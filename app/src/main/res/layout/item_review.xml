@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_review_item_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="id"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_review_item_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_item_id"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_id">
+
+
+        <RatingBar
+            android:id="@+id/rb_review_item_rate"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="false"
+            android:max="5"
+            android:progressBackgroundTint="@color/main"
+            android:progressTint="@color/main"
+            android:rating="2"
+            android:secondaryProgressTint="@color/main"
+            android:stepSize="1" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_review_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="2023.03.03"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_review_item_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삭제하기"
+        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_date"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_date" />
+
+    <TextView
+        android:id="@+id/tv_review_item_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_review_box"
+        android:padding="10dp"
+        android:layout_marginStart="40dp"
+        android:text="여기 계란국 맛집임...
+김치볶음밥에 계란후라이 없어서 아쉽
+다음에 또 먹어야지"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_item_id"
+        app:layout_constraintTop_toBottomOf="@+id/ll_review_item_rate" />
+
+    <TextView
+        android:id="@+id/tv_review_item_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_review_tag"
+        android:padding="10dp"
+        android:text="가성비가 좋아요"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_item_id"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
