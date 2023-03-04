@@ -82,3 +82,12 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 - 기능 추가 : feat
 - 문서 수정 : docs
 - 주석 추가 : comment
+
+
+### ISSUE Convention
+`[작업유형] 뷰이름 / 작업내용`
+ex) [FEAT] review / review recyclerView 작업
+
+### PR Convention
+[작업유형/#이슈번호] 뷰이름 / 작업내용
+ex) [FEAT] 리뷰 쓰기 구현 완료
