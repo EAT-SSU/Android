@@ -69,13 +69,12 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 4. 커밋 하나라도 했으면 PR 바로 하기
 
 ### Branch Convention
-`feat/{구현 기능}`  
-ex) feat/review, feat/login, feat/main ...
+`feat/{구현 기능}` ex) feat/review, feat/login, feat/main ...
+
+브랜치를 새로 생성할 때에는 main 브랜치를 기점으로 생성하기
 
 ### Commit Message Convention
-`작업유형: 작업내용 #이슈번호`
-
-ex) add: login 파일 추가 #20
+`작업유형: 작업내용 #이슈번호` ex) add: login 파일 추가 #20
 
 - 파일 추가 : add
 - 버그 수정 : fix
