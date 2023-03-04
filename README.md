@@ -69,13 +69,13 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 4. 커밋 하나라도 했으면 PR 바로 하기
 
 ### Branch Convention
-`{github 닉네임}`  
-예시) HI-JIN2
+`feat/{구현 기능}`  
+ex) feat/review, feat/login, feat/main ...
 
 ### Commit Message Convention
 `작업유형: 작업내용 #이슈번호`
 
-예시) add: login 파일 추가 #20
+ex) add: login 파일 추가 #20
 
 - 파일 추가 : add
 - 버그 수정 : fix
