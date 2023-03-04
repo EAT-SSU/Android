@@ -62,11 +62,14 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 
 ## Git convention
 
-### Git Flow
+1. **Git Flow**
+1. 작은 기능 하나 구현 할 때 마다 커밋하기  
+2. issue는 큰 기능이나 한 화면 기준으로 큰 단위의 작업
+3. PR은 작업 분량으로 정상작동 내용이 있다면 머지하는 식으로 작은 단위의 작업
+4. 커밋 하나라도 했으면 PR 바로 하기
 
 ### Branch Convention
 `{github 닉네임}`  
-
 예시) HI-JIN2
 
 ### Commit Message Convention
@@ -86,10 +89,10 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 
 
 ### ISSUE Convention
-`[작업유형] 뷰이름 / 작업내용`
-ex) [FEAT] review / review recyclerView 작업
+`[작업유형] 작업내용`
+ex) [FEAT] 리뷰 목록 
 
 ### PR Convention
-[작업유형/#이슈번호] 뷰이름 / 작업내용
+`[작업유형] 작업내용`
 ex) [FEAT] 리뷰 쓰기 구현 완료  
-커밋 하나라도 했으면 PR 바로 하기
+
