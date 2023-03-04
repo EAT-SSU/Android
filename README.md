@@ -62,13 +62,12 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 
 ## Git convention
 
-### GitHub Flow
-브랜치를 새로 생성할 때에는 main 브랜치를 기점으로 생성하기
+### Git Flow
 
 ### Branch Convention
-`feat/{기능}`  
+`{github 닉네임}`  
 
-예시) feat/HomeFragment
+예시) HI-JIN2
 
 ### Commit Message Convention
 `커밋태그 : 내용 #이슈번호`
