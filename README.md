@@ -70,7 +70,7 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 예시) HI-JIN2
 
 ### Commit Message Convention
-`커밋태그 : 내용 #이슈번호`
+`작업유형: 작업내용 #이슈번호`
 
 예시) add: login 파일 추가 #20
 
@@ -80,7 +80,9 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 - 파일 삭제 : remove
 - 기능 추가 : feat
 - 문서 수정 : docs
-- 주석 추가 : comment
+- 주석 추가 : comment  
+
+작은 기능 하나 구현 할 때 마다 커밋하기
 
 
 ### ISSUE Convention
@@ -89,4 +91,5 @@ ex) [FEAT] review / review recyclerView 작업
 
 ### PR Convention
 [작업유형/#이슈번호] 뷰이름 / 작업내용
-ex) [FEAT] 리뷰 쓰기 구현 완료
+ex) [FEAT] 리뷰 쓰기 구현 완료  
+커밋 하나라도 했으면 PR 바로 하기
