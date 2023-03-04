@@ -3,6 +3,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
+
 android {
     viewBinding {
         enabled true
@@ -13,9 +17,11 @@ android {
     defaultConfig {
         applicationId "com.eatssu.android"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "KAKAO_APP_KEY", properties['APP_KEY']
+        manifestPlaceholders = [KAKAO_APP_KEY : "APP_KEY"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
