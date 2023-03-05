@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 Properties properties = new Properties()
@@ -8,8 +9,8 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
 
 android {
-    viewBinding {
-        enabled true
+    buildFeatures {
+        viewBinding = true
     }
     namespace 'com.eatssu.android'
     compileSdk 33
@@ -55,14 +56,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
-
-
-    testImplementation 'junit:junit:'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

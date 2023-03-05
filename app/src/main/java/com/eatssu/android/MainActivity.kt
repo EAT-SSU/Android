@@ -24,9 +24,9 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        Log.d("getKeyHash", "" + getKeyHash(this));
+        //Log.d("getKeyHash", "" + getKeyHash(this));
     }
-    @SuppressLint("PackageManagerGetSignatures")
+    /*@SuppressLint("PackageManagerGetSignatures")
     open fun getKeyHash(context: Context): String? {
         val pm: PackageManager = context.getPackageManager()
         try {
@@ -46,5 +46,5 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         return null
-    }
+    }*/
 }
