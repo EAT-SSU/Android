@@ -2,8 +2,11 @@ package com.eatssu.android
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityCalendarBinding
@@ -25,7 +28,10 @@ class CalendarActivity : AppCompatActivity() {
         viewBinding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        var calendar: MaterialCalendarView
+        calendar = viewBinding.calendarView
         val today = CalendarDay.today()
+        calendar.selectedDate = today
 
         val disabledDates = hashSetOf<CalendarDay>()
         disabledDates.add(CalendarDay.from(2022, 7, 12))
@@ -33,6 +39,7 @@ class CalendarActivity : AppCompatActivity() {
         viewBinding.calendarView.apply {
             // 휴무일 지정을 위한 Decorator 설정
             addDecorator(DayDisableDecorator(disabledDates, today))
+            addDecorator(TodayDecorator())
             // 요일을 지정하귀 위해 {"월", "화", ..., "일"} 배열을 추가한다.
             setWeekDayLabels(arrayOf("월", "화", "수", "목", "금", "토", "일"))
             // 달력 상단에 `월 년` 포맷을 수정하기 위해 TitleFormatter 설정
@@ -68,6 +75,20 @@ class CalendarActivity : AppCompatActivity() {
 
         override fun decorate(view: DayViewFacade?) {
             view?.let { it.setDaysDisabled(true) }
+        }
+    }
+
+    inner class TodayDecorator: DayViewDecorator {
+        private var date = CalendarDay.today()
+
+        override fun shouldDecorate(day: CalendarDay?): Boolean {
+            return day?.equals(date)!!
+        }
+
+        override fun decorate(view: DayViewFacade?) {
+            view?.addSpan(StyleSpan(Typeface.BOLD))
+            view?.addSpan(RelativeSizeSpan(1.4f))
+            view?.addSpan(ForegroundColorSpan(Color.parseColor("#1D872A")))
         }
     }
 }
