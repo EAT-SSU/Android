@@ -12,8 +12,15 @@ import android.util.Base64.encodeToString
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.prolificinteractive.materialcalendarview.*
+import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
+import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
+import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
+import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding : ActivityMainBinding
@@ -24,9 +31,10 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+
         //Log.d("getKeyHash", "" + getKeyHash(this));
-    }
-    /*@SuppressLint("PackageManagerGetSignatures")
+
+        /*@SuppressLint("PackageManagerGetSignatures")
     open fun getKeyHash(context: Context): String? {
         val pm: PackageManager = context.getPackageManager()
         try {
@@ -47,4 +55,6 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }*/
+    }
 }
+

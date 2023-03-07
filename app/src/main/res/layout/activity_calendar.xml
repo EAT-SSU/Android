@@ -23,27 +23,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-    android:id="@+id/calendarView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu"
-    app:mcv_selectionColor="#5a7fbf"
-    app:mcv_showOtherDates="all"
-    app:mcv_arrowColor="@color/black"
-        android:theme="@style/CalenderViewCustom"
-        app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
-        app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
-    tools:ignore="MissingConstraints" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/item_month_day_list"
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarView"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu"
+        app:mcv_selectionColor="@color/main"
+        app:mcv_weekDayTextAppearance="@style/TextStyleSemiBold15"
+        app:mcv_showOtherDates="all" />
 
     <!--
 

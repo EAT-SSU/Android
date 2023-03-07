@@ -1,44 +1,73 @@
 package com.eatssu.android
 
-import android.os.Build
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import androidx.annotation.RequiresApi
+import android.text.style.ForegroundColorSpan
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityCalendarBinding
-import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
+import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
+import com.prolificinteractive.materialcalendarview.format.TitleFormatter
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek.*
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
 class CalendarActivity : AppCompatActivity() {
-    private lateinit var viewBinding : ActivityCalendarBinding
+    private lateinit var viewBinding: ActivityCalendarBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        val calendarView = viewBinding.calendarView
+        val today = CalendarDay.today()
 
-        // 첫 시작 요일이 월요일이 되도록 설정
-        /*calendarView.state()
-            .edit()
-            .setFirstDayOfWeek(MONDAY)
-            .commit();*/
+        val disabledDates = hashSetOf<CalendarDay>()
+        disabledDates.add(CalendarDay.from(2022, 7, 12))
 
-        // 월, 요일을 한글로 보이게 설정 (MonthArrayTitleFormatter의 작동을 확인하려면 밑의 setTitleFormatter()를 지운다)
-        calendarView.setTitleFormatter(MonthArrayTitleFormatter(getResources().getTextArray(R.array.custom_months)));
-        calendarView.setWeekDayFormatter(ArrayWeekDayFormatter(getResources().getTextArray(R.array.custom_weekdays)));
+        viewBinding.calendarView.apply {
+            // 휴무일 지정을 위한 Decorator 설정
+            addDecorator(DayDisableDecorator(disabledDates, today))
+            // 요일을 지정하귀 위해 {"월", "화", ..., "일"} 배열을 추가한다.
+            setWeekDayLabels(arrayOf("월", "화", "수", "목", "금", "토", "일"))
+            // 달력 상단에 `월 년` 포맷을 수정하기 위해 TitleFormatter 설정
+            setTitleFormatter(MyTitleFormatter())
+        }
 
-        // 좌우 화살표 사이 연, 월의 폰트 스타일 설정
-        calendarView.setHeaderTextAppearance(R.style.CalendarWidgetHeader);
+        DateFormatTitleFormatter()
+    }
 
+    inner class MyTitleFormatter : TitleFormatter {
+        override fun format(day: CalendarDay?): CharSequence {
+            val simpleDateFormat =
+                SimpleDateFormat("yyyy . MM", Locale.US) //"February 2016" format
 
+            return simpleDateFormat.format(Calendar.getInstance().getTime())
+        }
 
+    }
 
+    inner class DayDisableDecorator : DayViewDecorator {
+        private var dates = HashSet<CalendarDay>()
+        private var today: CalendarDay
+
+        constructor(dates: HashSet<CalendarDay>, today: CalendarDay) {
+            this.dates = dates
+            this.today = today
+        }
+
+        override fun shouldDecorate(day: CalendarDay): Boolean {
+            // 휴무일 || 이전 날짜
+            return dates.contains(day) || day.isBefore(today)
+        }
+
+        override fun decorate(view: DayViewFacade?) {
+            view?.let { it.setDaysDisabled(true) }
+        }
     }
 }
