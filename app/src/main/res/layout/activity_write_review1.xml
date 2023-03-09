@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.review.WriteReview1Activity">
+
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/tv_eat_ssu"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="80dp"-->
+    <!--            android:text="리뷰 남기기"-->
+    <!--            android:gravity="center"-->
+    <!--            android:textSize="25dp"-->
+    <!--            android:textColor="@color/white"-->
+    <!--            android:textStyle="bold"-->
+    <!--            android:background="@color/main"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <TextView
+        android:id="@+id/tv_review1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="식사는 맛있게 하셨나요?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/tv_review1_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:text=" '"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:text="메뉴"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:text="'을(를) 평가해주세요"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+
+    <RatingBar
+        android:id="@+id/rb_review1"
+        style="@style/Widget.AppCompat.RatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:progressTint="@color/main"
+        android:rating="0"
+        android:secondaryProgressTint="@color/main"
+        android:stepSize="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review1_menu" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next_review1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rb_review1">
+
+        <LinearLayout
+            android:id="@+id/ll_choose1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose1"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="가성비가 좋아요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose2"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="다른 데서 먹을래요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:background="@drawable/selector_tag_state"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_chooseLine2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose3"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="든든한 한끼"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose4"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="그럭저럭해요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose5"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="아쉬워요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_chooseLine4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose8"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="매워요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose10"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="싱거워요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose9"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="제 입맛엔 짜요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_chooseLine3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_marginTop="20dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose6"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="빠르게 먹을 수 있어요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_choose7"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="5dp"
+                android:paddingRight="14dp"
+                android:paddingBottom="5dp"
+                android:text="양이 많아요"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:background="@drawable/selector_tag_state"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_next_review1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/main"
+        android:text="다음 단계로"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

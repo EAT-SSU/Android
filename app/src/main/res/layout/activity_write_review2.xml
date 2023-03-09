@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.review.WriteReview2Activity">
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_eat_ssu"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:text="리뷰 남기기"-->
+<!--        android:gravity="center"-->
+<!--        android:textSize="25dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textStyle="bold"-->
+<!--        android:background="@color/main"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <LinearLayout
+        android:id="@+id/tv_review2_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:text=" '"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:text="메뉴"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:text="'을(를) 평가해주세요"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <RatingBar
+        android:id="@+id/rb_review1"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:progressTint="@color/main"
+        android:rating="0"
+        android:secondaryProgressTint="@color/main"
+        android:stepSize="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review2_menu" />
+
+    <EditText
+        android:id="@+id/et_review2_comment"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:gravity="top"
+        android:lines="10"
+        android:maxLength="150"
+        android:padding="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:privateImeOptions="defaultInputmode=korea"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rb_review1"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/tv_textnum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/tv_maxtext"
+        app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
+
+    <TextView
+        android:id="@+id/tv_maxtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" / 150"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/et_review2_comment"
+        app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
+
+    <Button
+        android:id="@+id/registReviewBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="리뷰 등록하기"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/main" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="30dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintStart_toStartOf="@+id/et_review2_comment"
+        app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />
+
+<!--    <ImageView-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:src="@drawable/ic_launcher_foreground"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/imageButton"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/imageButton" />-->
+<!--        -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
