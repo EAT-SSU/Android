@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!--갤러리 권한-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+    <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.eatssu.android"
+        android:exported="false"
+        android:grantUriPermissions="true"
+        tools:ignore="WrongManifestParent">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
+    <!--갤러리 권한-->
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,8 +38,28 @@
         android:theme="@style/Theme.EatSSUAndroid"
         tools:targetApi="31">
         <activity
-            android:name=".ReviewListActivity"
+            android:name=".ui.review.WriteReview2Activity"
             android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.review.WriteReview1Activity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.review.ReviewListActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
