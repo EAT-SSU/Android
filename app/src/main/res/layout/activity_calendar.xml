@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu"
         android:layout_centerVertical="true"
-        app:mcv_selectionColor="@color/main_shade"
+        app:mcv_selectionColor="@color/gray_background"
         app:mcv_weekDayTextAppearance="@style/TextStyleSemiBold15"
         app:mcv_showOtherDates="all" />
 

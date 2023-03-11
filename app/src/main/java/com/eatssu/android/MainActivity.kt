@@ -11,7 +11,9 @@ import android.util.Base64.NO_WRAP
 import android.util.Base64.encodeToString
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
@@ -31,6 +33,19 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        /*supportFragmentManager
+            .beginTransaction()
+            .replace(viewBinding.containerFragment.id,CalendarFragment())
+            .commitAllowingStateLoss()*/
+
+        TabLayoutMediator(viewBinding.tablayout, viewBinding.vpMain) { tab, position ->
+            Log.e("Restaurant", "ViewPager position: ${position}")
+            when (position) {
+                0 -> tab.text = "아침"
+                1 -> tab.text = "점심"
+                2 -> tab.text = "저녁"
+            }
+        }.attach()
 
         //Log.d("getKeyHash", "" + getKeyHash(this));
 
@@ -55,6 +70,24 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }*/
+    }
+    private fun initViewPager() {
+        //ViewPager2 Adapter 셋팅
+        var viewPager2Adatper = ViewPager2Adapter(this)
+        viewPager2Adatper.addFragment(BreakfastFragment())
+        viewPager2Adatper.addFragment(LunchFragment())
+        viewPager2Adatper.addFragment(DinnerFragment())
+
+        //Adapter 연결
+        viewBinding.vpMain.apply {
+            adapter = viewPager2Adatper
+
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                }
+            })
+        }
     }
 }
 

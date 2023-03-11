@@ -61,17 +61,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/black" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="7dp"
-                android:background="#00000000"
-                android:gravity="left"
-                android:scaleType="center"
-                android:src="@drawable/ic_location"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"></ImageButton>
 
             <TextView
                 android:id="@+id/item_tv_price"

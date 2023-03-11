@@ -11,5 +11,6 @@
     <color name="main_shade">#75DF5758</color>
     <color name="font_gray_1">#515151</color>
     <color name="font_gray_2">#797979</color>
+    <color name="gray_background">#E2E1E1</color>
     <color name="gray">#D9D9D9</color>
 </resources>

@@ -39,11 +39,11 @@ class CalendarActivity : AppCompatActivity() {
         viewBinding.calendarView.apply {
             // 휴무일 지정을 위한 Decorator 설정
             addDecorator(DayDisableDecorator(disabledDates, today))
-            addDecorator(TodayDecorator())
             // 요일을 지정하귀 위해 {"월", "화", ..., "일"} 배열을 추가한다.
             setWeekDayLabels(arrayOf("월", "화", "수", "목", "금", "토", "일"))
             // 달력 상단에 `월 년` 포맷을 수정하기 위해 TitleFormatter 설정
             setTitleFormatter(MyTitleFormatter())
+            addDecorator(TodayDecorator())
         }
 
         DateFormatTitleFormatter()
@@ -88,7 +88,7 @@ class CalendarActivity : AppCompatActivity() {
         override fun decorate(view: DayViewFacade?) {
             view?.addSpan(StyleSpan(Typeface.BOLD))
             view?.addSpan(RelativeSizeSpan(1.4f))
-            view?.addSpan(ForegroundColorSpan(Color.parseColor("#1D872A")))
+            view?.addSpan(ForegroundColorSpan(Color.parseColor("#DF5758")))
         }
     }
 }
