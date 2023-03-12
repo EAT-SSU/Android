@@ -62,7 +62,7 @@ isEnd(Boolean 타입 제외), viewPagerAdapter
 
 ## Git convention
 
-1. **Git Flow**
+1. **Github Flow**
 1. 작은 기능 하나 구현 할 때 마다 커밋하기  
 2. issue는 큰 기능이나 한 화면 기준으로 큰 단위의 작업
 3. PR은 작업 분량으로 정상작동 내용이 있다면 머지하는 식으로 작은 단위의 작업
