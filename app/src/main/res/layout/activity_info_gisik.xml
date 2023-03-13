@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="320dp"
-        android:layout_height="500dp"
+        android:layout_height="530dp"
         android:orientation="vertical"
         android:gravity="center"
         tools:ignore="MissingConstraints">
@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="숭실 학생 식당"
+                android:text="기숙사 식당"
                 android:textSize="30dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -49,12 +49,12 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/info_tv_haksik"
+                android:id="@+id/info_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:text="식당 위치"
                 android:textSize="18dp"
                 android:textStyle="bold"
@@ -63,11 +63,11 @@
 
 
             <TextView
-                android:id="@+id/item_tv_price"
+                android:id="@+id/tv_dodam_loca"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="숭실대학교 학생회관 3층"
+                android:layout_weight="7"
+                android:text="숭실대학교 레지던스홀 지하 1층"
                 android:layout_marginTop="7dp"
                 android:textSize="15dp"
                 android:textStyle="bold"
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/inca_tv_haksik"
+                android:id="@+id/tv_dodam_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -123,7 +123,7 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/week_tv_haksik"
+                android:id="@+id/week_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -138,7 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="점심"
+                android:text="아침"
                 android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
@@ -149,7 +149,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="11:30 - 13:30"
+                android:text="08:00 - 09:30"
                 android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
@@ -164,7 +164,46 @@
             android:weightSum="10">
 
             <TextView
-                android:id="@+id/week_tv_haksik2"
+                android:id="@+id/week_tv_gisik"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="5"
+                android:textSize="13dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_gisik_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="점심"
+                android:layout_marginLeft="10dp"
+                android:textSize="13dp"
+                android:textColor="@color/main"
+                ></TextView>
+
+            <TextView
+                android:id="@+id/tv_gisik_time2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="11:00 - 14:00"
+                android:layout_marginLeft="10dp"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                ></TextView>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/week_tv_dodam2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -178,7 +217,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="공간개방"
+                android:text="저녁"
                 android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
@@ -189,7 +228,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="14:00 - 17:00"
+                android:text="17:00 - 18:30"
                 android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
@@ -213,12 +252,106 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/weekend_tv_haksik"
+                android:id="@+id/weekend_tv_gisik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="5"
-                android:text="주말, 공휴일"
+                android:text="주말"
+                android:textSize="13dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_weekend_gisik"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="점심"
+                android:layout_marginLeft="10dp"
+                android:textSize="13dp"
+                android:textColor="@color/main"
+                ></TextView>
+
+            <TextView
+                android:id="@+id/tv_weekend_gisik2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="11:00 - 14:00"
+                android:layout_marginLeft="10dp"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                ></TextView>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/week_tv_gisik2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="5"
+                android:textSize="13dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_space_gisik"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="저녁"
+                android:layout_marginLeft="10dp"
+                android:textSize="13dp"
+                android:textColor="@color/main"
+                ></TextView>
+
+            <TextView
+                android:id="@+id/tv_space2_gisik"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="17:00 - 18:30"
+                android:layout_marginLeft="10dp"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                ></TextView>
+
+        </LinearLayout>
+
+
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="7dp"
+            android:background="@color/gray">
+
+        </View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/weekend_tv_dodam"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="5"
+                android:text="공휴일"
                 android:textSize="13dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/black" />
