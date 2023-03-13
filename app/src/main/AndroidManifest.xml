@@ -20,12 +20,8 @@
         tools:targetApi="31">
         <activity
             android:name=".InfoActivity_Gisik"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -33,12 +29,8 @@
         </activity>
         <activity
             android:name=".InfoActivity_Kitchen"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -46,12 +38,8 @@
         </activity>
         <activity
             android:name=".InfoActivity_Food"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -59,12 +47,8 @@
         </activity>
         <activity
             android:name=".InfoActivity_Snack"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -72,12 +56,8 @@
         </activity>
         <activity
             android:name=".InfoActivity_Dodam"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -99,7 +79,7 @@
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="${KAKAO_APP_KEY}" />
+            android:value="2f9633fd031ca35b60f4ec7fa3db1920" />
 
         <activity
             android:name=".InfoActivity_Haksik"

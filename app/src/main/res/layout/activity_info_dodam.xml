@@ -10,7 +10,7 @@
     android:backgroundTint="@color/white">
 
     <LinearLayout
-        android:layout_width="320dp"
+        android:layout_width="300dp"
         android:layout_height="500dp"
         android:orientation="vertical"
         android:gravity="center"
@@ -126,7 +126,6 @@
                 android:id="@+id/week_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:text="주중"
                 android:textSize="13dp"
@@ -137,9 +136,8 @@
                 android:id="@+id/lunch_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="점심"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -148,9 +146,8 @@
                 android:id="@+id/lunch_tv2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="11:30 - 14:00"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -167,7 +164,6 @@
                 android:id="@+id/week_tv_dodam2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:textSize="13dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -177,9 +173,8 @@
                 android:id="@+id/tv_space"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="저녁"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -188,9 +183,8 @@
                 android:id="@+id/tv_space2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="17:00 - 18:30"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -216,7 +210,6 @@
                 android:id="@+id/weekend_tv_haksik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:text="주말"
                 android:textSize="13dp"
@@ -227,9 +220,8 @@
                 android:id="@+id/tv_weekend_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="점심"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -238,9 +230,8 @@
                 android:id="@+id/tv_weekend"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="11:30 - 14:00"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -267,7 +258,6 @@
                 android:id="@+id/weekend_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:text="공휴일"
                 android:textSize="13dp"
@@ -280,7 +270,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="휴무"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -290,7 +279,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>

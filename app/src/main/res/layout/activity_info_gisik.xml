@@ -10,7 +10,7 @@
     android:backgroundTint="@color/white">
 
     <LinearLayout
-        android:layout_width="320dp"
+        android:layout_width="300dp"
         android:layout_height="530dp"
         android:orientation="vertical"
         android:gravity="center"
@@ -52,7 +52,6 @@
                 android:id="@+id/info_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="3"
                 android:text="식당 위치"
@@ -96,7 +95,6 @@
                 android:id="@+id/tv_dodam_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="5"
                 android:text="영업 시간"
@@ -126,7 +124,6 @@
                 android:id="@+id/week_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:text="주중"
                 android:textSize="13dp"
@@ -137,9 +134,8 @@
                 android:id="@+id/lunch_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="아침"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -148,9 +144,8 @@
                 android:id="@+id/lunch_tv2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="08:00 - 09:30"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -167,7 +162,6 @@
                 android:id="@+id/week_tv_gisik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:textSize="13dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -177,9 +171,8 @@
                 android:id="@+id/tv_gisik_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="점심"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -188,9 +181,8 @@
                 android:id="@+id/tv_gisik_time2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="11:00 - 14:00"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -206,7 +198,6 @@
                 android:id="@+id/week_tv_dodam2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:textSize="13dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -216,9 +207,8 @@
                 android:id="@+id/tv_space"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="저녁"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -227,9 +217,8 @@
                 android:id="@+id/tv_space2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="17:00 - 18:30"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -255,7 +244,6 @@
                 android:id="@+id/weekend_tv_gisik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:text="주말"
                 android:textSize="13dp"
@@ -266,9 +254,8 @@
                 android:id="@+id/tv_weekend_gisik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="점심"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -277,9 +264,8 @@
                 android:id="@+id/tv_weekend_gisik2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="11:00 - 14:00"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
@@ -296,7 +282,6 @@
                 android:id="@+id/week_tv_gisik2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:textSize="13dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -306,9 +291,8 @@
                 android:id="@+id/tv_space_gisik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="저녁"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -317,18 +301,13 @@
                 android:id="@+id/tv_space2_gisik"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:text="17:00 - 18:30"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
 
         </LinearLayout>
-
-
-
-
 
         <View
             android:layout_width="match_parent"
@@ -349,7 +328,6 @@
                 android:id="@+id/weekend_tv_dodam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_weight="5"
                 android:text="공휴일"
                 android:textSize="13dp"
@@ -362,7 +340,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="휴무"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/main"
                 ></TextView>
@@ -372,7 +349,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:layout_marginLeft="10dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>
