@@ -80,12 +80,15 @@
         android:lines="10"
         android:maxLength="150"
         android:padding="20dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
+        android:hint="한 줄 평 작성하기"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_edittext"
         android:privateImeOptions="defaultInputmode=korea"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rb_review1"
+        app:layout_constraintTop_toBottomOf="@+id/rb_review2"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
@@ -97,7 +100,7 @@
         android:textSize="10dp"
         android:textStyle="normal"
         app:layout_constraintEnd_toStartOf="@+id/tv_maxtext"
-        app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
+        app:layout_constraintTop_toTopOf="@+id/tv_maxtext" />
 
     <TextView
         android:id="@+id/tv_maxtext"
@@ -107,6 +110,7 @@
         android:textAlignment="center"
         android:textSize="10dp"
         android:textStyle="normal"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/et_review2_comment"
         app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
 
