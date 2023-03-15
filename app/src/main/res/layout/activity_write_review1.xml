@@ -71,7 +71,7 @@
 
     <RatingBar
         android:id="@+id/rb_review1"
-        style="@style/Widget.AppCompat.RatingBar"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
