@@ -17,8 +17,8 @@ class WriteReview1Activity : AppCompatActivity() {
 
         binding.btnNextReview1.setOnClickListener(){
             val intent = Intent(this, WriteReview2Activity::class.java)  // 인텐트를 생성해줌,
+            intent.putExtra("rating",binding.rbReview1.rating)
             startActivity(intent)  // 화면 전환을 시켜줌
-            finish()
         }
     }
 

@@ -57,8 +57,8 @@
     </LinearLayout>
 
     <RatingBar
-        android:id="@+id/rb_review1"
-        style="@style/Widget.AppCompat.RatingBar.Indicator"
+        android:id="@+id/rb_review2"
+        style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -111,7 +111,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
 
     <Button
-        android:id="@+id/registReviewBtn"
+        android:id="@+id/btn_next_review2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="리뷰 등록하기"
