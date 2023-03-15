@@ -6,29 +6,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.ItemReviewBinding
-/*
-class ReviewAdapter(private val dataList: List<GetTrainerListResponse.Result.Dto>): RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+
+
+class ListAdapter(private val dataList: ArrayList<review>): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            binding.tvName.text = dataList[position].name
-            binding.tvRating.text= dataList[position].grade.toString()
-            binding.tvUniv.text=dataList[position].school
-            binding.tvPr.text=dataList[position].contents
-            binding.tvMoney.text= dataList[position].cost.toString()
-
-            if (dataList[position].profile == "trainerProfile"){
-                binding.ivProfile.setImageResource(R.drawable.ic_profile)
-            }
-            else if (dataList[position].profile != "trainerProfile"|| dataList[position].profile != null) {
-                Glide.with(itemView)
-                    .load("${dataList[position].profile}")
-                    .into(binding.ivProfile)
-                binding.ivProfile.clipToOutline = true
-                Log.d("post", dataList[position].profile)
-            }
+            binding.tvReviewItemId.text=dataList[position].id
+            binding.tvReviewItemDate.text=dataList[position].date
+            binding.tvReviewItemComment.text=dataList[position].content
         }
     }
 
@@ -40,13 +29,8 @@ class ReviewAdapter(private val dataList: List<GetTrainerListResponse.Result.Dto
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(holder.itemView.context, ProfileActivity::class.java)
-//            intent.putExtra(
-//                "trainerIdx", dataList[position].id)
-//            startActivity(holder.itemView.context, intent, null)
-//        }
+        holder.itemView.setOnClickListener {}
     }
 
     override fun getItemCount(): Int = dataList.size
-}*/
+}
