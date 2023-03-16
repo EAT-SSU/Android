@@ -50,7 +50,7 @@ class CalendarFragment : Fragment() {
 
         calendarList.apply {
             val dateFormat = DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
-            val monthFormat = DateTimeFormatter.ofPattern("yyyy년 MM월").withLocale(Locale.forLanguageTag("ko"))
+            val monthFormat = DateTimeFormatter.ofPattern("yyyy . MM").withLocale(Locale.forLanguageTag("ko"))
 
             val localDate = LocalDateTime.now().format(monthFormat)
             binding.textYearMonth.text = localDate

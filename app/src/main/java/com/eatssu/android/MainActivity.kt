@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
@@ -38,14 +39,30 @@ class MainActivity : AppCompatActivity() {
             .replace(viewBinding.containerFragment.id,CalendarFragment())
             .commitAllowingStateLoss()*/
 
-        TabLayoutMediator(viewBinding.tablayout, viewBinding.vpMain) { tab, position ->
-            Log.e("Restaurant", "ViewPager position: ${position}")
-            when (position) {
-                0 -> tab.text = "아침"
-                1 -> tab.text = "점심"
-                2 -> tab.text = "저녁"
-            }
-        }.attach()
+        supportFragmentManager
+            .beginTransaction()
+            .add(viewBinding.frame.id, CalendarFragment())
+            .commitAllowingStateLoss()
+
+        // 1) ViewPager2 참조
+        val viewPager: ViewPager2 = viewBinding.vpMain
+        val tabLayout: TabLayout = viewBinding.tabLayout
+
+        // 2) FragmentStateAdapter 생성 : Fragment 여러개를 ViewPager2에 연결해주는 역할
+        val viewpagerFragmentAdapter = ViewPager2Adapter(this)
+
+        // 3) ViewPager2의 adapter에 설정
+        viewPager.adapter = viewpagerFragmentAdapter
+
+
+        // ###### TabLayout과 ViewPager2를 연결
+        // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
+        val tabTitles = listOf<String>("아침", "점심", "저녁")
+
+        // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
+        TabLayoutMediator(tabLayout, viewPager, {tab, position -> tab.text = tabTitles[position]}).attach()
+
+
 
         //Log.d("getKeyHash", "" + getKeyHash(this));
 
@@ -70,24 +87,6 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }*/
-    }
-    private fun initViewPager() {
-        //ViewPager2 Adapter 셋팅
-        var viewPager2Adatper = ViewPager2Adapter(this)
-        viewPager2Adatper.addFragment(BreakfastFragment())
-        viewPager2Adatper.addFragment(LunchFragment())
-        viewPager2Adatper.addFragment(DinnerFragment())
-
-        //Adapter 연결
-        viewBinding.vpMain.apply {
-            adapter = viewPager2Adatper
-
-            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                }
-            })
-        }
     }
 }
 
