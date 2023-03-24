@@ -6,15 +6,19 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.BaseActivity
 import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.ActivityReviewListBinding
 
-class ReviewListActivity : AppCompatActivity() {
+class ReviewListActivity : BaseActivity() {
     private lateinit var binding: ActivityReviewListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReviewListBinding.inflate(layoutInflater)
+
+        setActionBarTitle("리뷰")
+
         setContentView(binding.root)
 
         val reviewList : ArrayList<review> = arrayListOf()
