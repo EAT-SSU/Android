@@ -38,10 +38,10 @@
             android:layout_height="wrap_content"
             android:isIndicator="false"
             android:max="5"
-            android:progressBackgroundTint="@color/main"
-            android:progressTint="@color/main"
+            android:progressBackgroundTint="@color/primary"
+            android:progressTint="@color/primary"
             android:rating="2"
-            android:secondaryProgressTint="@color/main"
+            android:secondaryProgressTint="@color/primary"
             android:stepSize="1" />
 
 

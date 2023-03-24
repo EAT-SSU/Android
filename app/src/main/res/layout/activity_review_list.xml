@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:isIndicator="true"
-                    android:progressTint="@color/main"
+                    android:progressTint="@color/primary"
                     android:numStars="5"
                     android:rating="4.3"
                     android:stepSize="1"
@@ -64,8 +64,8 @@
                     app:layout_constraintLeft_toLeftOf="@id/tv_rate"
                     app:layout_constraintRight_toRightOf="@id/tv_rate"
                     app:layout_constraintBottom_toBottomOf="@id/rate1"
-                    android:progressBackgroundTint="@color/main"
-                    android:secondaryProgressTint="@color/main" />
+                    android:progressBackgroundTint="@color/primary"
+                    android:secondaryProgressTint="@color/primary" />
             </LinearLayout>
 
             <LinearLayout
@@ -95,7 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12"
-                        android:textColor="@color/main"
+                        android:textColor="@color/primary"
                         android:textAlignment="center"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/tv_review_num"
