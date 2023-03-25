@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.review.ReviewListActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="10dp"
+        android:background="@drawable/shape_shadow">
+
+        <TextView
+            android:id="@+id/tv_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="메뉴 명"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="50dp"
+                        android:text="4.3"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="45dp"
+                        android:textStyle="bold" />
+
+                    <RatingBar
+                        android:id="@+id/rb_average_rate"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:progressBackgroundTint="@color/primary"
+                        android:progressTint="@color/primary"
+                        android:rating="4.3"
+                        android:secondaryProgressTint="@color/primary"
+                        android:stepSize="1"
+                        app:layout_constraintBottom_toBottomOf="@id/rate1"
+                        app:layout_constraintLeft_toLeftOf="@id/tv_rate"
+                        app:layout_constraintRight_toRightOf="@id/tv_rate" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_review_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="총 리뷰 수"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@id/tv_rate"
+                            app:layout_constraintStart_toEndOf="@id/tv_rate" />
+
+                        <TextView
+                            android:id="@+id/tv_review_num_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="5dp"
+                            android:text="12"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_review_num"
+                            app:layout_constraintStart_toEndOf="@id/tv_review_num" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/rate5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="5점"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="@id/tv_review_num"
+                            app:layout_constraintTop_toBottomOf="@id/tv_review_num" />
+
+                        <ImageView
+                            android:id="@+id/rate5bar"
+                            android:layout_width="100dp"
+                            android:layout_height="8dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/rate4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="4점"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="@id/rate5"
+                            app:layout_constraintTop_toBottomOf="@id/rate5" />
+
+                        <ImageView
+                            android:id="@+id/rate4bar"
+                            android:layout_width="100dp"
+                            android:layout_height="8dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            app:layout_constraintTop_toTopOf="@id/rate4" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/rate3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="3점"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/rate3bar"
+                            android:layout_width="100dp"
+                            android:layout_height="8dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/rate2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="2점"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/rate2bar"
+                            android:layout_width="100dp"
+                            android:layout_height="8dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/rate1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="1점"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/rate1bar"
+                            android:layout_width="100dp"
+                            android:layout_height="8dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_next_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_btn_mini"
+            android:text="리뷰 남기러 가기"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_rate" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_review"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_review" />
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
