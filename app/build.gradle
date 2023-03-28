@@ -1,9 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
+
 android {
+    buildFeatures {
+        viewBinding = true
+    }
     namespace 'com.eatssu.android'
     compileSdk 33
 
@@ -13,6 +21,8 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "KAKAO_APP_KEY", properties['APP_KEY']
+        manifestPlaceholders = [KAKAO_APP_KEY : "APP_KEY"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,6 +44,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'armeabi', 'armeabi-v7a'
+            universalApk true
+        }
+    }
 }
 
 dependencies {
@@ -42,8 +60,17 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+<<<<<<< HEAD
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/libDaumMapAndroid.jar')
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+=======
 
+>>>>>>> b7c7d30273985d6e2e1769ab82b07addf02dd13d
 }
