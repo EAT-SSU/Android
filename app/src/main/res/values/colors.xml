@@ -13,4 +13,9 @@
     <color name="font_gray_2">#797979</color>
     <color name="gray_background">#E2E1E1</color>
     <color name="gray">#D9D9D9</color>
+    <color name="primary">#DF5757</color>
+    <color name="dark_gray">#9D9D9D</color>
+    <color name="medium_gray">#D9D9D9</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="background">#F9F9F9</color>
 </resources>

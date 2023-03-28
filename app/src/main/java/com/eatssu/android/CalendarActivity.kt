@@ -42,8 +42,9 @@ class CalendarActivity : AppCompatActivity() {
             // 요일을 지정하귀 위해 {"월", "화", ..., "일"} 배열을 추가한다.
             setWeekDayLabels(arrayOf("월", "화", "수", "목", "금", "토", "일"))
             // 달력 상단에 `월 년` 포맷을 수정하기 위해 TitleFormatter 설정
-            setTitleFormatter(MyTitleFormatter())
+
             addDecorator(TodayDecorator())
+            setTitleFormatter(MyTitleFormatter())
         }
 
         DateFormatTitleFormatter()
@@ -74,7 +75,7 @@ class CalendarActivity : AppCompatActivity() {
         }
 
         override fun decorate(view: DayViewFacade?) {
-            view?.let { it.setDaysDisabled(true) }
+            view?.let { it.setDaysDisabled(false) }
         }
     }
 
