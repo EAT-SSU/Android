@@ -54,10 +54,12 @@ class CalendarActivity : AppCompatActivity() {
 
     inner class MyTitleFormatter : TitleFormatter {
         override fun format(day: CalendarDay?): CharSequence {
-            val simpleDateFormat =
+            /*val simpleDateFormat =
                 SimpleDateFormat("yyyy . MM", Locale.US) //"February 2016" format
 
-            return simpleDateFormat.format(Calendar.getInstance().getTime())
+            return simpleDateFormat.format(Calendar.getInstance().getTime())*/
+                return "${day!!.year} . ${day.month + 1}"
+
         }
 
     }
