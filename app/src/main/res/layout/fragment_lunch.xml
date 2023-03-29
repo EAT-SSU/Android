@@ -127,16 +127,16 @@
 
                         </View>
 
-                        <TextView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_breakfast_haksik"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="학식은 아침이 제공되지 않습니다!"
                             android:layout_marginTop="10dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="parent" >
+                            app:layout_constraintTop_toBottomOf="parent"
+                            tools:listitem="@layout/item_haksik">
 
-                        </TextView>
+                        </androidx.recyclerview.widget.RecyclerView>
 
                     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.eatssu.android
 
+import android.content.Intent
 import android.graphics.Insets.add
 import android.os.Build
 import android.os.Bundle
@@ -69,6 +70,11 @@ class CalendarFragment : Fragment() {
         }
         binding.weekRecycler.adapter = calendarAdapter
         binding.weekRecycler.layoutManager = GridLayoutManager(context, 7)
+
+        binding.textYearMonth.setOnClickListener{
+            val intent = Intent(context, CalendarActivity::class.java);
+            startActivity(intent);
+        }
     }
 
     override fun onDestroyView() {

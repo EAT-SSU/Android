@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.FragmentBreakfastBinding
 import com.eatssu.android.databinding.FragmentLunchBinding
 
@@ -44,6 +45,16 @@ class LunchFragment : Fragment() {
             val intent = Intent(context, InfoActivity_Snack::class.java);
             startActivity(intent);
         }
+
+        val rv_haksik = binding.rvBreakfastHaksik
+        val itemListHaksik = ArrayList<Haksik>()
+        itemListHaksik.add(Haksik("안동찜닭", "5000", 5.0))
+        val haksikAdapter = LunchHaksikAdapter(itemListHaksik)
+        haksikAdapter.notifyDataSetChanged()
+        rv_haksik.adapter = haksikAdapter
+        rv_haksik.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+
         return binding.root
     }
 

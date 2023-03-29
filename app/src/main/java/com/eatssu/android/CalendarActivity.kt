@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityCalendarBinding
 import com.prolificinteractive.materialcalendarview.*
@@ -26,6 +27,7 @@ class CalendarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityCalendarBinding.inflate(layoutInflater)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(viewBinding.root)
 
         var calendar: MaterialCalendarView

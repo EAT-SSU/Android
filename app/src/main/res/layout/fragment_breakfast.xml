@@ -8,17 +8,16 @@
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical">-->
 
 
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,16 +126,16 @@
 
                         </View>
 
-                        <TextView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_breakfast_haksik"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="학식은 아침이 제공되지 않습니다!"
                             android:layout_marginTop="10dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="parent" >
+                            app:layout_constraintTop_toBottomOf="parent"
+                            tools:listitem="@layout/item_haksik">
 
-                        </TextView>
+                        </androidx.recyclerview.widget.RecyclerView>
 
                     </LinearLayout>
 
@@ -241,16 +240,17 @@
 
                     </View>
 
-                    <TextView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_breakfast_dodam"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         android:layout_marginTop="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
+                        app:layout_constraintTop_toBottomOf="parent"
+                        tools:listitem="@layout/item_dodam">
 
-                    </TextView>
+                    </androidx.recyclerview.widget.RecyclerView>
+
 
                 </LinearLayout>
 
@@ -352,16 +352,16 @@
 
                     </View>
 
-                    <TextView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_breakfast_gisik"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         android:layout_marginTop="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
+                        app:layout_constraintTop_toBottomOf="parent"
+                        tools:listitem="@layout/item_gisik">
 
-                    </TextView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
                     <LinearLayout
@@ -462,16 +462,16 @@
 
                         </View>
 
-                        <TextView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_breakfast_kitchen"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="학식은 아침이 제공되지 않습니다!"
                             android:layout_marginTop="10dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="parent">
+                            app:layout_constraintTop_toBottomOf="parent"
+                            tools:listitem="@layout/item_kitchen">
 
-                        </TextView>
+                        </androidx.recyclerview.widget.RecyclerView>
                     </LinearLayout>
 
                 <LinearLayout
@@ -572,16 +572,16 @@
 
                     </View>
 
-                    <TextView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_breakfast_food"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         android:layout_marginTop="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
+                        app:layout_constraintTop_toBottomOf="parent"
+                        tools:listitem="@layout/item_food">
 
-                    </TextView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -624,6 +624,7 @@
                     android:orientation="vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginBottom="30dp"
                     android:background="@drawable/shape_round_corners"
                     android:layout_marginTop="10dp">
 
@@ -682,22 +683,22 @@
 
                     </View>
 
-                    <TextView
-                        android:id="@+id/rv_snack_kitchen"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_breakfast_snack"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         android:layout_marginTop="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
+                        app:layout_constraintTop_toBottomOf="parent"
+                        tools:listitem="@layout/item_snack">
 
-                    </TextView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
 
             </LinearLayout>
 
         </ScrollView>
-
-    </LinearLayout>
+<!--
+    </LinearLayout>-->
 </FrameLayout>

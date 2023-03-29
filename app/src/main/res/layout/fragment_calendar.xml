@@ -16,13 +16,13 @@
             android:gravity="center"
             android:layout_gravity="center">
 
-            <ImageButton
+            <!--<ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_left_arrow"
                 android:backgroundTint="@color/white"
                 android:gravity="right">
-            </ImageButton>
+            </ImageButton>-->
 
         <TextView
             android:id="@+id/text_year_month"
@@ -37,13 +37,13 @@
             android:textStyle="bold"
             android:textColor="@color/font_gray_2"/>
 
-            <ImageButton
+            <!--<ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_right_arrow"
                 android:backgroundTint="@color/white"
-                android:gravity="left">
-            </ImageButton>
+                android:gravity="left">-->
+            <!--</ImageButton>-->
         </LinearLayout>
 
 
