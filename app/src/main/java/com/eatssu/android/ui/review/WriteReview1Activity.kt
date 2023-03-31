@@ -14,7 +14,7 @@ class WriteReview1Activity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWriteReview1Binding.inflate(layoutInflater)
 
-        setActionBarTitle("리뷰 남기기")
+        //setActionBarTitle("리뷰 남기기")
 
         setContentView(binding.root)
 
