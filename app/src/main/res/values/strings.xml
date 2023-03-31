@@ -33,5 +33,4 @@
     <string name="app_version">앱 버전</string>
     <string name="pw_rules">영문자와 숫자를 하나 이상 포함한 8자 이상 </string>
     <string name="done">완료하기</string>
-    <string name="nickname_rules">한글/영문 2~8자</string>
 </resources>
