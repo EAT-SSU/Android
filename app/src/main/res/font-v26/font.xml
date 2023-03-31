@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <font
+        android:font="@font/noto_black"
+        app:font="@font/noto_black" />
+
+    <font
+        android:font="@font/noto_bold"
+        android:fontWeight="700"
+        app:font="@font/noto_bold" />
+
+    <font
+        android:font="@font/noto_light"
+        app:font="@font/noto_light" />
+
+    <font
+        android:font="@font/noto_medium"
+        app:font="@font/noto_medium" />
+
+    <font
+        android:font="@font/noto_regular"
+        app:font="@font/noto_regular" />
+
+    <font
+        android:font="@font/noto_thin"
+        app:font="@font/noto_thin" />
+</font-family>
+    
