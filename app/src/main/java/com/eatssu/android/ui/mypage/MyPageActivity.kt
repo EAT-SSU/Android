@@ -20,15 +20,22 @@ class MyPageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyPageBinding.inflate(layoutInflater)
-
-
-        setActionBarTitle("마이페이지")
-
-
+        // 커스텀 액션바 설정
+        //setCustomActionBar("마이페이지", true)
 
         setContentView(binding.root)
 
 
+        binding.clChPw.setOnClickListener(){
+            val intent = Intent(this, ChangePwActivity::class.java)  // 인텐트를 생성해줌,
+            startActivity(intent)  // 화면 전환을 시켜줌
+            finish()
+        }
+        binding.icNicknameChange.setOnClickListener(){
+            val intent = Intent(this, ChangeNicknameActivity::class.java)  // 인텐트를 생성해줌,
+            startActivity(intent)  // 화면 전환을 시켜줌
+            //finish()
+        }
         binding.clReview.setOnClickListener(){
             val intent = Intent(this, MyReviewListActivity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌

@@ -18,7 +18,7 @@ class MyReviewListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyReviewListBinding.inflate(layoutInflater)
 
-        setActionBarTitle("내가 쓴 리뷰")
+        //setActionBarTitle("내가 쓴 리뷰")
 
         setContentView(binding.root)
 
