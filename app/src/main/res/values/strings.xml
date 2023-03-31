@@ -6,6 +6,6 @@
     <string name="logout">로그아웃</string>
     <string name="signout">탈퇴하기</string>
     <string name="app_version">앱 버전</string>
-    <string name="pw_rules">영문, 숫자, 특수문자를 포함한 8~13자</string>
+    <string name="pw_rules">영문자와 숫자를 하나 이상 포함한 8자 이상 </string>
     <string name="done">완료하기</string>
 </resources>
