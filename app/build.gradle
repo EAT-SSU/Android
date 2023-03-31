@@ -4,6 +4,9 @@ plugins {
 }
 
 android {
+    buildFeatures {
+        viewBinding = true
+    }
     namespace 'com.eatssu.android'
     compileSdk 33
 

@@ -146,7 +146,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tv_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logout"
@@ -157,13 +157,13 @@
 
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_signout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signout"
         android:fontFamily="@font/noto_bold"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="@+id/tv_logout"
+        app:layout_constraintTop_toBottomOf="@+id/tv_logout" />
 
     <TextView
         android:id="@+id/textView5"
@@ -171,8 +171,8 @@
         android:layout_height="wrap_content"
         android:text="@string/app_version"
         android:fontFamily="@font/noto_regular"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintStart_toStartOf="@+id/tv_logout"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signout" />
 
     <TextView
         android:layout_width="wrap_content"
