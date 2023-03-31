@@ -1,5 +1,30 @@
 <resources>
     <string name="app_name">EatSSU-Android</string>
+    <string-array name="custom_weekdays">
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+        <item>일</item>
+    </string-array>
+
+    <string-array name="custom_months">
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_review">내가 쓴 리뷰</string>
     <string name="change_pw">비밀번호 변경</string>
     <string name="announce">공지사항</string>
@@ -8,5 +33,4 @@
     <string name="app_version">앱 버전</string>
     <string name="pw_rules">영문자와 숫자를 하나 이상 포함한 8자 이상 </string>
     <string name="done">완료하기</string>
-    <string name="nickname_rules">한글/영문 2~8자</string>
 </resources>

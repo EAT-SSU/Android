@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".BreakfastFragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="15dp">
+
+                        <ImageButton
+                            android:id="@+id/btn_haksik_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:background="#00000000"
+                            android:src="@drawable/ic_location"
+                            android:layout_marginTop="9dp"
+                            android:gravity="left"
+                            android:scaleType="fitCenter"
+                            ></ImageButton>
+
+                        <TextView
+                            android:id="@+id/breakfast_tv_haksik"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="5"
+                            android:text="학생식당"
+                            android:textSize="25dp"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/shape_round_corners"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:id="@+id/tv_haksik_today"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="8dp"
+                                android:layout_weight="6"
+                                android:text="오늘의 메뉴"
+                                android:textSize="14dp"
+                                android:textStyle="bold"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="@color/black" />
+
+
+
+                            <TextView
+                                android:id="@+id/tv_haksik_price"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="price"
+                                android:textColor="@color/black"
+                                android:layout_marginTop="7dp"
+                                android:textSize="15dp"
+                                android:gravity="center"
+                                ></TextView>
+
+
+
+                        <TextView
+                            android:id="@+id/tv_haksik_rate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="rate"
+                            android:layout_weight="2"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/main" >
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/rv_breakfast_haksik"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="학식은 아침이 제공되지 않습니다!"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="parent" >
+
+                        </TextView>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_dodam_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="#00000000"
+                        android:src="@drawable/ic_location"
+                        android:layout_marginTop="9dp"
+                        android:gravity="left"
+                        android:scaleType="fitCenter"
+                        ></ImageButton>
+
+                    <TextView
+                        android:id="@+id/breakfast_tv_dodam"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="5"
+                        android:text="도담식당"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_round_corners"
+                    android:layout_marginTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/tv_haksik_today2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="6"
+                            android:text="오늘의 메뉴"
+                            android:textSize="14dp"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black" />
+
+
+
+                        <TextView
+                            android:id="@+id/tv_dodam_price"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:text="price"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+
+
+
+                        <TextView
+                            android:id="@+id/tv_dodam_rate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="rate"
+                            android:layout_weight="2"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/main" >
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/rv_breakfast_dodam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="학식은 아침이 제공되지 않습니다!"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_gisik_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="#00000000"
+                        android:src="@drawable/ic_location"
+                        android:layout_marginTop="9dp"
+                        android:gravity="left"
+                        android:scaleType="fitCenter"
+                        ></ImageButton>
+
+                    <TextView
+                        android:id="@+id/breakfast_tv_gisik"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="5"
+                        android:text="기숙사 식당"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_round_corners"
+                    android:layout_marginTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/tv_gisik_today"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="6"
+                            android:text="오늘의 메뉴"
+                            android:textSize="14dp"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black" />
+
+
+
+                        <TextView
+                            android:id="@+id/tv_gisik_price"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:text="price"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+
+
+
+                        <TextView
+                            android:id="@+id/tv_gisik_rate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="rate"
+                            android:layout_weight="2"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/main" >
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/rv_breakfast_gisik"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="학식은 아침이 제공되지 않습니다!"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent">
+
+                    </TextView>
+                </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp">
+
+                        <ImageButton
+                            android:id="@+id/btn_kitchen_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:background="#00000000"
+                            android:src="@drawable/ic_location"
+                            android:layout_marginTop="9dp"
+                            android:gravity="left"
+                            android:scaleType="fitCenter"
+                            ></ImageButton>
+
+                        <TextView
+                            android:id="@+id/breakfast_tv_kitchen"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="5"
+                            android:text="THE KITCHEN"
+                            android:textSize="25dp"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/shape_round_corners"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:id="@+id/tv_kitchen_today"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="8dp"
+                                android:layout_weight="6"
+                                android:text="오늘의 메뉴"
+                                android:textSize="14dp"
+                                android:textStyle="bold"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="@color/black" />
+
+
+
+                            <TextView
+                                android:id="@+id/tv_kitchen_price"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="price"
+                                android:textColor="@color/black"
+                                android:layout_marginTop="7dp"
+                                android:textSize="15dp"
+                                android:gravity="center"
+                                ></TextView>
+
+
+
+                            <TextView
+                                android:id="@+id/tv_kitchen_rate"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:text="rate"
+                                android:layout_weight="2"
+                                android:textColor="@color/black"
+                                android:layout_marginTop="7dp"
+                                android:textSize="15dp"
+                                android:gravity="center"
+                                ></TextView>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/main" >
+
+                        </View>
+
+                        <TextView
+                            android:id="@+id/rv_breakfast_kitchen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="학식은 아침이 제공되지 않습니다!"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="parent">
+
+                        </TextView>
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_food_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="#00000000"
+                        android:src="@drawable/ic_location"
+                        android:layout_marginTop="9dp"
+                        android:gravity="left"
+                        android:scaleType="fitCenter"
+                        ></ImageButton>
+
+                    <TextView
+                        android:id="@+id/breakfast_tv_food"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="5"
+                        android:text="푸드코트"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_round_corners"
+                    android:layout_marginTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/tv_food_today"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="6"
+                            android:text="오늘의 메뉴"
+                            android:textSize="14dp"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black" />
+
+
+
+                        <TextView
+                            android:id="@+id/tv_food_price"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:text="price"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+
+
+
+                        <TextView
+                            android:id="@+id/tv_food_rate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="rate"
+                            android:layout_weight="2"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/main" >
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/rv_breakfast_food"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="학식은 아침이 제공되지 않습니다!"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_snack_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="#00000000"
+                        android:src="@drawable/ic_location"
+                        android:layout_marginTop="9dp"
+                        android:gravity="left"
+                        android:scaleType="fitCenter"
+                        ></ImageButton>
+
+                    <TextView
+                        android:id="@+id/breakfast_tv_snack"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="5"
+                        android:text="스낵코너"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_round_corners"
+                    android:layout_marginTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/tv_snack_today"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="6"
+                            android:text="오늘의 메뉴"
+                            android:textSize="14dp"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black" />
+
+
+
+                        <TextView
+                            android:id="@+id/tv_snack_price"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:text="price"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+
+
+
+                        <TextView
+                            android:id="@+id/tv_snack_rate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="rate"
+                            android:layout_weight="2"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="7dp"
+                            android:textSize="15dp"
+                            android:gravity="center"
+                            ></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/main" >
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/rv_snack_kitchen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="학식은 아침이 제공되지 않습니다!"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent">
+
+                    </TextView>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+</FrameLayout>

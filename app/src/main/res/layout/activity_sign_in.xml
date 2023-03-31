@@ -34,7 +34,7 @@
         android:fontFamily="@font/noto_black"
         android:text="이메일"
         app:layout_constraintStart_toStartOf="@+id/tv_signin_nickname"
-        app:layout_constraintTop_toBottomOf="@+id/tv_pw_rule3" />
+        app:layout_constraintTop_toBottomOf="@+id/et_signin_nickname" />
 
     <EditText
         android:id="@+id/et_signin_email"
@@ -77,14 +77,6 @@
         app:layout_constraintStart_toStartOf="@+id/et_signin_pw"
         app:layout_constraintTop_toBottomOf="@+id/et_signin_pw" />
 
-    <TextView
-        android:id="@+id/tv_pw_rule3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
-        android:text="@string/nickname_rules"
-        app:layout_constraintStart_toStartOf="@+id/et_signin_pw"
-        app:layout_constraintTop_toBottomOf="@+id/et_signin_nickname" />
 
     <TextView
         android:id="@+id/tv_signin_pw2"

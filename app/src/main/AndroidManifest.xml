@@ -17,16 +17,23 @@
     </queries> <!-- 갤러리 권한 -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EatSSUAndroid"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31" >
+        
         <activity
             android:name=".ui.login.SignInActivity"
             android:exported="false" >
@@ -58,6 +65,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".ui.mypage.MyReviewListActivity"
             android:exported="true" >
@@ -109,6 +117,77 @@
             android:name=".ui.review.WriteReview1Activity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".InfoActivity_Gisik"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".InfoActivity_Kitchen"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".InfoActivity_Food"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".InfoActivity_Snack"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".InfoActivity_Dodam"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="${KAKAO_APP_KEY}" />
+
+        <activity
+            android:name=".InfoActivity_Haksik"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
