@@ -1,6 +1,6 @@
 package com.eatssu.android.data.service
 
-import ChangePwDto
+import com.eatssu.android.data.model.request.ChangePwDto
 import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.request.SignInRequest
 import com.eatssu.android.data.model.request.TokenRequest

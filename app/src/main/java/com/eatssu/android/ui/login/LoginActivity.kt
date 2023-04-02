@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.MainActivity
 import com.eatssu.android.R
@@ -18,6 +19,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
+    /*
     private lateinit var binding: ActivityLoginBinding
 
     var email : String=""
@@ -152,6 +154,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
         }
-    }
+    }*/
 
 }

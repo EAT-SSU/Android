@@ -1,26 +1,32 @@
 package com.eatssu.android.ui.mypage
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.BaseActivity
+import com.eatssu.android.R
 import com.eatssu.android.data.model.review
-import com.eatssu.android.databinding.ActivityMyReviewListBinding
-import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.databinding.*
+import com.eatssu.android.ui.BaseActivity
 
 class MyReviewListActivity : BaseActivity() {
     private lateinit var binding: ActivityMyReviewListBinding
 
+    override fun getLayoutResourceId(): Int {
+        return R.layout.activity_my_review_list
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMyReviewListBinding.inflate(layoutInflater)
 
-        //setActionBarTitle("내가 쓴 리뷰")
-
-        setContentView(binding.root)
+        val inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.activity_my_review_list, findViewById(R.id.frame_layout), true)
+        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
+        supportActionBar?.title = "내가 쓴 리뷰"
 
         val reviewList : ArrayList<review> = arrayListOf()
 
