@@ -44,6 +44,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
+        binding.tvLookAround.setOnClickListener() {
+            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
+            startActivity(intent)  // 화면 전환을 시켜줌
+            finish()
+        }
+
         //비밀번호 찾기
         binding.tvFindPw.setOnClickListener {
 //            val intent = Intent(this, LoginFindPwActivity::class.java)
