@@ -24,10 +24,10 @@ class SignUpActivity : BaseActivity() {
     private lateinit var binding: ActivitySignUpBinding
 
     //메시지 담을 변수
-    var name: String = ""
-    var email: String = ""
-    var pw: String = ""
-    var pw2: String = ""
+    private var name: String = ""
+    private var email: String = ""
+    private var pw: String = ""
+    private var pw2: String = ""
 
     val emailPattern =
         "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"

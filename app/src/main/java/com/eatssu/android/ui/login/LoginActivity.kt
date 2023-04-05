@@ -23,8 +23,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    var email: String = ""
-    var pw: String = ""
+    private var email: String = ""
+    private var pw: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +33,7 @@ class LoginActivity : AppCompatActivity() {
 
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserId(this).isBlank()
-            || MySharedPreferences.getUserPw(this).isBlank()
-        ) {
+            || MySharedPreferences.getUserPw(this).isBlank()) {
         } else { // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
             Toast.makeText(
                 this,
