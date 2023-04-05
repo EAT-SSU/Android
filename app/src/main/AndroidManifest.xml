@@ -4,6 +4,7 @@
     <!-- 갤러리 권한 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -15,7 +16,6 @@
         </intent>
     </queries> <!-- 갤러리 권한 -->
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -32,6 +32,49 @@
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.BaseActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.login.SignUpActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.mypage.ChangePwActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.mypage.ChangeNicknameActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <activity
             android:name=".ui.mypage.MyReviewListActivity"
@@ -67,6 +110,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -87,12 +131,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".InfoActivity_Gisik"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -101,7 +143,6 @@
             android:name=".InfoActivity_Kitchen"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -110,7 +151,6 @@
             android:name=".InfoActivity_Food"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -119,7 +159,6 @@
             android:name=".InfoActivity_Snack"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -128,7 +167,6 @@
             android:name=".InfoActivity_Dodam"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

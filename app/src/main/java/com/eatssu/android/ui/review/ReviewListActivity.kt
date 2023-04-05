@@ -3,23 +3,32 @@ package com.eatssu.android.ui.review
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.BaseActivity
+import com.eatssu.android.R
 import com.eatssu.android.data.model.review
+import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.ui.BaseActivity
 
 class ReviewListActivity : BaseActivity() {
     private lateinit var binding: ActivityReviewListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
         binding = ActivityReviewListBinding.inflate(layoutInflater)
+//        binding = ActivityReviewListBinding.inflate(layoutInflater, null, true)
 
-        setActionBarTitle("리뷰")
+//
+        val inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.activity_review_list, findViewById(R.id.frame_layout), true)
 
-        setContentView(binding.root)
+        supportActionBar?.title = "리뷰"
 
         val reviewList : ArrayList<review> = arrayListOf()
 
@@ -47,6 +56,10 @@ class ReviewListActivity : BaseActivity() {
             val intent = Intent(this, WriteReview1Activity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌
         }
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.activity_review_list
     }
 //
 //    private fun setAdapter(reviewList: List<review>){

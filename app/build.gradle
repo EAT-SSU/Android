@@ -7,11 +7,10 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
+def BASE_URL = properties.getProperty('baseurl')
+
 
 android {
-    buildFeatures {
-        viewBinding = true
-    }
     namespace 'com.eatssu.android'
     compileSdk 33
 
@@ -21,6 +20,9 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "BASE_URL", properties["baseurl"]
+        manifestPlaceholders = [BASE_URL : "baseurl"]
+
         buildConfigField "String", "KAKAO_APP_KEY", properties['APP_KEY']
         manifestPlaceholders = [KAKAO_APP_KEY : "APP_KEY"]
 
@@ -65,12 +67,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-<<<<<<< HEAD
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-=======
-
->>>>>>> b7c7d30273985d6e2e1769ab82b07addf02dd13d
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }
