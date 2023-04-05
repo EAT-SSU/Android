@@ -21,15 +21,15 @@ object RetrofitImpl {
             .build()
     }
 
-    private fun provideOkHttpClient(interceptor: AppInterceptorWithOutToken): OkHttpClient
-            = OkHttpClient.Builder().run {
-        addInterceptor(interceptor)
-        build()
-    }
+    private fun provideOkHttpClient(interceptor: AppInterceptorWithOutToken): OkHttpClient =
+        OkHttpClient.Builder().run {
+            addInterceptor(interceptor)
+            build()
+        }
 
     class AppInterceptorWithOutToken : Interceptor {
         @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
+        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
             val newRequest = request().newBuilder()
                 .addHeader("accept", "application/hal+json")
                 .addHeader("Content-Type", "application/json")
@@ -48,20 +48,20 @@ object RetrofitImpl {
             .build()
     }
 
-    private fun provideOkHttpClient(interceptor: AppInterceptor): OkHttpClient
-            = OkHttpClient.Builder().run {
-        addInterceptor(interceptor)
-        build()
-    }
+    private fun provideOkHttpClient(interceptor: AppInterceptor): OkHttpClient =
+        OkHttpClient.Builder().run {
+            addInterceptor(interceptor)
+            build()
+        }
 
     class AppInterceptor : Interceptor {
 
         @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
+        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
 
             val newRequest = request().newBuilder()
                 .addHeader("accept", "application/hal+json")
-                .addHeader("Authorization","Bearer ${App.token_prefs.accessToken.toString()}")
+                .addHeader("Authorization", "Bearer ${App.token_prefs.accessToken.toString()}")
                 .addHeader("Content-Type", "application/json")
                 .build()
             proceed(newRequest)

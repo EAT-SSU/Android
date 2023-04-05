@@ -98,27 +98,24 @@ class SignUpActivity : BaseActivity() {
 
 
         //중복체크
-        binding.btnEmailExist.setOnClickListener(){
+        binding.btnEmailExist.setOnClickListener() {
             val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-            val userService = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
-            userService.getEmailExist(email).enqueue(object: Callback<Boolean> {
+            val userService =
+                RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+            userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
                 override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    if(response.isSuccessful) {
+                    if (response.isSuccessful) {
                         Log.d("post", "onResponse 성공: " + response.body().toString());
 
                         if (response.body() == true) {
                             Toast.makeText(
-                                this@SignUpActivity,
-                                "실패 메세지 띄우기 입니다.",
-                                Toast.LENGTH_SHORT
+                                this@SignUpActivity, "실패 메세지 띄우기 입니다.", Toast.LENGTH_SHORT
                             ).show()
 
                         } else {
                             Toast.makeText(
-                                this@SignUpActivity,
-                                "성공 메세지 띄우기 입니다.",
-                                Toast.LENGTH_SHORT
+                                this@SignUpActivity, "성공 메세지 띄우기 입니다.", Toast.LENGTH_SHORT
                             ).show()
 
                             startActivity(intent)  // 화면 전환을 시켜줌
@@ -135,37 +132,37 @@ class SignUpActivity : BaseActivity() {
         }
 
         //회원가입하기
-        binding.btnSigninDone.setOnClickListener(){
+        binding.btnSigninDone.setOnClickListener() {
             val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-            val userService = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
-            userService.signUp(SignUpRequest(email, name, pw)).enqueue(object: Callback<TokenResponse> {
-                override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                    if(response.isSuccessful) {
-                        Log.d("post", "onResponse 성공: " + response.body().toString());
+            val userService =
+                RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+            userService.signUp(SignUpRequest(email, name, pw))
+                .enqueue(object : Callback<TokenResponse> {
+                    override fun onResponse(
+                        call: Call<TokenResponse>, response: Response<TokenResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("post", "onResponse 성공: " + response.body().toString());
 
-                        if (response.code()==200) {
-                            Toast.makeText(
-                                this@SignUpActivity,
-                                "회원가입 성공",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            startActivity(intent)  // 화면 전환을 시켜줌
-                            finish()
-                        } else {
-                            Toast.makeText(
-                                this@SignUpActivity,
-                                "실패 메세지 띄우기 입니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (response.code() == 200) {
+                                Toast.makeText(
+                                    this@SignUpActivity, "회원가입 성공", Toast.LENGTH_SHORT
+                                ).show()
+                                startActivity(intent)  // 화면 전환을 시켜줌
+                                finish()
+                            } else {
+                                Toast.makeText(
+                                    this@SignUpActivity, "실패 메세지 띄우기 입니다.", Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString());
-                }
-            })
+                    override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                        Log.d("post", "onFailure 에러: " + t.message.toString());
+                    }
+                })
 
         }
     }
