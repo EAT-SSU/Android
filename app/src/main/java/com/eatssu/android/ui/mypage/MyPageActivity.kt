@@ -4,17 +4,11 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toolbar
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMyPageBinding
-import com.eatssu.android.databinding.ActivityReviewListBinding
-import com.eatssu.android.databinding.ActivitySignInBinding
 import com.eatssu.android.ui.BaseActivity
 
 
