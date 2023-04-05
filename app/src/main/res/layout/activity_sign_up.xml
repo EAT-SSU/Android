@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".ui.login.SignInActivity">
+    tools:context=".ui.login.SignUpActivity">
 
     <TextView
         android:text="닉네임"
@@ -38,16 +38,25 @@
 
     <EditText
         android:id="@+id/et_signin_email"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_edittext"
         android:inputType="textEmailAddress"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_email_exist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_signin_email" />
 
 
+    <Button
+        android:id="@+id/btn_email_exist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="중복확인"
+        app:layout_constraintBottom_toBottomOf="@+id/et_signin_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_signin_email" />
     <TextView
         android:id="@+id/tv_signin_pw"
         android:layout_width="wrap_content"
