@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.MainActivity
-import com.eatssu.android.data.App
+import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl.getApiClientWithOutToken
 import com.eatssu.android.data.model.request.LoginRequest
