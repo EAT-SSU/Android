@@ -19,35 +19,31 @@ class MyPageActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMyPageBinding.inflate(layoutInflater)
-//        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
         val inflater = LayoutInflater.from(this)
         inflater.inflate(R.layout.activity_my_page, findViewById(R.id.frame_layout), true)
         findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
-
         supportActionBar?.title = "마이페이지"
 
-        //setContentView(binding.root)
-
-        binding.icNicknameChange.setOnClickListener(){
+        binding.clNickname.setOnClickListener{
             val intent = Intent(this, ChangeNicknameActivity::class.java)
             startActivity(intent)
             //finish()
         }
 
-        binding.clChPw.setOnClickListener(){
+        binding.clChPw.setOnClickListener{
             val intent = Intent(this, ChangePwActivity::class.java)
             startActivity(intent)
 //            finish()
         }
 
-        binding.clReview.setOnClickListener(){
+        binding.clReview.setOnClickListener{
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
         }
 
-        binding.tvLogout.setOnClickListener(){
+        binding.tvLogout.setOnClickListener{
 
             // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
             val builder = AlertDialog.Builder(this)
@@ -64,8 +60,7 @@ class MyPageActivity : BaseActivity() {
             builder.show()
         }
 
-        val signout : TextView= findViewById(R.id.tv_signout)
-        signout.setOnClickListener(){
+        binding.tvSignout.setOnClickListener(){
 
             // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
             val builder = AlertDialog.Builder(this)
