@@ -1,5 +1,5 @@
 # EatSSU-Android
-숭실대에서 먹자 잇슈!
+숭실대에서 먹자, 잇슈!
 
 | 유진<br/>([@HI-JIN2](https://github.com/HI-JIN2)) | 이현지<br/>([@Amepistheo](https://github.com/Amepistheo)) |
 | :---: | :---: |
