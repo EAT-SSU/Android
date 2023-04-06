@@ -19,6 +19,7 @@ import com.eatssu.android.ui.BaseActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
 class SignUpActivity : BaseActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -29,9 +30,9 @@ class SignUpActivity : BaseActivity() {
     private var pw: String = ""
     private var pw2: String = ""
 
-    val emailPattern =
+    private val emailPattern =
         "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
-    val pwPattern = "^.*(?=^.{5,15}\$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#\$%^&+=]).*$"
+    private val pwPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +72,6 @@ class SignUpActivity : BaseActivity() {
         })
 
 
-        //(! @ # $ % ^ &amp; + =
         binding.etSigninPw.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -99,7 +99,6 @@ class SignUpActivity : BaseActivity() {
 
         //중복체크
         binding.btnEmailExist.setOnClickListener() {
-            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
             val userService =
                 RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
@@ -108,18 +107,15 @@ class SignUpActivity : BaseActivity() {
                     if (response.isSuccessful) {
                         Log.d("post", "onResponse 성공: " + response.body().toString());
 
-                        if (response.body() == true) {
+                        if (response.body() == true) {//boolean 값으로 true가 DB에 있음을 의미함
                             Toast.makeText(
-                                this@SignUpActivity, "실패 메세지 띄우기 입니다.", Toast.LENGTH_SHORT
+                                this@SignUpActivity, "이미 가입한 이메일 입니다.", Toast.LENGTH_SHORT
                             ).show()
 
                         } else {
                             Toast.makeText(
-                                this@SignUpActivity, "성공 메세지 띄우기 입니다.", Toast.LENGTH_SHORT
+                                this@SignUpActivity, "사용 가능한 이메일 입니다.", Toast.LENGTH_SHORT
                             ).show()
-
-                            startActivity(intent)  // 화면 전환을 시켜줌
-                            finish()
                         }
                     }
                 }
@@ -133,38 +129,83 @@ class SignUpActivity : BaseActivity() {
 
         //회원가입하기
         binding.btnSigninDone.setOnClickListener() {
-            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-            val userService =
-                RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
-            userService.signUp(SignUpRequest(email, name, pw))
-                .enqueue(object : Callback<TokenResponse> {
-                    override fun onResponse(
-                        call: Call<TokenResponse>, response: Response<TokenResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.d("post", "onResponse 성공: " + response.body().toString());
+            if(pwDoubleCheck() &&pwCheck() &&emailCheck()){
+                val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-                            if (response.code() == 200) {
-                                Toast.makeText(
-                                    this@SignUpActivity, "회원가입 성공", Toast.LENGTH_SHORT
-                                ).show()
-                                startActivity(intent)  // 화면 전환을 시켜줌
-                                finish()
-                            } else {
-                                Toast.makeText(
-                                    this@SignUpActivity, "실패 메세지 띄우기 입니다.", Toast.LENGTH_SHORT
-                                ).show()
+                val userService =
+                    RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+                userService.signUp(SignUpRequest(email, name, pw))
+                    .enqueue(object : Callback<TokenResponse> {
+                        override fun onResponse(
+                            call: Call<TokenResponse>, response: Response<TokenResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                Log.d("post", "onResponse 성공: " + response.body().toString());
+
+                                if (response.code() == 200) {
+                                    Toast.makeText(
+                                        this@SignUpActivity, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT
+                                    ).show()
+                                    startActivity(intent)  // 화면 전환을 시켜줌
+                                    finish()
+                                } else {
+                                    Toast.makeText(
+                                        this@SignUpActivity, "회원가입에 실패했습니다.", Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
-                    }
 
-                    override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                        Log.d("post", "onFailure 에러: " + t.message.toString());
-                    }
-                })
+                        override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                            Log.d("post", "onFailure 에러: " + t.message.toString());
+                        }
+                    })}
+            else{
+
+            }
+
 
         }
+    }
+
+    //이메일 정규성 검사
+    private fun emailCheck(): Boolean {
+        val pattern1 = Pattern.compile(emailPattern) // 패턴 컴파일
+        val matcher1 = pattern1.matcher(email)
+
+        return if (!matcher1.find()) {
+            Toast.makeText(this@SignUpActivity, "이메일 형식을 확인해주세요", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    //패스워드 정규성검사
+    private fun pwCheck(): Boolean {
+        val pattern2 = Pattern.compile(pwPattern) // 패턴 컴파일
+        val matcher2 = pattern2.matcher(pw)
+
+        return if (!matcher2.find()) {
+            Toast.makeText(this@SignUpActivity, "영문자과 숫자를 포함하여 8자 이상을 입력해주세요.", Toast.LENGTH_SHORT)
+                .show()
+            false
+        } else {
+            true
+        }
+    }
+
+    //패스워드 일치 검사 로직
+    private fun pwDoubleCheck(): Boolean {
+        return if (pw == pw2) {
+            true
+        } else {
+            Toast.makeText(this@SignUpActivity, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+
+            false
+        }
+
     }
 
     override fun getLayoutResourceId(): Int {
