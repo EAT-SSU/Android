@@ -10,6 +10,8 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.eatssu.android.MainActivity
 import com.eatssu.android.R
+import com.eatssu.android.data.App
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.SignUpRequest
 import com.eatssu.android.data.model.response.TokenResponse
@@ -144,6 +146,12 @@ class SignUpActivity : BaseActivity() {
                                 Log.d("post", "onResponse 성공: " + response.body().toString());
 
                                 if (response.code() == 200) {
+                                    MySharedPreferences.setUserId(this@SignUpActivity, email)
+                                    MySharedPreferences.setUserPw(this@SignUpActivity, pw)//자동로그인 구현
+
+                                    App.token_prefs.accessToken = response.body()!!.accessToken
+                                    App.token_prefs.refreshToken = response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+
                                     Toast.makeText(
                                         this@SignUpActivity, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT
                                     ).show()
