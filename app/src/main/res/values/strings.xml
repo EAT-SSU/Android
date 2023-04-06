@@ -31,6 +31,6 @@
     <string name="logout">로그아웃</string>
     <string name="signout">탈퇴하기</string>
     <string name="app_version">앱 버전</string>
-    <string name="pw_rules">영문과 숫자를 포함하여 8자 이상을 입력해주세요.</string>
+    <string name="pw_rules">영문자과 숫자를 포함하여 8자 이상을 입력해주세요.</string>
     <string name="done">완료하기</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.eatssu.android.data
 
 
+import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
