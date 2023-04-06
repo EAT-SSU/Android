@@ -10,7 +10,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.eatssu.android.MainActivity
 import com.eatssu.android.R
-import com.eatssu.android.data.App
+import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.SignUpRequest
@@ -196,7 +196,7 @@ class SignUpActivity : BaseActivity() {
         val matcher2 = pattern2.matcher(pw)
 
         return if (!matcher2.find()) {
-            Toast.makeText(this@SignUpActivity, "영문자과 숫자를 포함하여 8자 이상을 입력해주세요.", Toast.LENGTH_SHORT)
+            Toast.makeText(this@SignUpActivity, "비밀번호는 영문자과 숫자를 포함하여 8자 이상을 입력해주세요.", Toast.LENGTH_SHORT)
                 .show()
             false
         } else {
