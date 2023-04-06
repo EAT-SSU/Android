@@ -81,8 +81,7 @@ class LoginActivity : AppCompatActivity() {
                 email = binding.etLoginEmail.text.toString()
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-            }
+            override fun afterTextChanged(p0: Editable?) {}
 
         })
 
@@ -113,34 +112,26 @@ class LoginActivity : AppCompatActivity() {
                     response: Response<TokenResponse>
                 ) {
                     if (response.isSuccessful) {
-//                        when(response.body()?.code){ // 정상적으로 통신이 성공된 경우
-//                            1000 -> {
-                        Log.d("post", "onResponse 성공: " + response.body().toString());
-                        MySharedPreferences.setUserId(this@LoginActivity, email)
-                        MySharedPreferences.setUserPw(this@LoginActivity, pw)//자동로그인 구현
+                        if(response.code()==200){
+                            Log.d("post", "onResponse 성공: " + response.body().toString());
+                            MySharedPreferences.setUserId(this@LoginActivity, email)
+                            MySharedPreferences.setUserPw(this@LoginActivity, pw)//자동로그인 구현
 
-                        App.token_prefs.accessToken = response.body()!!.accessToken
-                        App.token_prefs.refreshToken = response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+                            App.token_prefs.accessToken = response.body()!!.accessToken
+                            App.token_prefs.refreshToken = response.body()!!.refreshToken//헤더에 붙일 토큰 저장
 
-                        Toast.makeText(
-                            this@LoginActivity,
-                            email + ", 로그인에 성공하였습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        startActivity(intent)  // 화면 전환을 시켜줌
-                        finish()
-//                            }
-
-//                            else -> {
-                        Log.d("post", "onResponse 오류: " + response.body().toString());
-//                                Toast.makeText(this@LoginActivity, response.body()!!.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@LoginActivity,
+                                email + " 계정으로 로그인에 성공하였습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            startActivity(intent)  // 화면 전환을 시켜줌
+                            finish()
+                        }else{
+                            Log.d("post", "onResponse 오류: " + response.body().toString());
+                            Toast.makeText(this@LoginActivity, "error: "+response.message(), Toast.LENGTH_SHORT).show()
+                        }
                     }
-//                        }
-//                    }else{
-//                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-//                        Log.d("post", "onResponse 실패")
-////                        Toast.makeText(this@LoginActivity, response.body()!!.message, Toast.LENGTH_LONG).show()
-//                    }
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
