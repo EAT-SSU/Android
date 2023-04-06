@@ -100,39 +100,40 @@ class SignUpActivity : BaseActivity() {
 
 
         //중복체크
-        binding.btnEmailExist.setOnClickListener() {
+        binding.btnEmailExist.setOnClickListener{
 
-            val userService =
-                RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
-            userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    if (response.isSuccessful) {
-                        Log.d("post", "onResponse 성공: " + response.body().toString());
+            if (emailCheck()) {
+                val userService =
+                    RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+                userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
+                    override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                        if (response.isSuccessful) {
+                            Log.d("post", "onResponse 성공: " + response.body().toString());
 
-                        if (response.body() == true) {//boolean 값으로 true가 DB에 있음을 의미함
-                            Toast.makeText(
-                                this@SignUpActivity, "이미 가입한 이메일 입니다.", Toast.LENGTH_SHORT
-                            ).show()
+                            if (response.body() == true) {//boolean 값으로 true가 DB에 있음을 의미함
+                                Toast.makeText(
+                                    this@SignUpActivity, "이미 가입한 이메일 입니다.", Toast.LENGTH_SHORT
+                                ).show()
 
-                        } else {
-                            Toast.makeText(
-                                this@SignUpActivity, "사용 가능한 이메일 입니다.", Toast.LENGTH_SHORT
-                            ).show()
+                            } else {
+                                Toast.makeText(
+                                    this@SignUpActivity, "사용 가능한 이메일 입니다.", Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString());
-                }
-            })
-
+                    override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                        Log.d("post", "onFailure 에러: " + t.message.toString());
+                    }
+                })
+            }
         }
 
         //회원가입하기
         binding.btnSigninDone.setOnClickListener() {
 
-            if(pwDoubleCheck() &&pwCheck() &&emailCheck()){
+            if (pwDoubleCheck() && pwCheck()) {
                 val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
                 val userService =
@@ -150,7 +151,8 @@ class SignUpActivity : BaseActivity() {
                                     MySharedPreferences.setUserPw(this@SignUpActivity, pw)//자동로그인 구현
 
                                     App.token_prefs.accessToken = response.body()!!.accessToken
-                                    App.token_prefs.refreshToken = response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+                                    App.token_prefs.refreshToken =
+                                        response.body()!!.refreshToken//헤더에 붙일 토큰 저장
 
                                     Toast.makeText(
                                         this@SignUpActivity, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT
@@ -168,8 +170,8 @@ class SignUpActivity : BaseActivity() {
                         override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                             Log.d("post", "onFailure 에러: " + t.message.toString());
                         }
-                    })}
-            else{
+                    })
+            } else {
 
             }
 
@@ -196,7 +198,11 @@ class SignUpActivity : BaseActivity() {
         val matcher2 = pattern2.matcher(pw)
 
         return if (!matcher2.find()) {
-            Toast.makeText(this@SignUpActivity, "비밀번호는 영문자과 숫자를 포함하여 8자 이상을 입력해주세요.", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                this@SignUpActivity,
+                "비밀번호는 영문자과 숫자를 포함하여 8자 이상을 입력해주세요.",
+                Toast.LENGTH_SHORT
+            )
                 .show()
             false
         } else {
@@ -210,10 +216,8 @@ class SignUpActivity : BaseActivity() {
             true
         } else {
             Toast.makeText(this@SignUpActivity, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
-
             false
         }
-
     }
 
     override fun getLayoutResourceId(): Int {

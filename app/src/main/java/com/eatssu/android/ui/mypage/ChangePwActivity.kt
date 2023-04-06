@@ -18,6 +18,7 @@ import com.eatssu.android.ui.BaseActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
 class ChangePwActivity : BaseActivity() {
     private lateinit var binding: ActivityChangePwBinding
@@ -25,6 +26,7 @@ class ChangePwActivity : BaseActivity() {
     private var chPW: String = ""
     private var chPW2: String = ""
 
+    private val pwPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +62,9 @@ class ChangePwActivity : BaseActivity() {
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-        binding.btnChPwDone.setOnClickListener(){
+        binding.btnChPwDone.setOnClickListener{
+            pwCheck()
+            pwDoubleCheck()
 
             val userService =
                 RetrofitImpl.getApiClient().create(UserService::class.java)
@@ -91,6 +95,30 @@ class ChangePwActivity : BaseActivity() {
         }
     }
 
+    //패스워드 정규성검사
+    private fun pwCheck(): Boolean {
+        val pattern2 = Pattern.compile(pwPattern) // 패턴 컴파일
+        val matcher2 = pattern2.matcher(chPW)
+
+        return if (!matcher2.find()) {
+            Toast.makeText(this@ChangePwActivity, "비밀번호는 영문자과 숫자를 포함하여 8자 이상을 입력해주세요.", Toast.LENGTH_SHORT)
+                .show()
+            false
+        } else {
+            true
+        }
+    }
+
+    //패스워드 일치 검사 로직
+    private fun pwDoubleCheck(): Boolean {
+        return if (chPW == chPW2) {
+            true
+        } else {
+            Toast.makeText(this@ChangePwActivity, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+
+            false
+        }
+    }
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_change_pw
     }
