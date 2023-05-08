@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
-import com.eatssu.android.data.model.Food
+import com.eatssu.android.data.model.response.MenuBaseResponse
 
-class FoodAdapter (val itemList: ArrayList<Food>) :
+class FoodAdapter(val itemList: List<MenuBaseResponse.Result>) :
     RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {

@@ -2,6 +2,7 @@ package com.eatssu.android.data
 
 
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.data.RetrofitImpl.BASE_URL
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

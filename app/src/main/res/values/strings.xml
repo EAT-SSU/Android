@@ -24,6 +24,24 @@
         <item>11</item>
         <item>12</item>
     </string-array>
+    <string-array name="restaurant">
+        <item>HAKSIK</item>
+        <item>DODAM</item>
+        <item>DOMITORY</item>
+        <item>THE_KITCHEN</item>
+        <item>FOOD_COURT</item>
+        <item>SNACK_CORNER</item>
+    </string-array>
+    <string-array name="rv_restaurant">
+        <item>rvBreakfastHaksik</item>
+        <item>rvBreakfastDodam</item>
+        <item>rvBreakfastGisik</item>
+        <item>rvBreakfastKitchen</item>
+        <item>rvBreakfastFood</item>
+        <item>rvBreakfastSnack</item>
+    </string-array>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_review">내가 쓴 리뷰</string>
     <string name="change_pw">비밀번호 변경</string>

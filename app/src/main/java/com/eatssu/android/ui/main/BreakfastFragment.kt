@@ -2,20 +2,26 @@ package com.eatssu.android.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.R
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.*
+import com.eatssu.android.data.model.response.MenuBaseResponse
+import com.eatssu.android.data.service.RetrofitInterface
 import com.eatssu.android.databinding.FragmentBreakfastBinding
+import com.eatssu.android.ui.calendar.CalendarData
 import com.eatssu.android.ui.infopage.*
 import com.eatssu.android.ui.menuadapter.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class BreakfastFragment : Fragment() {
     private var _binding: FragmentBreakfastBinding? = null
@@ -67,7 +73,7 @@ class BreakfastFragment : Fragment() {
         val itemListFood = ArrayList<Food>()
         val itemListSnack = ArrayList<Snack>()
 
-        itemListHaksik.add(Haksik("김치찌개", "5000", 5.0))
+       /* itemListHaksik.add(Haksik("김치찌개", "5000", 5.0))
         //도담은 1코너, 2코너 각각에 여러 메뉴랑 반찬 있는데 코너로 나눌지, 메뉴 하나씩 띄울지 상의 필요..
         itemListDodam.add(Dodam("새우볶음밥", "5000", 5.0))
         itemListDodam.add(Dodam("간장마늘치킨", "5000", 5.0))
@@ -82,10 +88,10 @@ class BreakfastFragment : Fragment() {
         itemListFood.add(Food("치즈찜닭", "10000", 3.5))
 
         itemListSnack.add(Snack("떡볶이", "4500", 4.8))
-        itemListSnack.add(Snack("순대", "4000", 4.5))
+        itemListSnack.add(Snack("순대", "4000", 4.5))*/
 
 
-        val haksikAdapter = HaksikAdapter(itemListHaksik)
+        /*val haksikAdapter = HaksikAdapter(itemListHaksik)
         val dodamAdapter = DodamAdapter(itemListDodam)
         val gisikAdapter = GisikAdapter(itemListGisik)
         val kitchenAdapter = KitchenAdapter(itemListKitchen)
@@ -115,26 +121,45 @@ class BreakfastFragment : Fragment() {
         rv_food.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         rv_snack.adapter = snackAdapter
-        rv_snack.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rv_snack.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)*/
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://eatssu.shop")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        fun setAdapter(itemListFood: List<MenuBaseResponse.Result>){
+            val foodAdapter = FoodAdapter(itemListFood)
+            var rv_restaurant_array: Array<String> = resources.getStringArray(R.array.rv_restaurant)
+            binding.rvBreakfastFood.adapter=foodAdapter
 
-        val retrofitService = retrofit.create(RetrofitInterface::class.java)
-        retrofitService.requestAllData().enqueue(object:Callback<Haksik>{
-            override fun onResponse(call: Call<Haksik>, response: Response<Haksik>) {
+            val linearLayoutManager = LinearLayoutManager(context)
+            binding.rvBreakfastFood.layoutManager=linearLayoutManager
+
+            binding.rvBreakfastFood.setHasFixedSize(true)
+            binding.rvBreakfastFood.addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+        }
+
+        val retrofitService = RetrofitImpl.getApiClient().create(RetrofitInterface::class.java)
+        var restaurant_array: Array<String> = resources.getStringArray(R.array.restaurant)
+        for (i in 0..5) {
+        retrofitService.getMenuMorning(restaurant_array[i], "20230406").enqueue(object:Callback<MenuBaseResponse> {
+            override fun onResponse(
+                call: Call<MenuBaseResponse>,
+                response: Response<MenuBaseResponse>
+            ) {
                 if (response.isSuccessful) {
                     val body = response.body()
                     body?.let {
                         //text_text.text = body.toString response 잘 받아왔는지 확인.
-                        setAdapter(it.menu)
+                        setAdapter(it.menuInforesult)
                     }
+                } else {
+                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                    Log.d("post", "onResponse 실패")
                 }
-            })
+            }
 
+            override fun onFailure(call: Call<MenuBaseResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })}
         return binding.root
     }
-
 }

@@ -7,14 +7,6 @@
     tools:context=".ui.main.BreakfastFragment"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">-->
-
-
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">

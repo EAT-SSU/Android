@@ -1,19 +1,29 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.Haksik
 import com.eatssu.android.data.model.request.LoginRequest
+import com.eatssu.android.data.model.response.MenuBaseResponse
 import com.eatssu.android.data.model.response.TokenResponse
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RetrofitInterface {
     @GET("/menu/{date}/morning")
-    fun requestAllData() : Call<Haksik>
+    fun getMenuMorning(@Query("restaurant") restaurant : String,
+    @Path("date") date: String)
+    : Call<MenuBaseResponse>
 
-    @POST("user/login")
-    fun logIn(@Body request : LoginRequest) : Call<TokenResponse>
+    @GET("/menu/{date}/lunch")
+    fun getMenuLunch(@Query("restaurant") restaurant : String,
+                       @Path("date") date: String)
+            : Call<MenuBaseResponse>
+
+    @GET("/menu/{date}/dinner")
+    fun getMenuDinner(@Query("restaurant") restaurant : String,
+                       @Path("date") date: String)
+            : Call<MenuBaseResponse>
+
+
 
 
 }

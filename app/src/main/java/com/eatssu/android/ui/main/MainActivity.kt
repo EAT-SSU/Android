@@ -3,23 +3,33 @@ package com.eatssu.android.ui.main
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.FrameLayout
+import com.eatssu.android.R
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.eatssu.android.ui.BaseActivity
 import com.eatssu.android.ui.calendar.CalendarFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var viewBinding : ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(viewBinding.root)
+        //setContentView(viewBinding.root)
+        val inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
+        findViewById<FrameLayout>(R.id.frame_layout).addView(viewBinding.root)
+
+        supportActionBar?.title = "비밀번호 변경"
 
         /*supportFragmentManager
             .beginTransaction()
@@ -77,5 +87,10 @@ class MainActivity : AppCompatActivity() {
         return null
     }*/
     }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.activity_main
+    }
 }
+
 

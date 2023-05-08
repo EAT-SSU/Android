@@ -13,8 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-        <!--android:fontFamily="@font/noto_black"-->
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/noto_black"/>
+
 
     <RadioGroup
         android:id="@+id/radio_gp"
@@ -27,36 +28,42 @@
             android:id="@+id/radio_bt1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
             android:text="메뉴와 관련없는 내용" />
 
         <RadioButton
             android:id="@+id/radio_bt2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
             android:text="음란성, 욕설 등 부적절한 내용" />
 
         <RadioButton
         android:id="@+id/radio_bt3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
         android:text="부적절한 홍보 또는 광고" />
 
         <RadioButton
             android:id="@+id/radio_bt4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
             android:text="리뷰 작성 취지에 맞지 않은 내용 (복사글 등)" />
 
         <RadioButton
         android:id="@+id/radio_bt5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
         android:text="저작권 도용 의심 (사진 등)" />
 
         <RadioButton
             android:id="@+id/radio_bt6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
             android:text="기타 (하단 내용 작성)" />
 
     </RadioGroup>
