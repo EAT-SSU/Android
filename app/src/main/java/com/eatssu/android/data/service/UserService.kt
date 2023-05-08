@@ -1,5 +1,6 @@
 package com.eatssu.android.data.service
 
+import com.eatssu.android.data.model.request.ChangeNickname
 import com.eatssu.android.data.model.request.ChangePwDto
 import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.request.SignUpRequest
@@ -14,14 +15,14 @@ interface UserService {
     fun getEmailExist(@Path ("email") email : String) :Call<Boolean>
 
 
-//    //accessToken, refreshToken 재발급
-//    @POST("user/token/reissue")
-//
+    //accessToken, refreshToken 재발급
+    @POST("user/token/reissue")
+    fun getNewToken() :Call<TokenResponse>
+
 
     //로그인
     @POST("user/login")
     fun logIn(@Body request : LoginRequest) : Call<TokenResponse>
-
 
     //회원가입
     @POST("user/join")
@@ -31,6 +32,7 @@ interface UserService {
     @PATCH("user/password")
     fun changePw(@Body request : ChangePwDto) : Call<String>
 
-//    //닉네임 수정
-//    @PATCH("user/nickname")
+    //닉네임 수정
+    @PATCH("user/nickname")
+    fun changeNickname(@Body request: ChangeNickname) :Call<String>
 }
