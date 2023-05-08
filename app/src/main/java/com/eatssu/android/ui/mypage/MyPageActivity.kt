@@ -1,17 +1,15 @@
 package com.eatssu.android.ui.mypage
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
+import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toolbar
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import com.eatssu.android.BaseActivity
+import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMyPageBinding
-import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.ui.BaseActivity
 
 
 class MyPageActivity : BaseActivity() {
@@ -19,20 +17,73 @@ class MyPageActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMyPageBinding.inflate(layoutInflater)
+//        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
+        val inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.activity_my_page, findViewById(R.id.frame_layout), true)
+        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
 
-        setActionBarTitle("마이페이지")
+        supportActionBar?.title = "마이페이지"
 
+        //setContentView(binding.root)
 
+        binding.icNicknameChange.setOnClickListener(){
+            val intent = Intent(this, ChangeNicknameActivity::class.java)
+            startActivity(intent)
+            //finish()
+        }
 
-        setContentView(binding.root)
-
+        binding.clChPw.setOnClickListener(){
+            val intent = Intent(this, ChangePwActivity::class.java)
+            startActivity(intent)
+//            finish()
+        }
 
         binding.clReview.setOnClickListener(){
-            val intent = Intent(this, MyReviewListActivity::class.java)  // 인텐트를 생성해줌,
-            startActivity(intent)  // 화면 전환을 시켜줌
-            finish()
+            val intent = Intent(this, MyReviewListActivity::class.java)
+            startActivity(intent)
+//            finish()
         }
+
+        binding.tvLogout.setOnClickListener(){
+
+            // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("로그아웃")
+                .setMessage("로그아웃 하시겠습니까?")
+                .setPositiveButton("로그아웃",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        //탈퇴처리
+                    })
+                .setNegativeButton("취소",
+                    DialogInterface.OnClickListener { dialog, id ->
+                    })
+            // 다이얼로그를 띄워주기
+            builder.show()
+        }
+
+        val signout : TextView= findViewById(R.id.tv_signout)
+        signout.setOnClickListener(){
+
+            // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("탈퇴하기")
+                .setMessage("탈퇴 하시겠습니까?")
+                .setPositiveButton("탈퇴하기",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        //탈퇴처리
+                    })
+                .setNegativeButton("취소",
+                    DialogInterface.OnClickListener { dialog, id ->
+                    })
+            // 다이얼로그를 띄워주기
+            builder.show()
+        }
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.activity_my_page
     }
 }
