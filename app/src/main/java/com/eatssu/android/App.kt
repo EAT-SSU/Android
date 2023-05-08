@@ -1,6 +1,7 @@
-package com.eatssu.android.data
+package com.eatssu.android
 
 import android.app.Application
+import com.eatssu.android.data.TokenSharedPreferences
 
 
 class App: Application() {

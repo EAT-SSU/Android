@@ -20,28 +20,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_nickname"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="닉네임"
-        android:fontFamily="@font/noto_bold"
-        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_profile" />
+        app:layout_constraintTop_toBottomOf="@+id/ib_profile">
 
-    <ImageButton
-        android:id="@+id/ic_nickname_change"
-        android:layout_width="20dp"
-        android:layout_height="10dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitEnd"
-        android:paddingLeft="10dp"
-        android:src="@drawable/ic_next"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_nickname"
-        app:layout_constraintStart_toEndOf="@+id/tv_nickname"
-        app:layout_constraintTop_toTopOf="@+id/tv_nickname" />
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_bold"
+            android:text="닉네임"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ic_nickname_change"
+            android:layout_width="20dp"
+            android:layout_height="10dp"
+            android:background="@android:color/transparent"
+            android:paddingLeft="10dp"
+            android:scaleType="fitEnd"
+            android:src="@drawable/ic_next"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickname"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickname"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickname" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_email"
@@ -50,7 +58,7 @@
         android:text="email@email.com"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_nickname" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_nickname" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

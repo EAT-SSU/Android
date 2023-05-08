@@ -11,13 +11,13 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:elevation="4dp"
+        android:background="@drawable/shape_toolbar_background"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:contentInsetStart="0dp"
         android:contentInsetEnd="0dp"
         android:contentInsetLeft="0dp"
         android:contentInsetRight="0dp"/>
-
 
     <FrameLayout
         android:id="@+id/frame_layout"
