@@ -19,7 +19,11 @@ interface ReviewService {
     fun delReview(@Path("menuId") menuId: Int, @Path("reviewId") reviewId: Int): Call<String>
 
     @PATCH("/review/{menuId}/detail/{reviewId}") //리뷰 수정(글 수정)
-    fun modifyReview(@Path("menuId") menuId: Int, @Path("reviewId") reviewId: Int, @Body request : ModifyReviewResponse): Call<String>
+    fun modifyReview(
+        @Path("menuId") menuId: Int,
+        @Path("reviewId") reviewId: Int,
+        @Body request: ModifyReviewResponse
+    ): Call<String>
 
     @GET("/review/{menuId}") //메뉴 리뷰 정보 조회(평점 등등)
     fun reviewInfo(@Path("menuId") menuId: Int): Call<GetReviewInfoResponse>
