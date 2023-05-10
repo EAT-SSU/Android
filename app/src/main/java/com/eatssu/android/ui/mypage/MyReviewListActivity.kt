@@ -11,6 +11,7 @@ import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.*
 import com.eatssu.android.ui.BaseActivity
 
+/*
 class MyReviewListActivity : BaseActivity() {
     private lateinit var binding: ActivityMyReviewListBinding
 
@@ -39,7 +40,7 @@ class MyReviewListActivity : BaseActivity() {
             add(review("찜닭","김치볶음밥은 실패할 수 없다 배부르게 잘 먹고 감 ","2023-03-17"))
         }
 
-        val listAdapter = MyListAdapter(reviewList)
+        val listAdapter = MyReviewAdapter(reviewList)
         binding.rvReview.adapter=listAdapter
 
         val linearLayoutManager = LinearLayoutManager(this)
@@ -64,4 +65,4 @@ class MyReviewListActivity : BaseActivity() {
 //        // 1. 정의되어 있는 구분선
 //        binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
 //    }
-}
+}*/

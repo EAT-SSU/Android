@@ -1,49 +1,65 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64.NO_WRAP
+import android.util.Base64.encodeToString
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.FrameLayout
-import com.eatssu.android.R
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.BaseActivity
-import com.eatssu.android.ui.calendar.CalendarFragment
+import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
+import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
+import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
+import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
+import com.prolificinteractive.materialcalendarview.format.TitleFormatter
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : BaseActivity() {
-    private lateinit var viewBinding : ActivityMainBinding
+    private lateinit var binding : ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         //setContentView(viewBinding.root)
+
         val inflater = LayoutInflater.from(this)
         inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
-        findViewById<FrameLayout>(R.id.frame_layout).addView(viewBinding.root)
+        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
-        //supportActionBar?.title = "비밀번호 변경"
+        supportActionBar?.title = "EAT-SSU"
 
         /*supportFragmentManager
             .beginTransaction()
             .replace(viewBinding.containerFragment.id,CalendarFragment())
             .commitAllowingStateLoss()*/
 
-        /*supportFragmentManager
+        supportFragmentManager
             .beginTransaction()
-            .add(viewBinding.frame.id, CalendarFragment())
-            .commitAllowingStateLoss()*/
+            .add(binding.frame.id, CalendarFragment())
+            .commitAllowingStateLoss()
 
         // 1) ViewPager2 참조
-        val viewPager: ViewPager2 = viewBinding.vpMain
-        val tabLayout: TabLayout = viewBinding.tabLayout
+        val viewPager: ViewPager2 = binding.vpMain
+        val tabLayout: TabLayout = binding.tabLayout
 
         // 2) FragmentStateAdapter 생성 : Fragment 여러개를 ViewPager2에 연결해주는 역할
         val viewpagerFragmentAdapter = ViewPager2Adapter(this)
@@ -58,8 +74,6 @@ class MainActivity : BaseActivity() {
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
         TabLayoutMediator(tabLayout, viewPager, {tab, position -> tab.text = tabTitles[position]}).attach()
-
-
 
 
 
@@ -87,10 +101,28 @@ class MainActivity : BaseActivity() {
         return null
     }*/
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+//            android.R.id.home -> {
+//                onBackPressed()
+//                true
+//            }
+            R.id.action_setting ->{
+                val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
+                startActivity(intent)  // 화면 전환을 시켜줌
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_main
     }
 }
-
 

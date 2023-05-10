@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.MainActivity
 import com.eatssu.android.R
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
@@ -100,11 +100,10 @@ class SignUpActivity : BaseActivity() {
 
 
         //중복체크
-        binding.btnEmailExist.setOnClickListener{
+        binding.btnEmailExist.setOnClickListener {
 
             if (emailCheck()) {
-                val userService =
-                    RetrofitImpl.getApiClient().create(UserService::class.java)
+                val userService = RetrofitImpl.getApiClient().create(UserService::class.java)
                 userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
                     override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                         if (response.isSuccessful) {
@@ -136,8 +135,7 @@ class SignUpActivity : BaseActivity() {
             if (pwDoubleCheck() && pwCheck()) {
                 val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-                val userService =
-                    RetrofitImpl.getApiClient().create(UserService::class.java)
+                val userService = RetrofitImpl.getApiClient().create(UserService::class.java)
                 userService.signUp(SignUpRequest(email, name, pw))
                     .enqueue(object : Callback<TokenResponse> {
                         override fun onResponse(
@@ -199,11 +197,8 @@ class SignUpActivity : BaseActivity() {
 
         return if (!matcher2.find()) {
             Toast.makeText(
-                this@SignUpActivity,
-                "비밀번호는 영문자과 숫자를 포함하여 8자 이상을 입력해주세요.",
-                Toast.LENGTH_SHORT
-            )
-                .show()
+                this@SignUpActivity, "비밀번호는 영문자과 숫자를 포함하여 8자 이상을 입력해주세요.", Toast.LENGTH_SHORT
+            ).show()
             false
         } else {
             true

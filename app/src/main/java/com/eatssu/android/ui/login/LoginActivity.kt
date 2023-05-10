@@ -7,10 +7,10 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.MainActivity
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.RetrofitImpl.getApiClient
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.UserService
@@ -33,7 +33,8 @@ class LoginActivity : AppCompatActivity() {
 
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserId(this).isBlank()
-            || MySharedPreferences.getUserPw(this).isBlank()) {
+            || MySharedPreferences.getUserPw(this).isBlank()
+        ) {
         } else { // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
             Toast.makeText(
                 this,
@@ -105,20 +106,21 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
 
-            val service = getApiClient().create(UserService::class.java)
+            val service = RetrofitImpl.getApiClient().create(UserService::class.java)
             service.logIn(LoginRequest(email, pw)).enqueue(object : Callback<TokenResponse> {
                 override fun onResponse(
                     call: Call<TokenResponse>,
                     response: Response<TokenResponse>
                 ) {
                     if (response.isSuccessful) {
-                        if(response.code()==200){
+                        if (response.code() == 200) {
                             Log.d("post", "onResponse 성공: " + response.body().toString());
                             MySharedPreferences.setUserId(this@LoginActivity, email)
                             MySharedPreferences.setUserPw(this@LoginActivity, pw)//자동로그인 구현
 
                             App.token_prefs.accessToken = response.body()!!.accessToken
-                            App.token_prefs.refreshToken = response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+                            App.token_prefs.refreshToken =
+                                response.body()!!.refreshToken//헤더에 붙일 토큰 저장
 
                             Toast.makeText(
                                 this@LoginActivity,
@@ -127,9 +129,13 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             startActivity(intent)  // 화면 전환을 시켜줌
                             finish()
-                        }else{
+                        } else {
                             Log.d("post", "onResponse 오류: " + response.body().toString());
-                            Toast.makeText(this@LoginActivity, "error: "+response.message(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "error: " + response.message(),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
