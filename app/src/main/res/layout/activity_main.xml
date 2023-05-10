@@ -13,7 +13,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/week_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -21,37 +21,18 @@
             <FrameLayout
                 android:id="@+id/frame"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/week_calendar"
                 ></FrameLayout>
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <!-- TabLayou 을 배치한다. -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week_calendar"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <!-- TabItem은 탭메뉴 하나를 의미한다. -->
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Monday" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tuesday" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Wednesday" />
-        </com.google.android.material.tabs.TabLayout>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_main"
@@ -59,6 +40,14 @@
                 android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false"
                 android:layout_gravity="top"/>
+
+        <!--<FrameLayout
+            android:id="@+id/container_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />-->
+
 
     </LinearLayout>
 

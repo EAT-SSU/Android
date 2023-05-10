@@ -2,11 +2,11 @@ package com.eatssu.android.ui.mypage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.eatssu.android.BaseActivity
 import com.eatssu.android.databinding.ActivityNoticeBinding
 import com.eatssu.android.databinding.ActivityReportBinding
+import com.eatssu.android.ui.BaseActivity
 
-class NoticeActivity : BaseActivity() {
+abstract class NoticeActivity : BaseActivity() {
     private lateinit var binding: ActivityNoticeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,4 +17,6 @@ class NoticeActivity : BaseActivity() {
 
         setContentView(binding.root)
     }
+
+    abstract fun setActionBarTitle(s: String)
 }

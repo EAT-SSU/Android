@@ -2,11 +2,11 @@ package com.eatssu.android.ui.review
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.eatssu.android.BaseActivity
 import com.eatssu.android.databinding.ActivityReportBinding
 import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.ui.BaseActivity
 
-class ReportActivity : BaseActivity() {
+abstract class ReportActivity : BaseActivity() {
     private lateinit var binding: ActivityReportBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,4 +17,6 @@ class ReportActivity : BaseActivity() {
 
         setContentView(binding.root)
     }
+
+    abstract fun setActionBarTitle(s: String)
 }

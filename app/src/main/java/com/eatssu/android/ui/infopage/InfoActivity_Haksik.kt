@@ -47,7 +47,7 @@ class InfoActivity_Haksik : AppCompatActivity() {
             setCustomImageAnchor(0.5f, 1.0f)    // 마커 이미지 기준점
         }
         mapview.addPOIItem(marker)
-
+        /*
         val infoService = RetrofitImpl.getApiClientWithOutToken().create(InfoService::class.java)
             infoService.getRestaurantInfo("Haksik").enqueue(object:
                 Callback<InfoResponse> {
@@ -67,10 +67,10 @@ class InfoActivity_Haksik : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<MenuBaseResponse>, t: Throwable) {
+                override fun onFailure(call: Call<InfoResponse>, t: Throwable) {
                     TODO("Not yet implemented")
                 }
 
-            })
+            })*/
     }
 }

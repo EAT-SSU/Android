@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.eatssu.android.MainActivity
+import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.R
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
@@ -104,7 +104,7 @@ class SignUpActivity : BaseActivity() {
 
             if (emailCheck()) {
                 val userService =
-                    RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+                    RetrofitImpl.getApiClient().create(UserService::class.java)
                 userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
                     override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                         if (response.isSuccessful) {
@@ -137,7 +137,7 @@ class SignUpActivity : BaseActivity() {
                 val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
                 val userService =
-                    RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+                    RetrofitImpl.getApiClient().create(UserService::class.java)
                 userService.signUp(SignUpRequest(email, name, pw))
                     .enqueue(object : Callback<TokenResponse> {
                         override fun onResponse(

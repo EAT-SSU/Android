@@ -40,13 +40,4 @@ abstract class BaseActivity : AppCompatActivity() {
     abstract fun getLayoutResourceId(): Int
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 }

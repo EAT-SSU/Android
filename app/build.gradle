@@ -7,6 +7,7 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
+def BASE_URL = properties.getProperty('BASE_URL')
 
 android {
     buildFeatures {
@@ -22,7 +23,9 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "KAKAO_APP_KEY", properties['APP_KEY']
+        buildConfigField "String", "BASE_URL", properties['BASE_URL']
         manifestPlaceholders = [KAKAO_APP_KEY : "APP_KEY"]
+        manifestPlaceholders = [BASE_URL : "BASE_URL"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -56,21 +59,23 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+    implementation 'com.google.android.gms:play-services-basement:18.2.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-<<<<<<< HEAD
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-=======
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'     // Gson 처리시
+    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
 
->>>>>>> b7c7d30273985d6e2e1769ab82b07addf02dd13d
 }

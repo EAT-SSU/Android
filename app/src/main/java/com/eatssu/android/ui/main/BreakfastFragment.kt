@@ -58,7 +58,7 @@ class BreakfastFragment : Fragment() {
             val intent = Intent(context, InfoActivity_Snack::class.java);
             startActivity(intent);
         }
-        // rv 각 식당과 연결
+        /*        // rv 각 식당과 연결
         val rv_haksik = binding.rvBreakfastHaksik
         val rv_dodam = binding.rvBreakfastDodam
         val rv_gisik = binding.rvBreakfastGisik
@@ -73,7 +73,7 @@ class BreakfastFragment : Fragment() {
         val itemListFood = ArrayList<Food>()
         val itemListSnack = ArrayList<Snack>()
 
-       /* itemListHaksik.add(Haksik("김치찌개", "5000", 5.0))
+        itemListHaksik.add(Haksik("김치찌개", "5000", 5.0))
         //도담은 1코너, 2코너 각각에 여러 메뉴랑 반찬 있는데 코너로 나눌지, 메뉴 하나씩 띄울지 상의 필요..
         itemListDodam.add(Dodam("새우볶음밥", "5000", 5.0))
         itemListDodam.add(Dodam("간장마늘치킨", "5000", 5.0))
@@ -88,10 +88,10 @@ class BreakfastFragment : Fragment() {
         itemListFood.add(Food("치즈찜닭", "10000", 3.5))
 
         itemListSnack.add(Snack("떡볶이", "4500", 4.8))
-        itemListSnack.add(Snack("순대", "4000", 4.5))*/
+        itemListSnack.add(Snack("순대", "4000", 4.5))
 
 
-        /*val haksikAdapter = HaksikAdapter(itemListHaksik)
+        val haksikAdapter = HaksikAdapter(itemListHaksik)
         val dodamAdapter = DodamAdapter(itemListDodam)
         val gisikAdapter = GisikAdapter(itemListGisik)
         val kitchenAdapter = KitchenAdapter(itemListKitchen)
@@ -121,8 +121,10 @@ class BreakfastFragment : Fragment() {
         rv_food.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         rv_snack.adapter = snackAdapter
-        rv_snack.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)*/
+        rv_snack.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
+        */
+        /*
         fun setAdapter(itemListFood: List<MenuBaseResponse.Result>){
             val foodAdapter = FoodAdapter(itemListFood)
             var rv_restaurant_array: Array<String> = resources.getStringArray(R.array.rv_restaurant)
@@ -159,7 +161,7 @@ class BreakfastFragment : Fragment() {
                 TODO("Not yet implemented")
             }
 
-        })}
+        })}*/
         return binding.root
     }
 }

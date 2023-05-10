@@ -7,10 +7,10 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.eatssu.android.MainActivity
+import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.RetrofitImpl.getApiClientWithOutToken
+import com.eatssu.android.data.RetrofitImpl.getApiClient
 import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.UserService
@@ -105,7 +105,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
 
-            val service = getApiClientWithOutToken().create(UserService::class.java)
+            val service = getApiClient().create(UserService::class.java)
             service.logIn(LoginRequest(email, pw)).enqueue(object : Callback<TokenResponse> {
                 override fun onResponse(
                     call: Call<TokenResponse>,

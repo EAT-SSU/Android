@@ -29,17 +29,17 @@ class MainActivity : BaseActivity() {
         inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
         findViewById<FrameLayout>(R.id.frame_layout).addView(viewBinding.root)
 
-        supportActionBar?.title = "비밀번호 변경"
+        //supportActionBar?.title = "비밀번호 변경"
 
         /*supportFragmentManager
             .beginTransaction()
             .replace(viewBinding.containerFragment.id,CalendarFragment())
             .commitAllowingStateLoss()*/
 
-        supportFragmentManager
+        /*supportFragmentManager
             .beginTransaction()
             .add(viewBinding.frame.id, CalendarFragment())
-            .commitAllowingStateLoss()
+            .commitAllowingStateLoss()*/
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = viewBinding.vpMain

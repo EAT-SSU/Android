@@ -38,9 +38,9 @@ class CalendarActivity : AppCompatActivity() {
             // 요일을 지정하귀 위해 {"월", "화", ..., "일"} 배열을 추가한다.
             setWeekDayLabels(arrayOf("월", "화", "수", "목", "금", "토", "일"))
             // 달력 상단에 `월 년` 포맷을 수정하기 위해 TitleFormatter 설정
-
-            addDecorator(TodayDecorator())
             setTitleFormatter(MyTitleFormatter())
+            addDecorator(TodayDecorator())
+
         }
 
         DateFormatTitleFormatter()
@@ -58,14 +58,10 @@ class CalendarActivity : AppCompatActivity() {
 
     }
 
-    inner class DayDisableDecorator : DayViewDecorator {
-        private var dates = HashSet<CalendarDay>()
+    inner class DayDisableDecorator(
+        private var dates: HashSet<CalendarDay>,
         private var today: CalendarDay
-
-        constructor(dates: HashSet<CalendarDay>, today: CalendarDay) {
-            this.dates = dates
-            this.today = today
-        }
+    ) : DayViewDecorator {
 
         override fun shouldDecorate(day: CalendarDay): Boolean {
             // 휴무일 || 이전 날짜
