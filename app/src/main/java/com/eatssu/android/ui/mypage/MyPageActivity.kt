@@ -38,7 +38,7 @@ class MyPageActivity : BaseActivity() {
         }
 
         binding.clReview.setOnClickListener{
-            val intent = Intent(this, MyReviewListActivity::class.java)
+            //val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
         }
@@ -60,7 +60,7 @@ class MyPageActivity : BaseActivity() {
             builder.show()
         }
 
-        binding.tvSignout.setOnClickListener(){
+        binding.tvSignout.setOnClickListener{
 
             // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
             val builder = AlertDialog.Builder(this)
