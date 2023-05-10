@@ -1,6 +1,6 @@
 package com.eatssu.android.data.model.request
 
-data class ModifyReviewResponse(
+data class ModifyReviewRequest(
     val content: String,
     val grade: Int,
     val reviewTags: List<String>

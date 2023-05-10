@@ -2,10 +2,8 @@ package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponse
-import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.request.GetReviewDetailRequest
-import com.eatssu.android.data.model.request.ModifyReviewResponse
-import com.eatssu.android.data.model.response.TokenResponse
+import com.eatssu.android.data.model.request.ModifyReviewRequest
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -22,7 +20,7 @@ interface ReviewService {
     fun modifyReview(
         @Path("menuId") menuId: Int,
         @Path("reviewId") reviewId: Int,
-        @Body request: ModifyReviewResponse
+        @Body request: ModifyReviewRequest
     ): Call<String>
 
     @GET("/review/{menuId}") //메뉴 리뷰 정보 조회(평점 등등)
