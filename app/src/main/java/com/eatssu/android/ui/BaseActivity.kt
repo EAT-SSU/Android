@@ -1,5 +1,5 @@
 package com.eatssu.android.ui
-
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityBaseBinding
+import com.eatssu.android.ui.mypage.MyPageActivity
 
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -33,7 +34,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        //menuInflater.inflate(R.menu.menu_main, menu)
+//        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
@@ -46,6 +47,11 @@ abstract class BaseActivity : AppCompatActivity() {
                 onBackPressed()
                 true
             }
+//            R.id.action_setting ->{
+//                val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
+//                startActivity(intent)  // 화면 전환을 시켜줌
+//                true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }
