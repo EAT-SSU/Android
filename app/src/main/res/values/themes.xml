@@ -10,11 +10,38 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+<!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
         <item name="android:windowContentOverlay">@null</item>
 
+        <item name="android:statusBarColor" tools:targetApi="21">@color/white</item> <!--Status Bar의 배경색-->
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
+
+        <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
+        <item name="actionMenuTextColor">@color/main</item> <!--액션 메뉴의 텍스트 색상-->
+        <item name="colorControlNormal">@color/main</item> <!--홈/뒤로가기 버튼의 색상-->
+
     </style>
+    <!--Toolbar 스타일-->
+    <style name="ToolbarStyle.Dark" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/white</item> <!-- Toolbar의 배경색-->
+        <item name="titleTextAppearance">@style/ToolbarTitleStyle.Dark</item> <!-- Toolbar의 타이틀 텍스트-->
+        <item name="subtitleTextAppearance">@style/ToolbarSubtitleStyle.Dark</item> <!-- Toolbar의 서브타이틀 텍스트-->
+    </style>
+
+    <!-- Toolbar의 타이틀 텍스트-->
+    <style name="ToolbarTitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/main</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+        <item name="android:textSize">15dp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
+    </style>
+
+    <!-- Toolbar의 서브타이틀 텍스트-->
+    <style name="ToolbarSubtitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/main</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
+        <item name="android:textSize">12dp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
+    </style>
+
+
 
     <!-- 각 컴포넌트 기본 폰트 설정-->
     <style name="TextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">

@@ -2,6 +2,7 @@ package com.eatssu.android
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,9 +11,15 @@ import android.os.Bundle
 import android.util.Base64.NO_WRAP
 import android.util.Base64.encodeToString
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.eatssu.android.ui.BaseActivity
+import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
@@ -25,14 +32,20 @@ import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var viewBinding : ActivityMainBinding
+class MainActivity : BaseActivity() {
+    private lateinit var binding : ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(viewBinding.root)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        //setContentView(viewBinding.root)
+
+        val inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
+        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
+
+        supportActionBar?.title = "EAT-SSU"
 
         /*supportFragmentManager
             .beginTransaction()
@@ -41,12 +54,12 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .add(viewBinding.frame.id, CalendarFragment())
+            .add(binding.frame.id, CalendarFragment())
             .commitAllowingStateLoss()
 
         // 1) ViewPager2 참조
-        val viewPager: ViewPager2 = viewBinding.vpMain
-        val tabLayout: TabLayout = viewBinding.tabLayout
+        val viewPager: ViewPager2 = binding.vpMain
+        val tabLayout: TabLayout = binding.tabLayout
 
         // 2) FragmentStateAdapter 생성 : Fragment 여러개를 ViewPager2에 연결해주는 역할
         val viewpagerFragmentAdapter = ViewPager2Adapter(this)
@@ -87,6 +100,29 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }*/
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+//            android.R.id.home -> {
+//                onBackPressed()
+//                true
+//            }
+            R.id.action_setting ->{
+                val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
+                startActivity(intent)  // 화면 전환을 시켜줌
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.activity_main
     }
 }
 

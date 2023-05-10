@@ -33,7 +33,8 @@ class LoginActivity : AppCompatActivity() {
 
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserId(this).isBlank()
-            || MySharedPreferences.getUserPw(this).isBlank()) {
+            || MySharedPreferences.getUserPw(this).isBlank()
+        ) {
         } else { // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
             Toast.makeText(
                 this,
@@ -112,13 +113,14 @@ class LoginActivity : AppCompatActivity() {
                     response: Response<TokenResponse>
                 ) {
                     if (response.isSuccessful) {
-                        if(response.code()==200){
+                        if (response.code() == 200) {
                             Log.d("post", "onResponse 성공: " + response.body().toString());
                             MySharedPreferences.setUserId(this@LoginActivity, email)
                             MySharedPreferences.setUserPw(this@LoginActivity, pw)//자동로그인 구현
 
                             App.token_prefs.accessToken = response.body()!!.accessToken
-                            App.token_prefs.refreshToken = response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+                            App.token_prefs.refreshToken =
+                                response.body()!!.refreshToken//헤더에 붙일 토큰 저장
 
                             Toast.makeText(
                                 this@LoginActivity,
@@ -127,9 +129,13 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             startActivity(intent)  // 화면 전환을 시켜줌
                             finish()
-                        }else{
+                        } else {
                             Log.d("post", "onResponse 오류: " + response.body().toString());
-                            Toast.makeText(this@LoginActivity, "error: "+response.message(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "error: " + response.message(),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }

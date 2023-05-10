@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.ItemMyReviewBinding
 
-
-class MyListAdapter(private val dataList: ArrayList<review>): RecyclerView.Adapter<MyListAdapter.ViewHolder>() {
+/*
+class MyReviewAdapter(private val dataList: ArrayList<review>): RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ItemMyReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -19,9 +19,9 @@ class MyListAdapter(private val dataList: ArrayList<review>): RecyclerView.Adapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewBinding =
+        val binding =
             ItemMyReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(viewBinding)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -30,4 +30,4 @@ class MyListAdapter(private val dataList: ArrayList<review>): RecyclerView.Adapt
     }
 
     override fun getItemCount(): Int = dataList.size
-}
+}*/
