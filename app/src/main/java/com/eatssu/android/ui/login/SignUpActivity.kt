@@ -103,7 +103,7 @@ class SignUpActivity : BaseActivity() {
         binding.btnEmailExist.setOnClickListener {
 
             if (emailCheck()) {
-                val userService = RetrofitImpl.getApiClient().create(UserService::class.java)
+                val userService = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
                 userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
                     override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                         if (response.isSuccessful) {
@@ -135,7 +135,7 @@ class SignUpActivity : BaseActivity() {
             if (pwDoubleCheck() && pwCheck()) {
                 val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-                val userService = RetrofitImpl.getApiClient().create(UserService::class.java)
+                val userService = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
                 userService.signUp(SignUpRequest(email, name, pw))
                     .enqueue(object : Callback<TokenResponse> {
                         override fun onResponse(

@@ -2,16 +2,30 @@ package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponse
-import com.eatssu.android.data.model.request.GetReviewDetailRequest
+import com.eatssu.android.data.model.request.WriteReviewDetailRequest
 import com.eatssu.android.data.model.request.ModifyReviewRequest
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
 
 interface ReviewService {
 
-    @POST("review/{menuId}/detail")//리뷰 작성
-    fun writeReview(@Path("menuId") menuId: Int): Call<GetReviewDetailRequest>
+//    @Multipart
+//    @POST("review/{menuId}/detail")//리뷰 작성
+//    fun writeReview(@Path("menuId") menuId: Int,
+//                    @Body request: WriteReviewDetailRequest
+//    ): Call<String>
+
+
+    //by GPT
+    @Multipart
+    @POST("review/{menuId}/detail")
+    fun writeReview(
+        @Path("menuId") menuId: Int,
+        @Part image: MultipartBody.Part?,
+        @Part("reviewCreate") reviewCreate: WriteReviewDetailRequest
+    ): Call<String>
 
     @DELETE("/review/{menuId}/detail/{reviewId}") //리뷰 삭제
     fun delReview(@Path("menuId") menuId: Int, @Path("reviewId") reviewId: Int): Call<String>

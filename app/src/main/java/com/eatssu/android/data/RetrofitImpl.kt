@@ -14,8 +14,35 @@ import okhttp3.Headers
 object RetrofitImpl {
     private const val BASE_URL = BuildConfig.BASE_URL
 
-    private fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
+    //토큰 없음
+    fun getApiClientWithOutToken(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(provideOkHttpClient(AppInterceptorWithOutToken()))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    private fun provideOkHttpClient(interceptor: AppInterceptorWithOutToken): OkHttpClient
+            = OkHttpClient.Builder().run {
+        addInterceptor(interceptor)
+        build()
+    }
+
+    class AppInterceptorWithOutToken : Interceptor {
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
+            val newRequest = request().newBuilder()
+                .addHeader("accept", "application/hal+json")
+                .addHeader("Content-Type", "application/json")
+                .build()
+            proceed(newRequest)
+        }
+    }
+
+
+    //토큰 있음
     fun getApiClient(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -24,22 +51,21 @@ object RetrofitImpl {
             .build()
     }
 
+    private fun provideOkHttpClient(interceptor: AppInterceptor): OkHttpClient
+            = OkHttpClient.Builder().run {
+        addInterceptor(interceptor)
+        build()
+    }
+
     class AppInterceptor : Interceptor {
 
         @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
-            val headers = Headers.Builder()
-                .add("accept", "application/hal+json")
-                .apply {
-                    if (App.token_prefs.accessToken != null) {
-                        add("Authorization", "Bearer ${App.token_prefs.accessToken.toString()}")
-                    }
-                }
-                .add("Content-Type", "application/json")
-                .build()
+        override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
 
             val newRequest = request().newBuilder()
-                .headers(headers)
+                .addHeader("accept", "application/hal+json")
+                .addHeader("Authorization","Bearer ${App.token_prefs.accessToken.toString()}")
+                .addHeader("Content-Type", "application/json")
                 .build()
             proceed(newRequest)
         }
