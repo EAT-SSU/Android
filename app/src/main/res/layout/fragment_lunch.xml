@@ -572,8 +572,8 @@
 
                     </View>
 
-                    <TextView
-                        android:id="@+id/rv_breakfast_food"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_lunch_food"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="학식은 아침이 제공되지 않습니다!"
@@ -581,7 +581,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="parent">
 
-                    </TextView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
                 <LinearLayout

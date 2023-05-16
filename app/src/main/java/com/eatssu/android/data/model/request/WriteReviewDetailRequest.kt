@@ -1,6 +1,6 @@
 package com.eatssu.android.data.model.request
 
-data class GetReviewDetailRequest(
+data class WriteReviewDetailRequest(
     val multipartFileList: List<String>,
     val reviewCreate: ReviewCreate
 ){

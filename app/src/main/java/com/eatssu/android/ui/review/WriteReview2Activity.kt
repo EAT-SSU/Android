@@ -16,10 +16,22 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.eatssu.android.R
+import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReview2Binding
+import com.google.gson.Gson
+import okhttp3.MultipartBody
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 class WriteReview2Activity : AppCompatActivity() {
     private lateinit var binding: ActivityWriteReview2Binding
@@ -49,11 +61,58 @@ class WriteReview2Activity : AppCompatActivity() {
             openGallery()
         }
 
-        binding.btnNextReview2.setOnClickListener(){
-            val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
+        // 리뷰 데이터 생성
+        val reviewCreate = Review(
+            grade = 4,
+            reviewTags = listOf("GOOD", "BAD"),
+            content = "맛있어용"
+        )
+
+//
+//
+//        // 리뷰 데이터를 RequestBody로 변환
+//        val reviewRequestBody = Gson().toJson(reviewCreate).toRequestBody("application/json".toMediaTypeOrNull())
+//
+//
+//        // 이미지 파일을 MultipartBody.Part로 변환
+//        val imagePart = if (imageUri != null) {
+//            val imageFile = File(imageUri.path)
+//            val imageRequestBody = imageFile.asRequestBody("image/*".toMediaType())
+//            MultipartBody.Part.createFormData("multipartFileList", imageFile.name, imageRequestBody)
+//        } else {
+//            null
+//        }
+//
+//        // menuId를 RequestBody로 변환
+//        val menuIdRequestBody = menuId.toString().toRequestBody("text/plain".toMediaType())
+//
+//
+//        binding.btnNextReview2.setOnClickListener(){
+//            val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
+//
+//            val reviewService = RetrofitImpl.getApiClient().create(ReviewService::class.java)
+//            reviewService.writeReview(imagePart, reviewRequestBody, menuIdRequestBody).enqueue(object : Callback<BaseResponse> {
+//                override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+//                    if(response.isSuccessful){
+//                        // 정상적으로 통신이 성공된 경우
+//                        Log.d("post", "onResponse 성공: " + response.body().toString());
+//                        Toast.makeText(this@WriteReview2Activity, "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT).show()
+//                    }else{
+//                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+//                        Log.d("post", "onResponse 실패")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+//                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+//                    Log.d("post", "onFailure 에러: " + t.message.toString());
+//                }
+//            })
+
+
             startActivity(intent)  // 화면 전환을 시켜줌
             finish()
-        }
+//        }
     }
 
 

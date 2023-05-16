@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MenuService {
     @GET("menu/{date}/morning") //특정 식당의 아침메뉴 조회
@@ -45,6 +46,6 @@ interface MenuService {
         @Body request: ModifyMenuRequest
     ): Call<String>
 
-    @GET("menu") //고정메뉴 파는거 조회f
-    fun getFixedMenu(@Path("restaurant") restaurant: String): Call<GetMenuInfoListResponse>
+    @GET("menu") //고정메뉴 파는거 조회
+    fun getFixedMenu(@Query("restaurant") restaurant: String): Call<GetMenuInfoListResponse>
 }

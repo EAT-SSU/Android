@@ -32,7 +32,7 @@ import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : BaseActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -40,11 +40,12 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         //setContentView(viewBinding.root)
+//
+//        val inflater = LayoutInflater.from(this)
+//        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
+//        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
-        val inflater = LayoutInflater.from(this)
-        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
-        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
-
+        setContentView(binding.root)
         supportActionBar?.title = "EAT-SSU"
 
         /*supportFragmentManager
@@ -120,9 +121,9 @@ class MainActivity : BaseActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_main
-    }
+//
+//    override fun getLayoutResourceId(): Int {
+//        return R.layout.activity_main
+//    }
 }
 
