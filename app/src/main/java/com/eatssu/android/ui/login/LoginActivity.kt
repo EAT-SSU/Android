@@ -106,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
 
-            val service = RetrofitImpl.getApiClient().create(UserService::class.java)
+            val service = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
             service.logIn(LoginRequest(email, pw)).enqueue(object : Callback<TokenResponse> {
                 override fun onResponse(
                     call: Call<TokenResponse>,
