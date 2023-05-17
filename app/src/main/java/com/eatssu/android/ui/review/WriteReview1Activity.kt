@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.eatssu.android.App
 import com.eatssu.android.R
@@ -24,14 +25,20 @@ class WriteReview1Activity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        supportActionBar?.title = "리뷰남기기"
+        binding.included.actionBar.text = "리뷰남기기"
 
+        var MENU_ID: Int = intent.getIntExtra("menuId", -1)
+        var menu: String? = intent.getStringExtra("menu")
 
-        binding.btnNextReview1.setOnClickListener(){
-            val intent = Intent(this, WriteReview2Activity::class.java)  // 인텐트를 생성해줌,
-            Log.d("intent", "click");
-            intent.putExtra("rating",binding.rbReview1.rating)
-            startActivity(intent)  // 화면 전환을 시켜줌
+        binding.menu.text=menu.toString()
+        binding.btnNextReview1.setOnClickListener() {
+            //0점 처리
+                val intent = Intent(this, WriteReview2Activity::class.java)  // 인텐트를 생성해줌,
+                Log.d("intent", "click");
+                intent.putExtra("rating", binding.rbReview1.rating)
+                intent.getIntExtra("menuId", MENU_ID)
+                startActivity(intent)  // 화면 전환을 시켜줌
+
         }
     }
 //

@@ -10,6 +10,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
@@ -49,7 +51,31 @@ class WriteReview2Activity : AppCompatActivity() {
         binding = ActivityWriteReview2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.included.actionBar.text= "리뷰남기기"
+
+        var MENU_ID:Int=intent.getIntExtra("menuId",-1)
+        var menu: String? = intent.getStringExtra("menu")
+        var comment : String
+
+        //여기서는 레이팅 바꿀 수 있나?
         binding.rbReview2.rating=intent.getFloatExtra("rating", 0F)
+        binding.menu.text=menu.toString()
+
+
+        //텍스트 리뷰
+        binding.etReview2Comment.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            //값 변경 시 실행되는 함수
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //입력값 담기
+                comment = binding.etReview2Comment.text.toString()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+
+        })
 
 
         binding.ibCamera.setOnClickListener(){
@@ -107,11 +133,11 @@ class WriteReview2Activity : AppCompatActivity() {
 //                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
 //                    Log.d("post", "onFailure 에러: " + t.message.toString());
 //                }
-//            })
+//            })ㅁㄴㅇㄹ
 
 
-            startActivity(intent)  // 화면 전환을 시켜줌
-            finish()
+//            startActivity(intent)  // 화면 전환을 시켜줌
+//            finish()
 //        }
     }
 

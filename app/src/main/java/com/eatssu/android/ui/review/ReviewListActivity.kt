@@ -29,14 +29,15 @@ import retrofit2.Response
 
 class ReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewListBinding
+    lateinit var menu :String
 
-//    private val menuId =intent.getIntExtra("menuId",35)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityReviewListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.included.actionBar.text="리뷰"
 //        binding = ActivityReviewListBinding.inflate(layoutInflater, null, true)
 
         //val inflater = LayoutInflater.from(this)
@@ -53,6 +54,8 @@ class ReviewListActivity : AppCompatActivity() {
 
         binding.btnNextReview.setOnClickListener() {
             val intent = Intent(this, WriteReview1Activity::class.java)  // 인텐트를 생성해줌,
+            intent.putExtra("menuId",MENU_ID)
+            intent.putExtra("menu",menu)
             startActivity(intent)  // 화면 전환을 시켜줌
         }
     }
@@ -80,12 +83,23 @@ class ReviewListActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
                     Log.d("post", "onResponse 성공: " + response.body().toString());
-                    //Toast.makeText(this@ProfileActivity, "비밀번호 찾기 성공!", Toast.LENGTH_SHORT).show()
 
+                    menu = response.body()?.menuName.toString()
                     binding.tvMenu.text = response.body()?.menuName.toString()
                     binding.tvRate.text = response.body()?.grade.toString()
                     binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
 
+                    binding.progressBar1.max = response.body()?.totalReviewCount!!
+                    binding.progressBar2.max = response.body()?.totalReviewCount!!
+                    binding.progressBar3.max = response.body()?.totalReviewCount!!
+                    binding.progressBar4.max = response.body()?.totalReviewCount!!
+                    binding.progressBar5.max = response.body()?.totalReviewCount!!
+
+                    binding.progressBar1.progress= response.body()?.reviewGradeCnt?.oneCnt!!
+                    binding.progressBar2.progress= response.body()?.reviewGradeCnt?.twoCnt!!
+                    binding.progressBar3.progress= response.body()?.reviewGradeCnt?.threeCnt!!
+                    binding.progressBar4.progress= response.body()?.reviewGradeCnt?.fourCnt!!
+                    binding.progressBar5.progress= response.body()?.reviewGradeCnt?.fiveCnt!!
                 } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                     Log.d("post", "onResponse 실패")

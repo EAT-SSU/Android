@@ -7,6 +7,14 @@
     tools:context=".ui.review.WriteReview1Activity">
 
 
+
+    <include
+        android:id="@+id/included"
+        layout="@layout/include_actionbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!--        <TextView-->
     <!--            android:id="@+id/tv_eat_ssu"-->
     <!--            android:layout_width="match_parent"-->
@@ -26,11 +34,11 @@
         android:id="@+id/tv_review1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="식사는 맛있게 하셨나요?"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/included" />
 
     <LinearLayout
         android:id="@+id/tv_review1_menu"
