@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.RestaurantType
 import com.eatssu.android.data.RetrofitImpl
@@ -25,7 +27,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ReviewListActivity : BaseActivity() {
+class ReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewListBinding
 
 //    private val menuId =intent.getIntExtra("menuId",35)
@@ -34,15 +36,20 @@ class ReviewListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityReviewListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 //        binding = ActivityReviewListBinding.inflate(layoutInflater, null, true)
 
-        val inflater = LayoutInflater.from(this)
-        inflater.inflate(R.layout.activity_review_list, findViewById(R.id.frame_layout), true)
+        //val inflater = LayoutInflater.from(this)
+        //inflater(binding.root, findViewById(R.id.frame_layout), true)
 
         supportActionBar?.title = "리뷰"
 
-        lodeReviewInfo()
-        lodeData()
+        var MENU_ID:Int=intent.getIntExtra("menuId",-1)
+        Log.d("post",MENU_ID.toString())
+
+
+        lodeReviewInfo(MENU_ID)
+        lodeData(MENU_ID)
 
         binding.btnNextReview.setOnClickListener() {
             val intent = Intent(this, WriteReview1Activity::class.java)  // 인텐트를 생성해줌,
@@ -62,9 +69,9 @@ class ReviewListActivity : BaseActivity() {
 
     }
 
-    private fun lodeReviewInfo() {
+    private fun lodeReviewInfo(id:Int) {
         val reviewService = RetrofitImpl.getApiClient().create(ReviewService::class.java)
-        reviewService.reviewInfo(menuId = 35).enqueue(object :
+        reviewService.reviewInfo(menuId = id).enqueue(object :
             Callback<GetReviewInfoResponse> {
             override fun onResponse(
                 call: Call<GetReviewInfoResponse>,
@@ -92,9 +99,9 @@ class ReviewListActivity : BaseActivity() {
         })
     }
 
-    private fun lodeData() {
+    private fun lodeData(id:Int) {
         val reviewService = RetrofitImpl.getApiClient().create(ReviewService::class.java)
-        reviewService.getReview(menuId = 35).enqueue(object :
+        reviewService.getReview(id).enqueue(object :
             Callback<GetReviewListResponse> {
             override fun onResponse(
                 call: Call<GetReviewListResponse>,
@@ -122,7 +129,5 @@ class ReviewListActivity : BaseActivity() {
         })
     }
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_review_list
-    }
+
 }

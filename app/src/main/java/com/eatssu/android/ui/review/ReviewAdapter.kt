@@ -12,6 +12,8 @@ import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.main.MenuAdapter
+import java.util.Collections.min
+import kotlin.math.min
 
 
 class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):
@@ -25,22 +27,13 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):
             binding.tvReviewItemComment.text =dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
 
-            if(dataList[position].tagList.size==0){
-
+            for (i in 0 until min(dataList[position].tagList.size, 3)) {
+                when (i) {
+                    0 -> binding.tvReviewItemTag1.text = dataList[position].tagList[i]
+                    1 -> binding.tvReviewItemTag2.text = dataList[position].tagList[i]
+                    2 -> binding.tvReviewItemTag3.text = dataList[position].tagList[i]
+                }
             }
-            else if(dataList[position].tagList.size==1){
-                binding.tvReviewItemTag1.text=dataList[position].tagList[1]
-            }
-            else if(dataList[position].tagList.size==2){
-                binding.tvReviewItemTag1.text=dataList[position].tagList[1]
-                binding.tvReviewItemTag2.text=dataList[position].tagList[2]
-            }
-            else if(dataList[position].tagList.size==3){
-                binding.tvReviewItemTag1.text=dataList[position].tagList[1]
-                binding.tvReviewItemTag2.text=dataList[position].tagList[2]
-                binding.tvReviewItemTag3.text=dataList[position].tagList[3]
-            }
-
 
         //사진 바인딩
 //            if (dataList[position].imgUrlList == "trainerProfile"){

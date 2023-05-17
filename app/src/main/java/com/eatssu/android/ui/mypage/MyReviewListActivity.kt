@@ -11,14 +11,14 @@ import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.*
 import com.eatssu.android.ui.BaseActivity
 
-/*
+
 class MyReviewListActivity : BaseActivity() {
     private lateinit var binding: ActivityMyReviewListBinding
 
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_my_review_list
     }
-
+/*
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,5 +64,5 @@ class MyReviewListActivity : BaseActivity() {
 //        binding.rvReview.setHasFixedSize(true)
 //        // 1. 정의되어 있는 구분선
 //        binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-//    }
-}*/
+//    }*/
+}

@@ -207,7 +207,7 @@
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="${KAKAO_APP_KEY}" />
+            android:value="${APP_KEY}" />
 
         <activity
             android:name=".InfoActivity_Haksik"
