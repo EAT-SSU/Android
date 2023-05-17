@@ -1,5 +1,6 @@
-package com.eatssu.android
+package com.eatssu.android.ui.main
 
+import com.eatssu.android.R
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,8 @@ import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.BaseActivity
+import com.eatssu.android.ui.calendar.CalendarFragment
+import com.eatssu.android.ui.main.ViewPager2Adapter
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator

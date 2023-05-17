@@ -7,7 +7,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.eatssu.android.MainActivity
+import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl

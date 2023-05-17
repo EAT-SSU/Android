@@ -6,14 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
-    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!--<LinearLayout
+        <LinearLayout
             android:id="@+id/week_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -22,24 +20,40 @@
                 android:id="@+id/frame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/week_calendar"
+                app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 ></FrameLayout>
 
-        </LinearLayout>-->
+        </LinearLayout>
 
         <!-- TabLayou 을 배치한다. -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/week_calendar"/>
 
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tabLayout">
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false"
                 android:layout_gravity="top"/>
+        </androidx.core.widget.NestedScrollView>
+
 
         <!--<FrameLayout
             android:id="@+id/container_fragment"
@@ -47,7 +61,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />-->
-
 
     </LinearLayout>
 
