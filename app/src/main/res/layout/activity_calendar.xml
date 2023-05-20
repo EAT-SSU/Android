@@ -8,7 +8,7 @@
     tools:context=".ui.calendar.CalendarActivity"
     tools:ignore="MissingClass">
 
-    <TextView
+    <!--TextView
         android:id="@+id/tv_eat_ssu"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -20,7 +20,7 @@
         android:background="@color/main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
@@ -28,11 +28,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu"
         android:layout_centerVertical="true"
         app:mcv_selectionColor="@color/gray_background"
         app:mcv_weekDayTextAppearance="@style/TextStyleSemiBold15"
-        app:mcv_showOtherDates="all" />
+        app:mcv_showOtherDates="all"
+        tools:ignore="MissingConstraints" />
 
 
 

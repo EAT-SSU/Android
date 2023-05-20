@@ -19,8 +19,9 @@ import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.ui.BaseActivity
 import com.eatssu.android.ui.calendar.CalendarFragment
+import com.eatssu.android.ui.BaseActivity
+import com.eatssu.android.ui.calendar.CalendarActivity
 import com.eatssu.android.ui.main.ViewPager2Adapter
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
@@ -33,6 +34,8 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -44,9 +47,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         //setContentView(viewBinding.root)
 //
-//        val inflater = LayoutInflater.from(this)
-//        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
-//        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
+        /*val inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
+        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)*/
 
         setContentView(binding.root)
         supportActionBar?.title = "EAT-SSU"
@@ -56,10 +59,10 @@ class MainActivity : AppCompatActivity() {
             .replace(viewBinding.containerFragment.id,CalendarFragment())
             .commitAllowingStateLoss()*/
 
-        supportFragmentManager
+        /*upportFragmentManager
             .beginTransaction()
             .add(binding.frame.id, CalendarFragment())
-            .commitAllowingStateLoss()
+            .commitAllowingStateLoss()*/
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -78,6 +81,28 @@ class MainActivity : AppCompatActivity() {
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
         TabLayoutMediator(tabLayout, viewPager, {tab, position -> tab.text = tabTitles[position]}).attach()
+
+        binding.btnSetting.setOnClickListener() {
+            val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
+            startActivity(intent)  // 화면 전환을 시켜줌
+        }
+        val monthFormat = DateTimeFormatter.ofPattern("yyyy . MM . dd")
+            .withLocale(Locale.forLanguageTag("ko"))
+        val localDate = LocalDateTime.now().format(monthFormat)
+        binding.textYearMonth.text = localDate
+
+
+        binding.textYearMonth.setOnClickListener {
+            val intent = Intent(this, CalendarActivity::class.java);
+            startActivity(intent);
+            onStop()
+
+        }
+
+        //text 키값으로 데이터를 받는다. String을 받아야 하므로 getStringExtra()를 사용함
+        /*val selectdate = this.arguments?.getString("changedate")
+        Log.d("selectdate", selectdate.toString())*/
+
 
 
 
@@ -110,6 +135,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
 //            android.R.id.home -> {
@@ -128,5 +155,25 @@ class MainActivity : AppCompatActivity() {
 //    override fun getLayoutResourceId(): Int {
 //        return R.layout.activity_main
 //    }
+
+    override fun onRestart() {
+
+        val intentdate = intent.getStringExtra("intentdate")
+        if (intentdate != null) {
+            Log.d("intentdate", intentdate)
+        }
+
+        binding.textYearMonth.text = intentdate
+
+        binding.btnCalendarLeft.setOnClickListener {
+            binding.textYearMonth.text = null
+            binding.textYearMonth.text = intentdate
+            /*binding.btnCalendarRight.setOnClickListener{
+            binding.textYearMonth.text = null
+            binding.textYearMonth.text = LocalDateTime.now().plusDays(1).format(monthFormat).toString()
+        }*/
+        }
+        super.onRestart()
+    }
 }
 

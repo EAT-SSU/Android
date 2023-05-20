@@ -1,14 +1,18 @@
 package com.eatssu.android.ui.calendar
-
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.Window
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import com.eatssu.android.databinding.ActivityCalendarBinding
+import com.eatssu.android.ui.main.MainActivity
 import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
@@ -17,6 +21,12 @@ import java.util.*
 
 class CalendarActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCalendarBinding
+    lateinit var calendar: MaterialCalendarView
+
+    val today = CalendarDay.today()
+
+    lateinit var selectedDate: CalendarDay
+    lateinit var changedate : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +34,8 @@ class CalendarActivity : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(viewBinding.root)
 
-        var calendar: MaterialCalendarView
         calendar = viewBinding.calendarView
-        val today = CalendarDay.today()
         calendar.selectedDate = today
-
         val disabledDates = hashSetOf<CalendarDay>()
         disabledDates.add(CalendarDay.from(2022, 7, 12))
 
@@ -42,8 +49,34 @@ class CalendarActivity : AppCompatActivity() {
             addDecorator(TodayDecorator())
 
         }
-
         DateFormatTitleFormatter()
+        calendar.setOnDateChangedListener(object: OnDateSelectedListener{
+            override fun onDateSelected(
+                widget: MaterialCalendarView,
+                date: CalendarDay,
+                selected: Boolean
+            ) {
+                selectedDate = calendar.selectedDate
+                changedate = selectedDate.toString()
+                Log.d("changedate", changedate)
+                //인텐트 선언 및 정의
+                //인텐트 선언 및 정의
+
+                val intent = Intent(this@CalendarActivity, MainActivity::class.java)
+                intent.putExtra("intentdate", changedate)
+                startActivity(intent)
+
+                /*val bundle = Bundle()
+                bundle.putString("changedate", changedate)
+                Log.d("changedate", changedate)
+                Log.d("bundle", bundle.toString())
+                val calendarfragment = CalendarFragment()
+                calendarfragment.arguments = bundle*/
+
+                finish()
+
+            }
+        })
     }
 
     inner class MyTitleFormatter : TitleFormatter {
@@ -86,4 +119,6 @@ class CalendarActivity : AppCompatActivity() {
             view?.addSpan(ForegroundColorSpan(Color.parseColor("#DF5758")))
         }
     }
+
+
 }

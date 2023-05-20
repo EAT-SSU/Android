@@ -6,24 +6,101 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
+    <ImageButton
+        android:id="@+id/tv_eat_ssu"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:src="@drawable/logo"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="80dp"
+        android:gravity="right"
+        tools:ignore="MissingConstraints">
+        <ImageButton
+            android:id="@+id/btn_setting"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:background = "@android:color/transparent"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_setting"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:id="@+id/week_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <FrameLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/btn_calendar_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow"
+                    android:backgroundTint="@color/white"
+                    android:gravity="right">
+                </ImageButton>
+
+                <TextView
+                    android:id="@+id/text_year_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="2021 - 12"
+                    android:textSize="20dp"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/font_gray_2"/>
+
+                <ImageButton
+                    android:id="@+id/btn_calendar_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right_arrow"
+                    android:backgroundTint="@color/white"
+                    android:gravity="left">
+                </ImageButton>
+
+
+            </LinearLayout>
+
+            <!--<FrameLayout
                 android:id="@+id/frame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/tabLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                ></FrameLayout>
+                ></FrameLayout>-->
 
         </LinearLayout>
 

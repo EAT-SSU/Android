@@ -15,12 +15,13 @@ import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentBreakfastBinding
 import com.eatssu.android.databinding.FragmentLunchBinding
+import com.eatssu.android.ui.infopage.*
 import com.eatssu.android.ui.main.MenuAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LunchFragment : Fragment() {
+class DinnerFragment : Fragment() {
     private var _binding: FragmentLunchBinding? = null
     private val binding get() = _binding!!
 
