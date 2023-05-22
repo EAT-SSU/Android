@@ -1,21 +1,12 @@
-package com.eatssu.android.ui.menuadapter
+package com.eatssu.android.ui.menuAdapter
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.R
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
-import com.eatssu.android.data.model.response.MenuBaseResponse
-import com.eatssu.android.databinding.ItemDodamBinding
-import com.eatssu.android.databinding.ItemFoodBinding
-import com.eatssu.android.databinding.ItemGisikBinding
-import com.eatssu.android.databinding.ItemHaksikBinding
 import com.eatssu.android.databinding.ItemHaksikLunchBinding
-import com.eatssu.android.databinding.ItemSnackBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 

@@ -1,4 +1,4 @@
-package com.eatssu.android
+package com.eatssu.android.data.enums
 
 enum class RestaurantType {
     FOOD_COURT,

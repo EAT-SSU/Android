@@ -1,23 +1,19 @@
-package com.eatssu.android.ui.menuadapter
+package com.eatssu.android.ui.menuAdapter
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.R
-import com.eatssu.android.data.model.Snack
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
-import com.eatssu.android.databinding.ItemMenuBinding
-import com.eatssu.android.databinding.ItemSnackBinding
+import com.eatssu.android.databinding.ItemKitchenBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
-class SnackAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
-    RecyclerView.Adapter<SnackAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemSnackBinding) :
+class KitchenAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
+    RecyclerView.Adapter<KitchenAdapter.ViewHolder>() {
+
+    inner class ViewHolder(private val binding: ItemKitchenBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
@@ -29,7 +25,7 @@ class SnackAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemSnackBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemKitchenBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

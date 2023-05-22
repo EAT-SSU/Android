@@ -1,9 +1,6 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.Haksik
-import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.response.MenuBaseResponse
-import com.eatssu.android.data.model.response.TokenResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -22,8 +19,4 @@ interface RetrofitInterface {
     fun getMenuDinner(@Query("restaurant") restaurant : String,
                        @Path("date") date: String)
             : Call<MenuBaseResponse>
-
-
-
-
 }
