@@ -1,17 +1,10 @@
 package com.eatssu.android.ui.review
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.data.model.review
-import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.databinding.ItemReviewBinding
-import com.eatssu.android.ui.main.MenuAdapter
 
 
 class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):

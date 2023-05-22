@@ -55,4 +55,9 @@
     <string name="today_menu">오늘의 메뉴</string>
     <string name="food_court">푸드코트</string>
     <string name="the_kitchen">THE KITCHEN</string>
+    <string name="student_cafeteria">학생식당</string>
+    <string name="price">price</string>
+    <string name="rate">rate</string>
+    <string name="dodam">도담식당</string>
+    <string name="residence">기숙사 식당</string>
 </resources>

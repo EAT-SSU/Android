@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.review
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,18 +8,12 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.R
-import com.eatssu.android.RestaurantType
 import com.eatssu.android.data.RetrofitImpl
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.data.model.review
-import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.databinding.ActivityReviewListBinding
 import com.eatssu.android.ui.BaseActivity
-import com.eatssu.android.ui.main.MenuAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
