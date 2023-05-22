@@ -20,7 +20,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -52,7 +52,7 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="8dp"
                             android:layout_weight="5"
-                            android:text="학생식당"
+                            android:text="@string/student_cafeteria"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/black"
                             android:textSize="20dp"
@@ -81,7 +81,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginTop="8dp"
                                 android:layout_weight="6"
-                                android:text="오늘의 메뉴"
+                                android:text="@string/today_menu"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                                 android:textColor="@color/black"
                                 android:textSize="14dp"
@@ -95,7 +95,7 @@
                                 android:layout_marginTop="7dp"
                                 android:layout_weight="2"
                                 android:gravity="center"
-                                android:text="price"
+                                android:text="@string/price"
                                 android:textColor="@color/black"
                                 android:textSize="15dp" />
 
@@ -107,7 +107,7 @@
                                 android:layout_marginTop="7dp"
                                 android:layout_weight="2"
                                 android:gravity="center"
-                                android:text="rate"
+                                android:text="@string/rate"
                                 android:textColor="@color/black"
                                 android:textSize="15dp" />
                         </LinearLayout>
@@ -162,7 +162,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:layout_weight="5"
-                        android:text="도담식당"
+                        android:text="@string/dodam"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/black"
                         android:textSize="20dp"
@@ -191,7 +191,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginTop="8dp"
                             android:layout_weight="6"
-                            android:text="오늘의 메뉴"
+                            android:text="@string/today_menu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/black"
                             android:textSize="14dp"
@@ -205,7 +205,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="price"
+                            android:text="@string/price"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
 
@@ -217,7 +217,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="rate"
+                            android:text="@string/rate"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -268,7 +268,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:layout_weight="5"
-                        android:text="기숙사 식당"
+                        android:text="@string/residence"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/black"
                         android:textSize="20dp"
@@ -311,7 +311,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="price"
+                            android:text="@string/price"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
 
@@ -323,7 +323,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="rate"
+                            android:text="@string/rate"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -359,7 +359,6 @@
                         android:id="@+id/btn_kitchen_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:layout_marginTop="9dp"
                         android:background="#00000000"
                         android:gravity="left"
@@ -416,7 +415,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="price"
+                            android:text="@string/price"
                             android:textColor="@color/black"
                             android:textSize="15sp" />
 
@@ -428,7 +427,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="rate"
+                            android:text="@string/rate"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -517,7 +516,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="price"
+                            android:text="@string/price"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
 
@@ -529,7 +528,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="rate"
+                            android:text="@string/rate"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -606,7 +605,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginTop="8dp"
                             android:layout_weight="6"
-                            android:text="오늘의 메뉴"
+                            android:text="@string/today_menu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/black"
                             android:textSize="14dp"
@@ -620,7 +619,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="price"
+                            android:text="@string/price"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
 
@@ -632,7 +631,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="rate"
+                            android:text="@string/rate"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
                     </LinearLayout>
