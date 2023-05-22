@@ -1,35 +1,52 @@
 package com.eatssu.android.ui.menuadapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
-import com.eatssu.android.data.model.Dodam
+import com.eatssu.android.data.model.response.GetMenuInfoListResponse
+import com.eatssu.android.data.model.response.MenuBaseResponse
+import com.eatssu.android.databinding.ItemDodamBinding
+import com.eatssu.android.databinding.ItemFoodBinding
+import com.eatssu.android.databinding.ItemSnackBinding
+import com.eatssu.android.ui.review.ReviewListActivity
 
-class DodamAdapter(val itemList: ArrayList<Dodam>) :
-    RecyclerView.Adapter<DodamAdapter.DodamViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DodamViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_dodam, parent, false)
-        return DodamViewHolder(view)
+class DodamAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>):
+    RecyclerView.Adapter<DodamAdapter.ViewHolder>() {
+
+    inner class ViewHolder(private val binding: ItemDodamBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(position: Int) {
+            binding.tvMenu.text = dataList[position].name
+            binding.tvPrice.text = dataList[position].price.toString()
+            binding.tvRate.text = dataList[position].grade.toString()
+        }
     }
 
-    override fun onBindViewHolder(holder: DodamViewHolder, position: Int) {
-        holder.item_menu.text = itemList[position].menu
-        holder.item_price.text = itemList[position].price
-        holder.item_rate.text = itemList[position].rate.toString()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding =
+            ItemDodamBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return itemList.count()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(position)
+
+        //서버 연결
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+            intent.putExtra(
+                "menuId", dataList[position].menuId
+            )
+            ContextCompat.startActivity(holder.itemView.context, intent, null)
+        }
     }
 
-
-    inner class DodamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val item_menu = itemView.findViewById<TextView>(R.id.item_edt_contents)
-        val item_price = itemView.findViewById<TextView>(R.id.item_edt_price)
-        val item_rate = itemView.findViewById<TextView>(R.id.item_edt_rate)
-    }
+    override fun getItemCount(): Int = dataList.size
 }

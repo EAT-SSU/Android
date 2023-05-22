@@ -1,4 +1,4 @@
-package com.eatssu.android
+package com.eatssu.android.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,105 +10,136 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.RestaurantType
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.databinding.FragmentBreakfastBinding
+import com.eatssu.android.databinding.FragmentDinnerBinding
 import com.eatssu.android.databinding.FragmentLunchBinding
 import com.eatssu.android.ui.infopage.*
-import com.eatssu.android.ui.main.MenuAdapter
+import com.eatssu.android.ui.MenuAdapter
+import com.eatssu.android.ui.menuadapter.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
 
 class DinnerFragment : Fragment() {
-    private var _binding: FragmentLunchBinding? = null
+    private var _binding: FragmentDinnerBinding? = null
     private val binding get() = _binding!!
 
+    lateinit var retrofit: Retrofit
+    lateinit var menuService: MenuService
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentLunchBinding.inflate(inflater, container, false)
-
-        binding.btnHaksikInfo.setOnClickListener {
-            val intent = Intent(context, InfoActivity_Haksik::class.java);
-            startActivity(intent);
-        }
-        binding.btnDodamInfo.setOnClickListener {
-            val intent = Intent(context, InfoActivity_Dodam::class.java);
-            startActivity(intent);
-        }
-        binding.btnGisikInfo.setOnClickListener {
-            val intent = Intent(context, InfoActivity_Gisik::class.java);
-            startActivity(intent);
-        }
-        binding.btnKitchenInfo.setOnClickListener {
-            val intent = Intent(context, InfoActivity_Kitchen::class.java);
-            startActivity(intent);
-        }
-        binding.btnFoodInfo.setOnClickListener {
-            val intent = Intent(context, InfoActivity_Food::class.java);
-            startActivity(intent);
-        }
-        binding.btnSnackInfo.setOnClickListener {
-            val intent = Intent(context, InfoActivity_Snack::class.java);
-            startActivity(intent);
-        }
+        _binding = FragmentDinnerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
         lodeData()
     }
 
+    fun init() {
+        menuService = RetrofitImpl.getApiClientWithOutToken().create(MenuService::class.java)
+        setupClickListeners()
 
-    private fun setAdapter(menuList: List<GetMenuInfoListResponse.MenuInfo>) {
-        val menuAdapter = MenuAdapter(menuList)
-        binding.rvLunchFood.adapter = menuAdapter
+    }
 
-        val linearLayoutManager = LinearLayoutManager(context)
-        binding.rvLunchFood.layoutManager = linearLayoutManager
-
-        binding.rvLunchFood.setHasFixedSize(true)
-        binding.rvLunchFood.addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+    private fun setupClickListeners() {
+//        binding.btnHaksikInfo.setOnClickListener {
+//            startActivity(Intent(context, InfoActivity_Haksik::class.java))
+//        }
+        binding.btnDodamInfo.setOnClickListener {
+            startActivity(Intent(context, InfoActivity_Dodam::class.java))
+        }
+        binding.btnGisikInfo.setOnClickListener {
+            startActivity(Intent(context, InfoActivity_Gisik::class.java))
+        }
+//        binding.btnKitchenInfo.setOnClickListener {
+//            startActivity(Intent(context, InfoActivity_Kitchen::class.java))
+//        }
+//        binding.btnFoodInfo.setOnClickListener {
+//            startActivity(Intent(context, InfoActivity_Food::class.java))
+//        }
+//        binding.btnSnackInfo.setOnClickListener {
+//            startActivity(Intent(context, InfoActivity_Snack::class.java))
+//        }
     }
 
     private fun lodeData() {
+//        getFixedMenu(RestaurantType.FOOD_COURT, binding.rvLunchFood)
+//        getFixedMenu(RestaurantType.SNACK_CORNER, binding.rvLunchSnack)
+//        getFixedMenu(RestaurantType.THE_KITCHEN ,binding.rvLunchKitchen)
 
-        val restaurantType: RestaurantType = RestaurantType.FOOD_COURT
+        getNonFixed()
+    }
 
+    private fun setAdapter(
+        menuList: List<GetMenuInfoListResponse.MenuInfo>,
+        recyclerView: RecyclerView,
+        restaurantType: RestaurantType
+    ) {
+//        val foodAdapter =  FoodAdapter(menuList)
+//        val snackAdapter = SnackAdapter(menuList)
+//        val kitchenAdapter = KitchenAdapter(menuList)
+        val dodamAdapter = DodamAdapter(menuList)
+        val gisikAdapter = GisikAdapter(menuList)
 
-        val menuService = RetrofitImpl.getApiClient().create(MenuService::class.java)
-        menuService.getFixedMenu(restaurantType.toString()).enqueue(object :
-            Callback<GetMenuInfoListResponse> {
-            override fun onResponse(
-                call: Call<GetMenuInfoListResponse>,
-                response: Response<GetMenuInfoListResponse>
-            ) {
-                if (response.isSuccessful) {
-                    // 정상적으로 통신이 성공된 경우
-                    Log.d("post", "onResponse 성공: " + response.body().toString());
-                    //Toast.makeText(this@ProfileActivity, "비밀번호 찾기 성공!", Toast.LENGTH_SHORT).show()
+        val adapter = when (restaurantType) {
+//            RestaurantType.SNACK_CORNER -> snackAdapter
+//            RestaurantType.THE_KITCHEN -> kitchenAdapter
+//            RestaurantType.FOOD_COURT -> foodAdapter
+            RestaurantType.DODAM -> dodamAdapter
+            RestaurantType.DOMITORY -> gisikAdapter
 
-                    val body = response.body()
-                    body?.let {
-                        setAdapter(it.menuInfoList)
+            else -> {
+                dodamAdapter // 그냥
+            }
+        }
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+    }
+
+    private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
+
+        menuService.getFixedMenu(restaurantType.toString())
+            .enqueue(object : Callback<GetMenuInfoListResponse> {
+                override fun onResponse(
+                    call: Call<GetMenuInfoListResponse>,
+                    response: Response<GetMenuInfoListResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val body = response.body()
+                        body?.let {
+                            setAdapter(it.menuInfoList, recyclerView, restaurantType)
+                        }
+                    } else {
+                        Log.d("post", "onResponse 실패")
                     }
-                } else {
-                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                    Log.d("post", "onResponse 실패")
                 }
-            }
 
-            override fun onFailure(call: Call<GetMenuInfoListResponse>, t: Throwable) {
-                // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                Log.d("post", "onFailure 에러: " + t.message.toString());
-            }
-        })
+                override fun onFailure(call: Call<GetMenuInfoListResponse>, t: Throwable) {
+                    Log.d("post", "onFailure 에러: ${t.message}")
+                }
+            })
+    }
+
+    private fun getNonFixed() {
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
