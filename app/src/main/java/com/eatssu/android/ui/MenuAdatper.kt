@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.ui
 
 import android.content.Intent
 import android.view.LayoutInflater
