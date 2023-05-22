@@ -2,20 +2,10 @@ package com.eatssu.android.ui.infopage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.eatssu.android.R
-import com.eatssu.android.data.RetrofitImpl
-import com.eatssu.android.data.model.response.InfoResponse
-import com.eatssu.android.data.model.response.MenuBaseResponse
-import com.eatssu.android.data.service.InfoService
-import com.eatssu.android.data.service.RetrofitInterface
 import com.eatssu.android.databinding.ActivityInfoHaksikBinding
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class InfoActivity_Haksik : AppCompatActivity() {
     private lateinit var viewBinding: ActivityInfoHaksikBinding
