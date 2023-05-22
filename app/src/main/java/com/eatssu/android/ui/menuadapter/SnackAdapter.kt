@@ -14,7 +14,7 @@ import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.databinding.ItemSnackBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
-class SnackAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>):
+class SnackAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
     RecyclerView.Adapter<SnackAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemSnackBinding) :
