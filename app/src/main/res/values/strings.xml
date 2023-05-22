@@ -51,4 +51,8 @@
     <string name="app_version">앱 버전</string>
     <string name="pw_rules">영문자과 숫자를 포함하여 8자 이상을 입력해주세요.</string>
     <string name="done">완료하기</string>
+    <string name="snack_corner">스낵코너</string>
+    <string name="today_menu">오늘의 메뉴</string>
+    <string name="food_court">푸드코트</string>
+    <string name="the_kitchen">THE KITCHEN</string>
 </resources>
