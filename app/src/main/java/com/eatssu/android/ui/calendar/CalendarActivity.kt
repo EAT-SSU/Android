@@ -58,14 +58,12 @@ class CalendarActivity : AppCompatActivity() {
             finish()*/
             selectedDate = calendar.selectedDate
             val year = selectedDate?.year.toString()
-            //val month = (selectedDate?.month?.plus(1)).toString()
-            //val day = selectedDate?.day.toString()
             val month = String.format("%02d", selectedDate?.month?.plus(1))
             val day = String.format("%02d", selectedDate?.day)
 
 
 
-            val formattedDate = "$year-${month}-${day}"
+            val formattedDate = "$year.${month}.${day}"
 
             val intent = Intent()
             intent.putExtra("changedate", formattedDate)

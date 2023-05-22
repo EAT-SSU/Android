@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val monthFormat =
-            DateTimeFormatter.ofPattern("yyyy . MM . dd").withLocale(Locale.forLanguageTag("ko"))
+            DateTimeFormatter.ofPattern("yyyy.MM.dd").withLocale(Locale.forLanguageTag("ko"))
         val localDate = LocalDateTime.now().format(monthFormat)
         binding.textYearMonth.text = localDate
 
