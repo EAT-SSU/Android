@@ -32,26 +32,10 @@ import retrofit2.Retrofit
 class WriteReview2Activity : AppCompatActivity() {
     private lateinit var binding: ActivityWriteReview2Binding
 
-
     private lateinit var retrofit: Retrofit
     private lateinit var reviewService: ReviewService
 
-
-    // storage 권한 처리에 필요한 변수
-    val CAMERA = arrayOf(android.Manifest.permission.CAMERA)
-    val STORAGE = arrayOf(
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-    val CAMERA_CODE = 98
-    val STORAGE_CODE = 99
-    private val OPEN_GALLERY = 1
-
-    private var currentImageUri: Uri? = null // 선택한 이미지의 Uri를 저장할 변수
-
-    //private lateinit var selectedImageUri: Uri
     lateinit var getResult: ActivityResultLauncher<Intent>
-
 
     private var MENU_ID: Int = 0
     private lateinit var menu: String
@@ -59,13 +43,9 @@ class WriteReview2Activity : AppCompatActivity() {
     private var comment: String? = null
     var reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
 
-
     //    private lateinit var bitmap: Bitmap
-    private lateinit var filePath: String
     private lateinit var path: String
 
-
-    //uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +64,7 @@ class WriteReview2Activity : AppCompatActivity() {
             if (it.resultCode == Activity.RESULT_OK) {
                 path = it.data?.data?.let { it1 -> getRealPathFromURI(it1) }.toString()
                 Log.d("post", path)
-                val bitmap =convertImagePathToBitmap(path)
+                val bitmap = convertImagePathToBitmap(path)
 //                 =   MediaStore.Images.Media.getBitmap(contentResolver, path)
                 binding.ivImage.setImageBitmap(bitmap)
             }
@@ -110,8 +90,6 @@ class WriteReview2Activity : AppCompatActivity() {
         binding.ibAddPic.setOnClickListener {
             initAddPhoto()
         }
-
-
 
         binding.btnNextReview2.setOnClickListener() {
             postData()
@@ -186,7 +164,7 @@ class WriteReview2Activity : AppCompatActivity() {
     }
 
 
-    fun initAddPhoto() {
+    private fun initAddPhoto() {
         var writePermission = ContextCompat.checkSelfPermission(
             this,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -206,7 +184,7 @@ class WriteReview2Activity : AppCompatActivity() {
                 1
             )
         } else {
-            var state = Environment.getExternalStorageState()
+            val state = Environment.getExternalStorageState()
             if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.type = "image/*"
@@ -216,35 +194,4 @@ class WriteReview2Activity : AppCompatActivity() {
 
         }
     }
-
-//
-//        // 결과
-//        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//            super.onActivityResult(requestCode, resultCode, data)
-//
-//            val imageView = findViewById<ImageView>(R.id.imageView)
-//
-//            if (resultCode == Activity.RESULT_OK) {
-//                when (requestCode) {
-//
-//                    OPEN_GALLERY -> { //여기가 핵심
-//                        currentImageUri = data!!.data
-////                    path= currentImageUri?.let { getRealPathFromURI(it) }.toString()
-//                        path = currentImageUri?.path.toString()
-//                        try {
-//                            val bitmap =
-//                                MediaStore.Images.Media.getBitmap(contentResolver, currentImageUri)
-//                            binding.ivImage.setImageBitmap(bitmap)
-//                            Log.d("post2", currentImageUri?.path.toString())
-////                        path=currentImageUri?.path.toString()
-////                        path = currentImageUri?.let { getRealPathFromURI(it) }.toString()
-//                            Log.d("post22", path)
-////
-//                        } catch (e: Exception) {
-//                            e.printStackTrace()
-//                        }
-//                    }
-//                }
-//            }
-//        }
 }
