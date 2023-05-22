@@ -39,30 +39,17 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+    private var selectedDate: String = ""
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        //setContentView(viewBinding.root)
-//
-        /*val inflater = LayoutInflater.from(this)
-        inflater.inflate(R.layout.activity_main, findViewById(R.id.frame_layout), true)
-        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)*/
 
         setContentView(binding.root)
         supportActionBar?.title = "EAT-SSU"
-
-        /*supportFragmentManager
-            .beginTransaction()
-            .replace(viewBinding.containerFragment.id,CalendarFragment())
-            .commitAllowingStateLoss()*/
-
-        /*upportFragmentManager
-            .beginTransaction()
-            .add(binding.frame.id, CalendarFragment())
-            .commitAllowingStateLoss()*/
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -80,61 +67,47 @@ class MainActivity : AppCompatActivity() {
         val tabTitles = listOf<String>("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(tabLayout, viewPager, {tab, position -> tab.text = tabTitles[position]}).attach()
+        TabLayoutMediator(tabLayout,
+            viewPager,
+            { tab, position -> tab.text = tabTitles[position] }).attach()
 
         binding.btnSetting.setOnClickListener() {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌
         }
-        val monthFormat = DateTimeFormatter.ofPattern("yyyy . MM . dd")
-            .withLocale(Locale.forLanguageTag("ko"))
+
+        val monthFormat =
+            DateTimeFormatter.ofPattern("yyyy . MM . dd").withLocale(Locale.forLanguageTag("ko"))
         val localDate = LocalDateTime.now().format(monthFormat)
         binding.textYearMonth.text = localDate
 
 
         binding.textYearMonth.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java);
-            startActivity(intent);
-            onStop()
+            startActivityForResult(intent, CALENDAR_REQUEST_CODE)
+
 
         }
-
-        //text 키값으로 데이터를 받는다. String을 받아야 하므로 getStringExtra()를 사용함
-        /*val selectdate = this.arguments?.getString("changedate")
-        Log.d("selectdate", selectdate.toString())*/
-
-
-
-
-        //Log.d("getKeyHash", "" + getKeyHash(this));
-
-        /*@SuppressLint("PackageManagerGetSignatures")
-    open fun getKeyHash(context: Context): String? {
-        val pm: PackageManager = context.getPackageManager()
-        try {
-            val packageInfo: PackageInfo =
-                pm.getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES)
-                    ?: return null
-            for (signature in packageInfo.signatures) {
-                try {
-                    val md = MessageDigest.getInstance("SHA")
-                    md.update(signature.toByteArray())
-                    return encodeToString(md.digest(), NO_WRAP)
-                } catch (e: NoSuchAlgorithmException) {
-                    e.printStackTrace()
-                }
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        return null
-    }*/
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CALENDAR_REQUEST_CODE && resultCode == RESULT_OK) {
+            val changedDate = data?.getStringExtra("changedate")
+            if (changedDate != null) {
+                selectedDate = changedDate
+                binding.textYearMonth.text = selectedDate
+                Log.d("changedate", selectedDate)
+            }
+        }
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -143,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 //                onBackPressed()
 //                true
 //            }
-            R.id.action_setting ->{
+            R.id.action_setting -> {
                 val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
                 startActivity(intent)  // 화면 전환을 시켜줌
                 true
@@ -151,12 +124,8 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-//
-//    override fun getLayoutResourceId(): Int {
-//        return R.layout.activity_main
-//    }
 
-    override fun onRestart() {
+    override fun onRestart() { //여기 문제 있음
 
         val intentdate = intent.getStringExtra("intentdate")
         if (intentdate != null) {
@@ -174,6 +143,10 @@ class MainActivity : AppCompatActivity() {
         }*/
         }
         super.onRestart()
+    }
+
+    companion object {
+        private const val CALENDAR_REQUEST_CODE = 1
     }
 }
 

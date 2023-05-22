@@ -1,4 +1,5 @@
 package com.eatssu.android.ui.calendar
+
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -8,9 +9,7 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Window
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 import com.eatssu.android.databinding.ActivityCalendarBinding
 import com.eatssu.android.ui.main.MainActivity
 import com.prolificinteractive.materialcalendarview.*
@@ -20,26 +19,27 @@ import java.util.*
 
 
 class CalendarActivity : AppCompatActivity() {
-    private lateinit var viewBinding: ActivityCalendarBinding
+    private lateinit var binding: ActivityCalendarBinding
     lateinit var calendar: MaterialCalendarView
 
     val today = CalendarDay.today()
 
     lateinit var selectedDate: CalendarDay
-    lateinit var changedate : String
+    lateinit var changedate: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityCalendarBinding.inflate(layoutInflater)
+        binding = ActivityCalendarBinding.inflate(layoutInflater)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(viewBinding.root)
+        setContentView(binding.root)
 
-        calendar = viewBinding.calendarView
+        calendar = binding.calendarView
         calendar.selectedDate = today
         val disabledDates = hashSetOf<CalendarDay>()
         disabledDates.add(CalendarDay.from(2022, 7, 12))
 
-        viewBinding.calendarView.apply {
+        binding.calendarView.apply {
             // 휴무일 지정을 위한 Decorator 설정
             addDecorator(DayDisableDecorator(disabledDates, today))
             // 요일을 지정하귀 위해 {"월", "화", ..., "일"} 배열을 추가한다.
@@ -50,46 +50,48 @@ class CalendarActivity : AppCompatActivity() {
 
         }
         DateFormatTitleFormatter()
-        calendar.setOnDateChangedListener(object: OnDateSelectedListener{
-            override fun onDateSelected(
-                widget: MaterialCalendarView,
-                date: CalendarDay,
-                selected: Boolean
-            ) {
-                selectedDate = calendar.selectedDate
-                changedate = selectedDate.toString()
-                Log.d("changedate", changedate)
-                //인텐트 선언 및 정의
-                //인텐트 선언 및 정의
+        calendar.setOnDateChangedListener { widget, date, selected ->
+            /*selectedDate = calendar.selectedDate
+            val intent = Intent()
+            intent.putExtra("changedate", selectedDate)
+            setResult(RESULT_OK, intent)
+            finish()*/
+            selectedDate = calendar.selectedDate
+            val year = selectedDate?.year.toString()
+            //val month = (selectedDate?.month?.plus(1)).toString()
+            //val day = selectedDate?.day.toString()
+            val month = String.format("%02d", selectedDate?.month?.plus(1))
+            val day = String.format("%02d", selectedDate?.day)
 
-                val intent = Intent(this@CalendarActivity, MainActivity::class.java)
-                intent.putExtra("intentdate", changedate)
-                startActivity(intent)
 
-                /*val bundle = Bundle()
-                bundle.putString("changedate", changedate)
-                Log.d("changedate", changedate)
-                Log.d("bundle", bundle.toString())
-                val calendarfragment = CalendarFragment()
-                calendarfragment.arguments = bundle*/
 
-                finish()
+            val formattedDate = "$year-${month}-${day}"
 
-            }
-        })
+            val intent = Intent()
+            intent.putExtra("changedate", formattedDate)
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
+    inner class MyTitleFormatter : TitleFormatter {
+        override fun format(day: CalendarDay?): CharSequence {
+            val year = day?.year ?: ""
+            val month = String.format("%02d", day?.month?.plus(1) ?: "")
+            val date = String.format("%02d", day?.day ?: "")
 
+            return "$year-$month-$date"
+        }
+    }
+    /*
     inner class MyTitleFormatter : TitleFormatter {
         override fun format(day: CalendarDay?): CharSequence {
             /*val simpleDateFormat =
                 SimpleDateFormat("yyyy . MM", Locale.US) //"February 2016" format
 
             return simpleDateFormat.format(Calendar.getInstance().getTime())*/
-                return "${day!!.year} . ${day.month + 1}"
-
+            return "${day!!.year} . ${day.month + 1}"
         }
-
-    }
+    }*/
 
     inner class DayDisableDecorator(
         private var dates: HashSet<CalendarDay>,
@@ -106,7 +108,7 @@ class CalendarActivity : AppCompatActivity() {
         }
     }
 
-    inner class TodayDecorator: DayViewDecorator {
+    inner class TodayDecorator : DayViewDecorator {
         private var date = CalendarDay.today()
 
         override fun shouldDecorate(day: CalendarDay?): Boolean {
@@ -119,6 +121,4 @@ class CalendarActivity : AppCompatActivity() {
             view?.addSpan(ForegroundColorSpan(Color.parseColor("#DF5758")))
         }
     }
-
-
 }
