@@ -30,17 +30,17 @@ class WriteReview1Activity : AppCompatActivity() {
         var MENU_ID: Int = intent.getIntExtra("menuId", -1)
         var menu: String? = intent.getStringExtra("menu")
 
-        var rate : Int = binding.rbReview1.rating.toInt()
+        var rate: Int = binding.rbReview1.rating.toInt()
 
-        binding.menu.text=menu.toString()
+        binding.menu.text = menu.toString()
         binding.btnNextReview1.setOnClickListener() {
             //0점 처리
-                val intent = Intent(this, WriteReview2Activity::class.java)  // 인텐트를 생성해줌,
-                Log.d("intent", "click");
-                intent.putExtra("rating", rate)
-                intent.putExtra("menuId", MENU_ID)
-                intent.putExtra("menu",menu)
-                startActivity(intent)  // 화면 전환을 시켜줌
+            val intent = Intent(this, WriteReview2Activity::class.java)  // 인텐트를 생성해줌,
+            Log.d("intent", "click");
+            intent.putExtra("rating", rate)
+            intent.putExtra("menuId", MENU_ID)
+            intent.putExtra("menu", menu)
+            startActivity(intent)  // 화면 전환을 시켜줌
         }
     }
 //

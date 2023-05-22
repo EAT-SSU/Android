@@ -7,7 +7,7 @@ data class Review(
     val reviewCreate: WriteReviewDetailRequest.ReviewCreate
 ) {
     data class ReviewCreate(
-        val content: String,
+        val content: String?,
         val grade: Int,
         val reviewTags: List<String>
     )
