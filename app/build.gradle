@@ -20,7 +20,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "BASE_URL", properties["BASE_URL"]
+        buildConfigField "String", "BASE_URL", properties['baseurl']
         manifestPlaceholders = [BASE_URL : "baseurl"]
 
         buildConfigField "String", "KAKAO_APP_KEY", properties['APP_KEY']

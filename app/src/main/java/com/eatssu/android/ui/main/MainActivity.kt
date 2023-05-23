@@ -99,6 +99,7 @@ class MainActivity : AppCompatActivity() {
                 selectedDate = changedDate
                 binding.textYearMonth.text = selectedDate
                 Log.d("changedate", selectedDate)
+
             }
         }
     }
@@ -127,21 +128,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRestart() { //여기 문제 있음
 
-        val intentdate = intent.getStringExtra("intentdate")
-        if (intentdate != null) {
-            Log.d("intentdate", intentdate)
-        }
+        binding.textYearMonth.text = selectedDate
 
-        binding.textYearMonth.text = intentdate
+        val year = selectedDate.substring(0,4)
+        val month = selectedDate.substring(5,7)
+        val day = selectedDate.substring(8,10)
+        Log.d("cutyear", year)
+        Log.d("cutmonth", month)
+        Log.d("cutday", day)
 
         binding.btnCalendarLeft.setOnClickListener {
+            val cday = String.format("%02d",day.toInt()-1)
+            val newdate = year + "." + month + "." + cday
             binding.textYearMonth.text = null
-            binding.textYearMonth.text = intentdate
-            /*binding.btnCalendarRight.setOnClickListener{
-            binding.textYearMonth.text = null
-            binding.textYearMonth.text = LocalDateTime.now().plusDays(1).format(monthFormat).toString()
-        }*/
+            binding.textYearMonth.text = newdate
         }
+
+        binding.btnCalendarRight.setOnClickListener {
+            val cday = String.format("%02d",day.toInt()+1)
+            val newdate = year + "." + month + "." + cday
+            binding.textYearMonth.text = null
+            binding.textYearMonth.text = newdate
+        }
+
         super.onRestart()
     }
 
