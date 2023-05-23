@@ -33,6 +33,7 @@ jobs:
        BASE_URL: ${{ secrets.BASE_URL}}
    
     - name: APP_KEY
+      run: |
         echo APP_KEY=\"$APP_KEY\" > local.properties
       shell: bash
       env:
