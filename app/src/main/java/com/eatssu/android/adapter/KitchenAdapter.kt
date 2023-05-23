@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.menuAdapter
+package com.eatssu.android.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater

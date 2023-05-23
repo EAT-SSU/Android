@@ -9,13 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.adapter.FoodAdapter
+import com.eatssu.android.adapter.KitchenAdapter
+import com.eatssu.android.adapter.SnackAdapter
 import com.eatssu.android.data.enums.RestaurantType
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentLunchBinding
 import com.eatssu.android.ui.infopage.*
-import com.eatssu.android.ui.menuAdapter.*
 import retrofit2.*
 
 class LunchFragment : Fragment() {
