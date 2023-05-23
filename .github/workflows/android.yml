@@ -24,3 +24,16 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+
+    - name: BASE_URL
+      run: |
+        echo BASE_URL=\"$BASE_URL\" > local.properties
+      shell: bash
+      env:
+       BASE_URL: ${{ secrets.BASE_URL}}
+   
+    - name: APP_KEY
+        echo APP_KEY=\"$APP_KEY\" > local.properties
+      shell: bash
+      env:
+        APP_KEY: ${{ secrets.APP_KEY }}
