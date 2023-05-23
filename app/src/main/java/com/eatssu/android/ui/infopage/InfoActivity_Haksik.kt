@@ -1,4 +1,4 @@
-package com.eatssu.android
+package com.eatssu.android.ui.infopage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +9,11 @@ import net.daum.mf.map.api.MapView
 
 class InfoActivity_Haksik : AppCompatActivity() {
     private lateinit var viewBinding: ActivityInfoHaksikBinding
+
+    var location: String = ""
+    var openHours: String = ""
+    var pw: String = ""
+    var pw2: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,5 +37,30 @@ class InfoActivity_Haksik : AppCompatActivity() {
             setCustomImageAnchor(0.5f, 1.0f)    // 마커 이미지 기준점
         }
         mapview.addPOIItem(marker)
+        /*
+        val infoService = RetrofitImpl.getApiClientWithOutToken().create(InfoService::class.java)
+            infoService.getRestaurantInfo("Haksik").enqueue(object:
+                Callback<InfoResponse> {
+                override fun onResponse(
+                    call: Call<InfoResponse>,
+                    response: Response<InfoResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val body = response.body()
+                        body?.let {
+                            //text_text.text = body.toString response 잘 받아왔는지 확인.
+                            location = viewBinding.tvRestaurantLocation.toString()
+                        }
+                    } else {
+                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                        Log.d("post", "onResponse 실패")
+                    }
+                }
+
+                override fun onFailure(call: Call<InfoResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })*/
     }
 }

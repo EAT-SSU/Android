@@ -1,16 +1,5 @@
 package com.eatssu.android.ui.mypage
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.R
-import com.eatssu.android.data.model.review
-import com.eatssu.android.databinding.*
-import com.eatssu.android.ui.BaseActivity
-
 /*
 class MyReviewListActivity : BaseActivity() {
     private lateinit var binding: ActivityMyReviewListBinding

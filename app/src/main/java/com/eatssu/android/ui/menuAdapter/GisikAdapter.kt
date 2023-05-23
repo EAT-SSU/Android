@@ -1,32 +1,32 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.ui.menuAdapter
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
-import com.eatssu.android.databinding.ItemMenuBinding
+import com.eatssu.android.databinding.ItemGisikBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
-class MenuAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>):
-    RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
+class GisikAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
+    RecyclerView.Adapter<GisikAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemMenuBinding) :
+    inner class ViewHolder(private val binding: ItemGisikBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
-            binding.tvStar.text = dataList[position].grade.toString()
+            binding.tvRate.text = dataList[position].grade.toString()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewBinding =
-            ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(viewBinding)
+        val binding =
+            ItemGisikBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -38,7 +38,7 @@ class MenuAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>):
             intent.putExtra(
                 "menuId", dataList[position].menuId
             )
-            startActivity(holder.itemView.context, intent, null)
+            ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
 

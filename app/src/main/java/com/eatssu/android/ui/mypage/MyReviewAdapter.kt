@@ -1,11 +1,5 @@
 package com.eatssu.android.ui.mypage
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.review
-import com.eatssu.android.databinding.ItemMyReviewBinding
-
 /*
 class MyReviewAdapter(private val dataList: ArrayList<review>): RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ItemMyReviewBinding) :

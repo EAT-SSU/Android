@@ -144,7 +144,7 @@
         android:id="@+id/ib_gallery"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_baseline_picture_in_picture_alt_24"
+        android:src="@drawable/ic_bell"
         app:layout_constraintStart_toEndOf="@+id/ib_camera"
         app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />
 

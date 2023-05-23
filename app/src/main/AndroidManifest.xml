@@ -90,7 +90,7 @@
                 android:value="" />
         </activity>
 
-        <activity
+        <!--<activity
             android:name=".ui.mypage.MyReviewListActivity"
             android:exported="true">
             <intent-filter>
@@ -102,7 +102,7 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
+        </activity>-->
         <activity
             android:name=".ui.review.ReviewListActivity"
             android:exported="true">
@@ -152,7 +152,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".InfoActivity_Gisik"
+            android:name=".ui.infopage.InfoActivity_Gisik"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -160,7 +160,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".InfoActivity_Kitchen"
+            android:name=".ui.infopage.InfoActivity_Kitchen"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -168,7 +168,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".InfoActivity_Food"
+            android:name=".ui.infopage.InfoActivity_Food"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -176,7 +176,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".InfoActivity_Snack"
+            android:name=".ui.infopage.InfoActivity_Snack"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -184,7 +184,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".InfoActivity_Dodam"
+            android:name=".ui.infopage.InfoActivity_Dodam"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -192,8 +192,9 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".CalendarActivity"
-            android:exported="true">
+            android:name=".ui.calendar.CalendarActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -210,7 +211,7 @@
             android:value="${KAKAO_APP_KEY}" />
 
         <activity
-            android:name=".InfoActivity_Haksik"
+            android:name=".ui.infopage.InfoActivity_Haksik"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -218,7 +219,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
