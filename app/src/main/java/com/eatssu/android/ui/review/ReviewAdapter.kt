@@ -1,16 +1,10 @@
 package com.eatssu.android.ui.review
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.databinding.ItemReviewBinding
-import java.util.Collections.min
 import kotlin.math.min
 
 
@@ -25,7 +19,7 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
             binding.tvReviewItemComment.text = dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
 
-            if (dataList[position].tagList.size == 0) {
+            if (dataList[position].tagList.isEmpty()) {
 
                 for (i in 0 until min(dataList[position].tagList.size, 3)) {
                     when (i) {

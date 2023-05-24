@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -79,6 +80,7 @@ class ReviewListActivity : AppCompatActivity() {
                     binding.tvMenu.text = response.body()?.menuName.toString()
                     binding.tvRate.text = response.body()?.grade.toString()
                     binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
+                    binding.rbAverageRate.rating=response.body()?.grade!!.toFloat()
 
                     val cnt = response.body()?.totalReviewCount!!
 
