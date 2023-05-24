@@ -1,10 +1,11 @@
-package com.eatssu.android
+package com.eatssu.android.ui.main
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class ViewPager2Adapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
     // 1. ViewPager2에 연결할 Fragment 들을 생성
     val fragmentList = listOf<Fragment>(BreakfastFragment(), LunchFragment(), DinnerFragment())
 

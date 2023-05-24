@@ -1,10 +1,12 @@
-package com.eatssu.android
+package com.eatssu.android.ui.calendar
 
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemCalendarListBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -21,6 +23,7 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
             binding.day.text = item.cl_day
 
             var today = binding.date.text
+            var day = binding.day.text
 
             // 오늘 날짜
             val now = LocalDate.now()
@@ -29,6 +32,7 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
             if (today == now) {
                 binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
             }
+            Log.i("now", now)
         }
     }
 

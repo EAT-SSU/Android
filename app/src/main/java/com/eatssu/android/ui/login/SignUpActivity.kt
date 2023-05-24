@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.eatssu.android.MainActivity
+import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.R
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences

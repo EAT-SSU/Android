@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".ui.review.ReportActivity">
+
+    <TextView
+        android:text="리뷰를 신고하는 이유를 선택해주세요."
+        android:id="@+id/tv_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/noto_black"/>
+
+
+    <RadioGroup
+        android:id="@+id/radio_gp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_report"
+        tools:ignore="MissingConstraints">
+
+        <RadioButton
+            android:id="@+id/radio_bt1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
+            android:text="메뉴와 관련없는 내용" />
+
+        <RadioButton
+            android:id="@+id/radio_bt2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
+            android:text="음란성, 욕설 등 부적절한 내용" />
+
+        <RadioButton
+        android:id="@+id/radio_bt3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
+        android:text="부적절한 홍보 또는 광고" />
+
+        <RadioButton
+            android:id="@+id/radio_bt4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
+            android:text="리뷰 작성 취지에 맞지 않은 내용 (복사글 등)" />
+
+        <RadioButton
+        android:id="@+id/radio_bt5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
+        android:text="저작권 도용 의심 (사진 등)" />
+
+        <RadioButton
+            android:id="@+id/radio_bt6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_medium"
+            android:text="기타 (하단 내용 작성)" />
+
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/et_report_comment"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:gravity="top"
+        android:lines="10"
+        android:maxLength="150"
+        android:padding="20dp"
+        android:hint="내용을 작성해주세요"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_edittext"
+        android:privateImeOptions="defaultInputmode=korea"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_gp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/tv_textnum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/tv_maxtext"
+        app:layout_constraintTop_toTopOf="@+id/tv_maxtext"  />
+
+    <TextView
+        android:id="@+id/tv_maxtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" / 150"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        android:textStyle="normal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/et_report_comment"
+        app:layout_constraintTop_toBottomOf="@+id/et_report_comment" />
+
+    <Button
+        android:id="@+id/btn_next_review2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="EAT SSU에게 보내기"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:background="@drawable/shape_btn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/primary" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

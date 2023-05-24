@@ -4,21 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.R
-import com.eatssu.android.data.model.review
 import com.eatssu.android.databinding.*
 import com.eatssu.android.ui.BaseActivity
 
 
-class MyReviewListActivity : BaseActivity() {
+class MyReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewListBinding
-
+/*
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_my_review_list
     }
-/*
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
