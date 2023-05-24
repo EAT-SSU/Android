@@ -110,8 +110,8 @@ class WriteReview2Activity : AppCompatActivity() {
 //            })
 
 
-            startActivity(intent)  // 화면 전환을 시켜줌
-            finish()
+//            startActivity(intent)  // 화면 전환을 시켜줌
+//            finish()
 //        }
     }
 

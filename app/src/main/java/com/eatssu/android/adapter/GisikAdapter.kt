@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.menuAdapter
+package com.eatssu.android.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
-import com.eatssu.android.databinding.ItemFoodBinding
+import com.eatssu.android.databinding.ItemGisikBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
-class FoodAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
-    RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+class GisikAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
+    RecyclerView.Adapter<GisikAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemFoodBinding) :
+    inner class ViewHolder(private val binding: ItemGisikBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
@@ -25,7 +25,7 @@ class FoodAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemFoodBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemGisikBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
