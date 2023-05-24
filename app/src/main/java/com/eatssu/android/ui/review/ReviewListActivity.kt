@@ -31,7 +31,6 @@ class ReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewListBinding
     lateinit var menu :String
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,11 +61,10 @@ class ReviewListActivity : AppCompatActivity() {
 
     private fun setAdapter(reviewList: List<GetReviewListResponse.Data>) {
         val listAdapter = ReviewAdapter(reviewList)
-        binding.rvReview.adapter = listAdapter
-
         val linearLayoutManager = LinearLayoutManager(this)
-        binding.rvReview.layoutManager = linearLayoutManager
 
+        binding.rvReview.adapter = listAdapter
+        binding.rvReview.layoutManager = linearLayoutManager
         binding.rvReview.setHasFixedSize(true)
         binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
 
@@ -89,11 +87,13 @@ class ReviewListActivity : AppCompatActivity() {
                     binding.tvRate.text = response.body()?.grade.toString()
                     binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
 
-                    binding.progressBar1.max = response.body()?.totalReviewCount!!
-                    binding.progressBar2.max = response.body()?.totalReviewCount!!
-                    binding.progressBar3.max = response.body()?.totalReviewCount!!
-                    binding.progressBar4.max = response.body()?.totalReviewCount!!
-                    binding.progressBar5.max = response.body()?.totalReviewCount!!
+                    val cnt = response.body()?.totalReviewCount!!
+
+                    binding.progressBar1.max = cnt
+                    binding.progressBar2.max = cnt
+                    binding.progressBar3.max = cnt
+                    binding.progressBar4.max = cnt
+                    binding.progressBar5.max = cnt
 
                     binding.progressBar1.progress= response.body()?.reviewGradeCnt?.oneCnt!!
                     binding.progressBar2.progress= response.body()?.reviewGradeCnt?.twoCnt!!
@@ -142,6 +142,4 @@ class ReviewListActivity : AppCompatActivity() {
             }
         })
     }
-
-
 }

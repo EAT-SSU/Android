@@ -26,6 +26,7 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):
             binding.tvReviewItemId.text = dataList[position].writerId.toString()
             binding.tvReviewItemComment.text =dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
+//            binding.rbReviewItemRate.isClickable=false
 
             for (i in 0 until min(dataList[position].tagList.size, 3)) {
                 when (i) {
