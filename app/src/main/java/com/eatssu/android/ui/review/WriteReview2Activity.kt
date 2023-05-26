@@ -24,10 +24,15 @@ import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.WriteReviewDetailRequest
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReview2Binding
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.io.File
+
 
 class WriteReview2Activity : AppCompatActivity() {
     private lateinit var binding: ActivityWriteReview2Binding
@@ -59,6 +64,7 @@ class WriteReview2Activity : AppCompatActivity() {
         rate = intent.getIntExtra("rating", 0)
         comment = ""
         reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
+        path = ""
 
         getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -107,10 +113,39 @@ class WriteReview2Activity : AppCompatActivity() {
 
         if (MENU_ID != -1) {
             val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
-            val multipartFileList = listOf(path) // 이미지 파일 목록
-            val reviewData = WriteReviewDetailRequest(multipartFileList, reviewCreate)
+//            val multipartFileList = listOf(path) // 이미지 파일 목록
+//            val reviewData = WriteReviewDetailRequest(multipartFileList, reviewCreate)
+//            val requestBody = MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/5fe5707a0d0a0.jpg\"", File("\"/C:/Users/김소연/Pictures/짤/5fe5707a0d0a0.jpg\"").asRequestBody())
+//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/img.jpg\"", File("\"/C:/Users/김소연/Pictures/짤/img.jpg\"").asRequestBody())
+//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"", File("\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"").asRequestBody())
+//                .addFormDataPart("reviewCreate", "\"{\n  \\\"grade\\\": 4,\n  \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n  \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json")
+//                .build()
 
-            reviewService.writeReview(MENU_ID, reviewData)
+            val file1 = File(path)
+//            val file1 = File("C:\\Users\\qldls\\Downloads\\free-icon-people-3224689.png")
+            val requestBody1 = RequestBody.create(MediaType.parse("image/*"), file1)
+
+//            val file2 = File("C:/Users/김소연/Pictures/짤/img.jpg")
+//            val requestBody2 = RequestBody.create(MediaType.parse("image/jpeg"), file2)
+//
+//            val file3 = File("C:/Users/김소연/Pictures/짤/IMG_0997.jpg")
+//            val requestBody3 = RequestBody.create(MediaType.parse("image/jpeg"), file3)
+
+// ...
+
+
+// ...
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("multipartFileList", path, requestBody1)
+//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/img.jpg\"", requestBody2)
+//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"", requestBody3)
+                .addFormDataPart("reviewCreate", "\"{\n \\\"grade\\\": 4,\n \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json")
+                .build()
+            //reviewService.writeReview(MENU_ID, reviewData)
+            reviewService.writeReview(MENU_ID, requestBody)
                 .enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
@@ -127,7 +162,7 @@ class WriteReview2Activity : AppCompatActivity() {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                             Log.d(
                                 "post",
-                                "onResponse 실패" + response.code() + reviewData.toString()
+                                "onResponse 실패" + response.code()
                             )
                         }
                     }
@@ -195,3 +230,31 @@ class WriteReview2Activity : AppCompatActivity() {
         }
     }
 }
+
+//import java.io.File
+//import java.io.IOException
+//import okhttp3.MultipartBody
+//import okhttp3.OkHttpClient
+//import okhttp3.Request
+//import okhttp3.RequestBody.Companion.asRequestBody
+//
+//val client = OkHttpClient()
+//
+//val requestBody = MultipartBody.Builder()
+//    .setType(MultipartBody.FORM)
+//    .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/5fe5707a0d0a0.jpg\"", File("\"/C:/Users/김소연/Pictures/짤/5fe5707a0d0a0.jpg\"").asRequestBody())
+//    .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/img.jpg\"", File("\"/C:/Users/김소연/Pictures/짤/img.jpg\"").asRequestBody())
+//    .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"", File("\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"").asRequestBody())
+//    .addFormDataPart("reviewCreate", "\"{\n  \\\"grade\\\": 4,\n  \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n  \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json")
+//    .build()
+//
+//val request = Request.Builder()
+//    .url("https://eatssu.shop/review/35/detail")
+//    .post(requestBody)
+//    .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJlbWFpbFwiOlwidGVzdEBlbWFpbC5jb21cIn0iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwOTE4NjY1fQ.ZZr7LclD5YxRqzfjCnL8kImu4z--KYwo8y2V4VCHn1Oz1h-UbeNww6VVnIYonRL83lUu6zMZ59TlfU_eeqV_QQ")
+//    .build()
+//
+//client.newCall(request).execute().use { response ->
+//    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+//    response.body!!.string()
+//}
