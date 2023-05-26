@@ -16,17 +16,16 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.eatssu.android.data.RetrofitImpl
-import com.eatssu.android.data.model.request.WriteReviewDetailRequest
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReview2Binding
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +38,11 @@ class WriteReview2Activity : AppCompatActivity() {
 
     private lateinit var retrofit: Retrofit
     private lateinit var reviewService: ReviewService
+    private val PERMISSION_REQUEST_CODE = 1
+
+
+    private var selectedImagePath: String? = null
+
 
     lateinit var getResult: ActivityResultLauncher<Intent>
 
@@ -58,23 +62,36 @@ class WriteReview2Activity : AppCompatActivity() {
         binding = ActivityWriteReview2Binding.inflate(layoutInflater)
         setContentView(binding.root)
         initRetrofit()
+        // 외부 저장소에 대한 런타임 퍼미션 요청
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+
 
         MENU_ID = intent.getIntExtra("menuId", -1)
         menu = intent.getStringExtra("menu").toString()
-        rate = intent.getIntExtra("rating", 0)
+//        rate = intent.getIntExtra("rating", 0)
+        rate = 5
         comment = ""
         reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
         path = ""
-
-        getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                path = it.data?.data?.let { it1 -> getRealPathFromURI(it1) }.toString()
-                Log.d("post", path)
-                val bitmap = convertImagePathToBitmap(path)
-//                 =   MediaStore.Images.Media.getBitmap(contentResolver, path)
-                binding.ivImage.setImageBitmap(bitmap)
-            }
-        }
+//
+//        getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//            if (it.resultCode == Activity.RESULT_OK) {
+//                path = it.data?.data?.let { it1 -> getRealPathFromURI(it1) }.toString()
+//                Log.d("post", path)
+//                val bitmap = convertImagePathToBitmap(path)
+////                 =   MediaStore.Images.Media.getBitmap(contentResolver, path)
+//                binding.ivImage.setImageBitmap(bitmap)
+//            }
+//        }
 
         binding.rbReview2.rating = rate.toFloat()
         binding.menu.text = menu
@@ -94,18 +111,49 @@ class WriteReview2Activity : AppCompatActivity() {
 
 
         binding.ibAddPic.setOnClickListener {
-            initAddPhoto()
+//            initAddPhoto()
+            openGallery()
+
         }
 
         binding.btnNextReview2.setOnClickListener() {
             postData()
         }
     }
+    companion object {
+        private const val REQUEST_IMAGE_PICK = 1
+    }
 
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, REQUEST_IMAGE_PICK)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
+            val imageUri = data.data
+            binding.ivImage.setImageURI(imageUri)
+            selectedImagePath = imageUri?.let { getImagePath(it) }
+        }
+    }
     fun convertImagePathToBitmap(imagePath: String): Bitmap? {
         val options = BitmapFactory.Options()
         options.inPreferredConfig = Bitmap.Config.ARGB_8888
         return BitmapFactory.decodeFile(imagePath, options)
+    }
+
+    private fun getImagePath(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
     }
 
     private fun postData() {
@@ -123,9 +171,9 @@ class WriteReview2Activity : AppCompatActivity() {
 //                .addFormDataPart("reviewCreate", "\"{\n  \\\"grade\\\": 4,\n  \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n  \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json")
 //                .build()
 
-            val file1 = File(path)
+//            val file1 = File(selectedImagePath)
 //            val file1 = File("C:\\Users\\qldls\\Downloads\\free-icon-people-3224689.png")
-            val requestBody1 = RequestBody.create(MediaType.parse("image/*"), file1)
+//            val requestBody1 = RequestBody.create(MediaType.parse("image/*"), file1)
 
 //            val file2 = File("C:/Users/김소연/Pictures/짤/img.jpg")
 //            val requestBody2 = RequestBody.create(MediaType.parse("image/jpeg"), file2)
@@ -137,15 +185,43 @@ class WriteReview2Activity : AppCompatActivity() {
 
 
 // ...
-            val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("multipartFileList", path, requestBody1)
-//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/img.jpg\"", requestBody2)
-//                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"", requestBody3)
-                .addFormDataPart("reviewCreate", "\"{\n \\\"grade\\\": 4,\n \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json")
-                .build()
-            //reviewService.writeReview(MENU_ID, reviewData)
-            reviewService.writeReview(MENU_ID, requestBody)
+//            val requestBody = MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                .addFormDataPart("multipartFileList", selectedImagePath, requestBody1)
+////                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/img.jpg\"", requestBody2)
+////                .addFormDataPart("multipartFileList", "\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"", requestBody3)
+//                .addFormDataPart("reviewCreate", "$reviewCreate;type=application/json")
+//                .build()
+
+        // 업로드할 파일의 경로 목록
+            val filePaths = listOf(
+                selectedImagePath
+            )
+
+            val fileParts = mutableListOf<MultipartBody.Part>()
+            filePaths.forEach { filePath ->
+                val file = filePath?.let { File(it) }
+                val requestFile = file?.asRequestBody("image/*".toMediaType())
+                val filePart = requestFile?.let {
+                    MultipartBody.Part.createFormData("multipartFileList", file.name,
+                        it
+                    )
+                }
+                if (filePart != null) {
+                    fileParts.add(filePart)
+                }
+            }
+            // 리뷰 데이터
+            val reviewData = """
+            {
+              "grade": $rate,
+              "reviewTags": $reviewTags,
+              "content": "$comment"
+            }
+            """.trimIndent()
+
+            reviewService.writeReview(MENU_ID, fileParts, reviewData.toRequestBody())
+//            reviewService.writeReview(MENU_ID, requestBody)
                 .enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {

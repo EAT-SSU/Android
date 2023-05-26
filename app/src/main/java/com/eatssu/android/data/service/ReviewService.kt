@@ -4,35 +4,28 @@ import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponse
 import com.eatssu.android.data.model.request.ModifyReviewRequest
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 
 interface ReviewService {
-
-//    @FormUrlEncoded
-//    @POST("review/{menuId}/detail")//리뷰 작성
-//    fun writeReview(@Path("menuId") menuId: Int,
-//                    @Body request: WriteReviewDetailRequest
+//    @Multipart
+//    @POST("review/{menuId}/detail")
+//    @Headers("Content-Type: multipart/form-data")
+//    fun writeReview(
+//        @Path("menuId") menuId: Int,
+//        @Part("request") request: MultipartBody
 //    ): Call<String>
 
     @Multipart
-    @POST("review/{menuId}/detail")
-    @Headers("Content-Type: multipart/form-data")
+    @POST("review/{menuId}/detail") // {menuId}를 동적으로 처리하기 위해 {}로 감싸줍니다.
     fun writeReview(
-        @Part("menuId") menuId: Int,
-        @Part("request") request: MultipartBody
+        @Path("menuId") menuId: Int, // menuId를 동적으로 처리하기 위해 @Path 어노테이션을 사용합니다.
+        @Part files: List<MultipartBody.Part>,
+        @Part("reviewCreate") reviewData: RequestBody,
     ): Call<String>
 
-
-    //by GPT
-//    @Multipart
-//    @POST("review/{menuId}/detail")
-//    fun writeReview(
-//        @Path("menuId") menuId: Int,
-//        @Part image: Review,
-//        @Part("reviewCreate") reviewCreate: WriteReviewDetailRequest
-//    ): Call<String>
 
     @DELETE("/review/{menuId}/detail/{reviewId}") //리뷰 삭제
     fun delReview(@Path("menuId") menuId: Int, @Path("reviewId") reviewId: Int): Call<String>
