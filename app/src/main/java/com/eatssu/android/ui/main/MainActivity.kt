@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         // 3) ViewPager2의 adapter에 설정
         viewPager.adapter = viewpagerFragmentAdapter
+        viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
 
         // ###### TabLayout과 ViewPager2를 연결

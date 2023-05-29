@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.RestaurantType
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentBreakfastBinding
@@ -41,7 +40,7 @@ class BreakfastFragment : Fragment() {
     }
 
     fun init() {
-        menuService = RetrofitImpl.getApiClientWithOutToken().create(MenuService::class.java)
+        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         setupClickListeners()
 
     }
