@@ -34,6 +34,7 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         // 3) ViewPager2의 adapter에 설정
         viewPager.adapter = viewpagerFragmentAdapter
+        //viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
 
         // ###### TabLayout과 ViewPager2를 연결
@@ -76,18 +78,39 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)  // 화면 전환을 시켜줌
         }
 
-        val monthFormat =
-            DateTimeFormatter.ofPattern("yyyy.MM.dd").withLocale(Locale.forLanguageTag("ko"))
-        val localDate = LocalDateTime.now().format(monthFormat)
-        binding.textYearMonth.text = localDate
+        // Retrieve the selected date from the saved instance state, if available
+        selectedDate = savedInstanceState?.getString("selectedDate") ?: ""
 
+        // If no date is selected, set today's date as the default
+        if (selectedDate.isEmpty()) {
+            val currentDate = LocalDate.now()
+            val dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
+            selectedDate = currentDate.format(dateFormat)
+        }
+
+        // Set the selected date to the text view
+        binding.textYearMonth.text = selectedDate
 
         binding.textYearMonth.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java);
+            intent.putExtra("selectedDate", selectedDate)
+            //selectedDate= intent.getStringExtra("selectedDate").toString()
             startActivityForResult(intent, CALENDAR_REQUEST_CODE)
-
-
         }
+
+
+        // Check if there is an intent with a date extra
+        val intentDate = intent.getStringExtra("intentdate")
+        if (intentDate != null) {
+            selectedDate = intentDate
+            binding.textYearMonth.text = selectedDate
+            Log.d("intentdate", intentDate)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("selectedDate", selectedDate)
+        super.onSaveInstanceState(outState)
     }
 
 
@@ -126,27 +149,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRestart() { //여기 문제 있음
+        super.onRestart()
 
-        val intentdate = intent.getStringExtra("intentdate")
-        if (intentdate != null) {
-            Log.d("intentdate", intentdate)
+        val intentDate = intent.getStringExtra("intentdate")
+        if (intentDate != null) {
+            selectedDate = intentDate
+            binding.textYearMonth.text = selectedDate
+            Log.d("intentdate", intentDate)
         }
 
-        binding.textYearMonth.text = intentdate
+        //binding.textYearMonth.text = intentDate
 
         binding.btnCalendarLeft.setOnClickListener {
             binding.textYearMonth.text = null
-            binding.textYearMonth.text = intentdate
+            binding.textYearMonth.text = intentDate
             /*binding.btnCalendarRight.setOnClickListener{
             binding.textYearMonth.text = null
             binding.textYearMonth.text = LocalDateTime.now().plusDays(1).format(monthFormat).toString()
         }*/
         }
-        super.onRestart()
     }
 
     companion object {
         private const val CALENDAR_REQUEST_CODE = 1
     }
 }
-
