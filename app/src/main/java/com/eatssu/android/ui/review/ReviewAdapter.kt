@@ -1,6 +1,7 @@
 package com.eatssu.android.ui.review
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetReviewListResponse
@@ -18,17 +19,30 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
             binding.tvReviewItemId.text = dataList[position].writerId.toString()
             binding.tvReviewItemComment.text = dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
+            binding.rbReviewItemRate.rating=dataList[position].grade.toFloat()
+            val tagList = dataList[position].tagList
+            val tagCount = tagList.size
 
-            if (dataList[position].tagList.isEmpty()) {
+// 태그 초기화
+            binding.tvReviewItemTag1.text = ""
+            binding.tvReviewItemTag2.text = ""
+            binding.tvReviewItemTag3.text = ""
 
-                for (i in 0 until min(dataList[position].tagList.size, 3)) {
-                    when (i) {
-                        0 -> binding.tvReviewItemTag1.text = dataList[position].tagList[i]
-                        1 -> binding.tvReviewItemTag2.text = dataList[position].tagList[i]
-                        2 -> binding.tvReviewItemTag3.text = dataList[position].tagList[i]
-                    }
-                }
+            val tagTextViews = arrayOf(
+                binding.tvReviewItemTag1,
+                binding.tvReviewItemTag2,
+                binding.tvReviewItemTag3
+            )
+
+            for (i in 0 until min(tagCount, tagTextViews.size)) {
+                tagTextViews[i].text = tagList[i]
             }
+
+            for (i in tagCount until tagTextViews.size) {
+                tagTextViews[i].visibility = View.GONE
+            }
+
+
         }
     }
 

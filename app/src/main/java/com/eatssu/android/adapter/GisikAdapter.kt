@@ -19,7 +19,7 @@ class GisikAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>)
         fun bind(position: Int) {
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
-            binding.tvRate.text = dataList[position].grade.toString()
+            binding.tvRate.text = String.format("%.1f", dataList[position].price.toString().toFloat().toString())
         }
     }
 

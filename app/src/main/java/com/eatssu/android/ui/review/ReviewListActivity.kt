@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.App
 import com.eatssu.android.R
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetReviewInfoResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.service.ReviewService
@@ -65,7 +64,7 @@ class ReviewListActivity : AppCompatActivity() {
     }
 
     private fun lodeReviewInfo(id:Int) {
-        val reviewService = RetrofitImpl.getApiClient().create(ReviewService::class.java)
+        val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
         reviewService.reviewInfo(menuId = id).enqueue(object :
             Callback<GetReviewInfoResponse> {
             override fun onResponse(
@@ -78,7 +77,8 @@ class ReviewListActivity : AppCompatActivity() {
 
                     menu = response.body()?.menuName.toString()
                     binding.tvMenu.text = response.body()?.menuName.toString()
-                    binding.tvRate.text = response.body()?.grade.toString()
+                    binding.tvRate.text =
+                        String.format("%.1f", response.body()?.grade!!.toFloat()).toFloat().toString()
                     binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
                     binding.rbAverageRate.rating=response.body()?.grade!!.toFloat()
 
@@ -109,7 +109,7 @@ class ReviewListActivity : AppCompatActivity() {
     }
 
     private fun lodeData(id:Int) {
-        val reviewService = RetrofitImpl.getApiClient().create(ReviewService::class.java)
+        val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
         reviewService.getReview(id).enqueue(object :
             Callback<GetReviewListResponse> {
             override fun onResponse(
