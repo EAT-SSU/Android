@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.eatssu.android.R
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.ChangeNickname
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityChangeNicknameBinding
@@ -47,7 +46,7 @@ class ChangeNicknameActivity : BaseActivity() {
         binding.btnChNicknameDone.setOnClickListener{
 
             val userService =
-                RetrofitImpl.getApiClient().create(UserService::class.java)
+                RetrofitImpl.retrofit.create(UserService::class.java)
             userService.changeNickname(ChangeNickname(chNick)).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
@@ -70,6 +69,9 @@ class ChangeNicknameActivity : BaseActivity() {
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Log.d("post", "onFailure 에러: " + t.message.toString());
+                    Toast.makeText(
+                        this@ChangeNicknameActivity, "닉네임 변경에 실패했습니다.\"", Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         }

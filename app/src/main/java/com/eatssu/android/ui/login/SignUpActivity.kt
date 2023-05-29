@@ -12,7 +12,6 @@ import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.R
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.SignUpRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.UserService
@@ -103,7 +102,7 @@ class SignUpActivity : BaseActivity() {
         binding.btnEmailExist.setOnClickListener {
 
             if (emailCheck()) {
-                val userService = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+                val userService = RetrofitImpl.nonRetrofit.create(UserService::class.java)
                 userService.getEmailExist(email).enqueue(object : Callback<Boolean> {
                     override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                         if (response.isSuccessful) {
@@ -135,7 +134,7 @@ class SignUpActivity : BaseActivity() {
             if (pwDoubleCheck() && pwCheck()) {
                 val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-                val userService = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+                val userService = RetrofitImpl.retrofit.create(UserService::class.java)
                 userService.signUp(SignUpRequest(email, name, pw))
                     .enqueue(object : Callback<TokenResponse> {
                         override fun onResponse(

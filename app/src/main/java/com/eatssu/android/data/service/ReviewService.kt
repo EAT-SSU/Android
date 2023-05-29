@@ -10,21 +10,13 @@ import retrofit2.http.*
 
 
 interface ReviewService {
-//    @Multipart
-//    @POST("review/{menuId}/detail")
-//    @Headers("Content-Type: multipart/form-data")
-//    fun writeReview(
-//        @Path("menuId") menuId: Int,
-//        @Part("request") request: MultipartBody
-//    ): Call<String>
-
     @Multipart
-    @POST("review/{menuId}/detail") // {menuId}를 동적으로 처리하기 위해 {}로 감싸줍니다.
-    fun writeReview(
-        @Path("menuId") menuId: Int, // menuId를 동적으로 처리하기 위해 @Path 어노테이션을 사용합니다.
-//        @Part files: List<MultipartBody.Part>,
+    @POST("review/{menuId}/detail")
+    fun uploadFiles(
+        @Path("menuId") menuId: Int,
+        @Part files: List<MultipartBody.Part>?,
         @Part("reviewCreate") reviewData: RequestBody,
-    ): Call<String>
+    ): Call<Void>
 
 
     @DELETE("/review/{menuId}/detail/{reviewId}") //리뷰 삭제
