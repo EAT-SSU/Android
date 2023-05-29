@@ -13,7 +13,6 @@ import com.eatssu.android.adapter.FoodAdapter
 import com.eatssu.android.adapter.KitchenAdapter
 import com.eatssu.android.adapter.SnackAdapter
 import com.eatssu.android.data.enums.RestaurantType
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentLunchBinding
@@ -43,7 +42,7 @@ class LunchFragment : Fragment() {
     }
 
     fun init() {
-        menuService = RetrofitImpl.getApiClientWithOutToken().create(MenuService::class.java)
+        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         setupClickListeners()
 
     }

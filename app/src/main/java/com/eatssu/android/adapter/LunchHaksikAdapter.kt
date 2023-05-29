@@ -19,7 +19,7 @@ class LunchHaksikAdapter(private val dataList: List<GetMenuInfoListResponse.Menu
         fun bind(position: Int) {
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
-            binding.tvRate.text = String.format("%.1f", dataList[position].price.toString().toFloat().toString())
+            binding.tvRate.text = String.format("%.1f", dataList[position].grade)
         }
     }
 
