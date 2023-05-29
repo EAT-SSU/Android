@@ -22,7 +22,7 @@ interface ReviewService {
     @POST("review/{menuId}/detail") // {menuId}를 동적으로 처리하기 위해 {}로 감싸줍니다.
     fun writeReview(
         @Path("menuId") menuId: Int, // menuId를 동적으로 처리하기 위해 @Path 어노테이션을 사용합니다.
-        @Part files: List<MultipartBody.Part>,
+//        @Part files: List<MultipartBody.Part>,
         @Part("reviewCreate") reviewData: RequestBody,
     ): Call<String>
 

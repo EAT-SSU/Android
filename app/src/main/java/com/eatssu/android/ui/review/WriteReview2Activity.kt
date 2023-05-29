@@ -1,11 +1,14 @@
 package com.eatssu.android.ui.review
 
+
+
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -19,18 +22,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.eatssu.android.App
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReview2Binding
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.File
+import java.io.IOException
 
 
 class WriteReview2Activity : AppCompatActivity() {
@@ -61,7 +64,7 @@ class WriteReview2Activity : AppCompatActivity() {
 
         binding = ActivityWriteReview2Binding.inflate(layoutInflater)
         setContentView(binding.root)
-        initRetrofit()
+//        initRetrofit()
         // 외부 저장소에 대한 런타임 퍼미션 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
@@ -120,6 +123,7 @@ class WriteReview2Activity : AppCompatActivity() {
             postData()
         }
     }
+
     companion object {
         private const val REQUEST_IMAGE_PICK = 1
     }
@@ -138,6 +142,7 @@ class WriteReview2Activity : AppCompatActivity() {
             selectedImagePath = imageUri?.let { getImagePath(it) }
         }
     }
+
     fun convertImagePathToBitmap(imagePath: String): Bitmap? {
         val options = BitmapFactory.Options()
         options.inPreferredConfig = Bitmap.Config.ARGB_8888
@@ -156,7 +161,61 @@ class WriteReview2Activity : AppCompatActivity() {
         return null
     }
 
+    private inner class PostDataAsyncTask : AsyncTask<Unit, Unit, String>() {
+        override fun doInBackground(vararg params: Unit?): String {
+
+
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("reviewCreate", "\"{\n  \\\"grade\\\": 4,\n  \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n  \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json")
+                .addFormDataPart("multipartFileList", "$selectedImagePath", File("$selectedImagePath").asRequestBody())
+                .build()
+
+            val request = Request.Builder()
+                .url("https://eatssu.shop/review/$MENU_ID/detail")
+                .post(requestBody)
+                .header(
+                    "Authorization",
+                    "Bearer ${App.token_prefs.accessToken}"
+                )
+                .header("accept", "application/json")  // Content-Type 수정
+                .header("Content-Type", "multipart/form-data")  // Content-Type 수정
+
+                .build()
+
+            val client = OkHttpClient()
+            val response = client.newCall(request).execute()
+
+
+            return response.body?.string() ?: ""
+        }
+
+        override fun onPostExecute(result: String?) {
+            if (result != null) {
+                Log.d("post",result)
+            } else {
+                // 서버 응답이 실패한 경우
+                // 실패 상황 처리 코드 작성
+                Log.d("post", result.toString())
+                Toast.makeText(this@WriteReview2Activity, "리뷰를 업로드 하지 못했습니다.", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
+
     private fun postData() {
+        if (MENU_ID != -1) {
+            val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
+            val filePaths = listOf(selectedImagePath)
+
+            // AsyncTask 실행
+            val postDataAsyncTask = PostDataAsyncTask()
+            postDataAsyncTask.execute()
+        }
+    }
+}
+
+/*    private fun postData() {
         val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
 
         if (MENU_ID != -1) {
@@ -193,7 +252,7 @@ class WriteReview2Activity : AppCompatActivity() {
 //                .addFormDataPart("reviewCreate", "$reviewCreate;type=application/json")
 //                .build()
 
-        // 업로드할 파일의 경로 목록
+            // 업로드할 파일의 경로 목록
             val filePaths = listOf(
                 selectedImagePath
             )
@@ -203,7 +262,8 @@ class WriteReview2Activity : AppCompatActivity() {
                 val file = filePath?.let { File(it) }
                 val requestFile = file?.asRequestBody("image/*".toMediaType())
                 val filePart = requestFile?.let {
-                    MultipartBody.Part.createFormData("multipartFileList", file.name,
+                    MultipartBody.Part.createFormData(
+                        "multipartFileList", file.name,
                         it
                     )
                 }
@@ -220,92 +280,133 @@ class WriteReview2Activity : AppCompatActivity() {
             }
             """.trimIndent()
 
-            reviewService.writeReview(MENU_ID, fileParts, reviewData.toRequestBody())
-//            reviewService.writeReview(MENU_ID, requestBody)
-                .enqueue(object : Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if (response.isSuccessful) {
-                            // 정상적으로 통신이 성공한 경우
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
-                            Toast.makeText(
-                                this@WriteReview2Activity,
-                                "리뷰가 등록되었습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            startActivity(intent)  // 화면 전환을 시켜줌
-                            finish()
-                        } else {
-                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            Log.d(
-                                "post",
-                                "onResponse 실패" + response.code()
-                            )
-                        }
-                    }
 
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                        Log.d("post", "onFailure 에러: " + t.message.toString())
-                    }
-                })
-        }
-    }
+            val client = OkHttpClient()
 
-    private fun getRealPathFromURI(currentImageUri: Uri): String {
-        val buildName = Build.MANUFACTURER
-        if (buildName.equals("Xiaomi")) {
-            Log.d("post3", currentImageUri.path.toString())
-            return currentImageUri.path.toString()
-        }
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(
+                    "multipartFileList",
+                    "$selectedImagePath",
+                    File("$selectedImagePath").asRequestBody()
+                )
+//                .addFormDataPart(
+//                    "multipartFileList",
+//                    "\"/C:/Users/김소연/Pictures/짤/img.jpg\"",
+//                    File("\"/C:/Users/김소연/Pictures/짤/img.jpg\"").asRequestBody()
+//                )
+//                .addFormDataPart(
+//                    "multipartFileList",
+//                    "\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"",
+//                    File("\"/C:/Users/김소연/Pictures/짤/IMG_0997.jpg\"").asRequestBody()
+//                )
+                .addFormDataPart(
+                    "reviewCreate",
+                    "\"{\n  \\\"grade\\\": 4,\n  \\\"reviewTags\\\": [\\\"GOOD\\\",\\\"BAD\\\"],\n  \\\"content\\\": \\\"맛있어용\\\"\n}\";type=application/json"
+                )
+                .build()
 
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        var cursor = contentResolver.query(currentImageUri, proj, null, null, null)
-        if (cursor!!.moveToFirst()) {
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
+            val request = Request.Builder()
+                .url("https://eatssu.shop/review/$MENU_ID/detail")
+                .post(requestBody)
+                .header(
+                    "Authorization",
+                    "Bearer ${App.token_prefs.accessToken}"
+                )
+                .build()
 
-        return cursor.getString(columnIndex)
-
-    }
-
-    private fun initRetrofit() {
-        retrofit = RetrofitImpl.getApiClient()
-        reviewService = retrofit.create(ReviewService::class.java)
-    }
-
-
-    private fun initAddPhoto() {
-        var writePermission = ContextCompat.checkSelfPermission(
-            this,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        var readPermission = ContextCompat.checkSelfPermission(
-            this,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-
-        if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE
-                ),
-                1
-            )
-        } else {
-            val state = Environment.getExternalStorageState()
-            if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.type = "image/*"
-                getResult.launch(intent)
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                response.body!!.string()
             }
 
-
+//            reviewService.writeReview(MENU_ID, fileParts, reviewData.toRequestBody())
+////            reviewService.writeReview(MENU_ID, requestBody)
+//                .enqueue(object : Callback<String> {
+//                    override fun onResponse(call: Call<String>, response: Response<String>) {
+//                        if (response.isSuccessful) {
+//                            // 정상적으로 통신이 성공한 경우
+//                            Log.d("post", "onResponse 성공: " + response.body().toString())
+//                            Toast.makeText(
+//                                this@WriteReview2Activity,
+//                                "리뷰가 등록되었습니다.",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                            startActivity(intent)  // 화면 전환을 시켜줌
+//                            finish()
+//                        } else {
+//                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+//                            Log.d(
+//                                "post",
+//                                "onResponse 실패" + response.code()
+//                            )
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<String>, t: Throwable) {
+//                        // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+//                        Log.d("post", "onFailure 에러: " + t.message.toString())
+//                    }
+//                })
         }
     }
-}
+//
+//    private fun getRealPathFromURI(currentImageUri: Uri): String {
+//        val buildName = Build.MANUFACTURER
+//        if (buildName.equals("Xiaomi")) {
+//            Log.d("post3", currentImageUri.path.toString())
+//            return currentImageUri.path.toString()
+//        }
+//
+//        var columnIndex = 0
+//        val proj = arrayOf(MediaStore.Images.Media.DATA)
+//        var cursor = contentResolver.query(currentImageUri, proj, null, null, null)
+//        if (cursor!!.moveToFirst()) {
+//            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        }
+//
+//        return cursor.getString(columnIndex)
+//
+//    }
+
+//    private fun initRetrofit() {
+//        retrofit = RetrofitImpl.getApiClient()
+//        reviewService = retrofit.create(ReviewService::class.java)
+//    }
+//
+//
+//    private fun initAddPhoto() {
+//        var writePermission = ContextCompat.checkSelfPermission(
+//            this,
+//            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+//        )
+//        var readPermission = ContextCompat.checkSelfPermission(
+//            this,
+//            android.Manifest.permission.READ_EXTERNAL_STORAGE
+//        )
+//
+//        if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(
+//                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+//                ),
+//                1
+//            )
+//        } else {
+//            val state = Environment.getExternalStorageState()
+//            if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
+//                val intent = Intent(Intent.ACTION_PICK)
+//                intent.type = "image/*"
+//                getResult.launch(intent)
+//            }
+//
+//
+//        }
+//    }
+
+
 
 //import java.io.File
 //import java.io.IOException
@@ -333,4 +434,4 @@ class WriteReview2Activity : AppCompatActivity() {
 //client.newCall(request).execute().use { response ->
 //    if (!response.isSuccessful) throw IOException("Unexpected code $response")
 //    response.body!!.string()
-//}
+//}*/
