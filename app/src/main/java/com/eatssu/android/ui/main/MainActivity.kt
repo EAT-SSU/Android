@@ -61,6 +61,8 @@ class MainActivity : AppCompatActivity() {
 
         // 3) ViewPager2의 adapter에 설정
         viewPager.adapter = viewpagerFragmentAdapter
+
+        //진입 시 디폴트 tab 설정 -> 나중에 시간대 별로 설정되게 수정할 것
         //viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
 
@@ -69,7 +71,8 @@ class MainActivity : AppCompatActivity() {
         val tabTitles = listOf<String>("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(tabLayout,
+        TabLayoutMediator(
+            tabLayout,
             viewPager,
             { tab, position -> tab.text = tabTitles[position] }).attach()
 
@@ -94,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         binding.textYearMonth.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java);
             intent.putExtra("selectedDate", selectedDate)
-            //selectedDate= intent.getStringExtra("selectedDate").toString()
             startActivityForResult(intent, CALENDAR_REQUEST_CODE)
         }
 
