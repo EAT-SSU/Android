@@ -134,7 +134,7 @@ class SignUpActivity : BaseActivity() {
             if (pwDoubleCheck() && pwCheck()) {
                 val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
 
-                val userService = RetrofitImpl.retrofit.create(UserService::class.java)
+                val userService = RetrofitImpl.nonRetrofit.create(UserService::class.java)
                 userService.signUp(SignUpRequest(email, name, pw))
                     .enqueue(object : Callback<TokenResponse> {
                         override fun onResponse(
@@ -169,7 +169,7 @@ class SignUpActivity : BaseActivity() {
                         }
                     })
             } else {
-
+                Toast.makeText(this@SignUpActivity, "비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
             }
 
 

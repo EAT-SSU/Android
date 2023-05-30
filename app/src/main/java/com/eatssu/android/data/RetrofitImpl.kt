@@ -12,7 +12,7 @@ object RetrofitImpl {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
         OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
+//            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(NonAppInterceptor())
             .build()
     }
@@ -46,7 +46,7 @@ object RetrofitImpl {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
         OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
+//            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(AppInterceptor())
             .build()
     }
@@ -81,7 +81,7 @@ object RetrofitImpl {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
         OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
+//            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(mAppInterceptor())
             .build()
     }
