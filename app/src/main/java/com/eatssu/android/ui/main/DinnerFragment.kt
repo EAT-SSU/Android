@@ -71,40 +71,36 @@ class DinnerFragment : Fragment() {
     }
 
     private fun lodeData() {
-//        getFixedMenu(RestaurantType.FOOD_COURT, binding.rvLunchFood)
-//        getFixedMenu(RestaurantType.SNACK_CORNER, binding.rvLunchSnack)
-//        getFixedMenu(RestaurantType.THE_KITCHEN ,binding.rvLunchKitchen)
-
         getNonFixed()
     }
 
-    private fun setAdapter(
-        menuList: List<GetMenuInfoListResponse.MenuInfo>,
-        recyclerView: RecyclerView,
-        restaurantType: RestaurantType
-    ) {
-//        val foodAdapter =  FoodAdapter(menuList)
-//        val snackAdapter = SnackAdapter(menuList)
-//        val kitchenAdapter = KitchenAdapter(menuList)
-        val dodamAdapter = DodamAdapter(menuList)
-        val gisikAdapter = GisikAdapter(menuList)
-
-        val adapter = when (restaurantType) {
-//            RestaurantType.SNACK_CORNER -> snackAdapter
-//            RestaurantType.THE_KITCHEN -> kitchenAdapter
-//            RestaurantType.FOOD_COURT -> foodAdapter
-            RestaurantType.DODAM -> dodamAdapter
-            RestaurantType.DOMITORY -> gisikAdapter
-
-            else -> {
-                dodamAdapter // 그냥
-            }
-        }
-
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.setHasFixedSize(true)
-    }
+//    private fun setAdapter(
+//        menuList: List<GetMenuInfoListResponse.MenuInfo>,
+//        recyclerView: RecyclerView,
+//        restaurantType: RestaurantType
+//    ) {
+////        val foodAdapter =  FoodAdapter(menuList)
+////        val snackAdapter = SnackAdapter(menuList)
+////        val kitchenAdapter = KitchenAdapter(menuList)
+//        val dodamAdapter = DodamAdapter(menuList)
+//        val gisikAdapter = GisikAdapter(menuList)
+//
+//        val adapter = when (restaurantType) {
+////            RestaurantType.SNACK_CORNER -> snackAdapter
+////            RestaurantType.THE_KITCHEN -> kitchenAdapter
+////            RestaurantType.FOOD_COURT -> foodAdapter
+//            RestaurantType.DODAM -> dodamAdapter
+//            RestaurantType.DOMITORY -> gisikAdapter
+//
+//            else -> {
+//                dodamAdapter // 그냥
+//            }
+//        }
+//
+//        recyclerView.adapter = adapter
+//        recyclerView.layoutManager = LinearLayoutManager(context)
+//        recyclerView.setHasFixedSize(true)
+//    }
 
     private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
 
@@ -117,7 +113,7 @@ class DinnerFragment : Fragment() {
                     if (response.isSuccessful) {
                         val body = response.body()
                         body?.let {
-                            setAdapter(it.menuInfoList, recyclerView, restaurantType)
+//                            setAdapter(it.menuInfoList, recyclerView, restaurantType)
                         }
                     } else {
                         Log.d("post", "onResponse 실패")

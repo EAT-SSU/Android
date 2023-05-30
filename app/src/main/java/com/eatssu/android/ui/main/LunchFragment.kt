@@ -75,17 +75,13 @@ class LunchFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun lodeData() {
-//        getChangedMenu()
-
         getChangedMenu(RestaurantType.DODAM,binding.rvLunchDodam)
         getChangedMenu(RestaurantType.HAKSIK,binding.rvLunchHaksik)
-
-//        getNonFixed(RestaurantType.HAKSIK,binding.rvLunchDormitory)
-
 
         getFixedMenu(RestaurantType.FOOD_COURT, binding.rvLunchFood)
         getFixedMenu(RestaurantType.SNACK_CORNER, binding.rvLunchSnack)
         getFixedMenu(RestaurantType.THE_KITCHEN, binding.rvLunchKitchen)
+
 //        getNonFixed()
     }
 

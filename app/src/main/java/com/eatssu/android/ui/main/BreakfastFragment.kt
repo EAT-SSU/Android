@@ -74,33 +74,33 @@ class BreakfastFragment : Fragment() {
         getNonFixed()
     }
 
-    private fun setAdapter(
-        menuList: List<GetMenuInfoListResponse.MenuInfo>,
-        recyclerView: RecyclerView,
-        restaurantType: RestaurantType
-    ) {
-//        val foodAdapter =  FoodAdapter(menuList)
-//        val snackAdapter = SnackAdapter(menuList)
-//        val kitchenAdapter = KitchenAdapter(menuList)
-        val dodamAdapter = DodamAdapter(menuList)
-        val gisikAdapter = GisikAdapter(menuList)
-
-        val adapter = when (restaurantType) {
-//            RestaurantType.SNACK_CORNER -> snackAdapter
-//            RestaurantType.THE_KITCHEN -> kitchenAdapter
-//            RestaurantType.FOOD_COURT -> foodAdapter
-//            RestaurantType.DODAM -> dodamAdapter
-            RestaurantType.DOMITORY -> gisikAdapter
-
-            else -> {
-                dodamAdapter // 그냥
-            }
-        }
-
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.setHasFixedSize(true)
-    }
+//    private fun setAdapter(
+//        menuList: List<GetMenuInfoListResponse>,
+//        recyclerView: RecyclerView,
+//        restaurantType: RestaurantType
+//    ) {
+////        val foodAdapter =  FoodAdapter(menuList)
+////        val snackAdapter = SnackAdapter(menuList)
+////        val kitchenAdapter = KitchenAdapter(menuList)
+////        val dodamAdapter = DodamAdapter(menuList)
+//        val gisikAdapter = GisikAdapter(menuList)
+//
+//        val adapter = when (restaurantType) {
+////            RestaurantType.SNACK_CORNER -> snackAdapter
+////            RestaurantType.THE_KITCHEN -> kitchenAdapter
+////            RestaurantType.FOOD_COURT -> foodAdapter
+////            RestaurantType.DODAM -> dodamAdapter
+//            RestaurantType.DOMITORY -> gisikAdapter
+//
+//            else -> {
+//                dodamAdapter // 그냥
+//            }
+//        }
+//
+//        recyclerView.adapter = adapter
+//        recyclerView.layoutManager = LinearLayoutManager(context)
+//        recyclerView.setHasFixedSize(true)
+//    }
 
 //    private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
 //
