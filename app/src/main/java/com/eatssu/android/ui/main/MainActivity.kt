@@ -34,6 +34,7 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -41,7 +42,9 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var selectedDate: String = ""
-
+    private var year: String = ""
+    private var month: String = ""
+    private var day: String = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +89,27 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, CalendarActivity::class.java);
             startActivityForResult(intent, CALENDAR_REQUEST_CODE)
 
+        }
+        val year = binding.textYearMonth.text.substring(0,4)
+        val month = binding.textYearMonth.text.substring(5,7)
+        val day = binding.textYearMonth.text.substring(8,10)
+        Log.d("cutyear", year)
+        Log.d("cutmonth", month)
+        Log.d("cutday", day)
+        binding.btnCalendarLeft.setOnClickListener {
+            val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            Log.d("currentDate", currentDate.toString());
+            val previousDate = currentDate.minusDays(1)
+            Log.d("previousDate", previousDate.toString())
+            val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            binding.textYearMonth.text = newDate
+        }
 
+        binding.btnCalendarRight.setOnClickListener {
+            val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            val previousDate = currentDate.plusDays(1)
+            val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            binding.textYearMonth.text = newDate
         }
     }
 
@@ -100,7 +123,27 @@ class MainActivity : AppCompatActivity() {
                 binding.textYearMonth.text = selectedDate
                 Log.d("changedate", selectedDate)
 
+
             }
+            /*binding.textYearMonth.text = selectedDate
+            val year = binding.textYearMonth.text.substring(0,4)
+            val month = binding.textYearMonth.text.substring(5,7)
+            val day = binding.textYearMonth.text.substring(8,10)
+            Log.d("cutyear", year)
+            Log.d("cutmonth", month)
+            Log.d("cutday", day)
+
+            binding.btnCalendarLeft.setOnClickListener {
+                val cday = String.format("%02d",day.toInt()-1)
+                val newdate = "$year.$month.$cday"
+                binding.textYearMonth.text = newdate
+            }
+
+            binding.btnCalendarRight.setOnClickListener {
+                val cday = String.format("%02d", day.toInt() + 1)
+                val newdate = "$year.$month.$cday"
+                binding.textYearMonth.text = newdate
+            }*/
         }
     }
 
@@ -127,12 +170,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRestart() { //여기 문제 있음
-
+        super.onRestart()
         binding.textYearMonth.text = selectedDate
-
-        val year = selectedDate.substring(0,4)
-        val month = selectedDate.substring(5,7)
-        val day = selectedDate.substring(8,10)
+        /*val year = binding.textYearMonth.text.substring(0,4)
+        val month = binding.textYearMonth.text.substring(5,7)
+        val day = binding.textYearMonth.text.substring(8,10)
         Log.d("cutyear", year)
         Log.d("cutmonth", month)
         Log.d("cutday", day)
@@ -145,13 +187,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnCalendarRight.setOnClickListener {
-            val cday = String.format("%02d",day.toInt()+1)
+            val cday = String.format("%02d", day.toInt() + 1)
             val newdate = year + "." + month + "." + cday
             binding.textYearMonth.text = null
             binding.textYearMonth.text = newdate
-        }
+        }*/
 
-        super.onRestart()
+
+
+
     }
 
     companion object {
