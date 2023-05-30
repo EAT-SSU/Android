@@ -88,7 +88,7 @@
                 android:value="" />
         </activity>
 
-        <!--<activity
+        <activity
             android:name=".ui.mypage.MyReviewListActivity"
             android:exported="true">
             <intent-filter>
@@ -100,7 +100,7 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>-->
+        </activity>
         <activity
             android:name=".ui.review.ReviewListActivity"
             android:exported="true">

@@ -1,68 +1,86 @@
 package com.eatssu.android.ui.mypage
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.FrameLayout
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.R
+import com.eatssu.android.data.model.response.GetMyReviewResponse
+import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.*
-import com.eatssu.android.ui.BaseActivity
+import com.eatssu.android.ui.review.MyReviewAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
+
+//@POST("mypage/myreview") //내가 쓴 리뷰 모아보기
+//fun getMyReviews(@Query("lastReviewId") lastReviewId: Int): Call<GetMyReviewResponse>
 
 class MyReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewListBinding
-/*
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_my_review_list
-    }
+    lateinit var menu :String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMyReviewListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+//        binding.included.actionBar.text="리뷰"
+//        binding = ActivityReviewListBinding.inflate(layoutInflater, null, true)
 
-        val inflater = LayoutInflater.from(this)
-        inflater.inflate(R.layout.activity_my_review_list, findViewById(R.id.frame_layout), true)
-        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
-        supportActionBar?.title = "내가 쓴 리뷰"
+        //val inflater = LayoutInflater.from(this)
+        //inflater(binding.root, findViewById(R.id.frame_layout), true)
 
-        val reviewList : ArrayList<review> = arrayListOf()
+        supportActionBar?.title = "리뷰"
 
-        reviewList.apply {
-            add(review("김치볶음밥","여기 계란국 맛집임... 김치볶음밥에 계란후라이 없어서 아쉽\n" +
-                    "다음에 또 먹어야지","2023-03-16"))
-            add(review("나시고랭","김치볶음밥은 실패할 수 없다 배부르게 잘 먹고 감 ","2023-03-17"))
-            add(review("쌀국수","여기 계란국 맛집임... 김치볶음밥에 계란후라이 없어서 아쉽\n" +
-                    "다음에 또 먹어야지","2023-03-16"))
-            add(review("찜닭","김치볶음밥은 실패할 수 없다 배부르게 잘 먹고 감 ","2023-03-17"))
-        }
+        var MENU_ID:Int=intent.getIntExtra("menuId",-1)
+        Log.d("post",MENU_ID.toString())
 
+
+        lodeReview()
+    }
+
+    private fun setAdapter(reviewList: List<GetMyReviewResponse.Data>) {
         val listAdapter = MyReviewAdapter(reviewList)
-        binding.rvReview.adapter=listAdapter
-
         val linearLayoutManager = LinearLayoutManager(this)
-        binding.rvReview.layoutManager=linearLayoutManager
 
+        binding.rvReview.adapter = listAdapter
+        binding.rvReview.layoutManager = linearLayoutManager
         binding.rvReview.setHasFixedSize(true)
         binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
 
-
-
     }
-//
-//    private fun setAdapter(reviewList: List<review>){
-//
-//        val reviewAdapter = ReviewAdapter(reviewList)
-//        binding.rvReview.adapter=reviewAdapter
-//
-//        val linearLayoutManager = LinearLayoutManager(this)
-//        binding.rvReview.layoutManager=linearLayoutManager
-//
-//        binding.rvReview.setHasFixedSize(true)
-//        // 1. 정의되어 있는 구분선
-//        binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-//    }*/
+
+    private fun lodeReview() {
+        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        myPageService.getMyReviews().enqueue(object :
+            Callback<GetMyReviewResponse> {
+            override fun onResponse(
+                call: Call<GetMyReviewResponse>,
+                response: Response<GetMyReviewResponse>
+            ) {
+                if (response.isSuccessful) {
+                    // 정상적으로 통신이 성공된 경우
+                    Log.d("post", "onResponse 성공: " + response.body().toString());
+
+
+                    val body = response.body()
+                    body?.let {
+                        setAdapter(it.dataList)
+                    }
+
+                } else {
+                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                    Log.d("post", "onResponse 실패")
+                }
+            }
+
+            override fun onFailure(call: Call<GetMyReviewResponse>, t: Throwable) {
+                // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+                Log.d("post", "onFailure 에러: " + t.message.toString());
+            }
+        })
+    }
 }
