@@ -34,7 +34,7 @@
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="2f9633fd031ca35b60f4ec7fa3db1920" />
+            android:value="${KAKAO_APP_KEY}" />
 
         <activity
             android:name=".ui.login.LoginActivity"
