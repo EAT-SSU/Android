@@ -47,8 +47,8 @@ class ChangeNicknameActivity : BaseActivity() {
 
             val userService =
                 RetrofitImpl.retrofit.create(UserService::class.java)
-            userService.changeNickname(ChangeNickname(chNick)).enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
+            userService.changeNickname(ChangeNickname(chNick)).enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
                         Log.d("post", "onResponse 성공: " + response.body().toString());
 
@@ -67,7 +67,7 @@ class ChangeNicknameActivity : BaseActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     Log.d("post", "onFailure 에러: " + t.message.toString());
                     Toast.makeText(
                         this@ChangeNicknameActivity, "닉네임 변경에 실패했습니다.\"", Toast.LENGTH_SHORT
