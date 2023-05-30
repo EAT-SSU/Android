@@ -121,15 +121,13 @@
                         </View>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_breakfast_haksik"
+                            android:id="@+id/rv_lunch_haksik"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="parent"
-                            tools:listitem="@layout/item_haksik">
-
-                        </androidx.recyclerview.widget.RecyclerView>
+                            app:layout_constraintTop_toBottomOf="parent"/>
+<!--                            tools:listitem="@layout/item_haksik"-->
 
                     </LinearLayout>
 
@@ -226,20 +224,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_marginTop="5dp"
-                        android:background="@color/main">
+                        android:background="@color/main"/>
 
-                    </View>
-
-                    <TextView
-                        android:id="@+id/rv_breakfast_dodam"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_lunch_dodam"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
-
-                    </TextView>
+                        app:layout_constraintTop_toBottomOf="parent"
+                        tools:listitem="@layout/item_dodam"/>
 
                 </LinearLayout>
 
@@ -336,16 +330,14 @@
 
                     </View>
 
-                    <TextView
-                        android:id="@+id/rv_breakfast_gisik"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_lunch_dormitory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
+                        app:layout_constraintTop_toBottomOf="parent"/>
 
-                    </TextView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -436,9 +428,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_marginTop="5dp"
-                        android:background="@color/main">
+                        android:background="@color/main"/>
 
-                    </View>
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_lunch_kitchen"
                         android:layout_width="match_parent"
