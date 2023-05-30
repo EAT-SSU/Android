@@ -98,9 +98,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("cutday", day)
         binding.btnCalendarLeft.setOnClickListener {
             val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            Log.d("currentDate", currentDate.toString());
             val previousDate = currentDate.minusDays(1)
-            Log.d("previousDate", previousDate.toString())
             val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
             binding.textYearMonth.text = newDate
         }
@@ -122,28 +120,7 @@ class MainActivity : AppCompatActivity() {
                 selectedDate = changedDate
                 binding.textYearMonth.text = selectedDate
                 Log.d("changedate", selectedDate)
-
-
             }
-            /*binding.textYearMonth.text = selectedDate
-            val year = binding.textYearMonth.text.substring(0,4)
-            val month = binding.textYearMonth.text.substring(5,7)
-            val day = binding.textYearMonth.text.substring(8,10)
-            Log.d("cutyear", year)
-            Log.d("cutmonth", month)
-            Log.d("cutday", day)
-
-            binding.btnCalendarLeft.setOnClickListener {
-                val cday = String.format("%02d",day.toInt()-1)
-                val newdate = "$year.$month.$cday"
-                binding.textYearMonth.text = newdate
-            }
-
-            binding.btnCalendarRight.setOnClickListener {
-                val cday = String.format("%02d", day.toInt() + 1)
-                val newdate = "$year.$month.$cday"
-                binding.textYearMonth.text = newdate
-            }*/
         }
     }
 
@@ -156,10 +133,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-//            android.R.id.home -> {
-//                onBackPressed()
-//                true
-//            }
             R.id.action_setting -> {
                 val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
                 startActivity(intent)  // 화면 전환을 시켜줌
@@ -172,30 +145,6 @@ class MainActivity : AppCompatActivity() {
     override fun onRestart() { //여기 문제 있음
         super.onRestart()
         binding.textYearMonth.text = selectedDate
-        /*val year = binding.textYearMonth.text.substring(0,4)
-        val month = binding.textYearMonth.text.substring(5,7)
-        val day = binding.textYearMonth.text.substring(8,10)
-        Log.d("cutyear", year)
-        Log.d("cutmonth", month)
-        Log.d("cutday", day)
-
-        binding.btnCalendarLeft.setOnClickListener {
-            val cday = String.format("%02d",day.toInt()-1)
-            val newdate = year + "." + month + "." + cday
-            binding.textYearMonth.text = null
-            binding.textYearMonth.text = newdate
-        }
-
-        binding.btnCalendarRight.setOnClickListener {
-            val cday = String.format("%02d", day.toInt() + 1)
-            val newdate = year + "." + month + "." + cday
-            binding.textYearMonth.text = null
-            binding.textYearMonth.text = newdate
-        }*/
-
-
-
-
     }
 
     companion object {

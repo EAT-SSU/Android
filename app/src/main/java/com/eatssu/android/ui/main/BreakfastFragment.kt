@@ -14,7 +14,8 @@ import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentBreakfastBinding
 import com.eatssu.android.ui.infopage.*
-import com.eatssu.android.ui.menuAdapter.*
+import com.eatssu.android.adapter.DodamAdapter
+import com.eatssu.android.adapter.GisikAdapter
 import retrofit2.Retrofit
 
 class BreakfastFragment : Fragment() {

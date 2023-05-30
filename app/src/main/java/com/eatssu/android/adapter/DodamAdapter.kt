@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.menuAdapter
+package com.eatssu.android.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
-import com.eatssu.android.databinding.ItemHaksikBinding
+import com.eatssu.android.databinding.ItemDodamBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
-class HaksikAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>):
-    RecyclerView.Adapter<HaksikAdapter.ViewHolder>() {
+class DodamAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>):
+    RecyclerView.Adapter<DodamAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemHaksikBinding) :
+    inner class ViewHolder(private val binding: ItemDodamBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
@@ -25,7 +25,7 @@ class HaksikAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemHaksikBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemDodamBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
