@@ -1,20 +1,23 @@
 package com.eatssu.android.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
-import com.eatssu.android.databinding.ItemGisikBinding
+import com.eatssu.android.data.model.response.GetChangedMenuInfoResponse
+import com.eatssu.android.databinding.ItemDodamBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
-class GisikAdapter(private val dataList: List<GetMenuInfoListResponse>) :
-    RecyclerView.Adapter<GisikAdapter.ViewHolder>() {
+class DodamLunchAdapter(private val dataList: GetChangedMenuInfoResponse) :
+    RecyclerView.Adapter<DodamLunchAdapter.ViewHolder>() {
+    val idList: MutableList<Int> = mutableListOf()
 
-    inner class ViewHolder(private val binding: ItemGisikBinding) :
+    inner class ViewHolder(private val binding: ItemDodamBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
 
         fun bind(position: Int) {
             if (position >= 0 && position < dataList.size) {
@@ -24,7 +27,12 @@ class GisikAdapter(private val dataList: List<GetMenuInfoListResponse>) :
                 for (menuInfo in menuList.menuInfoList) {
                     nameList.append(menuInfo.name)
                     nameList.append("+")
+                    idList.add(menuInfo.menuId)
+
                 }
+
+//                for (menuInfo in menuList.menuInfoList) {
+//                }
 
                 if (nameList.isNotEmpty()) {
                     nameList.deleteCharAt(nameList.length - 1) // Remove the last '+'
@@ -33,7 +41,7 @@ class GisikAdapter(private val dataList: List<GetMenuInfoListResponse>) :
                 val result = nameList.toString()
                 binding.tvMenu.text = result
 
-                binding.tvPrice.text = 5000.toString()
+                binding.tvPrice.text = 6000.toString()
 
                 var totalGrade = 0.0
 
@@ -53,9 +61,10 @@ class GisikAdapter(private val dataList: List<GetMenuInfoListResponse>) :
         }
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemGisikBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemDodamBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -68,6 +77,8 @@ class GisikAdapter(private val dataList: List<GetMenuInfoListResponse>) :
 //            intent.putExtra(
 //                "menuId", dataList[position].menuId
 //            )
+            intent.putIntegerArrayListExtra("menuIdList", ArrayList(idList))
+            Log.d("post","메롱"+idList.toString())
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }

@@ -14,9 +14,9 @@
         android:orientation="vertical">
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+<!--        <ScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -336,16 +336,14 @@
 
                     </View>
 
-                    <TextView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_breakfast_gisik"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="학식은 아침이 제공되지 않습니다!"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
-
-                    </TextView>
+                        app:layout_constraintTop_toBottomOf="parent"/>
                 </LinearLayout>
 
 <!--                <LinearLayout-->
@@ -656,7 +654,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+<!--        </ScrollView>-->
 
     </LinearLayout>
 </FrameLayout>

@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetChangedMenuInfoResponse
+import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.databinding.ItemDodamBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
-class DodamAdapter(private val dataList: GetChangedMenuInfoResponse) :
+class DodamAdapter(private val dataList: List<GetMenuInfoListResponse>) :
     RecyclerView.Adapter<DodamAdapter.ViewHolder>() {
+    val idList: MutableList<Int> = mutableListOf()
 
     inner class ViewHolder(private val binding: ItemDodamBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -26,7 +27,12 @@ class DodamAdapter(private val dataList: GetChangedMenuInfoResponse) :
                 for (menuInfo in menuList.menuInfoList) {
                     nameList.append(menuInfo.name)
                     nameList.append("+")
+                    idList.add(menuInfo.menuId)
+
                 }
+
+//                for (menuInfo in menuList.menuInfoList) {
+//                }
 
                 if (nameList.isNotEmpty()) {
                     nameList.deleteCharAt(nameList.length - 1) // Remove the last '+'
@@ -71,6 +77,8 @@ class DodamAdapter(private val dataList: GetChangedMenuInfoResponse) :
 //            intent.putExtra(
 //                "menuId", dataList[position].menuId
 //            )
+            intent.putIntegerArrayListExtra("menuIdList", ArrayList(idList))
+            Log.d("post","메롱"+idList.toString())
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
