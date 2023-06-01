@@ -38,7 +38,7 @@ class MyPageActivity : BaseActivity() {
         }
 
         binding.clReview.setOnClickListener{
-            //val intent = Intent(this, MyReviewListActivity::class.java)
+            val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
         }

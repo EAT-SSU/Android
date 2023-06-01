@@ -18,4 +18,11 @@ class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
     override fun createFragment(position: Int): Fragment {
         return fragmentList[position]
     }
+
+    // 4. 디폴트로 노출할 Fragment의 위치를 설정
+    fun getDefaultFragmentPosition(): Int {
+        // 여기에서 디폴트로 노출할 Fragment의 위치를 반환해줍니다.
+        // 예를 들어, 첫 번째 Fragment를 디폴트로 설정하려면 0을 반환합니다.
+        return 1
+    }
 }

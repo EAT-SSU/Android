@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.eatssu.android.R
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.ChangeNickname
 import com.eatssu.android.data.model.request.ChangePwDto
 import com.eatssu.android.data.service.UserService
@@ -67,7 +66,7 @@ class ChangePwActivity : BaseActivity() {
             pwDoubleCheck()
 
             val userService =
-                RetrofitImpl.getApiClient().create(UserService::class.java)
+                RetrofitImpl.retrofit.create(UserService::class.java)
             userService.changePw(ChangePwDto(chPW)).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {

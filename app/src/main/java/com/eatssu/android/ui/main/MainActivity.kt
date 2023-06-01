@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         // 3) ViewPager2의 adapter에 설정
         viewPager.adapter = viewpagerFragmentAdapter
+        viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
         //진입 시 디폴트 tab 설정 -> 나중에 시간대 별로 설정되게 수정할 것
         //viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
