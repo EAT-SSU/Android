@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.UserService
@@ -104,9 +103,11 @@ class LoginActivity : AppCompatActivity() {
         //로그인 버튼 -> 메인
         //회원여부 판단하는 코드 작성 필요
         binding.btnLogin.setOnClickListener {
+//            App.token_prefs.accessToken=null
+
             val intent = Intent(this, MainActivity::class.java)
 
-            val service = RetrofitImpl.getApiClientWithOutToken().create(UserService::class.java)
+            val service = RetrofitImpl.nonRetrofit.create(UserService::class.java)
             service.logIn(LoginRequest(email, pw)).enqueue(object : Callback<TokenResponse> {
                 override fun onResponse(
                     call: Call<TokenResponse>,
