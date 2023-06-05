@@ -42,7 +42,9 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var selectedDate: String = ""
-
+    private var year: String = ""
+    private var month: String = ""
+    private var day: String = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,17 +65,13 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = viewpagerFragmentAdapter
         viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
-        //진입 시 디폴트 tab 설정 -> 나중에 시간대 별로 설정되게 수정할 것
-        //viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
-
 
         // ###### TabLayout과 ViewPager2를 연결
         // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
         val tabTitles = listOf<String>("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(
-            tabLayout,
+        TabLayoutMediator(tabLayout,
             viewPager,
             { tab, position -> tab.text = tabTitles[position] }).attach()
 
@@ -82,38 +80,36 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)  // 화면 전환을 시켜줌
         }
 
-        // Retrieve the selected date from the saved instance state, if available
-        selectedDate = savedInstanceState?.getString("selectedDate") ?: ""
+        val monthFormat =
+            DateTimeFormatter.ofPattern("yyyy.MM.dd").withLocale(Locale.forLanguageTag("ko"))
+        val localDate = LocalDateTime.now().format(monthFormat)
+        binding.textYearMonth.text = localDate
 
-        // If no date is selected, set today's date as the default
-        if (selectedDate.isEmpty()) {
-            val currentDate = LocalDate.now()
-            val dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
-            selectedDate = currentDate.format(dateFormat)
-        }
-
-        // Set the selected date to the text view
-        binding.textYearMonth.text = selectedDate
 
         binding.textYearMonth.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java);
-            intent.putExtra("selectedDate", selectedDate)
             startActivityForResult(intent, CALENDAR_REQUEST_CODE)
+
+        }
+        val year = binding.textYearMonth.text.substring(0,4)
+        val month = binding.textYearMonth.text.substring(5,7)
+        val day = binding.textYearMonth.text.substring(8,10)
+        Log.d("cutyear", year)
+        Log.d("cutmonth", month)
+        Log.d("cutday", day)
+        binding.btnCalendarLeft.setOnClickListener {
+            val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            val previousDate = currentDate.minusDays(1)
+            val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            binding.textYearMonth.text = newDate
         }
 
-
-        // Check if there is an intent with a date extra
-        val intentDate = intent.getStringExtra("intentdate")
-        if (intentDate != null) {
-            selectedDate = intentDate
-            binding.textYearMonth.text = selectedDate
-            Log.d("intentdate", intentDate)
+        binding.btnCalendarRight.setOnClickListener {
+            val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            val previousDate = currentDate.plusDays(1)
+            val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            binding.textYearMonth.text = newDate
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("selectedDate", selectedDate)
-        super.onSaveInstanceState(outState)
     }
 
 
@@ -138,10 +134,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-//            android.R.id.home -> {
-//                onBackPressed()
-//                true
-//            }
             R.id.action_setting -> {
                 val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
                 startActivity(intent)  // 화면 전환을 시켜줌
@@ -153,27 +145,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRestart() { //여기 문제 있음
         super.onRestart()
-
-        val intentDate = intent.getStringExtra("intentdate")
-        if (intentDate != null) {
-            selectedDate = intentDate
-            binding.textYearMonth.text = selectedDate
-            Log.d("intentdate", intentDate)
-        }
-
-        //binding.textYearMonth.text = intentDate
-
-        binding.btnCalendarLeft.setOnClickListener {
-            binding.textYearMonth.text = null
-            binding.textYearMonth.text = intentDate
-            /*binding.btnCalendarRight.setOnClickListener{
-            binding.textYearMonth.text = null
-            binding.textYearMonth.text = LocalDateTime.now().plusDays(1).format(monthFormat).toString()
-        }*/
-        }
+        binding.textYearMonth.text = selectedDate
     }
 
     companion object {
         private const val CALENDAR_REQUEST_CODE = 1
     }
 }
+

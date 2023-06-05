@@ -20,8 +20,8 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "BASE_URL", properties["BASE_URL"]
-        manifestPlaceholders = [BASE_URL : "BASE_URL"]
+        buildConfigField "String", "BASE_URL", properties['baseurl']
+        manifestPlaceholders = [BASE_URL : "baseurl"
 
         buildConfigField "String", "APP_KEY", properties['APP_KEY']
         manifestPlaceholders = [APP_KEY : "APP_KEY"]
