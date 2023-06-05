@@ -1,6 +1,7 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.request.ModifyMenuRequest
+import com.eatssu.android.data.model.response.GetChangedMenuInfoResponse
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -48,4 +49,11 @@ interface MenuService {
 
     @GET("menu") //고정메뉴 파는거 조회
     fun getFixedMenu(@Query("restaurant") restaurant: String): Call<GetMenuInfoListResponse>
+
+
+    @GET("menu/{date}/lunch2")//도담 혹은 학생식당의 점심메뉴 리스트 조회
+    fun getChangedLunchMenu(@Path("date") date: String,
+                            @Query("restaurant") restaurant : String
+    ):Call<GetChangedMenuInfoResponse>
+
 }

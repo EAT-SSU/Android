@@ -31,5 +31,5 @@ interface UserService {
 
     //닉네임 수정
     @PATCH("user/nickname")
-    fun changeNickname(@Body request: ChangeNickname): Call<String>
+    fun changeNickname(@Body request: ChangeNickname): Call<Void>
 }

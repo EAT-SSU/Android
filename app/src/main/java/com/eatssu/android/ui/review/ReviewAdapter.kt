@@ -1,13 +1,16 @@
 package com.eatssu.android.ui.review
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.model.response.GetMyReviewResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemReviewBinding
+import kotlin.math.min
 
 
-class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):
+class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
@@ -15,43 +18,32 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):
 
         fun bind(position: Int) {
             binding.tvReviewItemId.text = dataList[position].writerId.toString()
-            binding.tvReviewItemComment.text =dataList[position].content.toString()
+            binding.tvReviewItemComment.text = dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
+            binding.rbReviewItemRate.rating=dataList[position].grade.toFloat()
+            val tagList = dataList[position].tagList
+            val tagCount = tagList.size
 
-            if(dataList[position].tagList.size==0){
+// 태그 초기화
+            binding.tvReviewItemTag1.text = ""
+            binding.tvReviewItemTag2.text = ""
+            binding.tvReviewItemTag3.text = ""
 
+            val tagTextViews = arrayOf(
+                binding.tvReviewItemTag1,
+                binding.tvReviewItemTag2,
+                binding.tvReviewItemTag3
+            )
+
+            for (i in 0 until min(tagCount, tagTextViews.size)) {
+                tagTextViews[i].text = tagList[i]
             }
-            else if(dataList[position].tagList.size==1){
-                binding.tvReviewItemTag1.text=dataList[position].tagList[1]
-            }
-            else if(dataList[position].tagList.size==2){
-                binding.tvReviewItemTag1.text=dataList[position].tagList[1]
-                binding.tvReviewItemTag2.text=dataList[position].tagList[2]
-            }
-            else if(dataList[position].tagList.size==3){
-                binding.tvReviewItemTag1.text=dataList[position].tagList[1]
-                binding.tvReviewItemTag2.text=dataList[position].tagList[2]
-                binding.tvReviewItemTag3.text=dataList[position].tagList[3]
+
+            for (i in tagCount until tagTextViews.size) {
+                tagTextViews[i].visibility = View.GONE
             }
 
 
-        //사진 바인딩
-//            if (dataList[position].imgUrlList == "trainerProfile"){
-//                binding.ivTrainerProfile.setImageResource(R.drawable.ic_profile)
-//            }
-//            else if (data?.profile != "trainerProfile"|| data.profile != null) {
-//                Glide.with(this)
-//                    .load("${data?.profile}")
-//                    .into(binding.ivTrainerProfile)
-//                binding.ivTrainerProfile.clipToOutline = true
-//                Log.d("post", data?.profile.toString())
-//            }
-//
-//            if (data?.background != null) {
-//                Glide.with(this)
-//                    .load("${data.background}")
-//                    .into(binding.ivBackgroundPhoto)
-//            }
         }
     }
 
@@ -63,15 +55,6 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
-
-        //서버 연결
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-//            intent.putExtra(
-//                "menuId", dataList[position].menuId
-//            )
-//            ContextCompat.startActivity(holder.itemView.context, intent, null)
-//        }
     }
 
     override fun getItemCount(): Int = dataList.size

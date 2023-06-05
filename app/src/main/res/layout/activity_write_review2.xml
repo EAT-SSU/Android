@@ -6,7 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.review.WriteReview2Activity">
 
-<!--    <TextView-->
+
+    <include
+        android:id="@+id/included"
+        layout="@layout/include_actionbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    <TextView-->
 <!--        android:id="@+id/tv_eat_ssu"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="80dp"-->
@@ -27,7 +35,7 @@
         android:gravity="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/included">
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,21 +139,23 @@
         android:layout_marginBottom="30dp"
         android:backgroundTint="@color/primary" />
 
+<!--    <ImageButton-->
+<!--        android:id="@+id/ib_camera"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:src="@drawable/ic_baseline_camera_alt_24"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/et_review2_comment"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />-->
+
+
     <ImageButton
-        android:id="@+id/ib_camera"
+        android:id="@+id/ib_add_pic"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_baseline_camera_alt_24"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_add_pic"
+        android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="@+id/et_review2_comment"
-        app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />
-
-
-    <ImageButton
-        android:id="@+id/ib_gallery"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_bell"
-        app:layout_constraintStart_toEndOf="@+id/ib_camera"
         app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />
 
 
@@ -153,10 +163,10 @@
         android:id="@+id/iv_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginStart="10dp"
         android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintStart_toEndOf="@+id/ib_gallery"
-        app:layout_constraintTop_toTopOf="@+id/ib_gallery"
+        app:layout_constraintStart_toEndOf="@+id/ib_add_pic"
+        app:layout_constraintTop_toTopOf="@+id/ib_add_pic"
         tools:srcCompat="@tools:sample/avatars" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
