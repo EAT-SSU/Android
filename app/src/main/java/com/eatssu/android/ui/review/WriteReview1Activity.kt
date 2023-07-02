@@ -30,12 +30,12 @@ class WriteReview1Activity : AppCompatActivity() {
         initializeTagButtonUI()
 
 
-        binding.included.actionBar.text = "리뷰남기기"
+//        binding.included.actionBar.text = "리뷰남기기"
 
         var MENU_ID: Int = intent.getIntExtra("menuId", -1)
         var menu: String? = intent.getStringExtra("menu")
 
-        var rate: Int = binding.rbReview1.rating.toInt()
+//        val rate: Float = binding.rbReview1.rating
 
 
         binding.btnChoose1.setOnClickListener(){
@@ -74,8 +74,8 @@ class WriteReview1Activity : AppCompatActivity() {
         binding.btnNextReview1.setOnClickListener() {
             //0점 처리
             val intent = Intent(this, WriteReview2Activity::class.java)  // 인텐트를 생성해줌,
-            Log.d("intent", "click");
-            intent.putExtra("rating", rate)
+            Log.d("post", binding.rbReview1.rating.toString());
+            intent.putExtra("rating", binding.rbReview1.rating)
             intent.putExtra("menuId", MENU_ID)
             intent.putExtra("menu", menu)
 //            intent.putExtra("tag",selectedTags)

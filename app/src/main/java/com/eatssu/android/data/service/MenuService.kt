@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface MenuService {
     @GET("menu/{date}/morning") //특정 식당의 아침메뉴 조회
     fun getMorningMenu(
-        @Path("date") data: String, @Path("restaurant") restaurant: String
+        @Path("date") data: String, @Query("restaurant") restaurant: String
     ): Call<GetMenuInfoListResponse>
 
     @POST("menu/{date}/morning") //특정 식당의 아침메뉴 추가
@@ -25,7 +25,7 @@ interface MenuService {
 
     @GET("menu/{date}/lunch") //특정 식당의 점심메뉴 조회
     fun getLunchMenu(
-        @Path("date") data: String, @Path("restaurant") restaurant: String
+        @Path("date") data: String, @Query("restaurant") restaurant: String
     ): Call<GetMenuInfoListResponse>
 
     @POST("menu/{date}/lunch") //특정 식당의 점심메뉴 추가
@@ -37,7 +37,7 @@ interface MenuService {
 
     @GET("menu/{date}/dinner") //특정 식당의 저녁메뉴 조회
     fun getDinnerMenu(
-        @Path("date") data: String, @Path("restaurant") restaurant: String
+        @Path("date") data: String, @Query("restaurant") restaurant: String
     ): Call<GetMenuInfoListResponse>
 
     @POST("menu/{date}/dinner") //특정 식당의 저녁메뉴 추가

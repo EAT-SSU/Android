@@ -43,9 +43,9 @@ class WriteReview2Activity : AppCompatActivity() {
 
     private var MENU_ID: Int = 0
     private lateinit var menu: String
-    private var rate: Int = 0
+    private var rate: Float = 0.0F
     private var comment: String? = null
-    var reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
+//    private lateinit var reviewTags: ArrayList<String> // Replace with your review tags
 
     private lateinit var path: String
 
@@ -71,11 +71,13 @@ class WriteReview2Activity : AppCompatActivity() {
 
         MENU_ID = intent.getIntExtra("menuId", -1)
         menu = intent.getStringExtra("menu").toString()
-//        rate = intent.getIntExtra("rating", 0)
-        rate = 5
+        rate = intent.getFloatExtra("rating", 0F)
+        Log.d("post", rate.toString())
+//        rate = 5
         comment = ""
-        reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
-        path = ""
+//        reviewTags = intent.getStringArrayListExtra("selectedTags") as ArrayList<String>
+//        Log.d("post", reviewTags.toString())
+//        path = ""
 
         binding.rbReview2.rating = rate.toFloat()
         binding.menu.text = menu
@@ -138,101 +140,8 @@ class WriteReview2Activity : AppCompatActivity() {
         return null
     }
 
-    private inner class PostDataAsyncTask : AsyncTask<Unit, Unit, String>() {
-        override fun doInBackground(vararg params: Unit?): String? {
-            if (MENU_ID != -1) {
-                val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
-                val filePaths = listOf(selectedImagePath)
-
-                reviewService = mRetrofit.create(ReviewService::class.java)
-
-                val menuId = MENU_ID
-                val fileList = listOf(
-                    selectedImagePath
-//                    "/storage/emulated/0/Pictures/Screenshots/Screenshot_20230529-231907.png"
-                )
-
-                val parts: MutableList<MultipartBody.Part> = mutableListOf()
-                val reviewData = RequestBody.create(
-                    "application/json".toMediaTypeOrNull(),
-                    "{\n  \"grade\": 3,\n  \"reviewTags\": [\"$reviewTags\"],\n  \"content\": \"$comment\"\n}"
-                )
-                fileList.forEach { filePath ->
-                    val file = File(filePath)
-                    val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-                    val part = MultipartBody.Part.createFormData(
-                        "multipartFileList",
-                        file.name,
-                        requestFile
-                    )
-                    parts.add(part)
-                }
-
-                val call = reviewService.uploadFiles(
-                    menuId,
-                    parts,
-                    reviewData
-                )
-
-                val response = call.execute()
-                if (response.isSuccessful) {
-                    // 정상적으로 통신이 성공한 경우
-                    Log.d("post", "onResponse 성공: " + response.body().toString())
-                    Toast.makeText(
-                        this@WriteReview2Activity,
-                        "리뷰가 등록되었습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    startActivity(intent)  // 화면 전환을 시켜줌
-                    finish()
-                } else {
-                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                    Log.d(
-                        "post",
-                        "onResponse 실패" + response.code() + menuId + parts + reviewData
-                    )
-                }
-            }
-            return " "
-
-        }
-
-        //
-        override fun onPostExecute(result: String?) {
-            if (result != null) {
-                Log.d("post", result)
-                Toast.makeText(
-                    this@WriteReview2Activity,
-                    "리뷰를 업로드에 성공 했습니다.",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            } else {
-                // 서버 응답이 실패한 경우
-                // 실패 상황 처리 코드 작성
-                Log.d("post", result.toString())
-                Toast.makeText(
-                    this@WriteReview2Activity,
-                    "리뷰를 업로드 하지 못했습니다.",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-        }
-    }
-
-
-    private fun getFilePart(filePath: String): MultipartBody.Part {
-        val file = File(filePath)
-        val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-        return MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
-    }
 
     private fun postData() {
-//        val postDataAsyncTask = PostDataAsyncTask()
-//        postDataAsyncTask.execute()
-        val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
-        val filePaths = listOf(selectedImagePath)
 
         val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
 
@@ -247,7 +156,7 @@ class WriteReview2Activity : AppCompatActivity() {
         val parts: MutableList<MultipartBody.Part> = mutableListOf()
         val reviewData = RequestBody.create(
             "application/json".toMediaTypeOrNull(),
-            "{\n  \"grade\": 3,\n  \"reviewTags\": [\"FAST\"],\n  \"content\": \"냠얌\"\n}"
+            "{\n  \"grade\": $rate,\n  \"reviewTags\": [\"BAD\"],\n  \"content\": \"$comment\"\n}"
         )
         fileList.forEach { filePath ->
             val file = File(filePath)
@@ -259,12 +168,6 @@ class WriteReview2Activity : AppCompatActivity() {
             )
             parts.add(part)
         }
-
-        val call = reviewService.uploadFiles(
-            menuId,
-            parts,
-            reviewData
-        )
 
 
         lifecycleScope.launch {
@@ -285,7 +188,7 @@ class WriteReview2Activity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     startActivity(intent)  // 화면 전환을 시켜줌
-                    intent.putExtra("menuId",MENU_ID)
+                    intent.putExtra("menuId", MENU_ID)
                     finish()
                     finish()
                 } else {
@@ -304,6 +207,7 @@ class WriteReview2Activity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
 
         }
     }

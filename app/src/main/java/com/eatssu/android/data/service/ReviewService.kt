@@ -16,7 +16,15 @@ interface ReviewService {
     fun uploadFiles(
         @Path("menuId") menuId: Int,
         @Part files: List<MultipartBody.Part>?,
-        @Part("reviewCreate") reviewData: RequestBody,
+        @Part("reviewCreate") reviewData: RequestBody?,
+    ): Call<Void>
+
+
+    @Multipart
+    @POST("review/{menuId}/detail")
+    fun uploadFiles(
+        @Path("menuId") menuId: Int,
+        @Part("reviewCreate") reviewData: RequestBody?,
     ): Call<Void>
 
 

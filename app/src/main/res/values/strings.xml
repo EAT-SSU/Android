@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EatSSU-Android</string>
+    <string name="app_name">EAT-SSU</string>
     <string-array name="custom_weekdays">
         <item>월</item>
         <item>화</item>
@@ -42,7 +42,6 @@
     </string-array>
 
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_review">내가 쓴 리뷰</string>
     <string name="change_pw">비밀번호 변경</string>
     <string name="announce">공지사항</string>
@@ -60,4 +59,5 @@
     <string name="rate">rate</string>
     <string name="dodam">도담식당</string>
     <string name="residence">기숙사 식당</string>
+    <string name="evaluation">해당 메뉴에 대한 상세한 평가를 남겨주세요</string>
 </resources>

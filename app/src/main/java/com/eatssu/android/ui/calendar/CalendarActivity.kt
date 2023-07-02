@@ -35,6 +35,8 @@ class CalendarActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         calendar = binding.calendarView
+        calendar.topbarVisible = false //제목 숨기기
+
         calendar.selectedDate = today
         val disabledDates = hashSetOf<CalendarDay>()
         disabledDates.add(CalendarDay.from(2022, 7, 12))

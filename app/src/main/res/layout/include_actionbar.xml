@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
+    <!--        android:background="@drawable/shape_toolbar_background"-->
+<!--    android:layout_marginEnd="16dp"-->
+<!--    android:layout_marginStart="16dp"-->
     <TextView
         android:id="@+id/action_Bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/shape_toolbar_background"
         android:text="리뷰"
         android:gravity="center"
         android:textSize="17dp"
         android:textColor="@color/main"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
         android:contentInsetStart="0dp"
         android:contentInsetLeft="0dp"
         android:contentInsetEnd="0dp"

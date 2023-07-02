@@ -17,33 +17,12 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            binding.tvReviewItemId.text = dataList[position].writerId.toString()
+            binding.tvReviewItemId.text = dataList[position].writerNickname.toString()
             binding.tvReviewItemComment.text = dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
-            binding.rbReviewItemRate.rating=dataList[position].grade.toFloat()
+            binding.tvRatingTotal.text= dataList[position].grade.toFloat().toString()
             val tagList = dataList[position].tagList
             val tagCount = tagList.size
-
-// 태그 초기화
-            binding.tvReviewItemTag1.text = ""
-            binding.tvReviewItemTag2.text = ""
-            binding.tvReviewItemTag3.text = ""
-
-            val tagTextViews = arrayOf(
-                binding.tvReviewItemTag1,
-                binding.tvReviewItemTag2,
-                binding.tvReviewItemTag3
-            )
-
-            for (i in 0 until min(tagCount, tagTextViews.size)) {
-                tagTextViews[i].text = tagList[i]
-            }
-
-            for (i in tagCount until tagTextViews.size) {
-                tagTextViews[i].visibility = View.GONE
-            }
-
-
         }
     }
 
