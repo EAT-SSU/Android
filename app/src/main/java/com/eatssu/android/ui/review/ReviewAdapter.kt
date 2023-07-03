@@ -17,9 +17,9 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            binding.tvReviewItemId.text = dataList[position].writerNickname.toString()
-            binding.tvReviewItemComment.text = dataList[position].content.toString()
-            binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
+            binding.tvReviewItemId.text = dataList[position].writerNickname
+            binding.tvReviewItemComment.text = dataList[position].content
+            binding.tvReviewItemDate.text = dataList[position].writeDate
             binding.tvRatingTotal.text= dataList[position].grade.toFloat().toString()
             val tagList = dataList[position].tagList
             val tagCount = tagList.size

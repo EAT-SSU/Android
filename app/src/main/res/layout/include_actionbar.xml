@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <!--        android:background="@drawable/shape_toolbar_background"-->
-<!--    android:layout_marginEnd="16dp"-->
-<!--    android:layout_marginStart="16dp"-->
+
     <TextView
         android:id="@+id/action_Bar"
         android:layout_width="match_parent"
@@ -19,6 +17,9 @@
         android:contentInsetLeft="0dp"
         android:contentInsetEnd="0dp"
         android:contentInsetRight="0dp"
+        android:background="@drawable/shape_toolbar_background"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
