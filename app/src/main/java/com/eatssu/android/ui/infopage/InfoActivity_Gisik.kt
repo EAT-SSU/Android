@@ -27,7 +27,7 @@ import retrofit2.Retrofit
 class InfoActivity_Gisik : AppCompatActivity() {
     private lateinit var viewBinding: ActivityInfoGisikBinding
     lateinit var retrofit: Retrofit
-    lateinit var infoService: InfoService
+    private lateinit var infoService: InfoService
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,18 +102,5 @@ class InfoActivity_Gisik : AppCompatActivity() {
     }
 
     private fun getNonFixed() {
-    }
-
-    private fun putInfoResponse(infoList: List<InfoResponse.Result>) {
-        viewBinding.lunchTv.text = infoList[0].timepart
-        viewBinding.lunchTv2.text = infoList[0].time
-        viewBinding.tvGisikTime.text = infoList[1].timepart
-        viewBinding.tvGisikTime2.text = infoList[1].time
-        viewBinding.tvSpace.text = infoList[2].timepart
-        viewBinding.tvSpace2.text = infoList[2].time
-        viewBinding.tvWeekendGisik.text = infoList[3].timepart
-        viewBinding.tvWeekendGisik2.text = infoList[3].time
-        viewBinding.tvSpaceGisik.text = infoList[4].timepart
-        viewBinding.tvSpace2Gisik.text = infoList[4].time
     }
 }
