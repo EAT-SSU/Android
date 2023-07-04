@@ -152,7 +152,7 @@
         <activity
             android:name=".ui.infopage.InfoActivity_Gisik"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
