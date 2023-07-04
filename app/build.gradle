@@ -6,7 +6,7 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
+def APP_KEY = properties.getProperty('APP_KEY')
 def BASE_URL = properties.getProperty('baseurl')
 
 
@@ -24,7 +24,7 @@ android {
         manifestPlaceholders = [BASE_URL : "BASE_URL"]
 
         buildConfigField "String", "APP_KEY", properties['APP_KEY']
-        manifestPlaceholders = [APP_KEY : "APP_KEY"]
+        manifestPlaceholders = [APP_KEY : APP_KEY]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

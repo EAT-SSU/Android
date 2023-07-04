@@ -62,7 +62,7 @@
 
 
             <TextView
-                android:id="@+id/tv_dodam_loca"
+                android:id="@+id/tv_gisik_loca"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
@@ -71,6 +71,7 @@
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
+                android:gravity="right"
                 ></TextView>
 
         </LinearLayout>
@@ -303,52 +304,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:text="17:00 - 18:30"
-                android:textSize="13dp"
-                android:textColor="@color/black"
-                ></TextView>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="7dp"
-            android:background="@color/gray">
-
-        </View>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/weekend_tv_dodam"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="공휴일"
-                android:textSize="13dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/rest_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="휴무"
-                android:textSize="13dp"
-                android:textColor="@color/main"
-                ></TextView>
-
-            <TextView
-                android:id="@+id/rest_tv2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 ></TextView>

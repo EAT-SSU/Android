@@ -208,6 +208,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="${APP_KEY}" />
 
+
         <activity
             android:name=".ui.infopage.InfoActivity_Haksik"
             android:exported="true"
