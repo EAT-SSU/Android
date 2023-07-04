@@ -10,7 +10,7 @@
     android:backgroundTint="@color/white">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
@@ -68,6 +68,7 @@
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
+                android:gravity="right"
                 ></TextView>
 
         </LinearLayout>

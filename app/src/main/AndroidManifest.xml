@@ -160,7 +160,7 @@
         <activity
             android:name=".ui.infopage.InfoActivity_Kitchen"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -168,7 +168,7 @@
         <activity
             android:name=".ui.infopage.InfoActivity_Food"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -176,7 +176,7 @@
         <activity
             android:name=".ui.infopage.InfoActivity_Snack"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -184,7 +184,7 @@
         <activity
             android:name=".ui.infopage.InfoActivity_Dodam"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -212,7 +212,7 @@
         <activity
             android:name=".ui.infopage.InfoActivity_Haksik"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
