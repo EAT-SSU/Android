@@ -71,7 +71,6 @@ class InfoActivity_Gisik : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val body = response.body()
                         body?.let {
-                          //putInfoResponse(it.openHours)
                             viewBinding.tvGisikLoca.text = it.location
 
                             viewBinding.weekTvDodam.text = it.openHours[0].dayType
@@ -96,7 +95,6 @@ class InfoActivity_Gisik : AppCompatActivity() {
                 override fun onFailure(call: Call<InfoResponse>, t: Throwable) {
                     Log.d("post", "onFailure 에러: ${t.message}")
                 }
-
 
             })
     }

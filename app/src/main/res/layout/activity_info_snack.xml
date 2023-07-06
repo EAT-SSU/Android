@@ -10,24 +10,23 @@
     android:backgroundTint="@color/white">
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="450dp"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="스낵 코너"
-                android:textSize="30dp"
+                android:textSize="25dp"
+                android:fontFamily="@font/noto_black"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:gravity="center">
 
             </TextView>
@@ -36,7 +35,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_marginTop="15dp"
             android:background="@color/main" >
 
         </View>
@@ -45,40 +43,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="10"
-            android:layout_marginTop="10dp">
+            android:weightSum="10">
 
             <TextView
                 android:id="@+id/info_tv_snack"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="4"
                 android:text="식당 위치"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="15dp"
+                android:fontFamily="@font/noto_medium"
                 android:textColor="@color/black" />
 
 
             <TextView
-                android:id="@+id/item_tv_price"
+                android:id="@+id/tv_snack_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
                 android:text="숭실대학교 학생회관 3층"
-                android:layout_marginTop="7dp"
                 android:textSize="15dp"
                 android:textStyle="bold"
+                android:fontFamily="@font/noto_regular"
                 android:textColor="@color/black"
+                android:gravity="right"
                 ></TextView>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/btn_map"
@@ -95,12 +90,10 @@
                 android:id="@+id/inca_tv_snack"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="5"
                 android:text="영업 시간"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="15dp"
+                android:fontFamily="@font/noto_medium"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -108,7 +101,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_marginTop="7dp"
             android:background="@color/main" >
 
         </View>
@@ -117,83 +109,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="10"
-            android:layout_marginTop="10dp">
+            android:weightSum="10">
 
             <TextView
-                android:id="@+id/week_tv_snack"
+                android:id="@+id/tv_snack_week"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:text="주중"
                 android:textSize="13dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:fontFamily="@font/noto_medium"
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/lunch_tv"
+                android:id="@+id/tv_snack_lunch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="점심"
                 android:textSize="13dp"
                 android:textColor="@color/main"
+                android:fontFamily="@font/noto_medium"
                 ></TextView>
 
             <TextView
-                android:id="@+id/lunch_tv2"
+                android:id="@+id/tv_snack_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_weight="3"
                 android:text="11:30 - 16:00"
                 android:textSize="13dp"
-                android:textColor="@color/black"
-                ></TextView>
-
-        </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="7dp"
-            android:background="@color/gray">
-
-        </View>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/weekend_tv_snack"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="주말, 공휴일"
-                android:textSize="13dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/rest_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="휴무"
-                android:textSize="13dp"
-                android:textColor="@color/main"
-                ></TextView>
-
-            <TextView
-                android:id="@+id/rest_tv2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:textSize="13dp"
+                android:fontFamily="@font/noto_medium"
                 android:textColor="@color/black"
                 ></TextView>
 
