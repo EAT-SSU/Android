@@ -8,6 +8,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def APP_KEY = properties.getProperty('APP_KEY')
 def BASE_URL = properties.getProperty('baseurl')
+def GOOGLE_APP_KEY = properties.getProperty('GOOGLE_APP_KEY')
 
 
 android {
@@ -25,6 +26,9 @@ android {
 
         buildConfigField "String", "APP_KEY", properties['APP_KEY']
         manifestPlaceholders = [APP_KEY : APP_KEY]
+
+        buildConfigField "String", "GOOGLE_APP_KEY", properties['GOOGLE_APP_KEY']
+        manifestPlaceholders = [GOOGLE_APP_KEY : GOOGLE_APP_KEY]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,6 +74,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
+
+    // google map
+    implementation( 'com.google.android.gms:play-services-maps:18.1.0')
+    implementation( 'com.google.android.gms:play-services-location:21.0.1')
 
     //retrofit2 - 서버통신
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

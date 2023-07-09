@@ -16,18 +16,22 @@ import com.eatssu.android.data.service.InfoService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityInfoGisikBinding
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
+import com.google.android.gms.maps.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions;
 
-class InfoActivity_Gisik : AppCompatActivity() {
+class InfoActivity_Gisik : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var viewBinding: ActivityInfoGisikBinding
     lateinit var retrofit: Retrofit
     private lateinit var infoService: InfoService
+    private lateinit var mapView: MapView
+    private lateinit var googleMap: GoogleMap
+    private var currentMarker: Marker? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,17 +39,24 @@ class InfoActivity_Gisik : AppCompatActivity() {
         viewBinding = ActivityInfoGisikBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        this.mapView = viewBinding.btnMap
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this@InfoActivity_Gisik)
+
         infoService = RetrofitImpl.retrofit.create(InfoService::class.java)
 
-        val mapview = MapView(this);
-        val mapViewContainer = viewBinding.btnMap
-        mapViewContainer.addView(mapview)
+        getRestaurantInfo(RestaurantType.DOMITORY)
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        this.googleMap = googleMap
 
         // 중심점 변경 - 레지던스홀
-        mapview.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.495488,126.959173), true);
-        //mapview.zoomIn(true)
+        currentMarker = setupMarker(LatLngEntity(37.495488,126.959173))
+        currentMarker?.showInfoWindow()
 
-        val marker = MapPOIItem()
+        /*val marker = MapPOIItem()
         marker.apply {
             itemName = "레지던스홀"   // 마커 이름
             mapPoint = MapPoint.mapPointWithGeoCoord(37.495488,126.959173)   // 좌표
@@ -53,11 +64,28 @@ class InfoActivity_Gisik : AppCompatActivity() {
             isCustomImageAutoscale = false      // 커스텀 마커 이미지 크기 자동 조정
             setCustomImageAnchor(0.5f, 1.0f)    // 마커 이미지 기준점
         }
-        mapview.addPOIItem(marker)
+        mapview.addPOIItem(marker)*/
+    }
 
-        getRestaurantInfo(RestaurantType.DOMITORY)
+    private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? {
+
+        val positionLatLng = LatLng(locationLatLngEntity.latitude!!,locationLatLngEntity.longitude!!)
+        val markerOption = MarkerOptions().apply {
+            position(positionLatLng)
+            title("위치")
+            snippet("레지던스홀 위치")
+        }
+
+        googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL  // 지도 유형 설정
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f))  // 줌의 정도 - 1 일 경우 세계지도 수준, 숫자가 커질 수록 상세지도가 표시됨
+        return googleMap.addMarker(markerOption)
 
     }
+
+    data class LatLngEntity(
+        var latitude: Double?,
+        var longitude: Double?
+    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getRestaurantInfo(restaurantType: RestaurantType) {
@@ -101,4 +129,10 @@ class InfoActivity_Gisik : AppCompatActivity() {
 
     private fun getNonFixed() {
     }
+
+    override fun finish() {
+        super.finish()
+    }
+
+
 }
