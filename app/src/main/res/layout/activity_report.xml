@@ -4,16 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     tools:context=".ui.review.ReportActivity">
+
+    <include
+        android:id="@+id/included"
+        layout="@layout/include_actionbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:text="리뷰를 신고하는 이유를 선택해주세요."
         android:id="@+id/tv_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/included"
         android:fontFamily="@font/noto_black"/>
 
 
@@ -21,6 +28,7 @@
         android:id="@+id/radio_gp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_report"
         tools:ignore="MissingConstraints">
 
