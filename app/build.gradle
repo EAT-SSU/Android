@@ -6,8 +6,8 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
-def BASE_URL = properties.getProperty('baseurl')
+def app_key = properties.getProperty('app_key')
+def base_url = properties.getProperty('base_url')
 def kakao_app_key = properties.getProperty('kakao_app_key')
 def kakao_native_key = properties.getProperty('kakao_native_key')
 

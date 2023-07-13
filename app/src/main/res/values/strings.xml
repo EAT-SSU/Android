@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EatSSU-Android</string>
+    <string name="app_name">EatSSU</string>
     <string-array name="custom_weekdays">
         <item>월</item>
         <item>화</item>
