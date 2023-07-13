@@ -26,13 +26,16 @@ jobs:
       run: ./gradlew build
 
       
-    - name: properties
-      env : 
-        PROPERTIES_PATH: '/home/runner/work/EatSSU-Android/EatSSU-Android/app/build.gradle'
+
+    - name: Access Local Properties
+      env:
+        APP_KEY: ${{ secrets.APP_KEY }}
+        BASE_URL: ${{ secrets.BASE_URL }}
+        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        KAKAO_NATIVE_KEY: ${{ secrets.KAKAO_NATIVE_KEY }}
       run: |
-        echo base_url=\${{ secrets.base_url }} > ${{env.PROPERTIES_PATH}}
-        echo app_key=\${{ secrets.app_key }} >> ${{env.PROPERTIES_PATH}}
-        echo kakao_app_key=\${{ secrets.kakao_app_key }} >> ${{env.PROPERTIES_PATH}}
-        echo kakao_native_app_key=\${{ secrets.kakao_native_app_key }} >> ${{env.PROPERTIES_PATH}}
-          
+        echo APP_KEY=\"$APP_KEY\" >> local.properties
+        echo BASE_URL=\"$BASE_URL\" >> local.properties
+        echo KAKAO_APP_KEY=\"$KAKAO_APP_KEY\" >> local.properties
+        echo KAKAO_NATIVE_KEY=\"$KAKAO_NATIVE_KEY\" >> local.properties
       
