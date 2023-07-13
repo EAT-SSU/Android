@@ -8,6 +8,9 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
 def BASE_URL = properties.getProperty('baseurl')
+def kakao_app_key = properties.getProperty('kakao_app_key')
+def kakao_native_key = properties.getProperty('kakao_native_key')
+
 
 
 android {
@@ -21,7 +24,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "BASE_URL", properties['baseurl']
-        manifestPlaceholders = [BASE_URL : "baseurl"
+        manifestPlaceholders = [BASE_URL : "baseurl"]
 
         buildConfigField "String", "APP_KEY", properties['APP_KEY']
         manifestPlaceholders = [APP_KEY : "APP_KEY"]
@@ -84,5 +87,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+
+//    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: '1.30.0'
+//    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: '1.30.5'
+
+    implementation "com.kakao.sdk:v2-user:2.5.0" // 카카오 로그인
 }
