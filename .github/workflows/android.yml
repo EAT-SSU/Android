@@ -25,16 +25,31 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: BASE_URL
+    - name: base_url
       run: |
-        echo BASE_URL=\"$BASE_URL\" > local.properties
+        echo base_url=\"$base_url\" > local.properties
       shell: bash
       env:
        BASE_URL: ${{ secrets.BASE_URL}}
    
-    - name: APP_KEY
+    - name: app_key
       run: |
-        echo APP_KEY=\"$APP_KEY\" > local.properties
+        echo app_key=\"$app_key\" > local.properties
       shell: bash
       env:
         APP_KEY: ${{ secrets.APP_KEY }}
+        
+    - name: kakao_app_key
+      run: |
+        echo kakao_app_key=\"$kakao_app_key\" > local.properties
+      shell: bash
+      env:
+        APOD_API_KEY: ${{ secrets.kakao_app_key }}
+
+    - name: kakao_native_app_key
+      run: |
+        echo kakao_native_app_key=\"$kakao_native_app_key\" > local.properties
+      shell: bash
+      env:
+        APOD_API_KEY: ${{ secrets.kakao_native_app_key }}
+
