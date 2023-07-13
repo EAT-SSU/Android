@@ -28,7 +28,7 @@ jobs:
       
     - name: properties
       env : 
-        PROPERTIES_PATH: '/home/runner/work/EatSSU-Android/EatSSU-Android/app/build.gradle'"
+        PROPERTIES_PATH: '/home/runner/work/EatSSU-Android/EatSSU-Android/app/build.gradle'
       run: |
         echo base_url=\${{ secrets.base_url }} > ${{env.PROPERTIES_PATH}}
         echo app_key=\${{ secrets.app_key }} >> ${{env.PROPERTIES_PATH}}
