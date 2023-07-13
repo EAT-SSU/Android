@@ -6,11 +6,11 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def KAKAO_APP_KEY = properties.getProperty('APP_KEY')
-def BASE_URL = properties.getProperty('baseurl')
-def kakao_app_key = properties.getProperty('kakao_app_key')
-def kakao_native_key = properties.getProperty('kakao_native_key')
 
+def APP_KEY = properties.getProperty('APP_KEY')
+def BASE_URL = properties.getProperty('BASE_URL')
+def KAKAO_APP_KEY = properties.getProperty('KAKAO_APP_KEY')
+def KAKAO_NATIVE_KEY = properties.getProperty('KAKAO_NATIVE_KEY')
 
 
 android {
@@ -20,18 +20,24 @@ android {
     defaultConfig {
         applicationId "com.eatssu.android"
         minSdk 21
+        compileSdkVersion 33
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "base_url", properties['base_url']
-        manifestPlaceholders = [BASE_URL : "base_url"]
 
-        buildConfigField "String", "app_key", properties['app_key']
-        manifestPlaceholders = [APP_KEY : "app_key"]
 
-        buildConfigField "String", "kakao_native_key", properties['kakao_native_key']
-        manifestPlaceholders = [kakao_native_key : "kakao_native_key"]
+        buildConfigField("String", "APP_KEY", APP_KEY)
+        manifestPlaceholders = [APP_KEY: APP_KEY]
+
+        buildConfigField("String", "BASE_URL", BASE_URL)
+        manifestPlaceholders = [BASE_URL: BASE_URL]
+
+        buildConfigField("String", "KAKAO_NATIVE_KEY", KAKAO_NATIVE_KEY)
+        manifestPlaceholders = [KAKAO_NATIVE_KEY: KAKAO_NATIVE_KEY]
+
+        buildConfigField("String", "KAKAO_APP_KEY", KAKAO_APP_KEY)
+        manifestPlaceholders = [KAKAO_APP_KEY: KAKAO_APP_KEY]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,7 +73,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
@@ -93,9 +99,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
-
-//    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: '1.30.0'
-//    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: '1.30.5'
 
     implementation "com.kakao.sdk:v2-user:2.5.0" // 카카오 로그인
 }

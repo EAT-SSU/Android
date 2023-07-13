@@ -127,4 +127,9 @@
     <style name="TextStyleSemiBold15">
     </style>
 
+    <style name="Theme.MyDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>
