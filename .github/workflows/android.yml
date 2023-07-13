@@ -25,24 +25,14 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-
-    - name: Access base_url
-      env:
-        APOD_API_KEY: ${{ secrets.base_url }}
-      run: echo base_url=\"$base_url\" > ./local.properties
       
+    - name: properties
+      env : 
+        PROPERTIES_PATH: "./local.properties"
+      run: |
+        echo base_url=\${{ secrets.base_url }} > ${{env.PROPERTIES_PATH}}
+        echo app_key=\${{ secrets.app_key }} >> ${{env.PROPERTIES_PATH}}
+        echo kakao_app_key=\${{ secrets.kakao_app_key }} >> ${{env.PROPERTIES_PATH}}
+        echo kakao_native_app_key=\${{ secrets.kakao_native_app_key }} >> ${{env.PROPERTIES_PATH}}
+          
       
-    - name: Access app_key
-      env:
-        APOD_API_KEY: ${{ secrets.app_key }}
-      run: echo app_key=\"$app_key\" > ./local.properties      
-      
-    - name: Access kakao_app_key
-      env:
-        APOD_API_KEY: ${{ secrets.kakao_app_key }}
-      run: echo kakao_app_key=\"$kakao_app_key\" > ./local.properties      
-      
-    - name: Access kakao_native_app_key
-      env:
-        APOD_API_KEY: ${{ secrets.kakao_native_app_key }}
-      run: echo kakao_native_app_key=\"$kakao_native_app_key\" > ./local.properties      
