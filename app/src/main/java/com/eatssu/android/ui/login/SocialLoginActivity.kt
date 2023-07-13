@@ -3,8 +3,10 @@ package com.eatssu.android.ui.login
 import RetrofitImpl
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -21,10 +23,47 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.URISyntaxException
 
 
 class SocialLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySocialLoginBinding
+
+    // 코틀린
+    fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+        if (url != null && url.startsWith("intent://")) {
+            try {
+                val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                val existPackage =
+                    packageManager.getLaunchIntentForPackage(intent.getPackage()!!)
+                if (existPackage != null) {
+                    startActivity(intent)
+                } else {
+                    val marketIntent = Intent(Intent.ACTION_VIEW)
+                    marketIntent.data =
+                        Uri.parse("market://details?id=" + intent.getPackage()!!)
+                    startActivity(marketIntent)
+                }
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        } else if (url != null && url.startsWith("market://")) {
+            try {
+                val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                if (intent != null) {
+                    startActivity(intent)
+                }
+                return true
+            } catch (e: URISyntaxException) {
+                e.printStackTrace()
+            }
+
+        }
+        view.loadUrl(url)
+        return false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

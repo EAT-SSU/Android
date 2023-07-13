@@ -6,11 +6,11 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 def APP_KEY = properties.getProperty('APP_KEY')
 def BASE_URL = properties.getProperty('BASE_URL')
-def KAKAO_APP_KEY = properties.getProperty('KAKAO_APP_KEY')
-def KAKAO_NATIVE_KEY = properties.getProperty('KAKAO_NATIVE_KEY')
+def kakao_native_app_key = properties.getProperty('kakao_native_app_key')
+def kakao_redirection_scheme = properties.getProperty('kakao_redirection_scheme')
+
 
 
 android {
@@ -33,11 +33,11 @@ android {
         buildConfigField("String", "BASE_URL", BASE_URL)
         manifestPlaceholders = [BASE_URL: BASE_URL]
 
-        buildConfigField("String", "KAKAO_NATIVE_KEY", KAKAO_NATIVE_KEY)
-        manifestPlaceholders = [KAKAO_NATIVE_KEY: KAKAO_NATIVE_KEY]
+        buildConfigField("String", "kakao_native_app_key", kakao_native_app_key)
+        manifestPlaceholders = [kakao_native_app_key: kakao_native_app_key]
 
-        buildConfigField("String", "KAKAO_APP_KEY", KAKAO_APP_KEY)
-        manifestPlaceholders = [KAKAO_APP_KEY: KAKAO_APP_KEY]
+        buildConfigField("String", "kakao_redirection_scheme", kakao_redirection_scheme)
+        manifestPlaceholders = [kakao_redirection_scheme: kakao_redirection_scheme]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -73,7 +73,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
@@ -99,6 +99,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+
+//    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: '1.30.0'
+//    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: '1.30.5'
 
     implementation "com.kakao.sdk:v2-user:2.5.0" // 카카오 로그인
 }
