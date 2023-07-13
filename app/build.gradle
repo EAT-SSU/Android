@@ -23,11 +23,15 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "BASE_URL", properties['baseurl']
-        manifestPlaceholders = [BASE_URL : "baseurl"]
 
-        buildConfigField "String", "APP_KEY", properties['APP_KEY']
-        manifestPlaceholders = [APP_KEY : "APP_KEY"]
+        buildConfigField "String", "base_url", properties['base_url']
+        manifestPlaceholders = [BASE_URL : "base_url"]
+
+        buildConfigField "String", "app_key", properties['app_key']
+        manifestPlaceholders = [APP_KEY : "app_key"]
+
+        buildConfigField "String", "kakao_native_key", properties['kakao_native_key']
+        manifestPlaceholders = [kakao_native_key : "kakao_native_key"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,28 +1,22 @@
 package com.eatssu.android.ui.login
 
+import RetrofitImpl
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import com.eatssu.android.App
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.model.request.LoginRequest
 import com.eatssu.android.data.model.request.loginWithKakaoRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.OauthService
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.ui.main.MainActivity
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.sdk.user.model.User
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,46 +65,46 @@ class SocialLoginActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
 
                 val service = RetrofitImpl.nonRetrofit.create(OauthService::class.java)
-                service.loginWithKakao(loginWithKakaoRequest(email, providerID)).enqueue(object : Callback<TokenResponse> {
-                    override fun onResponse(
-                        call: Call<TokenResponse>,
-                        response: Response<TokenResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            if (response.code() == 200) {
-                                Log.d("post", "onResponse 성공: " + response.body().toString());
+                service.loginWithKakao(loginWithKakaoRequest(email, providerID))
+                    .enqueue(object : Callback<TokenResponse> {
+                        override fun onResponse(
+                            call: Call<TokenResponse>,
+                            response: Response<TokenResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                if (response.code() == 200) {
+                                    Log.d("post", "onResponse 성공: " + response.body().toString());
 //                                MySharedPreferences.setUserId(this@LoginActivity, email)
 //                                MySharedPreferences.setUserPw(this@LoginActivity, providerID)//자동로그인 구현
 
-                                App.token_prefs.accessToken = response.body()!!.accessToken
-                                App.token_prefs.refreshToken =
-                                    response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+                                    App.token_prefs.accessToken = response.body()!!.accessToken
+                                    App.token_prefs.refreshToken =
+                                        response.body()!!.refreshToken//헤더에 붙일 토큰 저장
 
-                                Toast.makeText(
-                                    this@SocialLoginActivity,
-                                    email + " 계정으로 로그인에 성공하였습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                startActivity(intent)  // 화면 전환을 시켜줌
-                                finish()
-                            } else {
-                                Log.d("post", "onResponse 오류: " + response.body().toString());
-                                Toast.makeText(
-                                    this@SocialLoginActivity,
-                                    "error: " + response.message(),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    Toast.makeText(
+                                        this@SocialLoginActivity,
+                                        email + " 계정으로 로그인에 성공하였습니다.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    startActivity(intent)  // 화면 전환을 시켜줌
+                                    finish()
+                                } else {
+                                    Log.d("post", "onResponse 오류: " + response.body().toString());
+                                    Toast.makeText(
+                                        this@SocialLoginActivity,
+                                        "error: " + response.message(),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
-                    }
 
-                    override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                        Log.d("post", "onFailure 에러: " + t.message.toString());
-                    }
-                })
+                        override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                            Log.d("post", "onFailure 에러: " + t.message.toString());
+                        }
+                    })
             }
-
-            }
+        }
     }
 
 }
