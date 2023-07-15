@@ -208,6 +208,10 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="${APP_KEY}" />
 
+        <!--<meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_APP_KEY}"/>-->
+
 
         <activity
             android:name=".ui.infopage.InfoActivity_Haksik"

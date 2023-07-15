@@ -91,13 +91,28 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/rv_main_weekcalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/calendar_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:spanCount="7"
+                android:adjustViewBounds="true"
+                app:layout_constrainedHeight="true"
+                tools:listitem="@layout/fragment_calendar"/>
+        </LinearLayout>
+
         <!-- TabLayou 을 배치한다. -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week_calendar" />
+            app:layout_constraintTop_toBottomOf="@id/rv_main_weekcalendar"/>
 
 
         <androidx.core.widget.NestedScrollView

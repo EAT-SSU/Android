@@ -1,29 +1,25 @@
 package com.eatssu.android.ui.infopage
 
-import android.icu.text.IDNA.Info
+import RetrofitImpl
+import android.R
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.data.enums.RestaurantType
-import com.eatssu.android.data.model.request.ChangeNickname
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.model.response.InfoResponse
 import com.eatssu.android.data.service.InfoService
-import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityInfoGisikBinding
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions;
+
 
 class InfoActivity_Gisik : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var viewBinding: ActivityInfoGisikBinding
@@ -130,8 +126,9 @@ class InfoActivity_Gisik : AppCompatActivity(), OnMapReadyCallback {
     private fun getNonFixed() {
     }
 
-    override fun finish() {
-        super.finish()
+    override fun onDestroy() {
+        googleMap.clear()
+        super.onDestroy()
     }
 
 

@@ -25,10 +25,10 @@ android {
         manifestPlaceholders = [BASE_URL : "BASE_URL"]
 
         buildConfigField "String", "APP_KEY", properties['APP_KEY']
-        manifestPlaceholders = [APP_KEY : APP_KEY]
+        manifestPlaceholders = [APP_KEY : "APP_KEY"]
 
         buildConfigField "String", "GOOGLE_APP_KEY", properties['GOOGLE_APP_KEY']
-        manifestPlaceholders = [GOOGLE_APP_KEY : GOOGLE_APP_KEY]
+        manifestPlaceholders = [GOOGLE_APP_KEY : "GOOGLE_APP_KEY"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

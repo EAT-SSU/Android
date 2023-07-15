@@ -57,7 +57,7 @@ class CalendarFragment : Fragment() {
                 .withLocale(Locale.forLanguageTag("ko"))
 
             val localDate = LocalDateTime.now().format(monthFormat)
-            binding.textYearMonth.text = localDate
+            //binding.textYearMonth.text = localDate
 
 
             var preSunday: LocalDateTime = LocalDateTime.now().with(
@@ -83,10 +83,10 @@ class CalendarFragment : Fragment() {
         binding.weekRecycler.adapter = calendarAdapter
         binding.weekRecycler.layoutManager = GridLayoutManager(context, 7)
 
-        binding.textYearMonth.setOnClickListener {
+        /*binding.textYearMonth.setOnClickListener {
             val intent = Intent(context, CalendarActivity::class.java);
             startActivity(intent);
-        }
+        }*/
 
 
 
@@ -100,14 +100,14 @@ class CalendarFragment : Fragment() {
         val intentdate = intent.getStringExtra("intentdate")
         Log.d("intentdate", intentdate.toString())
 
-        binding.btnCalendarLeft.setOnClickListener {
+        /*binding.btnCalendarLeft.setOnClickListener {
             binding.textYearMonth.text = null
             binding.textYearMonth.text = intentdate
-            /*binding.btnCalendarRight.setOnClickListener{
+            *//*binding.btnCalendarRight.setOnClickListener{
             binding.textYearMonth.text = null
             binding.textYearMonth.text = LocalDateTime.now().plusDays(1).format(monthFormat).toString()
-        }*/
         }
+        }*/
         super.onResume()
     }
 }

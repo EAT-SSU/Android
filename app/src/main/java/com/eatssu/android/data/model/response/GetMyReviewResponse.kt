@@ -7,9 +7,12 @@ data class GetMyReviewResponse(
 ){
     data class Data(
         val content: String,
-        val grade: Int,
+        val reviewId : Int,
+        val mainGrade: Int,
+        val amountGrade: Int,
+        val tasteGrade : Int,
         val imgUrlList: List<String>,
-        val tagList: List<String>,
-        val writeDate: String
+        val writeDate: String,
+        val menuName: String
     )
 }

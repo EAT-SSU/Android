@@ -81,6 +81,7 @@ class WriteReview1Activity : AppCompatActivity() {
 //            intent.putExtra("tag",selectedTags)
             intent.putExtra("selectedTags", ArrayList(selectedTags))
             startActivity(intent)  // 화면 전환을 시켜줌
+            Log.d("menuId", MENU_ID.toString());
         }
     }
 
