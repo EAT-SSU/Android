@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.adapter.DodamAdapter
+//import com.eatssu.android.adapter.DodamAdapter
 import com.eatssu.android.adapter.GisikAdapter
 import com.eatssu.android.data.enums.RestaurantType
 import com.eatssu.android.data.model.response.GetMenuInfoListResponse
@@ -101,30 +101,30 @@ class DinnerFragment : Fragment() {
 //        recyclerView.layoutManager = LinearLayoutManager(context)
 //        recyclerView.setHasFixedSize(true)
 //    }
-
-    private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
-
-        menuService.getFixedMenu(restaurantType.toString())
-            .enqueue(object : Callback<GetMenuInfoListResponse> {
-                override fun onResponse(
-                    call: Call<GetMenuInfoListResponse>,
-                    response: Response<GetMenuInfoListResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        body?.let {
-//                            setAdapter(it.menuInfoList, recyclerView, restaurantType)
-                        }
-                    } else {
-                        Log.d("post", "onResponse 실패")
-                    }
-                }
-
-                override fun onFailure(call: Call<GetMenuInfoListResponse>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: ${t.message}")
-                }
-            })
-    }
+//
+//    private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
+//
+//        menuService.getFixedMenu(restaurantType.toString())
+//            .enqueue(object : Callback<GetMenuInfoListResponse> {
+//                override fun onResponse(
+//                    call: Call<GetMenuInfoListResponse>,
+//                    response: Response<GetMenuInfoListResponse>
+//                ) {
+//                    if (response.isSuccessful) {
+//                        val body = response.body()
+//                        body?.let {
+////                            setAdapter(it.menuInfoList, recyclerView, restaurantType)
+//                        }
+//                    } else {
+//                        Log.d("post", "onResponse 실패")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<GetMenuInfoListResponse>, t: Throwable) {
+//                    Log.d("post", "onFailure 에러: ${t.message}")
+//                }
+//            })
+//    }
 
     private fun getNonFixed() {
     }
