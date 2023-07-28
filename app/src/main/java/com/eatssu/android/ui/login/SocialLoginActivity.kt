@@ -69,6 +69,18 @@ class SocialLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySocialLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+//            if (error != null) {
+//                Toast.makeText(this, "자동 로그인 실패", Toast.LENGTH_SHORT).show()
+//            }
+//            else if (tokenInfo != null) {
+//                Toast.makeText(this, "자동 로그인 성공", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+//            }
+//        }
+
         val context = this
         binding.imbKakao.setOnClickListener {
             lifecycleScope.launch {

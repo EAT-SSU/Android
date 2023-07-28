@@ -1,6 +1,7 @@
 package com.eatssu.android.data
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -10,93 +11,20 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import retrofit2.Retrofit
-
-//class TokenAuthenticator  constructor(
-//    val context: Context,
-//    private val refreshToken: String,
-//) : Authenticator {
-//
-//    companion object {
-//        private val TAG = TokenAuthenticator::class.java.simpleName
-//    }
-//
-//    override fun authenticate(route: Route?, response: Response): Request? {
-//
-//        if (response.code == 401) {
-//
-//            val refreshToken = CommonHelper.getRefreshToken(sharedPref)
-//            val getNewDeviceToken = GlobalScope.async(Dispatchers.Default) {
-//                getNewDeviceToken(refreshToken)
-//            }
-//
-//            val token = runBlocking {
-//                getNewDeviceToken.await()
-//            }
-//            if(token != null) {
-//                return getRequest(response, token)
-//            }
-//        }
-//        return null
-//    }
-//
-//    private suspend inline fun getNewDeviceToken(token: String): String? {
-//        return GlobalScope.async(Dispatchers.Default) {
-//            callApiNewDeviceToken(token)
-//        }.await()
-//    }
-//
-//
-//    private suspend inline fun callApiNewDeviceToken(token: String) : String? = suspendCoroutine { continuation ->
-//        createWebService<Api>()
-//            .refreshToken(RefreshToken(token))
-//            .with(rx)
-//            .response(object : ApiCallback<Token>{
-//                override fun success(data: Token?) {
-//                    if(data != null) {
-//                        CommonHelper.saveTokenInfo(sharedPref, data)
-//                        continuation.resume(data.accessToken)
-//                    } else {
-//                        continuation.resume(null)
-//                    }
-//                }
-//
-//                override fun error(statusCode: Int, message: String?) {
-//                    continuation.resume(null)
-//                }
-//            })
-//
-//        return@suspendCoroutine
-//    }
-//
-//    private val okHttp =  OkHttpClient.Builder()
-//        .connectTimeout(TIMEOUT_LIMIT, TimeUnit.SECONDS)
-//        .readTimeout(TIMEOUT_LIMIT, TimeUnit.SECONDS)
-//        .writeTimeout(TIMEOUT_LIMIT, TimeUnit.SECONDS)
-//        .addInterceptor(HttpLoggingInterceptor().apply {
-//            level = if (BuildConfig.DEBUG) {
-//                HttpLoggingInterceptor.Level.BODY
-//            } else {
-//                HttpLoggingInterceptor.Level.NONE
-//            }
-//        })
-//        .build()
-//
-//    private inline fun <reified T> createWebService(): T {
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl(BuildConfig.SERVER_URL)
-//            .client(okHttp)
-//            .addConverterFactory(GsonConverterFactory.create(
-//                GsonBuilder().serializeNulls().create()
-//            ))
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
-//        return retrofit.create(T::class.java)
-//    }
-//
-//    private fun getRequest(response: Response, token: String): Request {
-//        return response.request
-//            .newBuilder()
-//            .removeHeader("Authorization")
-//            .addHeader("Authorization", "Bearer $token")
-//            .build()
-//    }
-//}
+class TokenAuthenticator: Authenticator {
+    override fun authenticate(route: Route?, response: Response): Request? {
+        Log.i("Authenticator", response.toString())
+        Log.i("Authenticator", "토큰 재발급 시도")
+        return try {
+            val newAccessToken = RefreshTokenService.refreshToken()
+            Log.i("Authenticator", "토큰 재발급 성공 : $newAccessToken")
+            response.request.newBuilder()
+                .removeHeader("Bearer").apply {
+                    addHeader("Bearer", newAccessToken)
+                }.build() // 토큰 재발급이 성공했다면, 기존 헤더를 지우고, 새로운 해더를 단다.
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null // 만약 토큰 재발급이 실패했다면 헤더에 아무것도 추가하지 않는다.
+        }
+    }
+}

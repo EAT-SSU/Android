@@ -1,5 +1,6 @@
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.data.TokenAuthenticator
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -48,6 +49,7 @@ object RetrofitImpl {
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(AppInterceptor())
+            .authenticator(TokenAuthenticator())
             .build()
     }
 
