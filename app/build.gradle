@@ -86,6 +86,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
 
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0' // ViewModel KTX
+    implementation 'com.google.code.gson:gson:2.10'  // Gson
+
+
     //retrofit2 - 서버통신
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

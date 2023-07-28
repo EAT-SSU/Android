@@ -40,7 +40,7 @@
                 android:id="@+id/tv_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3.6"
+                android:text="0.0"
                 android:textSize="15dp"
                 android:layout_weight="1.5"
                 android:gravity="center" />
