@@ -31,6 +31,7 @@ class LunchFragment : Fragment() {
     lateinit var retrofit: Retrofit
     lateinit var menuService: MenuService
 
+    val time:String = "LUNCH"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,8 +49,8 @@ class LunchFragment : Fragment() {
     }
 
     fun init() {
-        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
-        setupClickListeners()
+        menuService = RetrofitImpl.nonRetrofit.create(MenuService::class.java)
+        setupClickListeners() //info dialog
 
     }
 
@@ -76,14 +77,14 @@ class LunchFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun lodeData() {
-        getTodayMeal(RestaurantType.DODAM,binding.rvLunchDodam)
-        getTodayMeal(RestaurantType.HAKSIK,binding.rvLunchHaksik)
+        loadTodayMeal(RestaurantType.DODAM, time, binding.rvLunchDodam)
+        loadTodayMeal(RestaurantType.HAKSIK, time,binding.rvLunchHaksik)
+        loadTodayMeal(RestaurantType.DOMITORY, time, binding.rvLunchDormitory)
 
         getFixedMenu(RestaurantType.FOOD_COURT, binding.rvLunchFood)
         getFixedMenu(RestaurantType.SNACK_CORNER, binding.rvLunchSnack)
         getFixedMenu(RestaurantType.THE_KITCHEN, binding.rvLunchKitchen)
     }
-
 
 
     private fun setAdapter(
@@ -109,31 +110,38 @@ class LunchFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
     }
-    private fun setAdapterLunch(
-        menuInfoList: GetTodayMealResponse,
-        recyclerView: RecyclerView,
-        restaurantType: RestaurantType
-    ) {
-//        val dodamAdapter = DodamAdapter(menuInfoList)
-//        val haksikAdapter = HaksikAdapter(menuInfoList)
 
-//
-//        val adapter = when (restaurantType) {
-//            RestaurantType.DODAM -> dodamAdapter
-//            RestaurantType.HAKSIK -> haksikAdapter
-//            else -> {
-//                dodamAdapter // 그냥
-//            }
-//        }
-//
-//        recyclerView.adapter = adapter
-//        recyclerView.layoutManager = LinearLayoutManager(context)
-//        recyclerView.setHasFixedSize(true)
+    private fun setAdapterTodayMeal(
+        menuInfoList: GetTodayMealResponse,
+        restaurantType: RestaurantType,
+        recyclerView: RecyclerView
+        ) {
+        val dodamAdapter = DodamAdapter(menuInfoList)
+        val haksikAdapter = HaksikAdapter(menuInfoList)
+        val gisikAdapter = GisikAdapter(menuInfoList)
+
+
+        val adapter = when (restaurantType) {
+            RestaurantType.DODAM -> dodamAdapter
+            RestaurantType.HAKSIK -> haksikAdapter
+            RestaurantType.DOMITORY -> gisikAdapter
+            else -> {
+                gisikAdapter // 그냥
+            }
+        }
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getTodayMeal(restaurantType: RestaurantType, recyclerView: RecyclerView) {
+    private fun loadTodayMeal(
+        restaurantType: RestaurantType,
+        time: String,
+        recyclerView: RecyclerView
+    ) {
 //        val date = LocalDate()
 
 
@@ -141,8 +149,9 @@ class LunchFragment : Fragment() {
             DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
         val localDate = LocalDateTime.now().format(monthFormat)
 
-
-        menuService.getTodayMeal("20230714","DOMITORY","LUNCH")
+        //date 자리에 localDate나 호출해서 불러온 날짜를 넣으면 됨
+        //지금은 날짜를 20230714로 고정해두었음
+        menuService.getTodayMeal("20230714", restaurantType.toString(),time)
             .enqueue(object : Callback<GetTodayMealResponse> {
                 override fun onResponse(
                     call: Call<GetTodayMealResponse>,
@@ -150,23 +159,21 @@ class LunchFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         val body = response.body()
-//                        body?.let {
-//                            setAdapterLunch(it, recyclerView, restaurantType)
-//                        }
-                        Log.d("post", "onResponse 성공"+response.body())
+                        body?.let {
+                            setAdapterTodayMeal(it, restaurantType,recyclerView)
+                        }
+                        Log.d("post", "onResponse 성공" + response.body())
 
                     } else {
-                        Log.d("post", "onResponse 실패 tlqkf")
+                        Log.d("post", "onResponse 실패 투데이밀" + response.code()+response.message())
                     }
                 }
 
                 override fun onFailure(call: Call<GetTodayMealResponse>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}"+"ddd")
+                    Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
                 }
             })
     }
-
-
 
 
     private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
@@ -182,7 +189,7 @@ class LunchFragment : Fragment() {
 //                        body?.let {
 //                            setAdapter(it, recyclerView, restaurantType)
 //                        }
-                        Log.d("post", "onResponse 성공"+response.body())
+                        Log.d("post", "onResponse 성공" + response.body())
 
                     } else {
                         Log.d("post", "onResponse 실패")
