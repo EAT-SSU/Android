@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.model.request.loginWithKakaoRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.OauthService
@@ -69,6 +70,31 @@ class SocialLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySocialLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //카카오 로그인에서 제공하는 자동로그인 메소드
+//        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+//            if (error != null) {
+//                Toast.makeText(this, "자동 로그인 실패", Toast.LENGTH_SHORT).show()
+//            }
+//            else if (tokenInfo != null) {
+//                Toast.makeText(this, "자동 로그인 성공", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+//            }
+//        }
+
+        // SharedPreferences 안에 값이 저장되어 있을 때-> Login 패스하기
+        if (App.token_prefs.accessToken?.isNotBlank() == true){ // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
+            Toast.makeText(
+                this,
+                "자동 로그인 되었습니다.",
+                Toast.LENGTH_SHORT
+            ).show()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         val context = this
         binding.imbKakao.setOnClickListener {
             lifecycleScope.launch {
