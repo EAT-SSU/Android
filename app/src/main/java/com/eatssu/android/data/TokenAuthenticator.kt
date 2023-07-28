@@ -1,16 +1,11 @@
 package com.eatssu.android.data
 
-import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import retrofit2.Retrofit
+
 class TokenAuthenticator: Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         Log.i("Authenticator", response.toString())
