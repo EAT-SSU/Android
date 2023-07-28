@@ -81,32 +81,32 @@ class LunchFragment : Fragment() {
         loadTodayMeal(RestaurantType.HAKSIK, time,binding.rvLunchHaksik)
         loadTodayMeal(RestaurantType.DOMITORY, time, binding.rvLunchDormitory)
 
-        getFixedMenu(RestaurantType.FOOD_COURT, binding.rvLunchFood)
-        getFixedMenu(RestaurantType.SNACK_CORNER, binding.rvLunchSnack)
-        getFixedMenu(RestaurantType.THE_KITCHEN, binding.rvLunchKitchen)
+        loadFixedMenu(RestaurantType.FOOD_COURT, binding.rvLunchFood)
+        loadFixedMenu(RestaurantType.SNACK_CORNER, binding.rvLunchSnack)
+        loadFixedMenu(RestaurantType.THE_KITCHEN, binding.rvLunchKitchen)
     }
 
 
     private fun setAdapter(
-        menuList: GetFixedMenuResponse,
+        menuList: List<GetFixedMenuResponse.FixMenuInfoList>,
         recyclerView: RecyclerView,
         restaurantType: RestaurantType
     ) {
-//        val foodAdapter = FoodAdapter(menuList)
-//        val snackAdapter = SnackAdapter(menuList)
-//        val kitchenAdapter = KitchenAdapter(menuList)
-//
-//
-//        val adapter = when (restaurantType) {
-//            RestaurantType.SNACK_CORNER -> snackAdapter
-//            RestaurantType.THE_KITCHEN -> kitchenAdapter
-//            RestaurantType.FOOD_COURT -> foodAdapter
-//            else -> {
-//                snackAdapter // 그냥
-//            }
-//        }
+        val foodAdapter = FoodAdapter(menuList)
+        val snackAdapter = SnackAdapter(menuList)
+        val kitchenAdapter = KitchenAdapter(menuList)
 
-//        recyclerView.adapter = adapter
+
+        val adapter = when (restaurantType) {
+            RestaurantType.SNACK_CORNER -> snackAdapter
+            RestaurantType.THE_KITCHEN -> kitchenAdapter
+            RestaurantType.FOOD_COURT -> foodAdapter
+            else -> {
+                snackAdapter // 그냥
+            }
+        }
+
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
     }
@@ -142,9 +142,6 @@ class LunchFragment : Fragment() {
         time: String,
         recyclerView: RecyclerView
     ) {
-//        val date = LocalDate()
-
-
         val monthFormat =
             DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
         val localDate = LocalDateTime.now().format(monthFormat)
@@ -176,9 +173,9 @@ class LunchFragment : Fragment() {
     }
 
 
-    private fun getFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
+    private fun loadFixedMenu(restaurantType: RestaurantType, recyclerView: RecyclerView) {
 
-        menuService.getFixMenu("FOOD_COURT")
+        menuService.getFixMenu(restaurantType.toString())
             .enqueue(object : Callback<GetFixedMenuResponse> {
                 override fun onResponse(
                     call: Call<GetFixedMenuResponse>,
@@ -186,9 +183,9 @@ class LunchFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         val body = response.body()
-//                        body?.let {
-//                            setAdapter(it, recyclerView, restaurantType)
-//                        }
+                        body?.let {
+                            setAdapter(it.fixMenuInfoList, recyclerView, restaurantType)
+                        }
                         Log.d("post", "onResponse 성공" + response.body())
 
                     } else {
