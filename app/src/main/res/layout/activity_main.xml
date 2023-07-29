@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu">
 
         <LinearLayout
-            android:id="@+id/week_calendar"
+            android:id="@+id/text_month_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -94,16 +94,15 @@
         <LinearLayout
             android:id="@+id/rv_main_weekcalendar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/calendar_view"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:spanCount="7"
-                android:adjustViewBounds="true"
-                app:layout_constrainedHeight="true"
-                tools:listitem="@layout/fragment_calendar"/>
+                android:layout_height="match_parent"
+                android:layout_below="@id/rv_main_weekcalendar"
+                ></FrameLayout>
+
         </LinearLayout>
 
         <!-- TabLayou 을 배치한다. -->

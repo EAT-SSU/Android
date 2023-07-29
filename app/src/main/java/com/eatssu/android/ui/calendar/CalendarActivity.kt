@@ -7,11 +7,9 @@ import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityCalendarBinding
-import com.eatssu.android.ui.main.MainActivity
 import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
@@ -21,6 +19,7 @@ import java.util.*
 class CalendarActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCalendarBinding
     lateinit var calendar: MaterialCalendarView
+    private lateinit var viewModel: CalendarViewModel
 
     val today = CalendarDay.today()
 

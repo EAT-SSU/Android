@@ -17,11 +17,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.calendar.CalendarFragment
 import com.eatssu.android.ui.BaseActivity
 import com.eatssu.android.ui.calendar.CalendarActivity
+import com.eatssu.android.ui.calendar.CalendarViewModel
 import com.eatssu.android.ui.main.ViewPager2Adapter
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        //viewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
 
         setContentView(binding.root)
         supportActionBar?.title = "EAT-SSU"
@@ -89,19 +92,26 @@ class MainActivity : AppCompatActivity() {
         binding.textYearMonth.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java);
             startActivityForResult(intent, CALENDAR_REQUEST_CODE)
-
         }
+
+        val bundle : Bundle = Bundle()
+        var calendarFragment : CalendarFragment = CalendarFragment()
+
         val year = binding.textYearMonth.text.substring(0,4)
         val month = binding.textYearMonth.text.substring(5,7)
         val day = binding.textYearMonth.text.substring(8,10)
+        bundle.putString("Date", binding.textYearMonth.text.toString())
+
         Log.d("cutyear", year)
         Log.d("cutmonth", month)
         Log.d("cutday", day)
+
         binding.btnCalendarLeft.setOnClickListener {
             val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
             val previousDate = currentDate.minusDays(1)
             val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
             binding.textYearMonth.text = newDate
+            bundle.putString("Date", newDate)
         }
 
         binding.btnCalendarRight.setOnClickListener {
@@ -109,10 +119,19 @@ class MainActivity : AppCompatActivity() {
             val previousDate = currentDate.plusDays(1)
             val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
             binding.textYearMonth.text = newDate
+            bundle.putString("Date", newDate)
         }
+
+        calendarFragment.arguments = bundle;
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(binding.frame.id, CalendarFragment())
+            .commitAllowingStateLoss()
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CALENDAR_REQUEST_CODE && resultCode == RESULT_OK) {
