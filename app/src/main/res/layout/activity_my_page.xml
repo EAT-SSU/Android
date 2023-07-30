@@ -33,29 +33,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_bold"
-            android:text="닉네임"
+            android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/ic_nickname_change"
-            android:layout_width="20dp"
-            android:layout_height="10dp"
-            android:background="@android:color/transparent"
-            android:paddingLeft="10dp"
-            android:scaleType="fitEnd"
-            android:src="@drawable/ic_next"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_nickname"
-            app:layout_constraintStart_toEndOf="@+id/tv_nickname"
-            app:layout_constraintTop_toTopOf="@+id/tv_nickname" />
+<!--        <TextView-->
+<!--            android:id="@+id/tv_nickname_change_btn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="@font/noto_bold"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tv_nickname"-->
+<!--            android:text=">"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="email@email.com"
+        android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_nickname" />

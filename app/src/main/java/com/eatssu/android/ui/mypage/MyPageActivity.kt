@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.R
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.BaseActivity
 
@@ -24,6 +24,9 @@ class MyPageActivity : BaseActivity() {
         findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
         supportActionBar?.title = "마이페이지"
+
+        binding.tvNickname.text = MySharedPreferences.getUserName(this)
+        binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
 
         binding.clNickname.setOnClickListener{
             val intent = Intent(this, ChangeNicknameActivity::class.java)
@@ -51,7 +54,7 @@ class MyPageActivity : BaseActivity() {
                 .setMessage("로그아웃 하시겠습니까?")
                 .setPositiveButton("로그아웃",
                     DialogInterface.OnClickListener { dialog, id ->
-                        //탈퇴처리
+                        //로그아웃
                     })
                 .setNegativeButton("취소",
                     DialogInterface.OnClickListener { dialog, id ->
