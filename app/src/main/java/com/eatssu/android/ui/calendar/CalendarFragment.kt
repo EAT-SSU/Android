@@ -52,8 +52,6 @@ class CalendarFragment : Fragment() {
 
         calendarAdapter = CalendarAdapter(calendarList)
 
-
-
         calendarList.apply {
             val dateFormat =
                 DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
@@ -86,27 +84,14 @@ class CalendarFragment : Fragment() {
                 }
                 Log.d("저번 주 일요일 기준으로 시작!", preSunday.plusDays(i.toLong()).format(dateFormat))
             }
-
+            binding.weekRecycler.adapter = calendarAdapter
+            binding.weekRecycler.layoutManager = GridLayoutManager(context, 7)
 
         }
-        binding.weekRecycler.adapter = calendarAdapter
-        binding.weekRecycler.layoutManager = GridLayoutManager(context, 7)
-
-        /*binding.textYearMonth.setOnClickListener {
-            val intent = Intent(context, CalendarActivity::class.java);
-            startActivity(intent);
-        }*/
-
-
-
     }
 
     override fun onResume() {
-        val intent = Intent()
-        //text 키값으로 데이터를 받는다. String을 받아야 하므로 getStringExtra()를 사용함
-        val intentdate = intent.getStringExtra("intentdate")
-        Log.d("intentdate", intentdate.toString())
-
         super.onResume()
+        Log.d("fragment", "onResumed")
     }
 }
