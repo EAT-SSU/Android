@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        val intent = Intent(this,ChangeNicknameActivity::class.java)
+        val intentNick = Intent(this,ChangeNicknameActivity::class.java)
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
-            startActivity(intent)
+            startActivity(intentNick)
         }
 
 
