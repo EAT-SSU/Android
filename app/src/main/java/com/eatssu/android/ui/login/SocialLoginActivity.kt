@@ -17,6 +17,7 @@ import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.ui.mypage.ChangeNicknameActivity
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -146,6 +147,9 @@ class SocialLoginActivity : AppCompatActivity() {
                                     Log.d("post", "onResponse 성공: " + response.body().toString());
 //                                MySharedPreferences.setUserId(this@LoginActivity, email)
 //                                MySharedPreferences.setUserPw(this@LoginActivity, providerID)//자동로그인 구현
+                                    MySharedPreferences.setUserEmail(this@SocialLoginActivity,email)
+                                    MySharedPreferences.setUserPlatform(this@SocialLoginActivity,"KAKAO")
+
 
                                     App.token_prefs.accessToken = response.body()!!.accessToken
                                     App.token_prefs.refreshToken =
