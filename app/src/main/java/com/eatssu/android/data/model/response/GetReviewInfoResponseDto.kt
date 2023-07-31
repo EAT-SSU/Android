@@ -1,10 +1,12 @@
 package com.eatssu.android.data.model.response
 
-data class GetReviewInfoResponse(
-    val grade: Double,
-    val menuName: String,
+data class GetReviewInfoResponseDto(
+    val menuName: List<String>,
+    val totalReviewCount: Int,
+    val mainGrade: Int,
+    val amountGrade: Int,
+    val tasteGrade: Int,
     val reviewGradeCnt: ReviewGradeCnt,
-    val totalReviewCount: Int
 ){
     data class ReviewGradeCnt(
         val fiveCnt: Int,
