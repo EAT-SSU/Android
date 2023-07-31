@@ -8,7 +8,8 @@ data class WriteReviewDetailRequest(
 ){
     data class ReviewCreate(
         val content: String,
-        val grade: Int,
-        val reviewTags: List<String>
-    )
+        val mainGrade: Int,
+        val amountGrade: Int,
+        val tastegrade: Int
+        )
 }
