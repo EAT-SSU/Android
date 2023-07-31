@@ -10,6 +10,6 @@ data class WriteReviewDetailRequest(
         val content: String,
         val mainGrade: Int,
         val amountGrade: Int,
-        val tastegrade: Int
+        val tasteGrade: Int
         )
 }

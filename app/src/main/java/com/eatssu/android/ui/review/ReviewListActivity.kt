@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.data.model.response.GetReviewInfoResponse
+import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
@@ -60,11 +60,11 @@ class ReviewListActivity : AppCompatActivity() {
 
     private fun lodeReviewInfo(id:Int) {
         val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-        reviewService.reviewInfo(menuId = id).enqueue(object :
-            Callback<GetReviewInfoResponse> {
+        reviewService.reviewInfo("FIX",3).enqueue(object :
+            Callback<GetReviewInfoResponseDto> {
             override fun onResponse(
-                call: Call<GetReviewInfoResponse>,
-                response: Response<GetReviewInfoResponse>
+                call: Call<GetReviewInfoResponseDto>,
+                response: Response<GetReviewInfoResponseDto>
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
@@ -72,10 +72,10 @@ class ReviewListActivity : AppCompatActivity() {
 
                     menu = response.body()?.menuName.toString()
                     binding.tvMenu.text = response.body()?.menuName.toString()
-                    binding.tvRate.text =
-                        String.format("%.1f", response.body()?.grade!!.toFloat()).toFloat().toString()
-                    binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-                    binding.rbAverageRate.rating=response.body()?.grade!!.toFloat()
+//                    binding.tvRate.text =
+//                        String.format("%.1f", response.body()?.grade!!.toFloat()).toFloat().toString()
+//                    binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
+//                    binding.rbAverageRate.rating=response.body()?.grade!!.toFloat()
 
                     val cnt = response.body()?.totalReviewCount!!
 
@@ -96,7 +96,7 @@ class ReviewListActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<GetReviewInfoResponse>, t: Throwable) {
+            override fun onFailure(call: Call<GetReviewInfoResponseDto>, t: Throwable) {
                 // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                 Log.d("post", "onFailure 에러: " + t.message.toString());
             }

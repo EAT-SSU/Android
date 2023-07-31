@@ -141,7 +141,7 @@ class WriteReview2Activity : AppCompatActivity() {
     private inner class PostDataAsyncTask : AsyncTask<Unit, Unit, String>() {
         override fun doInBackground(vararg params: Unit?): String? {
             if (MENU_ID != -1) {
-                val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
+//                val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
                 val filePaths = listOf(selectedImagePath)
 
                 reviewService = mRetrofit.create(ReviewService::class.java)
@@ -155,7 +155,7 @@ class WriteReview2Activity : AppCompatActivity() {
                 val parts: MutableList<MultipartBody.Part> = mutableListOf()
                 val reviewData = RequestBody.create(
                     "application/json".toMediaTypeOrNull(),
-                    "{\n  \"grade\": 3,\n  \"reviewTags\": [\"$reviewTags\"],\n  \"content\": \"$comment\"\n}"
+                    "{\n  \"mainGrade\": 3,\n \"amountGrade\": 3,\n \"tasteGrade\": 3,\n  \"content\": \"$comment\"\n}"
                 )
                 fileList.forEach { filePath ->
                     val file = File(filePath)
@@ -231,14 +231,14 @@ class WriteReview2Activity : AppCompatActivity() {
     private fun postData() {
 //        val postDataAsyncTask = PostDataAsyncTask()
 //        postDataAsyncTask.execute()
-        val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
+//        val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
         val filePaths = listOf(selectedImagePath)
 
         val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
 
         reviewService = mRetrofit.create(ReviewService::class.java)
 
-        val menuId = MENU_ID
+        val menuId = 3
         val fileList = listOf(
             selectedImagePath
 //                    "/storage/emulated/0/Pictures/Screenshots/Screenshot_20230529-231907.png"
@@ -247,7 +247,7 @@ class WriteReview2Activity : AppCompatActivity() {
         val parts: MutableList<MultipartBody.Part> = mutableListOf()
         val reviewData = RequestBody.create(
             "application/json".toMediaTypeOrNull(),
-            "{\n  \"grade\": 3,\n  \"reviewTags\": [\"FAST\"],\n  \"content\": \"냠얌\"\n}"
+            "{\n  \"mainGrade\": 3,\n \"amountGrade\": 3,\n \"tasteGrade\": 3,\n  \"content\": \"$comment\"\n}"
         )
         fileList.forEach { filePath ->
             val file = File(filePath)
@@ -271,7 +271,7 @@ class WriteReview2Activity : AppCompatActivity() {
             try {
                 val response = withContext(Dispatchers.IO) {
                     reviewService.uploadFiles(
-                        MENU_ID,
+                        3,
                         parts,
                         reviewData
                     ).execute()

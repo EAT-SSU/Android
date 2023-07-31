@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.model.request.loginWithKakaoRequest
 import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.OauthService
