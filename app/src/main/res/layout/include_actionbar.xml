@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <!--        android:background="@drawable/shape_toolbar_background"-->
 
     <TextView
         android:id="@+id/action_Bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/shape_toolbar_background"
         android:text="리뷰"
         android:gravity="center"
         android:textSize="17dp"
