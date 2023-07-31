@@ -163,7 +163,7 @@ class LunchFragment : Fragment() {
         viewModel.getData().observe(viewLifecycleOwner, androidx.lifecycle.Observer { dataReceived ->
             menuDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
             Log.d("lunchdate", menuDate)
-            menuService.getTodayMeal(menuDate, restaurantType.toString(),time)
+            menuService.getTodayMeal("$menuDate", restaurantType.toString(),time)
                 .enqueue(object : Callback<GetTodayMealResponse> {
                     override fun onResponse(
                         call: Call<GetTodayMealResponse>,
