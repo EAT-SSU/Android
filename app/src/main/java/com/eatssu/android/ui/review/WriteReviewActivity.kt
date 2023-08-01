@@ -13,9 +13,13 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.resolution
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -133,14 +137,14 @@ class WriteReviewActivity : AppCompatActivity() {
         return null
     }
 
-    private fun getFilePart(filePath: String): MultipartBody.Part {
-        val file = File(filePath)
-        val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-        return MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
-    }
+//    private fun getFilePart(filePath: String): MultipartBody.Part {
+//        val file = File(filePath)
+//        val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+//        return MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
+//    }
 
     private fun postData() {
-        val filePaths = listOf(selectedImagePath)
+//        val filePaths = listOf(selectedImagePath)
 
         val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
 
@@ -158,30 +162,80 @@ class WriteReviewActivity : AppCompatActivity() {
     }
 """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
         // Make the file list nullable
+
+
         val fileList: List<String?> = listOf(selectedImagePath)
 
-        fileList.forEach { filePath ->
-            // Check if the file path is null
-            if (filePath != null) {
-                val file = File(filePath)
-                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-                val part = MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
-                parts.add(part)
-            }
-        }
+//
+//        val fileList: List<String?> = listOf(selectedImagePath)
+//
+//        val compressedFileList: MutableList<File?> = mutableListOf()
+//
+//
+//        fileList.forEach { filePath ->
+//            // Check if the file path is not null and compress the image
+//            if (filePath != null) {
+//                val file = File(filePath)
+//                val compressedFile = Compressor.compress(this, file) {
+//                    quality(80) // Adjust the quality level (0-100)
+////                    resolution(1280, 720) // Set desired resolution
+//                }
+//                compressedFileList.add(compressedFile)
+//            }
+//        }
+//
+//        // Convert the compressed files to MultipartBody.Part
+//        val compressedPartsList: List<MultipartBody.Part> = compressedFileList.mapNotNull { compressedFile ->
+//            compressedFile?.let {
+//                val requestFile = it.asRequestBody("image/*".toMediaTypeOrNull())
+//                MultipartBody.Part.createFormData("multipartFileList", it.name, requestFile)
+//            }
+//        }
+
+        // Use compressedPartsList instead of partsList in the API call
+
+        // ...
+//    }
+//
+//
+//
+//    val fileList: List<String?> = listOf(selectedImagePath)
+//
+//        fileList.forEach { filePath ->
+//            // Check if the file path is null
+//            if (filePath != null) {
+//                val file = File(filePath)
+//                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+//                val part = MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
+//                parts.add(part)
+//            }
+//        }
 
         val partsList: List<MultipartBody.Part> = parts.toList()
 
+
+//
+//// Usage
+////        val originalImageFile: File = ... // Your original image file
+//        val compressedImageFile = Compressor.compress(context, selectedImagePath) {
+//            // Configure the image compression settings (optional)
+//            quality(80) // Adjust the quality level (0-100)
+//            resolution(1280, 720) // Set desired resolution
+//            destinationDirectory(ContextCompat.getExternalFilesDirs(context, null)[0]) // Set the destination directory
+//        }
+
         lifecycleScope.launch {
+            val compressedPartsList = compressImage(fileList)
+
             try {
                 val response = withContext(Dispatchers.IO) {
-                    if (fileList == null) {
+                    if (compressedPartsList == null) {
                             reviewService.uploadFiles(
                                 MENU_ID, reviewData
                             ).execute()
                     } else {
                         reviewService.uploadFiles(
-                            MENU_ID, partsList, reviewData
+                            MENU_ID, compressedPartsList, reviewData
                         ).execute()
                     }
                 }
@@ -209,5 +263,25 @@ class WriteReviewActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    // Coroutine function to compress the image
+    private suspend fun compressImage(fileList: List<String?>): List<MultipartBody.Part> {
+        val compressedPartsList: MutableList<MultipartBody.Part> = mutableListOf()
+
+        fileList.forEach { filePath ->
+            // Check if the file path is not null and compress the image
+            if (filePath != null) {
+                val file = File(filePath)
+                val compressedFile = Compressor.compress(this@WriteReviewActivity, file) {
+                    quality(50) // Adjust the quality level (0-100)
+                }
+                val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
+                val part = MultipartBody.Part.createFormData("multipartFileList", compressedFile.name, requestFile)
+                compressedPartsList.add(part)
+            }
+        }
+
+        return compressedPartsList
     }
 }
