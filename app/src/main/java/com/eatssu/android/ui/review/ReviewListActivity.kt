@@ -14,10 +14,13 @@ import com.eatssu.android.databinding.ActivityReviewListBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 class ReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewListBinding
     lateinit var menu :String
+
+    private var MENU_ID by Delegates.notNull<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,30 +28,26 @@ class ReviewListActivity : AppCompatActivity() {
         binding = ActivityReviewListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.included.actionBar.text="리뷰"
-//        binding = ActivityReviewListBinding.inflate(layoutInflater, null, true)
 
-        //val inflater = LayoutInflater.from(this)
-        //inflater(binding.root, findViewById(R.id.frame_layout), true)
+        //supportActionBar?.title = "리뷰"
 
-        supportActionBar?.title = "리뷰"
-
-        var MENU_ID:Int=intent.getIntExtra("menuId",-1)
-        Log.d("post",MENU_ID.toString())
+        MENU_ID = intent.getLongExtra("menuId",-1)
+        Log.d("post", "menuID:$MENU_ID")
 
 
         lodeReviewInfo(MENU_ID)
         lodeData(MENU_ID)
 
         binding.btnNextReview.setOnClickListener() {
-            val intent = Intent(this, WriteReview1Activity::class.java)  // 인텐트를 생성해줌,
+            val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
             intent.putExtra("menuId",MENU_ID)
             intent.putExtra("menu",menu)
             startActivity(intent)  // 화면 전환을 시켜줌
         }
     }
 
-    private fun setAdapter(reviewList: List<GetReviewListResponse.Data>) {
-        val listAdapter = ReviewAdapter(reviewList)
+    private fun setAdapter(reviewList: List<GetReviewListResponse.Data>?) {
+        val listAdapter = reviewList?.let { ReviewAdapter(it) }
         val linearLayoutManager = LinearLayoutManager(this)
 
         binding.rvReview.adapter = listAdapter
@@ -58,9 +57,9 @@ class ReviewListActivity : AppCompatActivity() {
 
     }
 
-    private fun lodeReviewInfo(id:Int) {
+    private fun lodeReviewInfo(id: Long) {
         val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-        reviewService.reviewInfo("FIX",3).enqueue(object :
+        reviewService.reviewInfo("FIX",id).enqueue(object :
             Callback<GetReviewInfoResponseDto> {
             override fun onResponse(
                 call: Call<GetReviewInfoResponseDto>,
@@ -72,10 +71,16 @@ class ReviewListActivity : AppCompatActivity() {
 
                     menu = response.body()?.menuName.toString()
                     binding.tvMenu.text = response.body()?.menuName.toString()
-//                    binding.tvRate.text =
-//                        String.format("%.1f", response.body()?.grade!!.toFloat()).toFloat().toString()
-//                    binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-//                    binding.rbAverageRate.rating=response.body()?.grade!!.toFloat()
+
+                    binding.tvRate.text =
+                        String.format("%.1f", response.body()?.mainGrade!!.toFloat()).toFloat().toString()
+                    binding.tvGradeTaste.text =
+                        String.format("%.1f", response.body()?.tasteGrade!!.toFloat()).toFloat().toString()
+                    binding.tvGradeAmount.text =
+                        String.format("%.1f", response.body()?.amountGrade!!.toFloat()).toFloat().toString()
+
+                    binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
+                    binding.rbAverageRate.rating=response.body()?.mainGrade!!.toFloat()
 
                     val cnt = response.body()?.totalReviewCount!!
 
@@ -103,9 +108,9 @@ class ReviewListActivity : AppCompatActivity() {
         })
     }
 
-    private fun lodeData(id:Int) {
+    private fun lodeData(id: Long) {
         val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-        reviewService.getReview(id).enqueue(object :
+        reviewService.getReview("FIX",id).enqueue(object :
             Callback<GetReviewListResponse> {
             override fun onResponse(
                 call: Call<GetReviewListResponse>,

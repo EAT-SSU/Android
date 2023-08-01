@@ -1,17 +1,21 @@
 package com.eatssu.android.data.model.response
 
 data class GetReviewListResponse(
-    val dataList: List<Data>,
+    val dataList: List<Data>?,
     val hasNext: Boolean,
     val numberOfElements: Int
 ){
     data class Data(
-        val content: String,
-        val grade: Int,
-        val imgUrlList: List<String>,
-        val tagList: List<String>,
+        val reviewId: Long,
+        val menu: String,
+        val writerId : Int,
+        val isWriter: Boolean,
+        val writerNickname: String,
+        val mainGrade: Int,
+        val amountGrade: Int,
+        val tasteGrade: Int,
         val writeDate: String,
-        val writerId: Int,
-        val writerNickname: String
+        val content: String,
+        val imgUrlList: List<String>
     )
 }
