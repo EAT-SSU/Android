@@ -10,9 +10,10 @@
 
 Framework
 - Android Studio : Dolphin 2020.3.1
+- JDK : 17.0.7
 - Kotlin : 1.8
 - minSDK : 21
-- targetSDK : 32
+- targetSDK : 31
 
 Infra
 - Github Actions

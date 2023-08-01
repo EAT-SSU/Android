@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.eatssu.android.R
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.model.request.ChangeNickname
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityChangeNicknameBinding
@@ -29,7 +30,7 @@ class ChangeNicknameActivity : BaseActivity() {
         inflater.inflate(R.layout.activity_change_nickname, findViewById(R.id.frame_layout), true)
         findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
-        supportActionBar?.title = "닉네임 변경"
+        supportActionBar?.title = "닉네임 설정"
 
         binding.etChNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -56,8 +57,8 @@ class ChangeNicknameActivity : BaseActivity() {
                             Toast.makeText(
                                 this@ChangeNicknameActivity, "닉네임 변경에 성공했습니다.", Toast.LENGTH_SHORT
                             ).show()
+                            MySharedPreferences.setUserName(this@ChangeNicknameActivity,chNick)
                             finish()
-
                         } else {
                             Toast.makeText(
                                 this@ChangeNicknameActivity, "닉네임 변경에 실패했습니다.\"", Toast.LENGTH_SHORT
