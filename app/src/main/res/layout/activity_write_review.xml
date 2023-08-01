@@ -64,7 +64,7 @@
     </LinearLayout>
 
     <RatingBar
-        android:id="@+id/rb_review2"
+        android:id="@+id/rb_main"
         style="@style/Widget.AppCompat.RatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
         android:text="해당 메뉴에 대한 상세한 평가를 남겨주세요"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rb_review2" />
+        app:layout_constraintTop_toBottomOf="@+id/rb_main" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
@@ -103,10 +103,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/taste"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-            app:layout_constraintEnd_toStartOf="@+id/ratingBar"
+            app:layout_constraintBottom_toBottomOf="@+id/rb_taste"
+            app:layout_constraintEnd_toStartOf="@+id/rb_taste"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+            app:layout_constraintTop_toTopOf="@+id/rb_taste" />
 
         <TextView
             android:id="@+id/textView8"
@@ -114,32 +114,45 @@
             android:layout_height="wrap_content"
             android:text="@string/amount"
 
-            app:layout_constraintBottom_toBottomOf="@+id/ratingBar2"
-            app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
+            app:layout_constraintBottom_toBottomOf="@+id/rb_amount"
+            app:layout_constraintEnd_toStartOf="@+id/rb_amount"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ratingBar2" />
+            app:layout_constraintTop_toTopOf="@+id/rb_amount" />
 
         <RatingBar
-            android:id="@+id/ratingBar"
+            android:id="@+id/rb_taste"
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="65dp"
+            android:layout_marginTop="10dp"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:progressTint="@color/primary"
+            android:rating="0"
+            android:secondaryProgressTint="@color/primary"
+            android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <RatingBar
-            android:id="@+id/ratingBar2"
+            android:id="@+id/rb_amount"
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="65dp"
             android:layout_marginTop="30dp"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:progressTint="@color/primary"
+            android:rating="0"
+            android:secondaryProgressTint="@color/primary"
+            android:stepSize="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            app:layout_constraintTop_toBottomOf="@+id/rb_taste" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -148,8 +161,8 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="40dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/shape_edittext"
         android:gravity="top"
         android:hint="한 줄 평 작성하기"
