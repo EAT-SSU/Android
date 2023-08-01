@@ -18,6 +18,13 @@ interface ReviewService {
         @Part("reviewCreate") reviewData: RequestBody,
     ): Call<Void>
 
+    @Multipart
+    @POST("review/{menuId}")
+    fun uploadFiles(
+        @Path("menuId") menuId: Int,
+        @Part("reviewCreate") reviewData: RequestBody,
+    ): Call<Void>
+
 
     @DELETE("/review/{menuId}/detail/{reviewId}") //리뷰 삭제
     fun delReview(@Path("menuId") menuId: Int, @Path("reviewId") reviewId: Int): Call<String>
