@@ -27,17 +27,15 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class WriteReview2Activity : AppCompatActivity() {
     private lateinit var binding: ActivityWriteReview2Binding
 
-    //    private lateinit var retro_fit: Retrofit
     private lateinit var reviewService: ReviewService
     private val PERMISSION_REQUEST_CODE = 1
 
-
     private var selectedImagePath: String? = null
-
 
     lateinit var getResult: ActivityResultLauncher<Intent>
 
@@ -229,42 +227,36 @@ class WriteReview2Activity : AppCompatActivity() {
     }
 
     private fun postData() {
-//        val postDataAsyncTask = PostDataAsyncTask()
-//        postDataAsyncTask.execute()
-//        val reviewCreate = Review.ReviewCreate(comment, 4, reviewTags)
         val filePaths = listOf(selectedImagePath)
 
         val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
 
         reviewService = mRetrofit.create(ReviewService::class.java)
 
-        val menuId = 3
-        val fileList = listOf(
-            selectedImagePath
-//                    "/storage/emulated/0/Pictures/Screenshots/Screenshot_20230529-231907.png"
-        )
 
-        val parts: MutableList<MultipartBody.Part> = mutableListOf()
-        val reviewData = RequestBody.create(
-            "application/json".toMediaTypeOrNull(),
-            "{\n  \"mainGrade\": 3,\n \"amountGrade\": 3,\n \"tasteGrade\": 3,\n  \"content\": \"$comment\"\n}"
-        )
+        val parts: MutableList<MultipartBody.Part> = mutableListOf() // Use MutableList to add elements
+
+        val comment = "Your review comment" // Replace with the actual comment
+
+        val reviewData = """
+    {
+        "mainGrade": 3,
+        "amountGrade": 3,
+        "tasteGrade": 3,
+        "content": "$comment"
+    }
+""".trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
+
+        val fileList = listOf(selectedImagePath) // Replace with the actual file paths
+
         fileList.forEach { filePath ->
             val file = File(filePath)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            val part = MultipartBody.Part.createFormData(
-                "multipartFileList",
-                file.name,
-                requestFile
-            )
-            parts.add(part)
+            val part = MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
+            parts.add(part) // Use parts.add() for MutableList, or directly create a new list for List
         }
+        val partsList: List<MultipartBody.Part> = parts.toList()
 
-        val call = reviewService.uploadFiles(
-            menuId,
-            parts,
-            reviewData
-        )
 
 
         lifecycleScope.launch {
@@ -272,7 +264,7 @@ class WriteReview2Activity : AppCompatActivity() {
                 val response = withContext(Dispatchers.IO) {
                     reviewService.uploadFiles(
                         3,
-                        parts,
+                        partsList,
                         reviewData
                     ).execute()
                 }

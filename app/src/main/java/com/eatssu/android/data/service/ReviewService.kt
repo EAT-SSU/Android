@@ -11,10 +11,10 @@ import retrofit2.http.*
 
 interface ReviewService {
     @Multipart
-    @POST("review/{menuId}/detail")
+    @POST("review/{menuId}")
     fun uploadFiles(
         @Path("menuId") menuId: Int,
-        @Part("multipartFileList") files: List<MultipartBody.Part>?,
+        @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
         @Part("reviewCreate") reviewData: RequestBody,
     ): Call<Void>
 
