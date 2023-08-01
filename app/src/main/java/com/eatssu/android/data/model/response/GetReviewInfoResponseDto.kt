@@ -3,9 +3,9 @@ package com.eatssu.android.data.model.response
 data class GetReviewInfoResponseDto(
     val menuName: List<String>,
     val totalReviewCount: Int,
-    val mainGrade: Int,
-    val amountGrade: Int,
-    val tasteGrade: Int,
+    val mainGrade: Double,
+    val amountGrade: Double,
+    val tasteGrade: Double,
     val reviewGradeCnt: ReviewGradeCnt,
 ){
     data class ReviewGradeCnt(
