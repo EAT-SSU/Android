@@ -69,14 +69,11 @@ class WriteReviewActivity : AppCompatActivity() {
         menu = intent.getStringExtra("menu").toString()
 //        rate = intent.getIntExtra("rating", 0)
 
+        initUI()
+        reviewService = mRetrofit.create(ReviewService::class.java)
+    }
 
-        comment = binding.etReview2Comment.text.toString()
-
-
-//        mainRating = binding.rbMain.rating.toInt()
-//        tasteRating = binding.rbTaste.rating.toInt()
-//        amountRating = binding.rbAmount.rating.toInt()
-
+    private fun initUI() {
         binding.menu.text = menu
         //텍스트 리뷰
         binding.etReview2Comment.addTextChangedListener(object : TextWatcher {
@@ -91,16 +88,66 @@ class WriteReviewActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {}
         })
-
+        comment = binding.etReview2Comment.text.toString()
 
         binding.ibAddPic.setOnClickListener {
 //            initAddPhoto()
             openGallery()
-
         }
 
         binding.btnNextReview2.setOnClickListener() {
-            postData()
+            lifecycleScope.launch {
+                compressAndPostData()
+            }
+        }
+    }
+
+    private suspend fun compressAndPostData() {
+        val compressedPartsList = compressImage(listOf(selectedImagePath))
+        val reviewData = """
+    {
+        "mainGrade": ${binding.rbMain.rating.toInt()},
+        "amountGrade": ${binding.rbAmount.rating.toInt()},
+        "tasteGrade": ${binding.rbTaste.rating.toInt()},
+        "content": "$comment"
+    }
+""".trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
+        // Make the file list nullable
+        try {
+            val response = withContext(Dispatchers.IO) {
+                if (compressedPartsList == null) {
+                    reviewService.uploadFiles(
+                        MENU_ID, reviewData
+                    ).execute()
+                } else {
+                    reviewService.uploadFiles(
+                        MENU_ID, compressedPartsList, reviewData
+                    ).execute()
+                }
+            }
+            if (response.isSuccessful) {
+                // 정상적으로 통신이 성공한 경우
+                Log.d("post", "onResponse 성공: " + response.body().toString())
+                Toast.makeText(
+                    this@WriteReviewActivity, "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT
+                ).show()
+                startActivity(intent)  // 화면 전환을 시켜줌
+                intent.putExtra("menuId", MENU_ID)
+                Log.d("post", "pass Id" + MENU_ID)
+                finish()
+            } else {
+                // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                Log.d(
+                    "post",
+                    "onResponse 실패 write" + response.code() + MENU_ID + compressedPartsList + reviewData
+                )
+            }
+        } catch (e: Exception) {
+            // 통신 중 예외가 발생한 경우
+            Log.d("post", "통신 실패: ${e.message}")
+            Toast.makeText(
+                this@WriteReviewActivity, "리뷰를 업로드하지 못했습니다.", Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -137,151 +184,25 @@ class WriteReviewActivity : AppCompatActivity() {
         return null
     }
 
-//    private fun getFilePart(filePath: String): MultipartBody.Part {
-//        val file = File(filePath)
-//        val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-//        return MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
-//    }
-
-    private fun postData() {
-//        val filePaths = listOf(selectedImagePath)
-
-        val intent = Intent(this, ReviewListActivity::class.java)  // 인텐트를 생성해줌,
-
-        reviewService = mRetrofit.create(ReviewService::class.java)
-
-        val parts: MutableList<MultipartBody.Part> =
-            mutableListOf() // Use MutableList to add elements
-
-        val reviewData = """
-    {
-        "mainGrade": ${binding.rbMain.rating.toInt()},
-        "amountGrade": ${binding.rbAmount.rating.toInt()},
-        "tasteGrade": ${binding.rbTaste.rating.toInt()},
-        "content": "$comment"
-    }
-""".trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
-        // Make the file list nullable
-
-
-        val fileList: List<String?> = listOf(selectedImagePath)
-
-//
-//        val fileList: List<String?> = listOf(selectedImagePath)
-//
-//        val compressedFileList: MutableList<File?> = mutableListOf()
-//
-//
-//        fileList.forEach { filePath ->
-//            // Check if the file path is not null and compress the image
-//            if (filePath != null) {
-//                val file = File(filePath)
-//                val compressedFile = Compressor.compress(this, file) {
-//                    quality(80) // Adjust the quality level (0-100)
-////                    resolution(1280, 720) // Set desired resolution
-//                }
-//                compressedFileList.add(compressedFile)
-//            }
-//        }
-//
-//        // Convert the compressed files to MultipartBody.Part
-//        val compressedPartsList: List<MultipartBody.Part> = compressedFileList.mapNotNull { compressedFile ->
-//            compressedFile?.let {
-//                val requestFile = it.asRequestBody("image/*".toMediaTypeOrNull())
-//                MultipartBody.Part.createFormData("multipartFileList", it.name, requestFile)
-//            }
-//        }
-
-        // Use compressedPartsList instead of partsList in the API call
-
-        // ...
-//    }
-//
-//
-//
-//    val fileList: List<String?> = listOf(selectedImagePath)
-//
-//        fileList.forEach { filePath ->
-//            // Check if the file path is null
-//            if (filePath != null) {
-//                val file = File(filePath)
-//                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-//                val part = MultipartBody.Part.createFormData("multipartFileList", file.name, requestFile)
-//                parts.add(part)
-//            }
-//        }
-
-        val partsList: List<MultipartBody.Part> = parts.toList()
-
-
-//
-//// Usage
-////        val originalImageFile: File = ... // Your original image file
-//        val compressedImageFile = Compressor.compress(context, selectedImagePath) {
-//            // Configure the image compression settings (optional)
-//            quality(80) // Adjust the quality level (0-100)
-//            resolution(1280, 720) // Set desired resolution
-//            destinationDirectory(ContextCompat.getExternalFilesDirs(context, null)[0]) // Set the destination directory
-//        }
-
-        lifecycleScope.launch {
-            val compressedPartsList = compressImage(fileList)
-
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    if (compressedPartsList == null) {
-                            reviewService.uploadFiles(
-                                MENU_ID, reviewData
-                            ).execute()
-                    } else {
-                        reviewService.uploadFiles(
-                            MENU_ID, compressedPartsList, reviewData
-                        ).execute()
-                    }
-                }
-                if (response.isSuccessful) {
-                    // 정상적으로 통신이 성공한 경우
-                    Log.d("post", "onResponse 성공: " + response.body().toString())
-                    Toast.makeText(
-                        this@WriteReviewActivity, "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT
-                    ).show()
-                    startActivity(intent)  // 화면 전환을 시켜줌
-                    intent.putExtra("menuId", MENU_ID)
-                    Log.d("post","pass Id"+MENU_ID)
-                    finish()
-                } else {
-                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                    Log.d(
-                        "post", "onResponse 실패 write" + response.code() + MENU_ID + parts + reviewData
-                    )
-                }
-            } catch (e: Exception) {
-                // 통신 중 예외가 발생한 경우
-                Log.d("post", "통신 실패: ${e.message}")
-                Toast.makeText(
-                    this@WriteReviewActivity, "리뷰를 업로드하지 못했습니다.", Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
     // Coroutine function to compress the image
-    private suspend fun compressImage(fileList: List<String?>): List<MultipartBody.Part> {
+    private suspend fun compressImage(fileList: List<String?>): List<MultipartBody.Part>? {
         val compressedPartsList: MutableList<MultipartBody.Part> = mutableListOf()
 
         fileList.forEach { filePath ->
-            // Check if the file path is not null and compress the image
             if (filePath != null) {
                 val file = File(filePath)
                 val compressedFile = Compressor.compress(this@WriteReviewActivity, file) {
-                    quality(50) // Adjust the quality level (0-100)
+                    quality(0) // Adjust the quality level (0-100)
                 }
                 val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
-                val part = MultipartBody.Part.createFormData("multipartFileList", compressedFile.name, requestFile)
+                val part = MultipartBody.Part.createFormData(
+                    "multipartFileList",
+                    compressedFile.name,
+                    requestFile
+                )
                 compressedPartsList.add(part)
             }
         }
-
-        return compressedPartsList
+        return if (compressedPartsList.isNotEmpty()) compressedPartsList else null
     }
 }
