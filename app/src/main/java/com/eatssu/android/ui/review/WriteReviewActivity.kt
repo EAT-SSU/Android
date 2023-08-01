@@ -36,20 +36,15 @@ class WriteReviewActivity : AppCompatActivity() {
 
     private var selectedImagePath: String? = null
 
-    lateinit var getResult: ActivityResultLauncher<Intent>
-
     private var MENU_ID: Int = 0
     private lateinit var menu: String
-    private var rate: Int = 0
-    private var comment: String? = null
-    var reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
 
+    private var comment: String? = null
     private var mainRating: Int = 0
     private var amountRating: Int = 0
     private var tasteRating: Int = 0
 
-
-    private lateinit var path: String
+//    private lateinit var path: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,9 +68,8 @@ class WriteReviewActivity : AppCompatActivity() {
 //        rate = intent.getIntExtra("rating", 0)
 
 
-        comment = ""
-        reviewTags = listOf("GOOD", "BAD") // Replace with your review tags
-        path = ""
+        comment = binding.etReview2Comment.text.toString()
+
 
         mainRating = binding.rbMain.rating.toInt()
         tasteRating = binding.rbTaste.rating.toInt()
@@ -157,7 +151,6 @@ class WriteReviewActivity : AppCompatActivity() {
         val parts: MutableList<MultipartBody.Part> =
             mutableListOf() // Use MutableList to add elements
 
-        val comment = "Your review comment" // Replace with the actual comment
 
         val reviewData = """
     {
