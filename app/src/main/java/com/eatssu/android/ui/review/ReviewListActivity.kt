@@ -47,7 +47,7 @@ class ReviewListActivity : AppCompatActivity() {
     }
 
     private fun setAdapter(reviewList: List<GetReviewListResponse.Data>?) {
-        val listAdapter = reviewList?.let { ReviewAdapter(it) }
+        val listAdapter = ReviewAdapter(reviewList)
         val linearLayoutManager = LinearLayoutManager(this)
 
         binding.rvReview.adapter = listAdapter
@@ -110,7 +110,7 @@ class ReviewListActivity : AppCompatActivity() {
 
     private fun lodeData(id: Long) {
         val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-        reviewService.getReview("FIX",id).enqueue(object :
+        reviewService.getReview("FIX",MENU_ID).enqueue(object :
             Callback<GetReviewListResponse> {
             override fun onResponse(
                 call: Call<GetReviewListResponse>,
