@@ -80,7 +80,7 @@ class ReviewListActivity : AppCompatActivity() {
                         String.format("%.1f", response.body()?.amountGrade!!.toFloat()).toFloat().toString()
 
                     binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-                    binding.rbAverageRate.rating=response.body()?.mainGrade!!.toFloat()
+//                    binding.rbAverageRate.rating=response.body()?.mainGrade!!.toFloat()
 
                     val cnt = response.body()?.totalReviewCount!!
 

@@ -70,10 +70,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:isIndicator="true"
+                            android:max="1"
                             android:numStars="1"
                             android:progressBackgroundTint="@color/primary"
                             android:progressTint="@color/primary"
-                            android:rating="4.3"
+                            android:rating="2"
                             android:secondaryProgressTint="@color/primary"
                             android:stepSize="1" />
 
@@ -107,12 +108,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:isIndicator="true"
+                            android:max="1"
                             android:numStars="1"
                             android:progressBackgroundTint="@color/primary"
                             android:progressTint="@color/primary"
-                            android:rating="4.3"
+                            android:rating="2"
                             android:secondaryProgressTint="@color/primary"
-                            android:stepSize="1" />
+                            android:stepSize="1"/>
 
                         <TextView
                             android:id="@+id/tv_grade_taste"
@@ -134,10 +136,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:isIndicator="true"
+                            android:max="1"
                             android:numStars="1"
                             android:progressBackgroundTint="@color/primary"
                             android:progressTint="@color/primary"
-                            android:rating="4.3"
+                            android:rating="2"
                             android:secondaryProgressTint="@color/primary"
                             android:stepSize="1" />
 

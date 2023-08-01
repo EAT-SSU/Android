@@ -106,7 +106,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:isIndicator="true"
-
             android:max="1"
             android:numStars="1"
             android:progressBackgroundTint="@color/primary"
