@@ -110,7 +110,7 @@ class ReviewListActivity : AppCompatActivity() {
 
     private fun lodeData(id: Long) {
         val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-        reviewService.getReview("FIX",MENU_ID).enqueue(object :
+        reviewService.getReview("FIX",id).enqueue(object :
             Callback<GetReviewListResponse> {
             override fun onResponse(
                 call: Call<GetReviewListResponse>,

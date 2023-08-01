@@ -12,11 +12,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.databinding.ActivityWriteReview2Binding
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -36,13 +34,13 @@ class WriteReviewActivity : AppCompatActivity() {
 
     private var selectedImagePath: String? = null
 
-    private var MENU_ID: Int = 0
+    private var MENU_ID: Long = 0
     private lateinit var menu: String
 
     private var comment: String? = null
-    private var mainRating: Int = 0
-    private var amountRating: Int = 0
-    private var tasteRating: Int = 0
+//    private var mainRating: Int = 0
+//    private var amountRating: Int = 0
+//    private var tasteRating: Int = 0
 
 //    private lateinit var path: String
 
@@ -63,7 +61,7 @@ class WriteReviewActivity : AppCompatActivity() {
             }
         }
 
-        MENU_ID = intent.getIntExtra("menuId", -1)
+        MENU_ID = intent.getLongExtra("menuId", -1)
         menu = intent.getStringExtra("menu").toString()
 //        rate = intent.getIntExtra("rating", 0)
 
@@ -71,9 +69,9 @@ class WriteReviewActivity : AppCompatActivity() {
         comment = binding.etReview2Comment.text.toString()
 
 
-        mainRating = binding.rbMain.rating.toInt()
-        tasteRating = binding.rbTaste.rating.toInt()
-        amountRating = binding.rbAmount.rating.toInt()
+//        mainRating = binding.rbMain.rating.toInt()
+//        tasteRating = binding.rbTaste.rating.toInt()
+//        amountRating = binding.rbAmount.rating.toInt()
 
         binding.menu.text = menu
         //텍스트 리뷰
@@ -151,12 +149,11 @@ class WriteReviewActivity : AppCompatActivity() {
         val parts: MutableList<MultipartBody.Part> =
             mutableListOf() // Use MutableList to add elements
 
-
         val reviewData = """
     {
-        "mainGrade": $mainRating,
-        "amountGrade": $amountRating,
-        "tasteGrade": $tasteRating,
+        "mainGrade": ${binding.rbMain.rating.toInt()},
+        "amountGrade": ${binding.rbAmount.rating.toInt()},
+        "tasteGrade": ${binding.rbTaste.rating.toInt()},
         "content": "$comment"
     }
 """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
@@ -180,11 +177,11 @@ class WriteReviewActivity : AppCompatActivity() {
                 val response = withContext(Dispatchers.IO) {
                     if (fileList == null) {
                             reviewService.uploadFiles(
-                                3, reviewData
+                                MENU_ID, reviewData
                             ).execute()
                     } else {
                         reviewService.uploadFiles(
-                            3, partsList, reviewData
+                            MENU_ID, partsList, reviewData
                         ).execute()
                     }
                 }
@@ -196,7 +193,7 @@ class WriteReviewActivity : AppCompatActivity() {
                     ).show()
                     startActivity(intent)  // 화면 전환을 시켜줌
                     intent.putExtra("menuId", MENU_ID)
-                    finish()
+                    Log.d("post","pass Id"+MENU_ID)
                     finish()
                 } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
