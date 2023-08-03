@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                holderSelect.binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
+                holderSelect.binding.weekCardview.setBackgroundResource(R.drawable.transparent_calendar_element)
 
                 val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
                 viewModel.setData(selected)

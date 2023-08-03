@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemCalendarListBinding
 import com.eatssu.android.ui.main.MainActivity
 import java.time.LocalDate
@@ -27,6 +28,7 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
 
         private var selectedDate: String? = null
         lateinit var today : String
+        lateinit var day : String
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: CalendarData) {
@@ -34,7 +36,7 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
             binding.day.text = item.cl_day
 
             today = binding.date.text as String
-            var day = binding.day.text
+            day = binding.day.text as String
 
             // 오늘 날짜
             val now = LocalDate.now()
@@ -44,7 +46,7 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
 
             // 오늘 날짜와 캘린더의 오늘 날짜가 같을 경우 background_blue 적용하기
             if (now.equals(today)) {
-                binding.weekCardview.setBackgroundResource(com.eatssu.android.R.drawable.selector_background_blue)
+                binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
             }
             /*
             binding.root.setOnClickListener {
