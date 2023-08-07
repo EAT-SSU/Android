@@ -245,8 +245,9 @@ class WriteReviewActivity : AppCompatActivity() {
                     Toast.makeText(
                         this@WriteReviewActivity, "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT
                     ).show()
-                    startActivity(intent)  // 화면 전환을 시켜줌
+//                    startActivity(intent)  // 화면 전환을 시켜줌
                     intent.putExtra("menuId", MENU_ID)
+                    intent.putExtra("fixedMenuReview",true)
                     Log.d("post","pass Id"+MENU_ID)
                     finish()
                 } else {

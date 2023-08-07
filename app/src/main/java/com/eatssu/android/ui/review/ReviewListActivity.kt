@@ -34,13 +34,15 @@ class ReviewListActivity : AppCompatActivity() {
 
         MENU_ID = intent.getLongExtra("menuId", -1L)
         MEAL_ID = intent.getLongExtra("mealId", -1L)
+        val fixedMenuReview = intent.getBooleanExtra("fixedMenuReview",false)
 
         Log.d("post", "menuID:$MENU_ID")
         Log.d("post", "mealID:$MEAL_ID")
-
-
-
-        if (MENU_ID == -1L && MEAL_ID != -1L) {
+        Log.d("post", "fixedMenuReview:$fixedMenuReview")
+        if(MENU_ID != -1L && MEAL_ID == -1L && fixedMenuReview == true){
+            true
+        }
+        else if (MENU_ID == -1L && MEAL_ID != -1L) {
             //가변 메뉴일 시
             lodeReviewInfo("CHANGE", MEAL_ID)
             lodeData("CHANGE", MEAL_ID)
@@ -57,7 +59,7 @@ class ReviewListActivity : AppCompatActivity() {
             lodeData("FIX", MENU_ID)
             binding.btnNextReview.setOnClickListener() {
                 val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
-                intent.putExtra("menuId", MEAL_ID)
+                intent.putExtra("menuId", MENU_ID)
                 intent.putExtra("menu", menu)
                 Log.d("menu",menu.javaClass.name)
                 startActivity(intent)  // 화면 전환을 시켜줌
