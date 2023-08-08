@@ -1,40 +1,26 @@
 package com.eatssu.android.ui.main
 
 import com.eatssu.android.R
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64.NO_WRAP
-import android.util.Base64.encodeToString
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.ui.BaseActivity
 import com.eatssu.android.ui.calendar.*
-import com.eatssu.android.ui.main.ViewPager2Adapter
 import com.eatssu.android.ui.mypage.ChangeNicknameActivity
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
-import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
-import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter
-import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
-import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -158,6 +144,9 @@ class MainActivity : AppCompatActivity() {
 
                 val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
                 viewModel.setData(selected)
+                // viewModel에 값 넘어가서 메뉴 뜨는지 확인하는 코드
+                //var senddate = "14"
+                //viewModel.setData(senddate)
 
                 // 1) ViewPager2 참조
                 val viewPager: ViewPager2 = binding.vpMain
