@@ -3,7 +3,6 @@ package com.eatssu.android.data.service
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponse
 import com.eatssu.android.data.model.request.ModifyReviewRequest
-import com.eatssu.android.data.model.response.GetChangedMenuInfoResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

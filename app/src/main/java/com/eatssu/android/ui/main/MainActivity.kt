@@ -18,11 +18,13 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.calendar.CalendarFragment
 import com.eatssu.android.ui.BaseActivity
 import com.eatssu.android.ui.calendar.CalendarActivity
 import com.eatssu.android.ui.main.ViewPager2Adapter
+import com.eatssu.android.ui.mypage.ChangeNicknameActivity
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -52,6 +54,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        val intentNick = Intent(this,ChangeNicknameActivity::class.java)
+        // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
+        if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
+            startActivity(intentNick)
+        }
+
+
         supportActionBar?.title = "EAT-SSU"
 
         // 1) ViewPager2 참조

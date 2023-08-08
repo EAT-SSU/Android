@@ -5,22 +5,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetChangedMenuInfoResponse
+import com.eatssu.android.data.model.response.GetTodayMealResponse
+import com.eatssu.android.databinding.ItemGisikBinding
 import com.eatssu.android.databinding.ItemHaksikBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
-
-class HaksikAdapter(private val dataList: GetChangedMenuInfoResponse):
+class HaksikAdapter(private val dataList: GetTodayMealResponse) :
     RecyclerView.Adapter<HaksikAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemHaksikBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+
         fun bind(position: Int) {
             if (position >= 0 && position < dataList.size) {
                 val menuList = dataList[position]
                 val nameList = StringBuilder()
 
-                for (menuInfo in menuList.menuInfoList) {
+                for (menuInfo in menuList.changeMenuInfoList) {
                     nameList.append(menuInfo.name)
                     nameList.append("+")
                 }
@@ -32,25 +34,12 @@ class HaksikAdapter(private val dataList: GetChangedMenuInfoResponse):
                 val result = nameList.toString()
                 binding.tvMenu.text = result
 
-                binding.tvPrice.text = 5000.toString()
-
-                var totalGrade = 0.0
-
-                for (menuInfo in menuList.menuInfoList) {
-                    val grade = menuInfo.grade ?: 0.0
-                    totalGrade += grade
-                }
-
-                val averageGrade = if (menuList.menuInfoList.isNotEmpty()) {
-                    totalGrade / menuList.menuInfoList.size
-                } else {
-                    0.0
-                }
-
-                binding.tvRate.text = String.format("%.1f", averageGrade)
+                binding.tvPrice.text = dataList[position].price.toString()
+                binding.tvRate.text = dataList[position].mainGrade.toString()
             }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =

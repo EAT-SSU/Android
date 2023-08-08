@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
+import com.eatssu.android.data.model.response.GetFixedMenuResponse
 import com.eatssu.android.databinding.ItemFoodBinding
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
-class FoodAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) :
+class FoodAdapter(private val dataList: List<GetFixedMenuResponse.FixMenuInfoList>) :
     RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemFoodBinding) :
@@ -19,7 +19,7 @@ class FoodAdapter(private val dataList: List<GetMenuInfoListResponse.MenuInfo>) 
         fun bind(position: Int) {
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
-            binding.tvRate.text = String.format("%.1f", dataList[position].grade)
+            binding.tvRate.text = String.format("%.1f", dataList[position].mainGrade)
         }
     }
 
