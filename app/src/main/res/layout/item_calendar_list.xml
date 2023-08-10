@@ -18,7 +18,8 @@
             android:layout_height="20dp"
             android:text="월"
             android:textAlignment="center"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/selector_calendar_colortext"/>
 
         <TextView
             android:id="@+id/date"
@@ -26,7 +27,8 @@
             android:layout_height="20dp"
             android:text="19"
             android:textAlignment="center"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/selector_calendar_colortext"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

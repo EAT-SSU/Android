@@ -134,12 +134,15 @@ class MainActivity : AppCompatActivity() {
 
                 for(holder in returnViewHolderList){
                     holder.binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
+                    holder.binding.day.isSelected = false
+                    holder.binding.date.isSelected = false
                     if(holder.today.equals(data.cl_date)) {
                         holderSelect = holder
                         selected = holder.today
                     }
                 }
-
+                holderSelect.binding.day.isSelected = true
+                holderSelect.binding.date.isSelected = true
                 holderSelect.binding.weekCardview.setBackgroundResource(R.drawable.transparent_calendar_element)
 
                 val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
