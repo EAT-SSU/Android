@@ -114,6 +114,10 @@ dependencies {
     implementation 'com.google.dagger:hilt-android:2.47'
     annotationProcessor 'com.google.dagger:hilt-compiler:2.47'
 
+    // viewmodel과 livedata
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+
 //    implementation "androidx.security:security-crypto:1.0.0"
 
 }

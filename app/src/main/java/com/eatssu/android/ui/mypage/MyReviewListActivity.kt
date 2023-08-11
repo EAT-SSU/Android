@@ -27,13 +27,12 @@ class MyReviewListActivity : AppCompatActivity() {
 
         binding = ActivityMyReviewListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        binding.included.actionBar.text="리뷰"
-//        binding = ActivityReviewListBinding.inflate(layoutInflater, null, true)
 
-        //val inflater = LayoutInflater.from(this)
-        //inflater(binding.root, findViewById(R.id.frame_layout), true)
+        binding.btnReviewClose.setOnClickListener() {
+            onBackPressed();
+        }
 
-        supportActionBar?.title = "리뷰"
+        supportActionBar?.title = "내가 쓴 리뷰"
 
         var MENU_ID:Int=intent.getIntExtra("menuId",-1)
         Log.d("post",MENU_ID.toString())
@@ -65,7 +64,6 @@ class MyReviewListActivity : AppCompatActivity() {
                     // 정상적으로 통신이 성공된 경우
                     Log.d("post", "onResponse 성공: " + response.body().toString());
 
-
                     val body = response.body()
                     body?.let {
                         setAdapter(it.dataList)
@@ -73,7 +71,7 @@ class MyReviewListActivity : AppCompatActivity() {
 
                 } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                    Log.d("post", "onResponse 실패")
+                    Log.d("post", "onResponse 실패 + ${response.code()}")
                 }
             }
 

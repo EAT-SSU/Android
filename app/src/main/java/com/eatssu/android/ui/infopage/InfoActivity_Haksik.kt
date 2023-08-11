@@ -84,4 +84,8 @@ class InfoActivity_Haksik : AppCompatActivity() {
 
         private fun getNonFixed() {
         }
+
+    override fun finish() {
+        super.finish()
+    }
 }

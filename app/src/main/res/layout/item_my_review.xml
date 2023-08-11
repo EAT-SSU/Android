@@ -20,22 +20,107 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+
         app:layout_constraintStart_toStartOf="@+id/tv_review_item_id"
         app:layout_constraintTop_toBottomOf="@+id/tv_review_item_id">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:src="@drawable/ic_star">
+            </ImageView>
 
-        <RatingBar
-            android:id="@+id/rb_review_item_rate"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:max="5"
-            android:progressBackgroundTint="@color/primary"
-            android:progressTint="@color/primary"
-            android:rating="2"
-            android:secondaryProgressTint="@color/primary"
-            android:stepSize="1" />
+            <TextView
+                android:id="@+id/tv_review_main_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:fontFamily="@font/noto_bold"
+                android:text="5"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/main">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="15">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:fontFamily="@font/noto_medium"
+                android:text="맛"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/black">
+            </TextView>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:src="@drawable/ic_star">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/tv_review_taste_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:fontFamily="@font/noto_bold"
+                android:text="5"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/main">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="15">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:fontFamily="@font/noto_medium"
+                android:text="양"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/black">
+            </TextView>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:src="@drawable/ic_star">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/tv_review_amount_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:fontFamily="@font/noto_bold"
+                android:text="5"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/main">
+            </TextView>
+        </LinearLayout>
+
 
 
     </LinearLayout>
@@ -46,15 +131,15 @@
         android:layout_height="wrap_content"
         android:text="2023.03.03"
         android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
-        app:layout_constraintStart_toEndOf="@+id/ll_review_item_rate"
-        app:layout_constraintTop_toTopOf="@+id/ll_review_item_rate" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_review_item_delete"
+        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_delete"
+        app:layout_constraintTop_toTopOf="@+id/tv_review_item_id"/>
 
     <TextView
         android:id="@+id/tv_review_item_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="삭제하기"
+        android:text="수정/삭제"
         android:textColor="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
         app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
@@ -72,7 +157,7 @@
         app:layout_constraintStart_toStartOf="@+id/tv_review_item_id"
         app:layout_constraintTop_toBottomOf="@+id/ll_review_item_rate" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tv_review_item_tag1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -108,6 +193,6 @@
         android:layout_marginStart="10dp"
         android:text="가성비가 좋아요"
         app:layout_constraintStart_toEndOf="@+id/tv_review_item_tag2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
