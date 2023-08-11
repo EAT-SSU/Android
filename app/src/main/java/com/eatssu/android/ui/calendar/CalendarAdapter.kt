@@ -50,35 +50,6 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
                 binding.day.isSelected = true;
                 binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
             }
-            /*
-            binding.root.setOnClickListener {
-                // Update the selectedDate to the clicked date
-                selectedDate = today as String?
-                // Update the background of the clicked date
-                for(holder in allViewHolders){
-                    holder.binding.weekCardview.setBackgroundResource(com.eatssu.android.R.drawable.ic_selector_background_white)
-                    Log.d("searchfor", holder.toString())
-                }
-                selectedDate?.let { it1 -> Log.d("rootdata", it1) }
-                val bundle : Bundle = Bundle()
-                bundle.putString("calendardata", selectedDate)
-
-                val intent = Intent(binding.root.context, MainActivity::class.java)
-                intent.putExtra("calendardata", selectedDate)
-                ContextCompat.startActivity(binding.root.context, intent, null)
-
-                *//*val lunchFragment = LunchFragment()
-                lunchFragment.arguments = bundle*//*
-
-                *//*val caledarFragment = CalendarFragment()
-
-                lateinit var dataPassListener : onDataPassListener
-
-                dataPassListener = caledarFragment.context as onDataPassListener
-                dataPassListener.onDataPass(selectedDate)*//*
-
-                binding.weekCardview.setBackgroundResource(com.eatssu.android.R.drawable.selector_background_blue)
-            }*/
         }
     }
 
