@@ -3,7 +3,7 @@ name: Android CI
 on:
   pull_request:
     branches:
-      - main # Change this to your main branch name
+      - main
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+    
     - name: APP_KEY
       run: |
         echo APP_KEY=\"$APP_KEY\" > local.properties
@@ -39,8 +39,6 @@ jobs:
       shell: bash
       env:
         APP_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
-
-
     
     - name: set up JDK 11
       uses: actions/setup-java@v3
