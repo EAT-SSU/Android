@@ -37,7 +37,7 @@ android {
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", KAKAO_NATIVE_APP_KEY)
         manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: KAKAO_NATIVE_APP_KEY]
 
-        buildConfigField("String", "kakao_redirection_scheme", kakao_redirection_scheme)
+        buildConfigField("String", "KAKAO_REDIRECTION_SCHEME", KAKAO_REDIRECTION_SCHEME)
         manifestPlaceholders = [KAKAO_REDIRECTION_SCHEME: KAKAO_REDIRECTION_SCHEME]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
