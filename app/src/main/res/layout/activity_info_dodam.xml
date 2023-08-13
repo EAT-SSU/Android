@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.infopage.InfoActivity_Dodam"
+    tools:context=".view.infopage.InfoActivity_Dodam"
     android:background="@drawable/shape_round_corners"
     android:backgroundTint="@color/white">
 

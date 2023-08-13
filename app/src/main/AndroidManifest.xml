@@ -38,17 +38,17 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
-            android:name=".ui.review.WriteReviewActivity"
+            android:name=".view.review.WriteReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.MenuPickActivity"
+            android:name=".view.review.MenuPickActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.SocialLoginActivity"
+            android:name=".view.login.SocialLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,7 +67,7 @@
         <!-- android:name="com.kakao.sdk.AppKey" -->
         <!-- android:value="${APP_KEY}" /> -->
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".view.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -96,14 +96,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.BaseActivity"
+            android:name=".base.BaseActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.login.SignUpActivity"
+            android:name=".view.login.SignUpActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -117,7 +117,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.ChangePwActivity"
+            android:name=".view.mypage.ChangePwActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -131,7 +131,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.ChangeNicknameActivity"
+            android:name=".view.mypage.ChangeNicknameActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -145,7 +145,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.MyReviewListActivity"
+            android:name=".view.mypage.MyReviewListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -158,7 +158,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.ReviewListActivity"
+            android:name=".view.review.ReviewListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -171,7 +171,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.MyPageActivity"
+            android:name=".view.mypage.MyPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -185,7 +185,7 @@
         </activity>
 
         <activity
-            android:name=".ui.infopage.InfoActivity_Gisik"
+            android:name=".view.infopage.InfoActivity_Gisik"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -193,7 +193,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.infopage.InfoActivity_Kitchen"
+            android:name=".view.infopage.InfoActivity_Kitchen"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -201,7 +201,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.infopage.InfoActivity_Food"
+            android:name=".view.infopage.InfoActivity_Food"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -209,7 +209,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.infopage.InfoActivity_Snack"
+            android:name=".view.infopage.InfoActivity_Snack"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -217,7 +217,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.infopage.InfoActivity_Dodam"
+            android:name=".view.infopage.InfoActivity_Dodam"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -225,7 +225,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.calendar.CalendarActivity"
+            android:name=".view.calendar.CalendarActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <intent-filter>
@@ -239,7 +239,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.infopage.InfoActivity_Haksik"
+            android:name=".view.infopage.InfoActivity_Haksik"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -247,7 +247,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".view.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

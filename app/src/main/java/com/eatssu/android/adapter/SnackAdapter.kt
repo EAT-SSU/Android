@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetFixedMenuResponse
+import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.databinding.ItemSnackBinding
-import com.eatssu.android.ui.review.ReviewListActivity
+import com.eatssu.android.view.review.ReviewListActivity
 
-class SnackAdapter(private val dataList: List<GetFixedMenuResponse.FixMenuInfoList>) :
+class SnackAdapter(private val dataList: List<GetFixedMenuResponseDto.FixMenuInfoList>) :
     RecyclerView.Adapter<SnackAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemSnackBinding) :
