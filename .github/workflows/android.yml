@@ -28,4 +28,4 @@ jobs:
       - name: Build and Test
         run: |
           # You can use the environment variables in your build commands
-          ./gradlew assembleDebug -PbaseUrl=$BASE_URL -PappKey=$APP_KEY
+          ./gradlew assembleDebug -PbaseUrl=$BASE_URL -PappKey=$APP_KEY -PkakaoNativeAppKey=$KAKAO_NATIVE_APP_KEY -PkakaoRedirectionScheme=$KAKAO_REDIRECTION_SCHEME
