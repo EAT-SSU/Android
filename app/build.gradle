@@ -9,8 +9,8 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def APP_KEY = properties.getProperty('APP_KEY')
 def BASE_URL = properties.getProperty('BASE_URL')
-def kakao_native_app_key = properties.getProperty('kakao_native_app_key')
-def kakao_redirection_scheme = properties.getProperty('kakao_redirection_scheme')
+def KAKAO_NATIVE_APP_KEY = properties.getProperty('KAKAO_NATIVE_APP_KEY')
+def KAKAO_REDIRECTION_SCHEME = properties.getProperty('KAKAO_REDIRECTION_SCHEME')
 
 
 
@@ -34,11 +34,11 @@ android {
         buildConfigField("String", "BASE_URL", BASE_URL)
         manifestPlaceholders = [BASE_URL: BASE_URL]
 
-        buildConfigField("String", "kakao_native_app_key", kakao_native_app_key)
-        manifestPlaceholders = [kakao_native_app_key: kakao_native_app_key]
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", KAKAO_NATIVE_APP_KEY)
+        manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: KAKAO_NATIVE_APP_KEY]
 
         buildConfigField("String", "kakao_redirection_scheme", kakao_redirection_scheme)
-        manifestPlaceholders = [kakao_redirection_scheme: kakao_redirection_scheme]
+        manifestPlaceholders = [KAKAO_REDIRECTION_SCHEME: KAKAO_REDIRECTION_SCHEME]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
