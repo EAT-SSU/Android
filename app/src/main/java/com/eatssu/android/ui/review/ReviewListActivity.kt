@@ -28,9 +28,9 @@ class ReviewListActivity : AppCompatActivity() {
 
         binding = ActivityReviewListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.included.actionBar.text = "리뷰"
+        //binding.included.actionBar.text = "리뷰"
 
-        //supportActionBar?.title = "리뷰"
+        supportActionBar?.title = "리뷰"
 
         MENU_ID = intent.getLongExtra("menuId", -1L)
         MEAL_ID = intent.getLongExtra("mealId", -1L)
