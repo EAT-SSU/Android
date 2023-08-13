@@ -1,63 +1,54 @@
 name: Android CI
 
 on:
-  push:
+  pull_request:
     branches:
       - main # Change this to your main branch name
 
 jobs:
   build:
-    name: Build and Test
+
     runs-on: ubuntu-latest
 
-    # env:
-    #   APP_KEY: ${{ secrets.APP_KEY }}
-    #   BASE_URL: ${{ secrets.BASE_URL }}
-    #   KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
-    #   KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
-      
-
     steps:
-      - name: BASE_URL
-        run: |
-          echo BASE_URL=\"$BASE_URL\" > local.properties
-        shell: bash
-        env:
-         BASE_URL: ${{ secrets.BASE_URL}}
-  
-      - name: KAKAO_NATIVE_APP_KEY
-        run: |
-          echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" > local.properties
-        shell: bash
-        env:
-          APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+    - uses: actions/checkout@v3
+    
+    - name: BASE_URL
+      run: |
+        echo BASE_URL=\"$BASE_URL\" > local.properties
+      shell: bash
+      env:
+       BASE_URL: ${{ secrets.BASE_URL}}
 
-      - name: KAKAO_REDIRECTION_SCHEME
-        run: |
-          echo KAKAO_REDIRECTION_SCHEME=\"$KAKAO_REDIRECTION_SCHEME\" > local.properties
-        shell: bash
-        env:
-          APP_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+    - name: KAKAO_NATIVE_APP_KEY
+      run: |
+        echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" > local.properties
+      shell: bash
+      env:
+        APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
-      - name: APP_KEY
-        run: |
-          echo APP_KEY=\"$APP_KEY\" > local.properties
-        shell: bash
-        env:
-          APP_KEY: ${{ secrets.APP_KEY }}
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: KAKAO_REDIRECTION_SCHEME
+      run: |
+        echo KAKAO_REDIRECTION_SCHEME=\"$KAKAO_REDIRECTION_SCHEME\" > local.properties
+      shell: bash
+      env:
+        APP_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11 # Change this to your desired Java version
-          distribution: 'temurin' # Replace with your desired distribution ("adopt", "zulu", "temurin", or "jdk")
-          architecture: x64
-          cache: gradle
+    - name: APP_KEY
+      run: |
+        echo APP_KEY=\"$APP_KEY\" > local.properties
+      shell: bash
+      env:
+        APP_KEY: ${{ secrets.APP_KEY }}
+    
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        
-      - name: Build with Gradle
-        run: ./gradlew build    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
