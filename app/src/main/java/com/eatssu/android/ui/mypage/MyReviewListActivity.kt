@@ -15,8 +15,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-//@POST("mypage/myreview") //내가 쓴 리뷰 모아보기
-//fun getMyReviews(@Query("lastReviewId") lastReviewId: Int): Call<GetMyReviewResponse>
+//@GET("mypage/myreview") //내가 쓴 리뷰 모아보기
+//fun getMyReviews(): Call<GetMyReviewResponse>
 
 class MyReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewListBinding

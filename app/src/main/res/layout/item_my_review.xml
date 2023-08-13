@@ -119,6 +119,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/main">
             </TextView>
+
         </LinearLayout>
 
 
@@ -151,11 +152,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="5dp"
-        android:text="여기 계란국 맛집임...
-김치볶음밥에 계란후라이 없어서 아쉽
-다음에 또 먹어야지"
+        android:text="여기 계란국 맛집임...김치볶음밥에 계란후라이 없어서 아쉽 다음에 또 먹어야지"
         app:layout_constraintStart_toStartOf="@+id/tv_review_item_id"
         app:layout_constraintTop_toBottomOf="@+id/ll_review_item_rate" />
+
+    <ImageView
+        android:id="@+id/iv_review_photo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_item_comment"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
 
     <!--<TextView
         android:id="@+id/tv_review_item_tag1"

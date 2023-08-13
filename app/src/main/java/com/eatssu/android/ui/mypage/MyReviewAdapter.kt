@@ -3,14 +3,16 @@ package com.eatssu.android.ui.review
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetMyReviewResponse
 import com.eatssu.android.databinding.ItemMyReviewBinding
 import kotlin.math.min
 
 
 //@POST("mypage/myreview") //내가 쓴 리뷰 모아보기
-//fun getMyReviews(@Query("lastReviewId") lastReviewId: Int): Call<GetMyReviewResponse>
+//fun getMyReviews(): Call<GetMyReviewResponse>
 
 class MyReviewAdapter(private val dataList: List<GetMyReviewResponse.Data>) :
     RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
@@ -26,6 +28,25 @@ class MyReviewAdapter(private val dataList: List<GetMyReviewResponse.Data>) :
             binding.tvReviewTasteGrade.text=dataList[position].tasteGrade.toString()
             binding.tvReviewAmountGrade.text=dataList[position].amountGrade.toString()
             binding.tvReviewItemId.text=dataList[position].menuName.toString()
+            // Assuming imgUrlList is a List<String>
+            val imgUrlList: List<String>? =
+                dataList?.get(position)?.imgUrlList// The list of image URLs
+
+            // Get the ImageView reference from your layout
+            val imageView: ImageView =
+                binding.ivReviewPhoto// Replace R.id.imageView with the ID of your ImageView
+            // Check if the imgUrlList is not empty before loading the image
+            if (dataList?.get(position)?.imgUrlList.isNullOrEmpty()) {
+                imageView.visibility = View.GONE
+            } else {
+                val imageUrl =
+                    imgUrlList?.get(0) // Assuming you want to load the first image from the list
+
+                Glide.with(itemView)
+                    .load(imageUrl)
+                    .into(imageView)
+                imageView.visibility = View.VISIBLE
+            }
         }
     }
 
