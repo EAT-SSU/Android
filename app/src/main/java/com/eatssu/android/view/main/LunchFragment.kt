@@ -14,19 +14,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.adapter.*
 import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
-import com.eatssu.android.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentLunchBinding
 import com.eatssu.android.view.calendar.CalendarViewModel
 import com.eatssu.android.view.infopage.*
 import com.eatssu.android.viewmodel.MenuViewModel
-import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import retrofit2.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import androidx.lifecycle.Observer
+import com.eatssu.android.repository.MenuRepository
+import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+
 
 // LunchFragment.kt
 //class LunchFragment : Fragment() {
@@ -117,9 +121,17 @@ import java.util.*
 //
 //}
 
+@AndroidEntryPoint
 class LunchFragment : Fragment() {
     private var _binding: FragmentLunchBinding? = null
     private val binding get() = _binding!!
+
+//    private lateinit var viewModel: MenuViewModel
+
+//    private val viewModel by viewModels<MenuViewModel>()
+
+    private lateinit var viewModel: MenuViewModel
+
 
     lateinit var retrofit: Retrofit
     lateinit var menuService: MenuService
@@ -127,6 +139,8 @@ class LunchFragment : Fragment() {
     private var menuDate : String = "20230714"
 
     val time:String = "LUNCH"
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -139,19 +153,30 @@ class LunchFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
 
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
-        init()
         lodeData()
-    }
 
-    fun init() {
-        menuService = RetrofitImpl.nonRetrofit.create(MenuService::class.java)
+        val repository = MenuRepository(menuService)
+        viewModel = ViewModelProvider(this, MenuViewModelFactory(repository)).get(MenuViewModel::class.java)
+
+
+        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MenuViewModel::class.java]
+
+        viewModel.loadTodayMeal(menuDate,Restaurant.DODAM, Time.LUNCH,binding.rvLunchDodam)
+
+        viewModel.todayMealData.observe(viewLifecycleOwner, Observer { result ->
+            val dodamAdapter = DodamAdapter(result)
+            binding.rvLunchDodam.adapter = dodamAdapter
+        })
+
+
         setupClickListeners() //info dialog
-
     }
+
 
     private fun setupClickListeners() {
         binding.btnHaksikInfo.setOnClickListener {
@@ -176,9 +201,9 @@ class LunchFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun lodeData() {
-        loadTodayMeal(Restaurant.DODAM, time, binding.rvLunchDodam)
-        loadTodayMeal(Restaurant.HAKSIK, time,binding.rvLunchHaksik)
-        loadTodayMeal(Restaurant.DOMITORY, time, binding.rvLunchDormitory)
+//        loadTodayMeal(Restaurant.DODAM, Time.LUNCH, binding.rvLunchDodam)
+//        loadTodayMeal(Restaurant.HAKSIK, Time.LUNCH,binding.rvLunchHaksik)
+//        loadTodayMeal(Restaurant.DOMITORY, Time.LUNCH, binding.rvLunchDormitory)
 
         loadFixedMenu(Restaurant.FOOD_COURT, binding.rvLunchFood)
         loadFixedMenu(Restaurant.SNACK_CORNER, binding.rvLunchSnack)
@@ -238,7 +263,7 @@ class LunchFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadTodayMeal(
         restaurantType: Restaurant,
-        time: String,
+        time: Time,
         recyclerView: RecyclerView
     ) {
         val monthFormat =
@@ -253,7 +278,7 @@ class LunchFragment : Fragment() {
             menuDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
             //menuDate = "202307$dataReceived"
             Log.d("lunchdate", menuDate)
-            menuService.getTodayMeal(menuDate, restaurantType.toString(),time)
+            menuService.getTodayMeal(menuDate, restaurantType.toString(),time.toString())
                 .enqueue(object : Callback<GetTodayMealResponseDto> {
                     override fun onResponse(
                         call: Call<GetTodayMealResponseDto>,
