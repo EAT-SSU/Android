@@ -66,4 +66,7 @@
     <string name="report4">리뷰 작성 취지에 맞지 않은 내용 (복사글 등)</string>
     <string name="report5">저작권 도용 의심 (사진 등)</string>
     <string name="report6">기타 (하단 내용 작성)</string>
+    <string name="write_review">리뷰 작성하기</string>
+    <string name="taste">맛</string>
+    <string name="amount">양</string>
 </resources>
