@@ -27,10 +27,10 @@
             android:id="@+id/tv_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:padding="10dp"
             android:text="메뉴 명"
             android:textAlignment="center"
-            android:gravity="center"
             android:textColor="@color/black"
             android:textSize="25dp"
             android:textStyle="bold"
@@ -58,33 +58,99 @@
                     android:layout_marginRight="10dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_rate"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="50dp"
-                        android:text="0.0"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="45dp"
-                        android:textStyle="bold" />
+                        android:layout_height="wrap_content">
 
-                    <RatingBar
-                        android:id="@+id/rb_average_rate"
-                        style="@style/Widget.AppCompat.RatingBar.Indicator"
+
+                        <RatingBar
+                            android:id="@+id/rb_average_rate"
+                            style="@style/Widget.AppCompat.RatingBar.Indicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:isIndicator="true"
+                            android:max="1"
+                            android:numStars="1"
+                            android:progressBackgroundTint="@color/primary"
+                            android:progressTint="@color/primary"
+                            android:rating="2"
+                            android:secondaryProgressTint="@color/primary"
+                            android:stepSize="1" />
+
+                        <TextView
+                            android:id="@+id/tv_rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="0.0"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="45dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:isIndicator="true"
-                        android:numStars="5"
-                        android:progressBackgroundTint="@color/primary"
-                        android:progressTint="@color/primary"
-                        android:rating="4.3"
-                        android:secondaryProgressTint="@color/primary"
-                        android:stepSize="1"
-                        app:layout_constraintBottom_toBottomOf="@id/rate1"
-                        app:layout_constraintLeft_toLeftOf="@id/tv_rate"
-                        app:layout_constraintRight_toRightOf="@id/tv_rate" />
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/taste" />
+
+                        <RatingBar
+                            android:id="@+id/rb_taste"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:isIndicator="true"
+                            android:max="1"
+                            android:numStars="1"
+                            android:progressBackgroundTint="@color/primary"
+                            android:progressTint="@color/primary"
+                            android:rating="2"
+                            android:secondaryProgressTint="@color/primary"
+                            android:stepSize="1"/>
+
+                        <TextView
+                            android:id="@+id/tv_grade_taste"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:text="5"
+                            android:textColor="@color/main" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/amount" />
+
+                        <RatingBar
+                            android:id="@+id/rb_amount"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:isIndicator="true"
+                            android:max="1"
+                            android:numStars="1"
+                            android:progressBackgroundTint="@color/primary"
+                            android:progressTint="@color/primary"
+                            android:rating="2"
+                            android:secondaryProgressTint="@color/primary"
+                            android:stepSize="1" />
+
+                        <TextView
+                            android:id="@+id/tv_grade_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5"
+                            android:textColor="@color/main" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -114,7 +180,7 @@
                             android:id="@+id/tv_review_num_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
+                            android:layout_marginStart="10dp"
                             android:text="0"
                             android:textAlignment="center"
                             android:textColor="@color/primary"
@@ -127,7 +193,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -146,11 +212,11 @@
                         <ProgressBar
                             android:id="@+id/progressBar5"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:progressDrawable="@drawable/progress"
-                            android:layout_marginStart="15dp"
+                            android:layout_width="115dp"
+                            android:layout_height="10dp"
                             android:layout_gravity="center"
-                            android:layout_width="70dp"
-                            android:layout_height="10dp" />
+                            android:layout_marginStart="15dp"
+                            android:progressDrawable="@drawable/progress" />
 
                     </LinearLayout>
 
@@ -175,11 +241,11 @@
                         <ProgressBar
                             android:id="@+id/progressBar4"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:progressDrawable="@drawable/progress"
-                            android:layout_marginStart="15dp"
+                            android:layout_width="115dp"
+                            android:layout_height="10dp"
                             android:layout_gravity="center"
-                            android:layout_width="70dp"
-                            android:layout_height="10dp" />
+                            android:layout_marginStart="15dp"
+                            android:progressDrawable="@drawable/progress" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -201,11 +267,11 @@
                         <ProgressBar
                             android:id="@+id/progressBar3"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:progressDrawable="@drawable/progress"
-                            android:layout_marginStart="15dp"
+                            android:layout_width="115dp"
+                            android:layout_height="10dp"
                             android:layout_gravity="center"
-                            android:layout_width="70dp"
-                            android:layout_height="10dp" />
+                            android:layout_marginStart="15dp"
+                            android:progressDrawable="@drawable/progress" />
 
                     </LinearLayout>
 
@@ -228,11 +294,11 @@
                         <ProgressBar
                             android:id="@+id/progressBar2"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:progressDrawable="@drawable/progress"
-                            android:layout_marginStart="15dp"
+                            android:layout_width="115dp"
+                            android:layout_height="10dp"
                             android:layout_gravity="center"
-                            android:layout_width="70dp"
-                            android:layout_height="10dp" />
+                            android:layout_marginStart="15dp"
+                            android:progressDrawable="@drawable/progress" />
 
                     </LinearLayout>
 
@@ -255,11 +321,11 @@
                         <ProgressBar
                             android:id="@+id/progressBar1"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:progressDrawable="@drawable/progress"
-                            android:layout_marginStart="15dp"
+                            android:layout_width="115dp"
+                            android:layout_height="10dp"
                             android:layout_gravity="center"
-                            android:layout_width="70dp"
-                            android:layout_height="10dp" />
+                            android:layout_marginStart="15dp"
+                            android:progressDrawable="@drawable/progress" />
 
                     </LinearLayout>
 
@@ -276,7 +342,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/shape_btn_mini"
-            android:text="리뷰 남기러 가기"
+            android:text="@string/write_review"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -287,8 +353,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
         android:layout_marginTop="30dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"

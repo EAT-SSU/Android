@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetTodayMealResponse
 import com.eatssu.android.databinding.ItemGisikBinding
+import com.eatssu.android.ui.review.MenuPickActivity
 import com.eatssu.android.ui.review.ReviewListActivity
 
 
@@ -53,9 +54,9 @@ class GisikAdapter(private val dataList: GetTodayMealResponse) :
         //서버 연결
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-//            intent.putExtra(
-//                "menuId", dataList[position].menuId
-//            )
+            intent.putExtra(
+                "mealId", dataList[position].mealId
+            )
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
