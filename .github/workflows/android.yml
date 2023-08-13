@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up JDK
-        uses: actions/setup-java@v
+        uses: actions/setup-java@v2
         with:
           java-version: 11 # Change this to your desired Java version
           distribution: 'jdk' # Replace with your desired distribution ("adopt", "zulu", "temurin", or "jdk")
