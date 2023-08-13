@@ -23,7 +23,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: 11 # Change this to your desired Java version
+          java-version: 11
+          distribution: 'jdk' # Replace with your desired distribution ("adopt", "zulu", "temurin", or "jdk")
+          architecture: x64
 
       - name: Build and test
         run: ./gradlew build # Adjust this command according to your project's build process
