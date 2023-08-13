@@ -4,16 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     tools:context=".ui.review.ReportActivity">
+
+    <include
+        android:id="@+id/included"
+        layout="@layout/include_actionbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/included"
+        app:layout_constraintTop_toTopOf="@id/included"
+        tools:ignore="MissingConstraints,NotSibling">
+
+        <ImageButton
+            android:id="@+id/btn_close_report"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@color/white"
+            android:paddingLeft="20dp"
+            android:src="@drawable/ic_close"
+
+            tools:ignore="MissingConstraints">
+
+        </ImageButton>
+    </LinearLayout>
 
     <TextView
         android:text="리뷰를 신고하는 이유를 선택해주세요."
         android:id="@+id/tv_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/included"
         android:fontFamily="@font/noto_black"/>
 
 
@@ -21,6 +49,7 @@
         android:id="@+id/radio_gp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_report"
         tools:ignore="MissingConstraints">
 
@@ -39,11 +68,11 @@
             android:text="음란성, 욕설 등 부적절한 내용" />
 
         <RadioButton
-        android:id="@+id/radio_bt3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            android:id="@+id/radio_bt3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/noto_medium"
-        android:text="부적절한 홍보 또는 광고" />
+            android:text="부적절한 홍보 또는 광고" />
 
         <RadioButton
             android:id="@+id/radio_bt4"
@@ -53,11 +82,11 @@
             android:text="리뷰 작성 취지에 맞지 않은 내용 (복사글 등)" />
 
         <RadioButton
-        android:id="@+id/radio_bt5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            android:id="@+id/radio_bt5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/noto_medium"
-        android:text="저작권 도용 의심 (사진 등)" />
+            android:text="저작권 도용 의심 (사진 등)" />
 
         <RadioButton
             android:id="@+id/radio_bt6"

@@ -85,4 +85,8 @@ class InfoActivity_Food : AppCompatActivity() {
 
     private fun getNonFixed() {
     }
+
+    override fun finish() {
+        super.finish()
+    }
 }

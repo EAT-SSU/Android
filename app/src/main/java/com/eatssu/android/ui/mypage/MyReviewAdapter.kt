@@ -22,31 +22,10 @@ class MyReviewAdapter(private val dataList: List<GetMyReviewResponse.Data>) :
 //            binding.tvReviewItemId.text = dataList[position].writerId.toString()
             binding.tvReviewItemComment.text = dataList[position].content.toString()
             binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
-            binding.rbReviewItemRate.rating=dataList[position].grade.toFloat()
-            val tagList = dataList[position].tagList
-
-            val tagCount = tagList.size
-
-// 태그 초기화
-            binding.tvReviewItemTag1.text = ""
-            binding.tvReviewItemTag2.text = ""
-            binding.tvReviewItemTag3.text = ""
-
-            val tagTextViews = arrayOf(
-                binding.tvReviewItemTag1,
-                binding.tvReviewItemTag2,
-                binding.tvReviewItemTag3
-            )
-
-            for (i in 0 until min(tagCount, tagTextViews.size)) {
-                tagTextViews[i].text = tagList[i]
-            }
-
-            for (i in tagCount until tagTextViews.size) {
-                tagTextViews[i].visibility = View.GONE
-            }
-
-
+            binding.tvReviewMainGrade.text=dataList[position].mainGrade.toString()
+            binding.tvReviewTasteGrade.text=dataList[position].tasteGrade.toString()
+            binding.tvReviewAmountGrade.text=dataList[position].amountGrade.toString()
+            binding.tvReviewItemId.text=dataList[position].menuName.toString()
         }
     }
 

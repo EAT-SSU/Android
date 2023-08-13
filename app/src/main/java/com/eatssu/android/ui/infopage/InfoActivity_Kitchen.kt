@@ -85,4 +85,8 @@ class InfoActivity_Kitchen : AppCompatActivity() {
 
     private fun getNonFixed() {
     }
+
+    override fun finish() {
+        super.finish()
+    }
 }

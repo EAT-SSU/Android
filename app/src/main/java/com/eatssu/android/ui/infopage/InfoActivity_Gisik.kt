@@ -1,20 +1,15 @@
 package com.eatssu.android.ui.infopage
 
-import android.icu.text.IDNA.Info
+import RetrofitImpl
+import android.R
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.data.enums.RestaurantType
-import com.eatssu.android.data.model.request.ChangeNickname
-import com.eatssu.android.data.model.response.GetMenuInfoListResponse
 import com.eatssu.android.data.model.response.InfoResponse
 import com.eatssu.android.data.service.InfoService
-import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityInfoGisikBinding
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -24,7 +19,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class InfoActivity_Gisik : AppCompatActivity() {
+
+class InfoActivity_Gisik : AppCompatActivity(){
     private lateinit var viewBinding: ActivityInfoGisikBinding
     lateinit var retrofit: Retrofit
     private lateinit var infoService: InfoService
@@ -43,7 +39,6 @@ class InfoActivity_Gisik : AppCompatActivity() {
 
         // 중심점 변경 - 레지던스홀
         mapview.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.495488,126.959173), true);
-        //mapview.zoomIn(true)
 
         val marker = MapPOIItem()
         marker.apply {
@@ -101,4 +96,10 @@ class InfoActivity_Gisik : AppCompatActivity() {
 
     private fun getNonFixed() {
     }
+
+    override fun finish() {
+        super.finish()
+    }
+
+
 }
