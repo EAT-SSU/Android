@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             val localDate = LocalDateTime.now().format(monthFormat)
 
             val preSunday: LocalDateTime = LocalDateTime.now().with(
-                TemporalAdjusters.previous(
+                TemporalAdjusters.previousOrSame(
                     DayOfWeek.SUNDAY
                 )
             )
