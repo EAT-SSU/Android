@@ -119,7 +119,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_report_comment" />
 
     <Button
-        android:id="@+id/btn_next_review2"
+        android:id="@+id/btn_send_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="EAT SSU에게 보내기"
