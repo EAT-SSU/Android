@@ -17,8 +17,8 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
 
 
         fun bind(position: Int) {
-            if (position >= 0 && position < dataList.todayMealList.size) {
-                val menuList = dataList.todayMealList[position]
+            if (position >= 0 && position < dataList.size) {
+                val menuList = dataList[position]
                 val nameList = StringBuilder()
 
                 for (menuInfo in menuList.changeMenuInfoList) {
@@ -33,8 +33,8 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
                 val result = nameList.toString()
                 binding.tvMenu.text = result
 
-                binding.tvPrice.text = dataList.todayMealList[position].price.toString()
-                binding.tvRate.text = dataList.todayMealList[position].mainGrade.toString()
+                binding.tvPrice.text = dataList[position].price.toString()
+                binding.tvRate.text = dataList[position].mainGrade.toString()
             }
         }
     }
@@ -53,11 +53,11 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
             intent.putExtra(
-                "mealId", dataList.todayMealList[position].mealId
+                "mealId", dataList[position].mealId
             )
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
 
-    override fun getItemCount(): Int = dataList.todayMealList.size
+    override fun getItemCount(): Int = dataList.size
 }

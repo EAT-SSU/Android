@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetTodayMealResponse
+import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.databinding.ItemGisikBinding
-import com.eatssu.android.ui.review.MenuPickActivity
-import com.eatssu.android.ui.review.ReviewListActivity
+import com.eatssu.android.view.review.MenuPickActivity
+import com.eatssu.android.view.review.ReviewListActivity
 
 
-class GisikAdapter(private val dataList: GetTodayMealResponse) :
+class GisikAdapter(private val dataList: GetTodayMealResponseDto) :
     RecyclerView.Adapter<GisikAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemGisikBinding) :

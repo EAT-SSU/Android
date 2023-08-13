@@ -1,6 +1,6 @@
 package com.eatssu.android.data.model.response
 
-typealias GetTodayMealResponse = List<GetTodayMeal>;
+typealias GetTodayMealResponseDto = List<GetTodayMeal>;
 
 data class GetTodayMeal(
     val mealId: Long,
