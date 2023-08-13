@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.adapter.*
@@ -18,8 +19,11 @@ import com.eatssu.android.data.model.response.GetFixedMenuResponse
 import com.eatssu.android.data.model.response.GetTodayMealResponse
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentLunchBinding
+import com.eatssu.android.ui.calendar.CalendarViewModel
+import com.eatssu.android.ui.calendar.MenuDate
 import com.eatssu.android.ui.infopage.*
 import retrofit2.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -30,6 +34,8 @@ class LunchFragment : Fragment() {
 
     lateinit var retrofit: Retrofit
     lateinit var menuService: MenuService
+
+    private var menuDate : String = "20230714"
 
     val time:String = "LUNCH"
     override fun onCreateView(
@@ -44,6 +50,10 @@ class LunchFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val calendardate = this.arguments?.getString("calendardata")
+        Log.d("lunchdate", "$calendardate")
+
         init()
         lodeData()
     }
@@ -143,33 +153,43 @@ class LunchFragment : Fragment() {
         recyclerView: RecyclerView
     ) {
         val monthFormat =
-            DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
+            DateTimeFormatter.ofPattern("yyyyMMdd").withLocale (Locale.forLanguageTag("ko"))
         val localDate = LocalDateTime.now().format(monthFormat)
 
+        // ViewModelProvider를 통해 ViewModel 가져오기
+        val viewModel = ViewModelProvider(requireActivity()).get(CalendarViewModel::class.java)
+
+        // ViewModel에서 데이터 가져오기
+        viewModel.getData().observe(viewLifecycleOwner, androidx.lifecycle.Observer { dataReceived ->
+            menuDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            //menuDate = "202307$dataReceived"
+            Log.d("lunchdate", menuDate)
+            menuService.getTodayMeal(menuDate, restaurantType.toString(),time)
+                .enqueue(object : Callback<GetTodayMealResponse> {
+                    override fun onResponse(
+                        call: Call<GetTodayMealResponse>,
+                        response: Response<GetTodayMealResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            body?.let {
+                                setAdapterTodayMeal(it, restaurantType,recyclerView)
+                            }
+                            Log.d("post", "onResponse 성공" + response.body())
+
+                        } else {
+                            Log.d("post", "onResponse 실패 투데이밀" + response.code()+response.message())
+                        }
+                    }
+
+                    override fun onFailure(call: Call<GetTodayMealResponse>, t: Throwable) {
+                        Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
+                    }
+                })
+        })
         //date 자리에 localDate나 호출해서 불러온 날짜를 넣으면 됨
         //지금은 날짜를 20230714로 고정해두었음
-        menuService.getTodayMeal("20230714", restaurantType.toString(),time)
-            .enqueue(object : Callback<GetTodayMealResponse> {
-                override fun onResponse(
-                    call: Call<GetTodayMealResponse>,
-                    response: Response<GetTodayMealResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        body?.let {
-                            setAdapterTodayMeal(it, restaurantType,recyclerView)
-                        }
-                        Log.d("post", "onResponse 성공" + response.body())
 
-                    } else {
-                        Log.d("post", "onResponse 실패 투데이밀" + response.code()+response.message())
-                    }
-                }
-
-                override fun onFailure(call: Call<GetTodayMealResponse>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
-                }
-            })
     }
 
 

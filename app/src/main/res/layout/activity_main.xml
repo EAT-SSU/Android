@@ -46,11 +46,11 @@
         app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu">
 
         <LinearLayout
-            android:id="@+id/week_calendar"
+            android:id="@+id/text_month_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -87,7 +87,21 @@
                     android:src="@drawable/ic_right_arrow" />
 
 
-            </LinearLayout>
+            </LinearLayout>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rv_main_weekcalendar"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/week_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"/>
 
         </LinearLayout>
 
@@ -97,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week_calendar" />
+            app:layout_constraintTop_toBottomOf="@id/rv_main_weekcalendar"/>
 
 
         <androidx.core.widget.NestedScrollView

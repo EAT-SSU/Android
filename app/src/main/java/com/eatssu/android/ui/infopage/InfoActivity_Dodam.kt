@@ -90,4 +90,8 @@ class InfoActivity_Dodam : AppCompatActivity() {
 
     private fun getNonFixed() {
     }
+
+    override fun finish() {
+        super.finish()
+    }
 }

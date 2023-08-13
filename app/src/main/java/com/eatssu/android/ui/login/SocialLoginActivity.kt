@@ -114,6 +114,11 @@ class SocialLoginActivity : AppCompatActivity() {
                 }
             }
         }
+        binding.btnLookAround.setOnClickListener() {
+            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
+            startActivity(intent)  // 화면 전환을 시켜줌
+            finish()
+        }
 
     }
 
