@@ -1,5 +1,6 @@
 package com.eatssu.android.view.review
 
+import RetrofitImpl
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -34,15 +35,14 @@ class ReviewListActivity : AppCompatActivity() {
 
         MENU_ID = intent.getLongExtra("menuId", -1L)
         MEAL_ID = intent.getLongExtra("mealId", -1L)
-        val fixedMenuReview = intent.getBooleanExtra("fixedMenuReview",false)
+        val fixedMenuReview = intent.getBooleanExtra("fixedMenuReview", false)
 
         Log.d("post", "menuID:$MENU_ID")
         Log.d("post", "mealID:$MEAL_ID")
         Log.d("post", "fixedMenuReview:$fixedMenuReview")
-        if(MENU_ID != -1L && MEAL_ID == -1L && fixedMenuReview == true){
+        if (MENU_ID != -1L && MEAL_ID == -1L && fixedMenuReview == true) {
             true
-        }
-        else if (MENU_ID == -1L && MEAL_ID != -1L) {
+        } else if (MENU_ID == -1L && MEAL_ID != -1L) {
             //가변 메뉴일 시
             lodeReviewInfo("CHANGE", MEAL_ID)
             lodeData("CHANGE", MEAL_ID)
@@ -50,7 +50,7 @@ class ReviewListActivity : AppCompatActivity() {
                 val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
                 intent.putExtra("mealId", MEAL_ID)
                 intent.putExtra("menu", menu)
-                Log.d("menu",menu.javaClass.name)
+                Log.d("menu", menu.javaClass.name)
                 startActivity(intent)  // 화면 전환을 시켜줌
             }
         } else if (MENU_ID != -1L && MEAL_ID == -1L) {
@@ -61,7 +61,7 @@ class ReviewListActivity : AppCompatActivity() {
                 val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
                 intent.putExtra("menuId", MENU_ID)
                 intent.putExtra("menu", menu)
-                Log.d("menu",menu.javaClass.name)
+                Log.d("menu", menu.javaClass.name)
                 startActivity(intent)  // 화면 전환을 시켜줌
             }
         }
@@ -107,7 +107,6 @@ class ReviewListActivity : AppCompatActivity() {
                                 .toFloat().toString()
 
                         binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-//                    binding.rbAverageRate.rating=response.body()?.mainGrade!!.toFloat()
 
                         val cnt = response.body()?.totalReviewCount!!
 
@@ -135,14 +134,14 @@ class ReviewListActivity : AppCompatActivity() {
             })
         } else if (menuType == "CHANGE") {
             reviewService.reviewInfoForChangeableMenu(menuType, id).enqueue(object :
-                retrofit2.Callback<com.eatssu.android.data.model.response.GetReviewInfoResponseDto> {
+                Callback<GetReviewInfoResponseDto> {
                 override fun onResponse(
-                    call: retrofit2.Call<com.eatssu.android.data.model.response.GetReviewInfoResponseDto>,
-                    response: retrofit2.Response<com.eatssu.android.data.model.response.GetReviewInfoResponseDto>
+                    call: Call<GetReviewInfoResponseDto>,
+                    response: Response<GetReviewInfoResponseDto>
                 ) {
                     if (response.isSuccessful) {
                         // 정상적으로 통신이 성공된 경우
-                        android.util.Log.d("post", "onResponse 성공: " + response.body().toString());
+                        Log.d("post", "onResponse 성공: " + response.body().toString());
 
                         menu = response.body()?.menuName.toString()
                         binding.tvMenu.text = response.body()?.menuName.toString()
@@ -158,7 +157,6 @@ class ReviewListActivity : AppCompatActivity() {
                                 .toFloat().toString()
 
                         binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-//                    binding.rbAverageRate.rating=response.body()?.mainGrade!!.toFloat()
 
                         val cnt = response.body()?.totalReviewCount!!
 
@@ -175,16 +173,16 @@ class ReviewListActivity : AppCompatActivity() {
                         binding.progressBar5.progress = response.body()?.reviewGradeCnt?.fiveCnt!!
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                        android.util.Log.d("post", "onResponse 실패")
+                        Log.d("post", "onResponse 실패")
                     }
                 }
 
                 override fun onFailure(
-                    call: retrofit2.Call<com.eatssu.android.data.model.response.GetReviewInfoResponseDto>,
-                    t: kotlin.Throwable
+                    call: Call<GetReviewInfoResponseDto>,
+                    t: Throwable
                 ) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    android.util.Log.d("post", "onFailure 에러: " + t.message.toString());
+                    Log.d("post", "onFailure 에러: " + t.message.toString());
                 }
             })
         }
