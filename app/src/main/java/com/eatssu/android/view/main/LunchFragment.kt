@@ -29,8 +29,6 @@ class LunchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MenuViewModel
-
-    private lateinit var retrofit: Retrofit
     private lateinit var menuService: MenuService
 
     private var menuDate: String = "20230714"

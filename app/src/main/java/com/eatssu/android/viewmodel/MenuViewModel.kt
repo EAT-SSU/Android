@@ -16,7 +16,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-// MenuViewModel.kt
 class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     private val _todayMealDataDodam = MutableLiveData<GetTodayMealResponseDto>()
@@ -27,21 +26,9 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     private val _todayMealDataDormitory = MutableLiveData<GetTodayMealResponseDto>()
     val todayMealDataDormitory: LiveData<GetTodayMealResponseDto> = _todayMealDataDormitory
-//    val todayMealData: LiveData<GetTodayMealResponseDto>
-//        get() = _todayMealData
-
-
-    private val _fixedMenuData = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuData: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuData
-//    val fixedMenuData: MutableLiveData<GetFixedMenuResponseDto>
-//        get() = _fixedMenuData
-
 
     private val _fixedMenuDataKitchen = MutableLiveData<GetFixedMenuResponseDto>()
     val fixedMenuDataKitchen: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataKitchen
-//    val fixedMenuDataKitchen: MutableLiveData<GetFixedMenuResponseDto>
-//        get() = _fixedMenuDataKitchen
-
 
     private val _fixedMenuDataSnack = MutableLiveData<GetFixedMenuResponseDto>()
     val fixedMenuDataSnack: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataSnack
@@ -70,7 +57,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                                 Restaurant.DOMITORY -> _todayMealDataDormitory.postValue(response.body())
 
                                 else -> {
-                                    Log.d("post", "onResponse 실패")
+                                    Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
                                 }
                             }
                         } else {
@@ -108,12 +95,9 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                                 Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.postValue(response.body())
 
                                 else -> {
-                                    Log.d("post", "onResponse 실패")
+                                    Log.d("post", "onResponse 실패. 잘못된 식당 입니다.")
                                 }
                             }
-//                            _fixedMenuData.postValue(response.body())
-//                            Log.d("post", "onResponse 성공" + response.body())
-
                         } else {
                             Log.d("post", "onResponse 실패")
                         }
