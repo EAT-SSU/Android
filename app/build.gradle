@@ -2,14 +2,15 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def APP_KEY = properties.getProperty('APP_KEY')
-def BASE_URL = properties.getProperty('BASE_URL')
-def kakao_native_app_key = properties.getProperty('kakao_native_app_key')
-def kakao_redirection_scheme = properties.getProperty('kakao_redirection_scheme')
+// Properties properties = new Properties()
+// properties.load(project.rootProject.file('local.properties').newDataInputStream())
+// def APP_KEY = properties.getProperty('APP_KEY')
+// def BASE_URL = properties.getProperty('BASE_URL')
+// def KAKAO_NATIVE_APP_KEY = properties.getProperty('KAKAO_NATIVE_APP_KEY')
+// def KAKAO_REDIRECTION_SCHEME = properties.getProperty('KAKAO_REDIRECTION_SCHEME')
 
 
 
@@ -27,17 +28,17 @@ android {
 
 
 
-        buildConfigField("String", "APP_KEY", APP_KEY)
-        manifestPlaceholders = [APP_KEY: APP_KEY]
+        // buildConfigField("String", "APP_KEY", APP_KEY)
+        // manifestPlaceholders = [APP_KEY: APP_KEY]
 
-        buildConfigField("String", "BASE_URL", BASE_URL)
-        manifestPlaceholders = [BASE_URL: BASE_URL]
+        // buildConfigField("String", "BASE_URL", BASE_URL)
+        // manifestPlaceholders = [BASE_URL: BASE_URL]
 
-        buildConfigField("String", "kakao_native_app_key", kakao_native_app_key)
-        manifestPlaceholders = [kakao_native_app_key: kakao_native_app_key]
+        // buildConfigField("String", "KAKAO_NATIVE_APP_KEY", KAKAO_NATIVE_APP_KEY)
+        // manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: KAKAO_NATIVE_APP_KEY]
 
-        buildConfigField("String", "kakao_redirection_scheme", kakao_redirection_scheme)
-        manifestPlaceholders = [kakao_redirection_scheme: kakao_redirection_scheme]
+        // buildConfigField("String", "KAKAO_REDIRECTION_SCHEME", KAKAO_REDIRECTION_SCHEME)
+        // manifestPlaceholders = [KAKAO_REDIRECTION_SCHEME: KAKAO_REDIRECTION_SCHEME]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -120,4 +121,11 @@ dependencies {
 
 //    implementation "androidx.security:security-crypto:1.0.0"
 
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+//    kapt 'com.github.bumptech.glide:compiler:4.12.0'
+
+    implementation 'id.zelory:compressor:3.0.1'
+
+    implementation platform('com.google.firebase:firebase-bom:32.2.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

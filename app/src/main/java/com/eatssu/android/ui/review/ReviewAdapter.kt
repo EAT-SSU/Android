@@ -1,49 +1,55 @@
 package com.eatssu.android.ui.review
 
+import  android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.GetMyReviewResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemReviewBinding
-import kotlin.math.min
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 
-
-class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
+class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            binding.tvReviewItemId.text = dataList[position].writerId.toString()
-            binding.tvReviewItemComment.text = dataList[position].content.toString()
-            binding.tvReviewItemDate.text = dataList[position].writeDate.toString()
-            binding.rbReviewItemRate.rating=dataList[position].grade.toFloat()
-            val tagList = dataList[position].tagList
-            val tagCount = tagList.size
+            binding.tvReviewItemId.text = dataList?.get(position)?.writerNickname.toString()
+            binding.tvReviewItemComment.text = dataList?.get(position)?.content
+            binding.tvReviewItemDate.text = dataList?.get(position)?.writeDate
+            binding.tvMenuName.text = dataList?.get(position)?.menu
 
-// 태그 초기화
-            binding.tvReviewItemTag1.text = ""
-            binding.tvReviewItemTag2.text = ""
-            binding.tvReviewItemTag3.text = ""
+            binding.tvTotalRating.text = dataList?.get(position)?.mainGrade?.toFloat().toString()
+            binding.tvTasteRating.text = dataList?.get(position)?.tasteGrade?.toFloat().toString()
+            binding.tvAmountRating.text = dataList?.get(position)?.amountGrade?.toFloat().toString()
 
-            val tagTextViews = arrayOf(
-                binding.tvReviewItemTag1,
-                binding.tvReviewItemTag2,
-                binding.tvReviewItemTag3
-            )
 
-            for (i in 0 until min(tagCount, tagTextViews.size)) {
-                tagTextViews[i].text = tagList[i]
+// ... other code in your class ...
+
+// Assuming imgUrlList is a List<String>
+            val imgUrlList: List<String>? =
+                dataList?.get(position)?.imgUrlList// The list of image URLs
+
+// Get the ImageView reference from your layout
+            val imageView: ImageView =
+                binding.ivReviewPhoto// Replace R.id.imageView with the ID of your ImageView
+// Check if the imgUrlList is not empty before loading the image
+
+
+            if (dataList?.get(position)?.imgUrlList.isNullOrEmpty()) {
+                imageView.visibility = View.GONE
+            } else {
+                val imageUrl =
+                    imgUrlList?.get(0) // Assuming you want to load the first image from the list
+
+                Glide.with(itemView)
+                    .load(imageUrl)
+                    .into(imageView)
+                imageView.visibility = View.VISIBLE
             }
-
-            for (i in tagCount until tagTextViews.size) {
-                tagTextViews[i].visibility = View.GONE
-            }
-
-
         }
     }
 
@@ -57,5 +63,5 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>) :
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = dataList.size
+    override fun getItemCount(): Int = dataList?.size ?: 0
 }
