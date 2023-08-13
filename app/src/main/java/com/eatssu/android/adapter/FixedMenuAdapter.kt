@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
-import com.eatssu.android.databinding.ItemMenuListBinding
+import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
 
 
 class FixedMenuAdapter(private val dataList: GetFixedMenuResponseDto, ) :
     RecyclerView.Adapter<FixedMenuAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemMenuListBinding) :
+    inner class ViewHolder(private val binding: ItemMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
@@ -25,7 +25,7 @@ class FixedMenuAdapter(private val dataList: GetFixedMenuResponseDto, ) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemMenuListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

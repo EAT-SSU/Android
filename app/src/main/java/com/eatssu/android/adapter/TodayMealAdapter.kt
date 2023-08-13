@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
-import com.eatssu.android.databinding.ItemHaksikBinding
+import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
 
 class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
     RecyclerView.Adapter<TodayMealAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemHaksikBinding) :
+    inner class ViewHolder(private val binding: ItemMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
@@ -34,7 +34,7 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
                 binding.tvMenu.text = result
 
                 binding.tvPrice.text = dataList[position].price.toString()
-                binding.tvRate.text = dataList[position].mainGrade.toString()
+                binding.tvRate.text = String.format("%.1f", dataList[position].mainGrade)
             }
         }
     }
@@ -42,7 +42,7 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemHaksikBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
