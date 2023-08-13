@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17 # Change this to your desired Java version
-          distribution: 'jdk' # Replace with your desired distribution ("adopt", "zulu", "temurin", or "jdk")
+          distribution: 'temurin' # Replace with your desired distribution ("adopt", "zulu", "temurin", or "jdk")
           architecture: x64
 
       - name: Build and test
