@@ -18,7 +18,6 @@ class App: Application() {
 
 
         appContext = this
-        KakaoSdk.init(this,BuildConfig.kakao_native_app_key)
-
+        KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
