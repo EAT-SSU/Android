@@ -31,11 +31,11 @@ jobs:
       env:
         APP_KEY: ${{ secrets.APP_KEY }}
         BASE_URL: ${{ secrets.BASE_URL }}
-        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
-        KAKAO_NATIVE_KEY: ${{ secrets.KAKAO_NATIVE_KEY }}
+        kakao_native_app_key: ${{ secrets.kakao_native_app_key }}
+        kakao_redirection_scheme: ${{ secrets.kakao_redirection_scheme }}
       run: |
         echo APP_KEY=\"$APP_KEY\" >> local.properties
         echo BASE_URL=\"$BASE_URL\" >> local.properties
-        echo KAKAO_APP_KEY=\"$KAKAO_APP_KEY\" >> local.properties
-        echo KAKAO_NATIVE_KEY=\"$KAKAO_NATIVE_KEY\" >> local.properties
+        echo kakao_native_app_key=\"$kakao_native_app_key\" >> local.properties
+        echo kakao_redirection_scheme=\"$kakao_redirection_scheme\" >> local.properties
       
