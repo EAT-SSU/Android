@@ -2,30 +2,29 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main # Change this to your main branch name
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
 
-    env:  # Define your environment variables here
-      BASE_URL: ${{ secrets.BASE_URL }}
+    env:
       APP_KEY: ${{ secrets.APP_KEY }}
+      BASE_URL: ${{ secrets.BASE_URL }}
       KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
       KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
-    
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
+          java-version: 11 # Change this to your desired Java version
 
-      - name: Build and Test
-        run: |
-          # You can use the environment variables in your build commands
-          ./gradlew assembleDebug -PbaseUrl=$BASE_URL -PappKey=$APP_KEY -PkakaoNativeAppKey=$KAKAO_NATIVE_APP_KEY -PkakaoRedirectionScheme=$KAKAO_REDIRECTION_SCHEME
+      - name: Build and test
+        run: ./gradlew build # Adjust this command according to your project's build process
+
