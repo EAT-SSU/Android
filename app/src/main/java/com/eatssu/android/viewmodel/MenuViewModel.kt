@@ -1,7 +1,10 @@
 package com.eatssu.android.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
@@ -16,8 +19,14 @@ import retrofit2.Response
 // MenuViewModel.kt
 class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
-    private val _todayMealData = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealData: LiveData<GetTodayMealResponseDto> = _todayMealData
+    private val _todayMealDataDodam = MutableLiveData<GetTodayMealResponseDto>()
+    val todayMealDataDodam: LiveData<GetTodayMealResponseDto> = _todayMealDataDodam
+
+    private val _todayMealDataHaksik = MutableLiveData<GetTodayMealResponseDto>()
+    val todayMealDataHaksik: LiveData<GetTodayMealResponseDto> = _todayMealDataHaksik
+
+    private val _todayMealDataDormitory = MutableLiveData<GetTodayMealResponseDto>()
+    val todayMealDataDormitory: LiveData<GetTodayMealResponseDto> = _todayMealDataDormitory
 //    val todayMealData: LiveData<GetTodayMealResponseDto>
 //        get() = _todayMealData
 
@@ -53,8 +62,17 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                         response: Response<GetTodayMealResponseDto>
                     ) {
                         if (response.isSuccessful) {
-                            Log.d("post", "onResponse 성공 투데이밀" + response.body())
-                            _todayMealData.postValue(response.body())
+                            Log.d("post", "onResponse 성공" + response.body())
+
+                            when (restaurantType) {
+                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(response.body())
+                                Restaurant.DODAM -> _todayMealDataDodam.postValue(response.body())
+                                Restaurant.DOMITORY -> _todayMealDataDormitory.postValue(response.body())
+
+                                else -> {
+                                    Log.d("post", "onResponse 실패")
+                                }
+                            }
                         } else {
                             Log.d(
                                 "post",
@@ -81,7 +99,10 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                         response: Response<GetFixedMenuResponseDto>
                     ) {
                         if (response.isSuccessful) {
+                            Log.d("post", "onResponse 성공" + response.body())
+
                             when (restaurantType) {
+
                                 Restaurant.THE_KITCHEN -> _fixedMenuDataKitchen.postValue(response.body())
                                 Restaurant.FOOD_COURT -> _fixedMenuDataFood.postValue(response.body())
                                 Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.postValue(response.body())
@@ -91,7 +112,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                                 }
                             }
 //                            _fixedMenuData.postValue(response.body())
-                            Log.d("post", "onResponse 성공" + response.body())
+//                            Log.d("post", "onResponse 성공" + response.body())
 
                         } else {
                             Log.d("post", "onResponse 실패")

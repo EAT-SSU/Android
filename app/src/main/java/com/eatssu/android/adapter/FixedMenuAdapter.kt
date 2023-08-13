@@ -10,8 +10,8 @@ import com.eatssu.android.databinding.ItemMenuListBinding
 import com.eatssu.android.view.review.ReviewListActivity
 
 
-class FixedAdapter(private val dataList: GetFixedMenuResponseDto, ) :
-    RecyclerView.Adapter<FixedAdapter.ViewHolder>() {
+class FixedMenuAdapter(private val dataList: GetFixedMenuResponseDto, ) :
+    RecyclerView.Adapter<FixedMenuAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMenuListBinding) :
         RecyclerView.ViewHolder(binding.root) {

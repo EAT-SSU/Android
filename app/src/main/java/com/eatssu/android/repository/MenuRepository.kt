@@ -12,15 +12,11 @@ import retrofit2.Retrofit
 
 class MenuRepository(private val menuService: MenuService) {
 
-    lateinit var retrofit: Retrofit
-
     fun getTodayMeal(menuDate: String, restaurant: Restaurant, time: Time): Call<GetTodayMealResponseDto> {
-        // API 호출 및 응답 반환
         return menuService.getTodayMeal(menuDate, restaurant.toString(), time.toString())
     }
 
     fun getFixedMenu(restaurant: Restaurant): Call<GetFixedMenuResponseDto> {
-        // API 호출 및 응답 반환
         return menuService.getFixMenu(restaurant.toString())
     }
 }

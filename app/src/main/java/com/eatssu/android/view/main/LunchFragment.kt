@@ -23,7 +23,6 @@ import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 
 
-
 @AndroidEntryPoint
 class LunchFragment : Fragment() {
     private var _binding: FragmentLunchBinding? = null
@@ -31,13 +30,10 @@ class LunchFragment : Fragment() {
 
     private lateinit var viewModel: MenuViewModel
 
+    private lateinit var retrofit: Retrofit
+    private lateinit var menuService: MenuService
 
-    lateinit var retrofit: Retrofit
-    lateinit var menuService: MenuService
-
-    private var menuDate : String = "20230714"
-
-    val time:String = "LUNCH"
+    private var menuDate: String = "20230714"
 
 
     override fun onCreateView(
@@ -58,12 +54,34 @@ class LunchFragment : Fragment() {
 
 
         val repository = MenuRepository(menuService)
-        viewModel = ViewModelProvider(this, MenuViewModelFactory(repository))[MenuViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, MenuViewModelFactory(repository))[MenuViewModel::class.java]
 
-        viewModel.loadTodayMeal(menuDate,Restaurant.DODAM, Time.LUNCH)
-        viewModel.todayMealData.observe(viewLifecycleOwner, Observer { result ->
-            val dodamAdapter = DodamAdapter(result)
+        //숭실도담
+        viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
+        viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
+            val dodamAdapter = TodayMealAdapter(result)
             val recyclerView = binding.rvLunchDodam
+            recyclerView.adapter = dodamAdapter
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.setHasFixedSize(true)
+        })
+
+        //기숙사식당
+        viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
+        viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
+            val dodamAdapter = TodayMealAdapter(result)
+            val recyclerView = binding.rvLunchDormitory
+            recyclerView.adapter = dodamAdapter
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.setHasFixedSize(true)
+        })
+
+        //학생식당
+        viewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
+        viewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
+            val dodamAdapter = TodayMealAdapter(result)
+            val recyclerView = binding.rvLunchHaksik
             recyclerView.adapter = dodamAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
@@ -72,7 +90,7 @@ class LunchFragment : Fragment() {
         //더키친
         viewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
         viewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
-            val kitchenAdapter = FixedAdapter(result)
+            val kitchenAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvLunchKitchen
             recyclerView.adapter = kitchenAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -82,7 +100,7 @@ class LunchFragment : Fragment() {
         //푸드코트
         viewModel.loadFixedMenu(Restaurant.FOOD_COURT)
         viewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
-            val foodAdapter = FixedAdapter(result)
+            val foodAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvLunchFood
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -92,12 +110,14 @@ class LunchFragment : Fragment() {
         //스낵코너
         viewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
         viewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
-            val foodAdapter = FixedAdapter(result)
+            val foodAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvLunchSnack
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
         })
+
+
         setupClickListeners() //info dialog
     }
 
