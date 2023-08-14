@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuPickBinding
-import com.eatssu.android.entity.MenuPickItem
+import com.eatssu.android.data.entity.MenuPickItem
 
 
 class MenuPickAdapter (private val context: Context, wordsItemList: List<MenuPickItem>) :

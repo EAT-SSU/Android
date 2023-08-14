@@ -2,7 +2,7 @@ package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
-import com.eatssu.android.data.model.request.ModifyReviewRequest
+import com.eatssu.android.data.model.request.ModifyReviewRequestDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -33,7 +33,7 @@ interface ReviewService {
     fun modifyReview(
         @Path("menuId") menuId: Int,
         @Path("reviewId") reviewId: Int,
-        @Body request: ModifyReviewRequest
+        @Body request: ModifyReviewRequestDto
     ): Call<String>
 
 
