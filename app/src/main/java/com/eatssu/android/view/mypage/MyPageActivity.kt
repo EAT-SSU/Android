@@ -1,8 +1,10 @@
 package com.eatssu.android.view.mypage
 
+import RetrofitImpl
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
@@ -10,6 +12,11 @@ import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.service.MyPageService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MyPageActivity : BaseActivity() {
@@ -25,8 +32,11 @@ class MyPageActivity : BaseActivity() {
 
         supportActionBar?.title = "마이페이지"
 
-        binding.tvNickname.text = MySharedPreferences.getUserName(this)
-        binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
+        /*binding.tvNicknameChangeBtn.setOnClickListener {
+            val intent = Intent(this, ChangeNicknameActivity::class.java)
+            startActivity(intent)
+            finish()
+        }*/
 
         binding.clNickname.setOnClickListener{
             val intent = Intent(this, ChangeNicknameActivity::class.java)
@@ -83,5 +93,36 @@ class MyPageActivity : BaseActivity() {
 
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_my_page
+    }
+
+    private fun loadMyInfo() {
+        val myInfoService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        myInfoService.getMyInfo().enqueue(object:
+            Callback<GetMyInfoResponseDto> {
+            override fun onResponse(
+                call: Call<GetMyInfoResponseDto>,
+                response: Response<GetMyInfoResponseDto>
+            ) {
+                if (response.isSuccessful) {
+                    // 정상적으로 통신이 성공된 경우
+                    Log.d("post", "onResponse 성공: " + response.body().toString());
+
+                    val body = response.body()
+                    body?.let {
+                        binding.tvNickname.text = it.nickname
+                        binding.tvEmail.text = it.accountForm
+                    }
+
+                } else {
+                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                    Log.d("post", "onResponse 실패 + ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+                // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+                Log.d("post", "onFailure 에러: " + t.message.toString());
+            }
+        })
     }
 }
