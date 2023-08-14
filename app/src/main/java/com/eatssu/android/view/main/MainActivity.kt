@@ -13,11 +13,14 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.eatssu.android.adapter.CalendarAdapter
+import com.eatssu.android.adapter.OnItemClickListener
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.view.calendar.*
 import com.eatssu.android.view.mypage.ChangeNicknameActivity
 import com.eatssu.android.view.mypage.MyPageActivity
+import com.eatssu.android.viewmodel.CalendarViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
@@ -45,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        val intentNick = Intent(this,ChangeNicknameActivity::class.java)
+        val intentNick = Intent(this, ChangeNicknameActivity::class.java)
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
             startActivity(intentNick)
@@ -125,14 +128,14 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(v: View?, data: CalendarData) {
 
                 val returnViewHolderList = calendarAdapter.returnViewHolderList()
-                lateinit var holderSelect : CalendarAdapter.CalendarViewHolder
-                lateinit var selected : String
+                lateinit var holderSelect: CalendarAdapter.CalendarViewHolder
+                lateinit var selected: String
 
-                for(holder in returnViewHolderList){
+                for (holder in returnViewHolderList) {
                     holder.binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
                     holder.binding.day.isSelected = false
                     holder.binding.date.isSelected = false
-                    if(holder.today.equals(data.cl_date)) {
+                    if (holder.today.equals(data.cl_date)) {
                         holderSelect = holder
                         selected = holder.today
                     }
@@ -160,7 +163,10 @@ class MainActivity : AppCompatActivity() {
 
                 // 3) ViewPager2의 adapter에 설정
                 viewPager.adapter = viewpagerFragmentAdapter
-                viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
+                viewPager.setCurrentItem(
+                    viewpagerFragmentAdapter.getDefaultFragmentPosition(),
+                    false
+                )
 
                 // ###### TabLayout과 ViewPager2를 연결
                 // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
@@ -176,49 +182,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         recyclerView.adapter = adapter
-
-        /*binding.textYearMonth.text = localDate
-
-
-        binding.textYearMonth.setOnClickListener {
-            val intent = Intent(this, CalendarActivity::class.java);
-            startActivityForResult(intent, CALENDAR_REQUEST_CODE)
-
-        }
-        val year = binding.textYearMonth.text.substring(0,4)
-        val month = binding.textYearMonth.text.substring(5,7)
-        val day = binding.textYearMonth.text.substring(8,10)
-        Log.d("cutyear", year)
-        Log.d("cutmonth", month)
-        Log.d("cutday", day)
-        binding.btnCalendarLeft.setOnClickListener {
-            val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            val previousDate = currentDate.minusDays(1)
-            val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            binding.textYearMonth.text = newDate
-        }
-
-        binding.btnCalendarRight.setOnClickListener {
-            val currentDate = LocalDate.parse(binding.textYearMonth.text.toString(), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            val previousDate = currentDate.plusDays(1)
-            val newDate = previousDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            binding.textYearMonth.text = newDate
-        }*/
     }
-
-
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CALENDAR_REQUEST_CODE && resultCode == RESULT_OK) {
-            val changedDate = data?.getStringExtra("changedate")
-            if (changedDate != null) {
-                selectedDate = changedDate
-                binding.textYearMonth.text = selectedDate
-                Log.d("changedate", selectedDate)
-            }
-        }
-    }*/
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -235,10 +199,6 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    companion object {
-        private const val CALENDAR_REQUEST_CODE = 1
     }
 }
 

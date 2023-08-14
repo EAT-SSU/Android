@@ -1,4 +1,4 @@
-package com.eatssu.android.view.calendar
+package com.eatssu.android.adapter
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
+import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.databinding.ItemCalendarListBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -44,6 +45,9 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
                 binding.date.isSelected = true;
                 binding.day.isSelected = true;
                 binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
+            }
+            else {
+                binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
             }
         }
     }
