@@ -187,6 +187,15 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".ui.review.ReportActivity"
+            android:exported="true">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
             android:name=".ui.mypage.MyPageActivity"
             android:exported="true">
             <intent-filter>

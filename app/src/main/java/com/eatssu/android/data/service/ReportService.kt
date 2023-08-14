@@ -11,7 +11,7 @@ import retrofit2.http.Path
 interface ReportService {
     @POST("report") //리뷰 신고하기
     fun reportReview(
-        @Path("reviewId") reviewId: Int,
+        @Path("reviewId") reviewId: Long,
         @Path("reportType") reportType: String,
         @Path("content") content: String
     )

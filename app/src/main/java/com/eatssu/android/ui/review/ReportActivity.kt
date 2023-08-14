@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.R
 import com.eatssu.android.data.model.request.ReportRequest
 import com.eatssu.android.data.model.response.TokenResponse
@@ -14,28 +15,25 @@ import com.eatssu.android.ui.BaseActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.properties.Delegates
 
 // reviewId 받아오는거 해야함
 // 메인 리뷰에서 신고하기 뷰로 넘어가는거 해야함
 
-abstract class ReportActivity : BaseActivity() {
+class ReportActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReportBinding
-    var reviewId = 4
+    private var reviewId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReportBinding.inflate(layoutInflater)
 
-        setActionBarTitle("신고하기")
+        supportActionBar?.title = "신고하기"
 
         setContentView(binding.root)
 
         ReportInfo();
 
     }
-
-    abstract fun setActionBarTitle(s: String)
 
     private fun ReportInfo() {
         val radioGroup = binding.radioGp;
@@ -75,11 +73,14 @@ abstract class ReportActivity : BaseActivity() {
             }
         }
 
-        postData(reportType, content);
+        reviewId = intent.getLongExtra("reviewId", -1L)
+
+        postData(reviewId, reportType, content);
     }
 
-    fun postData(reportType: String , content: String) {
-        val service = RetrofitImpl.mRetrofit.create(ReportService::class.java)
+    private fun postData(reviewId: Long, reportType: String , content: String) {
+        val service = RetrofitImpl.retrofit.create(ReportService::class.java)
+        Log.d("reportId", reviewId.toString())
         service.reportReview(reviewId, reportType, content)
             .enqueue(object : Callback<ReportRequest> {
                 override fun onResponse(
