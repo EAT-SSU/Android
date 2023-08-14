@@ -1,14 +1,16 @@
 package com.eatssu.android.ui.review
 
-import  android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemReviewBinding
-import android.widget.ImageView
-import com.bumptech.glide.Glide
 
 class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
@@ -50,6 +52,17 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
             }
+
+            binding.btnDetail.setOnClickListener() {
+                if(dataList?.get(position)?.isWriter == false) {
+                    val intent = Intent(binding.btnDetail.context, ReviewDialog1Activity::class.java)
+                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
+                }
+                else if (dataList?.get(position)?.isWriter == true) {
+                    val intent = Intent(binding.btnDetail.context, ReviewDialog2Activity::class.java)
+                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
+                }
+            }
         }
     }
 
@@ -61,7 +74,11 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
+
+
     }
 
     override fun getItemCount(): Int = dataList?.size ?: 0
+
+
 }

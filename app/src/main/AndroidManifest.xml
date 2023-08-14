@@ -38,6 +38,22 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
+            android:name=".ui.review.ReviewDialog2Activity"
+            android:exported="false"
+            android:theme="@style/Theme.MyDialog">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.review.ReviewDialog1Activity"
+            android:exported="false"
+            android:theme="@style/Theme.MyDialog">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.review.WriteReviewActivity"
             android:exported="true">
             <meta-data
@@ -173,28 +189,6 @@
         <activity
             android:name=".ui.mypage.MyPageActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.review.WriteReview2Activity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.review.WriteReview1Activity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

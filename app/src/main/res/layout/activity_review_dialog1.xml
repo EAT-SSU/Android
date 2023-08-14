@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ui.review.ReviewDialog1Activity">
+
+    <TextView
+        android:id="@+id/btn_review_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/report"
+        android:fontFamily="@font/noto_black"
+        android:gravity="center"
+        tools:ignore="MissingConstraints">
+    </TextView>
+
+    <TextView
+        android:id="@+id/btn_review_fix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fix"
+        android:fontFamily="@font/noto_black"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/btn_review_report">
+    </TextView>
+
+    <TextView
+        android:id="@+id/btn_review_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        android:fontFamily="@font/noto_black"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/btn_review_fix">
+    </TextView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

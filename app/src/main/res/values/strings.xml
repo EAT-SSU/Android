@@ -69,4 +69,7 @@
     <string name="write_review">리뷰 작성하기</string>
     <string name="taste">맛</string>
     <string name="amount">양</string>
+    <string name="report">신고하기</string>
+    <string name="fix">수정하기</string>
+    <string name="delete">삭제하기</string>
 </resources>
