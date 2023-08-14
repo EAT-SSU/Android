@@ -1,4 +1,4 @@
-package com.eatssu.android.view.calendar
+package com.eatssu.android.data.entity
 
 data class CalendarData(
     var cl_date: String = "", // 날짜

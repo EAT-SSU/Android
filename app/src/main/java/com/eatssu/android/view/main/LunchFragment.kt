@@ -21,7 +21,7 @@ import com.eatssu.android.viewmodel.MenuViewModel
 import retrofit2.*
 import androidx.lifecycle.Observer
 import com.eatssu.android.repository.MenuRepository
-import com.eatssu.android.view.calendar.CalendarViewModel
+import com.eatssu.android.viewmodel.CalendarViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
