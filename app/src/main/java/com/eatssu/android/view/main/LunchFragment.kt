@@ -1,11 +1,13 @@
 package com.eatssu.android.view.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +21,11 @@ import com.eatssu.android.viewmodel.MenuViewModel
 import retrofit2.*
 import androidx.lifecycle.Observer
 import com.eatssu.android.repository.MenuRepository
+import com.eatssu.android.view.calendar.CalendarViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
@@ -43,6 +48,7 @@ class LunchFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
@@ -55,34 +61,42 @@ class LunchFragment : Fragment() {
         viewModel =
             ViewModelProvider(this, MenuViewModelFactory(repository))[MenuViewModel::class.java]
 
-        //숭실도담
-        viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
-        viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
-            val dodamAdapter = TodayMealAdapter(result)
-            val recyclerView = binding.rvLunchDodam
-            recyclerView.adapter = dodamAdapter
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.setHasFixedSize(true)
-        })
 
-        //기숙사식당
-        viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
-        viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
-            val dodamAdapter = TodayMealAdapter(result)
-            val recyclerView = binding.rvLunchDormitory
-            recyclerView.adapter = dodamAdapter
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.setHasFixedSize(true)
-        })
+        // ViewModelProvider를 통해 ViewModel 가져오기
+        val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
+        // ViewModel에서 데이터 가져오기
+        calendarViewModel.getData().observe(viewLifecycleOwner, Observer { dataReceived ->
+            menuDate =
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            //숭실도담
+            viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
+            viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
+                val dodamAdapter = TodayMealAdapter(result)
+                val recyclerView = binding.rvLunchDodam
+                recyclerView.adapter = dodamAdapter
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+            })
 
-        //학생식당
-        viewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
-        viewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
-            val dodamAdapter = TodayMealAdapter(result)
-            val recyclerView = binding.rvLunchHaksik
-            recyclerView.adapter = dodamAdapter
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.setHasFixedSize(true)
+            //기숙사식당
+            viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
+            viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
+                val dodamAdapter = TodayMealAdapter(result)
+                val recyclerView = binding.rvLunchDormitory
+                recyclerView.adapter = dodamAdapter
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+            })
+
+            //학생식당
+            viewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
+            viewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
+                val dodamAdapter = TodayMealAdapter(result)
+                val recyclerView = binding.rvLunchHaksik
+                recyclerView.adapter = dodamAdapter
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+            })
         })
 
         //더키친
