@@ -14,8 +14,8 @@
 
         <TextView
             android:id="@+id/day"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_width="46dp"
+            android:layout_height="23dp"
             android:text="월"
             android:textAlignment="center"
             android:gravity="center"
@@ -23,8 +23,8 @@
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_width="46dp"
+            android:layout_height="23dp"
             android:text="19"
             android:textAlignment="center"
             android:gravity="center"

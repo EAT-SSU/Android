@@ -6,20 +6,43 @@
 | <img width="250" src="https://avatars.githubusercontent.com/u/94737714?v=4"/> | <img width="250" src="https://avatars.githubusercontent.com/u/110108243?v=4"/> |
 | `로그인` `리뷰`<br/>`마이 페이지`  | `메인 페이지`<br/>`신고하기` `공지사항`|
 
+## package
+### MVVM architecture pattern
+```
+com.eatssu.android
+├── adapter
+├── base
+├── data
+│   ├── entity
+│   ├── enums
+│   ├── model
+│   │   ├── request
+│   │   ├── response
+│   └── service
+│       └── MenuService.kt
+├── repository
+├── view
+│   ├── calendar
+│   ├── infopage
+│   ├── login
+│   ├── main
+│   ├── mypage
+│   ├── review
+└── viewmodel
+```
 
-
-Framework
+## Framework
 - Android Studio : Dolphin 2020.3.1
 - JDK : 17.0.7
 - Kotlin : 1.8
 - minSDK : 21
 - targetSDK : 31
 
-Infra
+## Infra
 - Github Actions
 - AWS S3
 
-Dependencies
+## Dependencies
 
 이름 | 기능
 ----|---
