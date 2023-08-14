@@ -89,13 +89,18 @@ class MyPageActivity : BaseActivity() {
             // 다이얼로그를 띄워주기
             builder.show()
         }
+
+        var email = MySharedPreferences.getUserEmail(this).split("@")
+        var emailsplit = email[1].split(".")
+        Log.d("myemail", email.toString())
+        loadMyInfo(emailsplit[1])
     }
 
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_my_page
     }
 
-    private fun loadMyInfo() {
+    private fun loadMyInfo(emailtype : String) {
         val myInfoService = RetrofitImpl.retrofit.create(MyPageService::class.java)
         myInfoService.getMyInfo().enqueue(object:
             Callback<GetMyInfoResponseDto> {
@@ -105,23 +110,26 @@ class MyPageActivity : BaseActivity() {
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
-                    Log.d("post", "onResponse 성공: " + response.body().toString());
+                    Log.d("myinfopost", "onResponse 성공: " + response.body().toString());
 
                     val body = response.body()
                     body?.let {
                         binding.tvNickname.text = it.nickname
-                        binding.tvEmail.text = it.accountForm
+                        if (emailtype == "kakao" || emailtype == "naver")
+                            binding.tvEmail.text = "카카오"
+                        else
+                            binding.tvEmail.text = it.accountForm
                     }
 
                 } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                    Log.d("post", "onResponse 실패 + ${response.code()}")
+                    Log.d("myinfopost", "onResponse 실패 + ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
                 // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                Log.d("post", "onFailure 에러: " + t.message.toString());
+                Log.d("myinfopost", "onFailure 에러: " + t.message.toString());
             }
         })
     }
