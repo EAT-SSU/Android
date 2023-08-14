@@ -50,6 +50,9 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
                 binding.day.isSelected = true;
                 binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
             }
+            else {
+                binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
+            }
         }
     }
 
