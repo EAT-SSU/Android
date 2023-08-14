@@ -56,7 +56,7 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
                 "mealId", dataList[position].mealId
             )
             ContextCompat.startActivity(holder.itemView.context, intent, null)
-        }
+        }//set menuId
     }
 
     override fun getItemCount(): Int = dataList.size

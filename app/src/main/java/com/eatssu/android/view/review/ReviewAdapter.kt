@@ -9,13 +9,14 @@ import com.eatssu.android.databinding.ItemReviewBinding
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
-class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
+class ReviewAdapter(private val dataList: GetReviewListResponse) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
+            val dataList = dataList.dataList
             binding.tvReviewItemId.text = dataList?.get(position)?.writerNickname.toString()
             binding.tvReviewItemComment.text = dataList?.get(position)?.content
             binding.tvReviewItemDate.text = dataList?.get(position)?.writeDate
@@ -62,5 +63,5 @@ class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = dataList?.size ?: 0
+    override fun getItemCount(): Int = dataList.dataList?.size ?: 0
 }

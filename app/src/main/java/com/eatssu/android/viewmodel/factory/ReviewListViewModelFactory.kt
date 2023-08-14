@@ -12,7 +12,7 @@ class ReviewListViewModelFactory(private val repository: ReviewListRepository) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MenuViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(ReviewListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ReviewListViewModel(repository) as T
         }

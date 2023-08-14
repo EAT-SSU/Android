@@ -20,9 +20,14 @@ import com.eatssu.android.view.infopage.*
 import com.eatssu.android.viewmodel.MenuViewModel
 import retrofit2.*
 import androidx.lifecycle.Observer
+import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.repository.MenuRepository
+import com.eatssu.android.repository.ReviewListRepository
+import com.eatssu.android.view.review.Review
 import com.eatssu.android.viewmodel.CalendarViewModel
+import com.eatssu.android.viewmodel.ReviewListViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
+import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -34,7 +39,12 @@ class LunchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MenuViewModel
+    private lateinit var reviewListViewModel: ReviewListViewModel
+
+
     private lateinit var menuService: MenuService
+    private lateinit var reviewService: ReviewService
+
 
     private var menuDate: String = "20230714"
 
@@ -52,14 +62,22 @@ class LunchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
+        reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
+
 
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
 
-        val repository = MenuRepository(menuService)
+        val menuRepository = MenuRepository(menuService)
         viewModel =
-            ViewModelProvider(this, MenuViewModelFactory(repository))[MenuViewModel::class.java]
+            ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
+
+        val reviewListRepository = ReviewListRepository(reviewService)
+        reviewListViewModel = ViewModelProvider(
+            this,
+            ReviewListViewModelFactory(reviewListRepository)
+        )[ReviewListViewModel::class.java]
 
 
         // ViewModelProvider를 통해 ViewModel 가져오기
@@ -102,17 +120,25 @@ class LunchFragment : Fragment() {
         //더키친
         viewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
         viewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
-            val kitchenAdapter = FixedMenuAdapter(result)
+            val kitchenAdapter = FixedMenuAdapter(reviewListViewModel, result)
             val recyclerView = binding.rvLunchKitchen
             recyclerView.adapter = kitchenAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
+
+//
+//            val adapter = FixedMenuAdapter(reviewListViewModel, result) { selectedItem ->
+//                viewModel.setSelectedItem(selectedItem)
+//                startActivity(Intent(this, SecondActivity::class.java))
+//            }
+//            recyclerView.layoutManager = LinearLayoutManager(this)
+//            recyclerView.adapter = adapter
         })
 
         //푸드코트
         viewModel.loadFixedMenu(Restaurant.FOOD_COURT)
         viewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
-            val foodAdapter = FixedMenuAdapter(result)
+            val foodAdapter = FixedMenuAdapter(reviewListViewModel, result)
             val recyclerView = binding.rvLunchFood
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -122,7 +148,7 @@ class LunchFragment : Fragment() {
         //스낵코너
         viewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
         viewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
-            val foodAdapter = FixedMenuAdapter(result)
+            val foodAdapter = FixedMenuAdapter(reviewListViewModel, result)
             val recyclerView = binding.rvLunchSnack
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)

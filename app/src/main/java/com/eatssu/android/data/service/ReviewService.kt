@@ -85,9 +85,9 @@ interface ReviewService {
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
         @Query("menuId") menuId: Long?,
-        @Query("lastReviewId") lastReviewId: Long?,
-        @Query("page") page: Int?,
-        @Query("size") size: Int?,
+//        @Query("lastReviewId") lastReviewId: Long?,
+//        @Query("page") page: Int?,
+//        @Query("size") size: Int?,
 //        @Query("black") black: List<String>?
     ):Call<GetReviewListResponse>
 

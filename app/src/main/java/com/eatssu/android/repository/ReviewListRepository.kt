@@ -19,11 +19,11 @@ class ReviewListRepository(private val reviewService: ReviewService) {
         menuType: String,
         mealId: Long?,
         menuId: Long?,
-        lastReviewId: Long?,
-        page: Int?,
-        size: Int?,
+//        lastReviewId: Long?,
+//        page: Int?,
+//        size: Int?,
     ): Call<GetReviewListResponse> {
-        return reviewService.getReviewList(menuType, mealId, menuId, lastReviewId, page, size)
+        return reviewService.getReviewList(menuType, mealId, menuId)
     }
 
     fun getReviewInfo(

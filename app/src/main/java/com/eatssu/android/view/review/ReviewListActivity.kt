@@ -1,27 +1,21 @@
 package com.eatssu.android.view.review
 
 import RetrofitImpl
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
 import com.eatssu.android.repository.ReviewListRepository
-import com.eatssu.android.viewmodel.MenuViewModel
 import com.eatssu.android.viewmodel.ReviewListViewModel
-import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.properties.Delegates
 
 class ReviewListActivity : AppCompatActivity() {
@@ -48,6 +42,8 @@ class ReviewListActivity : AppCompatActivity() {
 
         reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
+
+        //get menuId
 
 //        MENU_ID = intent.getLongExtra("menuId", -1L)
 //        MEAL_ID = intent.getLongExtra("mealId", -1L)
@@ -85,22 +81,50 @@ class ReviewListActivity : AppCompatActivity() {
 
         val repository = ReviewListRepository(reviewService)
         viewModel =
-            ViewModelProvider(this, ReviewListViewModelFactory(repository))[ReviewListViewModel::class.java]
+            ViewModelProvider(
+                this,
+                ReviewListViewModelFactory(repository)
+            )[ReviewListViewModel::class.java]
 
+
+        viewModel.getLiveDataMenuIdAndMenuType().observe(this) { pair ->
+            // Use the itemId as needed in this activity
+            // For example, fetch details for the item with this ID
+
+            Log.d("post",pair.toString())
+            when(pair.first){
+                MenuType.FIX -> { viewModel.loadReviewList(MenuType.FIX, 0, pair.second) }
+                MenuType.CHANGE -> { viewModel.loadReviewList(MenuType.CHANGE, pair.second,0) }
+            }
+
+            viewModel.reviewList.observe(this, Observer { reviewList ->
+                Log.d("post",reviewList.dataList.toString())
+                val listAdapter = ReviewAdapter(reviewList)
+                val recyclerView = binding.rvReview
+                recyclerView.adapter = listAdapter
+                recyclerView.layoutManager = LinearLayoutManager(this)
+                recyclerView.setHasFixedSize(true)
+                recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+            })
+//
+//        viewModel.type.observe(this, Observer { result ->
+//            when(viewModel.type){
+//                MenuType.FIX ->
+//            }
+//        }
+
+
+//        when(type){
+//            MenuType.FIX -> viewModel.loadReviewInfo(type.toString(), mealId =0 , menuId)
+//            else -> Log.d("post", "onResponse 실패")
+//
+//        }
 
 //        viewModel.loadReviewList(menuType, menuId, mealId)
+        }
     }
+}
 
-    private fun setAdapter(reviewList: List<GetReviewListResponse.Data>?) {
-        val listAdapter = ReviewAdapter(reviewList)
-        val linearLayoutManager = LinearLayoutManager(this)
-
-        binding.rvReview.adapter = listAdapter
-        binding.rvReview.layoutManager = linearLayoutManager
-        binding.rvReview.setHasFixedSize(true)
-        binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-
-    }
 //
 //    private fun lodeReviewInfo(menuType: String, id: Long) {
 //        val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
@@ -270,4 +294,3 @@ class ReviewListActivity : AppCompatActivity() {
 //            })
 //        }
 //    }
-}

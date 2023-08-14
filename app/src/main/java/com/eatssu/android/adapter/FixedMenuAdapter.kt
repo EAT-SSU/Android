@@ -1,16 +1,22 @@
 package com.eatssu.android.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
+import com.eatssu.android.viewmodel.ReviewListViewModel
 
 
-class FixedMenuAdapter(private val dataList: GetFixedMenuResponseDto, ) :
+class FixedMenuAdapter(
+    private val viewModel: ReviewListViewModel,
+    private val dataList: GetFixedMenuResponseDto
+) :
     RecyclerView.Adapter<FixedMenuAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMenuBinding) :
@@ -19,7 +25,8 @@ class FixedMenuAdapter(private val dataList: GetFixedMenuResponseDto, ) :
         fun bind(position: Int) {
             binding.tvMenu.text = dataList.fixMenuInfoList[position].name
             binding.tvPrice.text = dataList.fixMenuInfoList[position].price.toString()
-            binding.tvRate.text = String.format("%.1f", dataList.fixMenuInfoList[position].mainGrade)
+            binding.tvRate.text =
+                String.format("%.1f", dataList.fixMenuInfoList[position].mainGrade)
         }
     }
 
@@ -33,11 +40,23 @@ class FixedMenuAdapter(private val dataList: GetFixedMenuResponseDto, ) :
         holder.bind(position)
 
         //서버 연결
+//        holder.itemView.setOnClickListener {
+//            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+//            intent.putExtra(
+//                "menuId", dataList.fixMenuInfoList[position].menuId
+//            )
+//            ContextCompat.startActivity(holder.itemView.context, intent, null)
+//        }
+
+        val menuId = dataList.fixMenuInfoList[position].menuId
+
         holder.itemView.setOnClickListener {
+            viewModel.setSelectedItemId(menuId)
+            Log.d("post",viewModel.getSelectedItemId().toString())
+            viewModel.setSelectedMenuType(MenuType.FIX)
+            Log.d("post", "FIX")
+
             val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-            intent.putExtra(
-                "menuId", dataList.fixMenuInfoList[position].menuId
-            )
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
