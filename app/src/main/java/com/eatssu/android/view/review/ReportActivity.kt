@@ -16,9 +16,6 @@ import com.eatssu.android.view.main.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 // reviewId 받아오는거 해야함
 // 메인 리뷰에서 신고하기 뷰로 넘어가는거 해야함

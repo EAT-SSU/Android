@@ -18,6 +18,7 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
+            val dataList = dataList.dataList
             binding.tvReviewItemId.text = dataList?.get(position)?.writerNickname.toString()
             binding.tvReviewItemComment.text = dataList?.get(position)?.content
             binding.tvReviewItemDate.text = dataList?.get(position)?.writeDate
@@ -55,9 +56,6 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
             binding.btnDetail.setOnClickListener() {
                 if(dataList?.get(position)?.isWriter == false) {
                     val intent = Intent(binding.btnDetail.context, ReviewDialog1Activity::class.java)
-                    intent.putExtra(
-                        "reviewId", dataList[position].reviewId
-                    )
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
                 else if (dataList?.get(position)?.isWriter == true) {
@@ -76,11 +74,7 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
-
-
     }
 
-    override fun getItemCount(): Int = dataList?.size ?: 0
-
-
+    override fun getItemCount(): Int = dataList.dataList?.size ?: 0
 }
