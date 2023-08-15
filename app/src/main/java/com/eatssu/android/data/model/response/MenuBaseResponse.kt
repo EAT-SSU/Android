@@ -7,6 +7,5 @@ data class MenuBaseResponse (
         val menu: String,
         val price: String,
         val rate: Float
-    ) {
-    }
+    )
 }

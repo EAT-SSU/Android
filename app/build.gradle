@@ -17,6 +17,7 @@ plugins {
 android {
     namespace 'com.eatssu.android'
     compileSdk 33
+//    compileSdkVersion 33 // 원하는 SDK 버전으로 변경하세요
 
     defaultConfig {
         applicationId "com.eatssu.android"
@@ -28,17 +29,17 @@ android {
 
 
 
-//         buildConfigField("String", "APP_KEY", APP_KEY)
-//         manifestPlaceholders = [APP_KEY: APP_KEY]
+//        buildConfigField("String", "APP_KEY", APP_KEY)
+//        manifestPlaceholders = [APP_KEY: APP_KEY]
 
-         buildConfigField("String", "BASE_URL", BASE_URL)
-         manifestPlaceholders = [BASE_URL: BASE_URL]
+        buildConfigField("String", "BASE_URL", BASE_URL)
+        manifestPlaceholders = [BASE_URL: BASE_URL]
 
-         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", KAKAO_NATIVE_APP_KEY)
-         manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: KAKAO_NATIVE_APP_KEY]
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", KAKAO_NATIVE_APP_KEY)
+        manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: KAKAO_NATIVE_APP_KEY]
 
-         buildConfigField("String", "KAKAO_REDIRECTION_SCHEME", KAKAO_REDIRECTION_SCHEME)
-         manifestPlaceholders = [KAKAO_REDIRECTION_SCHEME: KAKAO_REDIRECTION_SCHEME]
+        buildConfigField("String", "KAKAO_REDIRECTION_SCHEME", KAKAO_REDIRECTION_SCHEME)
+        manifestPlaceholders = [KAKAO_REDIRECTION_SCHEME: KAKAO_REDIRECTION_SCHEME]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -118,6 +119,9 @@ dependencies {
     // viewmodel과 livedata
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
 
 //    implementation "androidx.security:security-crypto:1.0.0"
 
