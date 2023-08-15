@@ -2,7 +2,7 @@ package com.eatssu.android.data.model.request
 
 import com.google.gson.annotations.SerializedName
 
-data class ReportRequest(
+data class ReportRequestDto(
     @SerializedName("reviewId")
     val reviewId: Long,
 

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemReviewBinding
+import com.eatssu.android.view.review.MyReviewDialogActivity
+import com.eatssu.android.view.review.OthersReviewDialogActivity
 
 class ReviewAdapter(private val dataList: GetReviewListResponse) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
@@ -55,11 +57,11 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
 
             binding.btnDetail.setOnClickListener() {
                 if(dataList?.get(position)?.isWriter == false) {
-                    val intent = Intent(binding.btnDetail.context, ReviewDialog1Activity::class.java)
+                    val intent = Intent(binding.btnDetail.context, OthersReviewDialogActivity::class.java)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
                 else if (dataList?.get(position)?.isWriter == true) {
-                    val intent = Intent(binding.btnDetail.context, ReviewDialog2Activity::class.java)
+                    val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }

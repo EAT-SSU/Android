@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review
+package com.eatssu.android.view.mypage
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.databinding.ItemMyReviewBinding
-import kotlin.math.min
 
 
 //@POST("mypage/myreview") //내가 쓴 리뷰 모아보기

@@ -204,7 +204,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.ReviewDialog1Activity"
+            android:name=".view.review.OthersReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
 
@@ -213,7 +213,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.ReviewDialog2Activity"
+            android:name=".view.review.MyReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
 
@@ -222,7 +222,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.ReportActivity"
+            android:name=".view.review.ReportActivity"
             android:exported="true">
 
             <meta-data

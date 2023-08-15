@@ -10,6 +10,6 @@ interface MyPageService {
     @GET("mypage/myreview") //내가 쓴 리뷰 모아보기
     fun getMyReviews(): Call<GetMyReviewResponseDto>
 
-    @GET("mypage/info") //내가 쓴 리뷰 모아보기
+    @GET("mypage/info") //내 정보 모아보기
     fun getMyInfo(): Call<GetMyReviewResponseDto>
 }

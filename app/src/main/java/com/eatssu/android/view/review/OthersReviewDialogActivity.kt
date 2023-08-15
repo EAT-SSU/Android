@@ -1,22 +1,20 @@
-package com.eatssu.android.ui.review
+package com.eatssu.android.view.review
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.content.ContextCompat
-import com.eatssu.android.R
-import com.eatssu.android.databinding.ActivityReviewDialog1Binding
+import com.eatssu.android.databinding.ActivityOthersReviewDialogBinding
 
-class ReviewDialog1Activity : AppCompatActivity() {
+class OthersReviewDialogActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityReviewDialog1Binding
+    private lateinit var binding: ActivityOthersReviewDialogBinding
     var reviewId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityReviewDialog1Binding.inflate(layoutInflater)
+        binding = ActivityOthersReviewDialogBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 

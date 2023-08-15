@@ -1,15 +1,14 @@
-package com.eatssu.android.ui.review
+package com.eatssu.android.view.review
 
 import RetrofitImpl
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.R
-import com.eatssu.android.data.model.request.ReportRequest
+import com.eatssu.android.data.enums.ReportType
+import com.eatssu.android.data.model.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.databinding.ActivityReportBinding
 import com.eatssu.android.view.main.MainActivity
@@ -42,42 +41,30 @@ class ReportActivity : AppCompatActivity() {
 
         binding.btnSendReport.setOnClickListener {
 
-            val selectId = binding.radioGp.checkedRadioButtonId
+            val selectedReportType = getSelectedReportType(binding.radioGp.checkedRadioButtonId)
+            reportType = selectedReportType.type
+            content = selectedReportType.defaultContent?.let { getString(it) } ?: binding.etReportComment.text.toString()
 
-            if (selectId == binding.radioBt1.id) {
-                reportType = "CONTENT"
-                content = getString(R.string.report1);
-            }
-            else if (selectId == binding.radioBt2.id) {
-                reportType = "BAD_WORD"
-                content = getString(R.string.report2);
-            }
-            else if (selectId == binding.radioBt3.id) {
-                reportType = "AD"
-                content = getString(R.string.report3);
-            }
-            else if (selectId == binding.radioBt4.id) {
-                reportType = "COPY"
-                content = getString(R.string.report4);
-            }
-            else if (selectId == binding.radioBt5.id) {
-                reportType = "COPYRIGHT"
-                content = getString(R.string.report5);
-            }
-            else if (selectId == binding.radioBt6.id) {
-                reportType = "ETC"
-                content = binding.etReportComment.toString()
-            }
             Log.d("reporting", reportType)
 
-            reviewId = intent.getLongExtra("reviewId", -1L)
-
-            postData(reviewId, reportType, content);
+            postData(reviewId, reportType, content)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
 
+    }
+
+    private fun getSelectedReportType(selectedId: Int): ReportType {
+        return when (selectedId) {
+            binding.radioBt1.id -> ReportType.CONTENT
+            binding.radioBt2.id -> ReportType.BAD_WORD
+            binding.radioBt3.id -> ReportType.AD
+            binding.radioBt4.id -> ReportType.COPY
+            binding.radioBt5.id -> ReportType.COPYRIGHT
+            binding.radioBt6.id -> ReportType.ETC
+            else -> ReportType.ETC // Default to ETC if none selected
+        }
     }
 
     private fun postData(reviewId: Long, reportType: String, content: String) {
@@ -86,7 +73,7 @@ class ReportActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    service.reportReview(ReportRequest(reviewId, reportType, content)).execute()
+                    service.reportReview(ReportRequestDto(reviewId, reportType, content)).execute()
                 }
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공한 경우
