@@ -188,15 +188,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.calendar.CalendarActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".view.infopage.InfoActivity_Haksik"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
@@ -212,6 +203,34 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".view.review.OthersReviewDialogActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyDialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".view.review.MyReviewDialogActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyDialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".view.review.ReportActivity"
+            android:exported="true">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+
     </application>
 
 </manifest>

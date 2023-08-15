@@ -13,6 +13,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
 import com.eatssu.android.repository.ReviewRepository
+import com.eatssu.android.ui.review.ReviewAdapter
 import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import kotlin.properties.Delegates
@@ -99,10 +100,11 @@ class ReviewListActivity : AppCompatActivity() {
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
 
-            Log.d("post",reviewInfo.menuName.javaClass.name)
+            Log.d("post", reviewInfo.menuName.javaClass.name)
             itemName = reviewInfo.menuName as ArrayList<String>
 
             binding.tvMenu.text = reviewInfo.menuName.toString()
+
             binding.tvRate.text =
                 String.format("%.1f", reviewInfo.mainGrade.toFloat())
                     .toFloat().toString()
