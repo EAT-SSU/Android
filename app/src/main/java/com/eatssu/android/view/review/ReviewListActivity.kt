@@ -1,32 +1,33 @@
 package com.eatssu.android.view.review
 
 import RetrofitImpl
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
-import com.eatssu.android.repository.ReviewListRepository
+import com.eatssu.android.repository.ReviewRepository
 import com.eatssu.android.ui.review.ReviewAdapter
-import com.eatssu.android.viewmodel.ReviewListViewModel
-import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
+import com.eatssu.android.viewmodel.ReviewViewModel
+import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import kotlin.properties.Delegates
 
 class ReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewListBinding
 
-    private lateinit var viewModel: ReviewListViewModel
+    private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
 
-//    lateinit var menu: String
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
+    private lateinit var itemName: ArrayList<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +41,12 @@ class ReviewListActivity : AppCompatActivity() {
 
         reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-        val repository = ReviewListRepository(reviewService)
+        val repository = ReviewRepository(reviewService)
         viewModel =
             ViewModelProvider(
                 this,
-                ReviewListViewModelFactory(repository)
-            )[ReviewListViewModel::class.java]
+                ReviewViewModelFactory(repository)
+            )[ReviewViewModel::class.java]
 
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
@@ -56,10 +57,28 @@ class ReviewListActivity : AppCompatActivity() {
             "FIX" -> {
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
+
+                binding.btnNextReview.setOnClickListener() {
+                    val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
+                    intent.putExtra("itemId", itemId)
+                    intent.putExtra("menuType", menuType)
+                    intent.putStringArrayListExtra("itemName", itemName)
+
+                    startActivity(intent)  // 화면 전환을 시켜줌
+                }
             }
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+
+                binding.btnNextReview.setOnClickListener() {
+                    val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
+                    intent.putExtra("itemId", itemId)
+                    intent.putExtra("menuType", menuType)
+                    intent.putExtra("itemName", itemName)
+
+                    startActivity(intent)  // 화면 전환을 시켜줌
+                }
 
             }
             else -> {
@@ -68,7 +87,7 @@ class ReviewListActivity : AppCompatActivity() {
         }
 
 
-        viewModel.reviewList.observe(this, Observer { reviewList ->
+        viewModel.reviewList.observe(this) { reviewList ->
             Log.d("post", reviewList.dataList.toString())
             val listAdapter = ReviewAdapter(reviewList)
             val recyclerView = binding.rvReview
@@ -76,12 +95,14 @@ class ReviewListActivity : AppCompatActivity() {
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.setHasFixedSize(true)
             recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-        })
+        }
 
-        viewModel.reviewInfo.observe(this,Observer{ reviewInfo ->
+        viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
 
-//            menu = reviewInfo.menuName.toString()
+            Log.d("post", reviewInfo.menuName.javaClass.name)
+            itemName = reviewInfo.menuName as ArrayList<String>
+
             binding.tvMenu.text = reviewInfo.menuName.toString()
 
             binding.tvRate.text =
@@ -93,7 +114,6 @@ class ReviewListActivity : AppCompatActivity() {
             binding.tvGradeAmount.text =
                 String.format("%.1f", reviewInfo.amountGrade!!.toFloat())
                     .toFloat().toString()
-
             binding.tvReviewNumCount.text = reviewInfo.totalReviewCount.toString()
 
             val cnt = reviewInfo.totalReviewCount
@@ -110,6 +130,6 @@ class ReviewListActivity : AppCompatActivity() {
             binding.progressBar4.progress = reviewInfo.reviewGradeCnt.fourCnt
             binding.progressBar5.progress = reviewInfo.reviewGradeCnt.fiveCnt
 
-        })
+        }
     }
 }

@@ -9,7 +9,6 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
-import com.eatssu.android.viewmodel.ReviewListViewModel
 
 
 class FixedMenuAdapter(

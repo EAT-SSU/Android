@@ -22,12 +22,11 @@ import retrofit2.*
 import androidx.lifecycle.Observer
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.repository.MenuRepository
-import com.eatssu.android.repository.ReviewListRepository
-import com.eatssu.android.view.review.Review
+import com.eatssu.android.repository.ReviewRepository
 import com.eatssu.android.viewmodel.CalendarViewModel
-import com.eatssu.android.viewmodel.ReviewListViewModel
+import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
-import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
+import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -39,7 +38,7 @@ class LunchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MenuViewModel
-    private lateinit var reviewListViewModel: ReviewListViewModel
+    private lateinit var reviewViewModel: ReviewViewModel
 
 
     private lateinit var menuService: MenuService
@@ -73,11 +72,11 @@ class LunchFragment : Fragment() {
         viewModel =
             ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
 
-        val reviewListRepository = ReviewListRepository(reviewService)
-        reviewListViewModel = ViewModelProvider(
+        val reviewRepository = ReviewRepository(reviewService)
+        reviewViewModel = ViewModelProvider(
             this,
-            ReviewListViewModelFactory(reviewListRepository)
-        )[ReviewListViewModel::class.java]
+            ReviewViewModelFactory(reviewRepository)
+        )[ReviewViewModel::class.java]
 
 
         // ViewModelProvider를 통해 ViewModel 가져오기
