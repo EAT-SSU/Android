@@ -13,7 +13,6 @@ import com.eatssu.android.viewmodel.ReviewListViewModel
 
 
 class FixedMenuAdapter(
-    private val viewModel: ReviewListViewModel,
     private val dataList: GetFixedMenuResponseDto
 ) :
     RecyclerView.Adapter<FixedMenuAdapter.ViewHolder>() {

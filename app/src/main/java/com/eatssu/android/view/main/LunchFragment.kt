@@ -120,25 +120,17 @@ class LunchFragment : Fragment() {
         //더키친
         viewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
         viewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
-            val kitchenAdapter = FixedMenuAdapter(reviewListViewModel, result)
+            val kitchenAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvLunchKitchen
             recyclerView.adapter = kitchenAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
-
-//
-//            val adapter = FixedMenuAdapter(reviewListViewModel, result) { selectedItem ->
-//                viewModel.setSelectedItem(selectedItem)
-//                startActivity(Intent(this, SecondActivity::class.java))
-//            }
-//            recyclerView.layoutManager = LinearLayoutManager(this)
-//            recyclerView.adapter = adapter
         })
 
         //푸드코트
         viewModel.loadFixedMenu(Restaurant.FOOD_COURT)
         viewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
-            val foodAdapter = FixedMenuAdapter(reviewListViewModel, result)
+            val foodAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvLunchFood
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -148,7 +140,7 @@ class LunchFragment : Fragment() {
         //스낵코너
         viewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
         viewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
-            val foodAdapter = FixedMenuAdapter(reviewListViewModel, result)
+            val foodAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvLunchSnack
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
