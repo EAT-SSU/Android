@@ -1,21 +1,37 @@
 package com.eatssu.android.adapter
 
-import android.R
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuPickBinding
-import com.eatssu.android.data.entity.MenuPickItem
 
 
-class MenuPickAdapter (private val context: Context, wordsItemList: List<MenuPickItem>) :
+class MenuPickAdapter(itemList: ArrayList<String>?) :
     RecyclerView.Adapter<MenuPickAdapter.ViewHolder>() {
+
     /* 어댑터에 필요한 변수들 */
     private var binding: ItemMenuPickBinding? = null
-    private val wordsItemList: List<MenuPickItem>
+    private val wordsItemList: ArrayList<String>?
+
+    inner class ViewHolder(private val binding: ItemMenuPickBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        lateinit var checkBox: CheckBox
+
+        fun bind(position: Int) {
+//            var checkBox: CheckBox
+
+            checkBox = binding.checkBox
+
+            binding.tvMenuName.text = wordsItemList!![position]
+
+        }
+
+//        init {
+//            checkBox = itemView.findViewById(R.id.checkbox)
+//        }
+    }
 
     /* 리스너 인터페이스 구현부 */
     interface CheckBoxClickListener {
@@ -27,21 +43,21 @@ class MenuPickAdapter (private val context: Context, wordsItemList: List<MenuPic
 
     /* 어댑터 생성자 */
     init {
-        this.wordsItemList = wordsItemList
+        this.wordsItemList = itemList
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = ItemMenuPickBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return ViewHolder(binding!!.getRoot())
+        val binding =
+            ItemMenuPickBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val wordsItem: MenuPickItem = wordsItemList[position]
-        binding?.tvMenuName!!.text = wordsItem.menuName
+        holder.bind(position)
+
+
+//        val wordsItem: String = wordsItemList!![position]
+//        binding?.tvMenuName!!.text = wordsItem
 
 
         /* 체크박스 리스너 */holder.checkBox.setOnClickListener { v: View? ->
@@ -56,16 +72,9 @@ class MenuPickAdapter (private val context: Context, wordsItemList: List<MenuPic
     }
 
     override fun getItemCount(): Int {
-        return wordsItemList.size
+        return wordsItemList!!.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val checkBox: CheckBox
-
-        init {
-            checkBox = itemView.findViewById(R.id.checkbox)
-        }
-    }
 
     /* 리스너 메소드 */
     fun setOnCheckBoxClickListener(clickCheckBoxListener: CheckBoxClickListener?) {

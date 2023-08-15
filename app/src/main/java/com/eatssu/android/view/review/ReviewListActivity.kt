@@ -75,7 +75,8 @@ class ReviewListActivity : AppCompatActivity() {
                     val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
-                    intent.putExtra("itemName", itemName)
+                    intent.putStringArrayListExtra("itemName", itemName)
+                    Log.d("post",itemName.toString())
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
@@ -109,10 +110,10 @@ class ReviewListActivity : AppCompatActivity() {
                 String.format("%.1f", reviewInfo.mainGrade.toFloat())
                     .toFloat().toString()
             binding.tvGradeTaste.text =
-                String.format("%.1f", reviewInfo.tasteGrade!!.toFloat())
+                String.format("%.1f", reviewInfo.tasteGrade.toFloat())
                     .toFloat().toString()
             binding.tvGradeAmount.text =
-                String.format("%.1f", reviewInfo.amountGrade!!.toFloat())
+                String.format("%.1f", reviewInfo.amountGrade.toFloat())
                     .toFloat().toString()
             binding.tvReviewNumCount.text = reviewInfo.totalReviewCount.toString()
 
