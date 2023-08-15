@@ -6,22 +6,21 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
-import com.eatssu.android.repository.ReviewListRepository
-import com.eatssu.android.viewmodel.ReviewListViewModel
-import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
+import com.eatssu.android.repository.ReviewRepository
+import com.eatssu.android.viewmodel.ReviewViewModel
+import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import kotlin.properties.Delegates
 
 class ReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewListBinding
 
-    private lateinit var viewModel: ReviewListViewModel
+    private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
 
     private lateinit var menuType: String
@@ -41,12 +40,12 @@ class ReviewListActivity : AppCompatActivity() {
 
         reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-        val repository = ReviewListRepository(reviewService)
+        val repository = ReviewRepository(reviewService)
         viewModel =
             ViewModelProvider(
                 this,
-                ReviewListViewModelFactory(repository)
-            )[ReviewListViewModel::class.java]
+                ReviewViewModelFactory(repository)
+            )[ReviewViewModel::class.java]
 
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()

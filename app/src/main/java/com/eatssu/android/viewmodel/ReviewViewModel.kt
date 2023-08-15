@@ -5,15 +5,16 @@ import androidx.lifecycle.*
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.repository.ReviewListRepository
-import com.eatssu.android.view.review.ItemData
+import com.eatssu.android.repository.ReviewRepository
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class ReviewListViewModel(private val repository: ReviewListRepository) : ViewModel() {
+class ReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
 
 //    private val selectedItemId = MutableLiveData<Long>()
 //    private val selectedMenuType = MutableLiveData<MenuType>()

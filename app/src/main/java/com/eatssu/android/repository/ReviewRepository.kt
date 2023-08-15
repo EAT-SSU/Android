@@ -1,19 +1,15 @@
 package com.eatssu.android.repository
 
-import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.data.model.response.GetTodayMealResponseDto
-import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Retrofit
 
 // MenuRepository.kt
 
-class ReviewListRepository(private val reviewService: ReviewService) {
+class ReviewRepository(private val reviewService: ReviewService) {
 
     fun getReviewList(
         menuType: String,
@@ -32,5 +28,20 @@ class ReviewListRepository(private val reviewService: ReviewService) {
         menuId: Long?
     ): Call<GetReviewInfoResponseDto> {
         return reviewService.getRreviewInfo(menuType, mealId, menuId)
+    }
+
+    fun writeReview(
+        menuId: Long,
+        files: List<MultipartBody.Part>,
+        reviewData: RequestBody
+    ): Call<Void> {
+        return reviewService.writeReview(menuId, files, reviewData)
+    }
+
+    fun writeReview(
+        menuId: Long,
+        reviewData: RequestBody
+    ): Call<Void> {
+        return reviewService.writeReview(menuId, reviewData)
     }
 }

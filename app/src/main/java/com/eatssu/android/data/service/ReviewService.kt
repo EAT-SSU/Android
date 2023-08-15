@@ -12,7 +12,7 @@ import retrofit2.http.*
 interface ReviewService {
     @Multipart
     @POST("review/{menuId}")
-    fun uploadFiles(
+    fun writeReview(
         @Path("menuId") menuId: Long,
         @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
         @Part("reviewCreate") reviewData: RequestBody,
@@ -20,7 +20,7 @@ interface ReviewService {
 
     @Multipart
     @POST("review/{menuId}")
-    fun uploadFiles(
+    fun writeReview(
         @Path("menuId") menuId: Long,
         @Part("reviewCreate") reviewData: RequestBody,
     ): Call<Void>
