@@ -50,14 +50,16 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
 
-        val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-        intent.putExtra(
-            "itemId", dataList[position].mealId
-        )
-        intent.putExtra(
-            "menuType", MenuType.CHANGE.toString()
-        )
-        ContextCompat.startActivity(holder.itemView.context, intent, null)
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+            intent.putExtra(
+                "itemId", dataList[position].mealId
+            )
+            intent.putExtra(
+                "menuType", MenuType.CHANGE.toString()
+            )
+            ContextCompat.startActivity(holder.itemView.context, intent, null)
+        }
     }
 
     override fun getItemCount(): Int = dataList.size

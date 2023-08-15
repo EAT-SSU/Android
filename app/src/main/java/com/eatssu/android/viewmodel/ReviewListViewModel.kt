@@ -15,21 +15,8 @@ import retrofit2.Response
 
 class ReviewListViewModel(private val repository: ReviewListRepository) : ViewModel() {
 
-    private val _type = MutableLiveData<MenuType>()
-    val type: LiveData<MenuType> = _type
-
 //    private val selectedItemId = MutableLiveData<Long>()
-    private val selectedItemId = MutableLiveData<Long>()
-//    val selectedItemId: LiveData<MenuType> = _selectedItemId
-
-//    private val _mealId = MutableLiveData<Long>()
-//    val mealId: LiveData<Long> = _mealId
-//
-//    private val _menuId = MutableLiveData<Long>()
-//    val menuId: LiveData<Long> = _menuId
-
-//    private val selectedItemId = MutableLiveData<Long>()
-    private val selectedMenuType = MutableLiveData<MenuType>()
+//    private val selectedMenuType = MutableLiveData<MenuType>()
 
     private val _reviewList = MutableLiveData<GetReviewListResponse>()
     val reviewList: LiveData<GetReviewListResponse> = _reviewList
@@ -37,16 +24,15 @@ class ReviewListViewModel(private val repository: ReviewListRepository) : ViewMo
     private val _reviewInfo = MutableLiveData<GetReviewInfoResponseDto>()
     val reviewInfo: LiveData<GetReviewInfoResponseDto> = _reviewInfo
 
-
-
-    //최후의 방법
+    /*
+    //방법 1 itemData로 묶인 것
     val selectedItem = MutableLiveData<ItemData>()
 
     fun setSelectedItem(itemData: ItemData) {
         selectedItem.value = itemData
     }
 
-
+    //방법 2 id, type 따로
     fun setSelectedItemId(itemId: Long) {
         selectedItemId.value = itemId
     }
@@ -74,8 +60,7 @@ class ReviewListViewModel(private val repository: ReviewListRepository) : ViewMo
                 value = Pair(value1, value2)
             }
         }
-    }
-
+    }*/
 
 
     fun loadReviewList(
