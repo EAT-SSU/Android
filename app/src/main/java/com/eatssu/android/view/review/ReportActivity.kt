@@ -10,11 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
 import com.eatssu.android.data.model.request.ReportRequest
-import com.eatssu.android.data.model.response.TokenResponse
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.databinding.ActivityReportBinding
-import com.eatssu.android.ui.BaseActivity
-import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.view.main.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
