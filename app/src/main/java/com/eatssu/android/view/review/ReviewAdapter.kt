@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemReviewBinding
 
-class ReviewAdapter(private val dataList: List<GetReviewListResponse.Data>?) :
+class ReviewAdapter(private val dataList: GetReviewListResponse) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :

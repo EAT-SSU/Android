@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.eatssu.android.data.model.response.GetMyReviewResponse
+import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.databinding.ItemMyReviewBinding
 import kotlin.math.min
 
@@ -14,7 +14,7 @@ import kotlin.math.min
 //@POST("mypage/myreview") //내가 쓴 리뷰 모아보기
 //fun getMyReviews(): Call<GetMyReviewResponse>
 
-class MyReviewAdapter(private val dataList: List<GetMyReviewResponse.Data>) :
+class MyReviewAdapter(private val dataList: List<GetMyReviewResponseDto.Data>) :
     RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMyReviewBinding) :

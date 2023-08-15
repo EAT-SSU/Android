@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.*
-import com.eatssu.android.view.review.MyReviewAdapter
+import com.eatssu.android.ui.review.MyReviewAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
