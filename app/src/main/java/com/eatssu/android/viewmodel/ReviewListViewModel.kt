@@ -1,7 +1,6 @@
 package com.eatssu.android.viewmodel
 
 import android.util.Log
-import android.view.Menu
 import androidx.lifecycle.*
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
@@ -88,6 +87,7 @@ class ReviewListViewModel(private val repository: ReviewListRepository) : ViewMo
 //        size: Int?,
     ) {
         viewModelScope.launch {
+
             repository.getReviewList(menuType.toString(), mealId, menuId)
                 .enqueue(object : Callback<GetReviewListResponse> {
                     override fun onResponse(
@@ -113,13 +113,13 @@ class ReviewListViewModel(private val repository: ReviewListRepository) : ViewMo
     }
 
     fun loadReviewInfo(
-        menuType: String,
+        menuType: MenuType,
         mealId: Long?,
         menuId: Long?,
     ) {
         viewModelScope.launch {
 
-            repository.getReviewInfo(menuType, mealId, menuId)
+            repository.getReviewInfo(menuType.toString(), mealId, menuId)
                 .enqueue(object : Callback<GetReviewInfoResponseDto> {
                     override fun onResponse(
                         call: Call<GetReviewInfoResponseDto>,

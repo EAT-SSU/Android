@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
 import com.eatssu.android.repository.ReviewListRepository
@@ -24,11 +23,9 @@ class ReviewListActivity : AppCompatActivity() {
     private lateinit var viewModel: ReviewListViewModel
     private lateinit var reviewService: ReviewService
 
-
-    lateinit var menu: String
-
-    private var MENU_ID by Delegates.notNull<Long>()
-    private var MEAL_ID by Delegates.notNull<Long>()
+//    lateinit var menu: String
+    private lateinit var menuType: String
+    private var itemId by Delegates.notNull<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,43 +39,6 @@ class ReviewListActivity : AppCompatActivity() {
 
         reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-
-        //get menuId
-
-//        MENU_ID = intent.getLongExtra("menuId", -1L)
-//        MEAL_ID = intent.getLongExtra("mealId", -1L)
-//        val fixedMenuReview = intent.getBooleanExtra("fixedMenuReview", false)
-//
-//        Log.d("post", "menuID:$MENU_ID")
-//        Log.d("post", "mealID:$MEAL_ID")
-//        Log.d("post", "fixedMenuReview:$fixedMenuReview")
-//        if (MENU_ID != -1L && MEAL_ID == -1L && fixedMenuReview == true) {
-//            true
-//        } else if (MENU_ID == -1L && MEAL_ID != -1L) {
-//            //가변 메뉴일 시
-//            lodeReviewInfo("CHANGE", MEAL_ID)
-//            lodeData("CHANGE", MEAL_ID)
-//            binding.btnNextReview.setOnClickListener() {
-//                val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
-//                intent.putExtra("mealId", MEAL_ID)
-//                intent.putExtra("menu", menu)
-//                Log.d("menu", menu.javaClass.name)
-//                startActivity(intent)  // 화면 전환을 시켜줌
-//            }
-//        } else if (MENU_ID != -1L && MEAL_ID == -1L) {
-//            //고정 메뉴일 시
-//            lodeReviewInfo("FIX", MENU_ID)
-//            lodeData("FIX", MENU_ID)
-//            binding.btnNextReview.setOnClickListener() {
-//                val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
-//                intent.putExtra("menuId", MENU_ID)
-//                intent.putExtra("menu", menu)
-//                Log.d("menu", menu.javaClass.name)
-//                startActivity(intent)  // 화면 전환을 시켜줌
-//            }
-//        }
-
-
         val repository = ReviewListRepository(reviewService)
         viewModel =
             ViewModelProvider(
@@ -86,211 +46,69 @@ class ReviewListActivity : AppCompatActivity() {
                 ReviewListViewModelFactory(repository)
             )[ReviewListViewModel::class.java]
 
+        //get menuId
+        menuType = intent.getStringExtra("menuType").toString()
+        itemId = intent.getLongExtra("itemId", 0)
+        Log.d("post", menuType + itemId)
 
-        viewModel.getLiveDataMenuIdAndMenuType().observe(this) { pair ->
-            // Use the itemId as needed in this activity
-            // For example, fetch details for the item with this ID
-
-            Log.d("post",pair.toString())
-            when(pair.first){
-                MenuType.FIX -> { viewModel.loadReviewList(MenuType.FIX, 0, pair.second) }
-                MenuType.CHANGE -> { viewModel.loadReviewList(MenuType.CHANGE, pair.second,0) }
+        when (menuType) {
+            "FIX" -> {
+                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
+                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
             }
+            "CHANGE" -> {
+                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
+                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
 
-            viewModel.reviewList.observe(this, Observer { reviewList ->
-                Log.d("post",reviewList.dataList.toString())
-                val listAdapter = ReviewAdapter(reviewList)
-                val recyclerView = binding.rvReview
-                recyclerView.adapter = listAdapter
-                recyclerView.layoutManager = LinearLayoutManager(this)
-                recyclerView.setHasFixedSize(true)
-                recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-            })
-//
-//        viewModel.type.observe(this, Observer { result ->
-//            when(viewModel.type){
-//                MenuType.FIX ->
-//            }
-//        }
-
-
-//        when(type){
-//            MenuType.FIX -> viewModel.loadReviewInfo(type.toString(), mealId =0 , menuId)
-//            else -> Log.d("post", "onResponse 실패")
-//
-//        }
-
-//        viewModel.loadReviewList(menuType, menuId, mealId)
+            }
+            else -> {
+                Log.d("post", "잘못된 식당 정보입니다.")
+            }
         }
+
+
+        viewModel.reviewList.observe(this, Observer { reviewList ->
+            Log.d("post", reviewList.dataList.toString())
+            val listAdapter = ReviewAdapter(reviewList)
+            val recyclerView = binding.rvReview
+            recyclerView.adapter = listAdapter
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+        })
+
+        viewModel.reviewInfo.observe(this,Observer{ reviewInfo ->
+            Log.d("post", reviewInfo.toString())
+
+//            menu = reviewInfo.menuName.toString()
+            binding.tvMenu.text = reviewInfo.menuName.toString()
+
+            binding.tvRate.text =
+                String.format("%.1f", reviewInfo.mainGrade.toFloat())
+                    .toFloat().toString()
+            binding.tvGradeTaste.text =
+                String.format("%.1f", reviewInfo.tasteGrade!!.toFloat())
+                    .toFloat().toString()
+            binding.tvGradeAmount.text =
+                String.format("%.1f", reviewInfo.amountGrade!!.toFloat())
+                    .toFloat().toString()
+
+            binding.tvReviewNumCount.text = reviewInfo.totalReviewCount.toString()
+
+            val cnt = reviewInfo.totalReviewCount
+
+            binding.progressBar1.max = cnt
+            binding.progressBar2.max = cnt
+            binding.progressBar3.max = cnt
+            binding.progressBar4.max = cnt
+            binding.progressBar5.max = cnt
+
+            binding.progressBar1.progress = reviewInfo.reviewGradeCnt.oneCnt
+            binding.progressBar2.progress = reviewInfo.reviewGradeCnt.twoCnt
+            binding.progressBar3.progress = reviewInfo.reviewGradeCnt.threeCnt
+            binding.progressBar4.progress = reviewInfo.reviewGradeCnt.fourCnt
+            binding.progressBar5.progress = reviewInfo.reviewGradeCnt.fiveCnt
+
+        })
     }
 }
-
-//
-//    private fun lodeReviewInfo(menuType: String, id: Long) {
-//        val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-//        if (menuType == "FIX") {
-//            reviewService.reviewInfoForFixedMenu(menuType, id).enqueue(object :
-//                Callback<GetReviewInfoResponseDto> {
-//                override fun onResponse(
-//                    call: Call<GetReviewInfoResponseDto>,
-//                    response: Response<GetReviewInfoResponseDto>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        // 정상적으로 통신이 성공된 경우
-//                        Log.d("post", "onResponse 성공: " + response.body().toString());
-//
-//                        menu = response.body()?.menuName.toString()
-//                        binding.tvMenu.text = response.body()?.menuName.toString()
-//
-//                        binding.tvRate.text =
-//                            String.format("%.1f", response.body()?.mainGrade!!.toFloat()).toFloat()
-//                                .toString()
-//                        binding.tvGradeTaste.text =
-//                            String.format("%.1f", response.body()?.tasteGrade!!.toFloat()).toFloat()
-//                                .toString()
-//                        binding.tvGradeAmount.text =
-//                            String.format("%.1f", response.body()?.amountGrade!!.toFloat())
-//                                .toFloat().toString()
-//
-//                        binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-//
-//                        val cnt = response.body()?.totalReviewCount!!
-//
-//                        binding.progressBar1.max = cnt
-//                        binding.progressBar2.max = cnt
-//                        binding.progressBar3.max = cnt
-//                        binding.progressBar4.max = cnt
-//                        binding.progressBar5.max = cnt
-//
-//                        binding.progressBar1.progress = response.body()?.reviewGradeCnt?.oneCnt!!
-//                        binding.progressBar2.progress = response.body()?.reviewGradeCnt?.twoCnt!!
-//                        binding.progressBar3.progress = response.body()?.reviewGradeCnt?.threeCnt!!
-//                        binding.progressBar4.progress = response.body()?.reviewGradeCnt?.fourCnt!!
-//                        binding.progressBar5.progress = response.body()?.reviewGradeCnt?.fiveCnt!!
-//                    } else {
-//                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-//                        Log.d("post", "onResponse 실패")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<GetReviewInfoResponseDto>, t: Throwable) {
-//                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-//                    Log.d("post", "onFailure 에러: " + t.message.toString());
-//                }
-//            })
-//        } else if (menuType == "CHANGE") {
-//            reviewService.reviewInfoForChangeableMenu(menuType, id).enqueue(object :
-//                Callback<GetReviewInfoResponseDto> {
-//                override fun onResponse(
-//                    call: Call<GetReviewInfoResponseDto>,
-//                    response: Response<GetReviewInfoResponseDto>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        // 정상적으로 통신이 성공된 경우
-//                        Log.d("post", "onResponse 성공: " + response.body().toString());
-//
-//                        menu = response.body()?.menuName.toString()
-//                        binding.tvMenu.text = response.body()?.menuName.toString()
-//
-//                        binding.tvRate.text =
-//                            kotlin.String.format("%.1f", response.body()?.mainGrade!!.toFloat())
-//                                .toFloat().toString()
-//                        binding.tvGradeTaste.text =
-//                            kotlin.String.format("%.1f", response.body()?.tasteGrade!!.toFloat())
-//                                .toFloat().toString()
-//                        binding.tvGradeAmount.text =
-//                            kotlin.String.format("%.1f", response.body()?.amountGrade!!.toFloat())
-//                                .toFloat().toString()
-//
-//                        binding.tvReviewNumCount.text = response.body()?.totalReviewCount.toString()
-//
-//                        val cnt = response.body()?.totalReviewCount!!
-//
-//                        binding.progressBar1.max = cnt
-//                        binding.progressBar2.max = cnt
-//                        binding.progressBar3.max = cnt
-//                        binding.progressBar4.max = cnt
-//                        binding.progressBar5.max = cnt
-//
-//                        binding.progressBar1.progress = response.body()?.reviewGradeCnt?.oneCnt!!
-//                        binding.progressBar2.progress = response.body()?.reviewGradeCnt?.twoCnt!!
-//                        binding.progressBar3.progress = response.body()?.reviewGradeCnt?.threeCnt!!
-//                        binding.progressBar4.progress = response.body()?.reviewGradeCnt?.fourCnt!!
-//                        binding.progressBar5.progress = response.body()?.reviewGradeCnt?.fiveCnt!!
-//                    } else {
-//                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-//                        Log.d("post", "onResponse 실패")
-//                    }
-//                }
-//
-//                override fun onFailure(
-//                    call: Call<GetReviewInfoResponseDto>,
-//                    t: Throwable
-//                ) {
-//                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-//                    Log.d("post", "onFailure 에러: " + t.message.toString());
-//                }
-//            })
-//        }
-//
-//    }
-//
-//    private fun lodeData(menuType: String, id: Long) {
-//        val reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
-//
-//        if (menuType == "FIX") {
-//            reviewService.getReviewListForFixedMenu(menuType, id).enqueue(object :
-//                Callback<GetReviewListResponse> {
-//                override fun onResponse(
-//                    call: Call<GetReviewListResponse>,
-//                    response: Response<GetReviewListResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        // 정상적으로 통신이 성공된 경우
-//                        Log.d("post", "onResponse 성공: " + response.body().toString());
-//                        //Toast.makeText(this@ProfileActivity, "비밀번호 찾기 성공!", Toast.LENGTH_SHORT).show()
-//
-//                        val body = response.body()
-//                        body?.let {
-//                            setAdapter(it.dataList)
-//                        }
-//                    } else {
-//                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-//                        Log.d("post", "onResponse 실패")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<GetReviewListResponse>, t: Throwable) {
-//                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-//                    Log.d("post", "onFailure 에러: " + t.message.toString());
-//                }
-//            })
-//        } else if (menuType == "CHANGE") {
-//            reviewService.getReviewListForFixedMenu(menuType, id).enqueue(object :
-//                Callback<GetReviewListResponse> {
-//                override fun onResponse(
-//                    call: Call<GetReviewListResponse>,
-//                    response: Response<GetReviewListResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        // 정상적으로 통신이 성공된 경우
-//                        Log.d("post", "onResponse 성공: " + response.body().toString());
-//                        //Toast.makeText(this@ProfileActivity, "비밀번호 찾기 성공!", Toast.LENGTH_SHORT).show()
-//
-//                        val body = response.body()
-//                        body?.let {
-//                            setAdapter(it.dataList)
-//                        }
-//                    } else {
-//                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-//                        Log.d("post", "onResponse 실패")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<GetReviewListResponse>, t: Throwable) {
-//                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-//                    Log.d("post", "onFailure 에러: " + t.message.toString());
-//                }
-//            })
-//        }
-//    }

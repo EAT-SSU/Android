@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
@@ -49,14 +50,14 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
 
-        //서버 연결
-        holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-            intent.putExtra(
-                "mealId", dataList[position].mealId
-            )
-            ContextCompat.startActivity(holder.itemView.context, intent, null)
-        }//set menuId
+        val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+        intent.putExtra(
+            "itemId", dataList[position].mealId
+        )
+        intent.putExtra(
+            "menuType", MenuType.CHANGE.toString()
+        )
+        ContextCompat.startActivity(holder.itemView.context, intent, null)
     }
 
     override fun getItemCount(): Int = dataList.size
