@@ -26,6 +26,8 @@ class ReviewListActivity : AppCompatActivity() {
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
+    private lateinit var itemName: ArrayList<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +59,10 @@ class ReviewListActivity : AppCompatActivity() {
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
 
                 binding.btnNextReview.setOnClickListener() {
-                    val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
+                    val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
+                    intent.putStringArrayListExtra("itemName", itemName)
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
@@ -72,6 +75,7 @@ class ReviewListActivity : AppCompatActivity() {
                     val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
+                    intent.putExtra("itemName", itemName)
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
@@ -96,8 +100,10 @@ class ReviewListActivity : AppCompatActivity() {
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
 
-            binding.tvMenu.text = reviewInfo.menuName.toString()
+            Log.d("post",reviewInfo.menuName.javaClass.name)
+            itemName = reviewInfo.menuName as ArrayList<String>
 
+            binding.tvMenu.text = reviewInfo.menuName.toString()
             binding.tvRate.text =
                 String.format("%.1f", reviewInfo.mainGrade.toFloat())
                     .toFloat().toString()
@@ -107,7 +113,6 @@ class ReviewListActivity : AppCompatActivity() {
             binding.tvGradeAmount.text =
                 String.format("%.1f", reviewInfo.amountGrade!!.toFloat())
                     .toFloat().toString()
-
             binding.tvReviewNumCount.text = reviewInfo.totalReviewCount.toString()
 
             val cnt = reviewInfo.totalReviewCount

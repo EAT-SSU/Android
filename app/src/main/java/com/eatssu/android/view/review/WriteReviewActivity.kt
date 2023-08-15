@@ -35,8 +35,8 @@ class WriteReviewActivity : AppCompatActivity() {
 
     private var selectedImagePath: String? = null
 
-    private var MENU_ID: Long = 0
-    private lateinit var menu: String
+    private var itemId: Long = 0
+    private lateinit var itemName: String
 
     private var comment: String? = null
 //    private var mainRating: Int = 0
@@ -62,8 +62,9 @@ class WriteReviewActivity : AppCompatActivity() {
             }
         }
 
-        MENU_ID = intent.getLongExtra("menuId", -1)
-        menu = intent.getStringExtra("menu").toString()
+        itemId = intent.getLongExtra("itemId", -1)
+        itemName = intent.getStringArrayListExtra("itemName").toString()
+        Log.d("post",itemName)
 //        rate = intent.getIntExtra("rating", 0)
 
 
@@ -74,7 +75,7 @@ class WriteReviewActivity : AppCompatActivity() {
 //        tasteRating = binding.rbTaste.rating.toInt()
 //        amountRating = binding.rbAmount.rating.toInt()
 
-        binding.menu.text = menu
+        binding.menu.text = itemName
         //텍스트 리뷰
         binding.etReview2Comment.addTextChangedListener(object : TextWatcher {
 
@@ -228,11 +229,11 @@ class WriteReviewActivity : AppCompatActivity() {
                 val response = withContext(Dispatchers.IO) {
                     if (compressedPartsList == null) {
                             reviewService.uploadFiles(
-                                MENU_ID, reviewData
+                                itemId, reviewData
                             ).execute()
                     } else {
                         reviewService.uploadFiles(
-                            MENU_ID, compressedPartsList, reviewData
+                            itemId, compressedPartsList, reviewData
                         ).execute()
                     }
                 }
@@ -243,14 +244,14 @@ class WriteReviewActivity : AppCompatActivity() {
                         this@WriteReviewActivity, "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT
                     ).show()
 //                    startActivity(intent)  // 화면 전환을 시켜줌
-                    intent.putExtra("menuId", MENU_ID)
+                    intent.putExtra("menuId", itemId)
                     intent.putExtra("fixedMenuReview",true)
-                    Log.d("post","pass Id"+MENU_ID)
+                    Log.d("post","pass Id"+itemId)
                     finish()
                 } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                     Log.d(
-                        "post", "onResponse 실패 write" + response.code() + MENU_ID + parts + reviewData
+                        "post", "onResponse 실패 write" + response.code() + itemId + parts + reviewData
                     )
                 }
             } catch (e: Exception) {
