@@ -73,7 +73,6 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                     }
                 })
         }
-
     }
 
     // Fixed Menu 데이터 로드도 유사한 방식으로 구현
