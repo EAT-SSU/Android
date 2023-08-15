@@ -20,6 +20,7 @@ import retrofit2.Response
 
 class UploadReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
 
+    /*
     private val _reviewMenuId = MutableLiveData<Long>()
     val reviewMenuId: LiveData<Long> = _reviewMenuId
 
@@ -27,7 +28,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
     val reviewFiles: LiveData<List<MultipartBody.Part>> = _reviewFiles
 
     private val _reviewData = MutableLiveData<RequestBody>()
-    val reviewData: LiveData<RequestBody> = _reviewData
+    val reviewData: LiveData<RequestBody> = _reviewData*/
 
 
     val shouldStartActivity = MutableLiveData<Boolean>(false)

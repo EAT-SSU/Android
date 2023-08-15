@@ -46,11 +46,6 @@ class WriteReviewActivity : AppCompatActivity() {
     private lateinit var itemName: String
 
     private var comment: String? = null
-//    private var mainRating: Int = 0
-//    private var amountRating: Int = 0
-//    private var tasteRating: Int = 0
-
-//    private lateinit var path: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,8 +67,6 @@ class WriteReviewActivity : AppCompatActivity() {
         itemId = intent.getLongExtra("itemId", -1)
         itemName = intent.getStringArrayListExtra("itemName").toString()
         Log.d("post", itemName)
-//        rate = intent.getIntExtra("rating", 0)
-
 
         comment = binding.etReview2Comment.text.toString()
 
