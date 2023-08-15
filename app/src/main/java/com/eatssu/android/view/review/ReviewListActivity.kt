@@ -13,6 +13,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
 import com.eatssu.android.repository.ReviewListRepository
+import com.eatssu.android.ui.review.ReviewAdapter
 import com.eatssu.android.viewmodel.ReviewListViewModel
 import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
 import kotlin.properties.Delegates

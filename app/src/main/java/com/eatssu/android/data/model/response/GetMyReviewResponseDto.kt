@@ -13,6 +13,6 @@ data class GetMyReviewResponseDto(
         val tasteGrade : Int,
         val imgUrlList: List<String>,
         val writeDate: String,
-        val menuName: String
+        val menuName: String,
     )
 }

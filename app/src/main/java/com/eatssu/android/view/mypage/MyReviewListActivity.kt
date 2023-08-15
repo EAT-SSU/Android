@@ -9,14 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.*
-import com.eatssu.android.view.review.MyReviewAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-//@POST("mypage/myreview") //내가 쓴 리뷰 모아보기
-//fun getMyReviews(@Query("lastReviewId") lastReviewId: Int): Call<GetMyReviewResponse>
+//@GET("mypage/myreview") //내가 쓴 리뷰 모아보기
+//fun getMyReviews(): Call<GetMyReviewResponse>
 
 class MyReviewListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewListBinding

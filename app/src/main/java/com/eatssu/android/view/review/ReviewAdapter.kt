@@ -1,13 +1,17 @@
-package com.eatssu.android.view.review
+package com.eatssu.android.ui.review
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemReviewBinding
-import android.widget.ImageView
-import com.bumptech.glide.Glide
+import com.eatssu.android.view.review.MyReviewDialogActivity
+import com.eatssu.android.view.review.OthersReviewDialogActivity
 
 class ReviewAdapter(private val dataList: GetReviewListResponse) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
@@ -49,6 +53,17 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
                     .load(imageUrl)
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
+            }
+
+            binding.btnDetail.setOnClickListener() {
+                if(dataList?.get(position)?.isWriter == false) {
+                    val intent = Intent(binding.btnDetail.context, OthersReviewDialogActivity::class.java)
+                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
+                }
+                else if (dataList?.get(position)?.isWriter == true) {
+                    val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
+                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
+                }
             }
         }
     }
