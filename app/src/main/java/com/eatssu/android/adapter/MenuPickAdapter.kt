@@ -1,31 +1,34 @@
 package com.eatssu.android.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.databinding.ItemMenuPickBinding
 
 
-class MenuPickAdapter(itemList: ArrayList<String>?) :
+class MenuPickAdapter(private val itemList: GetTodayMealResponseDto) :
     RecyclerView.Adapter<MenuPickAdapter.ViewHolder>() {
 
     /* 어댑터에 필요한 변수들 */
-    private var binding: ItemMenuPickBinding? = null
-    private val wordsItemList: ArrayList<String>?
+//    private var binding: ItemMenuPickBinding? = null
+//    private val wordsItemList: ArrayList<String>?
 
     inner class ViewHolder(private val binding: ItemMenuPickBinding) :
         RecyclerView.ViewHolder(binding.root) {
         lateinit var checkBox: CheckBox
 
         fun bind(position: Int) {
-//            var checkBox: CheckBox
+            val menuList = itemList[position]
+            menuList.changeMenuInfoList[position]
+            Log.d("post","pick"+menuList.changeMenuInfoList.toString())
 
+            //            var checkBox: CheckBox
             checkBox = binding.checkBox
-
-            binding.tvMenuName.text = wordsItemList!![position]
-
+            binding.tvMenuName.text = menuList.changeMenuInfoList[position].name
         }
 
 //        init {
@@ -42,9 +45,9 @@ class MenuPickAdapter(itemList: ArrayList<String>?) :
     private var mCheckBoxClickListener: CheckBoxClickListener? = null
 
     /* 어댑터 생성자 */
-    init {
-        this.wordsItemList = itemList
-    }
+//    init {
+//        this.itemList = itemList
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -72,7 +75,7 @@ class MenuPickAdapter(itemList: ArrayList<String>?) :
     }
 
     override fun getItemCount(): Int {
-        return wordsItemList!!.size
+        return itemList.size
     }
 
 
