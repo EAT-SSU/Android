@@ -10,6 +10,8 @@ class OthersReviewDialogActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOthersReviewDialogBinding
     var reviewId = -1L
+    var menuId = -1L
+    var menu = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +21,8 @@ class OthersReviewDialogActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         reviewId = intent.getLongExtra("reviewId", -1L)
+        menu = intent.getStringExtra("menu").toString()
+
 
         binding.btnReviewReport.setOnClickListener {
             val intent = Intent(this, ReportActivity::class.java)
@@ -26,6 +30,14 @@ class OthersReviewDialogActivity : AppCompatActivity() {
                 "reviewId", reviewId
             )
             Log.d("dialogid", reviewId.toString())
+            startActivity(intent)
+            finish()
+        }
+
+        binding.btnReviewFix.setOnClickListener {
+            val intent = Intent(this, FixMenuActivity::class.java)
+            intent.putExtra("reviewId", reviewId)
+            intent.putExtra("menu", menu)
             startActivity(intent)
             finish()
         }

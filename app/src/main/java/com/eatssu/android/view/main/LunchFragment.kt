@@ -64,11 +64,6 @@ class LunchFragment : Fragment() {
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-
-        val calendardate = this.arguments?.getString("calendardata")
-        Log.d("lunchdate", "$calendardate")
-
-
         val menuRepository = MenuRepository(menuService)
         viewModel =
             ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]

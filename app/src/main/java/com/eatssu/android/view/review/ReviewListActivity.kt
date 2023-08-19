@@ -14,6 +14,7 @@ import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
 import com.eatssu.android.repository.ReviewListRepository
 import com.eatssu.android.ui.review.ReviewAdapter
+import com.eatssu.android.viewmodel.MenuIdViewModel
 import com.eatssu.android.viewmodel.ReviewListViewModel
 import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
 import kotlin.properties.Delegates
@@ -36,7 +37,6 @@ class ReviewListActivity : AppCompatActivity() {
         //binding.included.actionBar.text = "리뷰"
 
         supportActionBar?.title = "리뷰"
-
 
         reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
 

@@ -1,14 +1,18 @@
 package com.eatssu.android.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
+import com.eatssu.android.viewmodel.MenuIdViewModel
 
 class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
     RecyclerView.Adapter<TodayMealAdapter.ViewHolder>() {
@@ -58,7 +62,13 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
             intent.putExtra(
                 "menuType", MenuType.CHANGE.toString()
             )
+
+            Log.d("adaptermenu", "$dataList[position].mealId")
+            val menuViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[MenuIdViewModel::class.java]
+            menuViewModel.setData(dataList[position].mealId.toString())
+
             ContextCompat.startActivity(holder.itemView.context, intent, null)
+
         }
     }
 

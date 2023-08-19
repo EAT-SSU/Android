@@ -42,10 +42,11 @@ class ReportActivity : AppCompatActivity() {
         binding.btnSendReport.setOnClickListener {
 
             val selectedReportType = getSelectedReportType(binding.radioGp.checkedRadioButtonId)
+            reviewId = intent.getLongExtra("reviewId", -1L)
             reportType = selectedReportType.type
             content = selectedReportType.defaultContent?.let { getString(it) } ?: binding.etReportComment.text.toString()
 
-            Log.d("reporting", reportType)
+            Log.d("reporting", reviewId.toString())
 
             postData(reviewId, reportType, content)
             val intent = Intent(this, MainActivity::class.java)
