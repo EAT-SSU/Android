@@ -44,7 +44,7 @@ class FixMenuActivity : AppCompatActivity() {
     private fun reportInfo() {
 
         reviewId = intent.getLongExtra("reviewId", -1L)
-        Log.d("menufix", reviewId.toString())
+        //Log.d("menufix", reviewId.toString())
 
         binding.btnFixReview.setOnClickListener {
 

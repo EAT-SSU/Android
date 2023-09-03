@@ -29,8 +29,10 @@ import com.eatssu.android.viewmodel.ReviewListViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import com.eatssu.android.viewmodel.factory.ReviewListViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 
 
 @AndroidEntryPoint
@@ -79,8 +81,28 @@ class LunchFragment : Fragment() {
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner, Observer { dataReceived ->
-            menuDate =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            val dateFormat =
+                DateTimeFormatter.ofPattern("dd")
+            val monthFormat = DateTimeFormatter.ofPattern("yyyyMM")
+            val preSunday: LocalDateTime = LocalDateTime.now().with(
+                TemporalAdjusters.previousOrSame(
+                    DayOfWeek.SUNDAY
+                )
+            )
+
+            if (Integer.parseInt(preSunday.format(dateFormat)) > 24) {
+                if (Integer.parseInt(dataReceived) > 24)
+                    menuDate =
+                        preSunday.format(monthFormat) + dataReceived
+                else if (Integer.parseInt(dataReceived) < 7)
+                    menuDate =
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            }
+            else
+                menuDate =
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            Log.d("lunchdate", menuDate)
+
             //숭실도담
             viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
             viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
