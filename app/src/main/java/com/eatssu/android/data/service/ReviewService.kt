@@ -25,12 +25,11 @@ interface ReviewService {
     ): Call<Void>
 
 
-    @DELETE("/review/{menuId}/detail/{reviewId}") //리뷰 삭제
-    fun delReview(@Path("menuId") menuId: Long, @Path("reviewId") reviewId: Int): Call<String>
+    @DELETE("/review/{reviewId}") //리뷰 삭제
+    fun delReview(@Path("reviewId") reviewId: Long): Call<String>
 
-    @PATCH("/review/{menuId}/{reviewId}") //리뷰 수정(글 수정)
+    @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
-        @Path("menuId") menuId: Long,
         @Path("reviewId") reviewId: Long,
         @Body request: RequestBody
     ): Call<String>

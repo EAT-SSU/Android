@@ -44,7 +44,13 @@ class FixMenuActivity : AppCompatActivity() {
     private fun reportInfo() {
 
         reviewId = intent.getLongExtra("reviewId", -1L)
-        //Log.d("menufix", reviewId.toString())
+        Log.d("menufix", reviewId.toString())
+
+        /*val menuViewModel = ViewModelProvider(this@FixMenuActivity).get(MenuIdViewModel::class.java)
+        menuViewModel.getData().observe(this, Observer { dataReceived ->
+            menuId = dataReceived.toLong()
+            Log.d("menufix", menuId.toString())
+        })*/
 
         binding.btnFixReview.setOnClickListener {
 
@@ -70,15 +76,15 @@ class FixMenuActivity : AppCompatActivity() {
     }
 """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
 
-        val menuViewModel = ViewModelProvider(this)[MenuIdViewModel::class.java]
+        /*val menuViewModel = ViewModelProvider(this)[MenuIdViewModel::class.java]
         menuViewModel.getData().observe(this, Observer {dataReceived ->
             menuId = dataReceived.toLong()
-            Log.d("menufix", menuId.toString()+reviewId.toString())
+            Log.d("menufix", menuId.toString()+reviewId.toString())*/
 
         lifecycleScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    service.modifyReview(menuId, reviewId, reviewData).execute()
+                    service.modifyReview(reviewId, reviewData).execute()
                 }
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공한 경우
@@ -102,6 +108,6 @@ class FixMenuActivity : AppCompatActivity() {
                 ).show()
             }
         }
-        })
+        //})
     }
 }
