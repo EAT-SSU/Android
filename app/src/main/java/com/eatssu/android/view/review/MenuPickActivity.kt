@@ -23,9 +23,8 @@ class MenuPickActivity : AppCompatActivity() {
     private lateinit var menuService: MenuService
     private lateinit var reviewService: ReviewService
 
+    private lateinit var items: ArrayList<Pair<String, Long>>
 
-    private lateinit var items : kotlin.collections.ArrayList<Pair<String, Long>>
-//        listOf("apple", "banana", "cigarette")
     private var currentItemIndex = 0
 
 
@@ -51,26 +50,11 @@ class MenuPickActivity : AppCompatActivity() {
         recyclerView.adapter = menuPickAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
-//        menuPickAdapter.setOnCheckBoxClickListener(object :
-//            MenuPickAdapter.CheckBoxClickListener {
-//            override fun onClickCheckBox(flag: Int, pos: Int) {
-//                /* 체크박스를 눌렀을 때 리스너로 상태(눌렸는지, 위치)를 불러옴 */
-//                Log.d("__star__", flag.toString() + "" + pos)
-//            }
-//        })
 
-//        binding.btnNextReview.setOnClickListener {
-//            // ReviewActivity로 checkedItems 전달하는 코드
-//            menuPickAdapter.openReviewActivity()
-//            Log.d("post", checkedItems.toString())
-//
-//            intent
-//        }
-
-        // "Go to B Screen" 버튼 클릭 시, 다음 항목의 B 화면을 시작합니다.
+        // "다음" 버튼 클릭 시, 다음 항목의 리뷰화면을 시작합니다.
         binding.btnNextReview.setOnClickListener {
 
-            items=menuPickAdapter.sendItem()
+            items = menuPickAdapter.sendItem()
 
             if (currentItemIndex < items.size) {
                 val item = items[currentItemIndex]
@@ -79,7 +63,6 @@ class MenuPickActivity : AppCompatActivity() {
                 intent.putExtra("itemId", item.second)
 
                 Log.d("post", "넘길게$item")
-//                startActivity(intent)
                 startActivityForResult(intent, 1)
             } else {
                 // 모든 항목을 처리한 경우, A 화면으로 돌아갑니다.
