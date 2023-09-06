@@ -1,5 +1,6 @@
 package com.eatssu.android.data.service
 
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import retrofit2.Call
 import retrofit2.http.GET
@@ -11,5 +12,5 @@ interface MyPageService {
     fun getMyReviews(): Call<GetMyReviewResponseDto>
 
     @GET("mypage/info") //내 정보 모아보기
-    fun getMyInfo(): Call<GetMyReviewResponseDto>
+    fun getMyInfo(): Call<GetMyInfoResponseDto>
 }

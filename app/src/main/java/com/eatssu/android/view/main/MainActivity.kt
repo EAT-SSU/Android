@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,7 +17,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.adapter.CalendarAdapter
 import com.eatssu.android.adapter.OnItemClickListener
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.entity.CalendarData
+import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.view.mypage.ChangeNicknameActivity
 import com.eatssu.android.view.mypage.MyPageActivity
@@ -24,6 +30,9 @@ import com.eatssu.android.viewmodel.CalendarViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -41,6 +50,8 @@ class MainActivity : AppCompatActivity() {
     private var allViewHolders : List<CalendarAdapter.CalendarViewHolder> = mutableListOf()
 
 
+    private lateinit var nickname:String
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +60,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val intentNick = Intent(this, ChangeNicknameActivity::class.java)
-        // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
-        if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
-            startActivity(intentNick)
-        }
+
+        val myPageService =
+            RetrofitImpl.retrofit.create(MyPageService::class.java)
+        myPageService.getMyInfo().enqueue(object :
+            Callback<GetMyInfoResponseDto> {
+            override fun onResponse(call: Call<GetMyInfoResponseDto>, response: Response<GetMyInfoResponseDto>) {
+                if (response.isSuccessful) {
+                    Log.d("post", "onResponse 성공: " + response.body().toString());
+                    nickname = response.body()?.nickname.toString()
+                    //나중에 isNullOrBlank로 바꿀 것
+                    if (nickname=="KAKAO유저") {
+                        startActivity(intentNick)
+                    }}
+            }
+
+            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+                Log.d("post", "onFailure 에러: " + t.message.toString());
+            }
+        })
 
 
         supportActionBar?.title = "EAT-SSU"
