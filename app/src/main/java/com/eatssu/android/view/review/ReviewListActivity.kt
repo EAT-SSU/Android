@@ -26,6 +26,7 @@ class ReviewListActivity : AppCompatActivity() {
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
+//    private lateinit var itemIdList: ArrayList<Long>
     private lateinit var itemName: ArrayList<String>
 
 
@@ -51,6 +52,12 @@ class ReviewListActivity : AppCompatActivity() {
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
+//        itemIdList = intent.getLongArrayExtra("itemIdList")
+
+        val menuIdArray =intent.getLongArrayExtra("menuIdArray")
+        val menuNameArray =intent.getStringArrayListExtra("menuNameArray")
+
+
         Log.d("post", menuType + itemId)
 
         when (menuType) {
@@ -75,8 +82,13 @@ class ReviewListActivity : AppCompatActivity() {
                     val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
-                    intent.putStringArrayListExtra("itemName", itemName)
-                    Log.d("post",itemName.toString())
+
+                    intent.putStringArrayListExtra("menuNameArray", menuNameArray)
+                    intent.putExtra("menuIdArray",menuIdArray)
+
+                    if (menuNameArray != null) {
+                        Log.d("post", (menuNameArray+menuIdArray).toString())
+                    }
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }

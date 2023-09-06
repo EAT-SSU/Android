@@ -45,7 +45,7 @@
         tools:listitem="@layout/item_menu_pick" />
 
     <Button
-        android:id="@+id/btn_next_review2"
+        android:id="@+id/btn_next_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

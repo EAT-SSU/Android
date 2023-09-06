@@ -47,12 +47,27 @@ class WriteReviewActivity : AppCompatActivity() {
 
     private var comment: String? = null
 
+//    private lateinit var item:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityWriteReviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+        itemName = intent.getStringExtra("itemName").toString()
+        itemId = intent.getLongExtra("itemId",0)
+
+        Log.d("post","받았엉"+itemName+itemId)
+
+        // B 화면에서 현재 항목을 표시합니다.
+        binding.menu.text = itemName
+
+
+
+
 //        initRetrofit()
         // 외부 저장소에 대한 런타임 퍼미션 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -63,14 +78,14 @@ class WriteReviewActivity : AppCompatActivity() {
                 )
             }
         }
-
-        itemId = intent.getLongExtra("itemId", -1)
-        itemName = intent.getStringArrayListExtra("itemName").toString()
-        Log.d("post", itemName)
+//
+//        itemId = intent.getLongExtra("itemId", -1)
+//        itemName = intent.getStringArrayListExtra("itemName").toString()
+//        Log.d("post", itemName)
 
         comment = binding.etReview2Comment.text.toString()
 
-        binding.menu.text = itemName
+//        binding.menu.text = itemName
         //텍스트 리뷰
         binding.etReview2Comment.addTextChangedListener(object : TextWatcher {
 
@@ -102,6 +117,12 @@ class WriteReviewActivity : AppCompatActivity() {
                 UploadReviewViewModelFactory(repository)
             )[UploadReviewViewModel::class.java]
 
+        // B 화면에서 작업을 완료하고 A 화면으로 돌아가는 버튼 클릭 시, 결과를 설정하고 B 화면을 종료합니다.
+//        binding.btnNextReview2.setOnClickListener {
+//            val resultIntent = Intent()
+//            setResult(RESULT_OK, resultIntent)
+//            finish()
+//        }
 
         binding.btnNextReview2.setOnClickListener() {
 
@@ -125,14 +146,17 @@ class WriteReviewActivity : AppCompatActivity() {
                 } else { viewModel.postReview(itemId, compressedPartsList, reviewData) }
             }
 
-            viewModel.shouldStartActivity.observe(
-                this
-            ) {
-                val intent = Intent(this, ReviewListActivity::class.java)
-                intent.putExtra("itemId", itemId)
-                Log.d("post", itemId.toString())
-                finish()
-            }
+//            viewModel.shouldStartActivity.observe(
+//                this
+//            ) {
+//                val intent = Intent(this, ReviewListActivity::class.java)
+//                intent.putExtra("itemId", itemId)
+//                Log.d("post", itemId.toString())
+//                finish()
+//            }
+            val resultIntent = Intent()
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
     }
 
