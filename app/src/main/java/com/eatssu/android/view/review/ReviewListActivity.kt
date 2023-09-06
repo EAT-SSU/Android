@@ -30,6 +30,9 @@ class ReviewListActivity : AppCompatActivity() {
     private lateinit var itemName: ArrayList<String>
 
 
+    var adapter : ReviewAdapter? =null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -102,9 +105,9 @@ class ReviewListActivity : AppCompatActivity() {
 
         viewModel.reviewList.observe(this) { reviewList ->
             Log.d("post", reviewList.dataList.toString())
-            val listAdapter = ReviewAdapter(reviewList)
+            adapter = ReviewAdapter(reviewList)
             val recyclerView = binding.rvReview
-            recyclerView.adapter = listAdapter
+            recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.setHasFixedSize(true)
             recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
@@ -143,6 +146,25 @@ class ReviewListActivity : AppCompatActivity() {
             binding.progressBar4.progress = reviewInfo.reviewGradeCnt.fourCnt
             binding.progressBar5.progress = reviewInfo.reviewGradeCnt.fiveCnt
 
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        Log.d("post","resume")
+
+        // 다시 데이터를 로드하고 어댑터를 업데이트
+        when (menuType) {
+            "FIX" -> {
+                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
+                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
+            }
+            "CHANGE" -> {
+                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
+                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+            }
+            else -> {
+                Log.d("post", "잘못된 식당 정보입니다.")
+            }
         }
     }
 }
