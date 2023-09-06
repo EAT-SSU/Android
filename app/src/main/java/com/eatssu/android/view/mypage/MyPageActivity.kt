@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.view.login.SocialLoginActivity
 
 
 class MyPageActivity : BaseActivity() {
@@ -28,25 +30,25 @@ class MyPageActivity : BaseActivity() {
         binding.tvNickname.text = MySharedPreferences.getUserName(this)
         binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
 
-        binding.clNickname.setOnClickListener{
+        binding.clNickname.setOnClickListener {
             val intent = Intent(this, ChangeNicknameActivity::class.java)
             startActivity(intent)
             //finish()
         }
 
-        binding.clChPw.setOnClickListener{
+        binding.clChPw.setOnClickListener {
             val intent = Intent(this, ChangePwActivity::class.java)
             startActivity(intent)
 //            finish()
         }
 
-        binding.clReview.setOnClickListener{
+        binding.clReview.setOnClickListener {
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
         }
 
-        binding.tvLogout.setOnClickListener{
+        binding.tvLogout.setOnClickListener {
 
             // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
             val builder = AlertDialog.Builder(this)
@@ -55,6 +57,10 @@ class MyPageActivity : BaseActivity() {
                 .setPositiveButton("로그아웃",
                     DialogInterface.OnClickListener { dialog, id ->
                         //로그아웃
+                        MySharedPreferences.clearUser(this)
+                        Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        startActivity(intent)
                     })
                 .setNegativeButton("취소",
                     DialogInterface.OnClickListener { dialog, id ->
@@ -63,7 +69,7 @@ class MyPageActivity : BaseActivity() {
             builder.show()
         }
 
-        binding.tvSignout.setOnClickListener{
+        binding.tvSignout.setOnClickListener {
 
             // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
             val builder = AlertDialog.Builder(this)
@@ -72,6 +78,10 @@ class MyPageActivity : BaseActivity() {
                 .setPositiveButton("탈퇴하기",
                     DialogInterface.OnClickListener { dialog, id ->
                         //탈퇴처리
+                        MySharedPreferences.clearUser(this)
+                        Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        startActivity(intent)
                     })
                 .setNegativeButton("취소",
                     DialogInterface.OnClickListener { dialog, id ->
