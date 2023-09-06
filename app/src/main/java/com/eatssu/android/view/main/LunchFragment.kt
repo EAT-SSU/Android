@@ -45,7 +45,7 @@ class LunchFragment : Fragment() {
     private lateinit var reviewService: ReviewService
 
 
-    private var menuDate: String = "20230714"
+    private lateinit var menuDate: String
 
 
     override fun onCreateView(
