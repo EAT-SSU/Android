@@ -1,6 +1,5 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl.mRetrofit
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,27 +10,23 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
 import com.eatssu.android.repository.ReviewRepository
-import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.UploadReviewViewModel
-import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import com.eatssu.android.viewmodel.factory.UploadReviewViewModelFactory
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class WriteReviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWriteReviewBinding
@@ -122,7 +117,9 @@ class WriteReviewActivity : AppCompatActivity() {
                 // Make the file list nullable
                 if (compressedPartsList == null) {
                     viewModel.postReview(itemId, reviewData)
-                } else { viewModel.postReview(itemId, compressedPartsList, reviewData) }
+                } else {
+                    viewModel.postReview(itemId, compressedPartsList, reviewData)
+                }
             }
 
             viewModel.shouldStartActivity.observe(

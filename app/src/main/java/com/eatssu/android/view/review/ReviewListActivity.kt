@@ -1,6 +1,5 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
@@ -39,7 +39,7 @@ class ReviewListActivity : AppCompatActivity() {
         supportActionBar?.title = "리뷰"
 
 
-        reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
+        reviewService = retrofit.create(ReviewService::class.java)
 
         val repository = ReviewRepository(reviewService)
         viewModel =

@@ -20,6 +20,7 @@ import com.eatssu.android.view.infopage.*
 import com.eatssu.android.viewmodel.MenuViewModel
 import retrofit2.*
 import androidx.lifecycle.Observer
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.repository.MenuRepository
 import com.eatssu.android.repository.ReviewRepository
@@ -60,8 +61,8 @@ class LunchFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
-        reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
+        menuService = retrofit.create(MenuService::class.java)
+        reviewService = retrofit.create(ReviewService::class.java)
 
 
         val calendardate = this.arguments?.getString("calendardata")

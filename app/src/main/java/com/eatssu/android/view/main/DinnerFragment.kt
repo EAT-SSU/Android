@@ -35,7 +35,7 @@ class DinnerFragment : Fragment() {
     }
 
     fun init() {
-        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
+        menuService = retrofit.create(MenuService::class.java)
         setupClickListeners()
 
     }
