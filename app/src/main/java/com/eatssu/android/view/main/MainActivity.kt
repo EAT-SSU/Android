@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.adapter.CalendarAdapter
 import com.eatssu.android.adapter.OnItemClickListener
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.NetworkConnection
 import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.view.mypage.ChangeNicknameActivity
@@ -44,6 +45,9 @@ class MainActivity : AppCompatActivity() {
     private var calendarList = ArrayList<CalendarData>()
     private var allViewHolders : List<CalendarAdapter.CalendarViewHolder> = mutableListOf()
 
+    private val networkCheck: NetworkConnection by lazy {
+        NetworkConnection(this)
+    }
 
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
@@ -75,13 +79,13 @@ class MainActivity : AppCompatActivity() {
         // 메인 액티비티에서 Firebase Remote Config를 사용하여 업데이트 필요 여부 확인
         checkForUpdate()
 
+        networkCheck.register() // 네트워크 객체 등록
 
         val intentNick = Intent(this, ChangeNicknameActivity::class.java)
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
             startActivity(intentNick)
         }
-
 
         supportActionBar?.title = "EAT-SSU"
 
@@ -258,6 +262,11 @@ class MainActivity : AppCompatActivity() {
     private fun showForceUpdateDialog() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
         startActivity(intent)
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        networkCheck.unregister() // 네트워크 객체 해제
     }
 }
 
