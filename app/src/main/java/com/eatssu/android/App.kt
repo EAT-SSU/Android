@@ -16,6 +16,7 @@ class App: Application() {
         super.onCreate()
         token_prefs = TokenSharedPreferences(applicationContext)
 
+        val apiKey = BuildConfig.KAKAO_NATIVE_APP_KEY
 
         appContext = this
         KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)

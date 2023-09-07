@@ -63,7 +63,7 @@
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="$kakao_native_app_key" /> <!-- <meta-data -->
+            android:value="$app_key" /> <!-- <meta-data -->
         <!-- android:name="com.kakao.sdk.AppKey" -->
         <!-- android:value="${APP_KEY}" /> -->
 
