@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.adapter.CalendarAdapter
 import com.eatssu.android.adapter.OnItemClickListener
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.NetworkConnection
 import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.view.mypage.ChangeNicknameActivity
@@ -40,6 +41,9 @@ class MainActivity : AppCompatActivity() {
     private var calendarList = ArrayList<CalendarData>()
     private var allViewHolders : List<CalendarAdapter.CalendarViewHolder> = mutableListOf()
 
+    private val networkCheck: NetworkConnection by lazy {
+        NetworkConnection(this)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +52,13 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        networkCheck.register() // 네트워크 객체 등록
+
         val intentNick = Intent(this, ChangeNicknameActivity::class.java)
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
             startActivity(intentNick)
         }
-
 
         supportActionBar?.title = "EAT-SSU"
 
@@ -199,6 +204,13 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        networkCheck.unregister() // 네트워크 객체 해제
     }
 }
 
