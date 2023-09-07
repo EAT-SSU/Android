@@ -135,7 +135,7 @@ class SocialLoginActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
 
                 val service = RetrofitImpl.nonRetrofit.create(OauthService::class.java)
-                service.loginWithKakao(LoginWithKakaoRequestDto("test@gmail.com", "123092735403"))
+                service.loginWithKakao(LoginWithKakaoRequestDto(email, providerID))
                     .enqueue(object : Callback<TokenResponseDto> {
                         override fun onResponse(
                             call: Call<TokenResponseDto>,
