@@ -64,6 +64,8 @@ class ChangeNicknameActivity : BaseActivity() {
                             Toast.makeText(
                                 this@ChangeNicknameActivity, "닉네임 변경에 실패했습니다.\"", Toast.LENGTH_SHORT
                             ).show()
+                            Log.d("post", "onResponse 실패: " + response.body().toString());
+
 
                         }
                     }

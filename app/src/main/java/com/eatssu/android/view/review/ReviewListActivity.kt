@@ -3,10 +3,8 @@ package com.eatssu.android.view.review
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.MenuType
@@ -26,7 +24,11 @@ class ReviewListActivity : AppCompatActivity() {
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
-    private lateinit var itemName: ArrayList<String>
+//    private lateinit var itemIdList: ArrayList<Long>
+//    private lateinit var itemName: ArrayList<String>
+
+    private lateinit var itemName: String
+    var adapter: ReviewAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +53,17 @@ class ReviewListActivity : AppCompatActivity() {
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
+//        itemIdList = intent.getLongArrayExtra("itemIdList")
+        itemName = intent.getStringExtra("itemName").toString()
+//        intent.putExtra(
+//            "itemName", dataList.fixMenuInfoList[position].name
+//        )
+        Log.d("post", "고정메뉴${itemName}")
+
+        val menuIdArray = intent.getLongArrayExtra("menuIdArray")
+        val menuNameArray = intent.getStringArrayListExtra("menuNameArray")
+
+
         Log.d("post", menuType + itemId)
 
         when (menuType) {
@@ -62,8 +75,8 @@ class ReviewListActivity : AppCompatActivity() {
                     val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
-                    intent.putStringArrayListExtra("itemName", itemName)
-
+//                    intent.putStringArrayListExtra("itemName", itemName)
+                    intent.putExtra("itemName", itemName)
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
             }
@@ -75,7 +88,13 @@ class ReviewListActivity : AppCompatActivity() {
                     val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
-                    intent.putExtra("itemName", itemName)
+
+                    intent.putStringArrayListExtra("menuNameArray", menuNameArray)
+                    intent.putExtra("menuIdArray", menuIdArray)
+
+                    if (menuNameArray != null) {
+                        Log.d("post", (menuNameArray + menuIdArray).toString())
+                    }
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
@@ -89,19 +108,20 @@ class ReviewListActivity : AppCompatActivity() {
 
         viewModel.reviewList.observe(this) { reviewList ->
             Log.d("post", reviewList.dataList.toString())
-            val listAdapter = ReviewAdapter(reviewList)
+            adapter = ReviewAdapter(reviewList)
             val recyclerView = binding.rvReview
-            recyclerView.adapter = listAdapter
+            recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.setHasFixedSize(true)
-            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+            //구분선 주석처리
+//            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
         }
 
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
 
             Log.d("post", reviewInfo.menuName.javaClass.name)
-            itemName = reviewInfo.menuName as ArrayList<String>
+//            itemName = reviewInfo.menuName as ArrayList<String>
 
             binding.tvMenu.text = reviewInfo.menuName.toString()
 
@@ -109,10 +129,10 @@ class ReviewListActivity : AppCompatActivity() {
                 String.format("%.1f", reviewInfo.mainGrade.toFloat())
                     .toFloat().toString()
             binding.tvGradeTaste.text =
-                String.format("%.1f", reviewInfo.tasteGrade!!.toFloat())
+                String.format("%.1f", reviewInfo.tasteGrade.toFloat())
                     .toFloat().toString()
             binding.tvGradeAmount.text =
-                String.format("%.1f", reviewInfo.amountGrade!!.toFloat())
+                String.format("%.1f", reviewInfo.amountGrade.toFloat())
                     .toFloat().toString()
             binding.tvReviewNumCount.text = reviewInfo.totalReviewCount.toString()
 
@@ -130,6 +150,26 @@ class ReviewListActivity : AppCompatActivity() {
             binding.progressBar4.progress = reviewInfo.reviewGradeCnt.fourCnt
             binding.progressBar5.progress = reviewInfo.reviewGradeCnt.fiveCnt
 
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("post", "resume")
+
+        // 다시 데이터를 로드하고 어댑터를 업데이트
+        when (menuType) {
+            "FIX" -> {
+                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
+                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
+            }
+            "CHANGE" -> {
+                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
+                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+            }
+            else -> {
+                Log.d("post", "잘못된 식당 정보입니다.")
+            }
         }
     }
 }

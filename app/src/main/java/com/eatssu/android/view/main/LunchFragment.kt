@@ -46,7 +46,7 @@ class LunchFragment : Fragment() {
     private lateinit var reviewService: ReviewService
 
 
-    private var menuDate: String = "20230714"
+    private lateinit var menuDate: String
 
 
     override fun onCreateView(
@@ -89,31 +89,51 @@ class LunchFragment : Fragment() {
             //숭실도담
             viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
             viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
-                val dodamAdapter = TodayMealAdapter(result)
-                val recyclerView = binding.rvLunchDodam
-                recyclerView.adapter = dodamAdapter
-                recyclerView.layoutManager = LinearLayoutManager(context)
-                recyclerView.setHasFixedSize(true)
+                if (result.toString() != "[]") {
+                    val dodamAdapter = TodayMealAdapter(result)
+                    val recyclerView = binding.rvDodam
+                    recyclerView.adapter = dodamAdapter
+                    recyclerView.layoutManager = LinearLayoutManager(context)
+                    recyclerView.setHasFixedSize(true)
+                    recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
+                    Log.d("post","도담안널"+result)
+
+                }
+                else{
+                    Log.d("post","도담널"+result.toString())
+                    binding.llDodam.visibility = View.GONE
+                }
             })
 
             //기숙사식당
             viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
-                val dodamAdapter = TodayMealAdapter(result)
-                val recyclerView = binding.rvLunchDormitory
-                recyclerView.adapter = dodamAdapter
-                recyclerView.layoutManager = LinearLayoutManager(context)
-                recyclerView.setHasFixedSize(true)
+                if (result.toString()!= "[]") {
+                    val dodamAdapter = TodayMealAdapter(result)
+                    val recyclerView = binding.rvDormitory
+                    recyclerView.adapter = dodamAdapter
+                    recyclerView.layoutManager = LinearLayoutManager(context)
+                    recyclerView.setHasFixedSize(true)
+                    recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
+                    Log.d("post","기숙사 데이터 있음"+result.toString())
+                } else {
+                    binding.llGisik.visibility = View.GONE
+                }
             })
 
             //학생식당
             viewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
             viewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
-                val dodamAdapter = TodayMealAdapter(result)
-                val recyclerView = binding.rvLunchHaksik
-                recyclerView.adapter = dodamAdapter
-                recyclerView.layoutManager = LinearLayoutManager(context)
-                recyclerView.setHasFixedSize(true)
+                if (result.toString() != "[]") {
+                    val dodamAdapter = TodayMealAdapter(result)
+                    val recyclerView = binding.rvHaksik
+                    recyclerView.adapter = dodamAdapter
+                    recyclerView.layoutManager = LinearLayoutManager(context)
+                    recyclerView.setHasFixedSize(true)
+                    recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
+                } else {
+                    binding.llHaksik.visibility = View.GONE
+                }
             })
         })
 
@@ -121,7 +141,7 @@ class LunchFragment : Fragment() {
         viewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
         viewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
             val kitchenAdapter = FixedMenuAdapter(result)
-            val recyclerView = binding.rvLunchKitchen
+            val recyclerView = binding.rvKitchen
             recyclerView.adapter = kitchenAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
@@ -131,7 +151,7 @@ class LunchFragment : Fragment() {
         viewModel.loadFixedMenu(Restaurant.FOOD_COURT)
         viewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
             val foodAdapter = FixedMenuAdapter(result)
-            val recyclerView = binding.rvLunchFood
+            val recyclerView = binding.rvFood
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
@@ -141,7 +161,7 @@ class LunchFragment : Fragment() {
         viewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
         viewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
             val foodAdapter = FixedMenuAdapter(result)
-            val recyclerView = binding.rvLunchSnack
+            val recyclerView = binding.rvSnack
             recyclerView.adapter = foodAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)

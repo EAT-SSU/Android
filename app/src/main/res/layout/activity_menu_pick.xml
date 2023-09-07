@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:text="식사는 맛있게 하셨나요?"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/included" />
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="어떤 음식에 대한 리뷰인가요?"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +47,7 @@
         tools:listitem="@layout/item_menu_pick" />
 
     <Button
-        android:id="@+id/btn_next_review2"
+        android:id="@+id/btn_next_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
