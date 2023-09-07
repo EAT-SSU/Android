@@ -1,18 +1,14 @@
 package com.eatssu.android.adapter
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
-import com.eatssu.android.viewmodel.MenuIdViewModel
 
 class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
     RecyclerView.Adapter<TodayMealAdapter.ViewHolder>() {
@@ -63,12 +59,27 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
                 "menuType", MenuType.CHANGE.toString()
             )
 
-            Log.d("adaptermenu", "$dataList[position].mealId")
-            val menuViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[MenuIdViewModel::class.java]
-            menuViewModel.setData(dataList[position].mealId.toString())
+//            val changeMenuInfoList =dataList[position].changeMenuInfoList[position].menuId
+            val menuIds = mutableListOf<Long>()
+            val menuNames = mutableListOf<String>()
+
+            for (item in dataList) {
+                for (changeMenuInfo in item.changeMenuInfoList) {
+                    menuIds.add(changeMenuInfo.menuId)
+                    menuNames.add(changeMenuInfo.name)
+                }
+            }
+
+            val menuIdArray = menuIds.toLongArray()
+            val menuNameArray = menuNames.toList()?.let { ArrayList(it) }
+
+//            val arrayList: ArrayList<Long>? = longArray?.toList()?.let { ArrayList(it) }
+
+
+            intent.putExtra("menuIdArray",menuIdArray)
+            intent.putStringArrayListExtra("menuNameArray",menuNameArray)
 
             ContextCompat.startActivity(holder.itemView.context, intent, null)
-
         }
     }
 

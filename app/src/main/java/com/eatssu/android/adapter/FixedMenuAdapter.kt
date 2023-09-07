@@ -1,6 +1,7 @@
 package com.eatssu.android.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -46,6 +47,10 @@ class FixedMenuAdapter(
                 "itemId", dataList.fixMenuInfoList[position].menuId
             )
             intent.putExtra(
+                "itemName", dataList.fixMenuInfoList[position].name
+            )
+            Log.d("post","고정메뉴${dataList.fixMenuInfoList[position].name}")
+            intent.putExtra(
                 "menuType", MenuType.FIX.toString()
             )
 
@@ -53,21 +58,6 @@ class FixedMenuAdapter(
             //menuViewModel.setData(dataList.fixMenuInfoList[position].menuId.toString())
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
-
-
-        //intent 미사용
-        /*
-        val menuId = dataList.fixMenuInfoList[position].menuId
-
-        holder.itemView.setOnClickListener {
-            viewModel.setSelectedItemId(menuId)
-            Log.d("post",viewModel.getSelectedItemId().toString())
-            viewModel.setSelectedMenuType(MenuType.FIX)
-            Log.d("post", "FIX")
-
-            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-            ContextCompat.startActivity(holder.itemView.context, intent, null)
-        }*/
     }
 
     override fun getItemCount(): Int = dataList.fixMenuInfoList.size

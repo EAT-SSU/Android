@@ -1,74 +1,60 @@
 package com.eatssu.android.adapter
 
-import android.R
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuPickBinding
-import com.eatssu.android.data.entity.MenuPickItem
 
+class MenuPickAdapter(
+    private val menuNameArray: ArrayList<String>?,
+    private val menuIdArray: LongArray?
+) : RecyclerView.Adapter<MenuPickAdapter.ViewHolder>() {
 
-class MenuPickAdapter (private val context: Context, wordsItemList: List<MenuPickItem>) :
-    RecyclerView.Adapter<MenuPickAdapter.ViewHolder>() {
-    /* 어댑터에 필요한 변수들 */
-    private var binding: ItemMenuPickBinding? = null
-    private val wordsItemList: List<MenuPickItem>
+    private val checkedItems: ArrayList<Pair<String, Long>> = ArrayList()
 
-    /* 리스너 인터페이스 구현부 */
-    interface CheckBoxClickListener {
-        fun onClickCheckBox(flag: Int, pos: Int)
-    }
+    inner class ViewHolder(private val binding: ItemMenuPickBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    /* 체크박스 리스너 */
-    private var mCheckBoxClickListener: CheckBoxClickListener? = null
+        private val checkBox: CheckBox = binding.checkBox
 
-    /* 어댑터 생성자 */
-    init {
-        this.wordsItemList = wordsItemList
+        fun bind(position: Int) {
+            binding.tvMenuName.text = menuNameArray?.get(position)
+            checkBox.isChecked = checkedItems.contains(getItem(position))
+            checkBox.setOnClickListener { onCheckBoxClick(position) }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = ItemMenuPickBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return ViewHolder(binding!!.getRoot())
+        val binding =
+            ItemMenuPickBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val wordsItem: MenuPickItem = wordsItemList[position]
-        binding?.tvMenuName!!.text = wordsItem.menuName
-
-
-        /* 체크박스 리스너 */holder.checkBox.setOnClickListener { v: View? ->
-            if (holder.checkBox.isChecked) {
-                // 체크가 되어 있음
-                mCheckBoxClickListener!!.onClickCheckBox(1, position)
-            } else {
-                // 체크가 되어있지 않음
-                mCheckBoxClickListener!!.onClickCheckBox(0, position)
-            }
-        }
+        holder.bind(position)
     }
 
     override fun getItemCount(): Int {
-        return wordsItemList.size
+        return menuNameArray?.size ?: 0
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val checkBox: CheckBox
+    fun getItem(position: Int): Pair<String, Long> {
+        val menuName = menuNameArray?.get(position) ?: ""
+        val menuId = menuIdArray?.get(position) ?: 0L
+        return Pair(menuName, menuId)
+    }
 
-        init {
-            checkBox = itemView.findViewById(R.id.checkbox)
+    private fun onCheckBoxClick(position: Int) {
+        val item = getItem(position)
+        if (checkedItems.contains(item)) {
+            checkedItems.remove(item)
+        } else {
+            checkedItems.add(item)
         }
     }
 
-    /* 리스너 메소드 */
-    fun setOnCheckBoxClickListener(clickCheckBoxListener: CheckBoxClickListener?) {
-        mCheckBoxClickListener = clickCheckBoxListener
+    fun sendItem(): ArrayList<Pair<String, Long>> {
+        return checkedItems
     }
 }

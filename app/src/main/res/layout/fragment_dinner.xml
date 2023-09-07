@@ -136,112 +136,107 @@
 
                 <!--                </LinearLayout>-->
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_marginLeft="15dp"
-                                    android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
 
-                                    <ImageButton
-                                        android:id="@+id/btn_dodam_info"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                    <ImageButton
+                        android:id="@+id/btn_dodam_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-                                        android:layout_marginTop="9dp"
-                                        android:background="#00000000"
-                                        android:contentDescription="TODO"
-                                        android:gravity="left"
-                                        android:scaleType="fitCenter"
-                                        android:src="@drawable/ic_location" />
+                        android:layout_marginTop="9dp"
+                        android:background="#00000000"
+                        android:contentDescription="TODO"
+                        android:gravity="left"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_location" />
 
-                                    <TextView
-                                        android:id="@+id/breakfast_tv_dodam"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="5dp"
-                                        android:layout_marginTop="8dp"
-                                        android:layout_weight="5"
-                                        android:text="@string/dodam"
-                                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                        android:textColor="@color/black"
-                                        android:textSize="20dp"
-                                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_dodam"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="5"
+                        android:text="@string/dodam"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
-                                </LinearLayout>
+                </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="15dp"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginRight="15dp"
-                                    android:background="@drawable/shape_round_corners"
-                                    android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_round_corners"
+                    android:orientation="vertical">
 
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="horizontal"
-                                        android:weightSum="10">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
 
-                                        <TextView
-                                            android:id="@+id/tv_haksik_today2"
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginTop="8dp"
-                                            android:layout_weight="6"
-                                            android:text="@string/today_menu"
-                                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                            android:textColor="@color/black"
-                                            android:textSize="14dp"
-                                            android:textStyle="bold" />
-
-
-                                        <TextView
-                                            android:id="@+id/tv_dodam_price"
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginTop="7dp"
-                                            android:layout_weight="2"
-                                            android:gravity="center"
-                                            android:text="@string/price"
-                                            android:textColor="@color/black"
-                                            android:textSize="15dp" />
+                        <TextView
+                            android:id="@+id/tv_dodam_today"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="6"
+                            android:text="@string/today_menu"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            android:textStyle="bold" />
 
 
-                                        <TextView
-                                            android:id="@+id/tv_dodam_rate"
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginTop="7dp"
-                                            android:layout_weight="2"
-                                            android:gravity="center"
-                                            android:text="@string/rate"
-                                            android:textColor="@color/black"
-                                            android:textSize="15dp" />
-                                    </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_dodam_price"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="7dp"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/price"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
 
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="3dp"
-                                        android:layout_marginTop="5dp"
-                                        android:background="@color/main">
 
-                                    </View>
+                        <TextView
+                            android:id="@+id/tv_dodam_rate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="7dp"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/rate"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+                    </LinearLayout>
 
-                                    <TextView
-                                        android:id="@+id/rv_breakfast_dodam"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="10dp"
-                                        android:text="학식은 아침이 제공되지 않습니다!"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintTop_toBottomOf="parent">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/main"/>
 
-                                    </TextView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_dodam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent"/>
 
-                                </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -332,20 +327,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_marginTop="5dp"
-                        android:background="@color/main">
+                        android:background="@color/main"/>
 
-                    </View>
-
-                    <TextView
-                        android:id="@+id/rv_breakfast_gisik"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_gisik"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="학식은 아침이 제공되지 않습니다!"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent">
-
-                    </TextView>
+                        app:layout_constraintTop_toBottomOf="parent"/>
                 </LinearLayout>
 
                 <!--                <LinearLayout-->
