@@ -1,5 +1,6 @@
 package com.eatssu.android.view.main
 
+import android.content.DialogInterface
 import com.eatssu.android.R
 import android.content.Intent
 import android.os.Build
@@ -10,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -24,6 +26,8 @@ import com.eatssu.android.view.mypage.MyPageActivity
 import com.eatssu.android.viewmodel.CalendarViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.prolificinteractive.materialcalendarview.*
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -45,12 +49,35 @@ class MainActivity : AppCompatActivity() {
         NetworkConnection(this)
     }
 
+    private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
+        FirebaseRemoteConfig.getInstance()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        // Firebase Remote Config 초기화 설정
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(3600) // 캐시된 값을 1시간마다 업데이트
+            .build()
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+
+        // 기본값 설정 (강제 업데이트 여부와 버전 정보)
+        val defaultValues: Map<String, Any> = mapOf(
+            "force_update_required" to false,
+            "latest_app_version" to "1.0.0"
+        )
+        firebaseRemoteConfig.setDefaultsAsync(defaultValues)
+
+        // Firebase Remote Config 데이터 가져오기
+        fetchRemoteConfig()
+
+        // 메인 액티비티에서 Firebase Remote Config를 사용하여 업데이트 필요 여부 확인
+        checkForUpdate()
 
         networkCheck.register() // 네트워크 객체 등록
 
@@ -206,6 +233,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun fetchRemoteConfig() {
+        firebaseRemoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Remote Config 데이터 가져오기 성공
+                    // 필요한 경우 업데이트 필요 여부 확인을 수행
+                    checkForUpdate()
+                }
+            }
+    }
+
+    private fun checkForUpdate() {
+        val forceUpdateRequired = firebaseRemoteConfig.getBoolean("force_update")
+        val latestAppVersion = firebaseRemoteConfig.getString("app_version")
+
+        val currentAppVersion = BuildConfig.VERSION_NAME
+
+        if (forceUpdateRequired) {
+            Log.d("post",forceUpdateRequired.toString())
+            Log.d("post",latestAppVersion)
+            Log.d("post",currentAppVersion)
+            // 강제 업데이트 다이얼로그를 띄우거나 업데이트 화면으로 이동
+            showForceUpdateDialog()
+        }
+    }
+
+    private fun showForceUpdateDialog() {
+        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
+        startActivity(intent)
 
     override fun onDestroy() {
         super.onDestroy()

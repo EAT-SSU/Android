@@ -6,6 +6,6 @@ data class LoginWithKakaoRequestDto (
     @SerializedName("email")
     val email: String,
 
-    @SerializedName("pwd")
+    @SerializedName("providerId")
     val providerId: String
 )
