@@ -125,9 +125,10 @@ class WriteReviewActivity : AppCompatActivity() {
     }
 
     private fun deleteImage() {
+        Log.d("post",selectedImagePath.toString())
         if (selectedImagePath != null) {
             val imageFile = File(selectedImagePath)
-            if (imageFile.exists() && imageFile.delete()) {
+            if (imageFile.exists()) {
                 Toast.makeText(this, "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
                 binding.ivImage.setImageDrawable(null)
                 selectedImagePath = null
@@ -175,7 +176,7 @@ class WriteReviewActivity : AppCompatActivity() {
             if (filePath != null) {
                 val file = File(filePath)
                 val compressedFile = Compressor.compress(this@WriteReviewActivity, file) {
-                    quality(50)
+                    quality(80)
                 }
                 val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
                 val part = MultipartBody.Part.createFormData(
