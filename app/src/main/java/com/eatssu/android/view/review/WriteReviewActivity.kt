@@ -47,6 +47,8 @@ class WriteReviewActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         itemName = intent.getStringExtra("itemName").toString()
+        Log.d("post","고정메뉴${itemName}")
+
         itemId = intent.getLongExtra("itemId", 0)
 
         // 현재 메뉴명을 표시합니다.

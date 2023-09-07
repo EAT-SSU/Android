@@ -27,10 +27,10 @@ class ReviewListActivity : AppCompatActivity() {
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
 //    private lateinit var itemIdList: ArrayList<Long>
-    private lateinit var itemName: ArrayList<String>
+//    private lateinit var itemName: ArrayList<String>
 
-
-    var adapter : ReviewAdapter? =null
+    private lateinit var itemName: String
+    var adapter: ReviewAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,9 +56,14 @@ class ReviewListActivity : AppCompatActivity() {
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
 //        itemIdList = intent.getLongArrayExtra("itemIdList")
+        itemName = intent.getStringExtra("itemName").toString()
+//        intent.putExtra(
+//            "itemName", dataList.fixMenuInfoList[position].name
+//        )
+        Log.d("post", "고정메뉴${itemName}")
 
-        val menuIdArray =intent.getLongArrayExtra("menuIdArray")
-        val menuNameArray =intent.getStringArrayListExtra("menuNameArray")
+        val menuIdArray = intent.getLongArrayExtra("menuIdArray")
+        val menuNameArray = intent.getStringArrayListExtra("menuNameArray")
 
 
         Log.d("post", menuType + itemId)
@@ -72,8 +77,8 @@ class ReviewListActivity : AppCompatActivity() {
                     val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
-                    intent.putStringArrayListExtra("itemName", itemName)
-
+//                    intent.putStringArrayListExtra("itemName", itemName)
+                    intent.putExtra("itemName", itemName)
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
             }
@@ -87,10 +92,10 @@ class ReviewListActivity : AppCompatActivity() {
                     intent.putExtra("menuType", menuType)
 
                     intent.putStringArrayListExtra("menuNameArray", menuNameArray)
-                    intent.putExtra("menuIdArray",menuIdArray)
+                    intent.putExtra("menuIdArray", menuIdArray)
 
                     if (menuNameArray != null) {
-                        Log.d("post", (menuNameArray+menuIdArray).toString())
+                        Log.d("post", (menuNameArray + menuIdArray).toString())
                     }
 
                     startActivity(intent)  // 화면 전환을 시켜줌
@@ -110,14 +115,15 @@ class ReviewListActivity : AppCompatActivity() {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.setHasFixedSize(true)
-            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+            //구분선 주석처리
+//            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
         }
 
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
 
             Log.d("post", reviewInfo.menuName.javaClass.name)
-            itemName = reviewInfo.menuName as ArrayList<String>
+//            itemName = reviewInfo.menuName as ArrayList<String>
 
             binding.tvMenu.text = reviewInfo.menuName.toString()
 
@@ -148,9 +154,10 @@ class ReviewListActivity : AppCompatActivity() {
 
         }
     }
+
     override fun onResume() {
         super.onResume()
-        Log.d("post","resume")
+        Log.d("post", "resume")
 
         // 다시 데이터를 로드하고 어댑터를 업데이트
         when (menuType) {

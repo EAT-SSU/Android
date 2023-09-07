@@ -1,6 +1,7 @@
 package com.eatssu.android.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -45,6 +46,7 @@ class FixedMenuAdapter(
             intent.putExtra(
                 "itemName", dataList.fixMenuInfoList[position].name
             )
+            Log.d("post","고정메뉴${dataList.fixMenuInfoList[position].name}")
             intent.putExtra(
                 "menuType", MenuType.FIX.toString()
             )
