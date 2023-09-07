@@ -39,7 +39,7 @@ class WriteReviewActivity : AppCompatActivity() {
     private var selectedImagePath: String? = null
     private var itemId: Long = 0
     private lateinit var itemName: String
-    private var comment: String? = null
+    private var comment: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
