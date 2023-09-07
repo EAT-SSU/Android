@@ -44,55 +44,6 @@ class OthersReviewDialogActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.btnReviewFix.setOnClickListener {
-            val intent = Intent(this, FixMenuActivity::class.java)
-            intent.putExtra("reviewId", reviewId)
-            intent.putExtra("menu", menu)
-            startActivity(intent)
-            finish()
-        }
 
-        binding.btnReviewDelete.setOnClickListener {
-
-            AlertDialog.Builder(this).apply {
-                setTitle("리뷰 삭제")
-                setMessage("작성한 리뷰를 삭제하시겠습니까?")
-                setNegativeButton("취소", DialogInterface.OnClickListener{ dialog, which ->
-                    Toast.makeText(this@OthersReviewDialogActivity, "리뷰 삭제가 취소되었습니다", Toast.LENGTH_SHORT).show()
-                })
-                setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
-                    val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
-                    lifecycleScope.launch {
-                        try {
-                            val response = withContext(Dispatchers.IO) {
-                                service.delReview(reviewId).execute()
-                            }
-                            if (response.isSuccessful) {
-                                // 정상적으로 통신이 성공한 경우
-                                Log.d("post", "onResponse 성공: " + response.body().toString())
-                                Toast.makeText(
-                                    this@OthersReviewDialogActivity, "삭제하기가 완료되었습니다.", Toast.LENGTH_SHORT
-                                ).show()
-                                finish()
-                            } else {
-                                // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                                Log.d(
-                                    "post",
-                                    "onResponse 실패 write" + response.code()
-                                )
-                            }
-                        } catch (e: Exception) {
-                            // 통신 중 예외가 발생한 경우
-                            Log.d("post", "통신 실패: ${e.message}")
-                            Toast.makeText(
-                                this@OthersReviewDialogActivity, "리뷰를 삭제하지 못했습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                })
-                create()
-                show()
-            }
-        }
     }
 }

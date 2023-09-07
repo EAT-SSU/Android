@@ -12,7 +12,6 @@ import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
 import com.eatssu.android.viewmodel.MenuIdViewModel
-import com.eatssu.android.viewmodel.ReviewListViewModel
 
 
 class FixedMenuAdapter(
@@ -50,8 +49,8 @@ class FixedMenuAdapter(
                 "menuType", MenuType.FIX.toString()
             )
 
-            val menuViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[MenuIdViewModel::class.java]
-            menuViewModel.setData(dataList.fixMenuInfoList[position].menuId.toString())
+            //val menuViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[MenuIdViewModel::class.java]
+            //menuViewModel.setData(dataList.fixMenuInfoList[position].menuId.toString())
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
 
