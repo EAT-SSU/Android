@@ -66,10 +66,10 @@
             android:value="$kakao_native_app_key" /> <!-- <meta-data -->
         <!-- android:name="com.kakao.sdk.AppKey" -->
         <!-- android:value="${APP_KEY}" /> -->
-        <activity
-            android:name=".view.login.LoginActivity"
-            android:exported="true">
 
+        <activity
+            android:name=".view.main.ForceUpdateDialogActivity"
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -97,15 +97,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".view.login.SignUpActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
 
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
         <activity
             android:name=".view.mypage.ChangePwActivity"
             android:exported="true"

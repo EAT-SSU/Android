@@ -7,7 +7,6 @@ plugins {
 
  Properties properties = new Properties()
  properties.load(project.rootProject.file('local.properties').newDataInputStream())
-// def APP_KEY = properties.getProperty('APP_KEY')
  def BASE_URL = properties.getProperty('BASE_URL')
  def KAKAO_NATIVE_APP_KEY = properties.getProperty('KAKAO_NATIVE_APP_KEY')
  def KAKAO_REDIRECTION_SCHEME = properties.getProperty('KAKAO_REDIRECTION_SCHEME')
@@ -28,9 +27,6 @@ android {
         versionName "1.0"
 
 
-
-//        buildConfigField("String", "APP_KEY", APP_KEY)
-//        manifestPlaceholders = [APP_KEY: APP_KEY]
 
         buildConfigField("String", "BASE_URL", BASE_URL)
         manifestPlaceholders = [BASE_URL: BASE_URL]
@@ -82,6 +78,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'com.google.android.datatransport:transport-runtime:3.1.2'
     implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation 'com.google.firebase:firebase-config-ktx:21.4.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

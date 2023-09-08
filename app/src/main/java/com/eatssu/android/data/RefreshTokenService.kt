@@ -1,7 +1,7 @@
 package com.eatssu.android.data
 
-import RetrofitImpl.retrofit
 import com.eatssu.android.App
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.UserService
 
 object RefreshTokenService {
