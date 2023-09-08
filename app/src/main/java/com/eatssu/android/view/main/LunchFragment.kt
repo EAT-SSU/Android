@@ -100,8 +100,8 @@ class LunchFragment : Fragment() {
 
                 //}
                 //else{
-                    Log.d("post","도담널"+result.toString())
-                    binding.llDodam.visibility = View.GONE
+                //    Log.d("post","도담널"+result.toString())
+                //    binding.llDodam.visibility = View.GONE
                 //}
             })
 
