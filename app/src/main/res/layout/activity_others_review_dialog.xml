@@ -17,7 +17,7 @@
         tools:ignore="MissingConstraints">
     </TextView>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/btn_review_fix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:fontFamily="@font/noto_black"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/btn_review_fix">
-    </TextView>
+    </TextView>-->
 
 
 

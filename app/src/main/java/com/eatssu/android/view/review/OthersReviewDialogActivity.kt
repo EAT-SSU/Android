@@ -1,6 +1,5 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

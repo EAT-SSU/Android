@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +29,8 @@ class MyReviewDialogActivity : AppCompatActivity() {
 
         reviewId = intent.getLongExtra("reviewId", -1L)
         menu = intent.getStringExtra("menu").toString()
+
+        Log.d("reviewId", reviewId.toString())
 
         binding.btnReviewFix.setOnClickListener {
             val intent = Intent(this, FixMenuActivity::class.java)
@@ -77,6 +80,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
                 })
                 create()
                 show()
+                finish()
             }
         }
     }

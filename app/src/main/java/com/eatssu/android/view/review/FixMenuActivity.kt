@@ -1,12 +1,12 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl.mRetrofit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
+import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.view.main.MainActivity

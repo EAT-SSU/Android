@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tv_nickname_change_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_nickname"
             android:text=">"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -63,6 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="연결된 계정"
+        android:fontFamily="@font/noto_regular"
         app:layout_constraintStart_toStartOf="@id/cl_nickname"
         app:layout_constraintTop_toBottomOf="@+id/cl_nickname"
         tools:ignore="NotSibling" />
@@ -72,25 +73,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="카카오"
+        android:fontFamily="@font/noto_regular"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_account"
         app:layout_constraintTop_toBottomOf="@+id/cl_nickname"
         tools:ignore="NotSibling" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_kakaotalk_edge"
-        android:layout_marginLeft="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_account_type"
-        app:layout_constraintTop_toBottomOf="@+id/cl_nickname"
-        tools:ignore="NotSibling">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_kakaotalk_edge"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_account_type"
+            tools:ignore="NotSibling">
 
-    </ImageView>
+        </ImageView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

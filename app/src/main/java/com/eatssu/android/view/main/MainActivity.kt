@@ -288,10 +288,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-        fun onDestroy() {
+        override fun onDestroy() {
             super.onDestroy()
 
             networkCheck.unregister() // 네트워크 객체 해제
         }
     }
-}
