@@ -58,6 +58,8 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
             intent.putExtra(
                 "menuType", MenuType.CHANGE.toString()
             )
+            intent.putStringArrayListExtra("itemName", dataList[position].changeMenuInfoList as java.util.ArrayList<String>)
+
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
