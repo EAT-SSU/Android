@@ -107,7 +107,7 @@ class BreakfastFragment : Fragment() {
             //기숙사식당
             viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
-                if (result.toString() != "[]") {
+                //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvGisik
                     recyclerView.adapter = dodamAdapter
@@ -115,9 +115,9 @@ class BreakfastFragment : Fragment() {
                     recyclerView.setHasFixedSize(true)
                     recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
                     Log.d("post", "기숙사 데이터 있음" + result.toString())
-                } else {
-                    binding.llGisik.visibility = View.GONE
-                }
+                //} else {
+                //    binding.llGisik.visibility = View.GONE
+                //}
             })
         })
 

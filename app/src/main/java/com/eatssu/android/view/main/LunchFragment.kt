@@ -89,7 +89,7 @@ class LunchFragment : Fragment() {
             //숭실도담
             viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
             viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
-                if (result.toString() != "[]") {
+                //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvDodam
                     recyclerView.adapter = dodamAdapter
@@ -98,17 +98,17 @@ class LunchFragment : Fragment() {
                     recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
                     Log.d("post","도담안널"+result)
 
-                }
-                else{
+                //}
+                //else{
                     Log.d("post","도담널"+result.toString())
                     binding.llDodam.visibility = View.GONE
-                }
+                //}
             })
 
             //기숙사식당
             viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
-                if (result.toString()!= "[]") {
+                //if (result.toString()!= "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvDormitory
                     recyclerView.adapter = dodamAdapter
@@ -116,24 +116,24 @@ class LunchFragment : Fragment() {
                     recyclerView.setHasFixedSize(true)
                     recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
                     Log.d("post","기숙사 데이터 있음"+result.toString())
-                } else {
-                    binding.llGisik.visibility = View.GONE
-                }
+                //} else {
+                 //   binding.llGisik.visibility = View.GONE
+                //}
             })
 
             //학생식당
             viewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
             viewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
-                if (result.toString() != "[]") {
+            //    if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvHaksik
                     recyclerView.adapter = dodamAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context)
                     recyclerView.setHasFixedSize(true)
                     recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
-                } else {
-                    binding.llHaksik.visibility = View.GONE
-                }
+            //    } else {
+            //        binding.llHaksik.visibility = View.GONE
+            //    }
             })
         })
 
