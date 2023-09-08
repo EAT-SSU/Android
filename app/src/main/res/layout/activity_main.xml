@@ -29,10 +29,9 @@
         android:layout_gravity="center"
         android:layout_marginEnd="30dp"
         android:background="@android:color/transparent"
-        android:backgroundTint="@color/white"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_setting"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_eat_ssu"
+        android:src="@drawable/ic_dot"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/tv_eat_ssu"
         app:layout_constraintTop_toTopOf="@+id/tv_eat_ssu" />
 

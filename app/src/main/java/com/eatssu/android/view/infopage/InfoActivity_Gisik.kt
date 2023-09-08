@@ -1,6 +1,5 @@
 package com.eatssu.android.view.infopage
 
-import RetrofitImpl
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +29,7 @@ class InfoActivity_Gisik : AppCompatActivity(){
         viewBinding = ActivityInfoGisikBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        infoService = RetrofitImpl.retrofit.create(InfoService::class.java)
+        infoService = retrofit.create(InfoService::class.java)
 
         val mapview = MapView(this);
         val mapViewContainer = viewBinding.btnMap

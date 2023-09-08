@@ -12,6 +12,7 @@ import com.eatssu.android.data.model.request.ChangePwRequestDto
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityChangePwBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,7 +65,7 @@ class ChangePwActivity : BaseActivity() {
             pwDoubleCheck()
 
             val userService =
-                RetrofitImpl.retrofit.create(UserService::class.java)
+                retrofit.create(UserService::class.java)
             userService.changePw(ChangePwRequestDto(chPW)).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {

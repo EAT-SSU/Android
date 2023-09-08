@@ -1,6 +1,5 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl.mRetrofit
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,10 +15,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
 import com.eatssu.android.repository.ReviewRepository
+import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.UploadReviewViewModel
+import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import com.eatssu.android.viewmodel.factory.UploadReviewViewModelFactory
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -32,11 +34,14 @@ import java.io.File
 
 class WriteReviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWriteReviewBinding
+
     private lateinit var viewModel: UploadReviewViewModel
     private lateinit var reviewService: ReviewService
 
     private val PERMISSION_REQUEST_CODE = 1
+
     private var selectedImagePath: String? = null
+
     private var itemId: Long = 0
     private lateinit var itemName: String
     private var comment: String? = ""
@@ -175,6 +180,7 @@ class WriteReviewActivity : AppCompatActivity() {
         val compressedPartsList: MutableList<MultipartBody.Part> = mutableListOf()
 
         fileList.forEach { filePath ->
+            // Check if the file path is not null and compress the image
             if (filePath != null) {
                 val file = File(filePath)
                 val compressedFile = Compressor.compress(this@WriteReviewActivity, file) {

@@ -66,13 +66,7 @@
             android:value="$kakao_native_app_key" /> <!-- <meta-data -->
         <!-- android:name="com.kakao.sdk.AppKey" -->
         <!-- android:value="${APP_KEY}" /> -->
-        <activity
-            android:name=".view.login.LoginActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".view.main.ForceUpdateDialogActivity"
             android:exported="true">
@@ -93,7 +87,7 @@
                 <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
                 <data
                     android:host="oauth"
-                    android:scheme="@string/kakao_redirection_scheme" />
+                    android:scheme="${KAKAO_REDIRECTION_SCHEME}" />
             </intent-filter>
         </activity>
         <activity
@@ -103,18 +97,12 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".view.login.SignUpActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".view.mypage.ChangePwActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -123,6 +111,7 @@
             android:name=".view.mypage.ChangeNicknameActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -137,6 +126,7 @@
         <activity
             android:name=".view.review.ReviewListActivity"
             android:exported="true">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -148,6 +138,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".view.infopage.InfoActivity_Gisik"
             android:exported="true"
@@ -199,6 +190,7 @@
         <activity
             android:name=".view.main.MainActivity"
             android:exported="true">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -207,6 +199,7 @@
             android:name=".view.review.OthersReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -215,6 +208,7 @@
             android:name=".view.review.MyReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -222,10 +216,13 @@
         <activity
             android:name=".view.review.ReportActivity"
             android:exported="true">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+
     </application>
 
 </manifest>
