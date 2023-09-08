@@ -8,8 +8,8 @@
 
 ## package
 ### architecture
-MVVM architecture pattern으로 리팩토링 중 현재 부분적으로 적용되어 있습니다.
-이전 코드는 architecture pattern이 없는 코드 입니다. 
+- MVVM architecture pattern으로 리팩토링 중 현재 부분적으로 적용되어 있습니다.  
+- 이전 코드는 architecture pattern이 없는 코드 입니다. 
 ```
 com.eatssu.android
 ├── adapter
