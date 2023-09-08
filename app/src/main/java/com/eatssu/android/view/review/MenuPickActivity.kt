@@ -1,6 +1,5 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -9,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.adapter.MenuPickAdapter
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMenuPickBinding
@@ -34,8 +34,8 @@ class MenuPickActivity : AppCompatActivity() {
         binding = ActivityMenuPickBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
-        reviewService = RetrofitImpl.retrofit.create(ReviewService::class.java)
+        menuService = retrofit.create(MenuService::class.java)
+        reviewService = retrofit.create(ReviewService::class.java)
 
 
         val menuNameArray = intent.getStringArrayListExtra("menuNameArray")

@@ -28,7 +28,7 @@ class InfoActivity_Kitchen : AppCompatActivity() {
         viewBinding = ActivityInfoKitchenBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        infoService = RetrofitImpl.retrofit.create(InfoService::class.java)
+        infoService = retrofit.create(InfoService::class.java)
 
         val mapview = MapView(this);
         val mapViewContainer = viewBinding.btnMap

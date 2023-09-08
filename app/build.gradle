@@ -7,7 +7,6 @@ plugins {
 
  Properties properties = new Properties()
  properties.load(project.rootProject.file('local.properties').newDataInputStream())
-// def APP_KEY = properties.getProperty('APP_KEY')
  def BASE_URL = properties.getProperty('BASE_URL')
  def KAKAO_NATIVE_APP_KEY = properties.getProperty('KAKAO_NATIVE_APP_KEY')
  def KAKAO_REDIRECTION_SCHEME = properties.getProperty('KAKAO_REDIRECTION_SCHEME')
@@ -28,9 +27,6 @@ android {
         versionName "1.0"
 
 
-
-//        buildConfigField("String", "APP_KEY", APP_KEY)
-//        manifestPlaceholders = [APP_KEY: APP_KEY]
 
         buildConfigField("String", "BASE_URL", BASE_URL)
         manifestPlaceholders = [BASE_URL: BASE_URL]

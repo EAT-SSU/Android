@@ -1,6 +1,5 @@
 package com.eatssu.android.view.login
 
-import RetrofitImpl
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.RetrofitImpl.nonRetrofit
 import com.eatssu.android.data.model.request.LoginWithKakaoRequestDto
 import com.eatssu.android.data.model.response.TokenResponseDto
 import com.eatssu.android.data.service.OauthService
@@ -84,7 +84,7 @@ class SocialLoginActivity : AppCompatActivity() {
 //        }
 
         // SharedPreferences 안에 값이 저장되어 있을 때-> Login 패스하기
-        if (App.token_prefs.accessToken?.isNotBlank() == true){ // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
+        if (MySharedPreferences.getUserEmail(this).isNotBlank()){// SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
             Toast.makeText(
                 this,
                 "자동 로그인 되었습니다.",
@@ -96,6 +96,7 @@ class SocialLoginActivity : AppCompatActivity() {
         }
 
         val context = this
+
         binding.imbKakao.setOnClickListener {
             lifecycleScope.launch {
                 try {
@@ -113,12 +114,12 @@ class SocialLoginActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.btnLookAround.setOnClickListener() {
-            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
-            startActivity(intent)  // 화면 전환을 시켜줌
-            finish()
-        }
-
+        //둘러보기 MVP에서 제외
+//        binding.btnLookAround.setOnClickListener() {
+//            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
+//            startActivity(intent)  // 화면 전환을 시켜줌
+//            finish()
+//        }
     }
 
     private fun postUserInfo() {
@@ -134,8 +135,8 @@ class SocialLoginActivity : AppCompatActivity() {
 
                 val intent = Intent(this, MainActivity::class.java)
 
-                val service = RetrofitImpl.nonRetrofit.create(OauthService::class.java)
-                service.loginWithKakao(LoginWithKakaoRequestDto(email, providerID))
+                val service = nonRetrofit.create(OauthService::class.java)
+                service.loginWithKakao(LoginWithKakaoRequestDto(email,providerID))
                     .enqueue(object : Callback<TokenResponseDto> {
                         override fun onResponse(
                             call: Call<TokenResponseDto>,
@@ -144,30 +145,22 @@ class SocialLoginActivity : AppCompatActivity() {
                             if (response.isSuccessful) {
                                 if (response.code() == 200) {
                                     Log.d("post", "onResponse 성공: " + response.body().toString());
-//                                MySharedPreferences.setUserId(this@LoginActivity, email)
-//                                MySharedPreferences.setUserPw(this@LoginActivity, providerID)//자동로그인 구현
+
+                                    /*자동 로그인*/
                                     MySharedPreferences.setUserEmail(this@SocialLoginActivity,email)
                                     MySharedPreferences.setUserPlatform(this@SocialLoginActivity,"KAKAO")
 
-
+                                    /*토큰 저장*/
                                     App.token_prefs.accessToken = response.body()!!.accessToken
                                     App.token_prefs.refreshToken =
                                         response.body()!!.refreshToken//헤더에 붙일 토큰 저장
 
-                                    Toast.makeText(
-                                        this@SocialLoginActivity,
-                                        email + " 계정으로 로그인에 성공하였습니다.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(this@SocialLoginActivity, "$email 계정으로 로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
                                     startActivity(intent)  // 화면 전환을 시켜줌
                                     finish()
                                 } else {
                                     Log.d("post", "onResponse 오류: " + response.body().toString());
-                                    Toast.makeText(
-                                        this@SocialLoginActivity,
-                                        "error: " + response.message(),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(this@SocialLoginActivity, "error: " + response.message(), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }

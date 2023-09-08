@@ -1,12 +1,12 @@
 package com.eatssu.android.view.review
 
-import RetrofitImpl
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.data.model.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
@@ -69,7 +69,7 @@ class ReportActivity : AppCompatActivity() {
     }
 
     private fun postData(reviewId: Long, reportType: String, content: String) {
-        val service = RetrofitImpl.retrofit.create(ReportService::class.java)
+        val service = retrofit.create(ReportService::class.java)
         Log.d("reportId", reviewId.toString())
         lifecycleScope.launch {
             try {

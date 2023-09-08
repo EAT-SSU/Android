@@ -1,25 +1,25 @@
 package com.eatssu.android.view.main
 
-import android.content.DialogInterface
-import com.eatssu.android.R
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.eatssu.android.R
 import com.eatssu.android.adapter.CalendarAdapter
 import com.eatssu.android.adapter.OnItemClickListener
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.NetworkConnection
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.entity.CalendarData
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.view.mypage.ChangeNicknameActivity
 import com.eatssu.android.view.mypage.MyPageActivity
@@ -29,6 +29,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.prolificinteractive.materialcalendarview.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -52,6 +55,8 @@ class MainActivity : AppCompatActivity() {
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
     }
+
+    private lateinit var nickname: String
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,10 +87,29 @@ class MainActivity : AppCompatActivity() {
         networkCheck.register() // 네트워크 객체 등록
 
         val intentNick = Intent(this, ChangeNicknameActivity::class.java)
-        // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
-        if (MySharedPreferences.getUserName(this@MainActivity).isBlank()) {
-            startActivity(intentNick)
-        }
+
+        val myPageService =
+            RetrofitImpl.retrofit.create(MyPageService::class.java)
+        myPageService.getMyInfo().enqueue(object :
+            Callback<GetMyInfoResponseDto> {
+            override fun onResponse(
+                call: Call<GetMyInfoResponseDto>,
+                response: Response<GetMyInfoResponseDto>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("post", "onResponse 성공: " + response.body().toString());
+                    nickname = response.body()?.nickname.toString()
+                    //나중에 isNullOrBlank로 바꿀 것
+                    if (nickname == "KAKAO유저") {
+                        startActivity(intentNick)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+                Log.d("post", "onFailure 에러: " + t.message.toString());
+            }
+        })
 
         supportActionBar?.title = "EAT-SSU"
 
@@ -262,6 +286,7 @@ class MainActivity : AppCompatActivity() {
     private fun showForceUpdateDialog() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
         startActivity(intent)
+    }
 
         fun onDestroy() {
             super.onDestroy()

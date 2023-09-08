@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.*
@@ -52,7 +53,7 @@ class MyReviewListActivity : AppCompatActivity() {
     }
 
     private fun lodeReview() {
-        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        val myPageService = retrofit.create(MyPageService::class.java)
         myPageService.getMyReviews().enqueue(object :
             Callback<GetMyReviewResponseDto> {
             override fun onResponse(

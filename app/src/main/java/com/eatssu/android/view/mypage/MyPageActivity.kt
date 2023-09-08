@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
@@ -12,6 +13,7 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.base.BaseActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.eatssu.android.view.login.SocialLoginActivity
 
 
 class MyPageActivity : BaseActivity() {
@@ -50,7 +52,6 @@ class MyPageActivity : BaseActivity() {
         binding.tvNickname.text = MySharedPreferences.getUserName(this)
         //binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
 
-
         binding.clNickname.setOnClickListener{
             val intent = Intent(this, ChangeNicknameActivity::class.java)
             startActivity(intent)
@@ -78,6 +79,10 @@ class MyPageActivity : BaseActivity() {
                 .setPositiveButton("로그아웃",
                     DialogInterface.OnClickListener { dialog, id ->
                         //로그아웃
+                        MySharedPreferences.clearUser(this)
+                        Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        startActivity(intent)
                     })
                 .setNegativeButton("취소",
                     DialogInterface.OnClickListener { dialog, id ->
@@ -95,6 +100,10 @@ class MyPageActivity : BaseActivity() {
                 .setPositiveButton("탈퇴하기",
                     DialogInterface.OnClickListener { dialog, id ->
                         //탈퇴처리
+                        MySharedPreferences.clearUser(this)
+                        Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        startActivity(intent)
                     })
                 .setNegativeButton("취소",
                     DialogInterface.OnClickListener { dialog, id ->
