@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     private var day: String = ""
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
-    private var allViewHolders : List<CalendarAdapter.CalendarViewHolder> = mutableListOf()
+    private var allViewHolders: List<CalendarAdapter.CalendarViewHolder> = mutableListOf()
 
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
@@ -251,9 +251,9 @@ class MainActivity : AppCompatActivity() {
         val currentAppVersion = BuildConfig.VERSION_NAME
 
         if (forceUpdateRequired) {
-            Log.d("post",forceUpdateRequired.toString())
-            Log.d("post",latestAppVersion)
-            Log.d("post",currentAppVersion)
+            Log.d("post", forceUpdateRequired.toString())
+            Log.d("post", latestAppVersion)
+            Log.d("post", currentAppVersion)
             // 강제 업데이트 다이얼로그를 띄우거나 업데이트 화면으로 이동
             showForceUpdateDialog()
         }
@@ -263,10 +263,10 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
         startActivity(intent)
 
-    override fun onDestroy() {
-        super.onDestroy()
+        fun onDestroy() {
+            super.onDestroy()
 
-        networkCheck.unregister() // 네트워크 객체 해제
+            networkCheck.unregister() // 네트워크 객체 해제
+        }
     }
 }
-

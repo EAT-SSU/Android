@@ -48,7 +48,7 @@ class MyPageActivity : BaseActivity() {
         supportActionBar?.title = "마이페이지"
 
         binding.tvNickname.text = MySharedPreferences.getUserName(this)
-        binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
+        //binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
 
 
         binding.clNickname.setOnClickListener{
@@ -57,13 +57,13 @@ class MyPageActivity : BaseActivity() {
             //finish()
         }
 
-        binding.clChPw.setOnClickListener{
+        /*binding.clChPw.setOnClickListener{
             val intent = Intent(this, ChangePwActivity::class.java)
             startActivity(intent)
 //            finish()
-        }
+        }*/
 
-        binding.clReview.setOnClickListener{
+        binding.tvMyreview.setOnClickListener{
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
