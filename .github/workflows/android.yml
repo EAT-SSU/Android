@@ -14,29 +14,23 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-#    - name: APP_KEY
-#      run: |
-#        echo APP_KEY=\"$APP_KEY\" > local.properties
-#      shell: bash
-#      env:
-#        APP_KEY: ${{ secrets.APP_KEY }}
     - name: BASE_URL
       run: |
-        echo BASE_URL=\"$BASE_URL\" > local.properties
+        echo BASE_URL=\"$BASE_URL\" >> local.properties
       shell: bash
       env:
        BASE_URL: ${{ secrets.BASE_URL}}
 
     - name: KAKAO_NATIVE_APP_KEY
       run: |
-        echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" > local.properties
+        echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" >> local.properties
       shell: bash
       env:
         APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
     - name: KAKAO_REDIRECTION_SCHEME
       run: |
-        echo KAKAO_REDIRECTION_SCHEME=\"$KAKAO_REDIRECTION_SCHEME\" > local.properties
+        echo KAKAO_REDIRECTION_SCHEME=\"$KAKAO_REDIRECTION_SCHEME\" >> local.properties
       shell: bash
       env:
         APP_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
