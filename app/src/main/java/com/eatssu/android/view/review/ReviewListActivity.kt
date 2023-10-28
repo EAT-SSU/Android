@@ -105,7 +105,11 @@ class ReviewListActivity : AppCompatActivity() {
             }
         }
 
+        setInfoData()
+        setListData()
+    }
 
+    private fun setListData(){
         viewModel.reviewList.observe(this) { reviewList ->
             Log.d("post", reviewList.dataList.toString())
             adapter = ReviewAdapter(reviewList)
@@ -116,6 +120,8 @@ class ReviewListActivity : AppCompatActivity() {
             //구분선 주석처리
 //            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
         }
+    }
+    private fun setInfoData(){
 
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
@@ -171,5 +177,8 @@ class ReviewListActivity : AppCompatActivity() {
                 Log.d("post", "잘못된 식당 정보입니다.")
             }
         }
+        setInfoData()
+        setListData()
+
     }
 }

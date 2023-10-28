@@ -171,6 +171,11 @@ class LunchFragment : Fragment() {
         setupClickListeners() //info dialog
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
 
     private fun setupClickListeners() {
         binding.btnHaksikInfo.setOnClickListener {
