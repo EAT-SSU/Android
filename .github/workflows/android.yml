@@ -28,13 +28,7 @@ jobs:
       env:
         APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
-    - name: KAKAO_REDIRECTION_SCHEME
-      run: |
-        echo KAKAO_REDIRECTION_SCHEME=\"$KAKAO_REDIRECTION_SCHEME\" >> local.properties
-      shell: bash
-      env:
-        APP_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
-        
+  
     - name: Generate google-services.json
       run: |
         echo "$GOOGLE_SERVICE" > app/google-services.json.b64
