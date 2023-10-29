@@ -48,7 +48,7 @@ class InfoActivity_Gisik : AppCompatActivity(){
         }
         mapview.addPOIItem(marker)
 
-        getRestaurantInfo(Restaurant.DOMITORY)
+        getRestaurantInfo(Restaurant.DORMITORY)
 
     }
 

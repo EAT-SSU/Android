@@ -19,7 +19,6 @@ import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.FragmentBreakfastBinding
-import com.eatssu.android.databinding.FragmentDinnerBinding
 import com.eatssu.android.repository.MenuRepository
 import com.eatssu.android.repository.ReviewRepository
 import com.eatssu.android.view.infopage.*
@@ -29,7 +28,6 @@ import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 //import com.eatssu.android.adapter.DodamAdapter
-import retrofit2.Retrofit
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -105,7 +103,7 @@ class BreakfastFragment : Fragment() {
 //            })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
+            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)

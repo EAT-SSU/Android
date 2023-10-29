@@ -16,53 +16,12 @@ import retrofit2.Response
 
 class ReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
 
-//    private val selectedItemId = MutableLiveData<Long>()
-//    private val selectedMenuType = MutableLiveData<MenuType>()
 
     private val _reviewList = MutableLiveData<GetReviewListResponse>()
     val reviewList: LiveData<GetReviewListResponse> = _reviewList
 
     private val _reviewInfo = MutableLiveData<GetReviewInfoResponseDto>()
     val reviewInfo: LiveData<GetReviewInfoResponseDto> = _reviewInfo
-
-    /*
-    //방법 1 itemData로 묶인 것
-    val selectedItem = MutableLiveData<ItemData>()
-
-    fun setSelectedItem(itemData: ItemData) {
-        selectedItem.value = itemData
-    }
-
-    //방법 2 id, type 따로
-    fun setSelectedItemId(itemId: Long) {
-        selectedItemId.value = itemId
-    }
-
-    fun getSelectedItemId(): LiveData<Long> {
-        return selectedItemId
-    }
-
-    fun setSelectedMenuType(menuType: MenuType) {
-        selectedMenuType.value = menuType
-    }
-
-    fun getSelectedMenuType(): LiveData<MenuType> {
-        return selectedMenuType
-    }
-
-    fun getLiveDataMenuIdAndMenuType(): LiveData<Pair<MenuType,Long>> {
-        return MediatorLiveData<Pair<MenuType,Long>>().apply {
-            addSource(selectedMenuType) { value1 ->
-                val value2 = selectedItemId.value ?: 0
-                value = Pair(value1, value2)
-            }
-            addSource(selectedItemId) { value2 ->
-                val value1 = selectedMenuType.value ?: MenuType.FIX
-                value = Pair(value1, value2)
-            }
-        }
-    }*/
-
 
     fun loadReviewList(
         menuType: MenuType,

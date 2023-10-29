@@ -54,7 +54,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                             when (restaurantType) {
                                 Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(response.body())
                                 Restaurant.DODAM -> _todayMealDataDodam.postValue(response.body())
-                                Restaurant.DOMITORY -> _todayMealDataDormitory.postValue(response.body())
+                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(response.body())
 
                                 else -> {
                                     Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
