@@ -3,11 +3,14 @@ package com.eatssu.android.view.login
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
@@ -17,6 +20,7 @@ import com.eatssu.android.data.model.response.TokenResponseDto
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.view.main.MainActivity
+import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -30,61 +34,15 @@ import java.net.URISyntaxException
 class SocialLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySocialLoginBinding
 
-    // 코틀린
-    fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        if (url != null && url.startsWith("intent://")) {
-            try {
-                val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
-                val existPackage =
-                    packageManager.getLaunchIntentForPackage(intent.getPackage()!!)
-                if (existPackage != null) {
-                    startActivity(intent)
-                } else {
-                    val marketIntent = Intent(Intent.ACTION_VIEW)
-                    marketIntent.data =
-                        Uri.parse("market://details?id=" + intent.getPackage()!!)
-                    startActivity(marketIntent)
-                }
-                return true
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        } else if (url != null && url.startsWith("market://")) {
-            try {
-                val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
-                if (intent != null) {
-                    startActivity(intent)
-                }
-                return true
-            } catch (e: URISyntaxException) {
-                e.printStackTrace()
-            }
-
-        }
-        view.loadUrl(url)
-        return false
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySocialLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //카카오 로그인에서 제공하는 자동로그인 메소드
-//        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-//            if (error != null) {
-//                Toast.makeText(this, "자동 로그인 실패", Toast.LENGTH_SHORT).show()
-//            }
-//            else if (tokenInfo != null) {
-//                Toast.makeText(this, "자동 로그인 성공", Toast.LENGTH_SHORT).show()
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-//            }
-//        }
 
         // SharedPreferences 안에 값이 저장되어 있을 때-> Login 패스하기
-        if (MySharedPreferences.getUserEmail(this).isNotBlank()){// SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
+        if (MySharedPreferences.getUserEmail(this).isNotBlank()) {
+            // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
             Toast.makeText(
                 this,
                 "자동 로그인 되었습니다.",
@@ -97,7 +55,10 @@ class SocialLoginActivity : AppCompatActivity() {
 
         val context = this
 
+
         binding.imbKakao.setOnClickListener {
+
+            Log.d("post", "버튼 클릭")
             lifecycleScope.launch {
                 try {
                     // 서비스 코드에서는 간단하게 로그인 요청하고 oAuthToken 을 받아올 수 있다.
@@ -114,13 +75,8 @@ class SocialLoginActivity : AppCompatActivity() {
                 }
             }
         }
-        //둘러보기 MVP에서 제외
-//        binding.btnLookAround.setOnClickListener() {
-//            val intent = Intent(this, MainActivity::class.java)  // 인텐트를 생성해줌,
-//            startActivity(intent)  // 화면 전환을 시켜줌
-//            finish()
-//        }
     }
+
 
     private fun postUserInfo() {
         UserApiClient.instance.me { user, error ->

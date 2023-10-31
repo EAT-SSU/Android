@@ -59,108 +59,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_nickname" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_review"
-        android:layout_marginTop="30dp"
+    <TextView
+        android:id="@+id/tv_my_review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/noto_bold"
+        android:layout_marginTop="50dp"
+        android:text="@string/my_review"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email">
-
-        <ImageButton
-            android:id="@+id/ib_my_review"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_review"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_review"
-            app:layout_constraintEnd_toEndOf="@+id/ib_my_review"
-            app:layout_constraintStart_toStartOf="@+id/ib_my_review"
-            app:layout_constraintTop_toBottomOf="@+id/ib_my_review" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_ch_pw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/cl_review"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cl_review">
-
-        <ImageButton
-            android:id="@+id/ib_setting"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_setting"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/change_pw"
-            app:layout_constraintEnd_toEndOf="@+id/ib_setting"
-            app:layout_constraintStart_toStartOf="@+id/ib_setting"
-            app:layout_constraintTop_toBottomOf="@+id/ib_setting" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_bell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cl_review"
-        app:layout_constraintTop_toTopOf="@+id/cl_review">
-
-        <ImageButton
-            android:id="@+id/ib_announce"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_bell"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/announce"
-            app:layout_constraintEnd_toEndOf="@+id/ib_announce"
-            app:layout_constraintStart_toStartOf="@+id/ib_announce"
-            app:layout_constraintTop_toBottomOf="@+id/ib_announce" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/tv_email" />
 
     <TextView
         android:id="@+id/tv_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout"
         android:fontFamily="@font/noto_bold"
-        android:layout_marginTop="30dp"
+        android:text="@string/logout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_review" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_my_review" />
+
+
 
 
     <TextView

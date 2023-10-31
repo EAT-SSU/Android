@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("post", "onResponse 성공: " + response.body().toString());
                     nickname = response.body()?.nickname.toString()
                     //나중에 isNullOrBlank로 바꿀 것
-                    if (nickname == "KAKAO유저") {
+                    if (nickname == null) {
                         startActivity(intentNick)
                     }
                 }

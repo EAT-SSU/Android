@@ -44,11 +44,8 @@ class ReviewListActivity : AppCompatActivity() {
         reviewService = retrofit.create(ReviewService::class.java)
 
         val repository = ReviewRepository(reviewService)
-        viewModel =
-            ViewModelProvider(
-                this,
-                ReviewViewModelFactory(repository)
-            )[ReviewViewModel::class.java]
+
+        viewModel = ViewModelProvider(this, ReviewViewModelFactory(repository))[ReviewViewModel::class.java]
 
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
@@ -105,7 +102,11 @@ class ReviewListActivity : AppCompatActivity() {
             }
         }
 
+        setInfoData()
+        setListData()
+    }
 
+    private fun setListData(){
         viewModel.reviewList.observe(this) { reviewList ->
             Log.d("post", reviewList.dataList.toString())
             adapter = ReviewAdapter(reviewList)
@@ -116,6 +117,8 @@ class ReviewListActivity : AppCompatActivity() {
             //구분선 주석처리
 //            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
         }
+    }
+    private fun setInfoData(){
 
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
@@ -153,6 +156,36 @@ class ReviewListActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+
+        Log.d("post", "onRestart")
+
+        // 다시 데이터를 로드하고 어댑터를 업데이트
+        when (menuType) {
+            "FIX" -> {
+                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
+                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
+            }
+            "CHANGE" -> {
+                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
+                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+            }
+            else -> {
+                Log.d("post", "잘못된 식당 정보입니다.")
+            }
+        }
+        Log.d("post", "onRestart")
+
+        setInfoData()
+
+        Log.d("post", "onRestart"+viewModel.reviewInfo.value)
+        setListData()
+        Log.d("post", "onRestart")
+
+
+    }
+
     override fun onResume() {
         super.onResume()
         Log.d("post", "resume")
@@ -171,5 +204,14 @@ class ReviewListActivity : AppCompatActivity() {
                 Log.d("post", "잘못된 식당 정보입니다.")
             }
         }
+        Log.d("post", "resume시작")
+
+        setInfoData()
+
+        Log.d("post", "resume중간")
+        setListData()
+        Log.d("post", "resume끝")
+
+
     }
 }
