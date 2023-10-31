@@ -61,11 +61,7 @@
                 android:value="" />
         </activity>
 
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="$kakao_native_app_key" /> <!-- <meta-data -->
-        <!-- android:name="com.kakao.sdk.AppKey" -->
-        <!-- android:value="${APP_KEY}" /> -->
+
 
         <activity
             android:name=".view.main.ForceUpdateDialogActivity"
@@ -74,21 +70,21 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+<!--        <meta-data-->
+<!--            android:name="com.kakao.sdk.AppKey"-->
+<!--            android:value="$KAKAO_NATIVE_APP_KEY" />-->
+
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
                 <data
                     android:host="oauth"
-                    android:scheme="${KAKAO_REDIRECTION_SCHEME}" />
-            </intent-filter>
+                    android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />       </intent-filter>
         </activity>
         <activity
             android:name=".base.BaseActivity"

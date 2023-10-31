@@ -173,6 +173,7 @@ class WriteReviewActivity : AppCompatActivity() {
 
         val resultIntent = Intent()
         setResult(RESULT_OK, resultIntent)
+        Log.d("post","리뷰 다씀")
         finish()
     }
 

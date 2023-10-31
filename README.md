@@ -8,7 +8,7 @@
 
 ## package
 ### architecture
-- MVVM architecture pattern으로 리팩토링 중 현재 부분적으로 적용되어 있습니다.  
+- MVVM architecture pattern으로 리팩토링 중에 있으며, 현재 부분적으로 적용되어 있습니다.  
 - 이전 코드는 architecture pattern이 없는 코드 입니다. 
 ```
 com.eatssu.android
@@ -21,7 +21,6 @@ com.eatssu.android
 │   │   ├── request
 │   │   ├── response
 │   └── service
-│       └── MenuService.kt
 ├── repository
 ├── view
 │   ├── calendar
@@ -34,14 +33,11 @@ com.eatssu.android
 ```
 
 ## Framework
-- Android Studio : Dolphin 2020.3.1
-- JDK : 17.0.7
-- Kotlin : 1.8
+- Android Studio : 2022.2.1 Patch 2
+- JAVA : 17
 - minSDK : 21
-- targetSDK : 31
+- targetSDK : 34
 
 ## Infra
 - Github Actions
 - AWS S3
-
-## Dependencies

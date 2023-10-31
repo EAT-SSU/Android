@@ -117,13 +117,13 @@ class LunchFragment : Fragment() {
 
                 //}
                 //else{
-                    Log.d("post","도담널"+result.toString())
-                    binding.llDodam.visibility = View.GONE
+                //    Log.d("post","도담널"+result.toString())
+                //    binding.llDodam.visibility = View.GONE
                 //}
             })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
+            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString()!= "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
@@ -186,6 +186,11 @@ class LunchFragment : Fragment() {
 
 
         setupClickListeners() //info dialog
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
 
