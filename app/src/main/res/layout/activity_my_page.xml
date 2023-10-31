@@ -134,7 +134,9 @@
         android:id="@+id/cl_ch_pw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/cl_review"
+        android:fontFamily="@font/noto_bold"
+        android:layout_marginTop="50dp"
+        android:text="@string/my_review"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cl_review">
 
@@ -200,15 +202,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_account_layout" />
 
+
     <TextView
         android:id="@+id/tv_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout"
         android:fontFamily="@font/noto_bold"
+        android:text="@string/logout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_myreview" />
-
+        app:layout_constraintTop_toBottomOf="@+id/tv_my_review" />
 
     <TextView
         android:id="@+id/tv_signout"

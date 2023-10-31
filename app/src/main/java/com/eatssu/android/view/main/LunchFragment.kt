@@ -123,7 +123,7 @@ class LunchFragment : Fragment() {
             })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DOMITORY, Time.LUNCH)
+            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString()!= "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
@@ -186,6 +186,11 @@ class LunchFragment : Fragment() {
 
 
         setupClickListeners() //info dialog
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
 

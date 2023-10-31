@@ -3,17 +3,27 @@ package com.eatssu.android.view.mypage
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.model.response.TokenResponseDto
+import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.data.service.OauthService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.eatssu.android.view.login.SocialLoginActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MyPageActivity : BaseActivity() {
@@ -31,6 +41,7 @@ class MyPageActivity : BaseActivity() {
         inflater.inflate(R.layout.activity_my_page, findViewById(R.id.frame_layout), true)
         findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
 
+        loadMyInfo()
         // Firebase Remote Config 초기화 설정
         val configSettings = FirebaseRemoteConfigSettings.Builder()
             .setMinimumFetchIntervalInSeconds(3600) // 캐시된 값을 1시간마다 업데이트
@@ -69,6 +80,7 @@ class MyPageActivity : BaseActivity() {
             startActivity(intent)
 //            finish()
         }
+
 
         binding.tvLogout.setOnClickListener{
 
@@ -122,6 +134,30 @@ class MyPageActivity : BaseActivity() {
             }
     }
 
+    fun loadMyInfo() {
+        val service = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        service.getMyInfo()
+            .enqueue(object : Callback<GetMyInfoResponseDto> {
+                override fun onResponse(
+                    call: Call<GetMyInfoResponseDto>,
+                    response: Response<GetMyInfoResponseDto>
+                ) {
+                    if (response.isSuccessful) {
+                        if (response.code() == 200) {
+                            binding.tvNickname.text = response.body()!!.nickname
+                            Log.d("post", "onResponse 성공: " + response.body().toString());
+
+                        } else {
+                            Log.d("post", "onResponse 오류: " + response.body().toString());
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+                    Log.d("post", "onFailure 에러: " + t.message.toString());
+                }
+            })
+    }
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_my_page
     }
