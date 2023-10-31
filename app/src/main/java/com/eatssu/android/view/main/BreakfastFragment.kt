@@ -103,7 +103,7 @@ class BreakfastFragment : Fragment() {
 //            })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
+            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.MORNING)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)

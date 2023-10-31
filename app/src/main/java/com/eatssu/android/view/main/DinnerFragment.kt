@@ -86,7 +86,7 @@ class DinnerFragment : Fragment() {
             menuDate =
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
             //숭실도담
-            viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
+            viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.DINNER)
             viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
@@ -104,7 +104,7 @@ class DinnerFragment : Fragment() {
             })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
+            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.DINNER)
             viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
