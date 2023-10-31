@@ -33,14 +33,11 @@ com.eatssu.android
 ```
 
 ## Framework
-- Android Studio : Dolphin 2020.3.1
-- JDK : 17.0.7
-- Kotlin : 1.8
+- Android Studio : 2022.2.1 Patch 2
+- JAVA : 17
 - minSDK : 21
-- targetSDK : 31
+- targetSDK : 34
 
 ## Infra
 - Github Actions
 - AWS S3
-
-## Dependencies
