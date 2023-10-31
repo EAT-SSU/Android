@@ -23,7 +23,7 @@ jobs:
 
     - name: KAKAO_NATIVE_APP_KEY
       run: |
-        echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" >> local.properties
+        echo KAKAO_NATIVE_APP_KEY=$KAKAO_NATIVE_APP_KEY >> local.properties
       shell: bash
       env:
         APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
