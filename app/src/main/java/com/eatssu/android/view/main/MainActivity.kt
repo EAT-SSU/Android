@@ -1,5 +1,6 @@
 package com.eatssu.android.view.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -40,13 +41,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var selectedDate: String = ""
-    private var year: String = ""
-    private var month: String = ""
-    private var day: String = ""
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
-    private var allViewHolders: List<CalendarAdapter.CalendarViewHolder> = mutableListOf()
 
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
@@ -58,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var nickname: String
 
+    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         val myPageService =
             RetrofitImpl.retrofit.create(MyPageService::class.java)
-        myPageService.getMyInfo().enqueue(object :
+            myPageService.getMyInfo().enqueue(object :
             Callback<GetMyInfoResponseDto> {
             override fun onResponse(
                 call: Call<GetMyInfoResponseDto>,
@@ -143,13 +140,17 @@ class MainActivity : AppCompatActivity() {
 
         calendarAdapter = CalendarAdapter(calendarList)
 
+        val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
+
         calendarList.apply {
             val dateFormat =
                 DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
             val monthFormat = DateTimeFormatter.ofPattern("yyyy . MM . dd")
                 .withLocale(Locale.forLanguageTag("ko"))
+            val dayFormat = DateTimeFormatter.ofPattern("dd")
 
-            val localDate = LocalDateTime.now().format(monthFormat)
+            val todayDate = LocalDateTime.now().format(dayFormat)
+            viewModel.setData(todayDate)
 
             val preSunday: LocalDateTime = LocalDateTime.now().with(
                 TemporalAdjusters.previousOrSame(
@@ -200,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                 holderSelect.binding.date.isSelected = true
                 holderSelect.binding.weekCardview.setBackgroundResource(R.drawable.transparent_calendar_element)
 
-                val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
+                //val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
                 viewModel.setData(selected)
                 // viewModel에 값 넘어가서 메뉴 뜨는지 확인하는 코드
                 //var senddate = "14"

@@ -81,8 +81,8 @@ class LunchFragment : Fragment() {
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner, Observer { dataReceived ->
-            val dateFormat =
-                DateTimeFormatter.ofPattern("dd")
+            Log.d("lunchdate", dataReceived)
+            val dateFormat = DateTimeFormatter.ofPattern("dd")
             val monthFormat = DateTimeFormatter.ofPattern("yyyyMM")
             val preSunday: LocalDateTime = LocalDateTime.now().with(
                 TemporalAdjusters.previousOrSame(
@@ -101,7 +101,6 @@ class LunchFragment : Fragment() {
             else
                 menuDate =
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
-            Log.d("lunchdate", menuDate)
 
             //숭실도담
             viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
