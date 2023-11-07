@@ -73,6 +73,8 @@ object RetrofitImpl {
 
             // Unauthorized (401) 상태 코드를 받았을 경우 토큰 재발급 시도
             if (response.code == 401 or 403) {
+                response.close()
+
                 Log.d("AppInterceptor", "토큰 재발급 시도")
 
                 try {
