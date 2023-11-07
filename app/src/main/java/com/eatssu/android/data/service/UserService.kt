@@ -4,6 +4,7 @@ import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
 import com.eatssu.android.data.model.request.ChangePwRequestDto
 import com.eatssu.android.data.model.request.LoginRequestDto
 import com.eatssu.android.data.model.request.SignUpRequestDto
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.TokenResponseDto
 import retrofit2.Call
 import retrofit2.http.*
@@ -32,4 +33,7 @@ interface UserService {
     //닉네임 수정
     @PATCH("user/nickname")
     fun changeNickname(@Body request: ChangeNicknameRequestDto): Call<Void>
+
+    @DELETE("user/signout")
+    fun signOut(): Call<BaseResponse>
 }
