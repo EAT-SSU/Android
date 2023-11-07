@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
 import com.eatssu.android.databinding.ItemMenuPickBinding
 
 class MenuPickAdapter(
-    private val menuNameArray: ArrayList<String>?,
-    private val menuIdArray: LongArray?
+    private val menuList: ChangeMenuInfoListDto,
 ) : RecyclerView.Adapter<MenuPickAdapter.ViewHolder>() {
 
     private val checkedItems: ArrayList<Pair<String, Long>> = ArrayList()
@@ -19,7 +19,7 @@ class MenuPickAdapter(
         private val checkBox: CheckBox = binding.checkBox
 
         fun bind(position: Int) {
-            binding.tvMenuName.text = menuNameArray?.get(position)
+            binding.tvMenuName.text = menuList.menuInfoList[position].name
             checkBox.isChecked = checkedItems.contains(getItem(position))
             checkBox.setOnClickListener { onCheckBoxClick(position) }
         }
@@ -36,12 +36,12 @@ class MenuPickAdapter(
     }
 
     override fun getItemCount(): Int {
-        return menuNameArray?.size ?: 0
+        return menuList.menuInfoList?.size ?: 0
     }
 
     fun getItem(position: Int): Pair<String, Long> {
-        val menuName = menuNameArray?.get(position) ?: ""
-        val menuId = menuIdArray?.get(position) ?: 0L
+        val menuName = menuList.menuInfoList[position].name
+        val menuId = menuList.menuInfoList[position].menuId
         return Pair(menuName, menuId)
     }
 

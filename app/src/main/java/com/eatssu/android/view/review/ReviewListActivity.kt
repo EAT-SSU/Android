@@ -80,10 +80,13 @@ class ReviewListActivity : AppCompatActivity() {
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+                val mealId = itemId
 
                 binding.btnNextReview.setOnClickListener() {
                     val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
+                    intent.putExtra("mealId", mealId)
+
                     intent.putExtra("menuType", menuType)
 
                     intent.putStringArrayListExtra("menuNameArray", menuNameArray)
@@ -122,9 +125,6 @@ class ReviewListActivity : AppCompatActivity() {
 
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
-
-            Log.d("post", reviewInfo.menuName.javaClass.name)
-//            itemName = reviewInfo.menuName as ArrayList<String>
 
             binding.tvMenu.text = reviewInfo.menuName.toString()
 

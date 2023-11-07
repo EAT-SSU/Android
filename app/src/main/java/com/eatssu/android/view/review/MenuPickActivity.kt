@@ -6,12 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.adapter.MenuPickAdapter
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMenuPickBinding
+import com.eatssu.android.repository.MenuRepository
+import com.eatssu.android.viewmodel.MenuViewModel
+import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 
 
 class MenuPickActivity : AppCompatActivity() {
@@ -19,6 +23,8 @@ class MenuPickActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuPickBinding
     private lateinit var menuPickAdapter: MenuPickAdapter
 
+    private lateinit var viewModel: MenuViewModel
+    private lateinit var repository: MenuRepository
 
     private lateinit var menuService: MenuService
     private lateinit var reviewService: ReviewService
@@ -36,20 +42,25 @@ class MenuPickActivity : AppCompatActivity() {
 
         menuService = retrofit.create(MenuService::class.java)
         reviewService = retrofit.create(ReviewService::class.java)
+        repository = MenuRepository(menuService)
+
+        val mealId = intent.getLongExtra("mealId",-1)
+        viewModel = ViewModelProvider(this, MenuViewModelFactory(repository))[MenuViewModel::class.java]
+
+        Log.d("post", "!!!받은" + viewModel.findMenuItemByMealId(mealId).toString())
+        Log.d("post", "!!!받은2" + viewModel.menuBymealId.toString())
+
+        viewModel.menuBymealId.observe(this) { menuList ->
+            menuPickAdapter = MenuPickAdapter(menuList)
+            val recyclerView = binding.rvMenuPicker
+            recyclerView.adapter = menuPickAdapter
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.setHasFixedSize(true)
+            //구분선 주석처리
+//            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+        }
 
 
-        val menuNameArray = intent.getStringArrayListExtra("menuNameArray")
-        val menuIdArray = intent.getLongArrayExtra("menuIdArray")
-
-        Log.d("post", "받은" + menuNameArray.toString())
-
-
-        /* 리사이클러뷰 어댑터 */
-        menuPickAdapter = MenuPickAdapter(menuNameArray, menuIdArray)
-        val recyclerView = binding.rvMenuPicker
-        recyclerView.adapter = menuPickAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.setHasFixedSize(true)
 
         // "다음" 버튼 클릭 시, 다음 항목의 리뷰화면을 시작합니다.
         binding.btnNextReview.setOnClickListener {
