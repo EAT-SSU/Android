@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.view.review.ReviewListActivity
+import com.eatssu.android.viewmodel.MenuIdViewModel
 
 
 class FixedMenuAdapter(
@@ -50,6 +53,9 @@ class FixedMenuAdapter(
             intent.putExtra(
                 "menuType", MenuType.FIX.toString()
             )
+
+            //val menuViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[MenuIdViewModel::class.java]
+            //menuViewModel.setData(dataList.fixMenuInfoList[position].menuId.toString())
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
     }
