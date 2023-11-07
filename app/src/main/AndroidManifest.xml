@@ -95,15 +95,6 @@
         </activity>
 
         <activity
-            android:name=".view.mypage.ChangePwActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".view.mypage.ChangeNicknameActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
