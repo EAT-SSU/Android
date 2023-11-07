@@ -10,17 +10,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.App
 import com.eatssu.android.R
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.model.response.TokenResponseDto
 import com.eatssu.android.data.service.MyPageService
-import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.UserService
+import com.eatssu.android.databinding.ActivityMyPageBinding
+import com.eatssu.android.view.login.SocialLoginActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.eatssu.android.view.login.SocialLoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +27,7 @@ import retrofit2.Response
 
 class MyPageActivity : BaseActivity() {
     private lateinit var binding: ActivityMyPageBinding
+    private lateinit var userService: UserService
 
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
@@ -69,18 +69,13 @@ class MyPageActivity : BaseActivity() {
             //finish()
         }
 
-        /*binding.clChPw.setOnClickListener{
-            val intent = Intent(this, ChangePwActivity::class.java)
-            startActivity(intent)
-//            finish()
-        }*/
-
         binding.tvMyreview.setOnClickListener{
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
         }
 
+        val intent = Intent(this, SocialLoginActivity::class.java)
 
         binding.tvLogout.setOnClickListener{
 
@@ -93,12 +88,11 @@ class MyPageActivity : BaseActivity() {
                         //로그아웃
                         MySharedPreferences.clearUser(this)
                         Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        App.token_prefs.clearTokens() //자동로그인 토큰 날리기
                         startActivity(intent)
                     })
-                .setNegativeButton("취소",
-                    DialogInterface.OnClickListener { dialog, id ->
-                    })
+                .setNegativeButton("취소") { _, _ ->
+                }
             // 다이얼로그를 띄워주기
             builder.show()
         }
@@ -114,12 +108,12 @@ class MyPageActivity : BaseActivity() {
                         //탈퇴처리
                         MySharedPreferences.clearUser(this)
                         Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        App.token_prefs.clearTokens() //자동로그인 토큰 날리기
+                        userService.signOut() //탈퇴하기 API 호출
                         startActivity(intent)
                     })
-                .setNegativeButton("취소",
-                    DialogInterface.OnClickListener { dialog, id ->
-                    })
+                .setNegativeButton("취소") { _, _ ->
+                }
             // 다이얼로그를 띄워주기
             builder.show()
         }
