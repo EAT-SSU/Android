@@ -9,6 +9,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.data.RetrofitImpl.mRetrofit
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
 import kotlinx.coroutines.Dispatchers
@@ -49,12 +51,15 @@ class MyReviewDialogActivity : AppCompatActivity() {
                     Toast.makeText(this@MyReviewDialogActivity, "리뷰 삭제가 취소되었습니다", Toast.LENGTH_SHORT).show()
                 })
                 setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
-                    val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
+                    val service = mRetrofit.create(ReviewService::class.java)
                     lifecycleScope.launch {
                         try {
                             val response = withContext(Dispatchers.IO) {
                                 service.delReview(reviewId).execute()
                             }
+                            Log.d("post", "응답 코드: ${response.code()}")
+                            Log.d("post", "응답 본문: ${response.body()}")
+
                             if (response.isSuccessful) {
                                 // 정상적으로 통신이 성공한 경우
                                 Log.d("post", "onResponse 성공: " + response.body().toString())
@@ -68,6 +73,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
                                     "post",
                                     "onResponse 실패 write" + response.code()
                                 )
+                                finish()
                             }
                         } catch (e: Exception) {
                             // 통신 중 예외가 발생한 경우
@@ -75,12 +81,12 @@ class MyReviewDialogActivity : AppCompatActivity() {
                             Toast.makeText(
                                 this@MyReviewDialogActivity, "리뷰를 삭제하지 못했습니다.", Toast.LENGTH_SHORT
                             ).show()
+                            finish()
                         }
                     }
                 })
                 create()
                 show()
-                finish()
             }
         }
     }
