@@ -58,10 +58,14 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
             binding.btnDetail.setOnClickListener() {
                 if(dataList?.get(position)?.isWriter == false) {
                     val intent = Intent(binding.btnDetail.context, OthersReviewDialogActivity::class.java)
+                    intent.putExtra("reviewId", dataList[position].reviewId)
+                    intent.putExtra("menu", dataList[position].menu)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
                 else if (dataList?.get(position)?.isWriter == true) {
                     val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
+                    intent.putExtra("reviewId", dataList[position].reviewId)
+                    intent.putExtra("menu", dataList[position].menu)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }
