@@ -36,13 +36,9 @@ class BreakfastFragment : Fragment() {
     private var _binding: FragmentBreakfastBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MenuViewModel
-    private lateinit var reviewViewModel: ReviewViewModel
-
-
+    private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
-    private lateinit var reviewService: ReviewService
-
+    private lateinit var menuRepository: MenuRepository
 
     private lateinit var menuDate: String
 
@@ -60,23 +56,13 @@ class BreakfastFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuService = retrofit.create(MenuService::class.java)
-        reviewService = retrofit.create(ReviewService::class.java)
-
 
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
 
-        val menuRepository = MenuRepository(menuService)
-        viewModel =
-            ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
-
-        val reviewRepository = ReviewRepository(reviewService)
-        reviewViewModel = ViewModelProvider(
-            this,
-            ReviewViewModelFactory(reviewRepository)
-        )[ReviewViewModel::class.java]
-
+        menuRepository = MenuRepository(menuService)
+        menuViewModel = ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
 
         // ViewModelProvider를 통해 ViewModel 가져오기
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
@@ -103,8 +89,8 @@ class BreakfastFragment : Fragment() {
 //            })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.MORNING)
-            viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.MORNING)
+            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvGisik

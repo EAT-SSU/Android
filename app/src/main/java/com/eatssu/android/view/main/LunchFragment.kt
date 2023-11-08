@@ -40,16 +40,11 @@ class LunchFragment : Fragment() {
     private var _binding: FragmentLunchBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MenuViewModel
-    private lateinit var reviewViewModel: ReviewViewModel
-
-
+    private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
-    private lateinit var reviewService: ReviewService
-
+    private lateinit var menuRepository: MenuRepository
 
     private lateinit var menuDate: String
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,17 +59,8 @@ class LunchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuService = retrofit.create(MenuService::class.java)
-        reviewService = retrofit.create(ReviewService::class.java)
-
-        val menuRepository = MenuRepository(menuService)
-        viewModel =
-            ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
-
-        val reviewRepository = ReviewRepository(reviewService)
-        reviewViewModel = ViewModelProvider(
-            this,
-            ReviewViewModelFactory(reviewRepository)
-        )[ReviewViewModel::class.java]
+        menuRepository = MenuRepository(menuService)
+        menuViewModel = ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
 
 
         // ViewModelProvider를 통해 ViewModel 가져오기
@@ -103,8 +89,8 @@ class LunchFragment : Fragment() {
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
 
             //숭실도담
-            viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
-            viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
+            menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvDodam
@@ -122,8 +108,8 @@ class LunchFragment : Fragment() {
             })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
-            viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
+            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString()!= "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvDormitory
@@ -138,8 +124,8 @@ class LunchFragment : Fragment() {
             })
 
             //학생식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
-            viewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
+            menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
             //    if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvHaksik
@@ -154,8 +140,8 @@ class LunchFragment : Fragment() {
         })
 
         //더키친
-        viewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
-        viewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
+        menuViewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
+        menuViewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
             val kitchenAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvKitchen
             recyclerView.adapter = kitchenAdapter
@@ -164,8 +150,8 @@ class LunchFragment : Fragment() {
         })
 
         //푸드코트
-        viewModel.loadFixedMenu(Restaurant.FOOD_COURT)
-        viewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
+        menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
+        menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
             val foodAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvFood
             recyclerView.adapter = foodAdapter
@@ -174,8 +160,8 @@ class LunchFragment : Fragment() {
         })
 
         //스낵코너
-        viewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
-        viewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
+        menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
+        menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
             val foodAdapter = FixedMenuAdapter(result)
             val recyclerView = binding.rvSnack
             recyclerView.adapter = foodAdapter

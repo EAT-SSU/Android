@@ -18,16 +18,12 @@ import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 //import com.eatssu.android.adapter.DodamAdapter
 import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.FragmentDinnerBinding
 import com.eatssu.android.repository.MenuRepository
-import com.eatssu.android.repository.ReviewRepository
 import com.eatssu.android.view.infopage.*
 import com.eatssu.android.viewmodel.CalendarViewModel
 import com.eatssu.android.viewmodel.MenuViewModel
-import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
-import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -37,13 +33,9 @@ class DinnerFragment : Fragment() {
     private var _binding: FragmentDinnerBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MenuViewModel
-    private lateinit var reviewViewModel: ReviewViewModel
-
-
+    private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
-    private lateinit var reviewService: ReviewService
-
+    private lateinit var menuRepository: MenuRepository
 
     private lateinit var menuDate: String
 
@@ -61,23 +53,12 @@ class DinnerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuService = retrofit.create(MenuService::class.java)
-        reviewService = retrofit.create(ReviewService::class.java)
-
 
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
-
-        val menuRepository = MenuRepository(menuService)
-        viewModel =
-            ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
-
-        val reviewRepository = ReviewRepository(reviewService)
-        reviewViewModel = ViewModelProvider(
-            this,
-            ReviewViewModelFactory(reviewRepository)
-        )[ReviewViewModel::class.java]
-
+        menuRepository = MenuRepository(menuService)
+        menuViewModel = ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
 
         // ViewModelProvider를 통해 ViewModel 가져오기
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
@@ -86,8 +67,8 @@ class DinnerFragment : Fragment() {
             menuDate =
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
             //숭실도담
-            viewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.DINNER)
-            viewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.DINNER)
+            menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvDodam
@@ -104,8 +85,8 @@ class DinnerFragment : Fragment() {
             })
 
             //기숙사식당
-            viewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.DINNER)
-            viewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.DINNER)
+            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
                     val dodamAdapter = TodayMealAdapter(result)
                     val recyclerView = binding.rvDodam
