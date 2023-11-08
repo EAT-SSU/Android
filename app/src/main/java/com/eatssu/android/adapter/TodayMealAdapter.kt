@@ -55,11 +55,11 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
             intent.putExtra(
                 "itemId", dataList[position].mealId
             )
+            intent.putExtra("mealId",dataList[position].mealId)
             intent.putExtra(
                 "menuType", MenuType.CHANGE.toString()
             )
 
-//            val changeMenuInfoList =dataList[position].changeMenuInfoList[position].menuId
             val menuIds = mutableListOf<Long>()
             val menuNames = mutableListOf<String>()
 
@@ -71,10 +71,7 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
             }
 
             val menuIdArray = menuIds.toLongArray()
-            val menuNameArray = menuNames.toList()?.let { ArrayList(it) }
-
-//            val arrayList: ArrayList<Long>? = longArray?.toList()?.let { ArrayList(it) }
-
+            val menuNameArray = ArrayList(menuNames.toList())
 
             intent.putExtra("menuIdArray",menuIdArray)
             intent.putStringArrayListExtra("menuNameArray",menuNameArray)
