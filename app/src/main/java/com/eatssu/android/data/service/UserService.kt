@@ -15,7 +15,9 @@ interface UserService {
 
     //accessToken, refreshToken 재발급
     @POST("user/token/reissue")
-    fun getNewToken(): Call<TokenResponseDto>
+    fun getNewToken(
+        @Header("Authorization") refreshToken: String?)
+    : Call<TokenResponseDto>
 
     //로그인
     @POST("user/login")
