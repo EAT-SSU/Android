@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".view.main.MainActivity">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/tv_eat_ssu"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         android:gravity="center"
-        android:src="@drawable/logo"
+        android:src="@drawable/img_app_bar"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -26,13 +26,15 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_dot"
-        app:layout_constraintEnd_toEndOf="@+id/tv_eat_ssu"
-        app:layout_constraintTop_toTopOf="@+id/tv_eat_ssu" />
+        android:layout_marginTop="-5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_eat_ssu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_eat_ssu"
+        app:layout_constraintVertical_bias="0.5" />
 
 
     <LinearLayout
