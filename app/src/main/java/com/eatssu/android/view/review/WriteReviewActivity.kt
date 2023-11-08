@@ -166,8 +166,10 @@ class WriteReviewActivity : AppCompatActivity() {
             // Make the file list nullable
             if (compressedPartsList == null) {
                 viewModel.postReview(itemId, reviewData)
+                Log.d("post","사진 없는 리뷰")
             } else {
                 viewModel.postReview(itemId, compressedPartsList, reviewData)
+                Log.d("post","사진 있는 리뷰")
             }
         }
 
