@@ -1,5 +1,6 @@
 package com.eatssu.android.data.service
 
+import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import retrofit2.Call
@@ -18,4 +19,9 @@ interface MenuService {
     fun getFixMenu(
         @Query("restaurant") restaurant: String
     ): Call<GetFixedMenuResponseDto>
+
+    @GET("menu/menus")
+    fun getMenuByMealId(
+        @Query("mealId") mealId: Long
+    ): Call<ChangeMenuInfoListDto>
 }
