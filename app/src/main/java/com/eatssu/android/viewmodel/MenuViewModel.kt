@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
+import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.repository.MenuRepository
@@ -35,6 +36,10 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     private val _fixedMenuDataFood = MutableLiveData<GetFixedMenuResponseDto>()
     val fixedMenuDataFood: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataFood
+
+    private val _menuBymealId = MutableLiveData<ChangeMenuInfoListDto>()
+    val menuBymealId: MutableLiveData<ChangeMenuInfoListDto> = _menuBymealId
+
 
     fun loadTodayMeal(
         menuDate: String,
@@ -103,6 +108,31 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                     }
 
                     override fun onFailure(call: Call<GetFixedMenuResponseDto>, t: Throwable) {
+                        Log.d("post", "onFailure 에러: ${t.message}")
+                    }
+                })
+        }
+    }
+
+    fun findMenuItemByMealId(mealId: Long) {
+        viewModelScope.launch {
+            repository.getMenuIdByMealId(mealId)
+                .enqueue(object : Callback<ChangeMenuInfoListDto> {
+                    override fun onResponse(
+                        call: Call<ChangeMenuInfoListDto>,
+                        response: Response<ChangeMenuInfoListDto>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("post", "onResponse 성공" + response.body())
+
+                            menuBymealId.postValue(response.body())
+
+                        } else {
+                            Log.d("post", "onResponse 실패")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ChangeMenuInfoListDto>, t: Throwable) {
                         Log.d("post", "onFailure 에러: ${t.message}")
                     }
                 })
