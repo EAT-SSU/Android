@@ -1,16 +1,11 @@
 package com.eatssu.android.viewmodel
 
-import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.*
-import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
-import com.eatssu.android.data.model.response.GetReviewListResponse
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.repository.ReviewRepository
-import com.eatssu.android.view.review.ReviewListActivity
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -58,7 +53,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
 
                         } else {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            Log.d("post", "onResponse 실패")
+                            Log.d("post", "onResponse 리뷰 작성 실패")
                         }
                     }
 
@@ -85,17 +80,17 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
                 ) {
                     if (response.isSuccessful) {
                         // 정상적으로 통신이 성공된 경우
-                        Log.d("post", "onResponse 성공: " + response.body().toString());
+                        Log.d("post", "onResponse 리뷰 작성 성공: " + response.body().toString());
 
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                        Log.d("post", "onResponse 실패")
+                        Log.d("post", "onResponse 리뷰 작성 실패"+response.code())
                     }
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    Log.d("post", "onFailure 에러: " + t.message.toString());
+                    Log.d("post", "onFailure 리뷰 작성 에러: " + t.message.toString());
                 }
             })
         }

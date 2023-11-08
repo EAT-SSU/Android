@@ -19,9 +19,7 @@ import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
 import com.eatssu.android.repository.ReviewRepository
-import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.UploadReviewViewModel
-import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import com.eatssu.android.viewmodel.factory.UploadReviewViewModelFactory
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -166,8 +164,10 @@ class WriteReviewActivity : AppCompatActivity() {
             // Make the file list nullable
             if (compressedPartsList == null) {
                 viewModel.postReview(itemId, reviewData)
+                Log.d("post","사진 없는 리뷰")
             } else {
                 viewModel.postReview(itemId, compressedPartsList, reviewData)
+                Log.d("post","사진 있는 리뷰")
             }
         }
 

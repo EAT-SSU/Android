@@ -7,8 +7,11 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface UserService {
-    @POST("user/token/reissue") //accessToken, refreshToken 재발급
-    fun getNewToken(): Call<TokenResponseDto>
+    //accessToken, refreshToken 재발급
+    @POST("user/token/reissue")
+    fun getNewToken(
+        @Header("Authorization") refreshToken: String?)
+    : Call<TokenResponseDto>
 
     @PATCH("user/nickname") //닉네임 수정
     fun changeNickname(@Body request: ChangeNicknameRequestDto): Call<Void>
