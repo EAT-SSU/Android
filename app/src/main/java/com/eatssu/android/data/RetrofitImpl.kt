@@ -1,8 +1,14 @@
 package com.eatssu.android.data
 
+import android.content.Context
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.view.login.SocialLoginActivity
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -45,20 +51,18 @@ object RetrofitImpl {
     }
 
     private fun createTokenOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(AppInterceptor())
-//            .authenticator(TokenAuthenticator())
+        return commonOkHttpClient.newBuilder()
+            .addInterceptor(AppInterceptor(App.appContext))
             .build()
     }
 
     private fun createMultiPartOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
+        return commonOkHttpClient.newBuilder()
             .addInterceptor(mAppInterceptor())
-//            .authenticator(TokenAuthenticator())
             .build()
     }
 
-    private class AppInterceptor : Interceptor {
+    private class AppInterceptor(val context: Context) : Interceptor {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
             var response: Response
@@ -90,7 +94,19 @@ object RetrofitImpl {
                     // 새로운 요청으로 다시 시도
                     response = proceed(newRequest)
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.d("AppInterceptor", "토큰 재발급 실패"+response)
+//                    e.printStackTrace() //이거 빼니까 강제종료 안된다
+                    // 리프레시 토큰이 만료되어 재발급에 실패했을 때 로그아웃 처리
+                    if (response.code == 403) {
+                        MySharedPreferences.clearUser(context) //자동 로그인
+                        App.token_prefs.clearTokens() // 토큰 제거
+                        Handler(Looper.getMainLooper()).post {
+                            Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(context, SocialLoginActivity::class.java) // 로그인 화면으로 이동
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            context.startActivity(intent)
+                        }
+                    }
                 }
             }
             response

@@ -7,8 +7,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface UserService {
-    //accessToken, refreshToken 재발급
-    @POST("user/token/reissue")
+    @POST("user/token/reissue") //accessToken, refreshToken 재발급
     fun getNewToken(
         @Header("Authorization") refreshToken: String?)
     : Call<TokenResponseDto>
