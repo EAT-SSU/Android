@@ -7,7 +7,6 @@ import com.eatssu.android.data.service.UserService
 object TokenManager {
     private val userService = RetrofitImpl.nonRetrofit.create(UserService::class.java)
 
-
     fun refreshToken(): String {
         val refreshToken = "Bearer "+App.token_prefs.refreshToken
         val response = userService.getNewToken(refreshToken).execute()

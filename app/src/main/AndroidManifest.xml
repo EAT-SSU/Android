@@ -209,7 +209,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.review.FixMenuActivity"
+            android:name=".view.review.FixedReviewActivity"
             android:exported="true">
 
             <meta-data

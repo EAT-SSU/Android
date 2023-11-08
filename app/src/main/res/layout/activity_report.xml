@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.review.ReportActivity">
 
-    <include
-        android:id="@+id/included"
-        layout="@layout/include_actionbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:text="리뷰를 신고하는 이유를 선택해주세요."
         android:id="@+id/tv_report"
@@ -20,7 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/included"
+        app:layout_constraintTop_toTopOf="parent"
         android:fontFamily="@font/noto_black"/>
 
 

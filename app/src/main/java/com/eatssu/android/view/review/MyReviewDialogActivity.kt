@@ -8,9 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.RetrofitImpl.mRetrofit
-import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +33,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
         Log.d("reviewId", reviewId.toString())
 
         binding.btnReviewFix.setOnClickListener {
-            val intent = Intent(this, FixMenuActivity::class.java)
+            val intent = Intent(this, FixedReviewActivity::class.java)
             intent.putExtra("reviewId", reviewId)
             intent.putExtra("menu", menu)
             startActivity(intent)
@@ -47,10 +45,14 @@ class MyReviewDialogActivity : AppCompatActivity() {
             AlertDialog.Builder(this).apply {
                 setTitle("리뷰 삭제")
                 setMessage("작성한 리뷰를 삭제하시겠습니까?")
-                setNegativeButton("취소", DialogInterface.OnClickListener{ dialog, which ->
-                    Toast.makeText(this@MyReviewDialogActivity, "리뷰 삭제가 취소되었습니다", Toast.LENGTH_SHORT).show()
-                })
-                setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
+                setNegativeButton("취소") { _, _ ->
+                    Toast.makeText(
+                        this@MyReviewDialogActivity,
+                        "리뷰 삭제가 취소되었습니다",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                setPositiveButton("삭제") { _, _ ->
                     val service = mRetrofit.create(ReviewService::class.java)
                     lifecycleScope.launch {
                         try {
@@ -64,7 +66,9 @@ class MyReviewDialogActivity : AppCompatActivity() {
                                 // 정상적으로 통신이 성공한 경우
                                 Log.d("post", "onResponse 성공: " + response.body().toString())
                                 Toast.makeText(
-                                    this@MyReviewDialogActivity, "삭제하기가 완료되었습니다.", Toast.LENGTH_SHORT
+                                    this@MyReviewDialogActivity,
+                                    "삭제하기가 완료되었습니다.",
+                                    Toast.LENGTH_SHORT
                                 ).show()
                                 finish()
                             } else {
@@ -84,7 +88,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
                             finish()
                         }
                     }
-                })
+                }
                 create()
                 show()
             }

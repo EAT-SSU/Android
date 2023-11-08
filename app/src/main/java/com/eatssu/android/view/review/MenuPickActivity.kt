@@ -5,10 +5,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.adapter.MenuPickAdapter
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
@@ -18,9 +18,8 @@ import com.eatssu.android.viewmodel.MenuViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
 
 
-class MenuPickActivity : AppCompatActivity() {
+class MenuPickActivity : BaseActivity<ActivityMenuPickBinding>(ActivityMenuPickBinding::inflate) {
 
-    private lateinit var binding: ActivityMenuPickBinding
     private lateinit var menuPickAdapter: MenuPickAdapter
 
     private lateinit var viewModel: MenuViewModel
@@ -37,8 +36,8 @@ class MenuPickActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMenuPickBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
+
 
         menuService = retrofit.create(MenuService::class.java)
         reviewService = retrofit.create(ReviewService::class.java)
@@ -84,6 +83,7 @@ class MenuPickActivity : AppCompatActivity() {
     }
 
     // B 화면에서 돌아올 때 호출되는 콜백 메서드
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK) {

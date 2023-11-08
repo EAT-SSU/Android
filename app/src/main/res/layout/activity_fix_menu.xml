@@ -4,28 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.review.FixMenuActivity">
-
-    <include
-        android:id="@+id/included"
-        layout="@layout/include_actionbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/tv_eat_ssu"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="80dp"-->
-    <!--        android:text="리뷰 남기기"-->
-    <!--        android:gravity="center"-->
-    <!--        android:textSize="25dp"-->
-    <!--        android:textColor="@color/white"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:background="@color/main"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+    tools:context=".view.review.FixedReviewActivity">
 
     <LinearLayout
         android:id="@+id/tv_review2_menu"
@@ -34,7 +13,7 @@
         android:gravity="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/included">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
