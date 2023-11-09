@@ -132,39 +132,19 @@
         android:layout_height="wrap_content"
         android:text="2023.03.03"
         android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_review_item_delete"
-        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_delete"
+        app:layout_constraintBottom_toTopOf="@+id/btn_detail"
+        app:layout_constraintEnd_toEndOf="@+id/btn_detail"
         app:layout_constraintTop_toTopOf="@+id/tv_review_item_id"/>
 
-    <TextView
-        android:id="@+id/tv_review_item_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="수정"
-        android:textColor="@color/dark_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
-        app:layout_constraintEnd_toStartOf="@+id/tv_review_item"
-        app:layout_constraintTop_toTopOf="@+id/tv_review_item_id" />
-
-    <TextView
-        android:id="@+id/tv_review_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="/"
-        android:textColor="@color/dark_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
-        app:layout_constraintEnd_toStartOf="@+id/tv_review_item_delete"
-        app:layout_constraintTop_toTopOf="@+id/tv_review_item_id" />
-
-    <TextView
-        android:id="@+id/tv_review_item_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="삭제"
-        android:textColor="@color/dark_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
-        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
-        app:layout_constraintTop_toTopOf="@+id/tv_review_item_id" />
+    <ImageButton
+        android:id="@+id/btn_detail"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_three_dot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_date" />
 
     <TextView
         android:id="@+id/tv_review_item_comment"

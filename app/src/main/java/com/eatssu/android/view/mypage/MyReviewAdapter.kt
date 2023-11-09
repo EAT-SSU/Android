@@ -16,6 +16,8 @@ import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ItemMyReviewBinding
 import com.eatssu.android.view.review.FixedReviewActivity
+import com.eatssu.android.view.review.MyReviewDialogActivity
+import com.eatssu.android.view.review.OthersReviewDialogActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,59 +60,14 @@ class MyReviewAdapter(private val dataList: List<GetMyReviewResponseDto.Data>) :
                 imageView.visibility = View.VISIBLE
             }
 
-            binding.tvReviewItemUpdate.setOnClickListener() {
-                val intent = Intent(binding.tvReviewItemUpdate.context, FixedReviewActivity::class.java)
-                intent.putExtra("reviewId", dataList[position].reviewId.toLong())
-                intent.putExtra("menu", dataList[position].menuName)
-                ContextCompat.startActivity(binding.tvReviewItemUpdate.context, intent, null)
-            }
-
-            binding.tvReviewItemDelete.setOnClickListener() {
-                AlertDialog.Builder(binding.tvReviewItemDelete.context).apply {
-                    setTitle("리뷰 삭제")
-                    setMessage("작성한 리뷰를 삭제하시겠습니까?")
-                    setNegativeButton("취소") { _, _ ->
-                        Toast.makeText(
-                            binding.tvReviewItemDelete.context,
-                            "리뷰 삭제가 취소되었습니다",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    setPositiveButton("삭제") { _, _ ->
-                        val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
-
-                        service.delReview(dataList[position].reviewId.toLong())
-                            .enqueue(object : Callback<Void> {
-                                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                    if (response.isSuccessful) {
-                                        if (response.code() == 200) {
-                                            Log.d("post", "onResponse 성공: " + response.body().toString())
-                                            Toast.makeText(
-                                                binding.tvReviewItemDelete.context, "삭제가 완료되었습니다.", Toast.LENGTH_SHORT
-                                            ).show()
-
-
-                                        } else {
-                                            Log.d("post", "onResponse 오류: " + response.body().toString())
-                                            Toast.makeText(
-                                                binding.tvReviewItemDelete.context, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-                                }
-                                override fun onFailure(call: Call<Void>, t: Throwable) {
-                                    Log.d("post", "onFailure 에러: " + t.message.toString())
-                                    Toast.makeText(
-                                        binding.tvReviewItemDelete.context, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            })
-                    }
-                    show()
+            binding.btnDetail.setOnClickListener() {
+                    val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
+                    intent.putExtra("reviewId", dataList[position].reviewId.toLong())
+                    intent.putExtra("menu", dataList[position].menuName)
+                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }
         }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewBinding =
