@@ -8,12 +8,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.RetrofitImpl.mRetrofit
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class MyReviewDialogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewDialogBinding
@@ -41,7 +47,6 @@ class MyReviewDialogActivity : AppCompatActivity() {
         }
 
         binding.btnReviewDelete.setOnClickListener {
-
             AlertDialog.Builder(this).apply {
                 setTitle("리뷰 삭제")
                 setMessage("작성한 리뷰를 삭제하시겠습니까?")
@@ -53,45 +58,37 @@ class MyReviewDialogActivity : AppCompatActivity() {
                     ).show()
                 }
                 setPositiveButton("삭제") { _, _ ->
-                    val service = mRetrofit.create(ReviewService::class.java)
-                    lifecycleScope.launch {
-                        try {
-                            val response = withContext(Dispatchers.IO) {
-                                service.delReview(reviewId).execute()
-                            }
-                            Log.d("post", "응답 코드: ${response.code()}")
-                            Log.d("post", "응답 본문: ${response.body()}")
+                    val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-                            if (response.isSuccessful) {
-                                // 정상적으로 통신이 성공한 경우
-                                Log.d("post", "onResponse 성공: " + response.body().toString())
-                                Toast.makeText(
-                                    this@MyReviewDialogActivity,
-                                    "삭제하기가 완료되었습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                finish()
-                            } else {
-                                // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                                Log.d(
-                                    "post",
-                                    "onResponse 실패 write" + response.code()
-                                )
-                                finish()
+                    service.delReview(reviewId)
+                        .enqueue(object : Callback<Void> {
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                if (response.isSuccessful) {
+                                    if (response.code() == 200) {
+                                        Log.d("post", "onResponse 성공: " + response.body().toString())
+                                        Toast.makeText(
+                                            this@MyReviewDialogActivity, "삭제가 완료되었습니다.", Toast.LENGTH_SHORT
+                                        ).show()
+                                        finish()
+
+                                    } else {
+                                        Log.d("post", "onResponse 오류: " + response.body().toString())
+                                        Toast.makeText(
+                                            this@MyReviewDialogActivity, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
                             }
-                        } catch (e: Exception) {
-                            // 통신 중 예외가 발생한 경우
-                            Log.d("post", "통신 실패: ${e.message}")
-                            Toast.makeText(
-                                this@MyReviewDialogActivity, "리뷰를 삭제하지 못했습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
-                        }
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                Log.d("post", "onFailure 에러: " + t.message.toString())
+                                Toast.makeText(
+                                    this@MyReviewDialogActivity, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        })
                     }
-                }
-                create()
                 show()
+                }
             }
         }
     }
-}

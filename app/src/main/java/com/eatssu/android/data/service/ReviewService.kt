@@ -26,13 +26,13 @@ interface ReviewService {
 
 
     @DELETE("/review/{reviewId}") //리뷰 삭제
-    fun delReview(@Path("reviewId") reviewId: Long): Call<String>
+    fun delReview(@Path("reviewId") reviewId: Long): Call<Void>
 
     @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
         @Path("reviewId") reviewId: Long,
         @Body request: RequestBody
-    ): Call<String>
+    ): Call<Void>
 
 
     @GET("/review/info") // Retrieve menu review information (rating, etc.) for changeable menus
