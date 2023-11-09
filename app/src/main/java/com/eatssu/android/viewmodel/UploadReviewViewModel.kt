@@ -1,16 +1,11 @@
 package com.eatssu.android.viewmodel
 
-import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.*
-import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
-import com.eatssu.android.data.model.response.GetReviewListResponse
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.repository.ReviewRepository
-import com.eatssu.android.view.review.ReviewListActivity
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

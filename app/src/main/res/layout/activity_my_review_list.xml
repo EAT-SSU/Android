@@ -6,39 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".view.review.ReviewListActivity">
 
-    <include
-        android:id="@+id/included"
-        layout="@layout/include_actionbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/included"
-        app:layout_constraintTop_toTopOf="@id/included"
-        tools:ignore="MissingConstraints,NotSibling">
-
-        <ImageButton
-            android:id="@+id/btn_review_close"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="left"
-            android:background="@color/white"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_pre"
-            android:scaleType="fitCenter"
-            tools:ignore="MissingConstraints">
-
-        </ImageButton>
-    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/included"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"

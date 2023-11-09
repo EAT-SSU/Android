@@ -3,9 +3,9 @@ package com.eatssu.android.view.review
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
@@ -16,11 +16,11 @@ import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import kotlin.properties.Delegates
 
-class ReviewListActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityReviewListBinding
+class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityReviewListBinding::inflate) {
 
     private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
+    private lateinit var repository: ReviewRepository
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
@@ -33,18 +33,10 @@ class ReviewListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityReviewListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        //binding.included.actionBar.text = "리뷰"
-
-        supportActionBar?.title = "리뷰"
-
+        toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
         reviewService = retrofit.create(ReviewService::class.java)
-
-        val repository = ReviewRepository(reviewService)
-
+        repository = ReviewRepository(reviewService)
         viewModel = ViewModelProvider(this, ReviewViewModelFactory(repository))[ReviewViewModel::class.java]
 
         //get menuId
@@ -211,7 +203,5 @@ class ReviewListActivity : AppCompatActivity() {
         Log.d("post", "resume중간")
         setListData()
         Log.d("post", "resume끝")
-
-
     }
 }

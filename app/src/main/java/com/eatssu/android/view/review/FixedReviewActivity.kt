@@ -1,26 +1,23 @@
 package com.eatssu.android.view.review
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.*
+import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.view.main.MainActivity
-import com.eatssu.android.viewmodel.CalendarViewModel
-import com.eatssu.android.viewmodel.MenuIdViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class FixMenuActivity : AppCompatActivity() {
+class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 
-    private lateinit var binding : ActivityFixMenuBinding
     private var reviewId = -1L
     private var menuId = -1L
     private lateinit var menu: String
@@ -28,15 +25,10 @@ class FixMenuActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFixMenuBinding.inflate(layoutInflater)
-
-        supportActionBar?.title = "수정하기"
-
-        setContentView(binding.root)
+        toolbarTitle.text = "리뷰 수정하기" // 툴바 제목 설정
 
         menu = intent.getStringExtra("menu").toString()
         binding.menu.text = menu
-
         reportInfo()
 
     }
@@ -44,7 +36,7 @@ class FixMenuActivity : AppCompatActivity() {
     private fun reportInfo() {
 
         reviewId = intent.getLongExtra("reviewId", -1L)
-        Log.d("menufix", reviewId.toString())
+        Log.d("ReviewFixedActivity", reviewId.toString())
 
         /*val menuViewModel = ViewModelProvider(this@FixMenuActivity).get(MenuIdViewModel::class.java)
         menuViewModel.getData().observe(this, Observer { dataReceived ->
@@ -88,23 +80,26 @@ class FixMenuActivity : AppCompatActivity() {
                 }
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공한 경우
-                    Log.d("post", "onResponse 성공: " + response.body().toString())
+                    Log.d("ReviewFixedActivity", "onResponse 성공: " + response.body().toString())
                     Toast.makeText(
-                        this@FixMenuActivity, "수정이 완료되었습니다.", Toast.LENGTH_SHORT
+                        this@FixedReviewActivity, "수정이 완료되었습니다.", Toast.LENGTH_SHORT
                     ).show()
                     finish()
                 } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                     Log.d(
-                        "post",
+                        "ReviewFixedActivity",
                         "onResponse 실패 write" + response.code()
                     )
+                    Toast.makeText(
+                        this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
+                    ).show()
                 }
             } catch (e: Exception) {
                 // 통신 중 예외가 발생한 경우
-                Log.d("post", "통신 실패: ${e.message}")
+                Log.d("ReviewFixedActivity", "통신 실패: ${e.message}")
                 Toast.makeText(
-                    this@FixMenuActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
+                    this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
                 ).show()
             }
         }

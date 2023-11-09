@@ -4,30 +4,26 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.App
-import com.eatssu.android.R
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.model.response.TokenResponseDto
 import com.eatssu.android.data.service.MyPageService
-import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.UserService
+import com.eatssu.android.databinding.ActivityMyPageBinding
+import com.eatssu.android.view.login.SocialLoginActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.eatssu.android.view.login.SocialLoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class MyPageActivity : BaseActivity() {
-    private lateinit var binding: ActivityMyPageBinding
+class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
+    private lateinit var userService: UserService
 
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
@@ -35,13 +31,10 @@ class MyPageActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMyPageBinding.inflate(layoutInflater)
-        val inflater = LayoutInflater.from(this)
-        inflater.inflate(R.layout.activity_my_page, findViewById(R.id.frame_layout), true)
-        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
+        toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
         loadMyInfo()
+
         // Firebase Remote Config 초기화 설정
         val configSettings = FirebaseRemoteConfigSettings.Builder()
             .setMinimumFetchIntervalInSeconds(3600) // 캐시된 값을 1시간마다 업데이트
@@ -69,18 +62,13 @@ class MyPageActivity : BaseActivity() {
             //finish()
         }
 
-        /*binding.clChPw.setOnClickListener{
-            val intent = Intent(this, ChangePwActivity::class.java)
-            startActivity(intent)
-//            finish()
-        }*/
-
         binding.tvMyreview.setOnClickListener{
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
 //            finish()
         }
 
+        val intent = Intent(this, SocialLoginActivity::class.java)
 
         binding.tvLogout.setOnClickListener{
 
@@ -93,12 +81,11 @@ class MyPageActivity : BaseActivity() {
                         //로그아웃
                         MySharedPreferences.clearUser(this)
                         Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, SocialLoginActivity::class.java)
+                        App.token_prefs.clearTokens() //자동로그인 토큰 날리기
                         startActivity(intent)
                     })
-                .setNegativeButton("취소",
-                    DialogInterface.OnClickListener { dialog, id ->
-                    })
+                .setNegativeButton("취소") { _, _ ->
+                }
             // 다이얼로그를 띄워주기
             builder.show()
         }
@@ -109,17 +96,17 @@ class MyPageActivity : BaseActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("탈퇴하기")
                 .setMessage("탈퇴 하시겠습니까?")
-                .setPositiveButton("탈퇴하기",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        //탈퇴처리
-                        MySharedPreferences.clearUser(this)
-                        Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, SocialLoginActivity::class.java)
-                        startActivity(intent)
-                    })
-                .setNegativeButton("취소",
-                    DialogInterface.OnClickListener { dialog, id ->
-                    })
+                .setPositiveButton("탈퇴하기"
+                ) { _, _ ->
+                    //탈퇴처리
+                    MySharedPreferences.clearUser(this)
+                    Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
+                    App.token_prefs.clearTokens() //자동로그인 토큰 날리기
+                    userService.signOut() //탈퇴하기 API 호출
+                    startActivity(intent)
+                }
+                .setNegativeButton("취소") { _, _ ->
+                }
             // 다이얼로그를 띄워주기
             builder.show()
         }
@@ -145,20 +132,17 @@ class MyPageActivity : BaseActivity() {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
                             binding.tvNickname.text = response.body()!!.nickname
-                            Log.d("post", "onResponse 성공: " + response.body().toString());
+                            Log.d("post", "onResponse 성공: " + response.body().toString())
 
                         } else {
-                            Log.d("post", "onResponse 오류: " + response.body().toString());
+                            Log.d("post", "onResponse 오류: " + response.body().toString())
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString());
+                    Log.d("post", "onFailure 에러: " + t.message.toString())
                 }
             })
-    }
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_my_page
     }
 }

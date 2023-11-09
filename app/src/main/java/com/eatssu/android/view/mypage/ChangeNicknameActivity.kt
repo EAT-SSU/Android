@@ -4,34 +4,23 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.FrameLayout
 import android.widget.Toast
-import com.eatssu.android.R
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityChangeNicknameBinding
-import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.RetrofitImpl.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChangeNicknameActivity : BaseActivity() {
-    private lateinit var binding: ActivityChangeNicknameBinding
-
+class ChangeNicknameActivity : BaseActivity<ActivityChangeNicknameBinding>(ActivityChangeNicknameBinding::inflate) {
     private var chNick: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityChangeNicknameBinding.inflate(layoutInflater)
-
-        val inflater = LayoutInflater.from(this)
-        inflater.inflate(R.layout.activity_change_nickname, findViewById(R.id.frame_layout), true)
-        findViewById<FrameLayout>(R.id.frame_layout).addView(binding.root)
-
-        supportActionBar?.title = "닉네임 설정"
+        toolbarTitle.text = "닉네임 설정" // 툴바 제목 설정
 
         binding.etChNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -82,7 +71,7 @@ class ChangeNicknameActivity : BaseActivity() {
 
     }
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_change_nickname
-    }
+//    override fun getLayoutResourceId(): Int {
+//        return R.layout.activity_change_nickname
+//    }
 }

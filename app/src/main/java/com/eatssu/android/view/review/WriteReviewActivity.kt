@@ -12,16 +12,14 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
 import com.eatssu.android.repository.ReviewRepository
-import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.UploadReviewViewModel
-import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import com.eatssu.android.viewmodel.factory.UploadReviewViewModelFactory
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -32,8 +30,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class WriteReviewActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityWriteReviewBinding
+class WriteReviewActivity : BaseActivity<ActivityWriteReviewBinding>(ActivityWriteReviewBinding::inflate) {
 
     private lateinit var viewModel: UploadReviewViewModel
     private lateinit var reviewService: ReviewService
@@ -48,8 +45,7 @@ class WriteReviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityWriteReviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
         itemName = intent.getStringExtra("itemName").toString()
         Log.d("post","고정메뉴${itemName}")
@@ -107,6 +103,7 @@ class WriteReviewActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_IMAGE_PICK)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {

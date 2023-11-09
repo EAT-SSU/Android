@@ -9,7 +9,7 @@ import com.kakao.sdk.common.KakaoSdk
 
 class App: Application() {
     companion object{
-        var appContext : Context? = null
+        lateinit var appContext : Context
         lateinit var token_prefs : TokenSharedPreferences
     }
 
@@ -18,8 +18,6 @@ class App: Application() {
         FirebaseApp.initializeApp(this)
 
         token_prefs = TokenSharedPreferences(applicationContext)
-
-//        val apiKey = BuildConfig.KAKAO_NATIVE_APP_KEY
 
         appContext = this
         KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)

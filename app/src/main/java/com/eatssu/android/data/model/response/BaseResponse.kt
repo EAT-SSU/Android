@@ -1,8 +1,8 @@
 package com.eatssu.android.data.model.response
 
 data class BaseResponse(
-    val error: String,
-    val path: String,
-    val status: Int,
-    val timestamp: String
+    val code: Int,
+    val isSuccess: Boolean,
+    val message: String,
+    val result: Result
 )

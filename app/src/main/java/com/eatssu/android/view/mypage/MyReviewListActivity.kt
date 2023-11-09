@@ -3,40 +3,27 @@ package com.eatssu.android.view.mypage
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.MyPageService
-import com.eatssu.android.databinding.*
+import com.eatssu.android.databinding.ActivityMyReviewListBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-//@GET("mypage/myreview") //내가 쓴 리뷰 모아보기
-//fun getMyReviews(): Call<GetMyReviewResponse>
-
-class MyReviewListActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMyReviewListBinding
+class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityMyReviewListBinding::inflate) {
     lateinit var menu :String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        toolbarTitle.text = "내가 쓴 리뷰" // 툴바 제목 설정
 
-        binding = ActivityMyReviewListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.btnReviewClose.setOnClickListener() {
-            onBackPressed();
-        }
-
-        supportActionBar?.title = "내가 쓴 리뷰"
-
-        var MENU_ID:Int=intent.getIntExtra("menuId",-1)
+        val MENU_ID:Int=intent.getIntExtra("menuId",-1)
         Log.d("post",MENU_ID.toString())
-
 
         lodeReview()
     }

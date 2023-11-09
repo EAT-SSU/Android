@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.data.model.request.ReportRequestDto
@@ -19,22 +19,16 @@ import kotlinx.coroutines.withContext
 // reviewId 받아오는거 해야함
 // 메인 리뷰에서 신고하기 뷰로 넘어가는거 해야함
 
-class ReportActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityReportBinding
+class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
     private var reviewId = -1L
     private var reportType = ""
     private var content = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityReportBinding.inflate(layoutInflater)
+        toolbarTitle.text = "신고하기" // 툴바 제목 설정
 
-        supportActionBar?.title = "신고하기"
-
-        setContentView(binding.root)
-
-        reportInfo();
-
+        reportInfo()
     }
 
     private fun reportInfo() {

@@ -1,20 +1,13 @@
 package com.eatssu.android.view.mypage
 
 import android.os.Bundle
-import com.eatssu.android.databinding.ActivityNoticeBinding
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.databinding.ActivityNoticeBinding
 
-abstract class NoticeActivity : BaseActivity() {
-    private lateinit var binding: ActivityNoticeBinding
+abstract class NoticeActivity : BaseActivity<ActivityNoticeBinding>(ActivityNoticeBinding::inflate) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityNoticeBinding.inflate(layoutInflater)
-
-        setActionBarTitle("공지사항")
-
-        setContentView(binding.root)
+        toolbarTitle.text = "공지사항" // 툴바 제목 설정
     }
-
-    abstract fun setActionBarTitle(s: String)
 }
