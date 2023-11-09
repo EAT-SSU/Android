@@ -87,28 +87,32 @@ class MainActivity : AppCompatActivity() {
 
         val myPageService =
             RetrofitImpl.retrofit.create(MyPageService::class.java)
-            myPageService.getMyInfo().enqueue(object :
+
+        myPageService.getMyInfo().enqueue(object :
             Callback<GetMyInfoResponseDto> {
             override fun onResponse(
                 call: Call<GetMyInfoResponseDto>,
                 response: Response<GetMyInfoResponseDto>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("post", "onResponse 성공: " + response.body().toString());
+                    Log.d("MainActivity", "onResponse 성공: " + response.body().toString());
                     nickname = response.body()?.nickname.toString()
+                    Log.d("MainActivity", "onResponse 성공: $nickname");
+
                     //나중에 isNullOrBlank로 바꿀 것
-                    if (nickname == null) {
+                    if (nickname == "null") {
                         startActivity(intentNick)
+                        Log.d("MainActivity","닉네임이 null")
                     }
                 }
             }
 
             override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                Log.d("post", "onFailure 에러: " + t.message.toString());
+                Log.d("MainActivity", "onFailure 에러: " + t.message.toString());
             }
         })
 
-        supportActionBar?.title = "EAT-SSU"
+//        supportActionBar?.title = "EAT-SSU"
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -289,9 +293,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-        override fun onDestroy() {
-            super.onDestroy()
+    override fun onDestroy() {
+        super.onDestroy()
 
-            networkCheck.unregister() // 네트워크 객체 해제
-        }
+        networkCheck.unregister() // 네트워크 객체 해제
     }
+}
