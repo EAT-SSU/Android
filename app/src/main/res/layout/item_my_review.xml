@@ -137,10 +137,30 @@
         app:layout_constraintTop_toTopOf="@+id/tv_review_item_id"/>
 
     <TextView
+        android:id="@+id/tv_review_item_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수정"
+        android:textColor="@color/dark_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
+        app:layout_constraintEnd_toStartOf="@+id/tv_review_item"
+        app:layout_constraintTop_toTopOf="@+id/tv_review_item_id" />
+
+    <TextView
+        android:id="@+id/tv_review_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/"
+        android:textColor="@color/dark_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
+        app:layout_constraintEnd_toStartOf="@+id/tv_review_item_delete"
+        app:layout_constraintTop_toTopOf="@+id/tv_review_item_id" />
+
+    <TextView
         android:id="@+id/tv_review_item_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="수정/삭제"
+        android:text="삭제"
         android:textColor="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
         app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"

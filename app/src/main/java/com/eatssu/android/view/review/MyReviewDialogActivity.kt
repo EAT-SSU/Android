@@ -1,21 +1,14 @@
 package com.eatssu.android.view.review
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.RetrofitImpl
-import com.eatssu.android.data.RetrofitImpl.mRetrofit
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
