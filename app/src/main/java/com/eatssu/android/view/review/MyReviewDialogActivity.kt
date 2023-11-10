@@ -58,14 +58,14 @@ class MyReviewDialogActivity : AppCompatActivity() {
                             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                 if (response.isSuccessful) {
                                     if (response.code() == 200) {
-                                        Log.d("post", "onResponse 성공: " + response.body().toString())
+                                        Log.d("MyReviewDialogActivity", "onResponse 성공: " + response.body().toString())
                                         Toast.makeText(
                                             this@MyReviewDialogActivity, "삭제가 완료되었습니다.", Toast.LENGTH_SHORT
                                         ).show()
                                         finish()
 
                                     } else {
-                                        Log.d("post", "onResponse 오류: " + response.body().toString())
+                                        Log.d("MyReviewDialogActivity", "onResponse 오류: " + response.body().toString())
                                         Toast.makeText(
                                             this@MyReviewDialogActivity, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
                                         ).show()
@@ -73,7 +73,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
                                 }
                             }
                             override fun onFailure(call: Call<Void>, t: Throwable) {
-                                Log.d("post", "onFailure 에러: " + t.message.toString())
+                                Log.d("MyReviewDialogActivity", "onFailure 에러: " + t.message.toString())
                                 Toast.makeText(
                                     this@MyReviewDialogActivity, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
                                 ).show()

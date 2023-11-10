@@ -51,8 +51,6 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
         binding.btnFixReview.setOnClickListener {
 
             postData(reviewId)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
             finish()
         }
 
