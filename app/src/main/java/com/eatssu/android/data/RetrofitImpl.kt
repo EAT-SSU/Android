@@ -2,10 +2,13 @@ package com.eatssu.android.data
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.view.login.SocialLoginActivity
@@ -15,8 +18,33 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
+@RequiresApi(Build.VERSION_CODES.M)
 object RetrofitImpl {
     private const val BASE_URL = BuildConfig.BASE_URL
+
+    val size = 10 * 1024 * 1024 // 10MB Cache size
+
+    val mCache = Cache(App.appContext.cacheDir, size.toLong())
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    val cacheInterceptor = Interceptor{ chain ->
+        var request = chain.request()
+        request = if (hasNetwork(App.appContext)!!)
+            request.newBuilder().header("Cache-Control", "public, max-age=" + 5).build()
+        else
+            request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build()
+        chain.proceed(request)
+    }
+
+    // Check if network is available
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun hasNetwork(context: Context): Boolean? {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        return networkCapabilities != null
+    }
+
 
     // 공통으로 사용하는 OkHttpClient 생성
     private val commonOkHttpClient: OkHttpClient by lazy {
@@ -24,6 +52,8 @@ object RetrofitImpl {
             .setLevel(HttpLoggingInterceptor.Level.BODY)
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(cacheInterceptor)
+            .cache(mCache)
             .build()
     }
 
