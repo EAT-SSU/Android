@@ -1,8 +1,8 @@
 package com.eatssu.android.data.model.response
 
-data class BaseResponse(
+data class BaseResponse<T>(
     val code: Int,
     val isSuccess: Boolean,
     val message: String,
-    val result: Result
+    val result: T? = null
 )
