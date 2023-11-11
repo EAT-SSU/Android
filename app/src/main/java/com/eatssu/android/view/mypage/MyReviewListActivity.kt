@@ -68,4 +68,14 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
             }
         })
     }
+
+    override fun onRestart() {
+        super.onRestart()
+        lodeReview()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lodeReview()
+    }
 }

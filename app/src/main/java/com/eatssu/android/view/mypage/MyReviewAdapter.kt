@@ -1,13 +1,26 @@
 package com.eatssu.android.view.mypage
 
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
+import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ItemMyReviewBinding
+import com.eatssu.android.view.review.FixedReviewActivity
+import com.eatssu.android.view.review.MyReviewDialogActivity
+import com.eatssu.android.view.review.OthersReviewDialogActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 //@POST("mypage/myreview") //내가 쓴 리뷰 모아보기
@@ -46,8 +59,15 @@ class MyReviewAdapter(private val dataList: List<GetMyReviewResponseDto.Data>) :
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
             }
+
+            binding.btnDetail.setOnClickListener() {
+                    val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
+                    intent.putExtra("reviewId", dataList[position].reviewId.toLong())
+                    intent.putExtra("menu", dataList[position].menuName)
+                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
+                }
+            }
         }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewBinding =
