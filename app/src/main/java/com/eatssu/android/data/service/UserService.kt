@@ -1,7 +1,6 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
-import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.TokenResponseDto
 import retrofit2.Call
 import retrofit2.http.*
@@ -16,7 +15,7 @@ interface UserService {
     fun changeNickname(@Body request: ChangeNicknameRequestDto): Call<Void>
 
     @DELETE("user/signout") //유저 탈퇴
-    fun signOut(): Call<BaseResponse<String>>
+    fun signOut(): Call<String>
 
     @GET("user/check-nickname") //닉네임 중 복 체크, 존재하는 닉네임이면 errorCode 2012
     fun nicknameCheck(

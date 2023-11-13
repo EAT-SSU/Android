@@ -24,6 +24,8 @@ import retrofit2.Response
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
     private lateinit var userService: UserService
+    private lateinit var myPageService: MyPageService
+
 
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
@@ -32,6 +34,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
+        userService = RetrofitImpl.retrofit.create(UserService::class.java)
+        myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
 
         loadMyInfo()
 
@@ -100,9 +104,9 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 ) { _, _ ->
                     //탈퇴처리
                     MySharedPreferences.clearUser(this)
+                    signOut() //탈퇴하기
                     Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
                     App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                    userService.signOut() //탈퇴하기 API 호출
                     startActivity(intent)
                 }
                 .setNegativeButton("취소") { _, _ ->
@@ -122,8 +126,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     fun loadMyInfo() {
-        val service = RetrofitImpl.retrofit.create(MyPageService::class.java)
-        service.getMyInfo()
+        myPageService.getMyInfo()
             .enqueue(object : Callback<GetMyInfoResponseDto> {
                 override fun onResponse(
                     call: Call<GetMyInfoResponseDto>,
@@ -132,16 +135,38 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
                             binding.tvNickname.text = response.body()!!.nickname
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
+                            Log.d("MyPageActivity", "onResponse 성공: " + response.body().toString())
 
                         } else {
-                            Log.d("post", "onResponse 오류: " + response.body().toString())
+                            Log.d("MyPageActivity", "onResponse 오류: " + response.body().toString())
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString())
+                    Log.d("MyPageActivity", "onFailure 에러: " + t.message.toString())
+                }
+            })
+    }
+
+    fun signOut() {
+        userService.signOut().enqueue(object : Callback<String> {
+                override fun onResponse(
+                    call: Call<String>,
+                    response: Response<String>
+                ) {
+                    if (response.isSuccessful) {
+                        if (response.code() == 200) {
+                            Log.d("MyPageActivity", "onResponse 성공: 탈퇴" + response.body().toString())
+
+                        } else {
+                            Log.d("MyPageActivity", "onResponse 오류: 탈퇴" + response.body().toString())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
                 }
             })
     }

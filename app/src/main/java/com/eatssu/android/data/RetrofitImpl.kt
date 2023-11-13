@@ -3,12 +3,10 @@ package com.eatssu.android.data
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.view.login.SocialLoginActivity
@@ -18,7 +16,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-@RequiresApi(Build.VERSION_CODES.M)
 object RetrofitImpl {
     private const val BASE_URL = BuildConfig.BASE_URL
 
@@ -26,7 +23,6 @@ object RetrofitImpl {
 
     val mCache = Cache(App.appContext.cacheDir, size.toLong())
 
-    @RequiresApi(Build.VERSION_CODES.M)
     val cacheInterceptor = Interceptor{ chain ->
         var request = chain.request()
         request = if (hasNetwork(App.appContext)!!)
@@ -37,7 +33,6 @@ object RetrofitImpl {
     }
 
     // Check if network is available
-    @RequiresApi(Build.VERSION_CODES.M)
     fun hasNetwork(context: Context): Boolean? {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork
