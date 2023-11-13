@@ -12,21 +12,40 @@
         android:id="@+id/tv_ch_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_black"
+        android:fontFamily="@font/noto_bold"
         android:text="닉네임"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_ch_nickname"
-        android:background="@drawable/shape_edittext"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname" />
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname"
+        tools:layout_editor_absoluteX="20dp">
+
+        <EditText
+            android:id="@+id/et_ch_nickname"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_edittext"
+            android:inputType="text"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname" />
+
+        <Button
+            android:id="@+id/btn_check_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="중복확인"
+            android:background="@drawable/shape_btn"
+            app:layout_constraintStart_toEndOf="@+id/et_ch_nickname" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView"
@@ -34,14 +53,16 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/noto_bold"
         android:text="2~8글자를 입력해주세요."
-        app:layout_constraintStart_toStartOf="@+id/et_ch_nickname"
-        app:layout_constraintTop_toBottomOf="@+id/et_ch_nickname" />
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
 
     <Button
         android:id="@+id/btn_ch_nickname_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="완료하기"
+        android:background="@drawable/shape_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

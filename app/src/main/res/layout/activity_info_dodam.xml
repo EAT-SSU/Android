@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="숭실 도담 식당"
+                android:text="숭실 도담"
                 android:fontFamily="@font/noto_black"
                 android:textSize="25dp"
                 android:textColor="@color/black"
@@ -67,22 +67,21 @@
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:gravity="right"
-                ></TextView>
+                android:gravity="right" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp">-->
 
-            <RelativeLayout
-                android:id="@+id/btn_map"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"/>
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/btn_map"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="200dp"/>-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -139,7 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="11:30 - 14:00"
+                android:text="11:20 - 14:00"
                 android:textSize="13dp"
                 android:fontFamily="@font/noto_medium"
                 android:textColor="@color/black"
@@ -225,7 +224,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="11:30 - 14:00"
+                android:text="11:30 - 13:30"
                 android:textSize="13dp"
                 android:fontFamily="@font/noto_medium"
                 android:textColor="@color/black"

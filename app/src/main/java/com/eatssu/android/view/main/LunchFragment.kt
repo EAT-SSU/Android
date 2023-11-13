@@ -139,15 +139,15 @@ class LunchFragment : Fragment() {
             })
         })
 
-        //더키친
-        menuViewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
-        menuViewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
-            val kitchenAdapter = FixedMenuAdapter(result)
-            val recyclerView = binding.rvKitchen
-            recyclerView.adapter = kitchenAdapter
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.setHasFixedSize(true)
-        })
+//        //더키친
+//        menuViewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
+//        menuViewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
+//            val kitchenAdapter = FixedMenuAdapter(result)
+//            val recyclerView = binding.rvKitchen
+//            recyclerView.adapter = kitchenAdapter
+//            recyclerView.layoutManager = LinearLayoutManager(context)
+//            recyclerView.setHasFixedSize(true)
+//        })
 
         //푸드코트
         menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
@@ -189,9 +189,9 @@ class LunchFragment : Fragment() {
         binding.btnGisikInfo.setOnClickListener {
             startActivity(Intent(context, InfoActivity_Gisik::class.java))
         }
-        binding.btnKitchenInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Kitchen::class.java))
-        }
+//        binding.btnKitchenInfo.setOnClickListener {
+//            startActivity(Intent(context, InfoActivity_Kitchen::class.java))
+//        }
         binding.btnFoodInfo.setOnClickListener {
             startActivity(Intent(context, InfoActivity_Food::class.java))
         }

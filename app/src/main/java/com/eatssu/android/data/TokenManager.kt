@@ -1,12 +1,16 @@
 package com.eatssu.android.data
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.eatssu.android.App
 import com.eatssu.android.data.service.UserService
 
 object TokenManager {
+    @RequiresApi(Build.VERSION_CODES.M)
     private val userService = RetrofitImpl.nonRetrofit.create(UserService::class.java)
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun refreshToken(): String {
         val refreshToken = "Bearer "+App.token_prefs.refreshToken
         val response = userService.getNewToken(refreshToken).execute()

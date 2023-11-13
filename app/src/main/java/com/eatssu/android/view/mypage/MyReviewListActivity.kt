@@ -2,6 +2,7 @@ package com.eatssu.android.view.mypage
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,11 +50,17 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
-                    Log.d("post", "onResponse 성공: " + response.body().toString());
+                    Log.d("post", "onResponse 성공: " + response.body().toString())
 
                     val body = response.body()
-                    body?.let {
-                        setAdapter(it.dataList)
+
+                    if(body?.numberOfElements ==0){
+                        binding.llNonReview.visibility=View.VISIBLE
+                        binding.nestedScrollView.visibility=View.GONE
+                    }else{
+                        binding.llNonReview.visibility=View.GONE
+                        binding.nestedScrollView.visibility=View.VISIBLE
+                        setAdapter(body!!.dataList)
                     }
 
                 } else {
@@ -64,7 +71,7 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
 
             override fun onFailure(call: Call<GetMyReviewResponseDto>, t: Throwable) {
                 // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                Log.d("post", "onFailure 에러: " + t.message.toString());
+                Log.d("post", "onFailure 에러: " + t.message.toString())
             }
         })
     }

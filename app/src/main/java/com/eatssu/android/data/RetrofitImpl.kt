@@ -2,6 +2,7 @@ package com.eatssu.android.data
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -18,12 +19,36 @@ import java.io.IOException
 object RetrofitImpl {
     private const val BASE_URL = BuildConfig.BASE_URL
 
+    val size = 10 * 1024 * 1024 // 10MB Cache size
+
+    val mCache = Cache(App.appContext.cacheDir, size.toLong())
+
+    val cacheInterceptor = Interceptor{ chain ->
+        var request = chain.request()
+        request = if (hasNetwork(App.appContext)!!)
+            request.newBuilder().header("Cache-Control", "public, max-age=" + 5).build()
+        else
+            request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build()
+        chain.proceed(request)
+    }
+
+    // Check if network is available
+    fun hasNetwork(context: Context): Boolean? {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        return networkCapabilities != null
+    }
+
+
     // 공통으로 사용하는 OkHttpClient 생성
     private val commonOkHttpClient: OkHttpClient by lazy {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(cacheInterceptor)
+            .cache(mCache)
             .build()
     }
 

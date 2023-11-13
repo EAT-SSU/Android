@@ -3,6 +3,7 @@ package com.eatssu.android.view.review
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
@@ -16,7 +17,8 @@ import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import kotlin.properties.Delegates
 
-class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityReviewListBinding::inflate) {
+class ReviewListActivity :
+    BaseActivity<ActivityReviewListBinding>(ActivityReviewListBinding::inflate) {
 
     private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
@@ -37,7 +39,8 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
 
         reviewService = retrofit.create(ReviewService::class.java)
         repository = ReviewRepository(reviewService)
-        viewModel = ViewModelProvider(this, ReviewViewModelFactory(repository))[ReviewViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, ReviewViewModelFactory(repository))[ReviewViewModel::class.java]
 
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
@@ -69,6 +72,7 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
             }
+
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
@@ -90,8 +94,8 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
-
             }
+
             else -> {
                 Log.d("post", "잘못된 식당 정보입니다.")
             }
@@ -101,19 +105,29 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
         setListData()
     }
 
-    private fun setListData(){
+    private fun setListData() {
         viewModel.reviewList.observe(this) { reviewList ->
             Log.d("post", reviewList.dataList.toString())
-            adapter = ReviewAdapter(reviewList)
-            val recyclerView = binding.rvReview
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.setHasFixedSize(true)
-            //구분선 주석처리
-//            recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+
+            if (reviewList.numberOfElements == 0) {
+                Log.d("ReviewListActivity","리뷰가 없음")
+                binding.llNonReview.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.INVISIBLE
+            } else {
+                binding.llNonReview.visibility = View.INVISIBLE
+                binding.nestedScrollView.visibility = View.VISIBLE
+                adapter = ReviewAdapter(reviewList)
+                val recyclerView = binding.rvReview
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = LinearLayoutManager(this)
+                recyclerView.setHasFixedSize(true)
+//                recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))//구분선 주석처리
+
+            }
         }
     }
-    private fun setInfoData(){
+
+    private fun setInfoData() {
 
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
@@ -159,10 +173,12 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
             }
+
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
             }
+
             else -> {
                 Log.d("post", "잘못된 식당 정보입니다.")
             }
@@ -171,7 +187,7 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
 
         setInfoData()
 
-        Log.d("post", "onRestart"+viewModel.reviewInfo.value)
+        Log.d("post", "onRestart" + viewModel.reviewInfo.value)
         setListData()
         Log.d("post", "onRestart")
 
@@ -188,10 +204,12 @@ class ReviewListActivity : BaseActivity<ActivityReviewListBinding>(ActivityRevie
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
             }
+
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
             }
+
             else -> {
                 Log.d("post", "잘못된 식당 정보입니다.")
             }

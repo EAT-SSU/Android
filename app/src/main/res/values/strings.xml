@@ -73,4 +73,7 @@
     <string name="fix">수정하기</string>
     <string name="delete">삭제하기</string>
     <string name="myreview">내가 쓴 리뷰</string>
+    <string name="none_review">아직 작성한 리뷰가 없어요</string>
+    <string name="none_review_my">첫 리뷰를 남겨 주세요!</string>
+    <string name="none_review_list">가장 먼저 리뷰를 남겨 주세요</string>
 </resources>
