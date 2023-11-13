@@ -13,7 +13,7 @@ import retrofit2.Call
 
 class UserRepository(private val userService: UserService) {
 
-    fun checkNickname(nickname: String):Call<BaseResponse<String>>{
+    fun checkNickname(nickname: String):Call<String>{
         return userService.nicknameCheck(nickname)
     }
 }

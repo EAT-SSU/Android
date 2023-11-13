@@ -11,7 +11,6 @@ import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
-import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityChangeNicknameBinding
 import retrofit2.Call
@@ -47,37 +46,39 @@ class ChangeNicknameActivity : BaseActivity<ActivityChangeNicknameBinding>(Activ
         })
 
         binding.btnCheckNickname.setOnClickListener{
-
             val userService =
                 retrofit.create(UserService::class.java)
-            userService.nicknameCheck(inputNickname).enqueue(object : Callback<BaseResponse<String>> {
-                override fun onResponse(call: Call<BaseResponse<String>>, response: Response<BaseResponse<String>>) {
+            userService.nicknameCheck(inputNickname).enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
                         Log.d("post", "onResponse 성공: " + response.body().toString());
 
-                        if (response.code() == 200) {
-                            if(response.body()?.code==2011){
-                                Toast.makeText(
-                                    this@ChangeNicknameActivity, "이미 사용 중인 닉네임 입니다..", Toast.LENGTH_SHORT
-                                ).show()
-                                isEnableNickname=false
-                            }
-                            else if(response.body()?.code==1000){
+                        if(response.body()=="true"){
                             Toast.makeText(
                                 this@ChangeNicknameActivity, "사용가능한 닉네임 입니다.", Toast.LENGTH_SHORT
                             ).show()
-                                isEnableNickname=true
-                            }
-                        } else {
+                            isEnableNickname=true
+                            binding.btnChNicknameDone.isEnabled=isEnableNickname
+                        }else{
+
                             Toast.makeText(
-                                this@ChangeNicknameActivity, "닉네임 중복 확인에 실패했습니다.\"", Toast.LENGTH_SHORT
+                                this@ChangeNicknameActivity, "이미 사용 중인 닉네임 입니다..", Toast.LENGTH_SHORT
                             ).show()
-                            Log.d("post", "onResponse 실패: " + response.body().toString());
+                            isEnableNickname=false
+                            binding.btnChNicknameDone.isEnabled=isEnableNickname
                         }
+                    } else {
+                        Toast.makeText(
+                            this@ChangeNicknameActivity, "닉네임 중복 확인에 실패했습니다.\"", Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("post", "onResponse 실패: " + response.body().toString())
+                        isEnableNickname=false
+                        binding.btnChNicknameDone.isEnabled=isEnableNickname
                     }
                 }
 
-                override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
                     Log.d("post", "onFailure 에러: " + t.message.toString());
                     Toast.makeText(
                         this@ChangeNicknameActivity, "닉네임 중복 확인에 실패했습니다.\"", Toast.LENGTH_SHORT
@@ -85,6 +86,7 @@ class ChangeNicknameActivity : BaseActivity<ActivityChangeNicknameBinding>(Activ
                 }
             })
         }
+
 
         binding.btnChNicknameDone.setOnClickListener{
 
