@@ -9,26 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.adapter.*
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentLunchBinding
-import com.eatssu.android.view.infopage.*
-import com.eatssu.android.viewmodel.MenuViewModel
-import retrofit2.*
-import androidx.lifecycle.Observer
-import com.eatssu.android.data.RetrofitImpl.retrofit
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.repository.MenuRepository
-import com.eatssu.android.repository.ReviewRepository
+import com.eatssu.android.view.infopage.*
 import com.eatssu.android.viewmodel.CalendarViewModel
-import com.eatssu.android.viewmodel.ReviewViewModel
+import com.eatssu.android.viewmodel.MenuViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
-import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.*
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -92,13 +88,13 @@ class LunchFragment : Fragment() {
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.LUNCH)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString() != "[]") {
-                    val dodamAdapter = TodayMealAdapter(result)
-                    val recyclerView = binding.rvDodam
-                    recyclerView.adapter = dodamAdapter
-                    recyclerView.layoutManager = LinearLayoutManager(context)
-                    recyclerView.setHasFixedSize(true)
-                    recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
-                    Log.d("post","도담안널"+result)
+                val dodamAdapter = TodayMealAdapter(result)
+                val recyclerView = binding.rvDodam
+                recyclerView.adapter = dodamAdapter
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+                recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
+                Log.d("post","도담안널"+result)
 
                 //}
                 //else{
@@ -111,31 +107,31 @@ class LunchFragment : Fragment() {
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
             menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
                 //if (result.toString()!= "[]") {
-                    val dodamAdapter = TodayMealAdapter(result)
-                    val recyclerView = binding.rvDormitory
-                    recyclerView.adapter = dodamAdapter
-                    recyclerView.layoutManager = LinearLayoutManager(context)
-                    recyclerView.setHasFixedSize(true)
-                    recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
-                    Log.d("post","기숙사 데이터 있음"+result.toString())
+                val dodamAdapter = TodayMealAdapter(result)
+                val recyclerView = binding.rvDormitory
+                recyclerView.adapter = dodamAdapter
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+                recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
+                Log.d("post","기숙사 데이터 있음"+result.toString())
                 //} else {
-                 //   binding.llGisik.visibility = View.GONE
+                //   binding.llGisik.visibility = View.GONE
                 //}
             })
 
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
-            //    if (result.toString() != "[]") {
-                    val dodamAdapter = TodayMealAdapter(result)
-                    val recyclerView = binding.rvHaksik
-                    recyclerView.adapter = dodamAdapter
-                    recyclerView.layoutManager = LinearLayoutManager(context)
-                    recyclerView.setHasFixedSize(true)
-                    recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
-            //    } else {
-            //        binding.llHaksik.visibility = View.GONE
-            //    }
+                //    if (result.toString() != "[]") {
+                val dodamAdapter = TodayMealAdapter(result)
+                val recyclerView = binding.rvHaksik
+                recyclerView.adapter = dodamAdapter
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+                recyclerView.visibility = View.VISIBLE // 데이터가 있을 때 리사이클러뷰 표시
+                //    } else {
+                //        binding.llHaksik.visibility = View.GONE
+                //    }
             })
         })
 
@@ -173,30 +169,29 @@ class LunchFragment : Fragment() {
         setupClickListeners() //info dialog
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
 
     private fun setupClickListeners() {
+        val intent = Intent(context, InfoActivity::class.java)
+
         binding.btnHaksikInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Haksik::class.java))
+            intent.putExtra("restaurantType", Restaurant.HAKSIK)
+            context?.startActivity(intent)
         }
         binding.btnDodamInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Dodam::class.java))
+            intent.putExtra("restaurantType", Restaurant.DODAM)
+            context?.startActivity(intent)
         }
         binding.btnGisikInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Gisik::class.java))
+            intent.putExtra("restaurantType", Restaurant.DORMITORY)
+            context?.startActivity(intent)
         }
-//        binding.btnKitchenInfo.setOnClickListener {
-//            startActivity(Intent(context, InfoActivity_Kitchen::class.java))
-//        }
         binding.btnFoodInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Food::class.java))
+            intent.putExtra("restaurantType", Restaurant.FOOD_COURT)
+            context?.startActivity(intent)
         }
         binding.btnSnackInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Snack::class.java))
+            intent.putExtra("restaurantType", Restaurant.SNACK_CORNER)
+            context?.startActivity(intent)
         }
     }
 

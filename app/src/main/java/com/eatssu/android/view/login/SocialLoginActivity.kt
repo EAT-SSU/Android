@@ -2,15 +2,10 @@ package com.eatssu.android.view.login
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.webkit.WebView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.data.MySharedPreferences
@@ -20,7 +15,6 @@ import com.eatssu.android.data.model.response.TokenResponseDto
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.view.main.MainActivity
-import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -28,7 +22,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.URISyntaxException
 
 
 class SocialLoginActivity : AppCompatActivity() {

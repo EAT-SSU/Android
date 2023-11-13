@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,17 +17,12 @@ import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.FragmentBreakfastBinding
 import com.eatssu.android.repository.MenuRepository
-import com.eatssu.android.repository.ReviewRepository
 import com.eatssu.android.view.infopage.*
 import com.eatssu.android.viewmodel.CalendarViewModel
 import com.eatssu.android.viewmodel.MenuViewModel
-import com.eatssu.android.viewmodel.ReviewViewModel
 import com.eatssu.android.viewmodel.factory.MenuViewModelFactory
-import com.eatssu.android.viewmodel.factory.ReviewViewModelFactory
-//import com.eatssu.android.adapter.DodamAdapter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -157,24 +152,13 @@ class BreakfastFragment : Fragment() {
 
 
     private fun setupClickListeners() {
-//        binding.btnHaksikInfo.setOnClickListener {
-//            startActivity(Intent(context, InfoActivity_Haksik::class.java))
-//        }
-//        binding.btnDodamInfo.setOnClickListener {
-//            startActivity(Intent(context, InfoActivity_Dodam::class.java))
-//        }
+        val intent = Intent(context, InfoActivity::class.java)
+
         binding.btnGisikInfo.setOnClickListener {
-            startActivity(Intent(context, InfoActivity_Gisik::class.java))
+            intent.putExtra("restaurantType", Restaurant.DORMITORY)
+            context?.startActivity(intent)
         }
-//        binding.btnKitchenInfo.setOnClickListener {
-//            startActivity(Intent(context, InfoActivity_Kitchen::class.java))
-//        }
-//        binding.btnFoodInfo.setOnClickListener {
-//            startActivity(Intent(context, InfoActivity_Food::class.java))
-//        }
-//        binding.btnSnackInfo.setOnClickListener {
-//            startActivity(Intent(context, InfoActivity_Snack::class.java))
-//        }
+
     }
 
     override fun onDestroyView() {

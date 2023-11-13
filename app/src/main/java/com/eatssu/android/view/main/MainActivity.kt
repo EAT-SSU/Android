@@ -19,6 +19,7 @@ import com.eatssu.android.adapter.OnItemClickListener
 import com.eatssu.android.data.NetworkConnection
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.entity.CalendarData
+import com.eatssu.android.data.entity.FirebaseInfoItem
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
@@ -44,6 +45,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
+    //    private lateinit var infoViewModel: ViewModel
+//    private val infoViewModel by lazy {
+//        ViewModelProvider(this)[InfoViewModel::class.java]
+//    }
+    lateinit var infoList: ArrayList<FirebaseInfoItem>
+
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
     }
@@ -68,18 +75,25 @@ class MainActivity : AppCompatActivity() {
             .build()
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
 
-        // 기본값 설정 (강제 업데이트 여부와 버전 정보)
-        val defaultValues: Map<String, Any> = mapOf(
-            "force_update_required" to false,
-            "latest_app_version" to "1.0.0"
-        )
-        firebaseRemoteConfig.setDefaultsAsync(defaultValues)
+//        val cafeteriaInfoJson = defaultValues["cafeteria_info"] as String
+
+//        val defaultInfo = parsingJson(cafeteriaInfoJson)
+
+//        Log.d("MainActivity","11"+defaultInfo.toString())
+//        infoViewModel.updateValues(defaultInfo)
+
+//        firebaseRemoteConfig.setDefaultsAsync(defaultValues)
 
         // Firebase Remote Config 데이터 가져오기
         fetchRemoteConfig()
 
         // 메인 액티비티에서 Firebase Remote Config를 사용하여 업데이트 필요 여부 확인
         checkForUpdate()
+
+
+        // ViewModel에 값 업데이트
+//        infoViewModel.updateValues(infoList)
+
 
         networkCheck.register() // 네트워크 객체 등록
 
@@ -276,16 +290,24 @@ class MainActivity : AppCompatActivity() {
     private fun checkForUpdate() {
         val forceUpdateRequired = firebaseRemoteConfig.getBoolean("force_update")
         val latestAppVersion = firebaseRemoteConfig.getString("app_version")
+        val infoList = firebaseRemoteConfig.getString("cafeteria_info")
+        Log.d("remoteconfig", infoList.toString())
+
 
         val currentAppVersion = BuildConfig.VERSION_NAME
 
         if (forceUpdateRequired) {
-            Log.d("post", forceUpdateRequired.toString())
-            Log.d("post", latestAppVersion)
-            Log.d("post", currentAppVersion)
+            Log.d("remoteconfig", forceUpdateRequired.toString())
+            Log.d("remoteconfig", latestAppVersion)
+            Log.d("remoteconfig", currentAppVersion)
             // 강제 업데이트 다이얼로그를 띄우거나 업데이트 화면으로 이동
             showForceUpdateDialog()
         }
+
+//        if(infoList != defaultValues[defaultValues["cafeteria_info"] as String]){
+////            infoViewModel.updateValues(parsingJson(infoList))
+//            Log.d("MainActivity","갱신")
+//        }
     }
 
     private fun showForceUpdateDialog() {
@@ -298,4 +320,24 @@ class MainActivity : AppCompatActivity() {
 
         networkCheck.unregister() // 네트워크 객체 해제
     }
+
+//    fun parsingJson(json: String): ArrayList<FirebaseInfoItem> {
+//        val jsonArray = JSONArray(json)
+//        val list = ArrayList<FirebaseInfoItem>()
+//
+//        for (index in 0 until jsonArray.length()) {
+//            val jsonObject = jsonArray.getJSONObject(index)
+//
+//            val name = jsonObject.optString("name", "")
+//            val time = jsonObject.optString("time", "")
+//            val etc = jsonObject.optString("etc", "")
+//
+//            val firebaseInfoItem = FirebaseInfoItem(name, location, time, etc)
+//            Log.d("MainActivity", firebaseInfoItem.toString())
+//            list.add(firebaseInfoItem)
+//        }
+//
+//
+//        return list
+//    }
 }
