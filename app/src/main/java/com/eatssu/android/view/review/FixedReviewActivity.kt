@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.RetrofitImpl.mRetrofit
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityFixMenuBinding
@@ -15,6 +16,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 
@@ -47,15 +51,13 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
         binding.btnFixReview.setOnClickListener {
 
             postData(reviewId)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
             finish()
         }
 
     }
 
     private fun postData(reviewId: Long) {
-        val service = mRetrofit.create(ReviewService::class.java)
+        val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
         comment = binding.etReview2Comment.text.toString()
 
@@ -68,41 +70,31 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
     }
 """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
 
-        /*val menuViewModel = ViewModelProvider(this)[MenuIdViewModel::class.java]
-        menuViewModel.getData().observe(this, Observer {dataReceived ->
-            menuId = dataReceived.toLong()
-            Log.d("menufix", menuId.toString()+reviewId.toString())*/
+        service.modifyReview(reviewId, reviewData)
+            .enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        if (response.code() == 200) {
+                            Log.d("post", "onResponse 성공: " + response.body().toString())
+                            Toast.makeText(
+                                this@FixedReviewActivity, "수정이 완료되었습니다.", Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
 
-        lifecycleScope.launch {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    service.modifyReview(reviewId, reviewData).execute()
+                        } else {
+                            Log.d("post", "onResponse 오류: " + response.body().toString())
+                            Toast.makeText(
+                                this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-                if (response.isSuccessful) {
-                    // 정상적으로 통신이 성공한 경우
-                    Log.d("ReviewFixedActivity", "onResponse 성공: " + response.body().toString())
-                    Toast.makeText(
-                        this@FixedReviewActivity, "수정이 완료되었습니다.", Toast.LENGTH_SHORT
-                    ).show()
-                    finish()
-                } else {
-                    // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                    Log.d(
-                        "ReviewFixedActivity",
-                        "onResponse 실패 write" + response.code()
-                    )
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.d("post", "onFailure 에러: " + t.message.toString())
                     Toast.makeText(
                         this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
                     ).show()
                 }
-            } catch (e: Exception) {
-                // 통신 중 예외가 발생한 경우
-                Log.d("ReviewFixedActivity", "통신 실패: ${e.message}")
-                Toast.makeText(
-                    this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
-                ).show()
-            }
+            })
         }
-        //})
-    }
 }

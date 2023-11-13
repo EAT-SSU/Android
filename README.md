@@ -7,7 +7,7 @@
 | `로그인` `리뷰`<br/>`마이 페이지`  | `메인 페이지`<br/>`신고하기` `공지사항`|
 
 ## package
-### architecture
+### Architecture
 - MVVM architecture pattern으로 리팩토링 중에 있으며, 현재 부분적으로 적용되어 있습니다.  
 - 이전 코드는 architecture pattern이 없는 코드 입니다. 
 ```
@@ -32,12 +32,11 @@ com.eatssu.android
 └── viewmodel
 ```
 
+## Convertion
+[Convention Docs](https://github.com/EAT-SSU/EatSSU-Android/wiki/Convention)
+
 ## Framework
 - Android Studio : 2022.2.1 Patch 2
-- JAVA : 17
+- JDK : 17
 - minSDK : 21
 - targetSDK : 34
-
-## Infra
-- Github Actions
-- AWS S3
