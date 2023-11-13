@@ -72,16 +72,16 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
 
-            <RelativeLayout
-                android:id="@+id/btn_map"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"/>
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/btn_map"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="200dp"/>-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,19 +130,17 @@
                 android:text="점심"
                 android:textSize="13dp"
                 android:fontFamily="@font/noto_medium"
-                android:textColor="@color/main"
-                ></TextView>
+                android:textColor="@color/main" />
 
             <TextView
                 android:id="@+id/tv_time_foodcourt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="11:30 - 17:00"
+                android:text="11:30 - 16:00"
                 android:textSize="13dp"
                 android:fontFamily="@font/noto_medium"
-                android:textColor="@color/black"
-                ></TextView>
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

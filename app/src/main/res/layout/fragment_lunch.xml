@@ -351,111 +351,111 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_kitchen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/ll_kitchen"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:orientation="horizontal">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="15dp"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:orientation="horizontal">-->
 
-                        <ImageButton
-                            android:id="@+id/btn_kitchen_info"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="9dp"
-                            android:background="#00000000"
-                            android:gravity="left"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_location" />
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/btn_kitchen_info"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="9dp"-->
+<!--                            android:background="#00000000"-->
+<!--                            android:gravity="left"-->
+<!--                            android:scaleType="fitCenter"-->
+<!--                            android:src="@drawable/ic_location" />-->
 
-                        <TextView
-                            android:id="@+id/tv_kitchen"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_weight="5"
-                            android:text="@string/the_kitchen"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/black"
-                            android:textSize="20dp"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_kitchen"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="5dp"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:layout_weight="5"-->
+<!--                            android:text="@string/the_kitchen"-->
+<!--                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="20dp"-->
+<!--                            android:textStyle="bold" />-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="15dp"
-                        android:background="@drawable/shape_round_corners"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="15dp"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginRight="15dp"-->
+<!--                        android:background="@drawable/shape_round_corners"-->
+<!--                        android:orientation="vertical">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:weightSum="10">-->
 
-                            <TextView
-                                android:id="@+id/tv_kitchen_today"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="8dp"
-                                android:layout_weight="6"
-                                android:text="@string/today_menu"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                android:textColor="@color/black"
-                                android:textSize="14dp"
-                                android:textStyle="bold" />
-
-
-                            <TextView
-                                android:id="@+id/tv_kitchen_price"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="7dp"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:text="@string/price"
-                                android:textColor="@color/black"
-                                android:textSize="15sp" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/tv_kitchen_today"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_marginTop="8dp"-->
+<!--                                android:layout_weight="6"-->
+<!--                                android:text="@string/today_menu"-->
+<!--                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:textSize="14dp"-->
+<!--                                android:textStyle="bold" />-->
 
 
-                            <TextView
-                                android:id="@+id/tv_kitchen_rate"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="7dp"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:text="@string/rate"
-                                android:textColor="@color/black"
-                                android:textSize="15dp" />
-                        </LinearLayout>
+<!--                            <TextView-->
+<!--                                android:id="@+id/tv_kitchen_price"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_marginTop="7dp"-->
+<!--                                android:layout_weight="2"-->
+<!--                                android:gravity="center"-->
+<!--                                android:text="@string/price"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:textSize="15sp" />-->
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="3dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@color/main" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_kitchen"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="parent" />
-                    </LinearLayout>
-                </LinearLayout>
+<!--                            <TextView-->
+<!--                                android:id="@+id/tv_kitchen_rate"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_marginTop="7dp"-->
+<!--                                android:layout_weight="2"-->
+<!--                                android:gravity="center"-->
+<!--                                android:text="@string/rate"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:textSize="15dp" />-->
+<!--                        </LinearLayout>-->
+
+<!--                        <View-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="3dp"-->
+<!--                            android:layout_marginTop="5dp"-->
+<!--                            android:background="@color/main" />-->
+
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/rv_kitchen"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="10dp"-->
+<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="parent" />-->
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
 
                 <LinearLayout
                     android:id="@+id/ll_food"
