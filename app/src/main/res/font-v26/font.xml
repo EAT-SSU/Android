@@ -26,5 +26,73 @@
     <font
         android:font="@font/noto_thin"
         app:font="@font/noto_thin" />
+
+    <font
+        android:font="@font/android_h1"
+        android:fontWeight="800"
+        app:font="@font/android_h1" />
+
+    <font
+        android:font="@font/android_h2"
+        android:fontWeight="800"
+        app:font="@font/android_h2" />
+
+    <font
+        android:font="@font/android_subtitle1"
+        android:fontWeight="600"
+        app:font="@font/android_subtitle1" />
+
+    <font
+        android:font="@font/android_subtitle2"
+        android:fontWeight="600"
+        app:font="@font/android_subtitle2" />
+
+    <font
+        android:font="@font/android_body1"
+        android:fontStyle="normal"
+        android:fontWeight="500"
+        app:font="@font/android_body1" />
+
+    <font
+        android:font="@font/android_body2"
+        android:fontWeight="400"
+        app:font="@font/android_body2" />
+
+    <font
+        android:font="@font/android_body3"
+        android:fontWeight="400"
+        app:font="@font/android_body3" />
+
+    <font
+        android:font="@font/android_caption1"
+        android:fontWeight="400"
+        app:font="@font/android_caption1" />
+
+    <font
+        android:font="@font/android_caption2"
+        android:fontWeight="400"
+        app:font="@font/android_caption2" />
+
+    <font
+        android:font="@font/android_caption3"
+        android:fontWeight="400"
+        app:font="@font/android_caption3" />
+
+    <font
+        android:font="@font/android_button1"
+        android:fontWeight="700"
+        app:font="@font/android_button1" />
+
+    <font
+    android:font="@font/android_button2"
+    android:fontWeight="700"
+    app:font="@font/android_button2" />
+
+    <font
+        android:font="@font/android_rate"
+        android:fontWeight="800"
+        app:font="@font/android_rate" />
+
+
 </font-family>
     
