@@ -7,14 +7,13 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
-import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.ui.review.write.MenuPickActivity
 import com.eatssu.android.ui.review.write.WriteReviewActivity
-import com.eatssu.android.data.viewmodelFactory.ReviewViewModelFactory
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlin.properties.Delegates
 
 class ReviewListActivity :

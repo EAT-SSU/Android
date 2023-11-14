@@ -1,10 +1,8 @@
-package com.eatssu.android.data.viewmodelFactory
+package com.eatssu.android.ui.main.menu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.data.repository.MenuRepository
-
-import com.eatssu.android.ui.main.menu.MenuViewModel
 
 class MenuViewModelFactory(private val repository: MenuRepository) :
     ViewModelProvider.Factory {

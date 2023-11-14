@@ -15,11 +15,10 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl.mRetrofit
+import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityWriteReviewBinding
-import com.eatssu.android.data.repository.ReviewRepository
-import com.eatssu.android.data.viewmodelFactory.UploadReviewViewModelFactory
+import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.launch
@@ -73,15 +72,13 @@ class WriteReviewActivity : BaseActivity<ActivityWriteReviewBinding>(ActivityWri
     }
 
     private fun requestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_CODE
-                )
-            }
+        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_CODE
+            )
         }
     }
 

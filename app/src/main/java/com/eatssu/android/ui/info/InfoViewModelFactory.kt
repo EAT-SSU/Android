@@ -1,9 +1,8 @@
-package com.eatssu.android.viewmodel.factory
+package com.eatssu.android.ui.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.eatssu.android.view.infopage.FirebaseRemoteConfigRepository
-import com.eatssu.android.view.infopage.InfoViewModel
+import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 
 class InfoViewModelFactory(private val repository: FirebaseRemoteConfigRepository) :
     ViewModelProvider.Factory {

@@ -1,6 +1,5 @@
 package com.eatssu.android.ui.main
 
-//import com.eatssu.android.adapter.DodamAdapter
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -13,17 +12,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
+import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentDinnerBinding
-import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.ui.info.*
-import com.eatssu.android.ui.main.menu.MenuViewModel
-import com.eatssu.android.ui.main.menu.TodayMealAdapter
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
-import com.eatssu.android.data.viewmodelFactory.MenuViewModelFactory
+import com.eatssu.android.ui.main.menu.MenuViewModel
+import com.eatssu.android.ui.main.menu.MenuViewModelFactory
+import com.eatssu.android.ui.main.menu.TodayMealAdapter
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

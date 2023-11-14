@@ -8,13 +8,13 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
+import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMenuPickBinding
-import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.ui.main.menu.MenuViewModel
-import com.eatssu.android.data.viewmodelFactory.MenuViewModelFactory
+import com.eatssu.android.ui.main.menu.MenuViewModelFactory
+import com.eatssu.android.util.RetrofitImpl.retrofit
 
 
 class MenuPickActivity : BaseActivity<ActivityMenuPickBinding>(ActivityMenuPickBinding::inflate) {
