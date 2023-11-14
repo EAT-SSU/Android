@@ -32,7 +32,7 @@
             android:id="@+id/tv_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_bold"
+            android:fontFamily="@font/noto_semibold"
             android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -197,7 +197,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:fontFamily="@font/noto_bold"
+        android:fontFamily="@font/noto_semibold"
         android:text="@string/my_review"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_account_layout" />
@@ -207,7 +207,7 @@
         android:id="@+id/tv_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
+        android:fontFamily="@font/noto_semibold"
         android:text="@string/logout"
         app:layout_constraintStart_toStartOf="@+id/tv_myreview"
         app:layout_constraintTop_toBottomOf="@+id/tv_myreview" />
@@ -216,7 +216,7 @@
         android:id="@+id/tv_signout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
+        android:fontFamily="@font/noto_semibold"
         android:text="@string/signout"
         app:layout_constraintStart_toStartOf="@+id/tv_logout"
         app:layout_constraintTop_toBottomOf="@+id/tv_logout" />

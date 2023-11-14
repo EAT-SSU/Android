@@ -21,7 +21,7 @@
         android:id="@+id/tv_title_for_eatssu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_black"
+        android:fontFamily="@font/noto_bold"
         android:text="EAT SSU"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

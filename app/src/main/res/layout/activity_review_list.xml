@@ -382,7 +382,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
+        android:fontFamily="@font/noto_semibold"
         android:paddingTop="20dp"
         android:paddingStart="20dp"
         android:text="리뷰"

@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="THE KITCHEN"
-                android:fontFamily="@font/noto_black"
+                android:fontFamily="@font/noto_bold"
                 android:textSize="25dp"
                 android:textColor="@color/black"
                 android:gravity="center">

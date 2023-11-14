@@ -30,7 +30,7 @@
             android:textSize="17sp"
             android:textColor="@color/primary"
             android:textStyle="bold"
-            android:fontFamily="@font/noto_bold"/>
+            android:fontFamily="@font/noto_semibold"/>
     </androidx.appcompat.widget.Toolbar>
 
 
