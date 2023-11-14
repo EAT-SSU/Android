@@ -9,27 +9,26 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.adapter.CalendarAdapter
 import com.eatssu.android.adapter.OnItemClickListener
-import com.eatssu.android.data.NetworkConnection
+import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.entity.CalendarData
-import com.eatssu.android.data.entity.FirebaseInfoItem
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.eatssu.android.view.infopage.FirebaseRemoteConfigRepository
+import com.eatssu.android.view.infopage.InfoViewModel
 import com.eatssu.android.view.mypage.ChangeNicknameActivity
 import com.eatssu.android.view.mypage.MyPageActivity
 import com.eatssu.android.viewmodel.CalendarViewModel
+import com.eatssu.android.viewmodel.factory.InfoViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.prolificinteractive.materialcalendarview.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,8 +39,8 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
@@ -51,18 +50,14 @@ class MainActivity : AppCompatActivity() {
 //    }
     lateinit var infoList: ArrayList<FirebaseInfoItem>
 
-    private val networkCheck: NetworkConnection by lazy {
-        NetworkConnection(this)
-    }
-
-    private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
-        FirebaseRemoteConfig.getInstance()
-    }
+//    private val networkCheck: NetworkConnection by lazy {
+//        NetworkConnection(this)
+//    }
 
     private lateinit var nickname: String
 
-    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -94,8 +89,14 @@ class MainActivity : AppCompatActivity() {
         // ViewModel에 값 업데이트
 //        infoViewModel.updateValues(infoList)
 
-
-        networkCheck.register() // 네트워크 객체 등록
+        // 툴바 사용하지 않도록 설정
+        toolbar.let {
+            toolbar.visibility= View.GONE
+            toolbarTitle.visibility= View.GONE
+            setSupportActionBar(it)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
 
         val intentNick = Intent(this, ChangeNicknameActivity::class.java)
 
@@ -317,8 +318,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        networkCheck.unregister() // 네트워크 객체 해제
     }
 
 //    fun parsingJson(json: String): ArrayList<FirebaseInfoItem> {

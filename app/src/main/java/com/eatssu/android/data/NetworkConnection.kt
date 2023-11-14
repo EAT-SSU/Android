@@ -6,8 +6,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
-import androidx.annotation.RequiresApi
 
 // 네트워크 연결 확인을 위해 네트워크 변경 시 알람에 사용하는 클래스 NetworkCallback 을 커스터마이징
 class NetworkConnection(private val context: Context) :
@@ -39,14 +37,12 @@ class NetworkConnection(private val context: Context) :
     }
 
     // 현재 네트워크 상태 확인
-    @RequiresApi(Build.VERSION_CODES.M)
     fun getConnectivityStatus(): Network? {
         // 연결된 네트워크가 없을 시 null 리턴
         return connectivityManager.activeNetwork
     }
 
     // 콜백이 등록되거나 네트워크가 연결되었을 때 실행되는 메소드
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
 
