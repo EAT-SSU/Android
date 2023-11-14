@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:text="Toolbar Title"
             android:textSize="17sp"
-            android:textColor="@color/primary"
+            android:textColor="@color/Primary_Light"
             android:textStyle="bold"
             android:fontFamily="@font/noto_bold"/>
     </androidx.appcompat.widget.Toolbar>

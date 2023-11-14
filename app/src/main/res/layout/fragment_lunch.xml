@@ -117,7 +117,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:layout_marginTop="5dp"
-                            android:background="@color/main">
+                            android:background="@color/Primary_Light">
 
                         </View>
 
@@ -228,7 +228,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:layout_marginTop="5dp"
-                            android:background="@color/main" />
+                            android:background="@color/Primary_Light" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_dodam"
@@ -336,7 +336,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:layout_marginTop="5dp"
-                            android:background="@color/main">
+                            android:background="@color/Primary_Light">
 
                         </View>
 
@@ -552,7 +552,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:layout_marginTop="5dp"
-                            android:background="@color/main">
+                            android:background="@color/Primary_Light">
 
                         </View>
 
@@ -664,7 +664,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:layout_marginTop="5dp"
-                            android:background="@color/main" />
+                            android:background="@color/Primary_Light" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_snack"
