@@ -51,7 +51,7 @@ abstract class BaseActivity<B : ViewBinding>(
         networkCheck.register() // 네트워크 객체 등록
 
 
-        _binding = bindingFactory(layoutInflater, findViewById(R.id.content_frame), true)
+        _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
     }
 
     override fun onDestroy() {

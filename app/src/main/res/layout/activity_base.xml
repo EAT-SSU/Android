@@ -19,23 +19,22 @@
             android:background="@android:color/transparent"
             android:layout_marginStart="20dp"
             android:src="@drawable/ic_pre"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/back_btn" />
 
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Toolbar Title"
-            android:textSize="17sp"
-            android:textColor="@color/Primary_Light"
-            android:textStyle="bold"
-            android:fontFamily="@font/noto_bold"/>
+            style="@style/AndroidH2"
+            android:text=""
+            android:textColor="@color/Primary_Light"/>
     </androidx.appcompat.widget.Toolbar>
 
 
     <FrameLayout
-        android:id="@+id/content_frame"
+        android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

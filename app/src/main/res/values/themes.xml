@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.EatSSUAndroid" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -14,36 +14,30 @@
         <!-- Customize your theme here. -->
         <item name="android:windowContentOverlay">@null</item>
 
-        <item name="android:statusBarColor" tools:targetApi="21">@color/white</item> <!--Status Bar의 배경색-->
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
+        <item name="android:statusBarColor" >@color/white</item> <!--Status Bar의 배경색-->
+        <item name="android:windowLightStatusBar" >true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
 
         <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
         <item name="actionMenuTextColor">@color/Primary_Light</item> <!--액션 메뉴의 텍스트 색상-->
         <item name="colorControlNormal">@color/Primary_Light</item> <!--홈/뒤로가기 버튼의 색상-->
-
     </style>
+
     <!--Toolbar 스타일-->
-    <style name="ToolbarStyle.Dark" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/white</item> <!-- Toolbar의 배경색-->
-        <item name="titleTextAppearance">@style/ToolbarTitleStyle.Dark</item> <!-- Toolbar의 타이틀 텍스트-->
-        <item name="subtitleTextAppearance">@style/ToolbarSubtitleStyle.Dark</item> <!-- Toolbar의 서브타이틀 텍스트-->
-    </style>
-
     <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:gravity">center</item>
         <item name="android:textSize">22sp</item>
     </style>
 
     <!-- Toolbar의 타이틀 텍스트-->
-    <style name="ToolbarTitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/Primary_Light</item> <!-- Toolbar의 타이틀 텍스트 색상-->
-        <item name="android:textSize">15dp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
+        <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Toolbar의 서브타이틀 텍스트-->
-    <style name="ToolbarSubtitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+    <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textColor">@color/Primary_Light</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
-        <item name="android:textSize">12dp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
+        <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
     </style>
 
 
@@ -52,9 +46,8 @@
     <style name="TextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/noto_regular</item>
     </style>
-
-    <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
-        <item name="android:fontFamily">@font/noto_medium</item>
+    <style name="Button2Style" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
+        <item name="android:fontFamily">@font/noto_bold</item>
     </style>
 
     <style name="EditTextStyle" parent="@android:style/Widget.DeviceDefault.EditText">
@@ -68,6 +61,90 @@
     <style name="CheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox">
         <item name="android:fontFamily">@font/noto_regular</item>
     </style>
+
+    <!-- Eat-SSU 기본 폰트 설정-->
+
+    <style name="AndroidH1">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineSpacingExtra">24sp</item>
+    </style>
+
+    <style name="AndroidH2">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">24sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AndroidSubtitle1">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">24sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AndroidSubtitle2">
+        <item name="android:fontFamily">@font/noto_semibold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">24sp</item>
+    </style>
+
+    <style name="AndroidBody1">
+        <item name="android:fontFamily">@font/noto_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">24sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AndroidBody2">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">20sp</item>
+    </style>
+
+    <style name="AndroidBody3">
+        <item name="android:fontFamily">@font/noto_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">20sp</item>
+        <item name="android:textColor">@color/gray300</item>
+    </style>
+
+    <style name="AndroidCaption1">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AndroidCaption2">
+        <item name="android:fontFamily">@font/noto_medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">18sp</item>
+        <item name="android:textColor">@color/gray300</item>
+    </style>
+
+    <style name="AndroidButton1">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">24sp</item>
+    </style>
+
+    <style name="AndroidButton2">
+        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">20sp</item>
+    </style>
+
+    <style name="AndroidRate">
+        <item name="android:fontFamily">@font/noto_medium</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+
 
     <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
         <item name="android:focusedMonthDateColor">@android:color/holo_blue_light</item>
