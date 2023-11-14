@@ -1,4 +1,4 @@
-package com.eatssu.android.view.main
+package com.eatssu.android.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,20 +13,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
-import com.eatssu.android.adapter.CalendarAdapter
-import com.eatssu.android.adapter.OnItemClickListener
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.view.infopage.FirebaseRemoteConfigRepository
-import com.eatssu.android.view.infopage.InfoViewModel
-import com.eatssu.android.view.mypage.ChangeNicknameActivity
-import com.eatssu.android.view.mypage.MyPageActivity
-import com.eatssu.android.viewmodel.CalendarViewModel
-import com.eatssu.android.viewmodel.factory.InfoViewModelFactory
+import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.ui.common.ForceUpdateDialogActivity
+import com.eatssu.android.ui.info.InfoViewModel
+import com.eatssu.android.ui.main.calendar.CalendarAdapter
+import com.eatssu.android.ui.main.calendar.OnItemClickListener
+import com.eatssu.android.ui.mypage.ChangeNicknameActivity
+import com.eatssu.android.ui.mypage.MyPageActivity
+import com.eatssu.android.ui.main.calendar.CalendarViewModel
+import com.eatssu.android.ui.info.InfoViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
@@ -44,15 +45,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
-    //    private lateinit var infoViewModel: ViewModel
-//    private val infoViewModel by lazy {
-//        ViewModelProvider(this)[InfoViewModel::class.java]
-//    }
-    lateinit var infoList: ArrayList<FirebaseInfoItem>
-
-//    private val networkCheck: NetworkConnection by lazy {
-//        NetworkConnection(this)
-//    }
+    private lateinit var infoViewModel: InfoViewModel
+    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
     private lateinit var nickname: String
 
@@ -60,34 +54,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
 
-        setContentView(binding.root)
+        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
+        infoViewModel = ViewModelProvider(this, InfoViewModelFactory(firebaseRemoteConfigRepository))[InfoViewModel::class.java]
 
-        // Firebase Remote Config 초기화 설정
-        val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(3600) // 캐시된 값을 1시간마다 업데이트
-            .build()
-        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+        firebaseRemoteConfigRepository.init()
 
-//        val cafeteriaInfoJson = defaultValues["cafeteria_info"] as String
-
-//        val defaultInfo = parsingJson(cafeteriaInfoJson)
-
-//        Log.d("MainActivity","11"+defaultInfo.toString())
-//        infoViewModel.updateValues(defaultInfo)
-
-//        firebaseRemoteConfig.setDefaultsAsync(defaultValues)
-
-        // Firebase Remote Config 데이터 가져오기
-        fetchRemoteConfig()
-
-        // 메인 액티비티에서 Firebase Remote Config를 사용하여 업데이트 필요 여부 확인
-        checkForUpdate()
-
-
-        // ViewModel에 값 업데이트
-//        infoViewModel.updateValues(infoList)
+        if(firebaseRemoteConfigRepository.getForceUpdate()){
+            showForceUpdateDialog()
+        }
 
         // 툴바 사용하지 않도록 설정
         toolbar.let {
@@ -110,7 +85,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 response: Response<GetMyInfoResponseDto>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("MainActivity", "onResponse 성공: " + response.body().toString());
+                    Log.d("MainActivity", "onResponse 성공: " + response.body().toString())
                     nickname = response.body()?.nickname.toString()
                     Log.d("MainActivity", "onResponse 성공: $nickname");
 
@@ -123,7 +98,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
             override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                Log.d("MainActivity", "onFailure 에러: " + t.message.toString());
+                Log.d("MainActivity", "onFailure 에러: " + t.message.toString())
             }
         })
 
@@ -277,39 +252,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    private fun fetchRemoteConfig() {
-        firebaseRemoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Remote Config 데이터 가져오기 성공
-                    // 필요한 경우 업데이트 필요 여부 확인을 수행
-                    checkForUpdate()
-                }
-            }
-    }
-
-    private fun checkForUpdate() {
-        val forceUpdateRequired = firebaseRemoteConfig.getBoolean("force_update")
-        val latestAppVersion = firebaseRemoteConfig.getString("app_version")
-        val infoList = firebaseRemoteConfig.getString("cafeteria_info")
-        Log.d("remoteconfig", infoList.toString())
-
-
-        val currentAppVersion = BuildConfig.VERSION_NAME
-
-        if (forceUpdateRequired) {
-            Log.d("remoteconfig", forceUpdateRequired.toString())
-            Log.d("remoteconfig", latestAppVersion)
-            Log.d("remoteconfig", currentAppVersion)
-            // 강제 업데이트 다이얼로그를 띄우거나 업데이트 화면으로 이동
-            showForceUpdateDialog()
-        }
-
-//        if(infoList != defaultValues[defaultValues["cafeteria_info"] as String]){
-////            infoViewModel.updateValues(parsingJson(infoList))
-//            Log.d("MainActivity","갱신")
-//        }
-    }
 
     private fun showForceUpdateDialog() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
@@ -319,24 +261,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onDestroy() {
         super.onDestroy()
     }
-
-//    fun parsingJson(json: String): ArrayList<FirebaseInfoItem> {
-//        val jsonArray = JSONArray(json)
-//        val list = ArrayList<FirebaseInfoItem>()
-//
-//        for (index in 0 until jsonArray.length()) {
-//            val jsonObject = jsonArray.getJSONObject(index)
-//
-//            val name = jsonObject.optString("name", "")
-//            val time = jsonObject.optString("time", "")
-//            val etc = jsonObject.optString("etc", "")
-//
-//            val firebaseInfoItem = FirebaseInfoItem(name, location, time, etc)
-//            Log.d("MainActivity", firebaseInfoItem.toString())
-//            list.add(firebaseInfoItem)
-//        }
-//
-//
-//        return list
-//    }
 }

@@ -1,40 +1,33 @@
-package com.eatssu.android.view.infopage
+package com.eatssu.android.data.repository
 
 import android.util.Log
-import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.entity.FirebaseInfoItem
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.json.JSONArray
 
 class FirebaseRemoteConfigRepository {
     private val instance = FirebaseRemoteConfig.getInstance()
 
     fun init() {
+        // Firebase Remote Config 초기화 설정
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(1) // 캐시된 값을 1시간마다 업데이트
+            .build()
+        instance.setConfigSettingsAsync(configSettings)
+
         // Set the default values locally
         instance.setDefaultsAsync(defaultValues)
         instance.fetchAndActivate().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                checkForUpdate()
+//                val update = checkForUpdate()
 
             } else {
                 // Handle error
             }
         }
     }
-    private fun checkForUpdate() {
-        val forceUpdateRequired = getForceUpdate()
-        val latestAppVersion = getAppVersion()
 
-        val currentAppVersion = BuildConfig.VERSION_NAME
-
-        if (forceUpdateRequired) {
-            Log.d("remoteconfig", forceUpdateRequired.toString())
-            Log.d("remoteconfig", latestAppVersion)
-            Log.d("remoteconfig", currentAppVersion)
-            // 강제 업데이트 다이얼로그를 띄우거나 업데이트 화면으로 이동
-//            showForceUpdateDialog()
-        }
-    }
 
     fun getForceUpdate(): Boolean {
         return instance.getBoolean("force_update")
@@ -104,8 +97,6 @@ class FirebaseRemoteConfigRepository {
             Log.d("MainActivity", firebaseInfoItem.toString())
             list.add(firebaseInfoItem)
         }
-
-
         return list
     }
 }
