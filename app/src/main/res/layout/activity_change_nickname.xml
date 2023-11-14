@@ -12,7 +12,7 @@
         android:id="@+id/tv_ch_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
+        android:fontFamily="@font/noto_semibold"
         android:text="닉네임"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +51,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
+        android:fontFamily="@font/noto_semibold"
         android:text="2~8글자를 입력해주세요."
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />

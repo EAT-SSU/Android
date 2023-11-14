@@ -11,6 +11,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.ui.review.ReviewAdapter
 import com.eatssu.android.ui.review.write.MenuPickActivity
 import com.eatssu.android.ui.review.write.WriteReviewActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
