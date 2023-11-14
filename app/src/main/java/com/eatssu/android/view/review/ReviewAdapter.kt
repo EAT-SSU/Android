@@ -9,45 +9,37 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.response.GetReviewListResponse
+import com.eatssu.android.databinding.ItemOthersReviewBinding
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.view.review.MyReviewDialogActivity
 import com.eatssu.android.view.review.OthersReviewDialogActivity
+import com.eatssu.android.view.review.ReportActivity
 
 class ReviewAdapter(private val dataList: GetReviewListResponse) :
-    RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            val dataList = dataList.dataList
-            binding.tvReviewItemId.text = dataList?.get(position)?.writerNickname.toString()
-            binding.tvReviewItemComment.text = dataList?.get(position)?.content
-            binding.tvReviewItemDate.text = dataList?.get(position)?.writeDate
-            binding.tvMenuName.text = dataList?.get(position)?.menu
+            val data = dataList.dataList?.get(position)
+            binding.tvReviewItemId.text = data?.writerNickname.toString()
+            binding.tvReviewItemComment.text = data?.content
+            binding.tvReviewItemDate.text = data?.writeDate
+            binding.tvMenuName.text = data?.menu
 
-            binding.tvTotalRating.text = dataList?.get(position)?.mainGrade?.toFloat().toString()
-            binding.tvTasteRating.text = dataList?.get(position)?.tasteGrade?.toFloat().toString()
-            binding.tvAmountRating.text = dataList?.get(position)?.amountGrade?.toFloat().toString()
+            binding.tvTotalRating.text = data?.mainGrade?.toFloat().toString()
+            binding.tvTasteRating.text = data?.tasteGrade?.toFloat().toString()
+            binding.tvAmountRating.text = data?.amountGrade?.toFloat().toString()
 
+            val imgUrlList: List<String>? = data?.imgUrlList
 
-// ... other code in your class ...
+            val imageView: ImageView = binding.ivReviewPhoto
 
-// Assuming imgUrlList is a List<String>
-            val imgUrlList: List<String>? =
-                dataList?.get(position)?.imgUrlList// The list of image URLs
-
-// Get the ImageView reference from your layout
-            val imageView: ImageView =
-                binding.ivReviewPhoto// Replace R.id.imageView with the ID of your ImageView
-// Check if the imgUrlList is not empty before loading the image
-
-
-            if (dataList?.get(position)?.imgUrlList.isNullOrEmpty()) {
+            if (imgUrlList.isNullOrEmpty()) {
                 imageView.visibility = View.GONE
             } else {
-                val imageUrl =
-                    imgUrlList?.get(0) // Assuming you want to load the first image from the list
+                val imageUrl = imgUrlList[0]
 
                 Glide.with(itemView)
                     .load(imageUrl)
@@ -55,32 +47,90 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
                 imageView.visibility = View.VISIBLE
             }
 
-            binding.btnDetail.setOnClickListener() {
-                if(dataList?.get(position)?.isWriter == false) {
-                    val intent = Intent(binding.btnDetail.context, OthersReviewDialogActivity::class.java)
-                    intent.putExtra("reviewId", dataList[position].reviewId)
-                    intent.putExtra("menu", dataList[position].menu)
-                    ContextCompat.startActivity(binding.btnDetail.context, intent, null)
-                }
-                else if (dataList?.get(position)?.isWriter == true) {
+            binding.btnDetail.setOnClickListener {
+                if (data?.isWriter == true) {
                     val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
-                    intent.putExtra("reviewId", dataList[position].reviewId)
-                    intent.putExtra("menu", dataList[position].menu)
+                    intent.putExtra("reviewId", data?.reviewId)
+                    intent.putExtra("menu", data?.menu)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewBinding =
-            ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(viewBinding)
+    inner class OthersViewHolder(private val binding: ItemOthersReviewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(position: Int) {
+            val data = dataList.dataList?.get(position)
+            binding.tvReviewItemId.text = data?.writerNickname.toString()
+            binding.tvReviewItemComment.text = data?.content
+            binding.tvReviewItemDate.text = data?.writeDate
+            binding.tvMenuName.text = data?.menu
+
+            binding.tvTotalRating.text = data?.mainGrade?.toFloat().toString()
+            binding.tvTasteRating.text = data?.tasteGrade?.toFloat().toString()
+            binding.tvAmountRating.text = data?.amountGrade?.toFloat().toString()
+
+            val imgUrlList: List<String>? = data?.imgUrlList
+
+            val imageView: ImageView = binding.ivReviewPhoto
+
+            if (imgUrlList.isNullOrEmpty()) {
+                imageView.visibility = View.GONE
+            } else {
+                val imageUrl = imgUrlList[0]
+
+                Glide.with(itemView)
+                    .load(imageUrl)
+                    .into(imageView)
+                imageView.visibility = View.VISIBLE
+            }
+
+            binding.tvReviewItemReport.setOnClickListener {
+                if (data?.isWriter == false) {
+                    val intent = Intent(binding.tvReviewItemReport.context, ReportActivity::class.java)
+                    intent.putExtra("reviewId", data?.reviewId)
+                    intent.putExtra("menu", data?.menu)
+                    ContextCompat.startActivity(binding.tvReviewItemReport.context, intent, null)
+                }
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(position)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_MY_REVIEW -> {
+                val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ViewHolder(binding)
+            }
+            VIEW_TYPE_OTHERS_REVIEW -> {
+                val othersBinding = ItemOthersReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                OthersViewHolder(othersBinding)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ViewHolder -> holder.bind(position)
+            is OthersViewHolder -> holder.bind(position)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (dataList.dataList?.get(position)?.isWriter == true) {
+            VIEW_TYPE_MY_REVIEW
+        } else {
+            VIEW_TYPE_OTHERS_REVIEW
+        }
     }
 
     override fun getItemCount(): Int = dataList.dataList?.size ?: 0
+
+    companion object {
+        private const val VIEW_TYPE_MY_REVIEW = 1
+        private const val VIEW_TYPE_OTHERS_REVIEW = 2
+    }
 }

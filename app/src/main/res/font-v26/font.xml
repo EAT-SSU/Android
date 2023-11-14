@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <font
-        android:font="@font/noto_black"
-        app:font="@font/noto_black" />
+        android:font="@font/noto_bold"
+        app:font="@font/noto_bold" />
 
     <font
-        android:font="@font/noto_bold"
+        android:font="@font/noto_semibold"
         android:fontWeight="700"
-        app:font="@font/noto_bold" />
+        app:font="@font/noto_semibold" />
 
     <font
         android:font="@font/noto_light"
@@ -26,5 +26,7 @@
     <font
         android:font="@font/noto_thin"
         app:font="@font/noto_thin" />
+
+
 </font-family>
     
