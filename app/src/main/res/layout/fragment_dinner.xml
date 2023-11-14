@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="5dp"
-    tools:context=".view.main.DinnerFragment">
+    tools:context=".ui.main.DinnerFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

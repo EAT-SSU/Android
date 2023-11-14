@@ -2,7 +2,7 @@ package com.eatssu.android
 
 import android.app.Application
 import android.content.Context
-import com.eatssu.android.data.TokenSharedPreferences
+import com.eatssu.android.util.TokenSharedPreferences
 import com.google.firebase.FirebaseApp
 import com.kakao.sdk.common.KakaoSdk
 

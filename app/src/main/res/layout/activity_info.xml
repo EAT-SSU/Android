@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.infopage.InfoActivity"
+    tools:context=".ui.info.InfoActivity"
     android:background="@drawable/shape_round_corners"
     android:backgroundTint="@color/white">
 

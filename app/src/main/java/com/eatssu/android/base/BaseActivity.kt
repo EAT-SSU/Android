@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
-import com.eatssu.android.data.NetworkConnection
+import com.eatssu.android.util.NetworkConnection
 
 
 abstract class BaseActivity<B : ViewBinding>(
