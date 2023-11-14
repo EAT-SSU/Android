@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
+import com.eatssu.android.util.NetworkConnection
 
 
 abstract class BaseActivity<B : ViewBinding>(
@@ -25,6 +26,11 @@ abstract class BaseActivity<B : ViewBinding>(
     protected lateinit var toolbar: Toolbar
     protected lateinit var toolbarTitle: TextView
     protected lateinit var backBtn: ImageButton
+
+
+    private val networkCheck: NetworkConnection by lazy {
+        NetworkConnection(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +48,17 @@ abstract class BaseActivity<B : ViewBinding>(
             finish()
         }
 
-        _binding = bindingFactory(layoutInflater, findViewById(R.id.content_frame), true)
+        networkCheck.register() // 네트워크 객체 등록
+
+
+        _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        networkCheck.unregister() // 네트워크 객체 해제
+
         _binding = null
     }
 

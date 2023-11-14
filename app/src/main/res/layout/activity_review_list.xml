@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.review.ReviewListActivity">
+    tools:context=".ui.review.list.ReviewListActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -65,10 +65,10 @@
                             android:isIndicator="true"
                             android:max="1"
                             android:numStars="1"
-                            android:progressBackgroundTint="@color/primary"
-                            android:progressTint="@color/primary"
+                            android:progressBackgroundTint="@color/Primary_Light"
+                            android:progressTint="@color/Primary_Light"
                             android:rating="2"
-                            android:secondaryProgressTint="@color/primary"
+                            android:secondaryProgressTint="@color/Primary_Light"
                             android:stepSize="1" />
 
                         <TextView
@@ -103,10 +103,10 @@
                             android:isIndicator="true"
                             android:max="1"
                             android:numStars="1"
-                            android:progressBackgroundTint="@color/primary"
-                            android:progressTint="@color/primary"
+                            android:progressBackgroundTint="@color/Primary_Light"
+                            android:progressTint="@color/Primary_Light"
                             android:rating="2"
-                            android:secondaryProgressTint="@color/primary"
+                            android:secondaryProgressTint="@color/Primary_Light"
                             android:stepSize="1"/>
 
                         <TextView
@@ -115,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:text="5"
-                            android:textColor="@color/main" />
+                            android:textColor="@color/Primary_Light" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -131,10 +131,10 @@
                             android:isIndicator="true"
                             android:max="1"
                             android:numStars="1"
-                            android:progressBackgroundTint="@color/primary"
-                            android:progressTint="@color/primary"
+                            android:progressBackgroundTint="@color/Primary_Light"
+                            android:progressTint="@color/Primary_Light"
                             android:rating="2"
-                            android:secondaryProgressTint="@color/primary"
+                            android:secondaryProgressTint="@color/Primary_Light"
                             android:stepSize="1" />
 
                         <TextView
@@ -142,7 +142,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5"
-                            android:textColor="@color/main" />
+                            android:textColor="@color/Primary_Light" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -176,7 +176,7 @@
                             android:layout_marginStart="10dp"
                             android:text="0"
                             android:textAlignment="center"
-                            android:textColor="@color/primary"
+                            android:textColor="@color/Primary_Light"
                             android:textSize="15dp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="@id/tv_review_num"
@@ -209,7 +209,7 @@
                             android:layout_height="10dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="15dp"
-                            android:progressDrawable="@drawable/progress" />
+                            android:progressDrawable="@drawable/layer_progress" />
 
                     </LinearLayout>
 
@@ -238,7 +238,7 @@
                             android:layout_height="10dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="15dp"
-                            android:progressDrawable="@drawable/progress" />
+                            android:progressDrawable="@drawable/layer_progress" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -264,7 +264,7 @@
                             android:layout_height="10dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="15dp"
-                            android:progressDrawable="@drawable/progress" />
+                            android:progressDrawable="@drawable/layer_progress" />
 
                     </LinearLayout>
 
@@ -291,7 +291,7 @@
                             android:layout_height="10dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="15dp"
-                            android:progressDrawable="@drawable/progress" />
+                            android:progressDrawable="@drawable/layer_progress" />
 
                     </LinearLayout>
 
@@ -318,7 +318,7 @@
                             android:layout_height="10dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="15dp"
-                            android:progressDrawable="@drawable/progress" />
+                            android:progressDrawable="@drawable/layer_progress" />
 
                     </LinearLayout>
 

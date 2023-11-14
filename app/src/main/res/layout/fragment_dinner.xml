@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="5dp"
-    tools:context=".view.main.DinnerFragment">
+    tools:context=".ui.main.DinnerFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -226,7 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_marginTop="5dp"
-                        android:background="@color/main"/>
+                        android:background="@color/Primary_Light"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_dodam"
@@ -327,7 +327,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_marginTop="5dp"
-                        android:background="@color/main"/>
+                        android:background="@color/Primary_Light"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_gisik"

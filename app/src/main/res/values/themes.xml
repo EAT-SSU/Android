@@ -1,49 +1,43 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.EatSSUAndroid" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/Primary_Light</item>
+        <item name="colorPrimaryVariant">@color/gray600</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@color/Primary_Dark</item>
+        <item name="colorSecondaryVariant">@color/gray200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
 <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
         <item name="android:windowContentOverlay">@null</item>
 
-        <item name="android:statusBarColor" tools:targetApi="21">@color/white</item> <!--Status Bar의 배경색-->
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
+        <item name="android:statusBarColor" >@color/white</item> <!--Status Bar의 배경색-->
+        <item name="android:windowLightStatusBar" >true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
 
         <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
-        <item name="actionMenuTextColor">@color/main</item> <!--액션 메뉴의 텍스트 색상-->
-        <item name="colorControlNormal">@color/main</item> <!--홈/뒤로가기 버튼의 색상-->
-
+        <item name="actionMenuTextColor">@color/Primary_Light</item> <!--액션 메뉴의 텍스트 색상-->
+        <item name="colorControlNormal">@color/Primary_Light</item> <!--홈/뒤로가기 버튼의 색상-->
     </style>
+
     <!--Toolbar 스타일-->
-    <style name="ToolbarStyle.Dark" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/white</item> <!-- Toolbar의 배경색-->
-        <item name="titleTextAppearance">@style/ToolbarTitleStyle.Dark</item> <!-- Toolbar의 타이틀 텍스트-->
-        <item name="subtitleTextAppearance">@style/ToolbarSubtitleStyle.Dark</item> <!-- Toolbar의 서브타이틀 텍스트-->
-    </style>
-
     <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:gravity">center</item>
         <item name="android:textSize">22sp</item>
     </style>
 
     <!-- Toolbar의 타이틀 텍스트-->
-    <style name="ToolbarTitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/main</item> <!-- Toolbar의 타이틀 텍스트 색상-->
-        <item name="android:textSize">15dp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/Primary_Light</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+        <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Toolbar의 서브타이틀 텍스트-->
-    <style name="ToolbarSubtitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/main</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
-        <item name="android:textSize">12dp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
+    <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/Primary_Light</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
+        <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
     </style>
 
 
@@ -116,7 +110,7 @@
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
-        <item name="android:textColor">@color/font_gray_1</item>
+        <item name="android:textColor">@color/gray300</item>
     </style>
 
     <style name="AndroidCaption1">
@@ -130,7 +124,7 @@
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
-        <item name="android:textColor">@color/font_gray_1</item>
+        <item name="android:textColor">@color/gray300</item>
     </style>
 
     <style name="AndroidButton1">
@@ -195,14 +189,14 @@
         <item name="android:textColor">@android:color/darker_gray</item>
     </style>
     <style name="CustomDateTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
-        <item name="android:textColor"> @color/main
+        <item name="android:textColor">@color/Primary_Light
         </item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
     </style>
 
     <style name="CustomWeekDayAppearance" parent="TextAppearance.MaterialCalendarWidget.WeekDay">
-        <item name="android:textColor">@color/font_gray_1</item>
+        <item name="android:textColor">@color/gray200</item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
     </style>

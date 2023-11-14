@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.review.MenuPickActivity">
+    tools:context=".ui.review.write.MenuPickActivity">
 
     <TextView
         android:id="@+id/textView9"
@@ -47,7 +47,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/shape_btn"
-        android:backgroundTint="@color/primary"
+        android:backgroundTint="@color/Primary_Light"
         android:text="다음 단계로"
         android:textAlignment="center"
         android:textColor="@color/white"

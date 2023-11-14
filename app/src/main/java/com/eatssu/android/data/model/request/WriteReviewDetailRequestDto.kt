@@ -1,6 +1,6 @@
 package com.eatssu.android.data.model.request
 
-import com.eatssu.android.view.review.Review
+import com.eatssu.android.ui.review.write.Review
 
 data class WriteReviewDetailRequestDto(
     val multipartFileList: List<String>,

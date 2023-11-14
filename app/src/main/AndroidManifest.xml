@@ -38,17 +38,17 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
-            android:name=".view.review.WriteReviewActivity"
+            android:name=".ui.review.write.WriteReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.review.MenuPickActivity"
+            android:name=".ui.review.write.MenuPickActivity"
             android:exported="false" />
         <activity
-            android:name=".view.login.SocialLoginActivity"
+            android:name=".ui.login.SocialLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,7 +64,7 @@
 
 
         <activity
-            android:name=".view.main.ForceUpdateDialogActivity"
+            android:name=".ui.common.ForceUpdateDialogActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -95,7 +95,7 @@
         </activity>
 
         <activity
-            android:name=".view.mypage.ChangeNicknameActivity"
+            android:name=".ui.mypage.ChangeNicknameActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
 
@@ -104,78 +104,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.mypage.MyReviewListActivity"
+            android:name=".ui.mypage.MyReviewListActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.review.ReviewListActivity"
-            android:exported="true">
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.mypage.MyPageActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-        <activity
-            android:name=".view.infopage.InfoActivity_Gisik"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.infopage.InfoActivity_Kitchen"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.infopage.InfoActivity_Food"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.infopage.InfoActivity_Snack"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.infopage.InfoActivity_Dodam"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.infopage.InfoActivity_Haksik"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".view.main.MainActivity"
+            android:name=".ui.review.list.ReviewListActivity"
             android:exported="true">
 
             <meta-data
@@ -183,25 +119,24 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.review.OthersReviewDialogActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-
+            android:name=".ui.mypage.MyPageActivity"
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
-            android:name=".view.review.MyReviewDialogActivity"
+            android:name=".ui.info.InfoActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
-            android:name=".view.review.ReportActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
 
             <meta-data
@@ -209,7 +144,33 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.review.FixedReviewActivity"
+            android:name=".ui.review.etc.OthersReviewDialogActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyDialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.review.etc.MyReviewDialogActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyDialog">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.review.etc.ReportActivity"
+            android:exported="true">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.review.etc.FixedReviewActivity"
             android:exported="true">
 
             <meta-data
