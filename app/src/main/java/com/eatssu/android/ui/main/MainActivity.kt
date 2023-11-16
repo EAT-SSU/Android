@@ -24,7 +24,7 @@ import com.eatssu.android.ui.common.ForceUpdateDialogActivity
 import com.eatssu.android.ui.info.InfoViewModel
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.OnItemClickListener
-import com.eatssu.android.ui.mypage.ChangeNicknameActivity
+import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.info.InfoViewModelFactory
@@ -73,7 +73,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        val intentNick = Intent(this, ChangeNicknameActivity::class.java)
+        val intentNick = Intent(this, UserNameChangeActivity::class.java)
 
         val myPageService =
             RetrofitImpl.retrofit.create(MyPageService::class.java)
@@ -87,7 +87,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 if (response.isSuccessful) {
                     Log.d("MainActivity", "onResponse 성공: " + response.body().toString())
                     nickname = response.body()?.nickname.toString()
-                    Log.d("MainActivity", "onResponse 성공: $nickname");
+                    Log.d("MainActivity", "onResponse 성공: $nickname")
 
                     //나중에 isNullOrBlank로 바꿀 것
                     if (nickname == "null") {

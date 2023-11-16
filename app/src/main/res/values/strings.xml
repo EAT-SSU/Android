@@ -56,9 +56,10 @@
     <string name="food_court">푸드코트</string>
     <string name="the_kitchen">THE KITCHEN</string>
     <string name="student_cafeteria">학생식당</string>
-    <string name="price">price</string>
-    <string name="rate">rate</string>
+    <string name="price">가격</string>
+    <string name="rate">별점</string>
     <string name="dodam">도담식당</string>
+    <string name="dormitory">기숙사 식당</string>
     <string name="residence">기숙사 식당</string>
     <string name="report1">메뉴와 관련없는 내용</string>
     <string name="report2">음란성, 욕설 등 부적절한 내용</string>
@@ -82,4 +83,10 @@
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
     <string name="set_nickname_2_8">2~8글자를 입력해주세요.</string>
+    <string name="report_btn">EAT SSU에게 보내기</string>
+    <string name="location">식당 위치</string>
+    <string name="etc">비고</string>
+    <string name="time">운영 시간</string>
+    <string name="fix_review">리뷰 수정하기</string>
+    <string name="next_step">다음 단계로</string>
 </resources>
