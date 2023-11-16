@@ -95,7 +95,7 @@
         </activity>
 
         <activity
-            android:name=".ui.mypage.ChangeNicknameActivity"
+            android:name=".ui.mypage.usernamechange.UserNameChangeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
 
@@ -104,7 +104,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.MyReviewListActivity"
+            android:name=".ui.mypage.myreview.MyReviewListActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
