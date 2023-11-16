@@ -5,8 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginEnd="30dp"
     android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
     android:gravity="center"
     tools:context=".ui.info.InfoActivity">
 
@@ -36,7 +36,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@color/Primary_Light"/>
+            android:background="@color/Primary_Light" />
 
         <LinearLayout
             android:layout_width="match_parent"

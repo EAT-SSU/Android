@@ -12,16 +12,16 @@
         android:id="@+id/ib_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:scaleType="centerCrop"
         android:layout_marginTop="20dp"
         android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/cl_nickname"
+        android:id="@+id/ll_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
@@ -31,11 +31,11 @@
 
         <TextView
             android:id="@+id/tv_nickname"
+            style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AndroidSubtitle1"
-            android:text="@string/nickname"
             android:layout_gravity="center"
+            android:text="@string/nickname"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,13 +45,13 @@
             android:id="@+id/tv_nickname_change_btn"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            app:layout_constraintStart_toEndOf="@id/tv_nickname"
-            android:scaleType="fitCenter"
-            android:layout_marginStart="8dp"
             android:layout_gravity="center"
+            android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_arrow_right"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname"
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
@@ -63,36 +63,36 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_nickname">
+        app:layout_constraintTop_toBottomOf="@+id/ll_nickname">
 
         <TextView
             android:id="@+id/tv_account"
+            style="@style/AndroidBody3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/connect_account"
             android:textColor="@color/black"
-            android:layout_gravity="center"
-            style="@style/AndroidBody3"
             tools:ignore="NotSibling" />
 
         <TextView
             android:id="@+id/tv_account_type"
+            style="@style/AndroidBody2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/kakao"
-            android:layout_marginStart="8dp"
             android:layout_gravity="center"
-            style="@style/AndroidBody2"
+            android:layout_marginStart="8dp"
+            android:text="@string/kakao"
             android:textColor="@color/black"
             tools:ignore="NotSibling" />
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:layout_gravity="center"
             android:src="@drawable/ic_kakao_login"
             tools:ignore="NotSibling">
 
@@ -114,8 +114,8 @@
             style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="@string/my_review" />
+            android:text="@string/my_review"
+            android:textColor="@color/black" />
 
 
         <TextView
@@ -123,16 +123,16 @@
             style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="@string/logout" />
+            android:text="@string/logout"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/tv_signout"
             style="@style/AndroidBody1"
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signout" />
+            android:text="@string/signout"
+            android:textColor="@color/black" />
 
 
     </LinearLayout>

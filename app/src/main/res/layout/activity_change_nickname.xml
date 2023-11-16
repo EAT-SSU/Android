@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.mypage.ChangeNicknameActivity">
+    tools:context=".ui.mypage.usernamechange.UserNameChangeActivity">
 
 
     <TextView
         android:id="@+id/tv_ch_nickname"
+        style="@style/AndroidSubtitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_nickname"
-        style="@style/AndroidSubtitle2"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,11 +39,13 @@
 
         <Button
             android:id="@+id/btn_check_nickname"
+            style="@style/AndroidButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="중복확인"
             android:background="@drawable/shape_btn"
+            android:includeFontPadding="false"
+            android:text="중복확인"
             app:layout_constraintStart_toEndOf="@+id/et_ch_nickname" />
     </LinearLayout>
 
@@ -51,7 +53,6 @@
         android:id="@+id/tv_nickname_2_8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_semibold"
         android:text="@string/set_nickname_2_8"
         android:textColor="@color/gray700"
         app:layout_constraintStart_toStartOf="@+id/ll_change_nickname"
@@ -60,12 +61,13 @@
 
     <Button
         android:id="@+id/btn_complete"
+        style="@style/AndroidButton1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/complete"
-        style="@style/AndroidButton1"
-        android:includeFontPadding="false"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/shape_btn"
+        android:includeFontPadding="false"
+        android:text="@string/complete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

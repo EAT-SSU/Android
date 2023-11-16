@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".ui.review.etc.FixedReviewActivity">
 
     <LinearLayout
@@ -179,17 +180,13 @@
 
     <Button
         android:id="@+id/btn_fix_review"
+        style="@style/AndroidButton1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/shape_btn"
-        android:backgroundTint="@color/Primary_Light"
-        android:text="리뷰 수정하기"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20dp"
+        android:includeFontPadding="false"
+        android:text="@string/fix_review"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
