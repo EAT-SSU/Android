@@ -76,7 +76,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidSubtitle1">
@@ -84,7 +83,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidSubtitle2">
@@ -97,7 +95,6 @@
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidBody2">
@@ -110,21 +107,18 @@
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
-        <item name="android:textColor">@color/gray300</item>
     </style>
 
     <style name="AndroidCaption1">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidCaption2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
-        <item name="android:textColor">@color/gray300</item>
     </style>
 
     <style name="AndroidButton1">
