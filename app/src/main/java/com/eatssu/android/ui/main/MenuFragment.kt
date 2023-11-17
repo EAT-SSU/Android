@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.App
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
@@ -24,13 +24,12 @@ import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.main.menu.MenuViewModel
 import com.eatssu.android.ui.main.menu.MenuViewModelFactory
 import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.TokenSharedPreferences
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class MenuFragment : Fragment() {
+class MenuFragment(val time: Time) : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
@@ -52,7 +51,7 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -84,16 +83,13 @@ class MenuFragment : Fragment() {
 
             val dayOfWeek = formattedDate.dayOfWeek
 
-            if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-                // The date is on a weekend
-                Log.d("MenuFragment", "The date $menuDate is on a weekend.")
-            } else {
+            if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
                 // The date is not on a weekend
                 //푸드코트
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
                 menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
-                        Section(
+                        Section(MenuType.CHANGE,
                             Restaurant.FOOD_COURT,
                             mapFixedMenuResponseToMenu(result)
                         )
@@ -105,7 +101,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
                 menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
-                        Section(
+                        Section(MenuType.CHANGE,
                             Restaurant.SNACK_CORNER,
                             mapFixedMenuResponseToMenu(result)
                         )
@@ -119,15 +115,20 @@ class MenuFragment : Fragment() {
 
                 loadData()
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
+
+
+            } else {
+                // The date is on a weekend
+                Log.d("MenuFragment", "The date $menuDate is on a weekend.")
             }
 
 
             //학생식당
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
-                        Section(
+                        Section(MenuType.CHANGE,
                             Restaurant.HAKSIK,
                             mapTodayMenuResponseToMenu(result)
                         )
@@ -137,20 +138,20 @@ class MenuFragment : Fragment() {
             }
 
             //숭실도담
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.DINNER)
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
                 if (result.isNotEmpty()) {
-                    totalMenuList.add(Section(Restaurant.DODAM, mapTodayMenuResponseToMenu(result)))
+                    totalMenuList.add(Section(MenuType.CHANGE,Restaurant.DODAM, mapTodayMenuResponseToMenu(result)))
                     setupTodayRecyclerView()
                 }
             }
 
             //기숙사식당
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
             menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
-                        Section(
+                        Section(MenuType.CHANGE,
                             Restaurant.DORMITORY,
                             mapTodayMenuResponseToMenu(result)
                         )

@@ -21,7 +21,9 @@ class MenuAdapter(
             binding.rvMenu.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)
-                adapter = sectionModel.menuList?.let { SubMenuAdapter(it) }
+                adapter = sectionModel.menuList?.let {
+                    SubMenuAdapter(it,sectionModel.menuType)
+                }
                 addItemDecoration(
                     DividerItemDecoration(binding.root.context,
                         DividerItemDecoration.VERTICAL)
@@ -43,6 +45,6 @@ class MenuAdapter(
         }
     }
 
-    override fun getItemCount(): Int = totalMenuList.size ?: 0
+    override fun getItemCount(): Int = totalMenuList.size
 
 }

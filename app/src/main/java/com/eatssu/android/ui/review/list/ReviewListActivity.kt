@@ -45,11 +45,8 @@ class ReviewListActivity :
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
-//        itemIdList = intent.getLongArrayExtra("itemIdList")
         itemName = intent.getStringExtra("itemName").toString()
-//        intent.putExtra(
-//            "itemName", dataList.fixMenuInfoList[position].name
-//        )
+//
         Log.d("post", "고정메뉴${itemName}")
 
         val menuIdArray = intent.getLongArrayExtra("menuIdArray")
