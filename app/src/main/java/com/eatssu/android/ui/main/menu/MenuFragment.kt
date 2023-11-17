@@ -14,8 +14,8 @@ import com.eatssu.android.App
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
+import com.eatssu.android.data.model.response.ChangeMenuInfo
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
-import com.eatssu.android.data.model.response.GetTodayMeal
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
@@ -174,7 +174,7 @@ class MenuFragment(val time: Time) : Fragment() {
     }
 
 
-    private fun createNameList(menuInfoList: List<GetTodayMeal.ChangeMenuInfo>): String {
+    private fun createNameList(menuInfoList: List<ChangeMenuInfo>): String {
         val nameList = StringBuilder()
 
         for (menuInfo in menuInfoList) {
