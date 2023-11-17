@@ -3,10 +3,13 @@ package com.eatssu.android.ui.review.etc
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityFixMenuBinding
+import com.eatssu.android.ui.review.list.ReviewViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
@@ -35,59 +38,25 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
         reviewId = intent.getLongExtra("reviewId", -1L)
         Log.d("ReviewFixedActivity", reviewId.toString())
 
-        /*val menuViewModel = ViewModelProvider(this@FixMenuActivity).get(MenuIdViewModel::class.java)
-        menuViewModel.getData().observe(this, Observer { dataReceived ->
-            menuId = dataReceived.toLong()
-            Log.d("menufix", menuId.toString())
-        })*/
+        var viewModel = ViewModelProvider(this).get(FixViewModel::class.java)
+
+        val comment = binding.etReview2Comment.text.toString()
+        val mainGrade = binding.rbMain.rating.toInt()
+        val amountGrade = binding.rbAmount.rating.toInt()
+        val tasteGrade = binding.rbTaste.rating.toInt()
+
+        viewModel.resultLiveData.observe(this, Observer { result ->
+            Toast.makeText(this@FixedReviewActivity, result, Toast.LENGTH_SHORT).show()
+            if (result == "수정이 완료되었습니다.") {
+                finish()
+            }
+        })
 
         binding.btnFixReview.setOnClickListener {
 
-            postData(reviewId)
+            viewModel.postData(reviewId, comment, mainGrade, amountGrade, tasteGrade)
             finish()
         }
 
     }
-
-    private fun postData(reviewId: Long) {
-        val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
-
-        comment = binding.etReview2Comment.text.toString()
-
-        val reviewData = """
-    {
-        "mainGrade": ${binding.rbMain.rating.toInt()},
-        "amountGrade": ${binding.rbAmount.rating.toInt()},
-        "tasteGrade": ${binding.rbTaste.rating.toInt()},
-        "content": "$comment"
-    }
-""".trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
-
-        service.modifyReview(reviewId, reviewData)
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
-                            Toast.makeText(
-                                this@FixedReviewActivity, "수정이 완료되었습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
-
-                        } else {
-                            Log.d("post", "onResponse 오류: " + response.body().toString())
-                            Toast.makeText(
-                                this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString())
-                    Toast.makeText(
-                        this@FixedReviewActivity, "수정이 실패하였습니다.", Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-        }
 }
