@@ -96,4 +96,10 @@
     <string name="rate_1">1점</string>
     <string name="rate_2">2점</string>
     <string name="review">리뷰</string>
+    <string name="write_text_review">한 줄 평 작성하기</string>
+    <string name="pic_not_patch">리뷰 등록 후, 사진은 수정할 수 없습니다</string>
+    <string name="review_done">리뷰 등록하기</string>
+    <string name="review_patch_done">리뷰 수정하기</string>
+    <string name="eat_good">식사는 맛있게 하셨나요?</string>
+    <string name="eat_what">어떤 음식에 대한 리뷰인가요?</string>
 </resources>
