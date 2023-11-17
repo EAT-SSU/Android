@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
@@ -41,7 +43,17 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
 
             Log.d("reporting", reviewId.toString())
 
-            postData(reviewId, reportType, content)
+            var viewModel = ViewModelProvider(this).get(ReportViewModel::class.java)
+
+            // ViewModel에서 LiveData를 관찰하여 UI 업데이트
+            viewModel.reportResult.observe(this, Observer { result ->
+                Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+                if (result == "신고가 완료되었습니다.") {
+                    finish()
+                }
+            })
+
+            viewModel.postData(reviewId, reportType, content)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -59,37 +71,5 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             binding.radioBt6.id -> ReportType.ETC
             else -> ReportType.ETC // Default to ETC if none selected
         }
-    }
-
-    private fun postData(reviewId: Long, reportType: String, content: String) {
-        val service = retrofit.create(ReportService::class.java)
-        Log.d("reportId", reviewId.toString())
-
-        service.reportReview(ReportRequestDto(reviewId, reportType, content))
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
-                            Toast.makeText(
-                                this@ReportActivity, "신고가 완료되었습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
-
-                        } else {
-                            Log.d("post", "onResponse 오류: " + response.body().toString())
-                            Toast.makeText(
-                                this@ReportActivity, "신고가 실패하였습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString())
-                    Toast.makeText(
-                        this@ReportActivity, "신고가 실패하였습니다.", Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
     }
 }
