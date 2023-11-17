@@ -7,4 +7,9 @@ data class GetTodayMeal(
     val price: Long,
     val mainGrade: Double,
     val changeMenuInfoList: List<ChangeMenuInfo>,
-)
+){
+    data class ChangeMenuInfo(
+        val menuId: Long,
+        val name: String,
+    )
+}

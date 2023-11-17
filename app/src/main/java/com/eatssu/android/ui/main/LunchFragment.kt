@@ -136,16 +136,6 @@ class LunchFragment : Fragment() {
             })
         })
 
-//        //더키친
-//        menuViewModel.loadFixedMenu(Restaurant.THE_KITCHEN)
-//        menuViewModel.fixedMenuDataKitchen.observe(viewLifecycleOwner, Observer { result ->
-//            val kitchenAdapter = FixedMenuAdapter(result)
-//            val recyclerView = binding.rvKitchen
-//            recyclerView.adapter = kitchenAdapter
-//            recyclerView.layoutManager = LinearLayoutManager(context)
-//            recyclerView.setHasFixedSize(true)
-//        })
-
         //푸드코트
         menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
         menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->

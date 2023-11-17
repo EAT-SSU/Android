@@ -55,7 +55,7 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
             intent.putExtra(
                 "itemId", dataList[position].mealId
             )
-            intent.putExtra("mealId",dataList[position].mealId)
+            intent.putExtra("mealId", dataList[position].mealId)
             intent.putExtra(
                 "menuType", MenuType.CHANGE.toString()
             )
@@ -73,8 +73,8 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
             val menuIdArray = menuIds.toLongArray()
             val menuNameArray = ArrayList(menuNames.toList())
 
-            intent.putExtra("menuIdArray",menuIdArray)
-            intent.putStringArrayListExtra("menuNameArray",menuNameArray)
+            intent.putExtra("menuIdArray", menuIdArray)
+            intent.putStringArrayListExtra("menuNameArray", menuNameArray)
 
             ContextCompat.startActivity(holder.itemView.context, intent, null)
         }
