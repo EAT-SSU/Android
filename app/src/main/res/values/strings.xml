@@ -89,4 +89,11 @@
     <string name="time">운영 시간</string>
     <string name="fix_review">리뷰 수정하기</string>
     <string name="next_step">다음 단계로</string>
+    <string name="rate_5">5점</string>
+    <string name="rate_4">4점</string>
+    <string name="total_review_num">총 리뷰 수</string>
+    <string name="rate_3">3점</string>
+    <string name="rate_1">1점</string>
+    <string name="rate_2">2점</string>
+    <string name="review">리뷰</string>
 </resources>

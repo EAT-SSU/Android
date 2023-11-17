@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.data.service.UserService
-import com.eatssu.android.databinding.ActivityChangeNicknameBinding
+import com.eatssu.android.databinding.ActivityUserNameChangeBinding
 import com.eatssu.android.util.RetrofitImpl.retrofit
 
-class UserNameChangeActivity : BaseActivity<ActivityChangeNicknameBinding>(ActivityChangeNicknameBinding::inflate) {
+class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(ActivityUserNameChangeBinding::inflate) {
     private var inputNickname: String = ""
     private lateinit var viewModel: UserNameChangeViewModel
 

@@ -58,7 +58,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="top"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_my_review" />
+            tools:listitem="@layout/item_review" />
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
