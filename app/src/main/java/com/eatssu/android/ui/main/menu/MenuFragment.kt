@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.ui.main.menu
 
 import android.os.Build
 import android.os.Bundle
@@ -21,8 +21,6 @@ import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
-import com.eatssu.android.ui.main.menu.MenuViewModel
-import com.eatssu.android.ui.main.menu.MenuViewModelFactory
 import com.eatssu.android.util.RetrofitImpl
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -89,7 +87,7 @@ class MenuFragment(val time: Time) : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
                 menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
-                        Section(MenuType.CHANGE,
+                        Section(MenuType.FIX,
                             Restaurant.FOOD_COURT,
                             mapFixedMenuResponseToMenu(result)
                         )
@@ -101,7 +99,7 @@ class MenuFragment(val time: Time) : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
                 menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
-                        Section(MenuType.CHANGE,
+                        Section(MenuType.FIX,
                             Restaurant.SNACK_CORNER,
                             mapFixedMenuResponseToMenu(result)
                         )

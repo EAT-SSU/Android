@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.ui.main.menu
 
 import android.content.Intent
 import android.util.Log

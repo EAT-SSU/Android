@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.ui.main.menu
 
 data class Menu(
     val id: Long,

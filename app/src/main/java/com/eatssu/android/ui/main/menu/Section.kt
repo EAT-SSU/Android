@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.main
+package com.eatssu.android.ui.main.menu
 
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
