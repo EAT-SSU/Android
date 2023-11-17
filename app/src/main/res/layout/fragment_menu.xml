@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray300"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        tools:listitem="@layout/item_menu" />
+        tools:listitem="@layout/item_section" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

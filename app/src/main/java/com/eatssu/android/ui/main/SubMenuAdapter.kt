@@ -23,8 +23,11 @@ class SubMenuAdapter(
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
             binding.tvRate.text =
-                String.format("%.1f", dataList[position].rate)
-        }
+                if (dataList[position].rate == 0.0) {
+                    "-"
+                } else {
+                    String.format("%.1f", dataList[position].rate)
+                }        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

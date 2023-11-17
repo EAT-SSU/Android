@@ -17,7 +17,7 @@ class MenuAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(sectionModel: Section) {
-            binding.tvCafeteria.text = sectionModel.cafeteria.toString()
+            binding.tvCafeteria.text = sectionModel.cafeteria.displayName
             binding.rvMenu.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)

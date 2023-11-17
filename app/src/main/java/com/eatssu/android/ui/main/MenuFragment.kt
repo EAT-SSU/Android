@@ -23,6 +23,8 @@ import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.main.menu.MenuViewModel
 import com.eatssu.android.ui.main.menu.MenuViewModelFactory
 import com.eatssu.android.util.RetrofitImpl
+import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -72,53 +74,74 @@ class MenuFragment : Fragment() {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
 
 
+
+            // Assuming menuDate is a String in the format "yyyyMMdd"
+            val formattedDate = LocalDate.parse(menuDate.substring(0, 8), DateTimeFormatter.BASIC_ISO_DATE)
+
+            val dayOfWeek = formattedDate.dayOfWeek
+
+            if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+                // The date is on a weekend
+                Log.d("MenuFragment", "The date $menuDate is on a weekend.")
+            } else {
+                // The date is not on a weekend
+                //푸드코트
+                menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
+                menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
+                    totalMenuList.add(Section(Restaurant.FOOD_COURT, mapFixedMenuResponseToMenu(result)))
+                    setupTodayRecyclerView()
+                }
+
+                //스낵코너
+                menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
+                menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner){ result ->
+                    totalMenuList.add(Section(Restaurant.SNACK_CORNER, mapFixedMenuResponseToMenu(result)))
+                    setupTodayRecyclerView()
+
+                }
+
+                totalMenuList.sortBy { it.cafeteria.ordinal }
+                setupTodayRecyclerView()
+
+                loadData()
+                Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
+            }
+
+
+
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, Time.LUNCH)
-            menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
                 if(result.isNotEmpty()) {
                     totalMenuList.add(Section(Restaurant.HAKSIK, mapTodayMenuResponseToMenu(result)))
                     setupTodayRecyclerView()
                 }
-            })
+            }
 
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, Time.DINNER)
-            menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner, Observer { result ->
+            menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
                 if(result.isNotEmpty()){
                     totalMenuList.add(Section(Restaurant.DODAM, mapTodayMenuResponseToMenu(result)))
                     setupTodayRecyclerView()
                 }
-
-            })
+            }
 
             //기숙사식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, Time.LUNCH)
-            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner, Observer { result ->
-                if(result.isNotEmpty()) {
-                    totalMenuList.add(Section(Restaurant.DORMITORY, mapTodayMenuResponseToMenu(result)))
+            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
+                if (result.isNotEmpty()) {
+                    totalMenuList.add(
+                        Section(
+                            Restaurant.DORMITORY,
+                            mapTodayMenuResponseToMenu(result)
+                        )
+                    )
                     setupTodayRecyclerView()
                 }
-            })
-        })
-        //푸드코트
-        menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
-        menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner, Observer { result ->
-            totalMenuList.add(Section(Restaurant.FOOD_COURT, mapFixedMenuResponseToMenu(result)))
-            setupTodayRecyclerView()
+            }
         })
 
-        //스낵코너
-        menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
-        menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner, Observer { result ->
-            totalMenuList.add(Section(Restaurant.SNACK_CORNER, mapFixedMenuResponseToMenu(result)))
-            setupTodayRecyclerView()
-
-        })
-
-        totalMenuList.sortBy { it.cafeteria.ordinal }
-        setupTodayRecyclerView()
-
-        loadData()
     }
 
 
@@ -160,8 +183,8 @@ class MenuFragment : Fragment() {
         }
     }
 
-    private fun mapFixedMenuResponseToMenu(fixedMenuResponse: GetFixedMenuResponseDto?): List<Menu>? {
-        return fixedMenuResponse?.fixMenuInfoList?.map { fixMenuInfo ->
+    private fun mapFixedMenuResponseToMenu(fixedMenuResponse: GetFixedMenuResponseDto): List<Menu> {
+        return fixedMenuResponse.fixMenuInfoList.map { fixMenuInfo ->
             Menu(
                 id = fixMenuInfo.menuId,
                 name = fixMenuInfo.name,

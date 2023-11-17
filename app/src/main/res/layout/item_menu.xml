@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/tv_price"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="5,000"
                 android:textSize="15dp"
@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/tv_rate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="3.6"
                 android:textSize="15dp"
