@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
-import com.eatssu.android.ui.review.list.ReviewListActivity
+import com.eatssu.android.ui.review.list.ReviewActivity
 
 class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
     RecyclerView.Adapter<TodayMealAdapter.ViewHolder>() {
@@ -51,7 +51,7 @@ class TodayMealAdapter(private val dataList: GetTodayMealResponseDto) :
         holder.bind(position)
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+            val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
             intent.putExtra(
                 "itemId", dataList[position].mealId
             )

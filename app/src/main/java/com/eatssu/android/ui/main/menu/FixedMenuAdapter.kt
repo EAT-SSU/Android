@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.databinding.ItemMenuBinding
-import com.eatssu.android.ui.review.list.ReviewListActivity
+import com.eatssu.android.ui.review.list.ReviewActivity
 
 
 class FixedMenuAdapter(
@@ -39,7 +39,7 @@ class FixedMenuAdapter(
 
         //intent 사용
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+            val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
             intent.putExtra(
                 "itemId", dataList.fixMenuInfoList[position].menuId
             )

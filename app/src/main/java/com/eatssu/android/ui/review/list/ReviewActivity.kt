@@ -10,15 +10,15 @@ import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.ReviewAdapter
-import com.eatssu.android.ui.review.write.MenuPickActivity
-import com.eatssu.android.ui.review.write.WriteReviewActivity
+import com.eatssu.android.ui.review.write.ReviewWriteMenuActivity
+import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlin.properties.Delegates
 
-class ReviewListActivity :
-    BaseActivity<ActivityReviewListBinding>(ActivityReviewListBinding::inflate) {
+class ReviewActivity :
+    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
     private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
@@ -64,7 +64,7 @@ class ReviewListActivity :
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
 
                 binding.btnNextReview.setOnClickListener() {
-                    val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
+                    val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
 //                    intent.putStringArrayListExtra("itemName", itemName)
@@ -79,7 +79,7 @@ class ReviewListActivity :
                 val mealId = itemId
 
                 binding.btnNextReview.setOnClickListener() {
-                    val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
+                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("mealId", mealId)
 
