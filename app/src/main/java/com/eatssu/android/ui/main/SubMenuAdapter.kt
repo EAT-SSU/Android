@@ -12,7 +12,8 @@ import com.eatssu.android.ui.review.list.ReviewListActivity
 
 
 class SubMenuAdapter(
-    private val dataList: List<Menu>
+    private val dataList: List<Menu>,
+    private val menuType: MenuType
 ) :
     RecyclerView.Adapter<SubMenuAdapter.ViewHolder>() {
 
@@ -42,21 +43,25 @@ class SubMenuAdapter(
         //intent 사용
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
-            intent.putExtra(
-                "itemId", dataList[position].id
-            )
-            intent.putExtra(
-                "itemName", dataList[position].name
-            )
-            Log.d("post","고정메뉴${dataList[position].name}")
-            intent.putExtra(
-                "menuType", MenuType.FIX.toString()
-            )
 
-            //val menuViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[MenuIdViewModel::class.java]
-            //menuViewModel.setData(dataList.fixMenuInfoList[position].menuId.toString())
+            if(menuType==MenuType.FIX){
+                Log.d("SubMenuAdapter","고정메뉴${dataList[position].name}")
+                intent.putExtra("itemId", dataList[position].id)
+                intent.putExtra("itemName", dataList[position].name)
+                intent.putExtra("menuType", MenuType.FIX.toString())
+            }
+
+            if(menuType==MenuType.CHANGE){
+                Log.d("SubMenuAdapter","변동메뉴${dataList[position].name}")
+                intent.putExtra("itemId", dataList[position].id)
+                intent.putExtra("itemName", dataList[position].name)
+                intent.putExtra("menuType", MenuType.CHANGE.toString())
+            }
             ContextCompat.startActivity(holder.itemView.context, intent, null)
+
         }
+
+
     }
 
     override fun getItemCount(): Int = dataList.size
