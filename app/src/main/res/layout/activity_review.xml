@@ -38,6 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:includeFontPadding="false"
+                    android:lineSpacingExtra="-4dp"
                     android:text="메뉴"
                     android:textAlignment="center"
                     android:textColor="@color/black"

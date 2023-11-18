@@ -11,11 +11,11 @@ import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.ui.review.list.ReviewActivity
 
 
-class SubMenuAdapter(
+class MenuSubAdapter(
     private val dataList: List<Menu>,
     private val menuType: MenuType
 ) :
-    RecyclerView.Adapter<SubMenuAdapter.ViewHolder>() {
+    RecyclerView.Adapter<MenuSubAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
