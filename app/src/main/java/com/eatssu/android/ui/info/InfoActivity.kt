@@ -57,7 +57,7 @@ class InfoActivity : AppCompatActivity() {
                 }
 
                 Restaurant.DORMITORY -> {
-                    binding.tvLocation.text = infoViewModel.dodamLocation.value
+                    binding.tvLocation.text = infoViewModel.dormitoryLocation.value
                     binding.tvTime.text = infoViewModel.dormitoryTime.value
                     binding.tvEtc.text = infoViewModel.dormitoryEtc.value
                 }

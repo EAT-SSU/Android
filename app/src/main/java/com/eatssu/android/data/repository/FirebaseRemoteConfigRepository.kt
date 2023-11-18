@@ -17,13 +17,24 @@ class FirebaseRemoteConfigRepository {
         instance.setConfigSettingsAsync(configSettings)
 
         // Set the default values locally
-        instance.setDefaultsAsync(defaultValues)
         instance.fetchAndActivate().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-//                val update = checkForUpdate()
+
+                val cafeteriaInfo = instance.getString("cafeteria_info")
+                val forceUpdate =  instance.getBoolean("force_update")
+                val appVersion =  instance.getString("app_version")
+
+                val instanceValues: Map<String, Any> = mapOf(
+                    "force_update_required" to forceUpdate,
+                    "latest_app_version" to appVersion,
+                    "cafeteria_info" to cafeteriaInfo)
+
+                instance.setDefaultsAsync(instanceValues)
+
 
             } else {
                 // Handle error
+                instance.setDefaultsAsync(defaultValues)
             }
         }
     }
@@ -74,7 +85,7 @@ class FirebaseRemoteConfigRepository {
                     "  {\n" +
                     "    \"name\": \"기숙사 식당\",\n" +
                     "    \"location\": \"레지던스홀 지하 1층\",\n" +
-                    "    \"time\": \"08:00분~09:30\\n11:00~14:00\\n17:00~18:30\",\n" +
+                    "    \"time\": \"08:00~09:30\\n11:00~14:00\\n17:00~18:30\",\n" +
                     "    \"etc\": \"주말 조식은 운영되지 않습니다.\"\n" +
                     "  }\n" +
                     "]"
