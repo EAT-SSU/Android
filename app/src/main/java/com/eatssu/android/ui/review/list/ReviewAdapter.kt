@@ -90,8 +90,8 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
             binding.tvReviewItemReport.setOnClickListener {
                 if (data?.isWriter == false) {
                     val intent = Intent(binding.tvReviewItemReport.context, ReportActivity::class.java)
-                    intent.putExtra("reviewId", data?.reviewId)
-                    intent.putExtra("menu", data?.menu)
+                    intent.putExtra("reviewId", data.reviewId)
+                    intent.putExtra("menu", data.menu)
                     ContextCompat.startActivity(binding.tvReviewItemReport.context, intent, null)
                 }
             }

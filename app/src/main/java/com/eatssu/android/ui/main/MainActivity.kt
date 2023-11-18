@@ -125,7 +125,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             viewPager,
             { tab, position -> tab.text = tabTitles[position] }).attach()
 
-        binding.btnSetting.setOnClickListener() {
+        binding.btnSetting.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌
         }
@@ -258,7 +258,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         startActivity(intent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

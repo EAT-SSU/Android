@@ -14,8 +14,6 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
     inner class ViewHolder(private val binding: ItemMenuPickBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val checkBox = binding.checkBox
-
         fun bind(position: Int) {
             val menuItem = menuList.menuInfoList[position]
             with(binding) {
@@ -36,7 +34,7 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = menuList.menuInfoList?.size ?: 0
+    override fun getItemCount(): Int = menuList.menuInfoList.size
 
     private fun getItem(position: Int): Pair<String, Long> {
         val menuItem = menuList.menuInfoList[position]
