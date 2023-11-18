@@ -8,30 +8,26 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.ui.common.ForceUpdateDialogActivity
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
-import com.eatssu.android.ui.info.InfoViewModel
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
-import com.eatssu.android.ui.main.calendar.OnItemClickListener
-import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
-import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
-import com.eatssu.android.ui.info.InfoViewModelFactory
+import com.eatssu.android.ui.main.calendar.OnItemClickListener
+import com.eatssu.android.ui.mypage.MyPageActivity
+import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.util.RetrofitImpl
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
@@ -120,19 +116,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         // ###### TabLayout과 ViewPager2를 연결
         // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
-        val tabTitles = listOf<String>("아침", "점심", "저녁")
+        val tabTitles = listOf("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
         TabLayoutMediator(tabLayout,
-            viewPager,
-            { tab, position -> tab.text = tabTitles[position] }).attach()
+            viewPager
+        ) { tab, position -> tab.text = tabTitles[position] }.attach()
 
         binding.btnSetting.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌
         }
 
-        var week_day: Array<String> = resources.getStringArray(R.array.calendar_day)
+        val weekDay: Array<String> = resources.getStringArray(R.array.calendar_day)
 
         calendarAdapter = CalendarAdapter(calendarList)
 
@@ -155,13 +151,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             )
             Log.d("preSunday", preSunday.toString())
             for (i in 0..6) {
-                Log.d("날짜만", week_day[i])
+                Log.d("날짜만", weekDay[i])
 
                 calendarList.apply {
                     add(
                         CalendarData(
                             preSunday.plusDays(i.toLong()).format(dateFormat),
-                            week_day[i]
+                            weekDay[i]
                         )
                     )
                 }
@@ -223,12 +219,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
                 // ###### TabLayout과 ViewPager2를 연결
                 // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
-                val tabTitles = listOf<String>("아침", "점심", "저녁")
+                val tabTitles = listOf("아침", "점심", "저녁")
 
                 // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
                 TabLayoutMediator(tabLayout,
-                    viewPager,
-                    { tab, position -> tab.text = tabTitles[position] }).attach()
+                    viewPager
+                ) { tab, position -> tab.text = tabTitles[position] }.attach()
 
 
             }
