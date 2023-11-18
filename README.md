@@ -21,7 +21,6 @@ com.eatssu.android
 │   │   ├── response
 │   ├── repository
 │   └── service
-├── repository
 ├── ui
 │   ├── common
 │   ├── info
