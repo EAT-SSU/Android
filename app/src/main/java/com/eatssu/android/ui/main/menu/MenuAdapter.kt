@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemSectionBinding
@@ -32,12 +31,8 @@ class MenuAdapter(
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)
                 adapter = sectionModel.menuList?.let {
-                    SubMenuAdapter(it,sectionModel.menuType)
+                    MenuSubAdapter(it,sectionModel.menuType)
                 }
-                addItemDecoration(
-                    DividerItemDecoration(binding.root.context,
-                        DividerItemDecoration.VERTICAL)
-                )
             }
         }
     }

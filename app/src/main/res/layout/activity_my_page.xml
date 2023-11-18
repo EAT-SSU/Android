@@ -4,238 +4,155 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:padding="16dp"
     tools:context=".ui.mypage.MyPageActivity">
 
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ib_profile"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:scaleType="centerCrop"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_nickname"
+    <LinearLayout
+        android:id="@+id/ll_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ib_profile">
 
         <TextView
             android:id="@+id/tv_nickname"
+            style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_semibold"
-            android:text=""
+            android:layout_gravity="center"
+            android:text="@string/nickname"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--<TextView
+        <ImageButton
             android:id="@+id/tv_nickname_change_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_bold"
-            app:layout_constraintStart_toEndOf="@id/tv_nickname"
-            android:text=">"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />-->
+            app:layout_constraintStart_toEndOf="@id/tv_nickname"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/tv_account_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_nickname">
+        app:layout_constraintTop_toBottomOf="@+id/ll_nickname">
 
         <TextView
             android:id="@+id/tv_account"
+            style="@style/AndroidBody3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="연결된 계정"
-            android:fontFamily="@font/noto_regular"
-            app:layout_constraintStart_toStartOf="@id/cl_nickname"
-            app:layout_constraintTop_toBottomOf="@+id/cl_nickname"
+            android:layout_gravity="center"
+            android:text="@string/connect_account"
+            android:textColor="@color/black"
             tools:ignore="NotSibling" />
 
         <TextView
             android:id="@+id/tv_account_type"
+            style="@style/AndroidBody2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="카카오"
-            android:fontFamily="@font/noto_regular"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="@string/kakao"
             android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_account"
-            app:layout_constraintTop_toBottomOf="@+id/cl_nickname"
             tools:ignore="NotSibling" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_kakaotalk_edge"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_account_type"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_kakao_login"
             tools:ignore="NotSibling">
 
         </ImageView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-
-    <!--<androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_review"
-        android:layout_marginTop="30dp"
+    <LinearLayout
+        android:id="@+id/ll_my_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email">
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_layout">
 
-        <ImageButton
-            android:id="@+id/ib_my_review"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_review"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/tv_my_review"
+            style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_review"
-            app:layout_constraintEnd_toEndOf="@+id/ib_my_review"
-            app:layout_constraintStart_toStartOf="@+id/ib_my_review"
-            app:layout_constraintTop_toBottomOf="@+id/ib_my_review" />
+            android:textColor="@color/black" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_ch_pw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_bold"
-        android:layout_marginTop="50dp"
-        android:text="@string/my_review"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cl_review">
-
-        <ImageButton
-            android:id="@+id/ib_setting"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_setting"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_logout"
+            style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/change_pw"
-            app:layout_constraintEnd_toEndOf="@+id/ib_setting"
-            app:layout_constraintStart_toStartOf="@+id/ib_setting"
-            app:layout_constraintTop_toBottomOf="@+id/ib_setting" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_bell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cl_review"
-        app:layout_constraintTop_toTopOf="@+id/cl_review">
-
-        <ImageButton
-            android:id="@+id/ib_announce"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_bell"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="@string/logout"
+            android:textColor="@color/black" />
 
         <TextView
+            android:id="@+id/tv_signout"
+            style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/announce"
-            app:layout_constraintEnd_toEndOf="@+id/ib_announce"
-            app:layout_constraintStart_toStartOf="@+id/ib_announce"
-            app:layout_constraintTop_toBottomOf="@+id/ib_announce" />
+            android:text="@string/signout"
+            android:textColor="@color/black" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-    <TextView
-        android:id="@+id/tv_myreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/noto_semibold"
-        android:text="@string/my_review"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_account_layout" />
-
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_semibold"
-        android:text="@string/logout"
-        app:layout_constraintStart_toStartOf="@+id/tv_myreview"
-        app:layout_constraintTop_toBottomOf="@+id/tv_myreview" />
-
-    <TextView
-        android:id="@+id/tv_signout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_semibold"
-        android:text="@string/signout"
-        app:layout_constraintStart_toStartOf="@+id/tv_logout"
-        app:layout_constraintTop_toBottomOf="@+id/tv_logout" />
-
-    <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tv_app_version_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/noto_regular"
         android:text="@string/app_version"
-        app:layout_constraintStart_toStartOf="@+id/tv_logout"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signout" />
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/ll_my_page"
+        app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
 
     <TextView
         android:id="@+id/tv_app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        android:textColor="@color/gray700"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
+        app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

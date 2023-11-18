@@ -4,27 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.review.write.MenuPickActivity">
+    android:padding="16dp"
+    tools:context=".ui.review.write.ReviewWriteMenuActivity">
 
     <TextView
         android:id="@+id/textView9"
+        style="@style/AndroidSubtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:text="식사는 맛있게 하셨나요?"
-        android:textSize="18dp"
+        android:text="@string/eat_what"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView10"
+        style="@style/AndroidBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="어떤 음식에 대한 리뷰인가요?"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:text="@string/eat_good"
+        android:textColor="@color/gray700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -33,25 +33,19 @@
         android:id="@+id/rv_menu_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView10"
         tools:listitem="@layout/item_menu_pick" />
 
     <Button
         android:id="@+id/btn_next_review"
+        style="@style/AndroidButton1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/shape_btn"
-        android:backgroundTint="@color/Primary_Light"
-        android:text="다음 단계로"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20dp"
+        android:includeFontPadding="false"
+        android:text="@string/next_step"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

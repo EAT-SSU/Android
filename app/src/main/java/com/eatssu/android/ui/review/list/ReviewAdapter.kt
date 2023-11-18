@@ -23,14 +23,14 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
 
         fun bind(position: Int) {
             val data = dataList.dataList?.get(position)
-            binding.tvReviewItemId.text = data?.writerNickname.toString()
+            binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
             binding.tvReviewItemDate.text = data?.writeDate
             binding.tvMenuName.text = data?.menu
 
-            binding.tvTotalRating.text = data?.mainGrade?.toFloat().toString()
-            binding.tvTasteRating.text = data?.tasteGrade?.toFloat().toString()
-            binding.tvAmountRating.text = data?.amountGrade?.toFloat().toString()
+            binding.tvTotalRating.text = data?.mainGrade?.toString()
+            binding.tvTasteRating.text = data?.tasteGrade?.toString()
+            binding.tvAmountRating.text = data?.amountGrade?.toString()
 
             val imgUrlList: List<String>? = data?.imgUrlList
 
@@ -50,8 +50,8 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
             binding.btnDetail.setOnClickListener {
                 if (data?.isWriter == true) {
                     val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
-                    intent.putExtra("reviewId", data?.reviewId)
-                    intent.putExtra("menu", data?.menu)
+                    intent.putExtra("reviewId", data.reviewId)
+                    intent.putExtra("menu", data.menu)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }
@@ -63,7 +63,7 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
 
         fun bind(position: Int) {
             val data = dataList.dataList?.get(position)
-            binding.tvReviewItemId.text = data?.writerNickname.toString()
+            binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
             binding.tvReviewItemDate.text = data?.writeDate
             binding.tvMenuName.text = data?.menu
@@ -90,8 +90,8 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
             binding.tvReviewItemReport.setOnClickListener {
                 if (data?.isWriter == false) {
                     val intent = Intent(binding.tvReviewItemReport.context, ReportActivity::class.java)
-                    intent.putExtra("reviewId", data?.reviewId)
-                    intent.putExtra("menu", data?.menu)
+                    intent.putExtra("reviewId", data.reviewId)
+                    intent.putExtra("menu", data.menu)
                     ContextCompat.startActivity(binding.tvReviewItemReport.context, intent, null)
                 }
             }

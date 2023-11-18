@@ -1,16 +1,14 @@
-package com.eatssu.android.ui.mypage
+package com.eatssu.android.ui.mypage.myreview
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,9 +21,6 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "내가 쓴 리뷰" // 툴바 제목 설정
 
-        val MENU_ID:Int=intent.getIntExtra("menuId",-1)
-        Log.d("post",MENU_ID.toString())
-
         lodeReview()
     }
 
@@ -36,8 +31,6 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
         binding.rvReview.adapter = listAdapter
         binding.rvReview.layoutManager = linearLayoutManager
         binding.rvReview.setHasFixedSize(true)
-        binding.rvReview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-
     }
 
     private fun lodeReview() {

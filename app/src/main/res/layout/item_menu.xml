@@ -20,27 +20,37 @@
 
             <TextView
                 android:id="@+id/tv_menu"
+                style="@style/AndroidBody3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="7"
-                android:text="내용" />
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="-4dp"
+                android:text="내용"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/tv_price"
+                style="@style/AndroidBody3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
                 android:gravity="center"
-                android:text="5,000" />
+                android:includeFontPadding="false"
+                android:text="5,000"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/tv_rate"
+                style="@style/AndroidBody3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
                 android:gravity="center"
-                android:text="3.6" />
+                android:includeFontPadding="false"
+                android:text="3.6"
+                android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 

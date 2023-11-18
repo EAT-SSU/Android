@@ -8,14 +8,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ItemMenuBinding
-import com.eatssu.android.ui.review.list.ReviewListActivity
+import com.eatssu.android.ui.review.list.ReviewActivity
 
 
-class SubMenuAdapter(
+class MenuSubAdapter(
     private val dataList: List<Menu>,
     private val menuType: MenuType
 ) :
-    RecyclerView.Adapter<SubMenuAdapter.ViewHolder>() {
+    RecyclerView.Adapter<MenuSubAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -42,7 +42,7 @@ class SubMenuAdapter(
 
         //intent 사용
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewListActivity::class.java)
+            val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
 
             if(menuType==MenuType.FIX){
                 Log.d("SubMenuAdapter","고정메뉴${dataList[position].name}")

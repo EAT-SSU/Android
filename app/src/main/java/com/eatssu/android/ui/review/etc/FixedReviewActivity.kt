@@ -41,7 +41,7 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
             Log.d("menufix", menuId.toString())
         })*/
 
-        binding.btnFixReview.setOnClickListener {
+        binding.btnDone.setOnClickListener {
 
             postData(reviewId)
             finish()

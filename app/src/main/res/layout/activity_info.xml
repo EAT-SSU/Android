@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.info.InfoActivity"
-    android:background="@drawable/shape_round_corners"
-    android:backgroundTint="@color/white">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:gravity="center"
+    tools:context=".ui.info.InfoActivity">
 
     <LinearLayout
-        android:layout_width="280dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -20,21 +25,18 @@
 
             <TextView
                 android:id="@+id/tv_name"
+                style="@style/AndroidH1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text=""
-                android:textSize="25dp"
-                android:fontFamily="@font/noto_bold"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@color/Primary_Light" >
-
-        </View>
+            android:background="@color/Primary_Light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,26 +46,23 @@
 
             <TextView
                 android:id="@+id/tv_location_info"
+                style="@style/AndroidH2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:text="식당 위치"
-                android:textSize="15dp"
-                android:fontFamily="@font/noto_medium"
+                android:layout_weight="3"
+                android:text="@string/location"
                 android:textColor="@color/black" />
 
 
             <TextView
                 android:id="@+id/tv_location"
+                style="@style/AndroidBody1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="7"
+                android:gravity="end"
                 android:text=""
-                android:textSize="15dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/noto_regular"
-                android:textColor="@color/black"
-                android:gravity="right" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -75,26 +74,23 @@
 
             <TextView
                 android:id="@+id/tv_time_info"
+                style="@style/AndroidH2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:text="운영 시간"
-                android:textSize="15dp"
-                android:fontFamily="@font/noto_medium"
+                android:layout_weight="3"
+                android:text="@string/time"
                 android:textColor="@color/black" />
 
 
             <TextView
                 android:id="@+id/tv_time"
+                style="@style/AndroidBody1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="7"
+                android:gravity="end"
                 android:text=""
-                android:textSize="15dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/noto_regular"
-                android:textColor="@color/black"
-                android:gravity="right" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -106,29 +102,26 @@
 
             <TextView
                 android:id="@+id/tv_etc_info"
+                style="@style/AndroidH2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:text="비고"
-                android:textSize="15dp"
-                android:fontFamily="@font/noto_medium"
+                android:layout_weight="3"
+                android:text="@string/etc"
                 android:textColor="@color/black" />
 
 
             <TextView
                 android:id="@+id/tv_etc"
+                style="@style/AndroidBody1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="7"
+                android:gravity="end"
                 android:text=""
-                android:textSize="15dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/noto_regular"
-                android:textColor="@color/black"
-                android:gravity="right" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

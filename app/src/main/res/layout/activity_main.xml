@@ -64,6 +64,7 @@
 
         <!-- TabLayou 을 배치한다. -->
         <com.google.android.material.tabs.TabLayout
+            style="@style/AndroidSubtitle2"
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
