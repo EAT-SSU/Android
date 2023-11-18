@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>force_update_required</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>latest_app_version</key>
+        <value>1.0.0</value>
+    </entry>
+    <entry>
+        <key>cafeteria_info</key>
+        <value>{
+            "name": "숭실도담",
+            "location": "신양관 2층",
+            "time": "11:20~14:00\n17:00~18:30",
+            "etc": "대면 배식+웰빙코너\n토요일 11:30~13:30"
+            },
+            {
+            "name": "학생식당",
+            "location": "학생회관 3층",
+            "time": "11:20~16:00\n(식사 14:00 마감)",
+            "etc": "3개 코너 운영\n뚝배기찌개, 덮밥, 양식"
+            },
+            {
+            "name": "스낵코너",
+            "location": "학생회관 3층",
+            "time": "11:00~16:00",
+            "etc": "분식류, 옛날도시락, 컵밥 등"
+            },
+            {
+            "name": "FOOD COURT",
+            "location": "학생회관 2층",
+            "time": "11:30~16:00",
+            "etc": "아시안푸드, 돈까스, 샐러드, 국밥 등 + 카페"
+            },
+            {
+            "name": "기숙사 식당",
+            "location": "레지던스홀 지하 1층",
+            "time": "08:00~09:30\n11:00~14:00\n17:00~18:30",
+            "etc": "주말 조식은 운영되지 않습니다."
+            }
+            ]
+        </value>
+    </entry>
+</defaultsMap>

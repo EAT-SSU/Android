@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +23,8 @@ import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.ui.common.ForceUpdateDialogActivity
+import com.eatssu.android.ui.common.VersionViewModel
+import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.info.InfoViewModel
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.OnItemClickListener
@@ -45,7 +49,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
-    private lateinit var infoViewModel: InfoViewModel
+    private lateinit var versionViewModel: VersionViewModel
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
     private lateinit var nickname: String
@@ -56,11 +60,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        infoViewModel = ViewModelProvider(this, InfoViewModelFactory(firebaseRemoteConfigRepository))[InfoViewModel::class.java]
+        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
 
-        firebaseRemoteConfigRepository.init()
-
-        if(firebaseRemoteConfigRepository.getForceUpdate()){
+        if(versionViewModel.checkForceUpdate()){
             showForceUpdateDialog()
         }
 

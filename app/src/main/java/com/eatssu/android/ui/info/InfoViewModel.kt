@@ -1,5 +1,6 @@
 package com.eatssu.android.ui.info
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.data.entity.FirebaseInfoItem
@@ -31,6 +32,7 @@ class InfoViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigReposito
 
     init {
         infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
+        Log.d("InfoViewModel",infoList.value.toString())
 
         val dodam = infoList.value!!.find { it.name == "숭실도담" }
         dodamTime.value = dodam?.time ?: ""

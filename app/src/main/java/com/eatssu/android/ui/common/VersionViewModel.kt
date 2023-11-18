@@ -1,17 +1,20 @@
 package com.eatssu.android.ui.common
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 
-class VersionViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository): ViewModel() {
-
-    val version: MutableLiveData<String> = MutableLiveData()
-    val isForceUpdate: MutableLiveData<Boolean> = MutableLiveData()
-
+class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) : ViewModel() {
 
     init {
-        version.value = firebaseRemoteConfigRepository.getAppVersion()
-        isForceUpdate.value = firebaseRemoteConfigRepository.getForceUpdate()
+        // Repository 초기화
+        repository.init()
+    }
+
+    fun checkForceUpdate(): Boolean {
+        return repository.getForceUpdate()
+    }
+
+    fun getAppVersion(): String {
+        return repository.getAppVersion()
     }
 }
