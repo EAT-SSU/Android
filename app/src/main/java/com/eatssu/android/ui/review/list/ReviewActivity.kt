@@ -53,9 +53,11 @@ class ReviewActivity :
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
 
-                binding.btnNextReview.setOnClickListener() {
+                binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
+                    intent.putExtra("menuType", menuType)
+//                    intent.putStringArrayListExtra("itemName", itemName)
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("menuType", menuType)
                     startActivity(intent)  // 화면 전환을 시켜줌
@@ -67,7 +69,7 @@ class ReviewActivity :
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
                 val mealId = itemId
 
-                binding.btnNextReview.setOnClickListener() {
+                binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteMenuActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("mealId", mealId)
@@ -109,6 +111,7 @@ class ReviewActivity :
                 recyclerView.layoutManager = LinearLayoutManager(this)
                 recyclerView.setHasFixedSize(true)
 //                recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))//구분선 주석처리
+
             }
         }
     }
