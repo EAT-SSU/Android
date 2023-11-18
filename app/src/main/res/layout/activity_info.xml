@@ -48,6 +48,8 @@
                 android:id="@+id/tv_location_info"
                 style="@style/AndroidH2"
                 android:layout_width="0dp"
+
+                android:lineSpacingExtra="-4dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/location"
@@ -62,6 +64,8 @@
                 android:layout_weight="7"
                 android:gravity="end"
                 android:text=""
+
+                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -79,6 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/time"
+
+                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
 
 
@@ -90,6 +96,8 @@
                 android:layout_weight="7"
                 android:gravity="end"
                 android:text=""
+
+                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -107,6 +115,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/etc"
+
+                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
 
 
@@ -118,6 +128,8 @@
                 android:layout_weight="7"
                 android:gravity="end"
                 android:text=""
+
+                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
