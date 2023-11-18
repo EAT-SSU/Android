@@ -27,7 +27,7 @@ class ReviewWriteMenuActivity : BaseActivity<ActivityReviewWriteMenuBinding>(Act
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = title
+        toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
         initServices()
 

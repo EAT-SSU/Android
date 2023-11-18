@@ -23,7 +23,7 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
 
         fun bind(position: Int) {
             val data = dataList.dataList?.get(position)
-            binding.tvReviewItemId.text = data?.writerNickname.toString()
+            binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
             binding.tvReviewItemDate.text = data?.writeDate
             binding.tvMenuName.text = data?.menu
@@ -63,7 +63,7 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
 
         fun bind(position: Int) {
             val data = dataList.dataList?.get(position)
-            binding.tvReviewItemId.text = data?.writerNickname.toString()
+            binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
             binding.tvReviewItemDate.text = data?.writeDate
             binding.tvMenuName.text = data?.menu

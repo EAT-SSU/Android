@@ -70,7 +70,7 @@
     <string name="write_review">리뷰 작성하기</string>
     <string name="taste">맛</string>
     <string name="amount">양</string>
-    <string name="report">신고하기</string>
+    <string name="report">신고</string>
     <string name="fix">수정하기</string>
     <string name="delete">삭제하기</string>
     <string name="myreview">내가 쓴 리뷰</string>
@@ -102,4 +102,13 @@
     <string name="review_patch_done">리뷰 수정하기</string>
     <string name="eat_good">식사는 맛있게 하셨나요?</string>
     <string name="eat_what">어떤 음식에 대한 리뷰인가요?</string>
+    <string name="report_sub">하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.</string>
+    <string name="report_title">리뷰를 신고하는 이유를 선택해주세요.</string>
+    <string name="write_text">내용을 작성해주세요</string>
+    <string name="menu">메뉴</string>
+    <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
+    <string name="eat_ssu">EAT SSU</string>
+    <string name="recomented">\'를 추천하시겠어요?</string>
+    <string name="max_300">최대 300자</string>
+    <string name="max_150">최대 150</string>
 </resources>

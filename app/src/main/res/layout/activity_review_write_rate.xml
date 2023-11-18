@@ -29,14 +29,14 @@
             style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메뉴"
+            android:text="@string/menu"
             android:textColor="@color/black" />
 
         <TextView
             style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="'를 추천하시겠어요?"
+            android:text="@string/recomented"
             android:textColor="@color/black" />
     </LinearLayout>
 
@@ -142,7 +142,7 @@
 
     <EditText
         android:id="@+id/et_review2_comment"
-        style="@style/AndroidCaption2"
+        style="@style/AndroidBody3"
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginLeft="15dp"
@@ -151,9 +151,12 @@
         android:background="@drawable/shape_edittext"
         android:gravity="top"
         android:hint="@string/write_text_review"
+        android:inputType="text"
         android:lines="10"
         android:maxLength="150"
         android:padding="10dp"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="-4dp"
         android:privateImeOptions="defaultInputmode=korea"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -165,7 +168,7 @@
         style="@style/AndroidCaption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="최대 300자"
+        android:text="@string/max_300"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/et_review2_comment"
         app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />

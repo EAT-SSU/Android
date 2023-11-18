@@ -39,7 +39,7 @@
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:lineSpacingExtra="-4dp"
-                    android:text="메뉴"
+                    android:text="@string/menu"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -50,15 +50,10 @@
                     android:id="@+id/ll_rate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_menu">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -337,7 +332,6 @@
 
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
 
                 <Button
@@ -378,18 +372,22 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    style="@style/AndroidBody1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="30dp"
-                    android:text="@string/none_review" />
+                    android:text="@string/none_review"
+                    android:textColor="@color/gray700" />
 
                 <TextView
+                    style="@style/AndroidCaption2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:text="@string/none_review_list" />
+                    android:text="@string/none_review_list"
+                    android:textColor="@color/gray700" />
             </LinearLayout>
 
             <TextView

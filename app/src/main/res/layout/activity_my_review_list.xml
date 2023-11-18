@@ -28,18 +28,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:text="@string/none_review" />
+            android:text="@string/none_review"
+            android:textColor="@color/gray700" />
 
         <TextView
+            style="@style/AndroidCaption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="@string/none_review_my" />
+            android:text="@string/none_review_my"
+            android:textColor="@color/gray700" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView

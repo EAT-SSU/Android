@@ -26,13 +26,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_review_item_id"
+            android:id="@+id/tv_writer_nickname"
             style="@style/AndroidCaption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:includeFontPadding="false"
-            android:text="닉네임"
+            android:text="@string/nickname"
             android:textColor="@color/gray700"
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,9 +45,9 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:includeFontPadding="false"
-            android:text="메뉴명"
+            android:text="@string/menu"
             android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@+id/tv_review_item_id"
+            app:layout_constraintStart_toEndOf="@+id/tv_writer_nickname"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -62,7 +62,7 @@
             style="@style/AndroidCaption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="신고"
+            android:text="@string/report"
             android:textColor="@color/Primary_Light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -198,7 +198,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/noto_regular"
-        android:text="리뷰"
+        android:text="@string/review"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
