@@ -92,7 +92,7 @@ class FirebaseRemoteConfigRepository {
         )
     }
 
-    fun parsingJson(json: String): ArrayList<FirebaseInfoItem> {
+    private fun parsingJson(json: String): ArrayList<FirebaseInfoItem> {
         val jsonArray = JSONArray(json)
         val list = ArrayList<FirebaseInfoItem>()
 
