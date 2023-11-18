@@ -56,8 +56,8 @@
     <string name="food_court">푸드코트</string>
     <string name="the_kitchen">THE KITCHEN</string>
     <string name="student_cafeteria">학생식당</string>
-    <string name="price">price</string>
-    <string name="rate">rate</string>
+    <string name="price">가격</string>
+    <string name="rate">평점</string>
     <string name="dodam">도담식당</string>
     <string name="residence">기숙사 식당</string>
     <string name="report1">메뉴와 관련없는 내용</string>

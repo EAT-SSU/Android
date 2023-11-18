@@ -17,6 +17,8 @@
         <item name="android:statusBarColor" >@color/white</item> <!--Status Bar의 배경색-->
         <item name="android:windowLightStatusBar" >true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
 
+        <item name="colorControlHighlight">@color/gray200</item>
+
         <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
         <item name="actionMenuTextColor">@color/Primary_Light</item> <!--액션 메뉴의 텍스트 색상-->
         <item name="colorControlNormal">@color/Primary_Light</item> <!--홈/뒤로가기 버튼의 색상-->
@@ -66,38 +68,32 @@
 
     <style name="AndroidH1">
         <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:lineSpacingExtra">24sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineSpacingExtra">26sp</item>
     </style>
 
     <style name="AndroidH2">
-        <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidSubtitle1">
         <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidSubtitle2">
-        <item name="android:fontFamily">@font/noto_semibold</item>
+        <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
 
     <style name="AndroidBody1">
-        <item name="android:fontFamily">@font/noto_medium</item>
+        <item name="android:fontFamily">@font/noto_regular</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidBody2">
@@ -107,24 +103,27 @@
     </style>
 
     <style name="AndroidBody3">
-        <item name="android:fontFamily">@font/noto_medium</item>
+        <item name="android:fontFamily">@font/noto_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
-        <item name="android:textColor">@color/gray300</item>
     </style>
 
     <style name="AndroidCaption1">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AndroidCaption2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
-        <item name="android:textColor">@color/gray300</item>
+    </style>
+
+    <style name="AndroidCaption3">
+        <item name="android:fontFamily">@font/noto_regular</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:lineSpacingExtra">12sp</item>
     </style>
 
     <style name="AndroidButton1">
@@ -134,14 +133,14 @@
     </style>
 
     <style name="AndroidButton2">
-        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
     </style>
 
     <style name="AndroidRate">
         <item name="android:fontFamily">@font/noto_medium</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">36sp</item>
     </style>
 
 
