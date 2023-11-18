@@ -68,9 +68,9 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
             binding.tvReviewItemDate.text = data?.writeDate
             binding.tvMenuName.text = data?.menu
 
-            binding.tvTotalRating.text = data?.mainGrade?.toFloat().toString()
-            binding.tvTasteRating.text = data?.tasteGrade?.toFloat().toString()
-            binding.tvAmountRating.text = data?.amountGrade?.toFloat().toString()
+            binding.tvTotalRating.text = data?.mainGrade?.toString()
+            binding.tvTasteRating.text = data?.tasteGrade?.toString()
+            binding.tvAmountRating.text = data?.amountGrade?.toString()
 
             val imgUrlList: List<String>? = data?.imgUrlList
 
