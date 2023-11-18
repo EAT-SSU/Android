@@ -1,16 +1,14 @@
 package com.eatssu.android.ui.review.etc
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.data.model.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.databinding.ActivityReportBinding
-import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,12 +36,12 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             reviewId = intent.getLongExtra("reviewId", -1L)
             reportType = selectedReportType.type
             content = selectedReportType.defaultContent?.let { getString(it) } ?: binding.etReportComment.text.toString()
+            Log.d("ReportActivity", reportType)
 
-            Log.d("reporting", reviewId.toString())
+            Log.d("ReportActivity", reviewId.toString())
 
             postData(reviewId, reportType, content)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+
             finish()
         }
 
@@ -70,14 +68,14 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
+                            Log.d("ReportActivity", "onResponse 성공: " + response.body().toString())
                             Toast.makeText(
                                 this@ReportActivity, "신고가 완료되었습니다.", Toast.LENGTH_SHORT
                             ).show()
                             finish()
 
                         } else {
-                            Log.d("post", "onResponse 오류: " + response.body().toString())
+                            Log.d("ReportActivity", "onResponse 오류: " + response.body().toString())
                             Toast.makeText(
                                 this@ReportActivity, "신고가 실패하였습니다.", Toast.LENGTH_SHORT
                             ).show()
@@ -85,7 +83,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("post", "onFailure 에러: " + t.message.toString())
+                    Log.d("ReportActivity", "onFailure 에러: " + t.message.toString())
                     Toast.makeText(
                         this@ReportActivity, "신고가 실패하였습니다.", Toast.LENGTH_SHORT
                     ).show()
