@@ -10,13 +10,14 @@
         android:id="@+id/day_cell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/AndroidCaption3"
         android:text="MON" />
 
     <TextView
         android:id="@+id/date_cell"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginTop="10dp"
+        style="@style/AndroidBody2"
         android:gravity="center"
         android:text="1" />
 </LinearLayout>

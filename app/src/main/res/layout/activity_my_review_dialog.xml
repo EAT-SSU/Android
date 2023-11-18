@@ -14,7 +14,7 @@
         android:fontFamily="@font/noto_bold"
         android:gravity="center"
         android:text="@string/fix"
-        tools:ignore="MissingConstraints"></TextView>
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/btn_review_delete"
@@ -23,6 +23,6 @@
         android:fontFamily="@font/noto_bold"
         android:gravity="center"
         android:text="@string/delete"
-        app:layout_constraintTop_toBottomOf="@+id/btn_review_fix"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/btn_review_fix" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
