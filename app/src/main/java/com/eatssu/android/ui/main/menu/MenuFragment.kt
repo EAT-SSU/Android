@@ -96,8 +96,6 @@ class MenuFragment(val time: Time) : Fragment() {
                     )
                     foodCourtDataLoaded.value = true
                     checkDataLoaded()
-
-//                    setupTodayRecyclerView()
                 }
 
                 //스낵코너
@@ -112,8 +110,6 @@ class MenuFragment(val time: Time) : Fragment() {
                     )
                     snackCornerDataLoaded.value = true
                     checkDataLoaded()
-//                    setupTodayRecyclerView()
-
                 }
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
             }
@@ -163,8 +159,6 @@ class MenuFragment(val time: Time) : Fragment() {
                             mapTodayMenuResponseToMenu(result)
                         )
                     )
-//                    setupTodayRecyclerView()
-
                 }
                 dodamDataLoaded.value = true
                 checkDataLoaded()
@@ -181,17 +175,11 @@ class MenuFragment(val time: Time) : Fragment() {
                             mapTodayMenuResponseToMenu(result)
                         )
                     )
-
-//                    setupTodayRecyclerView()
                 }
                 dormitoryDataLoaded.value = true
                 checkDataLoaded()
             }
-//            totalMenuList.sortBy { it.cafeteria.ordinal }
-//            setupTodayRecyclerView()
-
         }
-
     }
 
     private fun setupTodayRecyclerView() {
