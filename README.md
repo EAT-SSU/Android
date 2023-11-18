@@ -12,7 +12,6 @@
 - 이전 코드는 architecture pattern이 없는 코드 입니다. 
 ```
 com.eatssu.android
-├── adapter
 ├── base
 ├── data
 │   ├── entity
@@ -20,16 +19,17 @@ com.eatssu.android
 │   ├── model
 │   │   ├── request
 │   │   ├── response
+│   ├── repository
 │   └── service
 ├── repository
-├── view
-│   ├── calendar
-│   ├── infopage
+├── ui
+│   ├── common
+│   ├── info
 │   ├── login
 │   ├── main
 │   ├── mypage
 │   ├── review
-└── viewmodel
+└── util
 ```
 
 ## Convertion
