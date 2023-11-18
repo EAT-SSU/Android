@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.App
@@ -37,11 +38,11 @@ class MenuFragment(val time: Time) : Fragment() {
 
     private lateinit var menuDate: String
 
-//    private var resultHaksik: GetTodayMealResponseDto? = null
-//    private var resultDodam: GetTodayMealResponseDto? = null
-//    private var resultDormitory: GetTodayMealResponseDto? = null
-//    private var resultFoodCourt: GetFixedMenuResponseDto? = null
-//    private var resultSnackCorner: GetFixedMenuResponseDto? = null
+    val foodCourtDataLoaded = MutableLiveData<Boolean>()
+    val snackCornerDataLoaded = MutableLiveData<Boolean>()
+    val haksikDataLoaded = MutableLiveData<Boolean>()
+    val dodamDataLoaded = MutableLiveData<Boolean>()
+    val dormitoryDataLoaded = MutableLiveData<Boolean>()
 
     private val totalMenuList = ArrayList<Section>()
 
@@ -59,7 +60,7 @@ class MenuFragment(val time: Time) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
 
-        Log.d("MenuFragment", App.token_prefs.accessToken+"여기부터"+App.token_prefs.refreshToken)
+        Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
 
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
@@ -87,38 +88,50 @@ class MenuFragment(val time: Time) : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
                 menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
-                        Section(MenuType.FIX,
+                        Section(
+                            MenuType.FIX,
                             Restaurant.FOOD_COURT,
                             mapFixedMenuResponseToMenu(result)
                         )
                     )
-                    setupTodayRecyclerView()
+                    foodCourtDataLoaded.value = true
+                    checkDataLoaded()
+
+//                    setupTodayRecyclerView()
                 }
 
                 //스낵코너
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
                 menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
-                        Section(MenuType.FIX,
+                        Section(
+                            MenuType.FIX,
                             Restaurant.SNACK_CORNER,
                             mapFixedMenuResponseToMenu(result)
                         )
                     )
-                    setupTodayRecyclerView()
+                    snackCornerDataLoaded.value = true
+                    checkDataLoaded()
+//                    setupTodayRecyclerView()
 
                 }
-
-                totalMenuList.sortBy { it.cafeteria.ordinal }
-                setupTodayRecyclerView()
-
-                loadData()
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
-
-
-            } else {
-                // The date is on a weekend
-                Log.d("MenuFragment", "The date $menuDate is on a weekend.")
             }
+
+            if ((dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY)) {
+                // The date is not on a weekend
+                foodCourtDataLoaded.value = true //푸드코트
+                snackCornerDataLoaded.value = true //스낵코너
+                checkDataLoaded()
+                Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
+            }
+
+            if(time!= Time.LUNCH){
+                foodCourtDataLoaded.value = true //푸드코트
+                snackCornerDataLoaded.value = true //스낵코너
+                checkDataLoaded()
+            }
+
 
 
             //학생식당
@@ -126,22 +139,35 @@ class MenuFragment(val time: Time) : Fragment() {
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
-                        Section(MenuType.CHANGE,
+                        Section(
+                            MenuType.CHANGE,
                             Restaurant.HAKSIK,
                             mapTodayMenuResponseToMenu(result)
                         )
                     )
-                    setupTodayRecyclerView()
+
+//                    setupTodayRecyclerView()
                 }
+                haksikDataLoaded.value = true
+                checkDataLoaded()
             }
 
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
                 if (result.isNotEmpty()) {
-                    totalMenuList.add(Section(MenuType.CHANGE,Restaurant.DODAM, mapTodayMenuResponseToMenu(result)))
-                    setupTodayRecyclerView()
+                    totalMenuList.add(
+                        Section(
+                            MenuType.CHANGE,
+                            Restaurant.DODAM,
+                            mapTodayMenuResponseToMenu(result)
+                        )
+                    )
+//                    setupTodayRecyclerView()
+
                 }
+                dodamDataLoaded.value = true
+                checkDataLoaded()
             }
 
             //기숙사식당
@@ -149,20 +175,24 @@ class MenuFragment(val time: Time) : Fragment() {
             menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
-                        Section(MenuType.CHANGE,
+                        Section(
+                            MenuType.CHANGE,
                             Restaurant.DORMITORY,
                             mapTodayMenuResponseToMenu(result)
                         )
                     )
-                    setupTodayRecyclerView()
+
+//                    setupTodayRecyclerView()
                 }
+                dormitoryDataLoaded.value = true
+                checkDataLoaded()
             }
+//            totalMenuList.sortBy { it.cafeteria.ordinal }
+//            setupTodayRecyclerView()
+
         }
 
     }
-
-
-    fun loadData() {}
 
     private fun setupTodayRecyclerView() {
         binding.rv.apply {
@@ -205,6 +235,18 @@ class MenuFragment(val time: Time) : Fragment() {
         }
     }
 
+    // Function to check if all data is loaded and then call setupTodayRecyclerView
+    fun checkDataLoaded() {
+        if (foodCourtDataLoaded.value == true &&
+            snackCornerDataLoaded.value == true &&
+            haksikDataLoaded.value == true &&
+            dodamDataLoaded.value == true &&
+            dormitoryDataLoaded.value == true
+        ) {
+            totalMenuList.sortBy { it.cafeteria.ordinal }
+            setupTodayRecyclerView()
+        }
+    }
 
     private fun mapFixedMenuResponseToMenu(fixedMenuResponse: GetFixedMenuResponseDto): List<Menu> {
         return fixedMenuResponse.fixMenuInfoList.map { fixMenuInfo ->
