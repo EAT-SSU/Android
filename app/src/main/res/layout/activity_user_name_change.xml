@@ -23,16 +23,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname">
 
         <EditText
             android:id="@+id/et_ch_nickname"
+            style="@style/AndroidBody3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/shape_edittext"
+            android:background="@drawable/shape_edittext_small"
             android:inputType="text"
             android:maxLines="1"
+            android:maxLength="8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname" />
@@ -51,11 +54,12 @@
 
     <TextView
         android:id="@+id/tv_nickname_2_8"
+        style="@style/AndroidCaption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_nickname_2_8"
         android:textColor="@color/gray700"
-        app:layout_constraintStart_toStartOf="@+id/ll_change_nickname"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_change_nickname" />
 
 
