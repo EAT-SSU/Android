@@ -5,7 +5,7 @@
 - 기획 `2022.10.10 ~ 2022.11.01`
 - 1차 개발  `2022.11.08 ~ 2022.12.14` [사용자인터페이스및실습 강의 수강: JAVA+Firesbase](https://github.com/EAT-SSU/EAT-SSU)  
 - 2차 개발 `2023.02.13 ~ 2023.09`
-  - 1.0.0 첫 릴리즈 `2023.11.13` [Play Store](https://play.google.com/console/u/0/developers/8219547653514217920/app/4974246039463609210/app-dashboard?timespan=thirtyDays)
+  - 1.0.0 첫 릴리즈 `2023.11.13` [Play Store](https://play.google.com/store/apps/details?id=com.eatssu.android)
   - 1.1.0 디자인 시스템 적용 `2023.11.18`
   - 현재 MVVM 리팩토링 진행 중
   
