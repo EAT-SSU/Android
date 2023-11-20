@@ -16,12 +16,8 @@ import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.ui.common.ForceUpdateDialogActivity
-import com.eatssu.android.ui.common.VersionViewModel
-import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.main.calendar.OnItemClickListener
@@ -45,9 +41,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
-    private lateinit var versionViewModel: VersionViewModel
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
-
     private lateinit var nickname: String
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -55,17 +48,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
-
-        if(versionViewModel.checkForceUpdate()){
-            showForceUpdateDialog()
-        }
-
         // 툴바 사용하지 않도록 설정
         toolbar.let {
-            toolbar.visibility= View.GONE
-            toolbarTitle.visibility= View.GONE
+            toolbar.visibility = View.GONE
+            toolbarTitle.visibility = View.GONE
             setSupportActionBar(it)
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -90,7 +76,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     //나중에 isNullOrBlank로 바꿀 것
                     if (nickname == "null") {
                         startActivity(intentNick)
-                        Log.d("MainActivity","닉네임이 null")
+                        Log.d("MainActivity", "닉네임이 null")
                     }
                 }
             }
@@ -119,7 +105,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val tabTitles = listOf("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(tabLayout,
+        TabLayoutMediator(
+            tabLayout,
             viewPager
         ) { tab, position -> tab.text = tabTitles[position] }.attach()
 
@@ -222,7 +209,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 val tabTitles = listOf("아침", "점심", "저녁")
 
                 // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-                TabLayoutMediator(tabLayout,
+                TabLayoutMediator(
+                    tabLayout,
                     viewPager
                 ) { tab, position -> tab.text = tabTitles[position] }.attach()
 
@@ -246,14 +234,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 startActivity(intent)  // 화면 전환을 시켜줌
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
-    private fun showForceUpdateDialog() {
-        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
-    }
-
 }
