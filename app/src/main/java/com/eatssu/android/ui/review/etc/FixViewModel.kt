@@ -1,5 +1,6 @@
 package com.eatssu.android.ui.review.etc
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.data.service.ReviewService
@@ -14,6 +15,7 @@ class FixViewModel : ViewModel() {
     // LiveData to observe the result of the server communication
     val resultLiveData = MutableLiveData<String>()
 
+    @SuppressLint("SuspiciousIndentation")
     fun postData(reviewId: Long, comment: String, mainGrade: Int, amountGrade: Int, tasteGrade: Int) {
         val service = retrofit.create(ReviewService::class.java)
 

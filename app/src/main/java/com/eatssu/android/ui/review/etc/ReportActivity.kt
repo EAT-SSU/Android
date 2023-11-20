@@ -41,7 +41,8 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             reportType = selectedReportType.type
             content = selectedReportType.defaultContent?.let { getString(it) } ?: binding.etReportComment.text.toString()
 
-            Log.d("reporting", reviewId.toString())
+            Log.d("ReportActivity", reportType)
+            Log.d("ReportActivity", reviewId.toString())
 
             var viewModel = ViewModelProvider(this).get(ReportViewModel::class.java)
 
@@ -54,8 +55,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             })
 
             viewModel.postData(reviewId, reportType, content)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+
             finish()
         }
 
