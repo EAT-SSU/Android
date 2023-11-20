@@ -58,6 +58,7 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
 
         binding.btnComplete.setOnClickListener {
             viewModel.changeNickname(inputNickname)
+            finish()
         }
     }
 

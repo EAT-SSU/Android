@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".ui.mypage.MyPageActivity">
 
 
@@ -25,6 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ib_profile">
@@ -101,9 +102,10 @@
 
     <LinearLayout
         android:id="@+id/ll_my_page"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_account_layout">
 
@@ -111,25 +113,32 @@
         <TextView
             android:id="@+id/tv_my_review"
             style="@style/AndroidBody1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="16dp"
             android:text="@string/my_review"
+
             android:textColor="@color/black" />
 
 
         <TextView
             android:id="@+id/tv_logout"
             style="@style/AndroidBody1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="16dp"
             android:text="@string/logout"
             android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/tv_signout"
             style="@style/AndroidBody1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="16dp"
             android:text="@string/signout"
             android:textColor="@color/black" />
 
@@ -141,6 +150,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/noto_regular"
+        android:paddingStart="16dp"
         android:text="@string/app_version"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/ll_my_page"
@@ -150,6 +160,7 @@
         android:id="@+id/tv_app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="16dp"
         android:textColor="@color/gray700"
         app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
         app:layout_constraintEnd_toEndOf="parent"

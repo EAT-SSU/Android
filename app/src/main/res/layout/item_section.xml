@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
     <LinearLayout
@@ -43,8 +42,9 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
@@ -53,17 +53,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:weightSum="10">
 
                 <TextView
-                    style="@style/AndroidCaption1"
+                    style="@style/AndroidCaption2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
@@ -72,7 +74,7 @@
 
 
                 <TextView
-                    style="@style/AndroidCaption1"
+                    style="@style/AndroidCaption2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
@@ -82,7 +84,7 @@
 
 
                 <TextView
-                    style="@style/AndroidCaption1"
+                    style="@style/AndroidCaption2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
@@ -94,6 +96,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@color/Primary_Light" />
 
 
