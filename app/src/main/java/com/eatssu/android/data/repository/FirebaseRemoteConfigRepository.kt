@@ -15,7 +15,7 @@ class FirebaseRemoteConfigRepository {
     fun init() {
         // Firebase Remote Config 초기화 설정
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(1) // 캐시된 값을 1시간마다 업데이트
+            .setMinimumFetchIntervalInSeconds(3600) // 캐시된 값을 1시간마다 업데이트
             .build()
         instance.setConfigSettingsAsync(configSettings)
         instance.setDefaultsAsync(R.xml.firebase_remote_config)
