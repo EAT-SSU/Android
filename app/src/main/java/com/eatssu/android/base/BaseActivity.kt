@@ -111,7 +111,7 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun showAndroidMessageDialog(message: String) {
         val intent = Intent(this, AndroidMessageDialogActivity::class.java)
         intent.putExtra("message",message)
-        Log.d("message",message.toString())
+        Log.d("BaseActivity", "공지사항: $message")
         startActivity(intent)
     }
 }
