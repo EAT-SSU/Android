@@ -34,10 +34,8 @@ class FirebaseRemoteConfigRepository {
 
     fun getAndroidMessage(): AndroidMessage {
 
-        val jsonString =instance.getString("android_message")
-
         // Gson을 사용하여 JSON 문자열을 DTO로 파싱
-        val serverStatus: AndroidMessage = Gson().fromJson(jsonString, AndroidMessage::class.java)
+        val serverStatus: AndroidMessage = Gson().fromJson(instance.getString("android_message"), AndroidMessage::class.java)
 
         // 파싱된 결과 확인
         println("Dialog: ${serverStatus.dialog}")
