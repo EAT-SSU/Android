@@ -10,15 +10,15 @@ import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.databinding.ActivityReviewListBinding
+import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.ReviewAdapter
-import com.eatssu.android.ui.review.write.MenuPickActivity
-import com.eatssu.android.ui.review.write.WriteReviewActivity
+import com.eatssu.android.ui.review.write.ReviewWriteMenuActivity
+import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlin.properties.Delegates
 
-class ReviewListActivity :
-    BaseActivity<ActivityReviewListBinding>(ActivityReviewListBinding::inflate) {
+class ReviewActivity :
+    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
     private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
@@ -26,8 +26,6 @@ class ReviewListActivity :
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
-//    private lateinit var itemIdList: ArrayList<Long>
-//    private lateinit var itemName: ArrayList<String>
 
     private lateinit var itemName: String
     var adapter: ReviewAdapter? = null
@@ -45,30 +43,23 @@ class ReviewListActivity :
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
-//        itemIdList = intent.getLongArrayExtra("itemIdList")
-        itemName = intent.getStringExtra("itemName").toString()
-//        intent.putExtra(
-//            "itemName", dataList.fixMenuInfoList[position].name
-//        )
-        Log.d("post", "고정메뉴${itemName}")
+        itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
 
-        val menuIdArray = intent.getLongArrayExtra("menuIdArray")
-        val menuNameArray = intent.getStringArrayListExtra("menuNameArray")
-
-
-        Log.d("post", menuType + itemId)
+        Log.d("ReviewActivity", "메뉴는 ${itemName}")
+        Log.d("ReviewActivity", "메뉴는 ${menuType} ${itemId}")
 
         when (menuType) {
             "FIX" -> {
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
                 viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
 
-                binding.btnNextReview.setOnClickListener() {
-                    val intent = Intent(this, WriteReviewActivity::class.java)  // 인텐트를 생성해줌,
+                binding.btnNextReview.setOnClickListener {
+                    val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
 //                    intent.putStringArrayListExtra("itemName", itemName)
                     intent.putExtra("itemName", itemName)
+                    intent.putExtra("menuType", menuType)
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
             }
@@ -78,26 +69,24 @@ class ReviewListActivity :
                 viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
                 val mealId = itemId
 
-                binding.btnNextReview.setOnClickListener() {
-                    val intent = Intent(this, MenuPickActivity::class.java)  // 인텐트를 생성해줌,
+                binding.btnNextReview.setOnClickListener {
+                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("mealId", mealId)
-
                     intent.putExtra("menuType", menuType)
-
-                    intent.putStringArrayListExtra("menuNameArray", menuNameArray)
-                    intent.putExtra("menuIdArray", menuIdArray)
-
-                    if (menuNameArray != null) {
-                        Log.d("post", (menuNameArray + menuIdArray).toString())
-                    }
+//                    intent.putStringArrayListExtra("menuNameArray", menuNameArray)
+//                    intent.putExtra("menuIdArray", menuIdArray)
+//
+//                    if (menuNameArray != null) {
+//                        Log.d("post", (menuNameArray + menuIdArray).toString())
+//                    }
 
                     startActivity(intent)  // 화면 전환을 시켜줌
                 }
             }
 
             else -> {
-                Log.d("post", "잘못된 식당 정보입니다.")
+                Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
             }
         }
 
@@ -107,15 +96,15 @@ class ReviewListActivity :
 
     private fun setListData() {
         viewModel.reviewList.observe(this) { reviewList ->
-            Log.d("post", reviewList.dataList.toString())
+            Log.d("ReviewActivity", reviewList.dataList.toString())
 
             if (reviewList.numberOfElements == 0) {
                 Log.d("ReviewListActivity","리뷰가 없음")
                 binding.llNonReview.visibility = View.VISIBLE
-                binding.nestedScrollView.visibility = View.INVISIBLE
+                binding.rvReview.visibility = View.INVISIBLE
             } else {
                 binding.llNonReview.visibility = View.INVISIBLE
-                binding.nestedScrollView.visibility = View.VISIBLE
+                binding.rvReview.visibility = View.VISIBLE
                 adapter = ReviewAdapter(reviewList)
                 val recyclerView = binding.rvReview
                 recyclerView.adapter = adapter
@@ -132,7 +121,7 @@ class ReviewListActivity :
         viewModel.reviewInfo.observe(this) { reviewInfo ->
             Log.d("post", reviewInfo.toString())
 
-            binding.tvMenu.text = reviewInfo.menuName.toString()
+            binding.tvMenu.text = reviewInfo.menuName.toString().replace(Regex("[\\[\\]]"), "")
 
             binding.tvRate.text =
                 String.format("%.1f", reviewInfo.mainGrade.toFloat())
@@ -188,10 +177,10 @@ class ReviewListActivity :
         setInfoData()
 
         Log.d("post", "onRestart" + viewModel.reviewInfo.value)
+
         setListData()
+
         Log.d("post", "onRestart")
-
-
     }
 
     override fun onResume() {
@@ -219,7 +208,9 @@ class ReviewListActivity :
         setInfoData()
 
         Log.d("post", "resume중간")
+
         setListData()
+
         Log.d("post", "resume끝")
     }
 }

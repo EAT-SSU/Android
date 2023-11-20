@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
  Properties properties = new Properties()
@@ -18,8 +19,8 @@ android {
         minSdk 23
         compileSdkVersion 34
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1.0"
 
 
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]
@@ -120,4 +121,6 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:32.2.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics'
+
 }

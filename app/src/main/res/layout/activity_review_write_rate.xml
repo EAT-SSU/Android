@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.review.write.WriteReviewActivity">
+    android:padding="16dp"
+    tools:context=".ui.review.write.ReviewWriteRateActivity">
 
 
     <LinearLayout
@@ -17,30 +18,26 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
             android:text=" '"
-            android:textSize="20dp"
-            android:textStyle="normal" />
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/menu"
+            style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:text="메뉴"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:textStyle="normal" />
+            android:text="@string/menu"
+            android:textColor="@color/black" />
 
         <TextView
+            style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:text="'를 추천하시겠어요?"
-            android:textSize="20dp"
-            android:textStyle="normal" />
+            android:text="@string/recomented"
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <RatingBar
@@ -48,7 +45,6 @@
         style="@style/Widget.AppCompat.RatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="0"
@@ -59,138 +55,135 @@
 
     <TextView
         android:id="@+id/textView3"
+        style="@style/AndroidBody3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:text="해당 메뉴에 대한 상세한 평가를 남겨주세요"
+        android:textColor="@color/gray700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rb_main" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/cl_rating_etc"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/taste"
-            app:layout_constraintBottom_toBottomOf="@+id/rb_taste"
-            app:layout_constraintEnd_toStartOf="@+id/rb_taste"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rb_taste" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
+            <TextView
+                style="@style/AndroidSubtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/taste"
+                android:textColor="@color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <RatingBar
+                android:id="@+id/rb_taste"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/amount"
+            android:orientation="horizontal">
 
-            app:layout_constraintBottom_toBottomOf="@+id/rb_amount"
-            app:layout_constraintEnd_toStartOf="@+id/rb_amount"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rb_amount" />
+            <TextView
+                style="@style/AndroidSubtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/amount"
+                android:textColor="@color/black" />
 
-        <RatingBar
-            android:id="@+id/rb_taste"
-            style="@style/Widget.AppCompat.RatingBar.Indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:layout_marginTop="10dp"
-            android:isIndicator="false"
-            android:numStars="5"
-            android:rating="0"
-            android:stepSize="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <RatingBar
-            android:id="@+id/rb_amount"
-            style="@style/Widget.AppCompat.RatingBar.Indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:layout_marginTop="20dp"
-            android:isIndicator="false"
-            android:numStars="5"
-            android:rating="0"
-            android:stepSize="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rb_taste" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <RatingBar
+                android:id="@+id/rb_amount"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <EditText
         android:id="@+id/et_review2_comment"
+        style="@style/AndroidBody3"
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_edittext"
+        android:background="@drawable/shape_edittext_big"
         android:gravity="top"
-        android:hint="한 줄 평 작성하기"
+        android:hint="@string/write_text_review"
+        android:includeFontPadding="false"
+        android:inputType="textMultiLine"
+        android:lineSpacingExtra="-4dp"
         android:lines="10"
-        android:maxLength="150"
-        android:padding="20dp"
+        android:maxLength="300"
+        android:padding="10dp"
         android:privateImeOptions="defaultInputmode=korea"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/cl_rating_etc"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
-        android:id="@+id/tv_textnum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textAlignment="center"
-        android:textSize="10dp"
-        android:textStyle="normal"
-        app:layout_constraintEnd_toStartOf="@+id/tv_maxtext"
-        app:layout_constraintTop_toTopOf="@+id/tv_maxtext" />
-
-    <TextView
         android:id="@+id/tv_maxtext"
+        style="@style/AndroidCaption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text=" / 150"
+        android:text="@string/max_300"
         android:textAlignment="center"
-        android:textSize="10dp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="@+id/et_review2_comment"
         app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
-
-
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/ib_camera"-->
-    <!--        android:layout_width="50dp"-->
-    <!--        android:layout_height="50dp"-->
-    <!--        android:src="@drawable/ic_baseline_camera_alt_24"-->
-    <!--        app:layout_constraintStart_toStartOf="@+id/et_review2_comment"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />-->
 
 
     <ImageButton
         android:id="@+id/ib_add_pic"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_add_pic"
         app:layout_constraintStart_toStartOf="@+id/et_review2_comment"
-        app:layout_constraintTop_toBottomOf="@+id/tv_maxtext" />
+        app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
 
 
     <ImageView
@@ -216,32 +209,27 @@
 
 
     <TextView
+        style="@style/AndroidCaption3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="리뷰 등록 후, 사진은 수정할 수 없습니다"
-        android:layout_marginTop="5dp"
-        android:textSize="10dp"
+        android:text="@string/pic_not_patch"
+        android:textColor="@color/gray500"
         app:layout_constraintStart_toStartOf="@+id/ib_add_pic"
         app:layout_constraintTop_toBottomOf="@+id/ib_add_pic" />
 
 
     <Button
         android:id="@+id/btn_next_review2"
+        style="@style/AndroidButton1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/shape_btn"
-        android:text="리뷰 등록하기"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20dp"
+        android:includeFontPadding="false"
+        android:text="@string/review_done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_add_pic" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

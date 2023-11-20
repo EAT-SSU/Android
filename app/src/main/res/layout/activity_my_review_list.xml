@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.review.list.ReviewListActivity">
+    android:padding="16dp"
+    tools:context=".ui.review.list.ReviewActivity">
 
     <LinearLayout
         android:id="@+id/ll_non_review"
@@ -12,14 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_none_review"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,18 +28,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/AndroidBody1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:text="@string/none_review" />
+            android:layout_marginTop="15dp"
+            android:text="@string/none_review"
+            android:textColor="@color/gray700" />
 
         <TextView
+            style="@style/AndroidCaption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/none_review_my" />
+            android:includeFontPadding="false"
+            android:text="@string/none_review_my"
+            android:textColor="@color/gray700" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -57,7 +62,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="top"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_my_review" />
+            tools:listitem="@layout/item_review" />
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

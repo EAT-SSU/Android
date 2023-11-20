@@ -22,7 +22,6 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
     inner class CalendarViewHolder(val binding: ItemCalendarListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private var selectedDate: String? = null
         lateinit var today : String
         lateinit var day : String
 
@@ -42,8 +41,8 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
 
             // 오늘 날짜와 캘린더의 오늘 날짜가 같을 경우 background_blue 적용하기
             if (now.equals(today)) {
-                binding.date.isSelected = true;
-                binding.day.isSelected = true;
+                binding.date.isSelected = true
+                binding.day.isSelected = true
                 binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
             }
             else {

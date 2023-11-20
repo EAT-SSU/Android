@@ -52,7 +52,7 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
             }
         })
 
-        binding.btnFixReview.setOnClickListener {
+        binding.btnDone.setOnClickListener {
 
             viewModel.postData(reviewId, comment, mainGrade, amountGrade, tasteGrade)
             finish()

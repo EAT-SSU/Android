@@ -10,6 +10,5 @@ data class GetFixedMenuResponseDto(
         val mainGrade: Double,
         val price: Long,
     )
-
 }
 

@@ -8,13 +8,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.MySharedPreferences
-import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.login.SocialLoginActivity
+import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
+import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.util.MySharedPreferences
+import com.eatssu.android.util.RetrofitImpl
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import retrofit2.Call
@@ -58,18 +60,15 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         supportActionBar?.title = "마이페이지"
 
         binding.tvNickname.text = MySharedPreferences.getUserName(this)
-        //binding.tvEmail.text = MySharedPreferences.getUserEmail(this)
 
-        binding.clNickname.setOnClickListener{
-            val intent = Intent(this, ChangeNicknameActivity::class.java)
+        binding.llNickname.setOnClickListener{
+            val intent = Intent(this, UserNameChangeActivity::class.java)
             startActivity(intent)
-            //finish()
         }
 
-        binding.tvMyreview.setOnClickListener{
+        binding.tvMyReview.setOnClickListener{
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
-//            finish()
         }
 
         val intent = Intent(this, SocialLoginActivity::class.java)
@@ -151,23 +150,23 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     fun signOut() {
         userService.signOut().enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            Log.d("MyPageActivity", "onResponse 성공: 탈퇴" + response.body().toString())
+            override fun onResponse(
+                call: Call<String>,
+                response: Response<String>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.code() == 200) {
+                        Log.d("MyPageActivity", "onResponse 성공: 탈퇴" + response.body().toString())
 
-                        } else {
-                            Log.d("MyPageActivity", "onResponse 오류: 탈퇴" + response.body().toString())
-                        }
+                    } else {
+                        Log.d("MyPageActivity", "onResponse 오류: 탈퇴" + response.body().toString())
                     }
                 }
+            }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
-                }
-            })
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
+            }
+        })
     }
 }

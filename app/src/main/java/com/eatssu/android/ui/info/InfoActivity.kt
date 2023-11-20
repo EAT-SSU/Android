@@ -3,9 +3,10 @@ package com.eatssu.android.ui.info
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.databinding.ActivityInfoBinding
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.databinding.ActivityInfoBinding
 
 class InfoActivity : AppCompatActivity() {
 
@@ -19,6 +20,8 @@ class InfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.setBackgroundDrawableResource(R.drawable.shape_round_corners_dialog)
+
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
         infoViewModel = ViewModelProvider(this, InfoViewModelFactory(firebaseRemoteConfigRepository))[InfoViewModel::class.java]
@@ -54,7 +57,7 @@ class InfoActivity : AppCompatActivity() {
                 }
 
                 Restaurant.DORMITORY -> {
-                    binding.tvLocation.text = infoViewModel.dodamLocation.value
+                    binding.tvLocation.text = infoViewModel.dormitoryLocation.value
                     binding.tvTime.text = infoViewModel.dormitoryTime.value
                     binding.tvEtc.text = infoViewModel.dormitoryEtc.value
                 }

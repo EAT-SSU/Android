@@ -48,7 +48,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
                     ) {
                         if (response.isSuccessful) {
                             // 정상적으로 통신이 성공된 경우
-                            Log.d("post", "onResponse 리뷰 작성 성공: " + response.body().toString());
+                            Log.d("post", "onResponse 리뷰 작성 성공: " + response.body().toString())
                             onClickEvent()
 
                         } else {
@@ -59,7 +59,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                        Log.d("post", "onFailure 에러: " + t.message.toString());
+                        Log.d("post", "onFailure 에러: " + t.message.toString())
                     }
                 })
         }
@@ -80,7 +80,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
                 ) {
                     if (response.isSuccessful) {
                         // 정상적으로 통신이 성공된 경우
-                        Log.d("post", "onResponse 리뷰 작성 성공: " + response.body().toString());
+                        Log.d("post", "onResponse 리뷰 작성 성공: " + response.body().toString())
 
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
@@ -90,7 +90,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    Log.d("post", "onFailure 리뷰 작성 에러: " + t.message.toString());
+                    Log.d("post", "onFailure 리뷰 작성 에러: " + t.message.toString())
                 }
             })
         }

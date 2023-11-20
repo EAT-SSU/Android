@@ -25,7 +25,7 @@ object RetrofitImpl {
 
     val cacheInterceptor = Interceptor{ chain ->
         var request = chain.request()
-        request = if (hasNetwork(App.appContext)!!)
+        request = if (hasNetwork(App.appContext))
             request.newBuilder().header("Cache-Control", "public, max-age=" + 5).build()
         else
             request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build()
@@ -33,7 +33,7 @@ object RetrofitImpl {
     }
 
     // Check if network is available
-    fun hasNetwork(context: Context): Boolean? {
+    fun hasNetwork(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)

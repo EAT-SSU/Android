@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -17,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.databinding.ActivityWriteReviewBinding
+import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -28,7 +27,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class WriteReviewActivity : BaseActivity<ActivityWriteReviewBinding>(ActivityWriteReviewBinding::inflate) {
+class ReviewWriteRateActivity : BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
     private lateinit var viewModel: UploadReviewViewModel
     private lateinit var reviewService: ReviewService
@@ -179,7 +178,7 @@ class WriteReviewActivity : BaseActivity<ActivityWriteReviewBinding>(ActivityWri
             // Check if the file path is not null and compress the image
             if (filePath != null) {
                 val file = File(filePath)
-                val compressedFile = Compressor.compress(this@WriteReviewActivity, file) {
+                val compressedFile = Compressor.compress(this@ReviewWriteRateActivity, file) {
                     quality(80)
                 }
                 val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())

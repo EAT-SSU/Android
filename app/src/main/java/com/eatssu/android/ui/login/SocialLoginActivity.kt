@@ -64,7 +64,7 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
                     // 서비스 코드에서는 간단하게 로그인 요청하고 oAuthToken 을 받아올 수 있다.
                     val oAuthToken = UserApiClient.loginWithKakao(context)
                     Log.d("MainActivity", "beanbean > $oAuthToken")
-                    postUserInfo();
+                    postUserInfo()
 
                 } catch (error: Throwable) {
                     if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
@@ -100,7 +100,7 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
                         ) {
                             if (response.isSuccessful) {
                                 if (response.code() == 200) {
-                                    Log.d("post", "onResponse 성공: " + response.body().toString());
+                                    Log.d("post", "onResponse 성공: " + response.body().toString())
 
                                     /*자동 로그인*/
                                     MySharedPreferences.setUserEmail(this@SocialLoginActivity,email)
@@ -115,14 +115,14 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
                                     startActivity(intent)  // 화면 전환을 시켜줌
                                     finish()
                                 } else {
-                                    Log.d("post", "onResponse 오류: " + response.body().toString());
+                                    Log.d("post", "onResponse 오류: " + response.body().toString())
                                     Toast.makeText(this@SocialLoginActivity, "error: " + response.message(), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
 
                         override fun onFailure(call: Call<TokenResponseDto>, t: Throwable) {
-                            Log.d("post", "onFailure 에러: " + t.message.toString());
+                            Log.d("post", "onFailure 에러: " + t.message.toString())
                         }
                     })
             }
