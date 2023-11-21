@@ -44,14 +44,14 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
         userRepository.nicknameChange(inputNickname, object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    handleSuccessResponse("닉네임 변경에 성공했습니다.")
+                    handleSuccessResponse("닉네임 설정에 성공했습니다.")
                 } else {
-                    handleErrorResponse("닉네임 변경에 실패했습니다.")
+                    handleErrorResponse("닉네임 설정에 실패했습니다.")
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                handleErrorResponse("닉네임 변경에 실패했습니다.")
+                handleErrorResponse("닉네임 설정에 실패했습니다.")
             }
         })
     }
