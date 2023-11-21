@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review
+package com.eatssu.android.ui.review.list
 
 import android.content.Intent
 import android.view.LayoutInflater
