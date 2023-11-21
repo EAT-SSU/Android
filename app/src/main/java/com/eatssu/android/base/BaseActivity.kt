@@ -1,7 +1,9 @@
 package com.eatssu.android.base
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -11,8 +13,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
+import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.ui.common.AndroidMessageDialogActivity
+import com.eatssu.android.ui.common.ForceUpdateDialogActivity
+import com.eatssu.android.ui.common.VersionViewModel
+import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.util.NetworkConnection
 
 
@@ -27,6 +35,8 @@ abstract class BaseActivity<B : ViewBinding>(
     protected lateinit var toolbarTitle: TextView
     protected lateinit var backBtn: ImageButton
 
+    private lateinit var versionViewModel: VersionViewModel
+    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
@@ -50,6 +60,17 @@ abstract class BaseActivity<B : ViewBinding>(
 
         networkCheck.register() // 네트워크 객체 등록
 
+
+        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
+        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
+
+        if(versionViewModel.checkForceUpdate()){
+            showForceUpdateDialog()
+        }
+
+        if(versionViewModel.checkAndroidMessage().dialog) {
+            showAndroidMessageDialog(versionViewModel.checkAndroidMessage().message)
+        }
 
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
     }
@@ -79,5 +100,18 @@ abstract class BaseActivity<B : ViewBinding>(
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+
+    private fun showForceUpdateDialog() {
+        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showAndroidMessageDialog(message: String) {
+        val intent = Intent(this, AndroidMessageDialogActivity::class.java)
+        intent.putExtra("message",message)
+        Log.d("BaseActivity", "공지사항: $message")
+        startActivity(intent)
     }
 }

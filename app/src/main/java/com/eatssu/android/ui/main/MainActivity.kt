@@ -86,10 +86,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val tabTitles = listOf("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(
-            tabLayout,
-            viewPager
-        ) { tab, position -> tab.text = tabTitles[position] }.attach()
+        TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
         binding.btnSetting.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
@@ -190,10 +187,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 val tabTitles = listOf("아침", "점심", "저녁")
 
                 // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-                TabLayoutMediator(
-                    tabLayout,
-                    viewPager
-                ) { tab, position -> tab.text = tabTitles[position] }.attach()
+                TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
 
             }
