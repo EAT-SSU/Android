@@ -27,7 +27,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class ReviewWriteRateActivity : BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
+class ReviewWriteRateActivity :
+    BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
     private lateinit var viewModel: UploadReviewViewModel
     private lateinit var reviewService: ReviewService
@@ -45,7 +46,7 @@ class ReviewWriteRateActivity : BaseActivity<ActivityReviewWriteRateBinding>(Act
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
         itemName = intent.getStringExtra("itemName").toString()
-        Log.d("post","고정메뉴${itemName}")
+        Log.d("post", "고정메뉴${itemName}")
 
         itemId = intent.getLongExtra("itemId", 0)
 
@@ -66,8 +67,25 @@ class ReviewWriteRateActivity : BaseActivity<ActivityReviewWriteRateBinding>(Act
         viewModel = ViewModelProvider(this, UploadReviewViewModelFactory(repository))
             .get(UploadReviewViewModel::class.java)
 
+
+        setupUI()
+        observeViewModel()
+
+    }
+
+    private fun setupUI() {
         binding.btnNextReview2.setOnClickListener { postReview() }
         binding.btnDelete.setOnClickListener { deleteImage() }
+    }
+
+    private fun observeViewModel() {
+        viewModel.isUpload.observe(this) { isUpload ->
+            if (isUpload == true) { finish() }
+
+        }
+        viewModel.toastMessage.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun requestStoragePermission() {
@@ -124,7 +142,7 @@ class ReviewWriteRateActivity : BaseActivity<ActivityReviewWriteRateBinding>(Act
     }
 
     private fun deleteImage() {
-        Log.d("post",selectedImagePath.toString())
+        Log.d("ReviewWriteRateActivity", selectedImagePath.toString())
         if (selectedImagePath != null) {
             val imageFile = File(selectedImagePath)
             if (imageFile.exists()) {
@@ -158,17 +176,16 @@ class ReviewWriteRateActivity : BaseActivity<ActivityReviewWriteRateBinding>(Act
             // Make the file list nullable
             if (compressedPartsList == null) {
                 viewModel.postReview(itemId, reviewData)
-                Log.d("post","사진 없는 리뷰")
+                Log.d("ReviewWriteRateActivity", "사진 없는 리뷰")
             } else {
                 viewModel.postReview(itemId, compressedPartsList, reviewData)
-                Log.d("post","사진 있는 리뷰")
+                Log.d("ReviewWriteRateActivity", "사진 있는 리뷰")
             }
         }
 
         val resultIntent = Intent()
         setResult(RESULT_OK, resultIntent)
-        Log.d("post","리뷰 다씀")
-        finish()
+        Log.d("ReviewWriteRateActivity", "리뷰 다씀")
     }
 
     private suspend fun compressImage(fileList: List<String?>): List<MultipartBody.Part>? {
