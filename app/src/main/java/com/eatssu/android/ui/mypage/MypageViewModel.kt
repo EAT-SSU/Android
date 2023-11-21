@@ -23,6 +23,9 @@ class MypageViewModel(private val myPageRepository: MyPageRepository) : ViewMode
     private val _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
 
+    private val _isNull = MutableLiveData<Boolean>()
+    val isNull: LiveData<Boolean> get() = _isNull
+
     fun checkMyInfo() {
         myPageRepository.myInfoCheck(object : Callback<GetMyInfoResponseDto> {
             override fun onResponse(call: Call<GetMyInfoResponseDto>, response: Response<GetMyInfoResponseDto>) {
@@ -31,8 +34,11 @@ class MypageViewModel(private val myPageRepository: MyPageRepository) : ViewMode
 
                     if (response.body()?.nickname.isNullOrBlank()) {
                         handleErrorResponse("환영합니다.") //null이면 isNull에 true를 넣음
+                        _isNull.postValue(true)
                     } else {
                         handleSuccessResponse("${response.body()?.nickname} 님 환영합니다.")
+                        _isNull.postValue(false)
+
                     }
                 } else {
                     handleErrorResponse("정보를 불러 올 수 없습니다.")

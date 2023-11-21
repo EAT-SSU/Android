@@ -16,12 +16,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.entity.CalendarData
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.repository.MyPageRepository
 import com.eatssu.android.data.repository.MyPageRepositoryImpl
-import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.data.service.MyPageService
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
@@ -30,15 +26,10 @@ import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.mypage.MypageViewModel
 import com.eatssu.android.ui.mypage.MypageViewModelFactory
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
-import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeViewModel
-import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeViewModelFactory
 import com.eatssu.android.util.RetrofitImpl
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -215,7 +206,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         viewModel.checkMyInfo()
     }
     private fun observeViewModel() {
-        viewModel.nicknameisNull.observe(this){ it ->
+        viewModel.isNull.observe(this){ it ->
             if(it) {
                 Log.d("MainActivity", viewModel.nickname.value.toString())
                 val intent = Intent(this, UserNameChangeActivity::class.java)
