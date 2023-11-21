@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.repository.MyPageRepositoryImpl
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyPageBinding
@@ -28,6 +29,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     private lateinit var userService: UserService
     private lateinit var myPageService: MyPageService
 
+    private lateinit var viewModel: MypageViewModel
+
 
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
@@ -39,7 +42,16 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         userService = RetrofitImpl.retrofit.create(UserService::class.java)
         myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
 
-        loadMyInfo()
+
+        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        val myPageRepository = MyPageRepositoryImpl(myPageService)
+        viewModel = ViewModelProvider(
+            this,
+            MypageViewModelFactory(myPageRepository)
+        )[MypageViewModel::class.java]
+
+        setupViewModel()
+        observeViewModel()
 
         // Firebase Remote Config 초기화 설정
         val configSettings = FirebaseRemoteConfigSettings.Builder()
@@ -58,8 +70,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         fetchRemoteConfig()
 
         supportActionBar?.title = "마이페이지"
-
-        binding.tvNickname.text = MySharedPreferences.getUserName(this)
 
         binding.llNickname.setOnClickListener{
             val intent = Intent(this, UserNameChangeActivity::class.java)
@@ -115,6 +125,12 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        setupViewModel()
+    }
+
     private fun fetchRemoteConfig() {
         firebaseRemoteConfig.fetchAndActivate()
             .addOnCompleteListener(this) { task ->
@@ -124,28 +140,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             }
     }
 
-    fun loadMyInfo() {
-        myPageService.getMyInfo()
-            .enqueue(object : Callback<GetMyInfoResponseDto> {
-                override fun onResponse(
-                    call: Call<GetMyInfoResponseDto>,
-                    response: Response<GetMyInfoResponseDto>
-                ) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            binding.tvNickname.text = response.body()!!.nickname
-                            Log.d("MyPageActivity", "onResponse 성공: " + response.body().toString())
-
-                        } else {
-                            Log.d("MyPageActivity", "onResponse 오류: " + response.body().toString())
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                    Log.d("MyPageActivity", "onFailure 에러: " + t.message.toString())
-                }
-            })
+    fun setupViewModel(){
+        viewModel.checkMyInfo()
+    }
+    private fun observeViewModel() {
+        viewModel.nickname.observe(this) { userNickname ->
+            binding.tvNickname.text = userNickname
+        }
     }
 
     fun signOut() {
