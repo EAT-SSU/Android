@@ -17,6 +17,9 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
     private val _isEnableNickname = MutableLiveData<Boolean>()
     val isEnableNickname: LiveData<Boolean> get() = _isEnableNickname
 
+    private val _isDone = MutableLiveData<Boolean>()
+    val isDone: LiveData<Boolean> get() = _isDone
+
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
 
@@ -60,6 +63,7 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
         viewModelScope.launch(Dispatchers.Main) {
             _toastMessage.value = message
             _isEnableNickname.value = true
+            _isDone.value = true
 
         }
     }
@@ -70,6 +74,7 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
         viewModelScope.launch(Dispatchers.Main) {
             _toastMessage.value = message
             _isEnableNickname.value = false
+            _isDone.value = false
         }
     }
 }
