@@ -140,7 +140,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             }
     }
 
-    fun setupViewModel(){
+    private fun setupViewModel(){
         viewModel.checkMyInfo()
     }
     private fun observeViewModel() {
@@ -149,7 +149,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
     }
 
-    fun signOut() {
+    private fun signOut() {
         userService.signOut().enqueue(object : Callback<String> {
             override fun onResponse(
                 call: Call<String>,
