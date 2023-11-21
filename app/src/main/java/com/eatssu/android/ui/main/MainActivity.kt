@@ -48,26 +48,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 툴바 사용하지 않도록 설정
-        toolbar.let {
-            toolbar.visibility = View.GONE
-            toolbarTitle.visibility = View.GONE
-            setSupportActionBar(it)
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowTitleEnabled(false)
-        }
+        setupNoToolbar()
 
-
-        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
-        val myPageRepository = MyPageRepositoryImpl(myPageService)
-
-        viewModel = ViewModelProvider(
-            this,
-            MypageViewModelFactory(myPageRepository)
-        )[MypageViewModel::class.java]
-
-        setupViewModel()
-        observeViewModel()
+        initializeMyPageViewModel()
+        setupMyPageViewModel()
+        observeMyPageViewModel()
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -196,10 +181,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         recyclerView.adapter = adapter
     }
 
-    fun setupViewModel(){
+    private fun setupNoToolbar() {
+        // 툴바 사용하지 않도록 설정
+        toolbar.let {
+            toolbar.visibility = View.GONE
+            toolbarTitle.visibility = View.GONE
+            setSupportActionBar(it)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+    }
+
+    private fun initializeMyPageViewModel() {
+        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        val myPageRepository = MyPageRepositoryImpl(myPageService)
+        viewModel = ViewModelProvider(this, MypageViewModelFactory(myPageRepository))[MypageViewModel::class.java]
+    }
+
+    private fun setupMyPageViewModel(){
         viewModel.checkMyInfo()
     }
-    private fun observeViewModel() {
+
+    private fun observeMyPageViewModel() {
         viewModel.isNull.observe(this){ it ->
             if(it) {
                 Log.d("MainActivity", viewModel.nickname.value.toString())
@@ -218,7 +221,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
