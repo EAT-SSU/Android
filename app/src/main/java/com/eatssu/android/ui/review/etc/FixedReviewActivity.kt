@@ -42,36 +42,12 @@ class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenu
     }
 
     private fun postData(reviewId: Long) {
-        val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
+        val comment = binding.etReview2Comment.text.toString()
+        val mainGrade = binding.rbMain.rating.toInt()
+        val amountGrade = binding.rbAmount.rating.toInt()
+        val tasteGrade = binding.rbTaste.rating.toInt()
 
-        comment = binding.etReview2Comment.text.toString()
-
-        val reviewData = """
-        {
-            "mainGrade": ${binding.rbMain.rating.toInt()},
-            "amountGrade": ${binding.rbAmount.rating.toInt()},
-            "tasteGrade": ${binding.rbTaste.rating.toInt()},
-            "content": "$comment"
-        }
-    """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
-
-        service.modifyReview(reviewId, reviewData)
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            viewModel.handleSuccessResponse("수정이 완료되었습니다.")
-
-                        } else {
-                            viewModel.handleErrorResponse("수정이 실패하였습니다.")
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    viewModel.handleErrorResponse("수정이 실패하였습니다.")
-                }
-            })
+        viewModel.postData(reviewId, comment, mainGrade, amountGrade, tasteGrade)
     }
 
     private fun observeViewModel() {
