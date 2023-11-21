@@ -52,7 +52,6 @@ android {
         abi {
             enable true
             reset()
-            include 'arm64-v8a', 'armeabi', 'armeabi-v7a'
             universalApk true
         }
     }
@@ -76,8 +75,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation files('libs/libDaumMapAndroid.jar')
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0' // ViewModel KTX
     implementation 'com.google.code.gson:gson:2.10'  // Gson
