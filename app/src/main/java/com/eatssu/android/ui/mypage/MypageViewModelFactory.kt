@@ -3,8 +3,9 @@ package com.eatssu.android.ui.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.data.repository.MyPageRepository
 
-class MypageViewModelFactory(private val repository: FirebaseRemoteConfigRepository) :
+class MypageViewModelFactory(private val repository: MyPageRepository) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,17 +17,21 @@ import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.data.repository.MyPageRepository
+import com.eatssu.android.data.repository.MyPageRepositoryImpl
+import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMainBinding
-import com.eatssu.android.ui.common.ForceUpdateDialogActivity
-import com.eatssu.android.ui.common.VersionViewModel
-import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.main.calendar.OnItemClickListener
 import com.eatssu.android.ui.mypage.MyPageActivity
+import com.eatssu.android.ui.mypage.MypageViewModel
+import com.eatssu.android.ui.mypage.MypageViewModelFactory
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeViewModel
+import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeViewModelFactory
 import com.eatssu.android.util.RetrofitImpl
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -45,62 +50,33 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
-    private lateinit var versionViewModel: VersionViewModel
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
-
-    private lateinit var nickname: String
+    private lateinit var viewModel: MypageViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
-
-        if(versionViewModel.checkForceUpdate()){
-            showForceUpdateDialog()
-        }
-
         // 툴바 사용하지 않도록 설정
         toolbar.let {
-            toolbar.visibility= View.GONE
-            toolbarTitle.visibility= View.GONE
+            toolbar.visibility = View.GONE
+            toolbarTitle.visibility = View.GONE
             setSupportActionBar(it)
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        val intentNick = Intent(this, UserNameChangeActivity::class.java)
 
-        val myPageService =
-            RetrofitImpl.retrofit.create(MyPageService::class.java)
+        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        val myPageRepository = MyPageRepositoryImpl(myPageService)
 
-        myPageService.getMyInfo().enqueue(object :
-            Callback<GetMyInfoResponseDto> {
-            override fun onResponse(
-                call: Call<GetMyInfoResponseDto>,
-                response: Response<GetMyInfoResponseDto>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("MainActivity", "onResponse 성공: " + response.body().toString())
-                    nickname = response.body()?.nickname.toString()
-                    Log.d("MainActivity", "onResponse 성공: $nickname")
+        viewModel = ViewModelProvider(
+            this,
+            MypageViewModelFactory(myPageRepository)
+        )[MypageViewModel::class.java]
 
-                    //나중에 isNullOrBlank로 바꿀 것
-                    if (nickname == "null") {
-                        startActivity(intentNick)
-                        Log.d("MainActivity","닉네임이 null")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                Log.d("MainActivity", "onFailure 에러: " + t.message.toString())
-            }
-        })
-
-//        supportActionBar?.title = "EAT-SSU"
+        setupViewModel()
+        observeViewModel()
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -119,7 +95,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val tabTitles = listOf("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(tabLayout,
+        TabLayoutMediator(
+            tabLayout,
             viewPager
         ) { tab, position -> tab.text = tabTitles[position] }.attach()
 
@@ -222,7 +199,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 val tabTitles = listOf("아침", "점심", "저녁")
 
                 // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-                TabLayoutMediator(tabLayout,
+                TabLayoutMediator(
+                    tabLayout,
                     viewPager
                 ) { tab, position -> tab.text = tabTitles[position] }.attach()
 
@@ -231,6 +209,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         })
 
         recyclerView.adapter = adapter
+    }
+
+    fun setupViewModel(){
+        viewModel.checkMyInfo()
+    }
+    private fun observeViewModel() {
+        viewModel.nicknameisNull.observe(this){ it ->
+            if(it) {
+                Log.d("MainActivity", viewModel.nickname.value.toString())
+                val intent = Intent(this, UserNameChangeActivity::class.java)
+                startActivity(intent)
+
+            }
+        }
+
+        viewModel.toastMessage.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -246,14 +242,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 startActivity(intent)  // 화면 전환을 시켜줌
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
-    private fun showForceUpdateDialog() {
-        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
-    }
-
 }
