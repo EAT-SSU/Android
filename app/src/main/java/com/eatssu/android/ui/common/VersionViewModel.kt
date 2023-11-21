@@ -1,6 +1,8 @@
 package com.eatssu.android.ui.common
 
 import androidx.lifecycle.ViewModel
+import com.eatssu.android.BuildConfig.VERSION_NAME
+import com.eatssu.android.data.entity.AndroidMessage
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 
 class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) : ViewModel() {
@@ -11,10 +13,15 @@ class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) :
     }
 
     fun checkForceUpdate(): Boolean {
-        return repository.getForceUpdate()
+        val lastVersion = checkAppVersion()
+        return VERSION_NAME != lastVersion && repository.getForceUpdate()
     }
 
-    fun getAppVersion(): String {
+    private fun checkAppVersion(): String {
         return repository.getAppVersion()
+    }
+
+    fun checkAndroidMessage(): AndroidMessage {
+        return repository.getAndroidMessage()
     }
 }

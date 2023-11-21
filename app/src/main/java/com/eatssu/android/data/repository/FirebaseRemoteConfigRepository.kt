@@ -1,11 +1,12 @@
 package com.eatssu.android.data.repository
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.eatssu.android.R
+import com.eatssu.android.data.entity.AndroidMessage
 import com.eatssu.android.data.entity.FirebaseInfoItem
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.gson.Gson
 import org.json.JSONArray
 
 class FirebaseRemoteConfigRepository {
@@ -29,6 +30,18 @@ class FirebaseRemoteConfigRepository {
                 throw RuntimeException("fetchAndActivate 실패")
             }
         }
+    }
+
+    fun getAndroidMessage(): AndroidMessage {
+
+        // Gson을 사용하여 JSON 문자열을 DTO로 파싱
+        val serverStatus: AndroidMessage = Gson().fromJson(instance.getString("android_message"), AndroidMessage::class.java)
+
+        // 파싱된 결과 확인
+        println("Dialog: ${serverStatus.dialog}")
+        println("Message: ${serverStatus.message}")
+
+        return serverStatus
     }
 
     fun getForceUpdate(): Boolean {
