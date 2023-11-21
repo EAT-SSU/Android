@@ -17,11 +17,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-// reviewId 받아오는거 해야함
-// 메인 리뷰에서 신고하기 뷰로 넘어가는거 해야함
-
 class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
     private var reviewId = -1L
+    private lateinit var viewModel: ReportViewModel
     private var reportType = ""
     private var content = ""
 
@@ -29,36 +27,28 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "신고하기" // 툴바 제목 설정
 
+        reviewId = intent.getLongExtra("reviewId", -1L)
+
+        viewModel = ViewModelProvider(this).get(ReportViewModel::class.java)
+
         reportInfo()
+
+        observeViewModel()
     }
 
     private fun reportInfo() {
-
         binding.btnSendReport.setOnClickListener {
 
             val selectedReportType = getSelectedReportType(binding.radioGp.checkedRadioButtonId)
-            reviewId = intent.getLongExtra("reviewId", -1L)
+
             reportType = selectedReportType.type
             content = selectedReportType.defaultContent?.let { getString(it) } ?: binding.etReportComment.text.toString()
 
             Log.d("ReportActivity", reportType)
             Log.d("ReportActivity", reviewId.toString())
 
-            var viewModel = ViewModelProvider(this).get(ReportViewModel::class.java)
-
-            // ViewModel에서 LiveData를 관찰하여 UI 업데이트
-            viewModel.reportResult.observe(this, Observer { result ->
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-                if (result == "신고가 완료되었습니다.") {
-                    finish()
-                }
-            })
-
             viewModel.postData(reviewId, reportType, content)
-
-            finish()
         }
-
     }
 
     private fun getSelectedReportType(selectedId: Int): ReportType {
@@ -70,6 +60,18 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             binding.radioBt5.id -> ReportType.COPYRIGHT
             binding.radioBt6.id -> ReportType.ETC
             else -> ReportType.ETC // Default to ETC if none selected
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.toastMessage.observe(this, Observer { result ->
+            Toast.makeText(this@ReportActivity, result, Toast.LENGTH_SHORT).show()
+        })
+
+        viewModel.isDone.observe(this) { isDone ->
+            if(isDone) {
+                finish()
+            }
         }
     }
 }
