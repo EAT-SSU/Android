@@ -43,7 +43,7 @@ com.eatssu.android
 ## 🐚 Convertion
 [Convention Docs](https://github.com/EAT-SSU/EatSSU-Android/wiki/Convention)
 
-## Framework
+## 🦩 Framework
 - Android Studio : Flamingo 2022.2.1 Patch 2
 - JDK : 17
 - minSDK : 21
