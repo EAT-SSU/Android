@@ -35,7 +35,6 @@ class MenuFragment(val time: Time) : Fragment() {
 
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
-//    private lateinit var menuRepository: MenuRepository
 
     private lateinit var menuDate: String
 
@@ -59,6 +58,17 @@ class MenuFragment(val time: Time) : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        observeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun observeViewModel(){
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
 
         Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
@@ -208,6 +218,19 @@ class MenuFragment(val time: Time) : Fragment() {
         return nameList.toString()
     }
 
+    // Function to check if all data is loaded and then call setupTodayRecyclerView
+    private fun checkDataLoaded() {
+        if (foodCourtDataLoaded.value == true &&
+            snackCornerDataLoaded.value == true &&
+            haksikDataLoaded.value == true &&
+            dodamDataLoaded.value == true &&
+            dormitoryDataLoaded.value == true
+        ) {
+            totalMenuList.sortBy { it.cafeteria.ordinal }
+            setupTodayRecyclerView()
+        }
+    }
+
     private fun mapTodayMenuResponseToMenu(todayMealResponseDto: GetTodayMealResponseDto): List<Menu> {
         return todayMealResponseDto.mapNotNull { todayMealResponseDto ->
             val name = createNameList(todayMealResponseDto.changeMenuInfoList)
@@ -221,19 +244,6 @@ class MenuFragment(val time: Time) : Fragment() {
             } else {
                 null
             }
-        }
-    }
-
-    // Function to check if all data is loaded and then call setupTodayRecyclerView
-    fun checkDataLoaded() {
-        if (foodCourtDataLoaded.value == true &&
-            snackCornerDataLoaded.value == true &&
-            haksikDataLoaded.value == true &&
-            dodamDataLoaded.value == true &&
-            dormitoryDataLoaded.value == true
-        ) {
-            totalMenuList.sortBy { it.cafeteria.ordinal }
-            setupTodayRecyclerView()
         }
     }
 
@@ -252,5 +262,4 @@ class MenuFragment(val time: Time) : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
