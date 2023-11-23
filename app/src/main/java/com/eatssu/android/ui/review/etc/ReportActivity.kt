@@ -1,23 +1,25 @@
 package com.eatssu.android.ui.review.etc
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.data.model.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.databinding.ActivityReportBinding
-import com.eatssu.android.util.RetrofitImpl.retrofit
+import com.eatssu.android.ui.main.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-// reviewId 받아오는거 해야함
-// 메인 리뷰에서 신고하기 뷰로 넘어가는거 해야함
-
 class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
     private var reviewId = -1L
+    private lateinit var viewModel: ReportViewModel
     private var reportType = ""
     private var content = ""
 
@@ -25,26 +27,28 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "신고하기" // 툴바 제목 설정
 
+        reviewId = intent.getLongExtra("reviewId", -1L)
+
+        viewModel = ViewModelProvider(this).get(ReportViewModel::class.java)
+
         reportInfo()
+
+        observeViewModel()
     }
 
     private fun reportInfo() {
-
         binding.btnSendReport.setOnClickListener {
 
             val selectedReportType = getSelectedReportType(binding.radioGp.checkedRadioButtonId)
-            reviewId = intent.getLongExtra("reviewId", -1L)
+
             reportType = selectedReportType.type
             content = selectedReportType.defaultContent?.let { getString(it) } ?: binding.etReportComment.text.toString()
-            Log.d("ReportActivity", reportType)
 
+            Log.d("ReportActivity", reportType)
             Log.d("ReportActivity", reviewId.toString())
 
-            postData(reviewId, reportType, content)
-
-            finish()
+            viewModel.postData(reviewId, reportType, content)
         }
-
     }
 
     private fun getSelectedReportType(selectedId: Int): ReportType {
@@ -59,35 +63,15 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
         }
     }
 
-    private fun postData(reviewId: Long, reportType: String, content: String) {
-        val service = retrofit.create(ReportService::class.java)
-        Log.d("reportId", reviewId.toString())
+    private fun observeViewModel() {
+        viewModel.toastMessage.observe(this, Observer { result ->
+            Toast.makeText(this@ReportActivity, result, Toast.LENGTH_SHORT).show()
+        })
 
-        service.reportReview(ReportRequestDto(reviewId, reportType, content))
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            Log.d("ReportActivity", "onResponse 성공: " + response.body().toString())
-                            Toast.makeText(
-                                this@ReportActivity, "신고가 완료되었습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
-
-                        } else {
-                            Log.d("ReportActivity", "onResponse 오류: " + response.body().toString())
-                            Toast.makeText(
-                                this@ReportActivity, "신고가 실패하였습니다.", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ReportActivity", "onFailure 에러: " + t.message.toString())
-                    Toast.makeText(
-                        this@ReportActivity, "신고가 실패하였습니다.", Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
+        viewModel.isDone.observe(this) { isDone ->
+            if(isDone) {
+                finish()
+            }
+        }
     }
 }

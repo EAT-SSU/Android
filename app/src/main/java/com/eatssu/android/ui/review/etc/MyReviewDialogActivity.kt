@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
@@ -15,6 +17,7 @@ import retrofit2.Response
 
 class MyReviewDialogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewDialogBinding
+    private lateinit var viewModel: DeleteViewModel
     var reviewId = -1L
     var menu = ""
 
@@ -24,6 +27,8 @@ class MyReviewDialogActivity : AppCompatActivity() {
         binding = ActivityMyReviewDialogBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this).get(DeleteViewModel::class.java)
 
         reviewId = intent.getLongExtra("reviewId", -1L)
         menu = intent.getStringExtra("menu").toString()
@@ -43,44 +48,26 @@ class MyReviewDialogActivity : AppCompatActivity() {
                 setTitle("리뷰 삭제")
                 setMessage("작성한 리뷰를 삭제하시겠습니까?")
                 setNegativeButton("취소") { _, _ ->
-                    Toast.makeText(
-                        this@MyReviewDialogActivity,
-                        "리뷰 삭제가 취소되었습니다",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    viewModel.handleErrorResponse("삭제를 취소하였습니다.")
                 }
                 setPositiveButton("삭제") { _, _ ->
-                    val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
-
-                    service.delReview(reviewId)
-                        .enqueue(object : Callback<Void> {
-                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                if (response.isSuccessful) {
-                                    if (response.code() == 200) {
-                                        Log.d("MyReviewDialogActivity", "onResponse 성공: " + response.body().toString())
-                                        Toast.makeText(
-                                            this@MyReviewDialogActivity, "삭제가 완료되었습니다.", Toast.LENGTH_SHORT
-                                        ).show()
-                                        finish()
-
-                                    } else {
-                                        Log.d("MyReviewDialogActivity", "onResponse 오류: " + response.body().toString())
-                                        Toast.makeText(
-                                            this@MyReviewDialogActivity, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            }
-                            override fun onFailure(call: Call<Void>, t: Throwable) {
-                                Log.d("MyReviewDialogActivity", "onFailure 에러: " + t.message.toString())
-                                Toast.makeText(
-                                    this@MyReviewDialogActivity, "삭제가 실패하였습니다.", Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        })
-                    }
-                show()
+                    viewModel.postData(reviewId)
                 }
+            }.create().show()
+
+            observeViewModel()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.toastMessage.observe(this, Observer { result ->
+            Toast.makeText(this@MyReviewDialogActivity, result, Toast.LENGTH_SHORT).show()
+        })
+
+        viewModel.isDone.observe(this) { isDone ->
+            if(isDone) {
+                finish()
             }
         }
     }
+}
