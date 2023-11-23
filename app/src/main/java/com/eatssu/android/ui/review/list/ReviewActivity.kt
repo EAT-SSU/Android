@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.write.ReviewWriteMenuActivity
@@ -21,7 +20,6 @@ class ReviewActivity :
 
     private lateinit var viewModel: ReviewViewModel
     private lateinit var reviewService: ReviewService
-    private lateinit var repository: ReviewRepository
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
@@ -35,9 +33,8 @@ class ReviewActivity :
         toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
         reviewService = retrofit.create(ReviewService::class.java)
-        repository = ReviewRepository(reviewService)
         viewModel =
-            ViewModelProvider(this, ReviewViewModelFactory(repository))[ReviewViewModel::class.java]
+            ViewModelProvider(this, ReviewViewModelFactory(reviewService))[ReviewViewModel::class.java]
 
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()

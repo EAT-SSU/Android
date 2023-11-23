@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.repository.ReviewRepository
+import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -15,7 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class UploadReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
+class UploadReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
     private val _isUpload = MutableLiveData<Boolean>()
     val isUpload: LiveData<Boolean> get() = _isUpload
@@ -43,7 +43,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
     ) {
         viewModelScope.launch {
 
-            repository.writeReview(
+            reviewService.writeReview(
                 menuId, compressedPartsList, reviewData
             ).enqueue(object : Callback<Void> {
                 override fun onResponse(
@@ -78,7 +78,7 @@ class UploadReviewViewModel(private val repository: ReviewRepository) : ViewMode
     ) {
         viewModelScope.launch {
 
-            repository.writeReview(
+            reviewService.writeReview(
                 menuId, reviewData
             ).enqueue(object : Callback<Void> {
                 override fun onResponse(

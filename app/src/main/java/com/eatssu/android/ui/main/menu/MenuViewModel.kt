@@ -10,14 +10,14 @@ import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
-import com.eatssu.android.data.repository.MenuRepository
+import com.eatssu.android.data.service.MenuService
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
+class MenuViewModel(private val menuService: MenuService) : ViewModel() {
 
     private val _todayMealDataDodam = MutableLiveData<GetTodayMealResponseDto>()
     val todayMealDataDodam: LiveData<GetTodayMealResponseDto> = _todayMealDataDodam
@@ -47,7 +47,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
         time: Time
     ) {
         viewModelScope.launch {
-            repository.getTodayMeal(menuDate, restaurantType, time)
+            menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
                 .enqueue(object : Callback<GetTodayMealResponseDto> {
                     override fun onResponse(
                         call: Call<GetTodayMealResponseDto>,
@@ -83,7 +83,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
     // Fixed Menu 데이터 로드도 유사한 방식으로 구현
     fun loadFixedMenu(restaurantType: Restaurant) {
         viewModelScope.launch {
-            repository.getFixedMenu(restaurantType)
+            menuService.getFixMenu(restaurantType.toString())
                 .enqueue(object : Callback<GetFixedMenuResponseDto> {
                     override fun onResponse(
                         call: Call<GetFixedMenuResponseDto>,
@@ -116,7 +116,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
-            repository.getMenuIdByMealId(mealId)
+            menuService.getMenuByMealId(mealId)
                 .enqueue(object : Callback<ChangeMenuInfoListDto> {
                     override fun onResponse(
                         call: Call<ChangeMenuInfoListDto>,

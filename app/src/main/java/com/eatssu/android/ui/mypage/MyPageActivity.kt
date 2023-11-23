@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.repository.MyPageRepositoryImpl
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyPageBinding
@@ -44,10 +43,9 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
 
         val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
-        val myPageRepository = MyPageRepositoryImpl(myPageService)
         viewModel = ViewModelProvider(
             this,
-            MypageViewModelFactory(myPageRepository)
+            MypageViewModelFactory(myPageService)
         )[MypageViewModel::class.java]
 
         setupViewModel()

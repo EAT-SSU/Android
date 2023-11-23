@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.repository.MyPageRepository
+import com.eatssu.android.data.service.MyPageService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import retrofit2.Response
 
 
 @HiltViewModel
-class MypageViewModel(private val myPageRepository: MyPageRepository) : ViewModel() {
+class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
@@ -27,7 +27,7 @@ class MypageViewModel(private val myPageRepository: MyPageRepository) : ViewMode
     val isNull: LiveData<Boolean> get() = _isNull
 
     fun checkMyInfo() {
-        myPageRepository.myInfoCheck(object : Callback<GetMyInfoResponseDto> {
+        myPageService.getMyInfo().enqueue(object : Callback<GetMyInfoResponseDto> {
             override fun onResponse(call: Call<GetMyInfoResponseDto>, response: Response<GetMyInfoResponseDto>) {
                 if (response.isSuccessful) {
                     _nickname.postValue(response.body()?.nickname)

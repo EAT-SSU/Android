@@ -1,19 +1,21 @@
 package com.eatssu.android.ui.review.list
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
 import com.eatssu.android.data.model.response.GetReviewListResponse
-import com.eatssu.android.data.repository.ReviewRepository
+import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class ReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
-
+class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
     private val _reviewList = MutableLiveData<GetReviewListResponse>()
     val reviewList: LiveData<GetReviewListResponse> = _reviewList
@@ -31,7 +33,7 @@ class ReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
 
-            repository.getReviewList(menuType.toString(), mealId, menuId)
+            reviewService.getReviewList(menuType.toString(), mealId, menuId)
                 .enqueue(object : Callback<GetReviewListResponse> {
                     override fun onResponse(
                         call: Call<GetReviewListResponse>, response: Response<GetReviewListResponse>
@@ -62,7 +64,7 @@ class ReviewViewModel(private val repository: ReviewRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
 
-            repository.getReviewInfo(menuType.toString(), mealId, menuId)
+            reviewService.getRreviewInfo(menuType.toString(), mealId, menuId)
                 .enqueue(object : Callback<GetReviewInfoResponseDto> {
                     override fun onResponse(
                         call: Call<GetReviewInfoResponseDto>,

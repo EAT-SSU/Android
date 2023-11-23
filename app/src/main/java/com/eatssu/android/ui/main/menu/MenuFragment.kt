@@ -20,7 +20,6 @@ import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.response.ChangeMenuInfo
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
-import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
@@ -36,7 +35,7 @@ class MenuFragment(val time: Time) : Fragment() {
 
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
-    private lateinit var menuRepository: MenuRepository
+//    private lateinit var menuRepository: MenuRepository
 
     private lateinit var menuDate: String
 
@@ -67,9 +66,9 @@ class MenuFragment(val time: Time) : Fragment() {
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
-        menuRepository = MenuRepository(menuService)
+//        menuRepository = MenuRepository(menuService)
         menuViewModel =
-            ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
+            ViewModelProvider(this, MenuViewModelFactory(menuService))[MenuViewModel::class.java]
 
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
         // ViewModel에서 데이터 가져오기
