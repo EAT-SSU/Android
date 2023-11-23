@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.repository.UserRepository
+import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
+import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -12,16 +13,19 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class UserNameChangeViewModel(private val userRepository: UserRepository) : ViewModel() {
+class UserNameChangeViewModel(private val userService: UserService) : ViewModel() {
 
     private val _isEnableNickname = MutableLiveData<Boolean>()
     val isEnableNickname: LiveData<Boolean> get() = _isEnableNickname
+
+    private val _isDone = MutableLiveData<Boolean>()
+    val isDone: LiveData<Boolean> get() = _isDone
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
 
     fun checkNickname(inputNickname: String) {
-        userRepository.nicknameCheck(inputNickname, object : Callback<String> {
+        userService.checkNickname(inputNickname).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     if (response.body() == "true") {
@@ -41,17 +45,17 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
     }
 
     fun changeNickname(inputNickname: String) {
-        userRepository.nicknameChange(inputNickname, object : Callback<Void> {
+        userService.changeNickname(ChangeNicknameRequestDto(inputNickname)).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    handleSuccessResponse("닉네임 변경에 성공했습니다.")
+                    handleSuccessResponse("닉네임 설정에 성공했습니다.")
                 } else {
-                    handleErrorResponse("닉네임 변경에 실패했습니다.")
+                    handleErrorResponse("닉네임 설정에 실패했습니다.")
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                handleErrorResponse("닉네임 변경에 실패했습니다.")
+                handleErrorResponse("닉네임 설정에 실패했습니다.")
             }
         })
     }
@@ -60,6 +64,7 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
         viewModelScope.launch(Dispatchers.Main) {
             _toastMessage.value = message
             _isEnableNickname.value = true
+            _isDone.value = true
 
         }
     }
@@ -70,6 +75,7 @@ class UserNameChangeViewModel(private val userRepository: UserRepository) : View
         viewModelScope.launch(Dispatchers.Main) {
             _toastMessage.value = message
             _isEnableNickname.value = false
+            _isDone.value = false
         }
     }
 }

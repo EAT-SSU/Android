@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityUserNameChangeBinding
 import com.eatssu.android.util.RetrofitImpl.retrofit
@@ -39,11 +38,10 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
         })
 
         val userService = retrofit.create(UserService::class.java)
-        val userRepository = UserRepositoryImpl(userService)
 
         viewModel = ViewModelProvider(
             this,
-            UserNameChangeViewModelFactory(userRepository)
+            UserNameChangeViewModelFactory(userService)
         )[UserNameChangeViewModel::class.java]
 
         setupUI()
@@ -58,7 +56,9 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
 
         binding.btnComplete.setOnClickListener {
             viewModel.changeNickname(inputNickname)
-            finish()
+            viewModel.isDone.observe(this){ isDone ->
+                if(isDone){ finish() }
+            }
         }
     }
 

@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
@@ -63,8 +62,7 @@ class ReviewWriteRateActivity :
         binding.ibAddPic.setOnClickListener { openGallery() }
 
         reviewService = mRetrofit.create(ReviewService::class.java)
-        val repository = ReviewRepository(reviewService)
-        viewModel = ViewModelProvider(this, UploadReviewViewModelFactory(repository))
+        viewModel = ViewModelProvider(this, UploadReviewViewModelFactory(reviewService))
             .get(UploadReviewViewModel::class.java)
 
 

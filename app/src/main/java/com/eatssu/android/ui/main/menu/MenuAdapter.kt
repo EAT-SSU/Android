@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.eatssu.android.data.entity.Section
 import com.eatssu.android.databinding.ItemSectionBinding
 import com.eatssu.android.ui.info.InfoActivity
 

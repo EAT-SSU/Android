@@ -18,8 +18,8 @@ interface UserService {
     fun signOut(): Call<String>
 
     @GET("user/check-nickname") //닉네임 중 복 체크, 존재하는 닉네임이면 errorCode 2012
-    fun nicknameCheck(
-        @Query("nickname") nickname: String,
+    fun checkNickname(
+        @Query("nickname") nickname: String
     ): Call<String>
 
 }

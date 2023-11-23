@@ -12,13 +12,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.App
+import com.eatssu.android.data.entity.Menu
+import com.eatssu.android.data.entity.Section
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.response.ChangeMenuInfo
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
-import com.eatssu.android.data.repository.MenuRepository
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
@@ -34,7 +35,6 @@ class MenuFragment(val time: Time) : Fragment() {
 
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
-    private lateinit var menuRepository: MenuRepository
 
     private lateinit var menuDate: String
 
@@ -58,6 +58,17 @@ class MenuFragment(val time: Time) : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        observeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun observeViewModel(){
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
 
         Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
@@ -65,9 +76,9 @@ class MenuFragment(val time: Time) : Fragment() {
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
-        menuRepository = MenuRepository(menuService)
+//        menuRepository = MenuRepository(menuService)
         menuViewModel =
-            ViewModelProvider(this, MenuViewModelFactory(menuRepository))[MenuViewModel::class.java]
+            ViewModelProvider(this, MenuViewModelFactory(menuService))[MenuViewModel::class.java]
 
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
         // ViewModel에서 데이터 가져오기
@@ -207,6 +218,19 @@ class MenuFragment(val time: Time) : Fragment() {
         return nameList.toString()
     }
 
+    // Function to check if all data is loaded and then call setupTodayRecyclerView
+    private fun checkDataLoaded() {
+        if (foodCourtDataLoaded.value == true &&
+            snackCornerDataLoaded.value == true &&
+            haksikDataLoaded.value == true &&
+            dodamDataLoaded.value == true &&
+            dormitoryDataLoaded.value == true
+        ) {
+            totalMenuList.sortBy { it.cafeteria.ordinal }
+            setupTodayRecyclerView()
+        }
+    }
+
     private fun mapTodayMenuResponseToMenu(todayMealResponseDto: GetTodayMealResponseDto): List<Menu> {
         return todayMealResponseDto.mapNotNull { todayMealResponseDto ->
             val name = createNameList(todayMealResponseDto.changeMenuInfoList)
@@ -220,19 +244,6 @@ class MenuFragment(val time: Time) : Fragment() {
             } else {
                 null
             }
-        }
-    }
-
-    // Function to check if all data is loaded and then call setupTodayRecyclerView
-    fun checkDataLoaded() {
-        if (foodCourtDataLoaded.value == true &&
-            snackCornerDataLoaded.value == true &&
-            haksikDataLoaded.value == true &&
-            dodamDataLoaded.value == true &&
-            dormitoryDataLoaded.value == true
-        ) {
-            totalMenuList.sortBy { it.cafeteria.ordinal }
-            setupTodayRecyclerView()
         }
     }
 
@@ -251,5 +262,4 @@ class MenuFragment(val time: Time) : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

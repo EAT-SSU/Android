@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,21 +16,19 @@ import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.entity.CalendarData
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.main.calendar.OnItemClickListener
 import com.eatssu.android.ui.mypage.MyPageActivity
+import com.eatssu.android.ui.mypage.MypageViewModel
+import com.eatssu.android.ui.mypage.MypageViewModelFactory
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.RetrofitImpl
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -41,52 +40,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
-    private lateinit var nickname: String
+    private lateinit var viewModel: MypageViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 툴바 사용하지 않도록 설정
-        toolbar.let {
-            toolbar.visibility = View.GONE
-            toolbarTitle.visibility = View.GONE
-            setSupportActionBar(it)
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowTitleEnabled(false)
-        }
+        setupNoToolbar()
 
-        val intentNick = Intent(this, UserNameChangeActivity::class.java)
-
-        val myPageService =
-            RetrofitImpl.retrofit.create(MyPageService::class.java)
-
-        myPageService.getMyInfo().enqueue(object :
-            Callback<GetMyInfoResponseDto> {
-            override fun onResponse(
-                call: Call<GetMyInfoResponseDto>,
-                response: Response<GetMyInfoResponseDto>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("MainActivity", "onResponse 성공: " + response.body().toString())
-                    nickname = response.body()?.nickname.toString()
-                    Log.d("MainActivity", "onResponse 성공: $nickname")
-
-                    //나중에 isNullOrBlank로 바꿀 것
-                    if (nickname == "null") {
-                        startActivity(intentNick)
-                        Log.d("MainActivity", "닉네임이 null")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
-                Log.d("MainActivity", "onFailure 에러: " + t.message.toString())
-            }
-        })
-
-//        supportActionBar?.title = "EAT-SSU"
+        initializeMyPageViewModel()
+        setupMyPageViewModel()
+        observeMyPageViewModel()
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -105,10 +70,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val tabTitles = listOf("아침", "점심", "저녁")
 
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-        TabLayoutMediator(
-            tabLayout,
-            viewPager
-        ) { tab, position -> tab.text = tabTitles[position] }.attach()
+        TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
         binding.btnSetting.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
@@ -209,10 +171,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 val tabTitles = listOf("아침", "점심", "저녁")
 
                 // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-                TabLayoutMediator(
-                    tabLayout,
-                    viewPager
-                ) { tab, position -> tab.text = tabTitles[position] }.attach()
+                TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
 
             }
@@ -221,11 +180,45 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         recyclerView.adapter = adapter
     }
 
+    private fun setupNoToolbar() {
+        // 툴바 사용하지 않도록 설정
+        toolbar.let {
+            toolbar.visibility = View.GONE
+            toolbarTitle.visibility = View.GONE
+            setSupportActionBar(it)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+    }
+
+    private fun initializeMyPageViewModel() {
+        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
+        viewModel = ViewModelProvider(this, MypageViewModelFactory(myPageService))[MypageViewModel::class.java]
+    }
+
+    private fun setupMyPageViewModel(){
+        viewModel.checkMyInfo()
+    }
+
+    private fun observeMyPageViewModel() {
+        viewModel.isNull.observe(this){ it ->
+            if(it) {
+                Log.d("MainActivity", viewModel.nickname.value.toString())
+                val intent = Intent(this, UserNameChangeActivity::class.java)
+                startActivity(intent)
+
+            }
+        }
+
+        viewModel.toastMessage.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

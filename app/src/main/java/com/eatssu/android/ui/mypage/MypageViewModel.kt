@@ -1,30 +1,68 @@
 package com.eatssu.android.ui.mypage
 
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.service.MyPageService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 @HiltViewModel
-class MypageViewModel @Inject constructor(repository: FirebaseRemoteConfigRepository)
-//    private val userRepository: UserRepository,
-//) : ViewModel() {
-//
-//    private val _nickname = MutableLiveData("")
-//    val nickname: LiveData<String> = _nickname
-//
+class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
 
-//
-//    fun getNicknameAbility() {
-//        viewModelScope.launch {
-//            userRepository.checkNickname(nickname)
-//                .onSuccess {
-//                    _nickname.value = it.
-//                    _wishCouponContent.value = it.wishCoupon.content
-//                    _wishCouponIsUsed.value = it.wishCoupon.isUsed
-//                    _wishCouponImage.value = it.wishCoupon.image
-//                }.onFailure {
-//                    // TODO: 에러 처리
-//                }
-//        }
-//    }
+    private val _toastMessage = MutableLiveData<String>()
+    val toastMessage: LiveData<String> get() = _toastMessage
+
+    private val _nickname = MutableLiveData<String>()
+    val nickname: LiveData<String> get() = _nickname
+
+    private val _isNull = MutableLiveData<Boolean>()
+    val isNull: LiveData<Boolean> get() = _isNull
+
+    fun checkMyInfo() {
+        myPageService.getMyInfo().enqueue(object : Callback<GetMyInfoResponseDto> {
+            override fun onResponse(call: Call<GetMyInfoResponseDto>, response: Response<GetMyInfoResponseDto>) {
+                if (response.isSuccessful) {
+                    _nickname.postValue(response.body()?.nickname)
+
+                    if (response.body()?.nickname.isNullOrBlank()) {
+                        handleErrorResponse("환영합니다.") //null이면 isNull에 true를 넣음
+                        _isNull.postValue(true)
+                    } else {
+                        handleSuccessResponse("${response.body()?.nickname} 님 환영합니다.")
+                        _isNull.postValue(false)
+
+                    }
+                } else {
+                    handleErrorResponse("정보를 불러 올 수 없습니다.")
+                }
+            }
+
+            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+                handleErrorResponse("정보를 불러 올 수 없습니다.")
+            }
+        })
+    }
+
+    private fun handleSuccessResponse(message: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            _toastMessage.value = message
+
+        }
+    }
+
+
+
+    private fun handleErrorResponse(message: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            _toastMessage.value = message
+        }
+    }
+}
