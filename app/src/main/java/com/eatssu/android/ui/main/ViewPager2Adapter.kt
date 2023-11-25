@@ -9,8 +9,14 @@ import com.eatssu.android.ui.main.menu.MenuFragment
 
 class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
+
     // 1. ViewPager2에 연결할 Fragment 들을 생성
-    val fragmentList = listOf<Fragment>(MenuFragment(Time.MORNING), MenuFragment(Time.LUNCH), MenuFragment(Time.DINNER))
+    private val fragmentList = listOf(
+        MenuFragment.newInstance(Time.MORNING),
+        MenuFragment.newInstance(Time.LUNCH),
+        MenuFragment.newInstance(Time.DINNER)
+    )
+
     lateinit var menuDate : String
 
     // 2. ViesPager2에서 노출시킬 Fragment 의 갯수 설정

@@ -29,7 +29,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class MenuFragment(val time: Time) : Fragment() {
+class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
@@ -45,6 +45,20 @@ class MenuFragment(val time: Time) : Fragment() {
     val dormitoryDataLoaded = MutableLiveData<Boolean>()
 
     private val totalMenuList = ArrayList<Section>()
+
+
+    companion object {
+        fun newInstance(time: Time): MenuFragment {
+            val fragment = MenuFragment()
+            val args = Bundle()
+            args.putSerializable("TIME", time)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    private val time: Time
+        get() = arguments?.getSerializable("TIME") as Time
 
     override fun onCreateView(
         inflater: LayoutInflater,
