@@ -58,7 +58,7 @@ class MenuFragment : Fragment() {
     }
 
     private val time: Time
-        get() = arguments?.getSerializable("TIME") as Time
+        get() = arguments?.getSerializable("TIME") as Time //Todo deprecated
 
     override fun onCreateView(
         inflater: LayoutInflater,
