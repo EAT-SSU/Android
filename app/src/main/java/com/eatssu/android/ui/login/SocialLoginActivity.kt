@@ -56,7 +56,7 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
         val context = this
 
 
-        binding.imbKakao.setOnClickListener {
+        binding.mcvKakaoLogin.setOnClickListener {
 
             Log.d("post", "버튼 클릭")
             lifecycleScope.launch {

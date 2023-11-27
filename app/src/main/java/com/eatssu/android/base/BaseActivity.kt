@@ -22,6 +22,7 @@ import com.eatssu.android.ui.common.ForceUpdateDialogActivity
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.util.NetworkConnection
+import com.google.android.material.card.MaterialCardView
 
 
 abstract class BaseActivity<B : ViewBinding>(
@@ -33,7 +34,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
     protected lateinit var toolbar: Toolbar
     protected lateinit var toolbarTitle: TextView
-    protected lateinit var backBtn: ImageButton
+    protected lateinit var backBtn: MaterialCardView
 
     private lateinit var versionViewModel: VersionViewModel
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
@@ -49,7 +50,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
         toolbar = findViewById(R.id.toolbar)
         toolbarTitle = findViewById(R.id.toolbar_title)
-        backBtn =findViewById(R.id.btn_back)
+        backBtn =findViewById(R.id.mcv_setting)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false) // 툴바 기본 제목 비활성화

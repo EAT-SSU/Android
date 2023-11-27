@@ -72,7 +72,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
         TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
-        binding.btnSetting.setOnClickListener {
+        binding.mcvSetting.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌
         }
