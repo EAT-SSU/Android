@@ -91,6 +91,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             val dayFormat = DateTimeFormatter.ofPattern("dd")
 
             val todayDate = LocalDateTime.now().format(dayFormat)
+
             viewModel.setData(todayDate)
 
             val preSunday: LocalDateTime = LocalDateTime.now().with(
@@ -142,8 +143,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 holderSelect.binding.date.isSelected = true
                 holderSelect.binding.weekCardview.setBackgroundResource(R.drawable.transparent_calendar_element)
 
-                //val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
                 viewModel.setData(selected)
+
                 // viewModel에 값 넘어가서 메뉴 뜨는지 확인하는 코드
                 //var senddate = "14"
                 //viewModel.setData(senddate)
@@ -154,10 +155,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
                 // 2) FragmentStateAdapter 생성 : Fragment 여러개를 ViewPager2에 연결해주는 역할
                 val viewpagerFragmentAdapter = ViewPager2Adapter(this@MainActivity)
-
-                viewpagerFragmentAdapter.setMenudate(selected)
-
-                Log.d("todaydate", selected)
 
                 // 3) ViewPager2의 adapter에 설정
                 viewPager.adapter = viewpagerFragmentAdapter
