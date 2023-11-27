@@ -87,11 +87,10 @@ class MenuFragment(val time: Time) : Fragment() {
 
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-            if (dataReceived < todayDate) {
+            if (dataReceived.toInt() < 7) {
                 val nextMonthDate = LocalDateTime.now().plusMonths(1)
-                val nextMonthYear = nextMonthDate.format(DateTimeFormatter.ofPattern("yyyy"))
-                val nextMonthMonth = nextMonthDate.format(DateTimeFormatter.ofPattern("MM"))
-                menuDate = "$nextMonthYear$nextMonthMonth$dataReceived"
+                val nextMonth = nextMonthDate.format(DateTimeFormatter.ofPattern("yyyyMM"))
+                menuDate = "$nextMonth$dataReceived"
             }
             else {
                 menuDate =
