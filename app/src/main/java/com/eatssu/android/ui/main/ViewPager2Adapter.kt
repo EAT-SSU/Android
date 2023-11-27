@@ -32,9 +32,4 @@ class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
         // 예를 들어, 첫 번째 Fragment를 디폴트로 설정하려면 0을 반환합니다.
         return 1
     }
-
-    fun setMenudate(date : String){
-        this.menuDate = date
-        Log.d("vpdate", menuDate)
-    }
 }
