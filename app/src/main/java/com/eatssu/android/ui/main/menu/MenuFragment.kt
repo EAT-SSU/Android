@@ -95,11 +95,24 @@ class MenuFragment : Fragment() {
             ViewModelProvider(this, MenuViewModelFactory(menuService))[MenuViewModel::class.java]
 
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
+
+        val dayFormat = DateTimeFormatter.ofPattern("dd")
+        val todayDate = LocalDateTime.now().format(dayFormat)
+
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-            menuDate =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            if (dataReceived < todayDate) {
+                val nextMonthDate = LocalDateTime.now().plusMonths(1)
+                val nextMonthYear = nextMonthDate.format(DateTimeFormatter.ofPattern("yyyy"))
+                val nextMonthMonth = nextMonthDate.format(DateTimeFormatter.ofPattern("MM"))
+                menuDate = "$nextMonthYear$nextMonthMonth$dataReceived"
+            }
+            else {
+                menuDate =
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+            }
 
+            Log.d("menucalendar", menuDate)
 
             // Assuming menuDate is a String in the format "yyyyMMdd"
             val formattedDate =
