@@ -17,7 +17,7 @@ class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) :
         return VERSION_NAME != lastVersion && repository.getForceUpdate()
     }
 
-    private fun checkAppVersion(): String {
+    fun checkAppVersion(): String {
         return repository.getAppVersion()
     }
 
