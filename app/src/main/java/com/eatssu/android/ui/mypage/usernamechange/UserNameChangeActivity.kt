@@ -27,10 +27,11 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
             //값 변경 시 실행되는 함수
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //입력값 담기
-                inputNickname = binding.etChNickname.text.toString()
-                //값 유무에 따른 활성화 여부
+                inputNickname = binding.etChNickname.text.trim().toString()
+                // 값 유무에 따른 활성화 여부
                 if (binding.etChNickname.text != null) {
-                    binding.btnCheckNickname.isEnabled =true //있다면 true 없으면 false
+                    val nicknameLength = inputNickname.length
+                    binding.btnCheckNickname.isEnabled = nicknameLength in 2..8
                 }
             }
 
