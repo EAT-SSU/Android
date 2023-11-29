@@ -21,6 +21,7 @@ import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.RetrofitImpl
+import com.eatssu.android.util.extension.startActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,13 +59,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
 
         binding.llNickname.setOnClickListener {
-            val intent = Intent(this, UserNameChangeActivity::class.java)
-            startActivity(intent)
+            startActivity<UserNameChangeActivity>()
         }
 
         binding.llMyReview.setOnClickListener {
-            val intent = Intent(this, MyReviewListActivity::class.java)
-            startActivity(intent)
+            startActivity<MyReviewListActivity>()
         }
 
         binding.tvLogout.setOnClickListener {
@@ -106,7 +105,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     private fun showLogoutDialog() {
-        val intent = Intent(this, SocialLoginActivity::class.java)
 
         // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
         val builder = AlertDialog.Builder(this)
@@ -118,7 +116,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 MySharedPreferences.clearUser(this)
                 Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
                 App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                startActivity(intent)
+                startActivity<SocialLoginActivity>()
             }
             .setNegativeButton("취소") { _, _ ->
             }
@@ -127,7 +125,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     private fun showSignoutDialog() {
-        val intent = Intent(this, SocialLoginActivity::class.java)
 
         // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
         val builder = AlertDialog.Builder(this)
@@ -141,7 +138,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 signOut() //탈퇴하기
                 Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
                 App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                startActivity(intent)
+                startActivity<SocialLoginActivity>()
             }
             .setNegativeButton("취소") { _, _ ->
             }
@@ -156,7 +153,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 call: Call<String>,
                 response: Response<String>,
             ) {
-                if (response.isSuccessful) {
+                if (response.isSuccessful){
                     if (response.code() == 200) {
                         Log.d("MyPageActivity", "onResponse 성공: 탈퇴" + response.body().toString())
 
