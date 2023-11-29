@@ -39,11 +39,7 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
         })
 
         val userService = retrofit.create(UserService::class.java)
-
-        viewModel = ViewModelProvider(
-            this,
-            UserNameChangeViewModelFactory(userService)
-        )[UserNameChangeViewModel::class.java]
+        viewModel = ViewModelProvider(this, UserNameChangeViewModelFactory(userService))[UserNameChangeViewModel::class.java]
 
         setupUI()
         observeViewModel()
