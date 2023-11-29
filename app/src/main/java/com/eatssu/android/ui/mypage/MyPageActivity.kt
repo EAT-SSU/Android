@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.App
@@ -21,6 +20,7 @@ import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.RetrofitImpl
+import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -114,7 +114,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             ) { _, _ ->
                 //로그아웃
                 MySharedPreferences.clearUser(this)
-                Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
+                showToast("로그아웃 되었습니다.")
                 App.token_prefs.clearTokens() //자동로그인 토큰 날리기
                 startActivity<SocialLoginActivity>()
             }
@@ -136,7 +136,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 //탈퇴처리
                 MySharedPreferences.clearUser(this)
                 signOut() //탈퇴하기
-                Toast.makeText(this, "탈퇴 되었습니다.", Toast.LENGTH_SHORT).show()
+                showToast("탈퇴 되었습니다.")
                 App.token_prefs.clearTokens() //자동로그인 토큰 날리기
                 startActivity<SocialLoginActivity>()
             }
