@@ -1,12 +1,14 @@
 package com.eatssu.android.ui.mypage
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.App
+import com.eatssu.android.BuildConfig
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MyPageService
@@ -30,6 +32,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private lateinit var myPageViewModel: MypageViewModel
     private lateinit var versionViewModel: VersionViewModel
+
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
 
@@ -53,14 +56,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private fun bindData(){
 
-        binding.tvAppVersion.text = versionViewModel.checkAppVersion()
 
         binding.llNickname.setOnClickListener {
             val intent = Intent(this, UserNameChangeActivity::class.java)
             startActivity(intent)
         }
 
-        binding.tvMyReview.setOnClickListener {
+        binding.llMyReview.setOnClickListener {
             val intent = Intent(this, MyReviewListActivity::class.java)
             startActivity(intent)
         }
@@ -72,6 +74,15 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         binding.tvSignout.setOnClickListener {
             showSignoutDialog()
         }
+
+        binding.tvAppVersion.text = BuildConfig.VERSION_NAME
+
+        binding.tvStoreAppVersion.text = versionViewModel.checkAppVersion()
+
+        binding.llStoreAppVersion.setOnClickListener{
+            moveToStore()
+        }
+
     }
 
     private fun initializeViewModel(){
@@ -143,7 +154,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         userService.signOut().enqueue(object : Callback<String> {
             override fun onResponse(
                 call: Call<String>,
-                response: Response<String>
+                response: Response<String>,
             ) {
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
@@ -159,5 +170,25 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
             }
         })
+    }
+
+    private fun moveToStore()
+    {
+        val appPackageName = packageName
+        try {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=$appPackageName")
+                )
+            )
+        } catch (e: android.content.ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
+                )
+            )
+        }
     }
 }
