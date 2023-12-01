@@ -7,7 +7,6 @@
 - 2차 개발 `2023.02.13 ~ 2023.09`
   - 1.0.0 첫 릴리즈 `2023.11.13` [Play Store](https://play.google.com/store/apps/details?id=com.eatssu.android)
   - 1.1.0 디자인 시스템 적용 `2023.11.18`
-  - 현재 MVVM 리팩토링 진행 중
   
 ## 🧚‍♀️ Member 
 | 유진<br/>([@HI-JIN2](https://github.com/HI-JIN2)) | 이현지<br/>([@Amepistheo](https://github.com/Amepistheo)) |
@@ -17,8 +16,7 @@
 
 ## 📄 Package
 ### Architecture
-- MVVM architecture pattern으로 리팩토링 중에 있으며, 현재 부분적으로 적용되어 있습니다.  
-- 이전 코드는 architecture pattern이 없는 코드 입니다. 
+- no pattern -> MVVM architecture pattern: 리팩토링 완료
 ```
 com.eatssu.android
 ├── base

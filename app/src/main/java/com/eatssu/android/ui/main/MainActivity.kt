@@ -134,7 +134,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     holder.binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
                     holder.binding.day.isSelected = false
                     holder.binding.date.isSelected = false
-                    if (holder.today.equals(data.cl_date)) {
+                    if (holder.today == data.cl_date) {
                         holderSelect = holder
                         selected = holder.today
                     }
