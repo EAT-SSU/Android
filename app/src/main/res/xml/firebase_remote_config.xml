@@ -45,7 +45,7 @@
     </entry>
     <entry>
         <key>android_message</key>
-        <value>{"dialog":true,"message":"지금은 서버 점검 중입니다. "}
+        <value>{"dialog":false,"message":"지금은 서버 점검 중입니다. "}
         </value>
     </entry>
 </defaultsMap>

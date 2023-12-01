@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="5dp"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ib_profile">
@@ -58,7 +58,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_account_layout"
+        android:id="@+id/ll_account_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -107,20 +107,40 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_account_layout">
+        app:layout_constraintTop_toBottomOf="@+id/ll_account_layout">
 
 
-        <TextView
-            android:id="@+id/tv_my_review"
-            style="@style/AndroidBody1"
+        <LinearLayout
+            android:id="@+id/ll_my_review"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="?android:attr/selectableItemBackground"
-            android:paddingStart="16dp"
-            android:text="@string/my_review"
+            android:orientation="horizontal">
 
-            android:textColor="@color/black" />
 
+            <TextView
+                style="@style/AndroidBody1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/my_review"
+                android:textColor="@color/black" />
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_logout"
@@ -142,28 +162,73 @@
             android:text="@string/signout"
             android:textColor="@color/black" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_app_version_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/app_version"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/ll_my_page"
+                app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_app_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/gray700"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_store_app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/tv_store_app_version_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/store_app_version"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/ll_my_page"
+                app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_store_app_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/gray700"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
+        </LinearLayout>
+
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_app_version_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_regular"
-        android:paddingStart="16dp"
-        android:text="@string/app_version"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/ll_my_page"
-        app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
-
-    <TextView
-        android:id="@+id/tv_app_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingEnd="16dp"
-        android:textColor="@color/gray700"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -158,6 +158,20 @@ class ReviewWriteRateActivity :
     }
 
     private fun postReview() {
+
+        // Check if any of the main, amount, or taste grades is 0
+        if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
+            Toast.makeText(this, "별점을 등록해주세요", Toast.LENGTH_SHORT).show()
+            return // Do not proceed with the review posting if any grade is 0
+        }
+
+        // Check if the comment has at least 3 characters
+        if ((comment?.trim()?.length ?: 0) < 3) {
+            Toast.makeText(this, "3자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
+            return // Do not proceed with the review posting if the comment is too short
+        }
+
+        // Proceed with posting the review
         val reviewData = """
     {
         "mainGrade": ${binding.rbMain.rating.toInt()},

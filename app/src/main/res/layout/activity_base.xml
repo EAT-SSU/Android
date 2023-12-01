@@ -1,35 +1,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="start"
-            android:background="@android:color/transparent"
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_setting"
+            app:cardCornerRadius="27.5dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_eat_ssu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_eat_ssu"
+            app:rippleColor="#fff"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="20dp"
-            android:src="@drawable/ic_arrow_left"
-            android:scaleType="fitCenter"
-            android:contentDescription="@string/back_btn" />
+            android:backgroundTint="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/back_btn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_left" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/toolbar_title"
+            style="@style/AndroidH2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            style="@style/AndroidH2"
             android:text=""
-            android:textColor="@color/Primary_Light"/>
+            android:textColor="@color/Primary_Light" />
     </androidx.appcompat.widget.Toolbar>
 
 
