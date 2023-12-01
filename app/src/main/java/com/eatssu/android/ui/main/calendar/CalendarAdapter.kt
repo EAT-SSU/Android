@@ -1,5 +1,6 @@
 package com.eatssu.android.ui.main.calendar
 
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -14,77 +15,37 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-class CalendarAdapter(private val cList: List<CalendarData>) :
-    RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
-    private var allViewHolders : List<CalendarViewHolder> = mutableListOf()
-    private var mListener: OnItemClickListener? = null
-
-    inner class CalendarViewHolder(val binding: ItemCalendarListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        lateinit var today : String
-        lateinit var day : String
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        fun bind(item: CalendarData) {
-            binding.date.text = item.cl_date
-            binding.day.text = item.cl_day
-
-            today = binding.date.text as String
-            day = binding.day.text as String
-
-            // 오늘 날짜
-            val now = LocalDate.now()
-                .format(
-                    DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
-                )
-
-            // 오늘 날짜와 캘린더의 오늘 날짜가 같을 경우 background_blue 적용하기
-            if (now.equals(today)) {
-                binding.date.isSelected = true
-                binding.day.isSelected = true
-                binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
-            }
-            else {
-                binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
-            }
-        }
-    }
-
+internal class CalendarAdapter(
+    private val days: ArrayList<LocalDate>,
+    private val onItemListener: OnItemListener
+) :
+    RecyclerView.Adapter<CalendarViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val binding =
             ItemCalendarListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CalendarViewHolder(binding)
+        val inflater = LayoutInflater.from(parent.context)
+        val view: View = inflater.inflate(R.layout.item_calendar_list, parent, false)
+        return CalendarViewHolder(binding, view, onItemListener, days)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.bind(cList[position])
-
-        allViewHolders = allViewHolders.plus(holder)
-
-        holder.itemView.setOnClickListener { v ->
-            val pos = holder.adapterPosition
-            if (pos != RecyclerView.NO_POSITION) {
-                mListener?.onItemClick(v, cList.get(position))
-            }
+        val date = days[position]
+        holder.dayOfMonth.text = date.dayOfMonth.toString()
+        if (date == CalendarUtils.selectedDate) {
+            holder.parentView.setBackgroundResource(R.drawable.selector_background_blue)
         }
-
+        else {
+            holder.parentView.setBackgroundResource(R.drawable.ic_selector_background_white)
+        }
     }
+
 
     override fun getItemCount(): Int {
-        return cList.size
+        return days.size
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener?) {
-        mListener = listener
-    }
-
-    fun returnViewHolderList(): List<CalendarViewHolder> {
-        return allViewHolders
+    interface OnItemListener {
+        fun onItemClick(position: Int, date: LocalDate?)
     }
 }
-
-    interface OnItemClickListener {
-        fun onItemClick(v: View?, data: CalendarData)
-    }

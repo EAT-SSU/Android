@@ -8,10 +8,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
@@ -19,8 +22,10 @@ import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
+import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
+import com.eatssu.android.ui.main.calendar.CalendarUtils.daysInWeekArray
+import com.eatssu.android.ui.main.calendar.CalendarUtils.monthYearFromDate
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
-import com.eatssu.android.ui.main.calendar.OnItemClickListener
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.mypage.MypageViewModel
 import com.eatssu.android.ui.mypage.MypageViewModelFactory
@@ -30,17 +35,22 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
+import com.eatssu.android.ui.main.calendar.CalendarUtils
 import java.util.*
 
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
 
-    lateinit var calendarAdapter: CalendarAdapter
+    //lateinit var calendarAdapter: CalendarAdapter
     private var calendarList = ArrayList<CalendarData>()
 
     private lateinit var viewModel: MypageViewModel
+
+    private var monthYearText: TextView? = null
+    private var calendarRecyclerView: RecyclerView? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
@@ -77,7 +87,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             startActivity(intent)  // 화면 전환을 시켜줌
         }
 
-        val weekDay: Array<String> = resources.getStringArray(R.array.calendar_day)
+        initWidgets()
+        CalendarUtils.selectedDate = LocalDate.now()
+        setWeekView()
+
+        /*val weekDay: Array<String> = resources.getStringArray(R.array.calendar_day)
 
         calendarAdapter = CalendarAdapter(calendarList)
 
@@ -178,6 +192,42 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         })
 
         recyclerView.adapter = adapter
+        */
+    }
+
+    private fun initWidgets() {
+        calendarRecyclerView = binding.weekRecycler
+        monthYearText = binding.monthYearTV
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setWeekView() {
+        monthYearText?.setText(CalendarUtils.selectedDate?.let { monthYearFromDate(it) })
+        val days: ArrayList<LocalDate>? = CalendarUtils.selectedDate?.let { daysInWeekArray(it) }
+        val calendarAdapter = days?.let { CalendarAdapter(it, this) }
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(applicationContext, 7)
+        calendarRecyclerView!!.layoutManager = layoutManager
+        calendarRecyclerView!!.adapter = calendarAdapter
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun previousWeekAction(view: View?) {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.minusWeeks(1)
+        setWeekView()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun nextWeekAction(view: View?) {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.plusWeeks(1)
+        setWeekView()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onItemClick(position: Int, date: LocalDate?) {
+        if (date != null) {
+            CalendarUtils.selectedDate = date
+        }
+        setWeekView()
     }
 
     private fun setupNoToolbar() {

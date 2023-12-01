@@ -12,19 +12,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/day"
             android:layout_width="46dp"
             android:layout_height="23dp"
             android:text="월"
             android:textAlignment="center"
             android:gravity="center"
-            android:textColor="@color/selector_calendar_colortext"/>
+            android:textColor="@color/selector_calendar_colortext"/>-->
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="46dp"
-            android:layout_height="23dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:text="19"
             android:textAlignment="center"
             android:gravity="center"
