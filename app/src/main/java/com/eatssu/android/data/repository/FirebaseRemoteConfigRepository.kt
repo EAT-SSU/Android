@@ -27,7 +27,8 @@ class FirebaseRemoteConfigRepository {
             } else {
                 // Handle error
                 Log.d("FirebaseRemoteConfigRepository", "fetchAndActivate error")
-                throw RuntimeException("fetchAndActivate 실패")
+                instance.setDefaultsAsync(R.xml.firebase_remote_config)
+//                throw RuntimeException("fetchAndActivate 실패")
             }
         }
     }
