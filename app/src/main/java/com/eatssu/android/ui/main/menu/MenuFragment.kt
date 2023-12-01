@@ -28,6 +28,8 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
+import java.util.Locale
 
 class MenuFragment(val time: Time) : Fragment() {
     private var _binding: FragmentMenuBinding? = null
@@ -87,14 +89,21 @@ class MenuFragment(val time: Time) : Fragment() {
 
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-            if (dataReceived.toInt() < 7) {
-                val nextMonthDate = LocalDateTime.now().plusMonths(1)
-                val nextMonth = nextMonthDate.format(DateTimeFormatter.ofPattern("yyyyMM"))
-                menuDate = "$nextMonth$dataReceived"
-            }
-            else {
-                menuDate =
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
+
+            val preSunday: LocalDateTime = LocalDateTime.now().with(
+                TemporalAdjusters.previousOrSame(
+                    DayOfWeek.SUNDAY
+                )
+            )
+
+            val dateFormat =
+                DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
+            val fullFormat = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
+
+            for (i in 0..6) {
+                if (preSunday.plusDays(i.toLong()).format(dateFormat) == dataReceived) {
+                    menuDate = preSunday.plusDays(i.toLong()).format(fullFormat)
+                }
             }
 
             Log.d("menucalendar", menuDate)
