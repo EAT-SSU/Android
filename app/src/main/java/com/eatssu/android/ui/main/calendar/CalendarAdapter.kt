@@ -27,7 +27,6 @@ internal class CalendarAdapter(
             ItemCalendarListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val inflater = LayoutInflater.from(parent.context)
         val view: View = inflater.inflate(R.layout.item_calendar_list, parent, false)
-        val layoutParams = view.layoutParams
         return CalendarViewHolder(binding, view, onItemListener, days)
     }
 
@@ -35,6 +34,7 @@ internal class CalendarAdapter(
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val date = days[position]
         holder.dayOfMonth.text = date.dayOfMonth.toString()
+
         if (date == CalendarUtils.selectedDate) {
             holder.parentView.setBackgroundResource(R.drawable.selector_background_blue)
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.selector_calendar_colortext))

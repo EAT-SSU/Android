@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -205,7 +206,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         monthYearText?.setText(CalendarUtils.selectedDate?.let { monthYearFromDate(it) })
         val days: ArrayList<LocalDate>? = CalendarUtils.selectedDate?.let { daysInWeekArray(it) }
         val calendarAdapter = days?.let { CalendarAdapter(it, this) }
-        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(applicationContext, 7)
+
+        // GridLayoutManager 생성
+        val layoutManager: GridLayoutManager = GridLayoutManager(applicationContext, 7)
+
         calendarRecyclerView!!.layoutManager = layoutManager
         calendarRecyclerView!!.adapter = calendarAdapter
     }

@@ -162,7 +162,6 @@
                 android:id="@+id/week_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
                 android:overScrollMode="never" />
 
         <!-- TabLayou 을 배치한다. -->
