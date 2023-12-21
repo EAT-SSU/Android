@@ -1,11 +1,13 @@
 package com.eatssu.android.ui.main.calendar
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.data.entity.CalendarData
@@ -35,6 +37,7 @@ internal class CalendarAdapter(
         holder.dayOfMonth.text = date.dayOfMonth.toString()
         if (date == CalendarUtils.selectedDate) {
             holder.parentView.setBackgroundResource(R.drawable.selector_background_blue)
+            holder.dayOfMonth.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.selector_calendar_colortext))
         }
         else {
             holder.parentView.setBackgroundResource(R.drawable.ic_selector_background_white)
