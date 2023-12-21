@@ -26,7 +26,7 @@ class CalendarViewHolder internal constructor(
         parentView = binding.weekCardview
         dayOfMonth = binding.date
         this.onItemListener = onItemListener
-        itemView.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
         this.days = days
     }
 

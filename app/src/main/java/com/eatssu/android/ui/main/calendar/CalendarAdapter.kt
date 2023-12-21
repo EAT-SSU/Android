@@ -25,6 +25,7 @@ internal class CalendarAdapter(
             ItemCalendarListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val inflater = LayoutInflater.from(parent.context)
         val view: View = inflater.inflate(R.layout.item_calendar_list, parent, false)
+        val layoutParams = view.layoutParams
         return CalendarViewHolder(binding, view, onItemListener, days)
     }
 

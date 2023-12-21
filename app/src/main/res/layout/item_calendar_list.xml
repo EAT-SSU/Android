@@ -23,8 +23,8 @@
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:text="19"
             android:textAlignment="center"
             android:gravity="center"
