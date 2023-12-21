@@ -20,7 +20,7 @@ object CalendarUtils {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun monthYearFromDate(date: LocalDate): String {
-        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM")
         return date.format(formatter)
     }
 
