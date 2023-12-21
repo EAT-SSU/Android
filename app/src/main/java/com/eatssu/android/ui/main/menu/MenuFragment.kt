@@ -28,8 +28,10 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
+import java.util.Locale
 
-class MenuFragment(val time: Time) : Fragment() {
+class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
@@ -45,6 +47,20 @@ class MenuFragment(val time: Time) : Fragment() {
     val dormitoryDataLoaded = MutableLiveData<Boolean>()
 
     private val totalMenuList = ArrayList<Section>()
+
+
+    companion object {
+        fun newInstance(time: Time): MenuFragment {
+            val fragment = MenuFragment()
+            val args = Bundle()
+            args.putSerializable("TIME", time)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    private val time: Time
+        get() = arguments?.getSerializable("TIME") as Time //Todo deprecated
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,15 +97,34 @@ class MenuFragment(val time: Time) : Fragment() {
             ViewModelProvider(this, MenuViewModelFactory(menuService))[MenuViewModel::class.java]
 
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
+
+        val dayFormat = DateTimeFormatter.ofPattern("dd")
+        val todayDate = LocalDateTime.now().format(dayFormat)
+
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-            val parsedDate = LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            menuDate = parsedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-            Log.d("menudate", menuDate)
+
+            val preSunday: LocalDateTime = LocalDateTime.now().with(
+                TemporalAdjusters.previousOrSame(
+                    DayOfWeek.SUNDAY
+                )
+            )
+
+            val dateFormat =
+                DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
+            val fullFormat = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
+
+            for (i in 0..6) {
+                if (preSunday.plusDays(i.toLong()).format(dateFormat) == dataReceived) {
+                    menuDate = preSunday.plusDays(i.toLong()).format(fullFormat)
+                }
+            }
+
+            Log.d("menucalendar", menuDate)
 
             // Assuming menuDate is a String in the format "yyyyMMdd"
             val formattedDate =
-                LocalDate.parse(menuDate, DateTimeFormatter.BASIC_ISO_DATE)
+                LocalDate.parse(menuDate.substring(0, 8), DateTimeFormatter.BASIC_ISO_DATE)
 
             val dayOfWeek = formattedDate.dayOfWeek
 

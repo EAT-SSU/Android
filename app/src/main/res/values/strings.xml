@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EatSSU</string>
+    <string name="app_name">EAT-SSU</string>
     <string-array name="custom_weekdays">
         <item>월</item>
         <item>화</item>
@@ -111,4 +111,5 @@
     <string name="recomented">\'를 추천하시겠어요?</string>
     <string name="max_300">최대 300자</string>
     <string name="max_150">최대 150</string>
+    <string name="store_app_version">스토어 앱 버전</string>
 </resources>

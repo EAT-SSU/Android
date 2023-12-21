@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -14,7 +13,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-@HiltViewModel
 class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
 
     private val _toastMessage = MutableLiveData<String>()
