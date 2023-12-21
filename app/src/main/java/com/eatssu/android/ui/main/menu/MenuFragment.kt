@@ -83,13 +83,13 @@ class MenuFragment(val time: Time) : Fragment() {
         val calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-            menuDate =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")) + dataReceived
-
+            val parsedDate = LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            menuDate = parsedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+            Log.d("menudate", menuDate)
 
             // Assuming menuDate is a String in the format "yyyyMMdd"
             val formattedDate =
-                LocalDate.parse(menuDate.substring(0, 8), DateTimeFormatter.BASIC_ISO_DATE)
+                LocalDate.parse(menuDate, DateTimeFormatter.BASIC_ISO_DATE)
 
             val dayOfWeek = formattedDate.dayOfWeek
 
