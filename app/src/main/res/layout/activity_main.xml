@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -39,6 +40,7 @@
 
 
         <ImageView
+            android:id="@+id/btn_setting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -61,16 +63,118 @@
             android:id="@+id/rv_main_weekcalendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="5dp">
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_left_arrow"
+                android:onClick="previousWeekAction"/>
+
+            <TextView
+                android:id="@+id/monthYearTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2023. 11"
+                style="@style/AndroidSubtitle2"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:textColor="@color/black"/>
+
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_right_arrow"
+                android:onClick="nextWeekAction"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="일"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="월"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="화"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="수"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="목"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="금"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="토"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+
+        </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/week_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:numColumns="auto_fit"
                 android:overScrollMode="never" />
-
-        </LinearLayout>
 
         <!-- TabLayou 을 배치한다. -->
         <com.google.android.material.tabs.TabLayout
@@ -79,7 +183,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_main_weekcalendar" />
+            app:layout_constraintTop_toBottomOf="@id/week_recycler"
+            tools:ignore="NotSibling" />
 
 
         <androidx.viewpager2.widget.ViewPager2
@@ -87,7 +192,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            tools:ignore="MissingConstraints" />
 
     </LinearLayout>
 
