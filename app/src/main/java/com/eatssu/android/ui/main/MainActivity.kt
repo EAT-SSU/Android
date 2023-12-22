@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
@@ -22,8 +23,8 @@ import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
-import com.eatssu.android.ui.main.calendar.CalendarUtils.daysInWeekArray
-import com.eatssu.android.ui.main.calendar.CalendarUtils.monthYearFromDate
+import com.eatssu.android.util.CalendarUtils.daysInWeekArray
+import com.eatssu.android.util.CalendarUtils.monthYearFromDate
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.mypage.MypageViewModel
@@ -34,13 +35,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
 import java.time.LocalDate
-import com.eatssu.android.ui.main.calendar.CalendarUtils
+import com.eatssu.android.util.CalendarUtils
 import java.util.*
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
-
-    //lateinit var calendarAdapter: CalendarAdapter
-    private var calendarList = ArrayList<CalendarData>()
 
     private lateinit var viewModel: MypageViewModel
 
@@ -99,7 +97,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val calendarAdapter = days?.let { CalendarAdapter(it, this) }
 
         // GridLayoutManager 생성
-        val layoutManager: GridLayoutManager = GridLayoutManager(applicationContext, 7)
+        val layoutManager: GridLayoutManager = GridLayoutManager(applicationContext, 7, LinearLayoutManager.VERTICAL, false)
+
 
         calendarRecyclerView!!.layoutManager = layoutManager
         calendarRecyclerView!!.adapter = calendarAdapter

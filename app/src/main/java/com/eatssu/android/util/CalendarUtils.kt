@@ -1,22 +1,14 @@
-package com.eatssu.android.ui.main.calendar
+package com.eatssu.android.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
 object CalendarUtils {
     lateinit var selectedDate: LocalDate
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun formattedDate(date: LocalDate): String {
-        val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-        return date.format(formatter)
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun monthYearFromDate(date: LocalDate): String {

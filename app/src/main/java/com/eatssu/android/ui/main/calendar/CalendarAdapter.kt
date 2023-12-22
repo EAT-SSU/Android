@@ -1,7 +1,5 @@
 package com.eatssu.android.ui.main.calendar
 
-import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +8,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
-import com.eatssu.android.data.entity.CalendarData
 import com.eatssu.android.databinding.ItemCalendarListBinding
+import com.eatssu.android.util.CalendarUtils
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -27,6 +24,8 @@ internal class CalendarAdapter(
             ItemCalendarListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val inflater = LayoutInflater.from(parent.context)
         val view: View = inflater.inflate(R.layout.item_calendar_list, parent, false)
+        val layoutParams = view.layoutParams
+        layoutParams.height = parent.height
         return CalendarViewHolder(binding, view, onItemListener, days)
     }
 

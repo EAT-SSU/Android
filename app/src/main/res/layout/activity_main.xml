@@ -173,6 +173,7 @@
                 android:id="@+id/week_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:numColumns="auto_fit"
                 android:overScrollMode="never" />
 
         <!-- TabLayou 을 배치한다. -->
