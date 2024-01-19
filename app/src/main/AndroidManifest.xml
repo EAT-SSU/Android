@@ -38,6 +38,9 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
+            android:name=".ui.mypage.signout.SignoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.review.write.ReviewWriteRateActivity"
             android:exported="true">
             <meta-data
@@ -60,8 +63,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-
         <activity
             android:name=".ui.common.AndroidMessageDialogActivity"
             android:exported="true">
@@ -69,7 +70,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".ui.common.ForceUpdateDialogActivity"
             android:exported="true">
@@ -77,18 +77,19 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="oauth"
-                    android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />       </intent-filter>
+                    android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".base.BaseActivity"
@@ -97,12 +98,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".ui.mypage.usernamechange.UserNameChangeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -117,7 +116,6 @@
         <activity
             android:name=".ui.review.list.ReviewActivity"
             android:exported="true">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -129,7 +127,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".ui.info.InfoActivity"
             android:exported="true"
@@ -138,11 +135,9 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -151,7 +146,6 @@
             android:name=".ui.review.etc.OthersReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -160,7 +154,6 @@
             android:name=".ui.review.etc.MyReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -168,7 +161,6 @@
         <activity
             android:name=".ui.review.etc.ReportActivity"
             android:exported="true">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -176,14 +168,10 @@
         <activity
             android:name=".ui.review.etc.FixedReviewActivity"
             android:exported="true">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-
-
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
+import com.eatssu.android.util.extension.getCompleteWordByJongsung
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.launch
@@ -51,6 +52,7 @@ class ReviewWriteRateActivity :
 
         // 현재 메뉴명을 표시합니다.
         binding.menu.text = itemName
+        binding.tvObject.text = "\'"+getCompleteWordByJongsung(itemName,"을","를")+" "
 
         // 외부 저장소에 대한 런타임 퍼미션 요청
         requestStoragePermission()

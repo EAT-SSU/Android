@@ -108,7 +108,8 @@
     <string name="menu">메뉴</string>
     <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
     <string name="eat_ssu">EAT SSU</string>
-    <string name="recomented">\'를 추천하시겠어요?</string>
+    <string name="jongsung">\'를</string>
+    <string name="recommended">\추천하시겠어요?</string>
     <string name="max_300">최대 300자</string>
     <string name="max_150">최대 150</string>
     <string name="store_app_version">스토어 앱 버전</string>

@@ -29,14 +29,24 @@
             style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/menu"
+            android:ellipsize="end"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:text="가나다라마바사아자차타하파기나라ㅣ타아너머노오ddd"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/tv_object"
+            style="@style/AndroidSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/jongsung"
             android:textColor="@color/black" />
 
         <TextView
             style="@style/AndroidSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/recomented"
+            android:text="@string/recommended"
             android:textColor="@color/black" />
     </LinearLayout>
 
@@ -67,10 +77,10 @@
 
     <LinearLayout
         android:id="@+id/cl_rating_etc"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,9 +100,8 @@
                 android:textColor="@color/black" />
 
             <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_width="17dp"
+                android:layout_height="match_parent" />
 
             <RatingBar
                 android:id="@+id/rb_taste"
@@ -122,15 +131,15 @@
 
 
             <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_width="17dp"
+                android:layout_height="match_parent" />
 
             <RatingBar
                 android:id="@+id/rb_amount"
                 style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:isIndicator="false"
                 android:numStars="5"
                 android:rating="0"
@@ -224,7 +233,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/shape_btn"
+        android:background="@drawable/shape_btn_primarylight"
         android:includeFontPadding="false"
         android:text="@string/review_done"
         app:layout_constraintBottom_toBottomOf="parent"

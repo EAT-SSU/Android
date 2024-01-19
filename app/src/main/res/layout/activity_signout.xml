@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.mypage.signout.SignoutActivity">
+
+    <TextView
+        android:id="@+id/tv_report"
+        style="@style/AndroidBody3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="
+- 작성한 리뷰 게시글은 삭제되지 않으며, (알수없음)으로 닉네임이 표시됩니다.\n
+- 자세한 내용은 서비스이용약관 및 개인정보처리방침을 확인해주세요."
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/btn_undo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_signout"
+        style="@style/AndroidButton1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_btn_primarylight"
+        android:includeFontPadding="false"
+        android:text="@string/signout"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/btn_undo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <Button
+        android:id="@+id/btn_undo"
+        style="@style/AndroidButton1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_btn_white"
+        android:includeFontPadding="false"
+        android:text="취소하기"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
