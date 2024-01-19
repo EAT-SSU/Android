@@ -111,8 +111,14 @@
     <string name="recomented">\'를 추천하시겠어요?</string>
     <string name="max_300">최대 300자</string>
     <string name="max_150">최대 150</string>
+    <string name="max_500">최대 500자</string>
     <string name="store_app_version">스토어 앱 버전</string>
     <string name="inquire">문의하기</string>
     <string name="service_rule">서비스 이용약관</string>
     <string name="private_information">개인정보 처리방침</string>
+    <string name="leave_inquiry">문의할 내용을 남겨주세요.</string>
+    <string name="email">이메일</string>
+    <string name="leave_email">답변받을 이메일 주소를 남겨주세요.</string>
+    <string name="inquire_content">문의 내용</string>
+    <string name="send">전송하기</string>
 </resources>
