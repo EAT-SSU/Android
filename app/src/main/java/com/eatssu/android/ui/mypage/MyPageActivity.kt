@@ -16,6 +16,7 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.SocialLoginActivity
+import com.eatssu.android.ui.mypage.Inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
@@ -60,6 +61,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         binding.llNickname.setOnClickListener {
             startActivity<UserNameChangeActivity>()
+        }
+
+        binding.llInquire.setOnClickListener {
+            startActivity<InquireActivity>()
         }
 
         binding.llMyReview.setOnClickListener {

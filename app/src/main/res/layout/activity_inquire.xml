@@ -39,7 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname"/>
 
         <EditText
-            android:id="@+id/et_ch_nickname"
+            android:id="@+id/et_email"
             style="@style/AndroidBody3"
             android:hint="@string/leave_email"
             android:layout_width="0dp"
@@ -48,7 +48,6 @@
             android:background="@drawable/shape_edittext_small_gray"
             android:inputType="text"
             android:maxLines="1"
-            android:maxLength="8"
              />
     </LinearLayout>
 
