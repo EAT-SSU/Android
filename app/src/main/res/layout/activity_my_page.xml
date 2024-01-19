@@ -142,6 +142,105 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_inquire"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+
+            <TextView
+                style="@style/AndroidBody1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/inquire"
+                android:textColor="@color/black" />
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btn_inquire"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_service_rule"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+
+            <TextView
+                style="@style/AndroidBody1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/service_rule"
+                android:textColor="@color/black" />
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btn_service_rule"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_private_information"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+
+            <TextView
+                style="@style/AndroidBody1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/private_information"
+                android:textColor="@color/black" />
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btn_private_information"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right" />
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_logout"
             style="@style/AndroidBody1"
