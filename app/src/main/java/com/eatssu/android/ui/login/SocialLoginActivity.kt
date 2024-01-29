@@ -6,16 +6,24 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.MySharedPreferences
-import com.eatssu.android.util.RetrofitImpl.nonRetrofit
 import com.eatssu.android.data.model.request.LoginWithKakaoRequestDto
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.TokenResponseDto
+import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.ui.main.calendar.CalendarViewModel
+import com.eatssu.android.ui.main.menu.MenuViewModel
+import com.eatssu.android.ui.main.menu.MenuViewModelFactory
+import com.eatssu.android.util.MySharedPreferences
+import com.eatssu.android.util.RetrofitImpl
+import com.eatssu.android.util.RetrofitImpl.nonRetrofit
+import com.eatssu.android.util.extension.showToast
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -27,8 +35,20 @@ import retrofit2.Response
 
 class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySocialLoginBinding::inflate) {
 
+    lateinit var viewModel:LoginViewModel
+
+    private lateinit var oauthService: OauthService
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        oauthService = RetrofitImpl.retrofit.create(OauthService::class.java)
+        viewModel = ViewModelProvider(this, LoginViewModelFactory(oauthService))[LoginViewModel::class.java]
+
 
         // 툴바 사용하지 않도록 설정
         toolbar.let {
@@ -91,40 +111,34 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
 
                 val intent = Intent(this, MainActivity::class.java)
 
-                val service = nonRetrofit.create(OauthService::class.java)
-                service.loginWithKakao(LoginWithKakaoRequestDto(email,providerID))
-                    .enqueue(object : Callback<TokenResponseDto> {
-                        override fun onResponse(
-                            call: Call<TokenResponseDto>,
-                            response: Response<TokenResponseDto>
-                        ) {
-                            if (response.isSuccessful) {
-                                if (response.code() == 200) {
-                                    Log.d("post", "onResponse 성공: " + response.body().toString())
+                viewModel.getLogin(email, providerID)
 
-                                    /*자동 로그인*/
-                                    MySharedPreferences.setUserEmail(this@SocialLoginActivity,email)
-                                    MySharedPreferences.setUserPlatform(this@SocialLoginActivity,"KAKAO")
+                viewModel.getHomeLoginSuccessResponse.observe(this) { successData ->
+                    successData.run {
+                        /*자동 로그인*/
+                        MySharedPreferences.setUserEmail(this@SocialLoginActivity, email)
+                        MySharedPreferences.setUserPlatform(this@SocialLoginActivity, "KAKAO")
 
-                                    /*토큰 저장*/
-                                    App.token_prefs.accessToken = response.body()!!.accessToken
-                                    App.token_prefs.refreshToken =
-                                        response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+                        /*토큰 저장*/
+                        App.token_prefs.accessToken = successData?.accessToken
+                        App.token_prefs.refreshToken = successData?.refreshToken
 
-                                    Toast.makeText(this@SocialLoginActivity, "$email 계정으로 로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
-                                    startActivity(intent)  // 화면 전환을 시켜줌
-                                    finish()
-                                } else {
-                                    Log.d("post", "onResponse 오류: " + response.body().toString())
-                                    Toast.makeText(this@SocialLoginActivity, "error: " + response.message(), Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
+                        Toast.makeText(
+                            this@SocialLoginActivity,
+                            "$email 계정으로 로그인에 성공하였습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        startActivity(intent)  // 화면 전환을 시켜줌
+                        finish()
+                    }
+                }
 
-                        override fun onFailure(call: Call<TokenResponseDto>, t: Throwable) {
-                            Log.d("post", "onFailure 에러: " + t.message.toString())
-                        }
-                    })
+                viewModel.getHomeLoginErrorResponse.observe(this) { errorMessage ->
+                    showToast(errorMessage)
+                    Log.d("errorMessage",errorMessage)
+                }
+
+
             }
         }
     }
