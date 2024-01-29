@@ -123,7 +123,7 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.FIX,
                             Restaurant.FOOD_COURT,
-                            mapFixedMenuResponseToMenu(result)
+                            result?.let { mapFixedMenuResponseToMenu(it) }
                         )
                     )
                     foodCourtDataLoaded.value = true
@@ -137,7 +137,7 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.FIX,
                             Restaurant.SNACK_CORNER,
-                            mapFixedMenuResponseToMenu(result)
+                            result?.let { mapFixedMenuResponseToMenu(it) }
                         )
                     )
                     snackCornerDataLoaded.value = true
@@ -165,16 +165,18 @@ class MenuFragment : Fragment() {
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
-                    totalMenuList.add(
-                        Section(
-                            MenuType.CHANGE,
-                            Restaurant.HAKSIK,
-                            mapTodayMenuResponseToMenu(result)
+                if (result != null) {
+                    if (result.isNotEmpty()) {
+                        totalMenuList.add(
+                            Section(
+                                MenuType.CHANGE,
+                                Restaurant.HAKSIK,
+                                result?.let { mapTodayMenuResponseToMenu(it) }
+                            )
                         )
-                    )
 
-//                    setupTodayRecyclerView()
+            //                    setupTodayRecyclerView()
+                    }
                 }
                 haksikDataLoaded.value = true
                 checkDataLoaded()
@@ -183,14 +185,16 @@ class MenuFragment : Fragment() {
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
-                    totalMenuList.add(
-                        Section(
-                            MenuType.CHANGE,
-                            Restaurant.DODAM,
-                            mapTodayMenuResponseToMenu(result)
+                if (result != null) {
+                    if (result.isNotEmpty()) {
+                        totalMenuList.add(
+                            Section(
+                                MenuType.CHANGE,
+                                Restaurant.DODAM,
+                                result?.let { mapTodayMenuResponseToMenu(it) }
+                            )
                         )
-                    )
+                    }
                 }
                 dodamDataLoaded.value = true
                 checkDataLoaded()
@@ -199,14 +203,16 @@ class MenuFragment : Fragment() {
             //기숙사식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
             menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
-                    totalMenuList.add(
-                        Section(
-                            MenuType.CHANGE,
-                            Restaurant.DORMITORY,
-                            mapTodayMenuResponseToMenu(result)
+                if (result != null) {
+                    if (result.isNotEmpty()) {
+                        totalMenuList.add(
+                            Section(
+                                MenuType.CHANGE,
+                                Restaurant.DORMITORY,
+                                result?.let { mapTodayMenuResponseToMenu(it) }
+                            )
                         )
-                    )
+                    }
                 }
                 dormitoryDataLoaded.value = true
                 checkDataLoaded()

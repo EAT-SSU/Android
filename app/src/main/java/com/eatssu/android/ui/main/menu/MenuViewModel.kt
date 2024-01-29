@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
@@ -19,23 +20,38 @@ import retrofit2.Response
 
 class MenuViewModel(private val menuService: MenuService) : ViewModel() {
 
-    private val _todayMealDataDodam = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealDataDodam: LiveData<GetTodayMealResponseDto> = _todayMealDataDodam
+//    private val _getHomeDataSuccessResponse = MutableLiveData<ResponseHomeDto?>()
+//    val getHomeDataSuccessResponse: LiveData<ResponseHomeDto?> = _getHomeDataSuccessResponse
+//
+//    private val _getHomeDataErrorResponse = MutableLiveData<String>()
+//    val getHomeDataErrorResponse: LiveData<String> = _getHomeDataErrorResponse
 
-    private val _todayMealDataHaksik = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealDataHaksik: LiveData<GetTodayMealResponseDto> = _todayMealDataHaksik
 
-    private val _todayMealDataDormitory = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealDataDormitory: LiveData<GetTodayMealResponseDto> = _todayMealDataDormitory
+    private val _getTodayMealSuccessResponse = MutableLiveData<GetTodayMealResponseDto?>()
+    val getTodayMealSuccessResponse: LiveData<GetTodayMealResponseDto?> =
+        _getTodayMealSuccessResponse
 
-    private val _fixedMenuDataKitchen = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuDataKitchen: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataKitchen
+    private val _getTodayMealErrorResponse = MutableLiveData<String>()
+    val getTodayMealErrorResponse: LiveData<String> = _getTodayMealErrorResponse
 
-    private val _fixedMenuDataSnack = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuDataSnack: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataSnack
 
-    private val _fixedMenuDataFood = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuDataFood: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataFood
+    private val _todayMealDataDodam = MutableLiveData<GetTodayMealResponseDto?>()
+    val todayMealDataDodam: MutableLiveData<GetTodayMealResponseDto?> = _todayMealDataDodam
+
+    private val _todayMealDataHaksik = MutableLiveData<GetTodayMealResponseDto?>()
+    val todayMealDataHaksik: MutableLiveData<GetTodayMealResponseDto?> = _todayMealDataHaksik
+
+    private val _todayMealDataDormitory = MutableLiveData<GetTodayMealResponseDto?>()
+    val todayMealDataDormitory: MutableLiveData<GetTodayMealResponseDto?> = _todayMealDataDormitory
+
+    private val _fixedMenuDataKitchen = MutableLiveData<GetFixedMenuResponseDto?>()
+    val fixedMenuDataKitchen: MutableLiveData<GetFixedMenuResponseDto?> = _fixedMenuDataKitchen
+
+    private val _fixedMenuDataSnack = MutableLiveData<GetFixedMenuResponseDto?>()
+    val fixedMenuDataSnack: MutableLiveData<GetFixedMenuResponseDto?> = _fixedMenuDataSnack
+
+    private val _fixedMenuDataFood = MutableLiveData<GetFixedMenuResponseDto?>()
+    val fixedMenuDataFood: MutableLiveData<GetFixedMenuResponseDto?> = _fixedMenuDataFood
 
     private val _menuBymealId = MutableLiveData<ChangeMenuInfoListDto>()
     val menuBymealId: MutableLiveData<ChangeMenuInfoListDto> = _menuBymealId
@@ -47,95 +63,126 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
         time: Time
     ) {
         viewModelScope.launch {
-            menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
-                .enqueue(object : Callback<GetTodayMealResponseDto> {
-                    override fun onResponse(
-                        call: Call<GetTodayMealResponseDto>,
-                        response: Response<GetTodayMealResponseDto>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.d("post", "onResponse 성공" + response.body())
+            kotlin.runCatching {
+                menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
+            }.fold(onSuccess = { successResponse ->
+                _getTodayMealSuccessResponse.value = successResponse.result
+                val data = successResponse.result
 
-                            when (restaurantType) {
-                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(response.body())
-                                Restaurant.DODAM -> _todayMealDataDodam.postValue(response.body())
-                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(response.body())
 
-                                else -> {
-                                    Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
+                when (restaurantType) {
+                    Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(data)
+                    Restaurant.DODAM -> _todayMealDataDodam.postValue(data)
+                    Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(data)
+                    else -> {
+                        Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
+                    }
+                }
+            }, onFailure = { errorResponse ->
+                _getTodayMealErrorResponse.value = errorResponse.message
+
+                Log.d("post", "onResponse 실패 투데이밀" + errorResponse.message)
+            })
+
+//            menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
+//                .enqueue(object : Callback<BaseResponse<GetTodayMealResponseDto>> {
+//                    override fun onResponse(
+//                        call: Call<BaseResponse<GetTodayMealResponseDto>>,
+//                        response: Response<BaseResponse<GetTodayMealResponseDto>>
+//                    ) {
+//                        if (response.isSuccessful) {
+//                            Log.d("post", "onResponse 성공" + response.body())
+//
+//                            val data = response.body()!!.result
+//
+//                            when (restaurantType) {
+//                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(data)
+//                                Restaurant.DODAM -> _todayMealDataDodam.postValue(data)
+//                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(data)
+//
+//                                else -> {
+//                                    Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
+//                                }
+//                            }
+//                        } else {
+//                            Log.d(
+//                                "post",
+//                                "onResponse 실패 투데이밀" + response.code() + response.message()
+//                            )
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<BaseResponse<GetTodayMealResponseDto>>, t: Throwable) {
+//                        Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
+//                    }
+//                })
+//        }
+        }
+    }
+
+        // Fixed Menu 데이터 로드도 유사한 방식으로 구현
+        fun loadFixedMenu(restaurantType: Restaurant) {
+            viewModelScope.launch {
+                menuService.getFixMenu(restaurantType.toString())
+                    .enqueue(object : Callback<BaseResponse<GetFixedMenuResponseDto>> {
+                        override fun onResponse(
+                            call: Call<BaseResponse<GetFixedMenuResponseDto>>,
+                            response: Response<BaseResponse<GetFixedMenuResponseDto>>
+                        ) {
+                            if (response.isSuccessful) {
+                                Log.d("post", "onResponse 성공" + response.body())
+                                val data = response.body()!!.result
+
+                                when (restaurantType) {
+
+                                    Restaurant.THE_KITCHEN -> _fixedMenuDataKitchen.postValue(data)
+                                    Restaurant.FOOD_COURT -> _fixedMenuDataFood.postValue(data)
+                                    Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.postValue(data)
+
+                                    else -> {
+                                        Log.d("post", "onResponse 실패. 잘못된 식당 입니다.")
+                                    }
                                 }
+                            } else {
+                                Log.d("post", "onResponse 실패")
                             }
-                        } else {
-                            Log.d(
-                                "post",
-                                "onResponse 실패 투데이밀" + response.code() + response.message()
-                            )
                         }
-                    }
 
-                    override fun onFailure(call: Call<GetTodayMealResponseDto>, t: Throwable) {
-                        Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
-                    }
-                })
+                        override fun onFailure(
+                            call: Call<BaseResponse<GetFixedMenuResponseDto>>,
+                            t: Throwable
+                        ) {
+                            Log.d("post", "onFailure 에러: ${t.message}")
+                        }
+                    })
+            }
         }
-    }
 
-    // Fixed Menu 데이터 로드도 유사한 방식으로 구현
-    fun loadFixedMenu(restaurantType: Restaurant) {
-        viewModelScope.launch {
-            menuService.getFixMenu(restaurantType.toString())
-                .enqueue(object : Callback<GetFixedMenuResponseDto> {
-                    override fun onResponse(
-                        call: Call<GetFixedMenuResponseDto>,
-                        response: Response<GetFixedMenuResponseDto>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.d("post", "onResponse 성공" + response.body())
+        fun findMenuItemByMealId(mealId: Long) {
+            viewModelScope.launch {
+                menuService.getMenuByMealId(mealId)
+                    .enqueue(object : Callback<BaseResponse<ChangeMenuInfoListDto>> {
+                        override fun onResponse(
+                            call: Call<BaseResponse<ChangeMenuInfoListDto>>,
+                            response: Response<BaseResponse<ChangeMenuInfoListDto>>
+                        ) {
+                            if (response.isSuccessful) {
+                                Log.d("post", "onResponse 성공" + response.body())
 
-                            when (restaurantType) {
+                                menuBymealId.postValue(response.body()!!.result!!)
 
-                                Restaurant.THE_KITCHEN -> _fixedMenuDataKitchen.postValue(response.body())
-                                Restaurant.FOOD_COURT -> _fixedMenuDataFood.postValue(response.body())
-                                Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.postValue(response.body())
-
-                                else -> {
-                                    Log.d("post", "onResponse 실패. 잘못된 식당 입니다.")
-                                }
+                            } else {
+                                Log.d("post", "onResponse 실패")
                             }
-                        } else {
-                            Log.d("post", "onResponse 실패")
                         }
-                    }
 
-                    override fun onFailure(call: Call<GetFixedMenuResponseDto>, t: Throwable) {
-                        Log.d("post", "onFailure 에러: ${t.message}")
-                    }
-                })
+                        override fun onFailure(
+                            call: Call<BaseResponse<ChangeMenuInfoListDto>>,
+                            t: Throwable
+                        ) {
+                            Log.d("post", "onFailure 에러: ${t.message}")
+                        }
+                    })
+            }
         }
     }
-
-    fun findMenuItemByMealId(mealId: Long) {
-        viewModelScope.launch {
-            menuService.getMenuByMealId(mealId)
-                .enqueue(object : Callback<ChangeMenuInfoListDto> {
-                    override fun onResponse(
-                        call: Call<ChangeMenuInfoListDto>,
-                        response: Response<ChangeMenuInfoListDto>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.d("post", "onResponse 성공" + response.body())
-
-                            menuBymealId.postValue(response.body())
-
-                        } else {
-                            Log.d("post", "onResponse 실패")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ChangeMenuInfoListDto>, t: Throwable) {
-                        Log.d("post", "onFailure 에러: ${t.message}")
-                    }
-                })
-        }
-    }
-}

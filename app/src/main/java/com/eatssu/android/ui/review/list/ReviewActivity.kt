@@ -94,7 +94,7 @@ class ReviewActivity :
         viewModel.reviewList.observe(this) { reviewList ->
             Log.d("ReviewActivity", reviewList.dataList.toString())
 
-            if (reviewList.numberOfElements == 0) {
+            if (reviewList.dataList?.size== 0) {
                 Log.d("ReviewListActivity","리뷰가 없음")
                 binding.llNonReview.visibility = View.VISIBLE
                 binding.rvReview.visibility = View.INVISIBLE

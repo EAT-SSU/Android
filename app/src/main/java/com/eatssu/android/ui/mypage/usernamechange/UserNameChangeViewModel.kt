@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,10 +26,10 @@ class UserNameChangeViewModel(private val userService: UserService) : ViewModel(
     val toastMessage: LiveData<String> get() = _toastMessage
 
     fun checkNickname(inputNickname: String) {
-        userService.checkNickname(inputNickname).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+        userService.checkNickname(inputNickname).enqueue(object : Callback<BaseResponse<String>> {
+            override fun onResponse(call: Call<BaseResponse<String>>, response: Response<BaseResponse<String>>) {
                 if (response.isSuccessful) {
-                    if (response.body() == "true") {
+                    if (response.body()?.result == "true") {
                         handleSuccessResponse("사용가능한 닉네임 입니다.")
                     } else {
                         handleErrorResponse("이미 사용 중인 닉네임 입니다.")
@@ -38,15 +39,15 @@ class UserNameChangeViewModel(private val userService: UserService) : ViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
                 handleErrorResponse("닉네임 중복 확인에 실패했습니다.")
             }
         })
     }
 
     fun changeNickname(inputNickname: String) {
-        userService.changeNickname(ChangeNicknameRequestDto(inputNickname)).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        userService.changeNickname(ChangeNicknameRequestDto(inputNickname)).enqueue(object : Callback<BaseResponse<Void>> {
+            override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
                 if (response.isSuccessful) {
                     handleSuccessResponse("닉네임 설정에 성공했습니다.")
                 } else {
@@ -54,7 +55,7 @@ class UserNameChangeViewModel(private val userService: UserService) : ViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                 handleErrorResponse("닉네임 설정에 실패했습니다.")
             }
         })

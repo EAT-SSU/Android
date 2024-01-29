@@ -6,10 +6,10 @@
         android:font="@font/noto_bold"
         app:font="@font/noto_bold" />
 
-    <font
-        android:font="@font/noto_semibold"
-        android:fontWeight="700"
-        app:font="@font/noto_semibold" />
+<!--    <font-->
+<!--        android:font="@font/noto_semibold"-->
+<!--        android:fontWeight="700"-->
+<!--        app:font="@font/noto_semibold" />-->
 
     <font
         android:font="@font/noto_light"
