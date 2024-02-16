@@ -113,4 +113,7 @@
     <string name="max_300">최대 300자</string>
     <string name="max_150">최대 150</string>
     <string name="store_app_version">스토어 앱 버전</string>
+
+
+    <string name="login_success">환영합니다.</string>
 </resources>

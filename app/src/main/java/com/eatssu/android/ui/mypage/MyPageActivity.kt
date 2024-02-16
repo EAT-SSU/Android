@@ -16,7 +16,7 @@ import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
-import com.eatssu.android.ui.login.SocialLoginActivity
+import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
@@ -117,7 +117,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 MySharedPreferences.clearUser(this)
                 showToast("로그아웃 되었습니다.")
                 App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                startActivity<SocialLoginActivity>()
+                startActivity<LoginActivity>()
             }
             .setNegativeButton("취소") { _, _ ->
             }
@@ -139,7 +139,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 signOut() //탈퇴하기
                 showToast("탈퇴 되었습니다.")
                 App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                startActivity<SocialLoginActivity>()
+                startActivity<LoginActivity>()
             }
             .setNegativeButton("취소") { _, _ ->
             }

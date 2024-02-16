@@ -11,5 +11,5 @@ interface OauthService {
 
     @POST("oauths/kakao")
     fun loginWithKakao(@Body request : LoginWithKakaoRequestDto)
-    : BaseResponse<TokenResponseDto>
+    : Call<BaseResponse<TokenResponseDto>>
 }
