@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.entity.CalendarData
+import com.eatssu.android.data.model.CalendarData
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter

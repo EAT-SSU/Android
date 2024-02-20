@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.model.response.GetTodayMealInfoListDto
-import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
-import com.eatssu.android.data.model.response.GetTodayMealResponseDto
+import com.eatssu.android.data.dto.response.GetTodayMealInfoListDto
+import com.eatssu.android.data.dto.response.GetFixedMenuResponseDto
+import com.eatssu.android.data.dto.response.GetTodayMealResponseDto
 import com.eatssu.android.data.service.MenuService
 import kotlinx.coroutines.launch
 import retrofit2.Call

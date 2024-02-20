@@ -1,4 +1,4 @@
-package com.eatssu.android.data.model.response
+package com.eatssu.android.data.dto.response
 
 data class GetMenuInfoListResponseDto(
     val menuInfoList: List<MenuInfo>

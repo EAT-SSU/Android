@@ -1,7 +1,7 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.request.ReportRequestDto
-import com.eatssu.android.data.model.response.GetReportTypeResponseDto
+import com.eatssu.android.data.dto.request.ReportRequestDto
+import com.eatssu.android.data.dto.response.GetReportTypeResponseDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

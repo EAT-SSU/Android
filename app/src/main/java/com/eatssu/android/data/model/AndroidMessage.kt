@@ -1,4 +1,4 @@
-package com.eatssu.android.data.entity
+package com.eatssu.android.data.model
 
 data class AndroidMessage(
     val dialog: Boolean,

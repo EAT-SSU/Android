@@ -1,8 +1,8 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.request.LoginWithKakaoRequestDto
+import com.eatssu.android.data.dto.request.LoginWithKakaoRequestDto
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.model.response.TokenResponseDto
+import com.eatssu.android.data.dto.response.TokenResponseDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
