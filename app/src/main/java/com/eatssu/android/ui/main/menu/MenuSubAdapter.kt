@@ -25,7 +25,7 @@ class MenuSubAdapter(
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
             binding.tvRate.text =
-                if (dataList[position].rate == 0.0) {
+                if (dataList[position].rate == "NaN") {
                     "-"
                 } else {
                     String.format("%.1f", dataList[position].rate)

@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.R
 import com.eatssu.android.data.model.request.LoginWithKakaoRequestDto
-import com.eatssu.android.data.model.response.BaseResponse
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.model.response.TokenResponseDto
 import com.eatssu.android.data.service.OauthService
 import kotlinx.coroutines.Dispatchers

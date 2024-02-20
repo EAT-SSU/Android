@@ -17,8 +17,8 @@ import com.eatssu.android.data.entity.Section
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.model.response.ChangeMenuInfo
 import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
+import com.eatssu.android.data.model.response.GetTodayMeal
 import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
@@ -28,8 +28,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
-import java.util.Locale
 
 class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
@@ -84,7 +82,7 @@ class MenuFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun observeViewModel(){
+    fun observeViewModel() {
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
 
         Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
@@ -104,7 +102,8 @@ class MenuFragment : Fragment() {
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
 
-            val parsedDate = LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val parsedDate =
+                LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             menuDate = parsedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
             Log.d("menudate", menuDate)
 
@@ -154,29 +153,28 @@ class MenuFragment : Fragment() {
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
             }
 
-            if(time!= Time.LUNCH){
+            if (time != Time.LUNCH) {
                 foodCourtDataLoaded.value = true //푸드코트
                 snackCornerDataLoaded.value = true //스낵코너
                 checkDataLoaded()
             }
 
 
-
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
-                if (result != null) {
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.CHANGE,
-                                Restaurant.HAKSIK,
-                                result?.let { mapTodayMenuResponseToMenu(it) }
-                            )
+                if (result!!.isNotEmpty()) {
+                    totalMenuList.add(
+                        Section(
+                            MenuType.CHANGE,
+                            Restaurant.HAKSIK,
+                            mapTodayMenuResponseToMenu(result)
                         )
+                    )
 
-            //                    setupTodayRecyclerView()
-                    }
+
+                    //                    setupTodayRecyclerView()
+
                 }
                 haksikDataLoaded.value = true
                 checkDataLoaded()
@@ -185,40 +183,40 @@ class MenuFragment : Fragment() {
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
-                if (result != null) {
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.CHANGE,
-                                Restaurant.DODAM,
-                                result?.let { mapTodayMenuResponseToMenu(it) }
-                            )
+                if (result!!.isNotEmpty()) {
+                    totalMenuList.add(
+                        Section(
+                            MenuType.CHANGE,
+                            Restaurant.DODAM,
+                            mapTodayMenuResponseToMenu(result)
                         )
-                    }
-                }
-                dodamDataLoaded.value = true
-                checkDataLoaded()
-            }
+                    )
 
-            //기숙사식당
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
-            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
-                if (result != null) {
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.CHANGE,
-                                Restaurant.DORMITORY,
-                                result?.let { mapTodayMenuResponseToMenu(it) }
-                            )
-                        )
-                    }
                 }
+            }
+            dodamDataLoaded.value = true
+            checkDataLoaded()
+        }
+
+        //기숙사식당
+        menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
+        menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
+            if (result!!.isNotEmpty()) {
+                totalMenuList.add(
+                    Section(
+                        MenuType.CHANGE,
+                        Restaurant.DORMITORY,
+                        mapTodayMenuResponseToMenu(result)
+                    )
+                )
+
                 dormitoryDataLoaded.value = true
                 checkDataLoaded()
             }
         }
+
     }
+
 
     private fun setupTodayRecyclerView() {
         binding.rv.apply {
@@ -230,7 +228,7 @@ class MenuFragment : Fragment() {
     }
 
 
-    private fun createNameList(menuInfoList: List<ChangeMenuInfo>): String {
+    private fun createNameList(menuInfoList: List<GetTodayMeal.MenusInformation>) : String {
         val nameList = StringBuilder()
 
         for (menuInfo in menuInfoList) {
@@ -260,13 +258,13 @@ class MenuFragment : Fragment() {
 
     private fun mapTodayMenuResponseToMenu(todayMealResponseDto: GetTodayMealResponseDto): List<Menu> {
         return todayMealResponseDto.mapNotNull { todayMealResponseDto ->
-            val name = createNameList(todayMealResponseDto.changeMenuInfoList)
+            val name = createNameList(todayMealResponseDto.menusInformation)
             if (name.isNotEmpty()) {
                 Menu(
                     id = todayMealResponseDto.mealId,
                     name = name,
                     price = todayMealResponseDto.price, // Assuming price is Int in Menu
-                    rate = todayMealResponseDto.mainGrade
+                    rate = todayMealResponseDto.mainRating
                 )
             } else {
                 null
@@ -280,7 +278,7 @@ class MenuFragment : Fragment() {
                 id = fixMenuInfo.menuId,
                 name = fixMenuInfo.name,
                 price = fixMenuInfo.price, // Assuming price is Int in Menu
-                rate = fixMenuInfo.mainGrade
+                rate = fixMenuInfo.mainRating
             )
         }
     }

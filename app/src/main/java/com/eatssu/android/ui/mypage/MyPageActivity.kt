@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.model.response.BaseResponse
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.data.service.UserService

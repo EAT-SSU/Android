@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
-import com.eatssu.android.data.model.response.BaseResponse
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
