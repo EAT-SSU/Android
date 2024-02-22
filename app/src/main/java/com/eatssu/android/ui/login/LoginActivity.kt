@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.OauthService
@@ -19,21 +21,16 @@ import com.eatssu.android.util.extension.startActivity
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
+@AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySocialLoginBinding::inflate) {
-
-    private lateinit var loginViewModel: LoginViewModel
-    private lateinit var oauthService: OauthService
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        oauthService = RetrofitImpl.nonRetrofit.create(OauthService::class.java)
-        loginViewModel =
-            ViewModelProvider(this, LoginViewModelFactory(oauthService))[LoginViewModel::class.java]
-//        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
 
         // 툴바 사용하지 않도록 설정
@@ -45,7 +42,8 @@ class LoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySocialLog
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-
+//        binding.viewModel = viewModel
+//        binding.lifecycleOwner = viewLifecycleOwner
         checkAutoLogin()
         bind()
     }
@@ -95,26 +93,47 @@ class LoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySocialLog
                 Log.d(TAG, "invoke: email =" + user.kakaoAccount!!.email)
                 val email = user.kakaoAccount!!.email.toString()
 
-                loginViewModel.getLogin(email, providerID)
-                loginViewModel.getHomeLoginSuccessResponse.observe(this) { successData ->
-                    successData.run {
-                        /*자동 로그인*/
-                        MySharedPreferences.setUserEmail(this@LoginActivity, email)
-                        MySharedPreferences.setUserPlatform(this@LoginActivity, "KAKAO")
 
-                        /*토큰 저장*/
-                        App.token_prefs.accessToken = successData?.accessToken
-                        App.token_prefs.refreshToken = successData?.refreshToken
+                lifecycleScope.launch {
+                    viewModel.getLogin(email, providerID)
 
-                        Toast.makeText(this@LoginActivity, "$email 계정으로 로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
-                        startActivity<MainActivity>()  // 화면 전환을 시켜줌
+                    viewModel.stateFlow.collect { state ->
+                        // 로딩 상태에 따라 프로그레스 바 등의 UI를 업데이트합니다.
+                        if (state.loading) {
+                            // 로딩 중이므로 프로그레스 바를 보여줍니다.
+                            Log.d("login","로딩")
+                        } else {
+                            // 로딩이 완료되었으므로 프로그레스 바를 숨깁니다.
+                            Log.d("login","로딩 끝")
+                        }
+
+                        // 에러가 발생한 경우 토스트 메시지를 표시합니다.
+                        if (state.error) {
+                            Log.d("login","에러")
+                        }
+
+                        // 토큰을 받아온 경우 해당 토큰을 사용하여 다음 작업을 수행합니다.
+                        state.tokens?.apply {
+
+                            // 받아온 토큰을 사용하여 다음 작업을 수행합니다.
+                            App.token_prefs.accessToken = accessToken
+                            App.token_prefs.refreshToken = refreshToken
+
+//                            Log.d("login", viewModel.getLogin())
+                            Log.d("login",viewModel.stateFlow.value.tokens?.accessToken.toString())
+
+                            MySharedPreferences.setUserEmail(this@LoginActivity, email)
+                            MySharedPreferences.setUserPlatform(this@LoginActivity, "KAKAO")
+
+
+
+                            Toast.makeText(this@LoginActivity, "$email 계정으로 로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
+                            startActivity<MainActivity>()}
                     }
                 }
 
-                loginViewModel.getHomeLoginErrorResponse.observe(this) { errorMessage ->
-                    showToast(errorMessage)
-                    Log.d("errorMessage",errorMessage)
-                }
+
+
             }
         }
     }

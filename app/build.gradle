@@ -5,6 +5,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
  Properties properties = new Properties()
@@ -18,7 +20,6 @@ android {
     defaultConfig {
         applicationId "com.eatssu.android"
         minSdk 23
-        compileSdkVersion 34
         targetSdk 34
         versionCode 6
         versionName "1.1.4"
@@ -100,8 +101,7 @@ dependencies {
     // 카카오 로그인 모듈
     implementation "com.kakao.sdk:v2-user:2.8.6" // 카카오 로그인
 
-    implementation 'com.google.dagger:hilt-android:2.47'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.47'
+
 
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
@@ -122,4 +122,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics'
 
+
+    implementation "com.google.dagger:hilt-android:2.47"
+    kapt "com.google.dagger:hilt-android-compiler:2.47"
+    annotationProcessor 'com.google.dagger:hilt-compiler:2.47'
+
+}
+
+kapt {
+    correctErrorTypes true
 }

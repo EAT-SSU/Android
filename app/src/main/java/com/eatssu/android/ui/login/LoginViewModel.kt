@@ -1,75 +1,77 @@
 package com.eatssu.android.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequestDto
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponseDto
+import com.eatssu.android.data.repository.OauthRepository
+import com.eatssu.android.data.repository.UserRepository
 import com.eatssu.android.data.service.OauthService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class LoginViewModel(private val oauthService: OauthService): ViewModel() {
 
-    private val _getLoginDataSuccessResponse = MutableLiveData<TokenResponseDto?>()
-    val getHomeLoginSuccessResponse: LiveData<TokenResponseDto?> = _getLoginDataSuccessResponse
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+//    private val savedStateHandle: SavedStateHandle,
+    private val repository: OauthRepository): ViewModel() {
 
-    private val _getLoginDataErrorResponse = MutableLiveData<String>()
-    val getHomeLoginErrorResponse: LiveData<String> = _getLoginDataErrorResponse
+    private val _stateFlow: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
+    val stateFlow: StateFlow<LoginState> = _stateFlow.asStateFlow()
 
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> = _toastMessage
+    suspend fun getLogin(email: String, providerID: String) {
+        viewModelScope.launch {
 
-//    fun getLogin(email: String, providerID: String) {
-//        viewModelScope.launch {
-//            kotlin.runCatching {
-//                oauthService.loginWithKakao(LoginWithKakaoRequestDto(email, providerID))
-//            }.fold(onSuccess = { successResponse ->
-//                _getLoginDataSuccessResponse.value = successResponse.result
-//            }, onFailure = { errorResponse ->
-//                _getLoginDataErrorResponse.value = errorResponse.message
-//            })
-//        }
-//    }
-
-    fun getLogin(email: String, providerID: String) {
-        oauthService.loginWithKakao(LoginWithKakaoRequestDto(email,providerID)).enqueue(object : Callback<BaseResponse<TokenResponseDto>> {
-            override fun onResponse(call: Call<BaseResponse<TokenResponseDto>>, response: Response<BaseResponse<TokenResponseDto>>) {
-                if (response.isSuccessful) {
-                    val data = response.body()!!
-                    if (data.isSuccess) {
-                        _getLoginDataSuccessResponse.value = data.result
-                    } else {
-                        _getLoginDataErrorResponse.value = data.message
-                        handleErrorResponse("가입 안됨.")
+            repository.kakaoLogin(LoginWithKakaoRequestDto(email, providerID)).onStart {
+                _stateFlow.update { state ->
+                    state.copy(loading = true)
+                }
+            }.catch {
+                _stateFlow.update { state ->
+                    state.copy(
+                        loading = false,
+                        error = true,
+                        toastMessage = "에러 입니다."
+                    )
+                }
+            }.collectLatest { result ->
+                if (result.isSuccess) {
+                    _stateFlow.update {
+                        it.copy(
+                            loading = false,
+                            toastMessage = "로그인 성공 입니다.",
+//                            user = result.value.asDomain(),
+//                            showTutorial = false,
+                        )
                     }
-                } else {
-                    handleErrorResponse("가입 안됨.")
+                    Log.d("loginvm",stateFlow.value.tokens?.accessToken.toString())
+
                 }
             }
-
-            override fun onFailure(call: Call<BaseResponse<TokenResponseDto>>, t: Throwable) {
-                handleErrorResponse("네트워크 오류입니다.")
-            }
-        })
-    }
-
-    private fun handleSuccessResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-        }
-    }
-
-
-
-    private fun handleErrorResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
         }
     }
 }
+
+data class LoginState(
+    val toastMessage: String = "",
+    val loading: Boolean = true,
+    val error: Boolean = false,
+    val tokens : TokenResponseDto? = null
+)

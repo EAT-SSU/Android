@@ -36,7 +36,7 @@ class MenuFragment : Fragment() {
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var menuService: MenuService
 
-    private lateinit var menuDate: String
+    private var menuDate: String = ""
 
     val foodCourtDataLoaded = MutableLiveData<Boolean>()
     val snackCornerDataLoaded = MutableLiveData<Boolean>()
