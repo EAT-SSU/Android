@@ -1,5 +1,6 @@
 package com.eatssu.android.data.service
 
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.GetReviewListResponse
 import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
 import okhttp3.MultipartBody
@@ -10,7 +11,7 @@ import retrofit2.http.*
 
 interface ReviewService {
     @Multipart
-    @POST("review/{menuId}")
+    @POST("reviews/{menuId}")
     fun writeReview(
         @Path("menuId") menuId: Long,
         @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
@@ -18,24 +19,24 @@ interface ReviewService {
     ): Call<Void>
 
     @Multipart
-    @POST("review/{menuId}")
+    @POST("reviews/{menuId}")
     fun writeReview(
         @Path("menuId") menuId: Long,
         @Part("reviewCreate") reviewData: RequestBody,
     ): Call<Void>
 
 
-    @DELETE("/review/{reviewId}") //리뷰 삭제
-    fun delReview(@Path("reviewId") reviewId: Long): Call<Void>
+    @DELETE("/reviews/{reviewId}") //리뷰 삭제
+    fun delReview(@Path("reviewId") reviewId: Long): Call<BaseResponse<Void>>
 
-    @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
+    @PATCH("/reviews/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
         @Path("reviewId") reviewId: Long,
         @Body request: RequestBody
-    ): Call<Void>
+    ): Call<BaseResponse<Void>>
 
 
-    @GET("/review/info") // Retrieve menu review information (rating, etc.) for changeable menus
+    @GET("/reviews/info") // Retrieve menu review information (rating, etc.) for changeable menus
     fun getRreviewInfo(
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
@@ -43,7 +44,7 @@ interface ReviewService {
     ): Call<GetReviewInfoResponseDto>
 
 
-    @GET("/review/list") //메뉴 리뷰 리스트 조회 - 고정메뉴
+    @GET("/reviews/list") //메뉴 리뷰 리스트 조회 - 고정메뉴
     fun getReviewList(
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
