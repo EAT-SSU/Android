@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.model.request.ReportRequestDto
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl
@@ -29,8 +30,8 @@ class ReportViewModel : ViewModel() {
         val service = RetrofitImpl.retrofit.create(ReportService::class.java)
 
         viewModelScope.launch(Dispatchers.IO) {
-            service.reportReview(ReportRequestDto(reviewId, reportType, content)).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+            service.reportReview(ReportRequestDto(reviewId, reportType, content)).enqueue(object : Callback<BaseResponse<Void>> {
+                override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
                             handleSuccessResponse("신고가 완료되었습니다.")
@@ -40,7 +41,7 @@ class ReportViewModel : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
+                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     handleErrorResponse("신고가 실패하였습니다.")
                 }
             })
