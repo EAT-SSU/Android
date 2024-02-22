@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.GetMyReviewResponseDto
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
@@ -36,10 +37,10 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
     private fun lodeReview() {
         val myPageService = retrofit.create(MyPageService::class.java)
         myPageService.getMyReviews().enqueue(object :
-            Callback<GetMyReviewResponseDto> {
+            Callback<BaseResponse<GetMyReviewResponseDto>> {
             override fun onResponse(
-                call: Call<GetMyReviewResponseDto>,
-                response: Response<GetMyReviewResponseDto>
+                call: Call<BaseResponse<GetMyReviewResponseDto>>,
+                response: Response<BaseResponse<GetMyReviewResponseDto>>
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
@@ -47,13 +48,13 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
 
                     val body = response.body()
 
-                    if(body?.numberOfElements ==0){
+                    if(body?.result?.dataList?.size==0){
                         binding.llNonReview.visibility=View.VISIBLE
                         binding.nestedScrollView.visibility=View.GONE
                     }else{
                         binding.llNonReview.visibility=View.GONE
                         binding.nestedScrollView.visibility=View.VISIBLE
-                        setAdapter(body!!.dataList)
+                        setAdapter(body!!.result!!.dataList)
                     }
 
                 } else {
@@ -62,7 +63,7 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
                 }
             }
 
-            override fun onFailure(call: Call<GetMyReviewResponseDto>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyReviewResponseDto>>, t: Throwable) {
                 // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                 Log.d("post", "onFailure 에러: " + t.message.toString())
             }

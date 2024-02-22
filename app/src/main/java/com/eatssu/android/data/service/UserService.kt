@@ -1,6 +1,7 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.TokenResponseDto
 import retrofit2.Call
 import retrofit2.http.*
@@ -11,15 +12,15 @@ interface UserService {
         @Header("Authorization") refreshToken: String?)
     : Call<TokenResponseDto>
 
-    @PATCH("user/nickname") //닉네임 수정
-    fun changeNickname(@Body request: ChangeNicknameRequestDto): Call<Void>
+    @PATCH("users/nickname") //닉네임 수정
+    fun changeNickname(@Body request: ChangeNicknameRequestDto): Call<BaseResponse<Void>>
 
-    @DELETE("user/signout") //유저 탈퇴
-    fun signOut(): Call<String>
+    @DELETE("users") //유저 탈퇴
+    fun signOut(): Call<BaseResponse<String>>
 
-    @GET("user/check-nickname") //닉네임 중 복 체크, 존재하는 닉네임이면 errorCode 2012
+    @GET("users/validate/nickname") //닉네임 중 복 체크, 존재하는 닉네임이면 errorCode 2012
     fun checkNickname(
         @Query("nickname") nickname: String
-    ): Call<String>
+    ): Call<BaseResponse<String>>
 
 }

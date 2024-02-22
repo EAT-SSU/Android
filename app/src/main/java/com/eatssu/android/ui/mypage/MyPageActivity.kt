@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.data.service.UserService
@@ -153,10 +154,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
 
     private fun signOut() {
-        userService.signOut().enqueue(object : Callback<String> {
+        userService.signOut().enqueue(object : Callback<BaseResponse<String>> {
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>,
+                call: Call<BaseResponse<String>>,
+                response: Response<BaseResponse<String>>,
             ) {
                 if (response.isSuccessful){
                     if (response.code() == 200) {
@@ -168,7 +169,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
                 Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
             }
         })

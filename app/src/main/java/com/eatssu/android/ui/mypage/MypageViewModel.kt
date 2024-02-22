@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.model.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import kotlinx.coroutines.Dispatchers
@@ -25,16 +26,16 @@ class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
     val isNull: LiveData<Boolean> get() = _isNull
 
     fun checkMyInfo() {
-        myPageService.getMyInfo().enqueue(object : Callback<GetMyInfoResponseDto> {
-            override fun onResponse(call: Call<GetMyInfoResponseDto>, response: Response<GetMyInfoResponseDto>) {
+        myPageService.getMyInfo().enqueue(object : Callback<BaseResponse<GetMyInfoResponseDto>> {
+            override fun onResponse(call: Call<BaseResponse<GetMyInfoResponseDto>>, response: Response<BaseResponse<GetMyInfoResponseDto>>) {
                 if (response.isSuccessful) {
-                    _nickname.postValue(response.body()?.nickname)
+                    _nickname.postValue(response.body()?.result?.nickname)
 
-                    if (response.body()?.nickname.isNullOrBlank()) {
+                    if (response.body()?.result?.nickname.isNullOrBlank()) {
                         handleErrorResponse("환영합니다.") //null이면 isNull에 true를 넣음
                         _isNull.postValue(true)
                     } else {
-                        handleSuccessResponse("${response.body()?.nickname} 님 환영합니다.")
+                        handleSuccessResponse("${response.body()?.result?.nickname} 님 환영합니다.")
                         _isNull.postValue(false)
 
                     }
@@ -43,7 +44,7 @@ class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyInfoResponseDto>>, t: Throwable) {
                 handleErrorResponse("정보를 불러 올 수 없습니다.")
             }
         })
