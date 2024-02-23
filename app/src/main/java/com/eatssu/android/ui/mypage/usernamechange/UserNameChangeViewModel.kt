@@ -26,10 +26,13 @@ class UserNameChangeViewModel(private val userService: UserService) : ViewModel(
     val toastMessage: LiveData<String> get() = _toastMessage
 
     fun checkNickname(inputNickname: String) {
-        userService.checkNickname(inputNickname).enqueue(object : Callback<BaseResponse<String>> {
-            override fun onResponse(call: Call<BaseResponse<String>>, response: Response<BaseResponse<String>>) {
+        userService.checkNickname(inputNickname).enqueue(object : Callback<BaseResponse<Boolean>> {
+            override fun onResponse(
+                call: Call<BaseResponse<Boolean>>,
+                response: Response<BaseResponse<Boolean>>,
+            ) {
                 if (response.isSuccessful) {
-                    if (response.body()?.result == "true") {
+                    if (response.body()?.result == true) {
                         handleSuccessResponse("사용가능한 닉네임 입니다.")
                     } else {
                         handleErrorResponse("이미 사용 중인 닉네임 입니다.")
@@ -39,7 +42,7 @@ class UserNameChangeViewModel(private val userService: UserService) : ViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<Boolean>>, t: Throwable) {
                 handleErrorResponse("닉네임 중복 확인에 실패했습니다.")
             }
         })

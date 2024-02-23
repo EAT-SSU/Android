@@ -16,7 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.model.CalendarData
-import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
@@ -189,8 +189,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private fun initializeMyPageViewModel() {
-        val myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
-        viewModel = ViewModelProvider(this, MypageViewModelFactory(myPageService))[MypageViewModel::class.java]
+        val userService = RetrofitImpl.retrofit.create(UserService::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            MypageViewModelFactory(userService)
+        )[MypageViewModel::class.java]
     }
 
     private fun setupMyPageViewModel(){

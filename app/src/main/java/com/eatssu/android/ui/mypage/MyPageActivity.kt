@@ -11,7 +11,6 @@ import com.eatssu.android.BuildConfig
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.data.service.MyPageService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
@@ -30,7 +29,6 @@ import retrofit2.Response
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
     private lateinit var userService: UserService
-    private lateinit var myPageService: MyPageService
 
     private lateinit var myPageViewModel: MypageViewModel
     private lateinit var versionViewModel: VersionViewModel
@@ -87,12 +85,17 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private fun initializeViewModel(){
         userService = RetrofitImpl.retrofit.create(UserService::class.java)
-        myPageService = RetrofitImpl.retrofit.create(MyPageService::class.java)
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
 
-        myPageViewModel = ViewModelProvider(this, MypageViewModelFactory(myPageService))[MypageViewModel::class.java]
-        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
+        myPageViewModel = ViewModelProvider(
+            this,
+            MypageViewModelFactory(userService)
+        )[MypageViewModel::class.java]
+        versionViewModel = ViewModelProvider(
+            this,
+            VersionViewModelFactory(firebaseRemoteConfigRepository)
+        )[VersionViewModel::class.java]
     }
 
     private fun setupViewModel() {
@@ -149,12 +152,12 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
 
     private fun signOut() {
-        userService.signOut().enqueue(object : Callback<BaseResponse<String>> {
+        userService.signOut().enqueue(object : Callback<BaseResponse<Boolean>> {
             override fun onResponse(
-                call: Call<BaseResponse<String>>,
-                response: Response<BaseResponse<String>>,
+                call: Call<BaseResponse<Boolean>>,
+                response: Response<BaseResponse<Boolean>>,
             ) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     if (response.code() == 200) {
                         Log.d("MyPageActivity", "onResponse 성공: 탈퇴" + response.body().toString())
 
@@ -164,7 +167,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 }
             }
 
-            override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<Boolean>>, t: Throwable) {
                 Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
             }
         })

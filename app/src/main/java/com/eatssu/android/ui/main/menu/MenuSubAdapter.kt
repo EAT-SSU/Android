@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.Menu
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.data.model.Menu
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.ui.review.list.ReviewActivity
 
@@ -27,7 +27,7 @@ class MenuSubAdapter(
             binding.tvRate.text =
                 if (dataList[position].rate == "0.0") {
                     "-"
-                } else if (dataList[position].rate == "Nan") {
+                } else if (dataList[position].rate == "NaN") {
                     "-"
                 } else {
                     dataList[position].rate
