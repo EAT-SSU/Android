@@ -25,14 +25,12 @@ class MenuSubAdapter(
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
             binding.tvRate.text =
-                if (dataList[position].rate == "0.0") {
-                    "-"
-                } else if (dataList[position].rate == "NaN") {
-                    "-"
-                } else {
-                    dataList[position].rate
-//                    String.format("%.1f", dataList[position].rate)
-                }        }
+                when (dataList[position].rate.toString()) {
+                    "0.0" -> "-"
+                    "NaN" -> "-"
+                    else -> dataList[position].rate
+                }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
