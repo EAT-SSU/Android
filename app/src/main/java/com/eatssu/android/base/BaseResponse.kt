@@ -1,4 +1,4 @@
-package com.eatssu.android.data.model.response
+package com.eatssu.android.base
 
 data class BaseResponse<T>(
     val code: Int,
