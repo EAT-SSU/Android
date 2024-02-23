@@ -3,16 +3,15 @@ package com.eatssu.android.ui.main.calendar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.time.LocalDate
 
 class CalendarViewModel : ViewModel() {
-    private val data = MutableLiveData<LocalDate>()
+    private val data = MutableLiveData<String>()
 
-    fun setData(dataToSend: LocalDate) {
+    fun setData(dataToSend: String) {
         data.value = dataToSend
     }
 
-    fun getData(): LiveData<LocalDate> {
+    fun getData(): LiveData<String> {
         return data
     }
 }
