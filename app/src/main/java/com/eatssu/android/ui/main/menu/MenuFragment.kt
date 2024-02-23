@@ -12,13 +12,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.App
+import com.eatssu.android.data.dto.response.FixMenuInfoList
 import com.eatssu.android.data.model.Menu
 import com.eatssu.android.data.model.Section
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.dto.response.ChangeMenuInfo
-import com.eatssu.android.data.dto.response.GetFixedMenuResponseDto
+import com.eatssu.android.data.dto.response.GetTodayMeal
 import com.eatssu.android.data.dto.response.GetTodayMealResponseDto
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
@@ -238,7 +238,7 @@ class MenuFragment : Fragment() {
     }
 
 
-    private fun createNameList(menuInfoList: List<ChangeMenuInfo>): String {
+    private fun createNameList(menuInfoList: List<GetTodayMeal.MenusInformation>): String {
         val nameList = StringBuilder()
 
         for (menuInfo in menuInfoList) {
@@ -268,13 +268,13 @@ class MenuFragment : Fragment() {
 
     private fun mapTodayMenuResponseToMenu(todayMealResponseDto: GetTodayMealResponseDto): List<Menu> {
         return todayMealResponseDto.mapNotNull { todayMealResponseDto ->
-            val name = createNameList(todayMealResponseDto.changeMenuInfoList)
+            val name = createNameList(todayMealResponseDto.menusInformation)
             if (name.isNotEmpty()) {
                 Menu(
-                    id = todayMealResponseDto.mealId,
+                    id = todayMealResponseDto.mealId.toInt(),
                     name = name,
-                    price = todayMealResponseDto.price, // Assuming price is Int in Menu
-                    rate = todayMealResponseDto.mainGrade
+                    price = todayMealResponseDto.price.toInt(), // Assuming price is Int in Menu
+                    rate = todayMealResponseDto.mainRating
                 )
             } else {
                 null
@@ -282,13 +282,13 @@ class MenuFragment : Fragment() {
         }
     }
 
-    private fun mapFixedMenuResponseToMenu(fixedMenuResponse: GetFixedMenuResponseDto): List<Menu> {
-        return fixedMenuResponse.fixMenuInfoList.map { fixMenuInfo ->
+    private fun mapFixedMenuResponseToMenu(fixedMenuResponse: ArrayList<FixMenuInfoList>): List<Menu> {
+        return fixedMenuResponse.map { fixMenuInfo ->
             Menu(
                 id = fixMenuInfo.menuId,
                 name = fixMenuInfo.name,
                 price = fixMenuInfo.price, // Assuming price is Int in Menu
-                rate = fixMenuInfo.mainGrade
+                rate = fixMenuInfo.mainRating
             )
         }
     }

@@ -1,8 +1,10 @@
 package com.eatssu.android.base
 
+import com.google.gson.annotations.SerializedName
+
 data class BaseResponse<T>(
-    val code: Int,
-    val isSuccess: Boolean,
-    val message: String,
-    val result: T? = null
+    @SerializedName("isSuccess") var isSuccess: Boolean? = null,
+    @SerializedName("code") var code: Int? = null,
+    @SerializedName("message") var message: String? = null,
+    @SerializedName("result") var result: T? = null,
 )

@@ -6,13 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

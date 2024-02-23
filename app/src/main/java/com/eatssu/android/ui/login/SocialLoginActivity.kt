@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.RetrofitImpl.nonRetrofit
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequestDto
@@ -93,10 +94,10 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
 
                 val service = nonRetrofit.create(OauthService::class.java)
                 service.loginWithKakao(LoginWithKakaoRequestDto(email,providerID))
-                    .enqueue(object : Callback<TokenResponseDto> {
+                    .enqueue(object : Callback<BaseResponse<TokenResponseDto>> {
                         override fun onResponse(
-                            call: Call<TokenResponseDto>,
-                            response: Response<TokenResponseDto>
+                            call: Call<BaseResponse<TokenResponseDto>>,
+                            response: Response<BaseResponse<TokenResponseDto>>
                         ) {
                             if (response.isSuccessful) {
                                 if (response.code() == 200) {
@@ -106,10 +107,12 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
                                     MySharedPreferences.setUserEmail(this@SocialLoginActivity,email)
                                     MySharedPreferences.setUserPlatform(this@SocialLoginActivity,"KAKAO")
 
+                                    response.body()!!.result?.apply {
+                                        App.token_prefs.accessToken = accessToken
+                                        App.token_prefs.refreshToken = refreshToken//헤더에 붙일 토큰 저장
+                                    }
                                     /*토큰 저장*/
-                                    App.token_prefs.accessToken = response.body()!!.accessToken
-                                    App.token_prefs.refreshToken =
-                                        response.body()!!.refreshToken//헤더에 붙일 토큰 저장
+
 
                                     Toast.makeText(this@SocialLoginActivity, "$email 계정으로 로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
                                     startActivity(intent)  // 화면 전환을 시켜줌
@@ -121,7 +124,7 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding>(ActivitySoc
                             }
                         }
 
-                        override fun onFailure(call: Call<TokenResponseDto>, t: Throwable) {
+                        override fun onFailure(call: Call<BaseResponse<TokenResponseDto>>, t: Throwable) {
                             Log.d("post", "onFailure 에러: " + t.message.toString())
                         }
                     })

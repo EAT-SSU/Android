@@ -1,21 +1,13 @@
 package com.eatssu.android.ui.review.etc
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
-import com.eatssu.android.data.dto.request.ReportRequestDto
-import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.databinding.ActivityReportBinding
-import com.eatssu.android.ui.main.MainActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
     private var reviewId = -1L
