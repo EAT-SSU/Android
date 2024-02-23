@@ -11,8 +11,8 @@ import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.RetrofitImpl.nonRetrofit
-import com.eatssu.android.data.model.request.LoginWithKakaoRequestDto
-import com.eatssu.android.data.model.response.TokenResponseDto
+import com.eatssu.android.data.dto.request.LoginWithKakaoRequestDto
+import com.eatssu.android.data.dto.response.TokenResponseDto
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.ui.main.MainActivity

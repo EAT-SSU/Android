@@ -2,8 +2,8 @@ package com.eatssu.android.data.repository
 
 import android.util.Log
 import com.eatssu.android.R
-import com.eatssu.android.data.entity.AndroidMessage
-import com.eatssu.android.data.entity.FirebaseInfoItem
+import com.eatssu.android.data.model.AndroidMessage
+import com.eatssu.android.data.model.FirebaseInfoItem
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson

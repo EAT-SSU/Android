@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
+import com.eatssu.android.data.dto.response.GetMyInfoResponseDto
 import com.eatssu.android.data.service.MyPageService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

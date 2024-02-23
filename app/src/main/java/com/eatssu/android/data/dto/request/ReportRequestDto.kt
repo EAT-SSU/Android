@@ -1,4 +1,4 @@
-package com.eatssu.android.data.model.request
+package com.eatssu.android.data.dto.request
 
 import com.google.gson.annotations.SerializedName
 

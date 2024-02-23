@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.model.response.GetReviewInfoResponseDto
-import com.eatssu.android.data.model.response.GetReviewListResponse
+import com.eatssu.android.data.dto.response.GetReviewInfoResponseDto
+import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.launch
 import retrofit2.Call

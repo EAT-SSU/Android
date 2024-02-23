@@ -1,6 +1,6 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.response.InfoResponseDto
+import com.eatssu.android.data.dto.response.InfoResponseDto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

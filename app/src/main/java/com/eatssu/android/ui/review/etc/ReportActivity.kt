@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.data.enums.ReportType
-import com.eatssu.android.data.model.request.ReportRequestDto
+import com.eatssu.android.data.dto.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.databinding.ActivityReportBinding
 import com.eatssu.android.ui.main.MainActivity

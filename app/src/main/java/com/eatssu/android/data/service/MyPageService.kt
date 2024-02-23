@@ -1,7 +1,7 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.model.response.GetMyReviewResponseDto
+import com.eatssu.android.data.dto.response.GetMyInfoResponseDto
+import com.eatssu.android.data.dto.response.GetMyReviewResponseDto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.model.request.ReportRequestDto
+import com.eatssu.android.data.dto.request.ReportRequestDto
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl

@@ -1,8 +1,8 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
-import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
-import com.eatssu.android.data.model.response.GetTodayMealResponseDto
+import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
+import com.eatssu.android.data.dto.response.GetFixedMenuResponseDto
+import com.eatssu.android.data.dto.response.GetTodayMealResponseDto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

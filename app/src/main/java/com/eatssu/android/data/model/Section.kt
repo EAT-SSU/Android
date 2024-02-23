@@ -1,4 +1,4 @@
-package com.eatssu.android.data.entity
+package com.eatssu.android.data.model
 
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant

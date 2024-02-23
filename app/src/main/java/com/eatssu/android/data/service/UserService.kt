@@ -1,7 +1,7 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.request.ChangeNicknameRequestDto
-import com.eatssu.android.data.model.response.TokenResponseDto
+import com.eatssu.android.data.dto.request.ChangeNicknameRequestDto
+import com.eatssu.android.data.dto.response.TokenResponseDto
 import retrofit2.Call
 import retrofit2.http.*
 

@@ -1,8 +1,8 @@
-package com.eatssu.android.data.entity
+package com.eatssu.android.data.model
 
 data class Menu(
     val id: Long,
     val name: String,
     val price: Long,
-    val rate: Double,
+    val rate: String,
 )
