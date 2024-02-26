@@ -8,39 +8,41 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
+import com.eatssu.android.util.CalendarUtils
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.model.CalendarData
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
+import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
-import com.eatssu.android.ui.main.calendar.OnItemClickListener
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.mypage.MypageViewModel
 import com.eatssu.android.ui.mypage.MypageViewModelFactory
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.util.CalendarUtils.daysInWeekArray
+import com.eatssu.android.util.CalendarUtils.monthYearFromDate
 import com.eatssu.android.util.RetrofitImpl
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
-import java.time.DayOfWeek
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
+import java.time.LocalDate
 import java.util.*
 
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-
-    lateinit var calendarAdapter: CalendarAdapter
-    private var calendarList = ArrayList<CalendarData>()
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
 
     private lateinit var viewModel: MypageViewModel
+    private lateinit var calendarViewModel : CalendarViewModel
+
+    private var monthYearText: TextView? = null
+    private var calendarRecyclerView: RecyclerView? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
@@ -72,111 +74,52 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
         TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
-        binding.mcvSetting.setOnClickListener {
+        binding.btnSetting.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
             startActivity(intent)  // 화면 전환을 시켜줌
         }
 
-        val weekDay: Array<String> = resources.getStringArray(R.array.calendar_day)
+        initWidgets()
+        CalendarUtils.selectedDate = LocalDate.now()
+        setWeekView()
+    }
 
-        calendarAdapter = CalendarAdapter(calendarList)
+    private fun initWidgets() {
+        calendarRecyclerView = binding.weekRecycler
+        monthYearText = binding.monthYearTV
+        calendarViewModel = ViewModelProvider(this)[CalendarViewModel::class.java]
+    }
 
-        val viewModel = ViewModelProvider(this@MainActivity)[CalendarViewModel::class.java]
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setWeekView() {
+        monthYearText?.setText(CalendarUtils.selectedDate?.let { monthYearFromDate(it) })
+        val days: ArrayList<LocalDate>? = CalendarUtils.selectedDate?.let { daysInWeekArray(it) }
+        val calendarAdapter = days?.let { CalendarAdapter(it, this) }
+        val gridLayoutManager = GridLayoutManager(applicationContext, 7)
 
-        calendarList.apply {
-            val dateFormat =
-                DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
-            val monthFormat = DateTimeFormatter.ofPattern("yyyy . MM . dd")
-                .withLocale(Locale.forLanguageTag("ko"))
-            val dayFormat = DateTimeFormatter.ofPattern("dd")
+        calendarRecyclerView!!.layoutManager = gridLayoutManager
+        calendarRecyclerView!!.adapter = calendarAdapter
+    }
 
-            val todayDate = LocalDateTime.now().format(dayFormat)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun previousWeekAction(view: View?) {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.minusWeeks(1)
+        setWeekView()
+    }
 
-            viewModel.setData(todayDate)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun nextWeekAction(view: View?) {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.plusWeeks(1)
+        setWeekView()
+    }
 
-            val preSunday: LocalDateTime = LocalDateTime.now().with(
-                TemporalAdjusters.previousOrSame(
-                    DayOfWeek.SUNDAY
-                )
-            )
-            Log.d("preSunday", preSunday.toString())
-            for (i in 0..6) {
-                Log.d("날짜만", weekDay[i])
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onItemClick(position: Int, date: LocalDate) {
+        CalendarUtils.selectedDate = date
+        calendarViewModel.setData(date)
+        Log.d("maindate", date.toString())
 
-                calendarList.apply {
-                    add(
-                        CalendarData(
-                            preSunday.plusDays(i.toLong()).format(dateFormat),
-                            weekDay[i]
-                        )
-                    )
-                }
-                Log.d("저번 주 일요일 기준으로 시작!", preSunday.plusDays(i.toLong()).format(dateFormat))
-            }
-            binding.weekRecycler.adapter = calendarAdapter
-            binding.weekRecycler.layoutManager = GridLayoutManager(this@MainActivity, 7)
-
-        }
-
-        //RecyclerView에 목록 출력
-        val recyclerView = binding.weekRecycler
-
-        val adapter = calendarAdapter
-
-        adapter.setOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClick(v: View?, data: CalendarData) {
-
-                val returnViewHolderList = calendarAdapter.returnViewHolderList()
-                lateinit var holderSelect: CalendarAdapter.CalendarViewHolder
-                lateinit var selected: String
-
-                for (holder in returnViewHolderList) {
-                    holder.binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
-                    holder.binding.day.isSelected = false
-                    holder.binding.date.isSelected = false
-                    if (holder.today == data.cl_date) {
-                        holderSelect = holder
-                        selected = holder.today
-                    }
-                }
-                holderSelect.binding.day.isSelected = true
-                holderSelect.binding.date.isSelected = true
-                holderSelect.binding.weekCardview.setBackgroundResource(R.drawable.transparent_calendar_element)
-
-                viewModel.setData(selected)
-
-                // viewModel에 값 넘어가서 메뉴 뜨는지 확인하는 코드
-                //var senddate = "14"
-                //viewModel.setData(senddate)
-
-                // 1) ViewPager2 참조
-                val viewPager: ViewPager2 = binding.vpMain
-                val tabLayout: TabLayout = binding.tabLayout
-
-                // 2) FragmentStateAdapter 생성 : Fragment 여러개를 ViewPager2에 연결해주는 역할
-                val viewpagerFragmentAdapter = ViewPager2Adapter(this@MainActivity)
-
-                // 3) ViewPager2의 adapter에 설정
-                viewPager.adapter = viewpagerFragmentAdapter
-                viewPager.setCurrentItem(
-                    viewpagerFragmentAdapter.getDefaultFragmentPosition(),
-                    false
-                )
-
-                // ###### TabLayout과 ViewPager2를 연결
-                // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
-                val tabTitles = listOf("아침", "점심", "저녁")
-
-                // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
-                TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                    tab.text = tabTitles[position]
-                }.attach()
-
-
-            }
-        })
-
-        recyclerView.adapter = adapter
+        setWeekView()
     }
 
     private fun setupNoToolbar() {
