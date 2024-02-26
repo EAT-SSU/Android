@@ -62,7 +62,12 @@ class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
                                     "LoginViewModel",
                                     "onResponse 오류: " + response.body().toString()
                                 )
-                                _state.value.toastMessage = response.body()?.message.toString()
+                                _state.update {
+                                    it.copy(
+                                        error = true,
+                                        toastMessage = response.body()?.message.toString()
+                                    )
+                                }
                             }
                         }
                     }
@@ -72,7 +77,12 @@ class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
                         t: Throwable,
                     ) {
                         Log.d("LoginViewModel", "onFailure 에러: " + t.message.toString())
-                        _state.value.toastMessage = t.message.toString()
+                        _state.update {
+                            it.copy(
+                                error = true,
+                                toastMessage = t.message.toString()
+                            )
+                        }
                     }
                 })
         }
