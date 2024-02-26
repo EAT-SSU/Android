@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.model.response.BaseResponse
-import com.eatssu.android.data.model.response.GetMyReviewResponseDto
-import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.GetMyReviewResponseDto
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import retrofit2.Call
@@ -35,12 +35,12 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
     }
 
     private fun lodeReview() {
-        val myPageService = retrofit.create(MyPageService::class.java)
-        myPageService.getMyReviews().enqueue(object :
+        val userService = retrofit.create(UserService::class.java)
+        userService.getMyReviews().enqueue(object :
             Callback<BaseResponse<GetMyReviewResponseDto>> {
             override fun onResponse(
                 call: Call<BaseResponse<GetMyReviewResponseDto>>,
-                response: Response<BaseResponse<GetMyReviewResponseDto>>
+                response: Response<BaseResponse<GetMyReviewResponseDto>>,
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우

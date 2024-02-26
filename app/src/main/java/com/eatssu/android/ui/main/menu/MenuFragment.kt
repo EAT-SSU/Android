@@ -12,14 +12,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.App
-import com.eatssu.android.data.entity.Menu
-import com.eatssu.android.data.entity.Section
+import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
+import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.model.response.ChangeMenuInfo
-import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
-import com.eatssu.android.data.model.response.GetTodayMealResponseDto
+import com.eatssu.android.data.model.Section
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
@@ -104,13 +102,28 @@ class MenuFragment : Fragment() {
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
 
-            val parsedDate = LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            menuDate = parsedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-            Log.d("menudate", menuDate)
+            val preSunday: LocalDateTime = LocalDateTime.now().with(
+                TemporalAdjusters.previousOrSame(
+                    DayOfWeek.SUNDAY
+                )
+            )
+
+            val dateFormat =
+                DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
+            val fullFormat =
+                DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
+
+            for (i in 0..6) {
+                if (preSunday.plusDays(i.toLong()).format(dateFormat) == dataReceived) {
+                    menuDate = preSunday.plusDays(i.toLong()).format(fullFormat)
+                }
+            }
+
+            Log.d("menucalendar", menuDate)
 
             // Assuming menuDate is a String in the format "yyyyMMdd"
             val formattedDate =
-                LocalDate.parse(menuDate, DateTimeFormatter.BASIC_ISO_DATE)
+                LocalDate.parse(menuDate.substring(0, 8), DateTimeFormatter.BASIC_ISO_DATE)
 
             val dayOfWeek = formattedDate.dayOfWeek
 
@@ -123,7 +136,7 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.FIX,
                             Restaurant.FOOD_COURT,
-                            mapFixedMenuResponseToMenu(result)
+                            result.mapFixedMenuResponseToMenu()
                         )
                     )
                     foodCourtDataLoaded.value = true
@@ -137,7 +150,7 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.FIX,
                             Restaurant.SNACK_CORNER,
-                            mapFixedMenuResponseToMenu(result)
+                            result.mapFixedMenuResponseToMenu()
                         )
                     )
                     snackCornerDataLoaded.value = true
@@ -165,12 +178,12 @@ class MenuFragment : Fragment() {
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
+                if (result.mealInformationResponseList.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
                             MenuType.CHANGE,
                             Restaurant.HAKSIK,
-                            mapTodayMenuResponseToMenu(result)
+                            result.mapTodayMenuResponseToMenu()
                         )
                     )
 
@@ -183,12 +196,12 @@ class MenuFragment : Fragment() {
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
+                if (result.mealInformationResponseList.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
                             MenuType.CHANGE,
                             Restaurant.DODAM,
-                            mapTodayMenuResponseToMenu(result)
+                            result.mapTodayMenuResponseToMenu()
                         )
                     )
                 }
@@ -199,12 +212,12 @@ class MenuFragment : Fragment() {
             //기숙사식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
             menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
+                if (result.mealInformationResponseList.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
                             MenuType.CHANGE,
                             Restaurant.DORMITORY,
-                            mapTodayMenuResponseToMenu(result)
+                            result.mapTodayMenuResponseToMenu()
                         )
                     )
                 }
@@ -223,23 +236,6 @@ class MenuFragment : Fragment() {
         }
     }
 
-
-    private fun createNameList(menuInfoList: List<ChangeMenuInfo>): String {
-        val nameList = StringBuilder()
-
-        for (menuInfo in menuInfoList) {
-            nameList.append(menuInfo.name)
-            nameList.append("+")
-        }
-
-        if (nameList.isNotEmpty()) {
-            nameList.deleteCharAt(nameList.length - 1) // Remove the last '+'
-        }
-
-        return nameList.toString()
-    }
-
-    // Function to check if all data is loaded and then call setupTodayRecyclerView
     private fun checkDataLoaded() {
         if (foodCourtDataLoaded.value == true &&
             snackCornerDataLoaded.value == true &&
@@ -249,33 +245,6 @@ class MenuFragment : Fragment() {
         ) {
             totalMenuList.sortBy { it.cafeteria.ordinal }
             setupTodayRecyclerView()
-        }
-    }
-
-    private fun mapTodayMenuResponseToMenu(todayMealResponseDto: GetTodayMealResponseDto): List<Menu> {
-        return todayMealResponseDto.mapNotNull { todayMealResponseDto ->
-            val name = createNameList(todayMealResponseDto.changeMenuInfoList)
-            if (name.isNotEmpty()) {
-                Menu(
-                    id = todayMealResponseDto.mealId,
-                    name = name,
-                    price = todayMealResponseDto.price, // Assuming price is Int in Menu
-                    rate = todayMealResponseDto.mainGrade
-                )
-            } else {
-                null
-            }
-        }
-    }
-
-    private fun mapFixedMenuResponseToMenu(fixedMenuResponse: GetFixedMenuResponseDto): List<Menu> {
-        return fixedMenuResponse.fixMenuInfoList.map { fixMenuInfo ->
-            Menu(
-                id = fixMenuInfo.menuId,
-                name = fixMenuInfo.name,
-                price = fixMenuInfo.price, // Assuming price is Int in Menu
-                rate = fixMenuInfo.mainGrade
-            )
         }
     }
 

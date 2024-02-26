@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.model.request.InquiriesRequestDto
-import com.eatssu.android.data.model.response.BaseResponse
 import com.eatssu.android.data.service.InquiresService
 import com.eatssu.android.databinding.ActivityInquireBinding
 import com.eatssu.android.util.MySharedPreferences

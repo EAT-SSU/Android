@@ -1,14 +1,12 @@
 package com.eatssu.android.ui.review.etc
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.model.response.BaseResponse
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

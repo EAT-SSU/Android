@@ -1,11 +1,9 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.data.model.request.ReportRequestDto
-import com.eatssu.android.data.model.response.BaseResponse
-import com.eatssu.android.data.model.response.GetReportTypeResponseDto
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.request.ReportRequestDto
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ReportService {
@@ -13,7 +11,4 @@ interface ReportService {
     fun reportReview(
         @Body request: ReportRequestDto
     ): Call<BaseResponse<Void>>
-
-    @GET("reports/types") //리뷰 신고 사유 받아오기
-    fun getMyReviews(): Call<GetReportTypeResponseDto>
 }

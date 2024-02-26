@@ -3,7 +3,7 @@ package com.eatssu.android.ui.review.write
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
+import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
 import com.eatssu.android.databinding.ItemMenuPickBinding
 
 class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
@@ -17,7 +17,7 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
         fun bind(position: Int) {
             val menuItem = menuList.menuInfoList[position]
             with(binding) {
-                tvMenuName.text = menuItem.name
+                tvMenuName.text = menuItem.menusInformation[position].name
                 checkBox.isChecked = checkedItems.contains(getItem(position))
                 checkBox.setOnClickListener { onCheckBoxClick(position) }
             }
@@ -37,7 +37,7 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
     override fun getItemCount(): Int = menuList.menuInfoList.size
 
     private fun getItem(position: Int): Pair<String, Long> {
-        val menuItem = menuList.menuInfoList[position]
+        val menuItem = menuList.menuInfoList[position].menusInformation[position]
         return Pair(menuItem.name, menuItem.menuId)
     }
 

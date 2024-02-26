@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/day_cell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AndroidCaption3"
+        android:text="MON" />
+
+    <TextView
+        android:id="@+id/date_cell"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        style="@style/AndroidBody2"
+        android:gravity="center"
+        android:text="1" />
+</LinearLayout>
