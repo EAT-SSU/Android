@@ -81,6 +81,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         initWidgets()
         CalendarUtils.selectedDate = LocalDate.now()
+        calendarViewModel.setData(LocalDate.now())
         setWeekView()
     }
 
@@ -119,6 +120,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         calendarViewModel.setData(date)
         Log.d("maindate", date.toString())
 
+        // 1) ViewPager2 참조
+        val viewPager: ViewPager2 = binding.vpMain
+        val tabLayout: TabLayout = binding.tabLayout
+
+        // 2) FragmentStateAdapter 생성 : Fragment 여러개를 ViewPager2에 연결해주는 역할
+        val viewpagerFragmentAdapter = ViewPager2Adapter(this)
+
+        // 3) ViewPager2의 adapter에 설정
+        viewPager.adapter = viewpagerFragmentAdapter
+        viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
+
+
+        // ###### TabLayout과 ViewPager2를 연결
+        // 1. 탭메뉴의 이름을 리스트로 생성해둔다.
+        val tabTitles = listOf("아침", "점심", "저녁")
+
+        // 2. TabLayout과 ViewPager2를 연결하고, TabItem의 메뉴명을 설정한다.
+        TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
+
+        binding.btnSetting.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
+            startActivity(intent)  // 화면 전환을 시켜줌
+        }
+
+        initWidgets()
         setWeekView()
     }
 

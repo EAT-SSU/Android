@@ -10,9 +10,7 @@ class CalendarViewModel : ViewModel() {
     private val data = MutableLiveData<LocalDate>()
 
     fun setData(dataToSend: LocalDate) {
-        if (dataToSend != data.value) {
-            data.value = dataToSend
-        }
+        data.value = dataToSend
 
         Log.d("setdata", dataToSend.toString())
     }
