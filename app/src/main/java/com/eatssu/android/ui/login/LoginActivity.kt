@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
@@ -20,20 +19,30 @@ import com.eatssu.android.util.extension.startActivity
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
+@AndroidEntryPoint
 class LoginActivity :
     BaseActivity<ActivitySocialLoginBinding>(ActivitySocialLoginBinding::inflate) {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var oauthService: OauthService
 
+
+//    private val loginViewModel: LoginViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        oauthService = RetrofitImpl.retrofit.create(OauthService::class.java)
+        oauthService = RetrofitImpl.nonRetrofit.create(OauthService::class.java)
         loginViewModel =
             ViewModelProvider(this, LoginViewModelFactory(oauthService))[LoginViewModel::class.java]
+
+
+//        MainScope().launch {  loginViewModel }
 
         // 툴바 사용하지 않도록 설정
         toolbar.let {
@@ -93,11 +102,15 @@ class LoginActivity :
                 Log.d(TAG, "invoke: email =" + user.kakaoAccount!!.email)
                 val email = user.kakaoAccount!!.email.toString()
 
-                loginViewModel.viewModelScope.launch {
-                    loginViewModel.getLogin(providerID, email)
-                    showToast(loginViewModel.state.value.toastMessage.toString())
-                    if (!loginViewModel.state.value.error && !loginViewModel.state.value.loading) {
-                        startActivity<MainActivity>()
+                loginViewModel.getLogin(email, providerID)
+
+                lifecycleScope.launch {
+                    loginViewModel.state.collectLatest {
+                        if (!it.error && !it.loading) {
+                            Log.d("login", it.toString())
+                            showToast(loginViewModel.state.value.toastMessage.toString())
+                            startActivity<MainActivity>()
+                        }
                     }
                 }
             }

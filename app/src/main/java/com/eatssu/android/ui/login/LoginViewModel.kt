@@ -9,20 +9,23 @@ import com.eatssu.android.data.dto.request.LoginWithKakaoRequestDto
 import com.eatssu.android.data.dto.response.TokenResponseDto
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.util.MySharedPreferences
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@HiltViewModel
 class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
 
     private val _state: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
 
-    suspend fun getLogin(email: String, providerID: String) {
+    fun getLogin(email: String, providerID: String) {
         viewModelScope.launch {
             oauthService.loginWithKakao(LoginWithKakaoRequestDto(email, providerID))
                 .enqueue(object : Callback<BaseResponse<TokenResponseDto>> {
@@ -32,11 +35,16 @@ class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
                     ) {
                         if (response.isSuccessful) {
                             if (response.code() == 200) {
-                                Log.d(
-                                    "LoginViewModel",
-                                    "onResponse 성공: " + response.body().toString()
-                                )
-                                _state.value.toastMessage = "$email 계정으로 로그인에 성공하였습니다."
+
+                                _state.update {
+                                    it.copy(
+                                        loading = false,
+                                        error = false,
+                                        toastMessage = "$email 계정으로 로그인에 성공하였습니다.",
+                                        tokens = response.body()?.result
+                                    )
+                                }
+
 
                                 /*자동 로그인*/
                                 MySharedPreferences.setUserEmail(App.appContext, email)
@@ -69,11 +77,12 @@ class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
                 })
         }
     }
+
 }
 
 data class LoginState(
     var toastMessage: String = "",
-    val loading: Boolean = true,
-    val error: Boolean = false,
-    val tokens: TokenResponseDto? = null,
+    var loading: Boolean = true,
+    var error: Boolean = false,
+    var tokens: TokenResponseDto? = null,
 )
