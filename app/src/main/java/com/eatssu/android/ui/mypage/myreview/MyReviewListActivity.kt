@@ -6,7 +6,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.GetMyReviewResponseDto
+import com.eatssu.android.data.dto.response.GetMyReviewResponse
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
 import com.eatssu.android.util.RetrofitImpl.retrofit
@@ -25,7 +25,7 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
         lodeReview()
     }
 
-    private fun setAdapter(reviewList: List<GetMyReviewResponseDto.Data>) {
+    private fun setAdapter(reviewList: List<GetMyReviewResponse.Data>) {
         val listAdapter = MyReviewAdapter(reviewList)
         val linearLayoutManager = LinearLayoutManager(this)
 
@@ -37,10 +37,10 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
     private fun lodeReview() {
         val userService = retrofit.create(UserService::class.java)
         userService.getMyReviews().enqueue(object :
-            Callback<BaseResponse<GetMyReviewResponseDto>> {
+            Callback<BaseResponse<GetMyReviewResponse>> {
             override fun onResponse(
-                call: Call<BaseResponse<GetMyReviewResponseDto>>,
-                response: Response<BaseResponse<GetMyReviewResponseDto>>,
+                call: Call<BaseResponse<GetMyReviewResponse>>,
+                response: Response<BaseResponse<GetMyReviewResponse>>,
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
@@ -63,7 +63,7 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
                 }
             }
 
-            override fun onFailure(call: Call<BaseResponse<GetMyReviewResponseDto>>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyReviewResponse>>, t: Throwable) {
                 // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                 Log.d("post", "onFailure 에러: " + t.message.toString())
             }

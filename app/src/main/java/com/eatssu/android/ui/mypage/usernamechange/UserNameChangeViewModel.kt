@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.request.ChangeNicknameRequestDto
+import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,17 +49,21 @@ class UserNameChangeViewModel(private val userService: UserService) : ViewModel(
     }
 
     fun changeNickname(inputNickname: String) {
-        userService.changeNickname(ChangeNicknameRequestDto(inputNickname)).enqueue(object : Callback<BaseResponse<Void>> {
-            override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
-                if (response.isSuccessful) {
-                    handleSuccessResponse("닉네임 설정에 성공했습니다.")
-                } else {
-                    handleErrorResponse("닉네임 설정에 실패했습니다.")
+        userService.changeNickname(ChangeNicknameRequest(inputNickname))
+            .enqueue(object : Callback<BaseResponse<Void>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<Void>>,
+                    response: Response<BaseResponse<Void>>,
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessResponse("닉네임 설정에 성공했습니다.")
+                    } else {
+                        handleErrorResponse("닉네임 설정에 실패했습니다.")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
-                handleErrorResponse("닉네임 설정에 실패했습니다.")
+                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
+                    handleErrorResponse("닉네임 설정에 실패했습니다.")
             }
         })
     }

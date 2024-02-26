@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.request.ReportRequestDto
+import com.eatssu.android.data.dto.request.ReportRequest
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.util.RetrofitImpl
 import kotlinx.coroutines.Dispatchers
@@ -26,16 +26,20 @@ class ReportViewModel : ViewModel() {
         val service = RetrofitImpl.retrofit.create(ReportService::class.java)
 
         viewModelScope.launch(Dispatchers.IO) {
-            service.reportReview(ReportRequestDto(reviewId, reportType, content)).enqueue(object : Callback<BaseResponse<Void>> {
-                override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            handleSuccessResponse("신고가 완료되었습니다.")
-                        } else {
-                            handleErrorResponse("신고가 실패하였습니다.")
+            service.reportReview(ReportRequest(reviewId, reportType, content))
+                .enqueue(object : Callback<BaseResponse<Void>> {
+                    override fun onResponse(
+                        call: Call<BaseResponse<Void>>,
+                        response: Response<BaseResponse<Void>>,
+                    ) {
+                        if (response.isSuccessful) {
+                            if (response.code() == 200) {
+                                handleSuccessResponse("신고가 완료되었습니다.")
+                            } else {
+                                handleErrorResponse("신고가 실패하였습니다.")
+                            }
                         }
                     }
-                }
 
                 override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     handleErrorResponse("신고가 실패하였습니다.")

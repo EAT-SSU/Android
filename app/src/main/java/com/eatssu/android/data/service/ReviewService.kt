@@ -2,7 +2,7 @@ package com.eatssu.android.data.service
 
 
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.GetReviewInfoResponseDto
+import com.eatssu.android.data.dto.response.GetReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -42,7 +42,7 @@ interface ReviewService {
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
         @Query("menuId") menuId: Long?,
-    ): Call<GetReviewInfoResponseDto>
+    ): Call<GetReviewInfoResponse>
 
 
     @GET("/review/list") //메뉴 리뷰 리스트 조회 - 고정메뉴

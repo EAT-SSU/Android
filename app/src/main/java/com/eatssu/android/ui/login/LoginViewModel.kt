@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.App
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.request.LoginWithKakaoRequestDto
-import com.eatssu.android.data.dto.response.TokenResponseDto
+import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
+import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.util.MySharedPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,11 +27,11 @@ class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
 
     fun getLogin(email: String, providerID: String) {
         viewModelScope.launch {
-            oauthService.loginWithKakao(LoginWithKakaoRequestDto(email, providerID))
-                .enqueue(object : Callback<BaseResponse<TokenResponseDto>> {
+            oauthService.loginWithKakao(LoginWithKakaoRequest(email, providerID))
+                .enqueue(object : Callback<BaseResponse<TokenResponse>> {
                     override fun onResponse(
-                        call: Call<BaseResponse<TokenResponseDto>>,
-                        response: Response<BaseResponse<TokenResponseDto>>,
+                        call: Call<BaseResponse<TokenResponse>>,
+                        response: Response<BaseResponse<TokenResponse>>,
                     ) {
                         if (response.isSuccessful) {
                             if (response.code() == 200) {
@@ -73,7 +73,7 @@ class LoginViewModel(private val oauthService: OauthService) : ViewModel() {
                     }
 
                     override fun onFailure(
-                        call: Call<BaseResponse<TokenResponseDto>>,
+                        call: Call<BaseResponse<TokenResponse>>,
                         t: Throwable,
                     ) {
                         Log.d("LoginViewModel", "onFailure 에러: " + t.message.toString())
@@ -94,5 +94,5 @@ data class LoginState(
     var toastMessage: String = "",
     var loading: Boolean = true,
     var error: Boolean = false,
-    var tokens: TokenResponseDto? = null,
+    var tokens: TokenResponse? = null,
 )

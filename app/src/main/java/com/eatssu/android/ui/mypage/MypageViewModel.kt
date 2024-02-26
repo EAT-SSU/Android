@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.GetMyInfoResponseDto
+import com.eatssu.android.data.dto.response.GetMyInfoResponse
 import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,10 +26,10 @@ class MypageViewModel(private val userService: UserService) : ViewModel() {
     val isNull: LiveData<Boolean> get() = _isNull
 
     fun checkMyInfo() {
-        userService.getMyInfo().enqueue(object : Callback<BaseResponse<GetMyInfoResponseDto>> {
+        userService.getMyInfo().enqueue(object : Callback<BaseResponse<GetMyInfoResponse>> {
             override fun onResponse(
-                call: Call<BaseResponse<GetMyInfoResponseDto>>,
-                response: Response<BaseResponse<GetMyInfoResponseDto>>,
+                call: Call<BaseResponse<GetMyInfoResponse>>,
+                response: Response<BaseResponse<GetMyInfoResponse>>,
             ) {
                 if (response.isSuccessful) {
                     _nickname.postValue(response.body()?.result?.nickname)
@@ -47,7 +47,7 @@ class MypageViewModel(private val userService: UserService) : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<BaseResponse<GetMyInfoResponseDto>>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyInfoResponse>>, t: Throwable) {
                 handleErrorResponse("정보를 불러 올 수 없습니다.")
             }
         })

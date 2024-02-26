@@ -1,9 +1,9 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.request.ChangeNicknameRequestDto
-import com.eatssu.android.data.dto.response.GetMyInfoResponseDto
-import com.eatssu.android.data.dto.response.GetMyReviewResponseDto
+import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.dto.response.GetMyInfoResponse
+import com.eatssu.android.data.dto.response.GetMyReviewResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -15,20 +15,19 @@ interface UserService {
     ): Call<BaseResponse<Boolean>>
 
     @PATCH("users/nickname") //닉네임 수정
-    fun changeNickname(@Body request: ChangeNicknameRequestDto)
+    fun changeNickname(@Body request: ChangeNicknameRequest)
             : Call<BaseResponse<Void>>
 
     @GET("/users/validate/nickname") //닉네임 중복 체크
     fun checkNickname(
         @Query("nickname") nickname: String,
-    )
-            : Call<BaseResponse<Boolean>>
+    ): Call<BaseResponse<Boolean>>
 
     @GET("users/reviews") //내가 쓴 리뷰 모아보기
-    fun getMyReviews(): Call<BaseResponse<GetMyReviewResponseDto>> //Todo 언닝 해줭
+    fun getMyReviews(): Call<BaseResponse<GetMyReviewResponse>> //Todo 언닝 해줭
 
     @GET("users/mypage") //내 정보 모아보기
-    fun getMyInfo(): Call<BaseResponse<GetMyInfoResponseDto>>
+    fun getMyInfo(): Call<BaseResponse<GetMyInfoResponse>>
 
     @DELETE("users") //유저 탈퇴
     fun signOut(): Call<BaseResponse<Boolean>>

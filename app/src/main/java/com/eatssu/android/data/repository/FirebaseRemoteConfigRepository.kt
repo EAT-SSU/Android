@@ -3,7 +3,7 @@ package com.eatssu.android.data.repository
 import android.util.Log
 import com.eatssu.android.R
 import com.eatssu.android.data.model.AndroidMessage
-import com.eatssu.android.data.model.FirebaseInfoItem
+import com.eatssu.android.data.model.RestaurantInfo
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson
@@ -53,13 +53,13 @@ class FirebaseRemoteConfigRepository {
         return instance.getString("app_version")
     }
 
-    fun getCafeteriaInfo(): ArrayList<FirebaseInfoItem> {
+    fun getCafeteriaInfo(): ArrayList<RestaurantInfo> {
         return parsingJson(instance.getString("cafeteria_info"))
     }
 
-    private fun parsingJson(json: String): ArrayList<FirebaseInfoItem> {
+    private fun parsingJson(json: String): ArrayList<RestaurantInfo> {
         val jsonArray = JSONArray(json)
-        val list = ArrayList<FirebaseInfoItem>()
+        val list = ArrayList<RestaurantInfo>()
 
         for (index in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(index)
@@ -69,9 +69,9 @@ class FirebaseRemoteConfigRepository {
             val time = jsonObject.optString("time", "")
             val etc = jsonObject.optString("etc", "")
 
-            val firebaseInfoItem = FirebaseInfoItem(name, location, time, etc)
-            Log.d("FirebaseRemoteConfigRepository", firebaseInfoItem.toString())
-            list.add(firebaseInfoItem)
+            val restaurantInfo = RestaurantInfo(name, location, time, etc)
+            Log.d("FirebaseRemoteConfigRepository", restaurantInfo.toString())
+            list.add(restaurantInfo)
         }
         return list
     }

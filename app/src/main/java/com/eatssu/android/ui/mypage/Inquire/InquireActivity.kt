@@ -5,7 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.model.request.InquiriesRequestDto
+import com.eatssu.android.data.model.request.InquiriesRequest
 import com.eatssu.android.data.service.InquiresService
 import com.eatssu.android.databinding.ActivityInquireBinding
 import com.eatssu.android.util.MySharedPreferences
@@ -50,17 +50,22 @@ class InquireActivity : BaseActivity<ActivityInquireBinding>(ActivityInquireBind
     }
 
     private fun inquireContent(content: String) {
-        inquiresService.inquireContent(InquiriesRequestDto(content)).enqueue(object : Callback<BaseResponse<InquiriesRequestDto>> {
-            override fun onResponse(
-                call: Call<BaseResponse<InquiriesRequestDto>>,
-                response: Response<BaseResponse<InquiriesRequestDto>>,
-            ) {
-                if (response.isSuccessful){
-                    if (response.code() == 200) {
-                        Log.d("InquireActivity", "onResponse 성공: 문의하기" + response.body().toString())
-                        Toast.makeText(this@InquireActivity, "문의가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+        inquiresService.inquireContent(InquiriesRequest(content))
+            .enqueue(object : Callback<BaseResponse<InquiriesRequest>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<InquiriesRequest>>,
+                    response: Response<BaseResponse<InquiriesRequest>>,
+                ) {
+                    if (response.isSuccessful) {
+                        if (response.code() == 200) {
+                            Log.d(
+                                "InquireActivity",
+                                "onResponse 성공: 문의하기" + response.body().toString()
+                            )
+                            Toast.makeText(this@InquireActivity, "문의가 완료되었습니다.", Toast.LENGTH_SHORT)
+                                .show()
 
-                    } else {
+                        } else {
                         Log.d("InquireActivity", "onResponse 오류: 문의하기" + response.body().toString())
                     }
 
@@ -68,9 +73,9 @@ class InquireActivity : BaseActivity<ActivityInquireBinding>(ActivityInquireBind
                 }
             }
 
-            override fun onFailure(call: Call<BaseResponse<InquiriesRequestDto>>, t: Throwable) {
-                Log.d("InquireActivity", "onFailure 에러: 문의하기" + t.message.toString())
-            }
+                override fun onFailure(call: Call<BaseResponse<InquiriesRequest>>, t: Throwable) {
+                    Log.d("InquireActivity", "onFailure 에러: 문의하기" + t.message.toString())
+                }
         })
     }
 }
