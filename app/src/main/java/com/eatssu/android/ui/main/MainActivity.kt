@@ -44,6 +44,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private var monthYearText: TextView? = null
     private var calendarRecyclerView: RecyclerView? = null
 
+    private var mainPosition : Int = -1
+
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,12 +107,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @RequiresApi(Build.VERSION_CODES.O)
     fun previousWeekAction(view: View?) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.minusWeeks(1)
+        onItemClick(mainPosition, CalendarUtils.selectedDate)
         setWeekView()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun nextWeekAction(view: View?) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.plusWeeks(1)
+        onItemClick(mainPosition, CalendarUtils.selectedDate)
         setWeekView()
     }
 
@@ -118,6 +122,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onItemClick(position: Int, date: LocalDate) {
         CalendarUtils.selectedDate = date
         calendarViewModel.setData(date)
+        mainPosition = position
         Log.d("maindate", date.toString())
 
         // 1) ViewPager2 참조
