@@ -45,14 +45,14 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
     fun loadTodayMeal(
         menuDate: String,
         restaurantType: Restaurant,
-        time: Time
+        time: Time,
     ) {
         viewModelScope.launch {
             menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
                 .enqueue(object : Callback<BaseResponse<GetTodayMealResponseDto>> {
                     override fun onResponse(
                         call: Call<BaseResponse<GetTodayMealResponseDto>>,
-                        response: Response<BaseResponse<GetTodayMealResponseDto>>
+                        response: Response<BaseResponse<GetTodayMealResponseDto>>,
                     ) {
                         val data = response.body()?.result
 
@@ -76,7 +76,10 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<BaseResponse<GetTodayMealResponseDto>>, t: Throwable) {
+                    override fun onFailure(
+                        call: Call<BaseResponse<GetTodayMealResponseDto>>,
+                        t: Throwable,
+                    ) {
                         Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
                     }
                 })
@@ -90,7 +93,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                 .enqueue(object : Callback<BaseResponse<ArrayList<FixMenuInfoList>>> {
                     override fun onResponse(
                         call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>,
-                        response: Response<BaseResponse<ArrayList<FixMenuInfoList>>>
+                        response: Response<BaseResponse<ArrayList<FixMenuInfoList>>>,
                     ) {
                         if (response.isSuccessful) {
                             Log.d("post", "onResponse 성공" + response.body())
@@ -109,7 +112,10 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>, t: Throwable) {
+                    override fun onFailure(
+                        call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>,
+                        t: Throwable,
+                    ) {
                         Log.d("post", "onFailure 에러: ${t.message}")
                     }
                 })
@@ -122,7 +128,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                 .enqueue(object : Callback<BaseResponse<ChangeMenuInfoListDto>> {
                     override fun onResponse(
                         call: Call<BaseResponse<ChangeMenuInfoListDto>>,
-                        response: Response<BaseResponse<ChangeMenuInfoListDto>>
+                        response: Response<BaseResponse<ChangeMenuInfoListDto>>,
                     ) {
                         val data = response.body()?.result!!
                         if (response.isSuccessful) {
@@ -135,7 +141,10 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<BaseResponse<ChangeMenuInfoListDto>>, t: Throwable) {
+                    override fun onFailure(
+                        call: Call<BaseResponse<ChangeMenuInfoListDto>>,
+                        t: Throwable,
+                    ) {
                         Log.d("post", "onFailure 에러: ${t.message}")
                     }
                 })

@@ -73,7 +73,7 @@
     <string name="report">신고</string>
     <string name="fix">수정하기</string>
     <string name="delete">삭제하기</string>
-    <string name="myreview">내가 쓴 리뷰</string>
+    <string name="myreview">작성한 리뷰</string>
     <string name="none_review">아직 작성한 리뷰가 없어요</string>
     <string name="none_review_my">첫 리뷰를 남겨 주세요!</string>
     <string name="none_review_list">가장 먼저 리뷰를 남겨 주세요</string>
@@ -111,5 +111,14 @@
     <string name="recomented">\'를 추천하시겠어요?</string>
     <string name="max_300">최대 300자</string>
     <string name="max_150">최대 150</string>
+    <string name="max_500">최대 500자</string>
     <string name="store_app_version">스토어 앱 버전</string>
+    <string name="inquire">문의하기</string>
+    <string name="service_rule">서비스 이용약관</string>
+    <string name="private_information">개인정보 처리방침</string>
+    <string name="leave_inquiry">문의할 내용을 남겨주세요.</string>
+    <string name="email">이메일</string>
+    <string name="leave_email">답변받을 이메일 주소를 남겨주세요.</string>
+    <string name="inquire_content">문의 내용</string>
+    <string name="send">전송하기</string>
 </resources>

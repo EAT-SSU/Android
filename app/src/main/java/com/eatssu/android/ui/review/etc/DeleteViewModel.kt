@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,8 +24,8 @@ class DeleteViewModel : ViewModel() {
         val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
         viewModelScope.launch(Dispatchers.IO) {
-            service.delReview(reviewId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+            service.delReview(reviewId).enqueue(object : Callback<BaseResponse<Void>> {
+                override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
                             handleSuccessResponse("삭제가 완료되었습니다.")
@@ -36,7 +35,7 @@ class DeleteViewModel : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
+                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     handleErrorResponse("삭제가 실패하였습니다.")
                 }
             })

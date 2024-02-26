@@ -110,7 +110,8 @@ class MenuFragment : Fragment() {
 
             val dateFormat =
                 DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko"))
-            val fullFormat = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
+            val fullFormat =
+                DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.forLanguageTag("ko"))
 
             for (i in 0..6) {
                 if (preSunday.plusDays(i.toLong()).format(dateFormat) == dataReceived) {

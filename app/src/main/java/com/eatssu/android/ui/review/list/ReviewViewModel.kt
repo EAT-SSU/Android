@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.dto.response.GetReviewInfoResponseDto
+import com.eatssu.android.data.dto.response.GetReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -20,8 +20,8 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
     private val _reviewList = MutableLiveData<GetReviewListResponse>()
     val reviewList: LiveData<GetReviewListResponse> = _reviewList
 
-    private val _reviewInfo = MutableLiveData<GetReviewInfoResponseDto>()
-    val reviewInfo: LiveData<GetReviewInfoResponseDto> = _reviewInfo
+    private val _reviewInfo = MutableLiveData<GetReviewInfoResponse>()
+    val reviewInfo: LiveData<GetReviewInfoResponse> = _reviewInfo
 
     fun loadReviewList(
         menuType: MenuType,
@@ -65,10 +65,10 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
         viewModelScope.launch {
 
             reviewService.getRreviewInfo(menuType.toString(), mealId, menuId)
-                .enqueue(object : Callback<GetReviewInfoResponseDto> {
+                .enqueue(object : Callback<GetReviewInfoResponse> {
                     override fun onResponse(
-                        call: Call<GetReviewInfoResponseDto>,
-                        response: Response<GetReviewInfoResponseDto>
+                        call: Call<GetReviewInfoResponse>,
+                        response: Response<GetReviewInfoResponse>,
                     ) {
                         if (response.isSuccessful) {
                             // 정상적으로 통신이 성공된 경우
@@ -81,7 +81,7 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<GetReviewInfoResponseDto>, t: Throwable) {
+                    override fun onFailure(call: Call<GetReviewInfoResponse>, t: Throwable) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                         Log.d("post", "onFailure 에러: " + t.message.toString())
                     }

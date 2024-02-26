@@ -16,6 +16,7 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
+import com.eatssu.android.ui.mypage.Inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
@@ -61,6 +62,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             startActivity<UserNameChangeActivity>()
         }
 
+        binding.llInquire.setOnClickListener {
+            startActivity<InquireActivity>()
+        }
+
         binding.llMyReview.setOnClickListener {
             startActivity<MyReviewListActivity>()
         }
@@ -87,7 +92,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         userService = RetrofitImpl.retrofit.create(UserService::class.java)
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-
         myPageViewModel = ViewModelProvider(
             this,
             MypageViewModelFactory(userService)

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.GetMyInfoResponseDto
+import com.eatssu.android.data.dto.response.GetMyInfoResponse
 import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,21 +26,19 @@ class MypageViewModel(private val userService: UserService) : ViewModel() {
     val isNull: LiveData<Boolean> get() = _isNull
 
     fun checkMyInfo() {
-        userService.getMyInfo().enqueue(object : Callback<BaseResponse<GetMyInfoResponseDto>> {
+        userService.getMyInfo().enqueue(object : Callback<BaseResponse<GetMyInfoResponse>> {
             override fun onResponse(
-                call: Call<BaseResponse<GetMyInfoResponseDto>>,
-                response: Response<BaseResponse<GetMyInfoResponseDto>>,
+                call: Call<BaseResponse<GetMyInfoResponse>>,
+                response: Response<BaseResponse<GetMyInfoResponse>>,
             ) {
                 if (response.isSuccessful) {
-                    val data = response.body()?.result
+                    _nickname.postValue(response.body()?.result?.nickname)
 
-                    _nickname.postValue(data!!.nickname)
-
-                    if (data.nickname.isNullOrBlank()) {
+                    if (response.body()?.result?.nickname.isNullOrBlank()) {
                         handleErrorResponse("환영합니다.") //null이면 isNull에 true를 넣음
                         _isNull.postValue(true)
                     } else {
-                        handleSuccessResponse("${data.nickname} 님 환영합니다.")
+                        handleSuccessResponse("${response.body()?.result?.nickname} 님 환영합니다.")
                         _isNull.postValue(false)
 
                     }
@@ -49,7 +47,7 @@ class MypageViewModel(private val userService: UserService) : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<BaseResponse<GetMyInfoResponseDto>>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyInfoResponse>>, t: Throwable) {
                 handleErrorResponse("정보를 불러 올 수 없습니다.")
             }
         })

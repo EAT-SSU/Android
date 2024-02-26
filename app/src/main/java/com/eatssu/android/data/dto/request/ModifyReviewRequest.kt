@@ -1,7 +1,7 @@
 package com.eatssu.android.data.dto.request
 
-data class ModifyReviewRequestDto(
+data class ModifyReviewRequest(
     val content: String,
     val grade: Int,
-    val reviewTags: List<String>
+    val reviewTags: List<String>,
 )

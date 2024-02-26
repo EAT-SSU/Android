@@ -1,7 +1,9 @@
 package com.eatssu.android.data.service
 
+
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.GetReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
-import com.eatssu.android.data.dto.response.GetReviewInfoResponseDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -25,14 +27,14 @@ interface ReviewService {
     ): Call<Void>
 
 
-    @DELETE("/review/{reviewId}") //리뷰 삭제
-    fun delReview(@Path("reviewId") reviewId: Long): Call<Void>
+    @DELETE("/reviews/{reviewId}") //리뷰 삭제
+    fun delReview(@Path("reviewId") reviewId: Long): Call<BaseResponse<Void>>
 
     @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
         @Path("reviewId") reviewId: Long,
-        @Body request: RequestBody
-    ): Call<Void>
+        @Body request: RequestBody,
+    ): Call<BaseResponse<Void>>
 
 
     @GET("/review/info") // Retrieve menu review information (rating, etc.) for changeable menus
@@ -40,7 +42,7 @@ interface ReviewService {
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
         @Query("menuId") menuId: Long?,
-    ): Call<GetReviewInfoResponseDto>
+    ): Call<GetReviewInfoResponse>
 
 
     @GET("/review/list") //메뉴 리뷰 리스트 조회 - 고정메뉴
@@ -52,6 +54,6 @@ interface ReviewService {
 //        @Query("page") page: Int?,
 //        @Query("size") size: Int?,
 //        @Query("black") black: List<String>?
-    ):Call<GetReviewListResponse>
+    ): Call<GetReviewListResponse>
 
 }

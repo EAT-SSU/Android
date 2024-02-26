@@ -2,7 +2,7 @@ package com.eatssu.android.data.dto.request
 
 import com.google.gson.annotations.SerializedName
 
-data class ReportRequestDto(
+data class ReportRequest(
     @SerializedName("reviewId")
     val reviewId: Long,
 
@@ -10,5 +10,5 @@ data class ReportRequestDto(
     val reportType: String,
 
     @SerializedName("content")
-    val content: String
+    val content: String,
 )

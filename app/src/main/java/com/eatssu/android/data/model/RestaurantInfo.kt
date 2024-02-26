@@ -1,8 +1,8 @@
 package com.eatssu.android.data.model
 
-data class FirebaseInfoItem(
+data class RestaurantInfo(
     val name: String,
     val location: String,
     val time: String,
-    val etc: String
+    val etc: String,
 )

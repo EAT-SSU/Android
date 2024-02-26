@@ -11,19 +11,19 @@ import com.eatssu.android.data.model.CalendarData
 import com.eatssu.android.databinding.ItemCalendarListBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 
 class CalendarAdapter(private val cList: List<CalendarData>) :
     RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
-    private var allViewHolders : List<CalendarViewHolder> = mutableListOf()
+    private var allViewHolders: List<CalendarViewHolder> = mutableListOf()
     private var mListener: OnItemClickListener? = null
 
     inner class CalendarViewHolder(val binding: ItemCalendarListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        lateinit var today : String
-        lateinit var day : String
+        lateinit var today: String
+        lateinit var day: String
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: CalendarData) {
@@ -44,8 +44,7 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
                 binding.date.isSelected = true
                 binding.day.isSelected = true
                 binding.weekCardview.setBackgroundResource(R.drawable.selector_background_blue)
-            }
-            else {
+            } else {
                 binding.weekCardview.setBackgroundResource(R.drawable.ic_selector_background_white)
             }
         }
@@ -85,6 +84,6 @@ class CalendarAdapter(private val cList: List<CalendarData>) :
     }
 }
 
-    interface OnItemClickListener {
-        fun onItemClick(v: View?, data: CalendarData)
-    }
+interface OnItemClickListener {
+    fun onItemClick(v: View?, data: CalendarData)
+}

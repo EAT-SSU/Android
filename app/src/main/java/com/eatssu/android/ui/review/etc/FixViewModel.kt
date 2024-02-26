@@ -1,13 +1,12 @@
 package com.eatssu.android.ui.review.etc
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -37,8 +36,8 @@ class FixViewModel : ViewModel() {
         """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
 
         viewModelScope.launch(Dispatchers.IO) {
-            service.modifyReview(reviewId, reviewData).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+            service.modifyReview(reviewId, reviewData).enqueue(object : Callback<BaseResponse<Void>> {
+                override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
                             handleSuccessResponse("수정이 완료되었습니다.")
@@ -48,7 +47,7 @@ class FixViewModel : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
+                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     handleErrorResponse("수정이 실패하였습니다.")
                 }
             })
