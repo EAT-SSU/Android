@@ -3,7 +3,7 @@ package com.eatssu.android.ui.info
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.eatssu.android.data.entity.FirebaseInfoItem
+import com.eatssu.android.data.model.FirebaseInfoItem
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 
 class InfoViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository): ViewModel() {

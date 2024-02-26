@@ -1,16 +1,16 @@
-package com.eatssu.android.ui.mypage
+package com.eatssu.android.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.eatssu.android.data.service.UserService
+import com.eatssu.android.data.service.OauthService
 
-class MypageViewModelFactory(private val userService: UserService) :
+class LoginViewModelFactory(private val oauthService: OauthService) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MypageViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MypageViewModel(userService) as T
+            return LoginViewModel(oauthService) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

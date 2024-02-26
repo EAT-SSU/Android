@@ -9,7 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
-import com.eatssu.android.ui.login.SocialLoginActivity
+import com.eatssu.android.ui.login.LoginActivity
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -127,7 +127,7 @@ object RetrofitImpl {
                         App.token_prefs.clearTokens() // 토큰 제거
                         Handler(Looper.getMainLooper()).post {
                             Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, SocialLoginActivity::class.java) // 로그인 화면으로 이동
+                            val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             context.startActivity(intent)
                         }

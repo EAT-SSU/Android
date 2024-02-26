@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
+import com.eatssu.android.data.dto.response.FixMenuInfoList
+import com.eatssu.android.data.dto.response.GetTodayMealResponseDto
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.model.response.ChangeMenuInfoListDto
-import com.eatssu.android.data.model.response.GetFixedMenuResponseDto
-import com.eatssu.android.data.model.response.GetTodayMealResponseDto
 import com.eatssu.android.data.service.MenuService
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -28,14 +29,14 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
     private val _todayMealDataDormitory = MutableLiveData<GetTodayMealResponseDto>()
     val todayMealDataDormitory: LiveData<GetTodayMealResponseDto> = _todayMealDataDormitory
 
-    private val _fixedMenuDataKitchen = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuDataKitchen: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataKitchen
+    private val _fixedMenuDataKitchen = MutableLiveData<ArrayList<FixMenuInfoList>>()
+    val fixedMenuDataKitchen: MutableLiveData<ArrayList<FixMenuInfoList>> = _fixedMenuDataKitchen
 
-    private val _fixedMenuDataSnack = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuDataSnack: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataSnack
+    private val _fixedMenuDataSnack = MutableLiveData<ArrayList<FixMenuInfoList>>()
+    val fixedMenuDataSnack: MutableLiveData<ArrayList<FixMenuInfoList>> = _fixedMenuDataSnack
 
-    private val _fixedMenuDataFood = MutableLiveData<GetFixedMenuResponseDto>()
-    val fixedMenuDataFood: MutableLiveData<GetFixedMenuResponseDto> = _fixedMenuDataFood
+    private val _fixedMenuDataFood = MutableLiveData<ArrayList<FixMenuInfoList>>()
+    val fixedMenuDataFood: MutableLiveData<ArrayList<FixMenuInfoList>> = _fixedMenuDataFood
 
     private val _menuBymealId = MutableLiveData<ChangeMenuInfoListDto>()
     val menuBymealId: MutableLiveData<ChangeMenuInfoListDto> = _menuBymealId
@@ -48,18 +49,20 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
     ) {
         viewModelScope.launch {
             menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
-                .enqueue(object : Callback<GetTodayMealResponseDto> {
+                .enqueue(object : Callback<BaseResponse<GetTodayMealResponseDto>> {
                     override fun onResponse(
-                        call: Call<GetTodayMealResponseDto>,
-                        response: Response<GetTodayMealResponseDto>
+                        call: Call<BaseResponse<GetTodayMealResponseDto>>,
+                        response: Response<BaseResponse<GetTodayMealResponseDto>>
                     ) {
+                        val data = response.body()?.result
+
                         if (response.isSuccessful) {
                             Log.d("post", "onResponse 성공" + response.body())
 
                             when (restaurantType) {
-                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(response.body())
-                                Restaurant.DODAM -> _todayMealDataDodam.postValue(response.body())
-                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(response.body())
+                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(data!!)
+                                Restaurant.DODAM -> _todayMealDataDodam.postValue(data!!)
+                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(data!!)
 
                                 else -> {
                                     Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
@@ -73,7 +76,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<GetTodayMealResponseDto>, t: Throwable) {
+                    override fun onFailure(call: Call<BaseResponse<GetTodayMealResponseDto>>, t: Throwable) {
                         Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
                     }
                 })
@@ -84,19 +87,18 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
     fun loadFixedMenu(restaurantType: Restaurant) {
         viewModelScope.launch {
             menuService.getFixMenu(restaurantType.toString())
-                .enqueue(object : Callback<GetFixedMenuResponseDto> {
+                .enqueue(object : Callback<BaseResponse<ArrayList<FixMenuInfoList>>> {
                     override fun onResponse(
-                        call: Call<GetFixedMenuResponseDto>,
-                        response: Response<GetFixedMenuResponseDto>
+                        call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>,
+                        response: Response<BaseResponse<ArrayList<FixMenuInfoList>>>
                     ) {
                         if (response.isSuccessful) {
                             Log.d("post", "onResponse 성공" + response.body())
-
+                            val data = response.body()?.result!!
                             when (restaurantType) {
-
-                                Restaurant.THE_KITCHEN -> _fixedMenuDataKitchen.postValue(response.body())
-                                Restaurant.FOOD_COURT -> _fixedMenuDataFood.postValue(response.body())
-                                Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.postValue(response.body())
+                                Restaurant.THE_KITCHEN -> _fixedMenuDataKitchen.postValue(data)
+                                Restaurant.FOOD_COURT -> _fixedMenuDataFood.postValue(data)
+                                Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.postValue(data)
 
                                 else -> {
                                     Log.d("post", "onResponse 실패. 잘못된 식당 입니다.")
@@ -107,7 +109,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<GetFixedMenuResponseDto>, t: Throwable) {
+                    override fun onFailure(call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>, t: Throwable) {
                         Log.d("post", "onFailure 에러: ${t.message}")
                     }
                 })
@@ -116,23 +118,24 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
 
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
-            menuService.getMenuByMealId(mealId)
-                .enqueue(object : Callback<ChangeMenuInfoListDto> {
+            menuService.getMenuInfoByMealId(mealId)
+                .enqueue(object : Callback<BaseResponse<ChangeMenuInfoListDto>> {
                     override fun onResponse(
-                        call: Call<ChangeMenuInfoListDto>,
-                        response: Response<ChangeMenuInfoListDto>
+                        call: Call<BaseResponse<ChangeMenuInfoListDto>>,
+                        response: Response<BaseResponse<ChangeMenuInfoListDto>>
                     ) {
+                        val data = response.body()?.result!!
                         if (response.isSuccessful) {
                             Log.d("post", "onResponse 성공" + response.body())
 
-                            menuBymealId.postValue(response.body())
+                            menuBymealId.postValue(data)
 
                         } else {
                             Log.d("post", "onResponse 실패")
                         }
                     }
 
-                    override fun onFailure(call: Call<ChangeMenuInfoListDto>, t: Throwable) {
+                    override fun onFailure(call: Call<BaseResponse<ChangeMenuInfoListDto>>, t: Throwable) {
                         Log.d("post", "onFailure 에러: ${t.message}")
                     }
                 })

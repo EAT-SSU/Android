@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
-import com.eatssu.android.data.entity.CalendarData
+import com.eatssu.android.data.model.CalendarData
 import com.eatssu.android.databinding.ItemCalendarListBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

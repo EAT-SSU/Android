@@ -5,8 +5,9 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.model.response.GetMyReviewResponseDto
-import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.GetMyReviewResponseDto
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import retrofit2.Call
@@ -34,18 +35,18 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
     }
 
     private fun lodeReview() {
-        val myPageService = retrofit.create(MyPageService::class.java)
-        myPageService.getMyReviews().enqueue(object :
-            Callback<GetMyReviewResponseDto> {
+        val userService = retrofit.create(UserService::class.java)
+        userService.getMyReviews().enqueue(object :
+            Callback<BaseResponse<GetMyReviewResponseDto>> {
             override fun onResponse(
-                call: Call<GetMyReviewResponseDto>,
-                response: Response<GetMyReviewResponseDto>
+                call: Call<BaseResponse<GetMyReviewResponseDto>>,
+                response: Response<BaseResponse<GetMyReviewResponseDto>>,
             ) {
                 if (response.isSuccessful) {
                     // 정상적으로 통신이 성공된 경우
                     Log.d("post", "onResponse 성공: " + response.body().toString())
 
-                    val body = response.body()
+                    val body = response.body()?.result
 
                     if(body?.numberOfElements ==0){
                         binding.llNonReview.visibility=View.VISIBLE
@@ -62,7 +63,7 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
                 }
             }
 
-            override fun onFailure(call: Call<GetMyReviewResponseDto>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyReviewResponseDto>>, t: Throwable) {
                 // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                 Log.d("post", "onFailure 에러: " + t.message.toString())
             }

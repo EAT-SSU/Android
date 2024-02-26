@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.model.response.GetMyInfoResponseDto
-import com.eatssu.android.data.service.MyPageService
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.GetMyInfoResponseDto
+import com.eatssu.android.data.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -13,28 +14,33 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
+class MypageViewModel(private val userService: UserService) : ViewModel() {
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
 
-    private val _nickname = MutableLiveData<String>()
-    val nickname: LiveData<String> get() = _nickname
+    private val _nickname = MutableLiveData<String?>()
+    val nickname: LiveData<String?> get() = _nickname
 
     private val _isNull = MutableLiveData<Boolean>()
     val isNull: LiveData<Boolean> get() = _isNull
 
     fun checkMyInfo() {
-        myPageService.getMyInfo().enqueue(object : Callback<GetMyInfoResponseDto> {
-            override fun onResponse(call: Call<GetMyInfoResponseDto>, response: Response<GetMyInfoResponseDto>) {
+        userService.getMyInfo().enqueue(object : Callback<BaseResponse<GetMyInfoResponseDto>> {
+            override fun onResponse(
+                call: Call<BaseResponse<GetMyInfoResponseDto>>,
+                response: Response<BaseResponse<GetMyInfoResponseDto>>,
+            ) {
                 if (response.isSuccessful) {
-                    _nickname.postValue(response.body()?.nickname)
+                    val data = response.body()?.result
 
-                    if (response.body()?.nickname.isNullOrBlank()) {
+                    _nickname.postValue(data!!.nickname)
+
+                    if (data.nickname.isNullOrBlank()) {
                         handleErrorResponse("환영합니다.") //null이면 isNull에 true를 넣음
                         _isNull.postValue(true)
                     } else {
-                        handleSuccessResponse("${response.body()?.nickname} 님 환영합니다.")
+                        handleSuccessResponse("${data.nickname} 님 환영합니다.")
                         _isNull.postValue(false)
 
                     }
@@ -43,7 +49,7 @@ class MypageViewModel(private val myPageService: MyPageService) : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<GetMyInfoResponseDto>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<GetMyInfoResponseDto>>, t: Throwable) {
                 handleErrorResponse("정보를 불러 올 수 없습니다.")
             }
         })

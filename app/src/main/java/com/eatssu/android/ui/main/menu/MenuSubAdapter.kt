@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.entity.Menu
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.data.model.Menu
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.ui.review.list.ReviewActivity
 
@@ -25,11 +25,12 @@ class MenuSubAdapter(
             binding.tvMenu.text = dataList[position].name
             binding.tvPrice.text = dataList[position].price.toString()
             binding.tvRate.text =
-                if (dataList[position].rate == 0.0) {
-                    "-"
-                } else {
-                    String.format("%.1f", dataList[position].rate)
-                }        }
+                when (dataList[position].rate.toString()) {
+                    "0.0" -> "-"
+                    "NaN" -> "-"
+                    else -> dataList[position].rate
+                }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
