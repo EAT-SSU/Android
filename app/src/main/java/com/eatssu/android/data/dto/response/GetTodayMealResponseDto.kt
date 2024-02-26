@@ -20,33 +20,22 @@ data class MenusInformation(
     @SerializedName("name") var name: String? = null,
 )
 
-fun GetTodayMealResponseDto.createNameList(): String {
-    val nameList = StringBuilder()
+fun GetTodayMealResponseDto.mapTodayMenuResponseToMenu(): List<Menu> {
+    val menuList = mutableListOf<Menu>()
 
-    for (mealInfo in mealInformationResponseList) {
-        for (menuInfo in mealInfo.menusInformation) {
-            nameList.append(menuInfo.name)
-            nameList.append("+")
+    mealInformationResponseList.forEach { mealInfo ->
+        val nameList = mealInfo.menusInformation.mapNotNull { it.name } // Filter out null names
+        if (nameList.isNotEmpty()) {
+            val name = nameList.joinToString("+")
+            val menu = Menu(
+                id = mealInfo.mealId ?: -1, // Default value if mealId is null
+                name = name,
+                price = mealInfo.price ?: 0, // Default value if price is null
+                rate = mealInfo.mainRating
+            )
+            menuList.add(menu)
         }
     }
 
-    if (nameList.isNotEmpty()) {
-        nameList.deleteCharAt(nameList.length - 1) // Remove the last '+'
-    }
-
-    return nameList.toString()
-}
-
-fun GetTodayMealResponseDto.mapTodayMenuResponseToMenu(): List<Menu> {
-    return mealInformationResponseList.map { mealInfo ->
-        val name = createNameList()
-//        if (name.isNotEmpty()) {
-        Menu(
-            id = mealInfo.mealId ?: -1, // Default value if mealId is null
-            name = name,
-            price = mealInfo.price ?: 0, // Default value if price is null
-            rate = mealInfo.mainRating
-        )
-//        }
-    }
+    return menuList
 }

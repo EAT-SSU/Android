@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.dto.response.FixMenuInfoList
 import com.eatssu.android.data.dto.response.GetTodayMealResponseDto
+import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.service.MenuService
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -54,15 +54,15 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         call: Call<BaseResponse<GetTodayMealResponseDto>>,
                         response: Response<BaseResponse<GetTodayMealResponseDto>>
                     ) {
-                        val data = response.body()?.result!!
+                        val data = response.body()?.result
 
                         if (response.isSuccessful) {
                             Log.d("post", "onResponse 성공" + response.body())
 
                             when (restaurantType) {
-                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(data)
-                                Restaurant.DODAM -> _todayMealDataDodam.postValue(data)
-                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(data)
+                                Restaurant.HAKSIK -> _todayMealDataHaksik.postValue(data!!)
+                                Restaurant.DODAM -> _todayMealDataDodam.postValue(data!!)
+                                Restaurant.DORMITORY -> _todayMealDataDormitory.postValue(data!!)
 
                                 else -> {
                                     Log.d("post", "onResponse 실패. 잘못된 식당입니다.")
