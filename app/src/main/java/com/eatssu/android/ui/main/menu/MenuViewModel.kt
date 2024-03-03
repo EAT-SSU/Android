@@ -130,8 +130,8 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                         call: Call<BaseResponse<ChangeMenuInfoListDto>>,
                         response: Response<BaseResponse<ChangeMenuInfoListDto>>,
                     ) {
-                        val data = response.body()?.result!!
                         if (response.isSuccessful) {
+                            val data = response.body()?.result!!
                             Log.d("post", "onResponse 성공" + response.body())
 
                             menuBymealId.postValue(data)

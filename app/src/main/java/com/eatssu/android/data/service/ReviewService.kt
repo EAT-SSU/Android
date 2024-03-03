@@ -12,20 +12,19 @@ import retrofit2.http.*
 
 interface ReviewService {
     @Multipart
-    @POST("review/{menuId}")
+    @POST("reviews/{menuId}")
     fun writeReview(
         @Path("menuId") menuId: Long,
         @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
         @Part("reviewCreate") reviewData: RequestBody,
-    ): Call<Void>
+    ): Call<BaseResponse<Void>>
 
     @Multipart
-    @POST("review/{menuId}")
+    @POST("reviews/{menuId}")
     fun writeReview(
         @Path("menuId") menuId: Long,
         @Part("reviewCreate") reviewData: RequestBody,
-    ): Call<Void>
-
+    ): Call<BaseResponse<Void>>
 
     @DELETE("/reviews/{reviewId}") //리뷰 삭제
     fun delReview(@Path("reviewId") reviewId: Long): Call<BaseResponse<Void>>
@@ -36,16 +35,7 @@ interface ReviewService {
         @Body request: RequestBody,
     ): Call<BaseResponse<Void>>
 
-
-    @GET("/review/info") // Retrieve menu review information (rating, etc.) for changeable menus
-    fun getRreviewInfo(
-        @Query("menuType") menuType: String,
-        @Query("mealId") mealId: Long?,
-        @Query("menuId") menuId: Long?,
-    ): Call<GetReviewInfoResponse>
-
-
-    @GET("/review/list") //메뉴 리뷰 리스트 조회 - 고정메뉴
+    @GET("/reviews") //리뷰 리스트 조회
     fun getReviewList(
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
@@ -54,6 +44,17 @@ interface ReviewService {
 //        @Query("page") page: Int?,
 //        @Query("size") size: Int?,
 //        @Query("black") black: List<String>?
-    ): Call<GetReviewListResponse>
+    ): Call<BaseResponse<GetReviewListResponse>>
+
+    @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
+    fun getMenuReviewInfo(
+        @Query("menuType") menuType: String,
+        @Path("menuId") menuId: Long,
+    ): Call<BaseResponse<GetReviewInfoResponse>>
+
+    @GET("/reviews/menus/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
+    fun getMealReviewInfo(
+        @Path("mealId") mealId: Long,
+    ): Call<BaseResponse<GetReviewInfoResponse>>
 
 }

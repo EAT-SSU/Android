@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,10 +46,10 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
 
             reviewService.writeReview(
                 menuId, compressedPartsList, reviewData
-            ).enqueue(object : Callback<Void> {
+            ).enqueue(object : Callback<BaseResponse<Void>> {
                 override fun onResponse(
-                    call: Call<Void>,
-                    response: Response<Void>
+                    call: Call<BaseResponse<Void>>,
+                    response: Response<BaseResponse<Void>>,
                 ) {
                     if (response.isSuccessful) {
                         handleSuccessResponse("리뷰 작성에 성공하였습니다.")
@@ -63,7 +64,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                     }
                 }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
+                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                     handleErrorResponse("리뷰 작성에 실패했습니다.")
                     Log.d("post", "onFailure 에러: " + t.message.toString())
@@ -80,10 +81,10 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
 
             reviewService.writeReview(
                 menuId, reviewData
-            ).enqueue(object : Callback<Void> {
+            ).enqueue(object : Callback<BaseResponse<Void>> {
                 override fun onResponse(
-                    call: Call<Void>,
-                    response: Response<Void>
+                    call: Call<BaseResponse<Void>>,
+                    response: Response<BaseResponse<Void>>,
                 ) {
                     if (response.isSuccessful) {
                         handleSuccessResponse("리뷰 작성에 성공하였습니다.")
@@ -98,7 +99,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                     }
                 }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
+                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                     handleErrorResponse("리뷰 작성에 실패했습니다.")
                     Log.d("post", "onFailure 에러: " + t.message.toString())

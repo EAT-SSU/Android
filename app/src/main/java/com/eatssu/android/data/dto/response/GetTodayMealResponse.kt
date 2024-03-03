@@ -9,14 +9,14 @@ data class GetTodayMealResponseDto(
 
 data class MealInformationResponseList(
 
-    @SerializedName("mealId") var mealId: Int? = null,
+    @SerializedName("mealId") var mealId: Long? = null,
     @SerializedName("price") var price: Int? = null,
     @SerializedName("mainRating") var mainRating: String? = null,
     @SerializedName("menusInformation") var menusInformation: ArrayList<MenusInformation> = arrayListOf(),
 )
 
 data class MenusInformation(
-    @SerializedName("menuId") var menuId: Int? = null,
+    @SerializedName("menuId") var menuId: Long? = null,
     @SerializedName("name") var name: String? = null,
 )
 
@@ -31,7 +31,7 @@ fun GetTodayMealResponseDto.mapTodayMenuResponseToMenu(): List<Menu> {
                 id = mealInfo.mealId ?: -1, // Default value if mealId is null
                 name = name,
                 price = mealInfo.price ?: 0, // Default value if price is null
-                rate = mealInfo.mainRating
+                rate = mealInfo.mainRating ?: ""
             )
             menuList.add(menu)
         }

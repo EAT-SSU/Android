@@ -1,14 +1,18 @@
 package com.eatssu.android.ui.review.list
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.GetReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.data.model.Review
 import com.eatssu.android.data.service.ReviewService
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,11 +21,98 @@ import retrofit2.Response
 
 class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
-    private val _reviewList = MutableLiveData<GetReviewListResponse>()
-    val reviewList: LiveData<GetReviewListResponse> = _reviewList
+    private val _itemState: MutableStateFlow<ItemState> =
+        MutableStateFlow(ItemState(MenuType.FIX, 0))
+    val ItemState: StateFlow<ItemState> = _itemState.asStateFlow()
 
-    private val _reviewInfo = MutableLiveData<GetReviewInfoResponse>()
-    val reviewInfo: LiveData<GetReviewInfoResponse> = _reviewInfo
+    private val _state: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
+    val state: StateFlow<ReviewState> = _state.asStateFlow()
+
+//    private val _reviewList = MutableLiveData<GetReviewListResponse>()
+//    val reviewList: LiveData<GetReviewListResponse> = _reviewList
+//
+//    private val _reviewInfo = MutableLiveData<GetReviewInfoResponse>()
+//    val reviewInfo: LiveData<GetReviewInfoResponse> = _reviewInfo
+
+
+    fun loadMenuReviewInfo(
+        menuType: MenuType,
+        menuId: Long,
+    ) {
+        viewModelScope.launch {
+
+            reviewService.getMenuReviewInfo(menuType.toString(), menuId)
+                .enqueue(object : Callback<BaseResponse<GetReviewInfoResponse>> {
+                    override fun onResponse(
+                        call: Call<BaseResponse<GetReviewInfoResponse>>,
+                        response: Response<BaseResponse<GetReviewInfoResponse>>,
+                    ) {
+                        if (response.isSuccessful) {
+                            val data = response.body()?.result!!
+
+
+                            // 정상적으로 통신이 성공된 경우
+                            Log.d("post", "onResponse 성공: " + response.body().toString())
+                            _state.update {
+                                it.copy(
+//                                    review = data.asReview()
+                                )
+                            }
+
+                        } else {
+                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                            Log.d("post", "onResponse 실패")
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<BaseResponse<GetReviewInfoResponse>>,
+                        t: Throwable,
+                    ) {
+                        // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+                        Log.d("post", "onFailure 에러: " + t.message.toString())
+                    }
+                })
+        }
+    }
+
+    fun loadMealReviewInfo(
+        menuType: MenuType,
+        menuId: Long,
+    ) {
+        viewModelScope.launch {
+            reviewService.getMealReviewInfo(menuId)
+                .enqueue(object : Callback<BaseResponse<GetReviewInfoResponse>> {
+                    override fun onResponse(
+                        call: Call<BaseResponse<GetReviewInfoResponse>>,
+                        response: Response<BaseResponse<GetReviewInfoResponse>>,
+                    ) {
+                        if (response.isSuccessful) {
+
+                            val data = response.body()?.result!!
+                            // 정상적으로 통신이 성공된 경우
+                            Log.d("post", "onResponse 성공: " + response.body().toString())
+                            _state.update {
+                                it.copy(
+//                                    review = data.asReview()
+                                )
+                            }
+                        } else {
+                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                            Log.d("post", "onResponse 실패")
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<BaseResponse<GetReviewInfoResponse>>,
+                        t: Throwable,
+                    ) {
+                        // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+                        Log.d("post", "onFailure 에러: " + t.message.toString())
+                    }
+                })
+        }
+    }
 
     fun loadReviewList(
         menuType: MenuType,
@@ -34,14 +125,28 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
         viewModelScope.launch {
 
             reviewService.getReviewList(menuType.toString(), mealId, menuId)
-                .enqueue(object : Callback<GetReviewListResponse> {
+                .enqueue(object : Callback<BaseResponse<GetReviewListResponse>> {
                     override fun onResponse(
-                        call: Call<GetReviewListResponse>, response: Response<GetReviewListResponse>
+                        call: Call<BaseResponse<GetReviewListResponse>>,
+                        response: Response<BaseResponse<GetReviewListResponse>>,
                     ) {
                         if (response.isSuccessful) {
+
+                            val data = response.body()?.result!!
+
+                            if (data.dataList!!.isNotEmpty()) {
+                                Log.d("post", "onResponse 성공: " + response.body().toString())
+                                _state.update {
+                                    it.copy(
+                                        error = true,
+                                        reviewList = data,
+                                        isEmpty = false
+                                    )
+                                }
+
+                            }
                             // 정상적으로 통신이 성공된 경우
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
-                            _reviewList.postValue(response.body())
+
 
                         } else {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
@@ -49,39 +154,10 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                         }
                     }
 
-                    override fun onFailure(call: Call<GetReviewListResponse>, t: Throwable) {
-                        // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                        Log.d("post", "onFailure 에러: " + t.message.toString())
-                    }
-                })
-        }
-    }
-
-    fun loadReviewInfo(
-        menuType: MenuType,
-        mealId: Long?,
-        menuId: Long?,
-    ) {
-        viewModelScope.launch {
-
-            reviewService.getRreviewInfo(menuType.toString(), mealId, menuId)
-                .enqueue(object : Callback<GetReviewInfoResponse> {
-                    override fun onResponse(
-                        call: Call<GetReviewInfoResponse>,
-                        response: Response<GetReviewInfoResponse>,
+                    override fun onFailure(
+                        call: Call<BaseResponse<GetReviewListResponse>>,
+                        t: Throwable,
                     ) {
-                        if (response.isSuccessful) {
-                            // 정상적으로 통신이 성공된 경우
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
-                            _reviewInfo.postValue(response.body())
-
-                        } else {
-                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            Log.d("post", "onResponse 실패")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<GetReviewInfoResponse>, t: Throwable) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                         Log.d("post", "onFailure 에러: " + t.message.toString())
                     }
@@ -89,3 +165,20 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
         }
     }
 }
+
+data class ItemState(
+    var menuType: MenuType,
+    var itemid: Long,
+)
+
+data class ReviewState(
+//    var toastMessage: String = "",
+    var loading: Boolean = true,
+    var error: Boolean = false,
+//    var tokens: TokenResponse? = null,
+    var review: Review? = null,
+    var reviewList: GetReviewListResponse? = null,
+    var isEmpty: Boolean = true,
+    var menuType: MenuType? = MenuType.FIX,
+    var itemId: Long? = 0,
+)

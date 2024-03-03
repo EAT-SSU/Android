@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.MenuType
@@ -13,6 +14,8 @@ import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.write.ReviewWriteMenuActivity
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 class ReviewActivity :
@@ -47,7 +50,7 @@ class ReviewActivity :
         when (menuType) {
             "FIX" -> {
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
-                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
+                viewModel.loadMenuReviewInfo(MenuType.FIX, itemId)
 
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
@@ -62,7 +65,7 @@ class ReviewActivity :
 
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
-                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+                viewModel.loadMealReviewInfo(MenuType.CHANGE, itemId)
                 val mealId = itemId
 
                 binding.btnNextReview.setOnClickListener {
@@ -86,64 +89,59 @@ class ReviewActivity :
             }
         }
 
-        setInfoData()
-        setListData()
+        setData()
     }
 
-    private fun setListData() {
-        viewModel.reviewList.observe(this) { reviewList ->
-            Log.d("ReviewActivity", reviewList.dataList.toString())
+    private fun setData() {
+        lifecycleScope.launch {
+            viewModel.state.collectLatest {
+                if (!it.error && !it.loading) {
+                    it.reviewList
+                    if (it.isEmpty) {
+                        Log.d("ReviewListActivity", "리뷰가 없음")
+                        binding.llNonReview.visibility = View.VISIBLE
+                        binding.rvReview.visibility = View.INVISIBLE
+                    } else {
+                        binding.llNonReview.visibility = View.INVISIBLE
+                        binding.rvReview.visibility = View.VISIBLE
+                        adapter = ReviewAdapter(it.reviewList)
+                        val recyclerView = binding.rvReview
+                        recyclerView.adapter = adapter
+                        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+                        recyclerView.setHasFixedSize(true)
 
-            if (reviewList.numberOfElements == 0) {
-                Log.d("ReviewListActivity","리뷰가 없음")
-                binding.llNonReview.visibility = View.VISIBLE
-                binding.rvReview.visibility = View.INVISIBLE
-            } else {
-                binding.llNonReview.visibility = View.INVISIBLE
-                binding.rvReview.visibility = View.VISIBLE
-                adapter = ReviewAdapter(reviewList)
-                val recyclerView = binding.rvReview
-                recyclerView.adapter = adapter
-                recyclerView.layoutManager = LinearLayoutManager(this)
-                recyclerView.setHasFixedSize(true)
-//                recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))//구분선 주석처리
+
+                        it.review?.apply {
+                            binding.tvMenu.text = name.toString().replace(Regex("[\\[\\]]"), "")
+                            binding.tvRate.text =
+                                String.format("%.1f", mainRating?.toFloat())
+                                    .toFloat().toString()
+                            binding.tvGradeTaste.text =
+                                String.format("%.1f", tasteRating?.toFloat())
+                                    .toFloat().toString()
+                            binding.tvGradeAmount.text =
+                                String.format("%.1f", amountRating?.toFloat())
+                                    .toFloat().toString()
+                            binding.tvReviewNumCount.text = reviewCnt.toString()
+
+                            val totalReviewCount = reviewCnt ?: 0
+                            binding.progressBar1.max = totalReviewCount
+                            binding.progressBar2.max = totalReviewCount
+                            binding.progressBar3.max = totalReviewCount
+                            binding.progressBar4.max = totalReviewCount
+                            binding.progressBar5.max = totalReviewCount
+
+
+                            binding.progressBar1.progress = ratingDetails.one
+                            binding.progressBar2.progress = ratingDetails.two
+                            binding.progressBar3.progress = ratingDetails.three
+                            binding.progressBar4.progress = ratingDetails.four
+                            binding.progressBar5.progress = ratingDetails.five
+                        }
+                    }
+                }
 
             }
-        }
-    }
-
-    private fun setInfoData() {
-
-        viewModel.reviewInfo.observe(this) { reviewInfo ->
-            Log.d("post", reviewInfo.toString())
-
-            binding.tvMenu.text = reviewInfo.menuName.toString().replace(Regex("[\\[\\]]"), "")
-
-            binding.tvRate.text =
-                String.format("%.1f", reviewInfo.mainGrade.toFloat())
-                    .toFloat().toString()
-            binding.tvGradeTaste.text =
-                String.format("%.1f", reviewInfo.tasteGrade.toFloat())
-                    .toFloat().toString()
-            binding.tvGradeAmount.text =
-                String.format("%.1f", reviewInfo.amountGrade.toFloat())
-                    .toFloat().toString()
-            binding.tvReviewNumCount.text = reviewInfo.totalReviewCount.toString()
-
-            val cnt = reviewInfo.totalReviewCount
-
-            binding.progressBar1.max = cnt
-            binding.progressBar2.max = cnt
-            binding.progressBar3.max = cnt
-            binding.progressBar4.max = cnt
-            binding.progressBar5.max = cnt
-
-            binding.progressBar1.progress = reviewInfo.reviewGradeCnt.oneCnt
-            binding.progressBar2.progress = reviewInfo.reviewGradeCnt.twoCnt
-            binding.progressBar3.progress = reviewInfo.reviewGradeCnt.threeCnt
-            binding.progressBar4.progress = reviewInfo.reviewGradeCnt.fourCnt
-            binding.progressBar5.progress = reviewInfo.reviewGradeCnt.fiveCnt
-
         }
     }
 
@@ -156,12 +154,12 @@ class ReviewActivity :
         when (menuType) {
             "FIX" -> {
                 viewModel.loadReviewList(MenuType.FIX, 0, itemId)
-                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
+                viewModel.loadMenuReviewInfo(MenuType.FIX, itemId)
             }
 
             "CHANGE" -> {
                 viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
-                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
+                viewModel.loadMealReviewInfo(MenuType.CHANGE, itemId)
             }
 
             else -> {
@@ -170,43 +168,39 @@ class ReviewActivity :
         }
         Log.d("post", "onRestart")
 
-        setInfoData()
 
-        Log.d("post", "onRestart" + viewModel.reviewInfo.value)
-
-        setListData()
+        setData()
 
         Log.d("post", "onRestart")
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("post", "resume")
-
-        // 다시 데이터를 로드하고 어댑터를 업데이트
-        when (menuType) {
-            "FIX" -> {
-                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
-                viewModel.loadReviewInfo(MenuType.FIX, 0, itemId)
-            }
-
-            "CHANGE" -> {
-                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
-                viewModel.loadReviewInfo(MenuType.CHANGE, itemId, 0)
-            }
-
-            else -> {
-                Log.d("post", "잘못된 식당 정보입니다.")
-            }
-        }
-        Log.d("post", "resume시작")
-
-        setInfoData()
-
-        Log.d("post", "resume중간")
-
-        setListData()
-
-        Log.d("post", "resume끝")
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        Log.d("post", "resume")
+//
+//        // 다시 데이터를 로드하고 어댑터를 업데이트
+//        when (menuType) {
+//            "FIX" -> {
+//                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
+//                viewModel.loadMenuReviewInfo(MenuType.FIX, itemId)
+//            }
+//
+//            "CHANGE" -> {
+//                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
+//                viewModel.loadMealReviewInfo(MenuType.CHANGE, itemId)
+//            }
+//
+//            else -> {
+//                Log.d("post", "잘못된 식당 정보입니다.")
+//            }
+//        }
+//        Log.d("post", "resume시작")
+//
+//
+//        Log.d("post", "resume중간")
+//
+//        setListData()
+//
+//        Log.d("post", "resume끝")
+//    }
 }

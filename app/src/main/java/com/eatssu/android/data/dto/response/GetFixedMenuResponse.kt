@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 
 data class FixMenuInfoList(
-    @SerializedName("menuId") var menuId: Int? = null,
+    @SerializedName("menuId") var menuId: Long? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("price") var price: Int? = null,
     @SerializedName("mainRating") var mainRating: String? = null,
@@ -14,10 +14,10 @@ data class FixMenuInfoList(
 fun ArrayList<FixMenuInfoList>.mapFixedMenuResponseToMenu(): List<Menu> {
     return this.map { fixMenuInfo ->
         Menu(
-            id = fixMenuInfo.menuId,
-            name = fixMenuInfo.name,
-            price = fixMenuInfo.price,
-            rate = fixMenuInfo.mainRating
+            id = fixMenuInfo.menuId ?: 0,
+            name = fixMenuInfo.name ?: "",
+            price = fixMenuInfo.price ?: 0,
+            rate = fixMenuInfo.mainRating ?: ""
         )
     }
 }
