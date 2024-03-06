@@ -14,16 +14,23 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
 class ReviewWriteRateActivity :
@@ -31,6 +38,7 @@ class ReviewWriteRateActivity :
 
     private lateinit var viewModel: UploadReviewViewModel
     private lateinit var reviewService: ReviewService
+    private lateinit var imageService: ImageService
 
     private val PERMISSION_REQUEST_CODE = 1
 
@@ -47,7 +55,7 @@ class ReviewWriteRateActivity :
         itemName = intent.getStringExtra("itemName").toString()
         Log.d("post", "고정메뉴${itemName}")
 
-        itemId = intent.getLongExtra("itemId", 0)
+        itemId = intent.getLongExtra("itemId", 16)
 
         // 현재 메뉴명을 표시합니다.
         binding.menu.text = itemName
@@ -61,12 +69,13 @@ class ReviewWriteRateActivity :
         // 이미지 추가 버튼 클릭 리스너 설정
         binding.ibAddPic.setOnClickListener { openGallery() }
 
-        reviewService = mRetrofit.create(ReviewService::class.java)
+        imageService = mRetrofit.create(ImageService::class.java)
+        reviewService = retrofit.create(ReviewService::class.java)
+
         viewModel = ViewModelProvider(
             this,
             UploadReviewViewModelFactory(reviewService)
         )[UploadReviewViewModel::class.java]
-
 
         setupUI()
         observeViewModel()
@@ -80,7 +89,9 @@ class ReviewWriteRateActivity :
 
     private fun observeViewModel() {
         viewModel.isUpload.observe(this) { isUpload ->
-            if (isUpload == true) { finish() }
+            if (isUpload == true) {
+                finish()
+            }
 
         }
         viewModel.toastMessage.observe(this) { message ->
@@ -121,7 +132,7 @@ class ReviewWriteRateActivity :
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
             val imageUri = data.data
-            binding.ivImage.setImageURI(imageUri)
+            binding.ivImage.setImageURI(imageUri) //이미지 불러다 놓기
             selectedImagePath = imageUri?.let { getImagePath(it) }
             selectedImagePath?.let { Log.d("path", it) }
             binding.ivImage.visibility = View.VISIBLE
@@ -161,68 +172,90 @@ class ReviewWriteRateActivity :
 
     private fun postReview() {
 
-        // Check if any of the main, amount, or taste grades is 0
         if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
             Toast.makeText(this, "별점을 등록해주세요", Toast.LENGTH_SHORT).show()
-            return // Do not proceed with the review posting if any grade is 0
+            return
         }
 
-        // Check if the comment has at least 3 characters
         if ((comment?.trim()?.length ?: 0) < 3) {
             Toast.makeText(this, "3자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
-            return // Do not proceed with the review posting if the comment is too short
+            return
         }
 
-        // Proceed with posting the review
-        val reviewData = """
-    {
-        "mainGrade": ${binding.rbMain.rating.toInt()},
-        "amountGrade": ${binding.rbAmount.rating.toInt()},
-        "tasteGrade": ${binding.rbTaste.rating.toInt()},
-        "content": "$comment"
-    }
-""".trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
 
-        val fileList: List<String?> = listOf(selectedImagePath)
+        lifecycleScope.launch {//리뷰 작성
+            val compressImageString = compressImage(selectedImagePath)
 
-        lifecycleScope.launch {
-            val compressedPartsList = compressImage(fileList)
-            // Make the file list nullable
-            if (compressedPartsList == null) {
-                viewModel.postReview(itemId, reviewData)
-                Log.d("ReviewWriteRateActivity", "사진 없는 리뷰")
+            if (compressImageString != null) { //null일 때는 할 필요가 없음
+                imageService.getImageUrl(compressImageString).enqueue(
+                    object : Callback<BaseResponse<ImageResponse>> {
+                        override fun onResponse(
+                            call: Call<BaseResponse<ImageResponse>>,
+                            response: Response<BaseResponse<ImageResponse>>,
+                        ) {
+                            if (response.isSuccessful) {
+                                // 정상적으로 통신이 성공된 경우
+
+                                val imageUrl = response.body()?.result?.url
+                                val reviewData = WriteReviewRequest(
+                                    binding.rbMain.rating.toInt(),
+                                    binding.rbAmount.rating.toInt(),
+                                    binding.rbTaste.rating.toInt(),
+                                    comment,
+                                    imageUrl
+                                )
+                                viewModel.postReview(itemId, reviewData)
+                                Log.d("ReviewWriteRateActivity", "리뷰")
+                            } else {
+                                // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                                Log.d("post", "onResponse 리뷰 작성 실패")
+                            }
+                        }
+
+                        override fun onFailure(
+                            call: Call<BaseResponse<ImageResponse>>,
+                            t: Throwable,
+                        ) {
+                            // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
+                            Log.d("post", "onFailure 에러: " + t.message.toString())
+                        }
+                    })
+
             } else {
-                viewModel.postReview(itemId, compressedPartsList, reviewData)
-                Log.d("ReviewWriteRateActivity", "사진 있는 리뷰")
+                val reviewData = WriteReviewRequest(
+                    binding.rbMain.rating.toInt(),
+                    binding.rbAmount.rating.toInt(),
+                    binding.rbTaste.rating.toInt(),
+                    comment,
+                    ""
+                )
+                viewModel.postReview(itemId, reviewData)
+                Log.d("ReviewWriteRateActivity", "리뷰")
             }
         }
+
 
         val resultIntent = Intent()
         setResult(RESULT_OK, resultIntent)
         Log.d("ReviewWriteRateActivity", "리뷰 다씀")
     }
 
-    private suspend fun compressImage(fileList: List<String?>): List<MultipartBody.Part>? {
-        val compressedPartsList: MutableList<MultipartBody.Part> = mutableListOf()
 
-        fileList.forEach { filePath ->
-            // Check if the file path is not null and compress the image
-            if (filePath != null) {
-                val file = File(filePath)
-                val compressedFile = Compressor.compress(this@ReviewWriteRateActivity, file) {
-                    quality(80)
-                }
-                val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
-                val part = MultipartBody.Part.createFormData(
-                    "multipartFileList",
-                    compressedFile.name,
-                    requestFile
-                )
-                compressedPartsList.add(part)
-            }
+    private suspend fun compressImage(imageString: String?): MultipartBody.Part? {
+
+        if (imageString != null) {
+            val file = File(imageString)
+            val compressedFile =
+                Compressor.compress(this@ReviewWriteRateActivity, file) { quality(80) }
+            val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
+
+            return MultipartBody.Part.createFormData(
+                "multipartFileList",
+                compressedFile.name,
+                requestFile
+            )
         }
-
-        return if (compressedPartsList.isEmpty()) null else compressedPartsList
+        return null
     }
 
     companion object {

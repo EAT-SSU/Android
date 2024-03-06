@@ -28,6 +28,7 @@ interface ReviewService {
 
     @POST("/reviews/write/{menuId}") //리뷰 작성
     fun writeReview(
+        @Path("menuId") menuId: Long,
         @Body request: WriteReviewRequest,
     ): Call<BaseResponse<Void>>
 

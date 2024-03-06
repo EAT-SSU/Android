@@ -6,11 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,43 +38,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
 
     fun postReview(
         menuId: Long,
-        compressedPartsList : List<MultipartBody.Part>,
-        reviewData: RequestBody
-    ) {
-        viewModelScope.launch {
-
-            reviewService.writeReview(
-                menuId, compressedPartsList, reviewData
-            ).enqueue(object : Callback<BaseResponse<Void>> {
-                override fun onResponse(
-                    call: Call<BaseResponse<Void>>,
-                    response: Response<BaseResponse<Void>>,
-                ) {
-                    if (response.isSuccessful) {
-                        handleSuccessResponse("리뷰 작성에 성공하였습니다.")
-                        // 정상적으로 통신이 성공된 경우
-                        Log.d("post", "onResponse 리뷰 작성 성공: " + response.body().toString())
-//                        onClickEvent()
-
-                    } else {
-                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                        handleErrorResponse("리뷰 작성에 실패했습니다.")
-                        Log.d("post", "onResponse 리뷰 작성 실패")
-                    }
-                }
-
-                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
-                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    handleErrorResponse("리뷰 작성에 실패했습니다.")
-                    Log.d("post", "onFailure 에러: " + t.message.toString())
-                }
-            })
-        }
-    }
-
-    fun postReview(
-        menuId: Long,
-        reviewData: RequestBody
+        reviewData: WriteReviewRequest,
     ) {
         viewModelScope.launch {
 
@@ -107,6 +70,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
             })
         }
     }
+
 
 
     private fun handleSuccessResponse(message: String) {
