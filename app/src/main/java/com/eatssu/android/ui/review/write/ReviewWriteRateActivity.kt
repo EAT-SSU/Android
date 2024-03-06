@@ -62,8 +62,10 @@ class ReviewWriteRateActivity :
         binding.ibAddPic.setOnClickListener { openGallery() }
 
         reviewService = mRetrofit.create(ReviewService::class.java)
-        viewModel = ViewModelProvider(this, UploadReviewViewModelFactory(reviewService))
-            .get(UploadReviewViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            UploadReviewViewModelFactory(reviewService)
+        )[UploadReviewViewModel::class.java]
 
 
         setupUI()

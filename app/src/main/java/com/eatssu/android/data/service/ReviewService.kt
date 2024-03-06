@@ -2,37 +2,44 @@ package com.eatssu.android.data.service
 
 
 import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.request.ModifyReviewRequest
+import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.dto.response.GetReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 
 interface ReviewService {
-    @Multipart
-    @POST("reviews/{menuId}")
-    fun writeReview(
-        @Path("menuId") menuId: Long,
-        @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
-        @Part("reviewCreate") reviewData: RequestBody,
-    ): Call<BaseResponse<Void>>
+//    @Multipart
+//    @POST("reviews/{menuId}")
+//    fun writeReview(
+//        @Path("menuId") menuId: Long,
+//        @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
+//        @Part("reviewCreate") reviewData: RequestBody,
+//    ): Call<BaseResponse<Void>>
+//
+//    @Multipart
+//    @POST("reviews/{menuId}")
+//    fun writeReview(
+//        @Path("menuId") menuId: Long,
+//        @Part("reviewCreate") reviewData: RequestBody,
+//    ): Call<BaseResponse<Void>>
 
-    @Multipart
-    @POST("reviews/{menuId}")
+    @POST("/reviews/write/{menuId}") //리뷰 작성
     fun writeReview(
-        @Path("menuId") menuId: Long,
-        @Part("reviewCreate") reviewData: RequestBody,
+        @Body request: WriteReviewRequest,
     ): Call<BaseResponse<Void>>
 
     @DELETE("/reviews/{reviewId}") //리뷰 삭제
-    fun delReview(@Path("reviewId") reviewId: Long): Call<BaseResponse<Void>>
+    fun deleteReview(
+        @Path("reviewId") reviewId: Long,
+    ): Call<BaseResponse<Void>>
 
     @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
         @Path("reviewId") reviewId: Long,
-        @Body request: RequestBody,
+        @Body request: ModifyReviewRequest,
     ): Call<BaseResponse<Void>>
 
     @GET("/reviews") //리뷰 리스트 조회
