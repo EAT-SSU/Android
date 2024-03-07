@@ -12,31 +12,23 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.ImageResponse
 import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 
 class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
     private lateinit var viewModel: UploadReviewViewModel
+    private lateinit var imageviewModel: ImageViewModel
+
     private lateinit var reviewService: ReviewService
     private lateinit var imageService: ImageService
 
@@ -47,6 +39,7 @@ class ReviewWriteRateActivity :
     private var itemId: Long = 0
     private lateinit var itemName: String
     private var comment: String? = ""
+//    private var imageUrlString = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,10 +65,13 @@ class ReviewWriteRateActivity :
         imageService = mRetrofit.create(ImageService::class.java)
         reviewService = retrofit.create(ReviewService::class.java)
 
+
         viewModel = ViewModelProvider(
             this,
             UploadReviewViewModelFactory(reviewService)
         )[UploadReviewViewModel::class.java]
+        imageviewModel =
+            ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
 
         setupUI()
         observeViewModel()
@@ -110,6 +106,7 @@ class ReviewWriteRateActivity :
         }
     }
 
+
     private fun setupTextReviewInput() {
         binding.etReview2Comment.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -132,13 +129,22 @@ class ReviewWriteRateActivity :
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
             val imageUri = data.data
+
             binding.ivImage.setImageURI(imageUri) //이미지 불러다 놓기
-            selectedImagePath = imageUri?.let { getImagePath(it) }
-            selectedImagePath?.let { Log.d("path", it) }
-            binding.ivImage.visibility = View.VISIBLE
-            binding.btnDelete.visibility = View.VISIBLE
+
+            imageviewModel.viewModelScope.launch {
+                selectedImagePath = imageUri?.let { getImagePath(it) }
+                selectedImagePath?.let { Log.d("path", it) }
+
+                imageviewModel.getImageString(selectedImagePath) //이미지 url 반환 api 호출
+
+
+                binding.ivImage.visibility = View.VISIBLE
+                binding.btnDelete.visibility = View.VISIBLE
+            }
         }
     }
+
 
     private fun getImagePath(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
@@ -151,6 +157,7 @@ class ReviewWriteRateActivity :
         }
         return null
     }
+
 
     private fun deleteImage() {
         Log.d("ReviewWriteRateActivity", selectedImagePath.toString())
@@ -183,55 +190,16 @@ class ReviewWriteRateActivity :
         }
 
 
-        lifecycleScope.launch {//리뷰 작성
-            val compressImageString = compressImage(selectedImagePath)
-
-            if (compressImageString != null) { //null일 때는 할 필요가 없음
-                imageService.getImageUrl(compressImageString).enqueue(
-                    object : Callback<BaseResponse<ImageResponse>> {
-                        override fun onResponse(
-                            call: Call<BaseResponse<ImageResponse>>,
-                            response: Response<BaseResponse<ImageResponse>>,
-                        ) {
-                            if (response.isSuccessful) {
-                                // 정상적으로 통신이 성공된 경우
-
-                                val imageUrl = response.body()?.result?.url
-                                val reviewData = WriteReviewRequest(
-                                    binding.rbMain.rating.toInt(),
-                                    binding.rbAmount.rating.toInt(),
-                                    binding.rbTaste.rating.toInt(),
-                                    comment,
-                                    imageUrl
-                                )
-                                viewModel.postReview(itemId, reviewData)
-                                Log.d("ReviewWriteRateActivity", "리뷰")
-                            } else {
-                                // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                                Log.d("post", "onResponse 리뷰 작성 실패")
-                            }
-                        }
-
-                        override fun onFailure(
-                            call: Call<BaseResponse<ImageResponse>>,
-                            t: Throwable,
-                        ) {
-                            // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                            Log.d("post", "onFailure 에러: " + t.message.toString())
-                        }
-                    })
-
-            } else {
-                val reviewData = WriteReviewRequest(
-                    binding.rbMain.rating.toInt(),
-                    binding.rbAmount.rating.toInt(),
-                    binding.rbTaste.rating.toInt(),
-                    comment,
-                    ""
-                )
-                viewModel.postReview(itemId, reviewData)
-                Log.d("ReviewWriteRateActivity", "리뷰")
-            }
+        imageviewModel.imageString.observe(this) {
+            val reviewData = WriteReviewRequest(
+                binding.rbMain.rating.toInt(),
+                binding.rbAmount.rating.toInt(),
+                binding.rbTaste.rating.toInt(),
+                comment,
+                it
+            )
+            viewModel.postReview(itemId, reviewData)
+            Log.d("ReviewWriteRateActivity", "리뷰 씀")
         }
 
 
@@ -241,22 +209,7 @@ class ReviewWriteRateActivity :
     }
 
 
-    private suspend fun compressImage(imageString: String?): MultipartBody.Part? {
 
-        if (imageString != null) {
-            val file = File(imageString)
-            val compressedFile =
-                Compressor.compress(this@ReviewWriteRateActivity, file) { quality(80) }
-            val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
-
-            return MultipartBody.Part.createFormData(
-                "multipartFileList",
-                compressedFile.name,
-                requestFile
-            )
-        }
-        return null
-    }
 
     companion object {
         private const val REQUEST_IMAGE_PICK = 1
