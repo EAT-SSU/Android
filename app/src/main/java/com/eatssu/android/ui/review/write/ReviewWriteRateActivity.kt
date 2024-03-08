@@ -16,16 +16,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
+import com.eatssu.android.util.extension.showToast
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -79,13 +81,12 @@ class ReviewWriteRateActivity :
 
         viewModel = ViewModelProvider(
             this,
-            UploadReviewViewModelFactory(reviewService)
+            ReviewWriteViewModelFactory(reviewService)
         )[UploadReviewViewModel::class.java]
         imageviewModel =
             ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
 
         setupUI()
-        observeViewModel()
     }
 
 
@@ -115,7 +116,7 @@ class ReviewWriteRateActivity :
                     imageviewModel.saveS3() //이미지 url 반환 api 호출
 
                 }
-//
+
                 binding.ivImage.visibility = View.VISIBLE
                 binding.btnDelete.visibility = View.VISIBLE
             }
@@ -139,7 +140,7 @@ class ReviewWriteRateActivity :
         val result = cursor.getString(columnIndex)
         cursor.close()
 
-        Log.d("result", result)
+        Log.d("ReviewWriteRateActivity", result)
         return result
     }
 
@@ -160,7 +161,7 @@ class ReviewWriteRateActivity :
                         Manifest.permission.READ_MEDIA_IMAGES,
                     ), REQ_GALLERY
                 )
-                Log.d("re", "권한 없음")
+                Log.d("ReviewWriteRateActivity", "권한 없음")
 
             } else {
                 openGallery()
@@ -186,7 +187,7 @@ class ReviewWriteRateActivity :
                         Manifest.permission.READ_EXTERNAL_STORAGE
                     ), REQ_GALLERY
                 )
-                Log.d("re", "권한 없음")
+                Log.d("ReviewWriteRateActivity", "권한 없음")
 
             } else {
                 openGallery()
@@ -212,17 +213,17 @@ class ReviewWriteRateActivity :
         binding.btnDelete.setOnClickListener { deleteImage() }
     }
 
-    private fun observeViewModel() {
-        viewModel.isUpload.observe(this) { isUpload ->
-            if (isUpload == true) {
-                finish()
-            }
-
-        }
-        viewModel.toastMessage.observe(this) { message ->
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private fun observeViewModel() {
+//        viewModel.isUpload.observe(this) { isUpload ->
+//            if (isUpload == true) {
+//                finish()
+//            }
+//
+//        }
+//        viewModel.toastMessage.observe(this) { message ->
+//            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
     private fun requestStoragePermission() {
         if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
@@ -249,7 +250,6 @@ class ReviewWriteRateActivity :
     }
 
 
-
     private fun deleteImage() {
         Log.d("ReviewWriteRateActivity", imageFile.toString())
         if (imageFile.exists()) {
@@ -258,6 +258,8 @@ class ReviewWriteRateActivity :
             imageFile.delete() //file을 날린다.
             binding.ivImage.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
+
+            imageviewModel.deleteFile()
         } else {
             Toast.makeText(this, "이미지를 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
@@ -276,15 +278,32 @@ class ReviewWriteRateActivity :
         }
 
 
-        imageviewModel.imageUrl.observe(this) {
-            val reviewData = WriteReviewRequest(
-                binding.rbMain.rating.toInt(),
-                binding.rbAmount.rating.toInt(),
-                binding.rbTaste.rating.toInt(),
-                comment,
-                it
-            )
-            viewModel.postReview(itemId, reviewData)
+        //Todo imageurl을 체크해야하는 이유?
+
+
+        viewModel.setReviewData(
+            itemId,
+            binding.rbMain.rating.toInt(),
+            binding.rbAmount.rating.toInt(),
+            binding.rbTaste.rating.toInt(),
+            comment.toString(),
+            imageviewModel.imageUrl.value ?: ""
+        )
+
+        viewModel.postReview()
+
+        lifecycleScope.launch {
+            viewModel.state.collectLatest {
+                if (it.error) {
+                    showToast(viewModel.state.value.toastMessage)
+                }
+                if (it.isUpload) {
+                    showToast(viewModel.state.value.toastMessage)
+//                    finish()
+                }
+
+            }
+
             Log.d("ReviewWriteRateActivity", "리뷰 씀")
         }
 

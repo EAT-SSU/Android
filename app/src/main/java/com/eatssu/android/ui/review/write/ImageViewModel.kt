@@ -32,6 +32,11 @@ class ImageViewModel(
         _imageFile.value = imageFile
     }
 
+    fun deleteFile() {
+        _imageFile.value?.delete()
+        _imageUrl.value = ""
+    }
+
     private suspend fun compressImage(imageFile: File): MultipartBody.Part {
 
         val compressedFile = Compressor.compress(App.appContext, imageFile) { quality(80) }
