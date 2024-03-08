@@ -150,8 +150,8 @@ class ReviewWriteRateActivity :
 //                    imageviewModel.getImageString(selectedImagePath) //이미지 url 반환 api 호출
 
 //
-//                    binding.ivImage.visibility = View.VISIBLE
-//                    binding.btnDelete.visibility = View.VISIBLE
+                binding.ivImage.visibility = View.VISIBLE
+                binding.btnDelete.visibility = View.VISIBLE
             }
         }
 
@@ -177,38 +177,72 @@ class ReviewWriteRateActivity :
 
     // 갤러리를 부르는 메서드
     private fun selectGallery() {
-        val writePermission =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val readPermission =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-        //권한 확인
-        if (writePermission == PackageManager.PERMISSION_DENIED ||
-            readPermission == PackageManager.PERMISSION_DENIED
-        ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
-            // 권한 요청
-            ActivityCompat.requestPermissions(
-                this, arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ), REQ_GALLERY
-            )
-            Log.d("re", "권한 없")
+            checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES)
+
+            val readMediaImagePermission =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+
+            //권한 확인
+            if (readMediaImagePermission == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(
+                        Manifest.permission.READ_MEDIA_IMAGES,
+                    ), REQ_GALLERY
+                )
+                Log.d("re", "권한 없음")
+
+            } else {
+                Log.d("re", "권한 잇음")
+                // 권한이 있는 경우 갤러리 실행
+                val intent = Intent(Intent.ACTION_PICK)
+                // intent의 data와 type을 동시에 설정하는 메서드
+                intent.setDataAndType(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "image/*"
+                )
+
+                imageResult.launch(intent)
+            }
 
         } else {
-            Log.d("re", "권한 잇음")
-            // 권한이 있는 경우 갤러리 실행
-            val intent = Intent(Intent.ACTION_PICK)
-            // intent의 data와 type을 동시에 설정하는 메서드
-            intent.setDataAndType(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*"
-            )
+            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-            imageResult.launch(intent)
+            val writePermission =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val readPermission =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            //권한 확인
+            if (writePermission == PackageManager.PERMISSION_DENIED ||
+                readPermission == PackageManager.PERMISSION_DENIED
+            ) {
+
+                // 권한 요청
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ), REQ_GALLERY
+                )
+                Log.d("re", "권한 없음")
+
+            } else {
+                Log.d("re", "권한 잇음")
+                // 권한이 있는 경우 갤러리 실행
+                val intent = Intent(Intent.ACTION_PICK)
+                // intent의 data와 type을 동시에 설정하는 메서드
+                intent.setDataAndType(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "image/*"
+                )
+
+                imageResult.launch(intent)
+            }
         }
     }
+
 
     private fun setupUI() {
         binding.btnNextReview2.setOnClickListener { postReview() }
