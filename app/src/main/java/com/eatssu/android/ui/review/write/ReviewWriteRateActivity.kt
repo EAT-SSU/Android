@@ -1,9 +1,10 @@
 package com.eatssu.android.ui.review.write
 
-import android.app.Activity
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -11,8 +12,12 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.service.ImageService
@@ -20,7 +25,6 @@ import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
-import kotlinx.coroutines.launch
 import java.io.File
 
 class ReviewWriteRateActivity :
@@ -41,6 +45,9 @@ class ReviewWriteRateActivity :
     private var comment: String? = ""
 //    private var imageUrlString = ""
 
+    private lateinit var imageFile: File
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
@@ -60,7 +67,11 @@ class ReviewWriteRateActivity :
         setupTextReviewInput()
 
         // 이미지 추가 버튼 클릭 리스너 설정
-        binding.ibAddPic.setOnClickListener { openGallery() }
+        binding.ibAddPic.setOnClickListener {
+            Log.d("re", "클릭")
+
+            selectGallery()
+        }
 
         imageService = mRetrofit.create(ImageService::class.java)
         reviewService = retrofit.create(ReviewService::class.java)
@@ -76,6 +87,127 @@ class ReviewWriteRateActivity :
         setupUI()
         observeViewModel()
 
+
+//        private val activityResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()
+//        ) {
+//
+//            //결과 코드 OK , 결가값 null 아니면
+//            if (it.resultCode == RESULT_OK && it.data != null) {
+//                //값 담기
+//                val uri = it.data!!.data
+//
+//                //화면에 보여주기
+////            Glide.with(this)
+////                .load(uri) //이미지
+////                .into(binding.ivImage) //보여줄 위치
+//
+//                binding.ivImage.setImageURI(uri)
+//            }
+//        }
+//
+//
+//        //버튼 이벤트
+//        binding.ibAddPic.setOnClickListener {
+//
+//            //갤러리 호출
+//            val intent = Intent(Intent.ACTION_PICK)
+//            intent.type = "image/*"
+//            activityResult.launch(intent)
+//        }
+    }//onCreate
+
+
+    //결과 가져오기
+
+
+    //    // 이미지를 결과값으로 받는 변수
+    private val imageResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // 이미지를 받으면 ImageView에 적용한다
+            val imageUri = result.data?.data
+            imageUri?.let {
+
+                // 서버 업로드를 위해 파일 형태로 변환한다
+                imageFile = File(getRealPathFromURI(it))
+
+                // 이미지를 불러온다
+                Glide.with(this)
+                    .load(imageUri)
+                    .fitCenter()
+                    .apply(RequestOptions().override(500, 500))
+                    .into(binding.ivImage)
+
+
+//                binding.ivImage.setImageURI(imageUri) //이미지 불러다 놓기
+
+//                imageviewModel.viewModelScope.launch {
+//                    selectedImagePath = imageUri?.let { getImagePath(it) }
+//                    selectedImagePath?.let { Log.d("path", it) }
+
+//                    imageviewModel.getImageString(selectedImagePath) //이미지 url 반환 api 호출
+
+//
+//                    binding.ivImage.visibility = View.VISIBLE
+//                    binding.btnDelete.visibility = View.VISIBLE
+            }
+        }
+
+    }
+
+    // 이미지 실제 경로 반환
+    fun getRealPathFromURI(uri: Uri): String {
+
+        val buildName = Build.MANUFACTURER
+        if (buildName.equals("Xiaomi")) {
+            return uri.path!!
+        }
+        var columnIndex = 0
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, proj, null, null, null)
+        if (cursor!!.moveToFirst()) {
+            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        }
+        val result = cursor.getString(columnIndex)
+        cursor.close()
+        return result
+    }
+
+    // 갤러리를 부르는 메서드
+    private fun selectGallery() {
+        val writePermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val readPermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        //권한 확인
+        if (writePermission == PackageManager.PERMISSION_DENIED ||
+            readPermission == PackageManager.PERMISSION_DENIED
+        ) {
+
+            // 권한 요청
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ), REQ_GALLERY
+            )
+            Log.d("re", "권한 없")
+
+        } else {
+            Log.d("re", "권한 잇음")
+            // 권한이 있는 경우 갤러리 실행
+            val intent = Intent(Intent.ACTION_PICK)
+            // intent의 data와 type을 동시에 설정하는 메서드
+            intent.setDataAndType(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*"
+            )
+
+            imageResult.launch(intent)
+        }
     }
 
     private fun setupUI() {
@@ -118,45 +250,45 @@ class ReviewWriteRateActivity :
             override fun afterTextChanged(p0: Editable?) {}
         })
     }
+//
+//    private fun openGallery() {
+//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        startActivityForResult(intent, REQUEST_IMAGE_PICK)
+//    }
+//
+//    @Deprecated("Deprecated in Java")
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
+//            val imageUri = data.data
+//
+//            binding.ivImage.setImageURI(imageUri) //이미지 불러다 놓기
+//
+//            imageviewModel.viewModelScope.launch {
+//                selectedImagePath = imageUri?.let { getImagePath(it) }
+//                selectedImagePath?.let { Log.d("path", it) }
+//
+//                imageviewModel.getImageString(selectedImagePath) //이미지 url 반환 api 호출
+//
+//
+//                binding.ivImage.visibility = View.VISIBLE
+//                binding.btnDelete.visibility = View.VISIBLE
+//            }
+//        }
+//    }
 
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, REQUEST_IMAGE_PICK)
-    }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
-            val imageUri = data.data
-
-            binding.ivImage.setImageURI(imageUri) //이미지 불러다 놓기
-
-            imageviewModel.viewModelScope.launch {
-                selectedImagePath = imageUri?.let { getImagePath(it) }
-                selectedImagePath?.let { Log.d("path", it) }
-
-                imageviewModel.getImageString(selectedImagePath) //이미지 url 반환 api 호출
-
-
-                binding.ivImage.visibility = View.VISIBLE
-                binding.btnDelete.visibility = View.VISIBLE
-            }
-        }
-    }
-
-
-    private fun getImagePath(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                return it.getString(columnIndex)
-            }
-        }
-        return null
-    }
+//    private fun getImagePath(uri: Uri): String? {
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = contentResolver.query(uri, projection, null, null, null)
+//        cursor?.use {
+//            if (it.moveToFirst()) {
+//                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//                return it.getString(columnIndex)
+//            }
+//        }
+//        return null
+//    }
 
 
     private fun deleteImage() {
@@ -209,9 +341,21 @@ class ReviewWriteRateActivity :
     }
 
 
-
+//
+//    companion object {
+//        private const val REQUEST_IMAGE_PICK = 1
+//    }
 
     companion object {
-        private const val REQUEST_IMAGE_PICK = 1
+        const val REVIEW_MIN_LENGTH = 10
+
+        // 갤러리 권한 요청
+        const val REQ_GALLERY = 1
+
+        // API 호출시 Parameter key값
+        const val PARAM_KEY_IMAGE = "image"
+        const val PARAM_KEY_PRODUCT_ID = "product_id"
+        const val PARAM_KEY_REVIEW = "review_content"
+        const val PARAM_KEY_RATING = "rating"
     }
 }
