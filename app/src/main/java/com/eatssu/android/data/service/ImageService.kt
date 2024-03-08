@@ -13,6 +13,6 @@ interface ImageService {
     @Multipart
     @POST("/reviews/upload/image") //리뷰 이미지 업로드
     fun getImageUrl(
-        @Part files: MultipartBody.Part,
+        @Part image: MultipartBody.Part,
     ): Call<BaseResponse<ImageResponse>>
 }

@@ -22,34 +22,32 @@ class ImageViewModel(
     private val imageService: ImageService,
 ) : ViewModel() {
 
-    private val _imagePath = MutableLiveData<String>()
-    val imagePath: LiveData<String> get() = _imagePath
+    private val _imageUrl = MutableLiveData<String>()
+    val imageUrl: LiveData<String> get() = _imageUrl
 
-    private var _imageString = MutableLiveData<String>("")
-    val imageString: LiveData<String> get() = _imageString
+    private var _imageFile = MutableLiveData<File>()
+    val imageFile: LiveData<File> get() = _imageFile
 
-    private suspend fun compressImage(imageString: String?): MultipartBody.Part? {
-
-        if (imageString != null) {
-            val file = File(imageString)
-            val compressedFile =
-                Compressor.compress(App.appContext, file) { quality(80) }
-            val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
-
-            return MultipartBody.Part.createFormData(
-                "multipartFileList",
-                compressedFile.name,
-                requestFile
-            )
-        }
-        return null
+    fun setImageFile(imageFile: File) {
+        _imageFile.value = imageFile
     }
 
-    suspend fun getImageString(imageString: String?) {
-        val compressImageString = compressImage(imageString)
+    private suspend fun compressImage(imageFile: File): MultipartBody.Part {
 
-        if (compressImageString != null) { //null일 때는 할 필요가 없음
+        val compressedFile = Compressor.compress(App.appContext, imageFile) { quality(80) }
+        val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
 
+        return MultipartBody.Part.createFormData(
+            "image",
+            compressedFile.name,
+            requestFile
+        )
+    }
+
+    suspend fun saveS3() {
+        val compressImageString = imageFile.value?.let { compressImage(it) }
+
+        if (compressImageString != null) {
             imageService.getImageUrl(compressImageString).enqueue(
                 object : Callback<BaseResponse<ImageResponse>> {
                     override fun onResponse(
@@ -58,13 +56,13 @@ class ImageViewModel(
                     ) {
                         if (response.isSuccessful) {
                             // 정상적으로 통신이 성공된 경우
-                            _imageString.value = response.body()?.result?.url.toString()
-                            Log.d("ReviewWriteRateActivity", _imageString.value.toString())
+                            _imageUrl.value = response.body()?.result?.url.toString()
+                            Log.d("ImageViewModel", _imageUrl.value.toString())
 
 
                         } else {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            Log.d("ReviewWriteRateActivity", "onResponse 리뷰 작성 실패")
+                            Log.d("ImageViewModel", "onResponse 리뷰 작성 실패")
                         }
                     }
 
@@ -74,12 +72,11 @@ class ImageViewModel(
                     ) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
                         Log.d(
-                            "ReviewWriteRateActivity",
+                            "ImageViewModel",
                             "onFailure 에러: " + t.message.toString()
                         )
                     }
                 })
-
         }
     }
 }
