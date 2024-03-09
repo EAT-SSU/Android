@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
 import com.eatssu.android.ui.main.menu.MenuViewModel
@@ -18,7 +19,10 @@ class ReviewWriteMenuActivity : BaseActivity<ActivityReviewWriteMenuBinding>(Act
 
     private lateinit var menuPickAdapter: MenuPickAdapter
     private lateinit var viewModel: MenuViewModel
+
     private lateinit var menuService: MenuService
+    private lateinit var mealService: MealService
+
     private lateinit var items: ArrayList<Pair<String, Long>>
     private var currentItemIndex = 0
 
@@ -39,10 +43,14 @@ class ReviewWriteMenuActivity : BaseActivity<ActivityReviewWriteMenuBinding>(Act
 
     private fun initServices() {
         menuService = retrofit.create(MenuService::class.java)
+        mealService = retrofit.create(MealService::class.java)
     }
 
     private fun initViewModel(mealId: Long) {
-        viewModel = ViewModelProvider(this, MenuViewModelFactory(menuService))[MenuViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            MenuViewModelFactory(menuService, mealService)
+        )[MenuViewModel::class.java]
         Log.d("MenuPickActivity", "!!!받은" + viewModel.findMenuItemByMealId(mealId).toString())
         Log.d("MenuPickActivity", "!!!받은2" + viewModel.menuBymealId.toString())
     }

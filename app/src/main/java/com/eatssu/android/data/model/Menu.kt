@@ -4,5 +4,5 @@ data class Menu(
     val id: Long,
     val name: String,
     val price: Int,
-    val rate: String,
+    val rate: Double,
 )

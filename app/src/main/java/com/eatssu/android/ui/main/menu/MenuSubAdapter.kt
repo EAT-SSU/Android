@@ -28,7 +28,7 @@ class MenuSubAdapter(
                 when (dataList[position].rate.toString()) {
                     "0.0" -> "-"
                     "NaN" -> "-"
-                    else -> dataList[position].rate
+                    else -> dataList[position].rate.toString()
                 }
         }
     }

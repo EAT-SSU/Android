@@ -2,15 +2,19 @@ package com.eatssu.android.ui.main.menu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 
-class MenuViewModelFactory(private val menuService: MenuService) :
+class MenuViewModelFactory(
+    private val menuService: MenuService,
+    private val mealService: MealService,
+) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MenuViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MenuViewModel(menuService) as T
+            return MenuViewModel(menuService, mealService) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

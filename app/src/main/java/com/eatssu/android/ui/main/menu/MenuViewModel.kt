@@ -7,10 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
-import com.eatssu.android.data.dto.response.FixMenuInfoList
-import com.eatssu.android.data.dto.response.GetTodayMealResponseDto
+import com.eatssu.android.data.dto.response.GetFixedMenuResponse
+import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
+import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -18,25 +19,26 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class MenuViewModel(private val menuService: MenuService) : ViewModel() {
+class MenuViewModel(private val menuService: MenuService, private val mealService: MealService) :
+    ViewModel() {
 
-    private val _todayMealDataDodam = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealDataDodam: LiveData<GetTodayMealResponseDto> = _todayMealDataDodam
+    private val _todayMealDataDodam = MutableLiveData<ArrayList<GetMealResponse>>()
+    val todayMealDataDodam: LiveData<ArrayList<GetMealResponse>> = _todayMealDataDodam
 
-    private val _todayMealDataHaksik = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealDataHaksik: LiveData<GetTodayMealResponseDto> = _todayMealDataHaksik
+    private val _todayMealDataHaksik = MutableLiveData<ArrayList<GetMealResponse>>()
+    val todayMealDataHaksik: LiveData<ArrayList<GetMealResponse>> = _todayMealDataHaksik
 
-    private val _todayMealDataDormitory = MutableLiveData<GetTodayMealResponseDto>()
-    val todayMealDataDormitory: LiveData<GetTodayMealResponseDto> = _todayMealDataDormitory
+    private val _todayMealDataDormitory = MutableLiveData<ArrayList<GetMealResponse>>()
+    val todayMealDataDormitory: LiveData<ArrayList<GetMealResponse>> = _todayMealDataDormitory
 
-    private val _fixedMenuDataKitchen = MutableLiveData<ArrayList<FixMenuInfoList>>()
-    val fixedMenuDataKitchen: MutableLiveData<ArrayList<FixMenuInfoList>> = _fixedMenuDataKitchen
+    private val _fixedMenuDataKitchen = MutableLiveData<GetFixedMenuResponse>()
+    val fixedMenuDataKitchen: MutableLiveData<GetFixedMenuResponse> = _fixedMenuDataKitchen
 
-    private val _fixedMenuDataSnack = MutableLiveData<ArrayList<FixMenuInfoList>>()
-    val fixedMenuDataSnack: MutableLiveData<ArrayList<FixMenuInfoList>> = _fixedMenuDataSnack
+    private val _fixedMenuDataSnack = MutableLiveData<GetFixedMenuResponse>()
+    val fixedMenuDataSnack: MutableLiveData<GetFixedMenuResponse> = _fixedMenuDataSnack
 
-    private val _fixedMenuDataFood = MutableLiveData<ArrayList<FixMenuInfoList>>()
-    val fixedMenuDataFood: MutableLiveData<ArrayList<FixMenuInfoList>> = _fixedMenuDataFood
+    private val _fixedMenuDataFood = MutableLiveData<GetFixedMenuResponse>()
+    val fixedMenuDataFood: MutableLiveData<GetFixedMenuResponse> = _fixedMenuDataFood
 
     private val _menuBymealId = MutableLiveData<ChangeMenuInfoListDto>()
     val menuBymealId: MutableLiveData<ChangeMenuInfoListDto> = _menuBymealId
@@ -48,11 +50,11 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
         time: Time,
     ) {
         viewModelScope.launch {
-            menuService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
-                .enqueue(object : Callback<BaseResponse<GetTodayMealResponseDto>> {
+            mealService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
+                .enqueue(object : Callback<BaseResponse<ArrayList<GetMealResponse>>> {
                     override fun onResponse(
-                        call: Call<BaseResponse<GetTodayMealResponseDto>>,
-                        response: Response<BaseResponse<GetTodayMealResponseDto>>,
+                        call: Call<BaseResponse<ArrayList<GetMealResponse>>>,
+                        response: Response<BaseResponse<ArrayList<GetMealResponse>>>,
                     ) {
                         val data = response.body()?.result
 
@@ -77,7 +79,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                     }
 
                     override fun onFailure(
-                        call: Call<BaseResponse<GetTodayMealResponseDto>>,
+                        call: Call<BaseResponse<ArrayList<GetMealResponse>>>,
                         t: Throwable,
                     ) {
                         Log.d("post", "onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
@@ -90,10 +92,10 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
     fun loadFixedMenu(restaurantType: Restaurant) {
         viewModelScope.launch {
             menuService.getFixMenu(restaurantType.toString())
-                .enqueue(object : Callback<BaseResponse<ArrayList<FixMenuInfoList>>> {
+                .enqueue(object : Callback<BaseResponse<GetFixedMenuResponse>> {
                     override fun onResponse(
-                        call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>,
-                        response: Response<BaseResponse<ArrayList<FixMenuInfoList>>>,
+                        call: Call<BaseResponse<GetFixedMenuResponse>>,
+                        response: Response<BaseResponse<GetFixedMenuResponse>>,
                     ) {
                         if (response.isSuccessful) {
                             Log.d("post", "onResponse 성공" + response.body())
@@ -113,7 +115,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
                     }
 
                     override fun onFailure(
-                        call: Call<BaseResponse<ArrayList<FixMenuInfoList>>>,
+                        call: Call<BaseResponse<GetFixedMenuResponse>>,
                         t: Throwable,
                     ) {
                         Log.d("post", "onFailure 에러: ${t.message}")
@@ -124,7 +126,7 @@ class MenuViewModel(private val menuService: MenuService) : ViewModel() {
 
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
-            menuService.getMenuInfoByMealId(mealId)
+            mealService.getMenuInfoByMealId(mealId)
                 .enqueue(object : Callback<BaseResponse<ChangeMenuInfoListDto>> {
                     override fun onResponse(
                         call: Call<BaseResponse<ChangeMenuInfoListDto>>,
