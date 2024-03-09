@@ -46,18 +46,18 @@ class MenuSubAdapter(
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
 
-            if(menuType==MenuType.FIX){
-                Log.d("SubMenuAdapter","고정메뉴${dataList[position].name}")
+            if (menuType == MenuType.FIXED) {
+                Log.d("SubMenuAdapter", "고정메뉴${dataList[position].name}")
                 intent.putExtra("itemId", dataList[position].id)
                 intent.putExtra("itemName", dataList[position].name)
-                intent.putExtra("menuType", MenuType.FIX.toString())
+                intent.putExtra("menuType", MenuType.FIXED.toString())
             }
 
-            if(menuType==MenuType.CHANGE){
-                Log.d("SubMenuAdapter","변동메뉴${dataList[position].name}")
+            if (menuType == MenuType.VARIABLE) {
+                Log.d("SubMenuAdapter", "변동메뉴${dataList[position].name}")
                 intent.putExtra("itemId", dataList[position].id)
                 intent.putExtra("itemName", dataList[position].name)
-                intent.putExtra("menuType", MenuType.CHANGE.toString())
+                intent.putExtra("menuType", MenuType.VARIABLE.toString())
             }
             ContextCompat.startActivity(holder.itemView.context, intent, null)
 

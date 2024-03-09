@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.GetReviewInfoResponse
+import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
+import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.Review
@@ -22,7 +23,7 @@ import retrofit2.Response
 class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
     private val _itemState: MutableStateFlow<ItemState> =
-        MutableStateFlow(ItemState(MenuType.FIX, 0))
+        MutableStateFlow(ItemState(MenuType.FIXED, 0))
     val ItemState: StateFlow<ItemState> = _itemState.asStateFlow()
 
     private val _state: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
@@ -36,16 +37,15 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
 
     fun loadMenuReviewInfo(
-        menuType: MenuType,
         menuId: Long,
     ) {
         viewModelScope.launch {
 
-            reviewService.getMenuReviewInfo(menuType.toString(), menuId)
-                .enqueue(object : Callback<BaseResponse<GetReviewInfoResponse>> {
+            reviewService.getMenuReviewInfo(menuId)
+                .enqueue(object : Callback<BaseResponse<GetMenuReviewInfoResponse>> {
                     override fun onResponse(
-                        call: Call<BaseResponse<GetReviewInfoResponse>>,
-                        response: Response<BaseResponse<GetReviewInfoResponse>>,
+                        call: Call<BaseResponse<GetMenuReviewInfoResponse>>,
+                        response: Response<BaseResponse<GetMenuReviewInfoResponse>>,
                     ) {
                         if (response.isSuccessful) {
                             val data = response.body()?.result!!
@@ -66,7 +66,7 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                     }
 
                     override fun onFailure(
-                        call: Call<BaseResponse<GetReviewInfoResponse>>,
+                        call: Call<BaseResponse<GetMenuReviewInfoResponse>>,
                         t: Throwable,
                     ) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
@@ -77,15 +77,14 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
     }
 
     fun loadMealReviewInfo(
-        menuType: MenuType,
         menuId: Long,
     ) {
         viewModelScope.launch {
             reviewService.getMealReviewInfo(menuId)
-                .enqueue(object : Callback<BaseResponse<GetReviewInfoResponse>> {
+                .enqueue(object : Callback<BaseResponse<GetMealReviewInfoResponse>> {
                     override fun onResponse(
-                        call: Call<BaseResponse<GetReviewInfoResponse>>,
-                        response: Response<BaseResponse<GetReviewInfoResponse>>,
+                        call: Call<BaseResponse<GetMealReviewInfoResponse>>,
+                        response: Response<BaseResponse<GetMealReviewInfoResponse>>,
                     ) {
                         if (response.isSuccessful) {
 
@@ -104,7 +103,7 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                     }
 
                     override fun onFailure(
-                        call: Call<BaseResponse<GetReviewInfoResponse>>,
+                        call: Call<BaseResponse<GetMealReviewInfoResponse>>,
                         t: Throwable,
                     ) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
@@ -179,6 +178,6 @@ data class ReviewState(
     var review: Review? = null,
     var reviewList: GetReviewListResponse? = null,
     var isEmpty: Boolean = true,
-    var menuType: MenuType? = MenuType.FIX,
+    var menuType: MenuType? = MenuType.FIXED,
     var itemId: Long? = 0,
 )

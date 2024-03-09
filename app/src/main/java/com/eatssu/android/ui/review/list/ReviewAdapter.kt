@@ -25,14 +25,14 @@ class ReviewAdapter(private val dataList: GetReviewListResponse?) :
             val data = dataList?.dataList?.get(position)
             binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
-            binding.tvReviewItemDate.text = data?.writeDate
+            binding.tvReviewItemDate.text = data?.writedAt
             binding.tvMenuName.text = data?.menu
 
-            binding.tvTotalRating.text = data?.mainGrade?.toString()
-            binding.tvTasteRating.text = data?.tasteGrade?.toString()
-            binding.tvAmountRating.text = data?.amountGrade?.toString()
+            binding.tvTotalRating.text = data?.mainRating?.toString()
+            binding.tvTasteRating.text = data?.tasteRating?.toString()
+            binding.tvAmountRating.text = data?.amountRating?.toString()
 
-            val imgUrlList: List<String>? = data?.imgUrlList
+            val imgUrlList: List<String>? = data?.imageUrls
 
             val imageView: ImageView = binding.ivReviewPhoto
 
@@ -65,14 +65,14 @@ class ReviewAdapter(private val dataList: GetReviewListResponse?) :
             val data = dataList?.dataList?.get(position)
             binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
-            binding.tvReviewItemDate.text = data?.writeDate
+            binding.tvReviewItemDate.text = data?.writedAt
             binding.tvMenuName.text = data?.menu
 
-            binding.tvTotalRating.text = data?.mainGrade?.toString()
-            binding.tvTasteRating.text = data?.tasteGrade?.toString()
-            binding.tvAmountRating.text = data?.amountGrade?.toString()
+            binding.tvTotalRating.text = data?.mainRating?.toString()
+            binding.tvTasteRating.text = data?.tasteRating?.toString()
+            binding.tvAmountRating.text = data?.amountRating?.toString()
 
-            val imgUrlList: List<String>? = data?.imgUrlList
+            val imgUrlList: List<String>? = data?.imageUrls
 
             val imageView: ImageView = binding.ivReviewPhoto
 

@@ -4,28 +4,14 @@ package com.eatssu.android.data.service
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.GetReviewInfoResponse
+import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
+import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import retrofit2.Call
 import retrofit2.http.*
 
 
 interface ReviewService {
-//    @Multipart
-//    @POST("reviews/{menuId}")
-//    fun writeReview(
-//        @Path("menuId") menuId: Long,
-//        @Part files: List<MultipartBody.Part>, // Remove the part name from the annotation
-//        @Part("reviewCreate") reviewData: RequestBody,
-//    ): Call<BaseResponse<Void>>
-//
-//    @Multipart
-//    @POST("reviews/{menuId}")
-//    fun writeReview(
-//        @Path("menuId") menuId: Long,
-//        @Part("reviewCreate") reviewData: RequestBody,
-//    ): Call<BaseResponse<Void>>
-
     @POST("/reviews/write/{menuId}") //리뷰 작성
     fun writeReview(
         @Path("menuId") menuId: Long,
@@ -43,26 +29,26 @@ interface ReviewService {
         @Body request: ModifyReviewRequest,
     ): Call<BaseResponse<Void>>
 
+    //Todo paging 라이브러리 써보기
     @GET("/reviews") //리뷰 리스트 조회
     fun getReviewList(
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
         @Query("menuId") menuId: Long?,
 //        @Query("lastReviewId") lastReviewId: Long?,
-//        @Query("page") page: Int?,
-//        @Query("size") size: Int?,
-//        @Query("black") black: List<String>?
+//        @Query("page") page: Int? =
+//        @Query("size") size: Int? = 20
+//        @Query("sort") sort: List<String>? = arrayListOf("date","DESC")
     ): Call<BaseResponse<GetReviewListResponse>>
 
     @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
     fun getMenuReviewInfo(
-        @Query("menuType") menuType: String,
         @Path("menuId") menuId: Long,
-    ): Call<BaseResponse<GetReviewInfoResponse>>
+    ): Call<BaseResponse<GetMenuReviewInfoResponse>>
 
-    @GET("/reviews/menus/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
+    @GET("/reviews/meals/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
     fun getMealReviewInfo(
         @Path("mealId") mealId: Long,
-    ): Call<BaseResponse<GetReviewInfoResponse>>
+    ): Call<BaseResponse<GetMealReviewInfoResponse>>
 
 }

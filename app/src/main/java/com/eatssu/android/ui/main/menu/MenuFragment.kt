@@ -126,7 +126,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
                         Section(
-                            MenuType.FIX,
+                            MenuType.FIXED,
                             Restaurant.FOOD_COURT,
                             result.mapFixedMenuResponseToMenu()
                         )
@@ -140,7 +140,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
                         Section(
-                            MenuType.FIX,
+                            MenuType.FIXED,
                             Restaurant.SNACK_CORNER,
                             result.mapFixedMenuResponseToMenu()
                         )
@@ -173,7 +173,7 @@ class MenuFragment : Fragment() {
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
-                            MenuType.CHANGE,
+                            MenuType.VARIABLE,
                             Restaurant.HAKSIK,
                             result.mapTodayMenuResponseToMenu()
                         )
@@ -191,7 +191,7 @@ class MenuFragment : Fragment() {
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
-                            MenuType.CHANGE,
+                            MenuType.VARIABLE,
                             Restaurant.DODAM,
                             result.mapTodayMenuResponseToMenu()
                         )
@@ -207,7 +207,7 @@ class MenuFragment : Fragment() {
                 if (result.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
-                            MenuType.CHANGE,
+                            MenuType.VARIABLE,
                             Restaurant.DORMITORY,
                             result.mapTodayMenuResponseToMenu()
                         )

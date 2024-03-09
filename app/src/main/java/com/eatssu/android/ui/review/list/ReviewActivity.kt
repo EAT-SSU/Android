@@ -48,9 +48,9 @@ class ReviewActivity :
         Log.d("ReviewActivity", "메뉴는 ${menuType} ${itemId}")
 
         when (menuType) {
-            "FIX" -> {
-                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
-                viewModel.loadMenuReviewInfo(MenuType.FIX, itemId)
+            "FIXED" -> {
+                viewModel.loadReviewList(MenuType.FIXED, 0, itemId)
+                viewModel.loadMenuReviewInfo(itemId)
 
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
@@ -63,9 +63,9 @@ class ReviewActivity :
                 }
             }
 
-            "CHANGE" -> {
-                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
-                viewModel.loadMealReviewInfo(MenuType.CHANGE, itemId)
+            "VARIABLE" -> {
+                viewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
+                viewModel.loadMealReviewInfo(itemId)
                 val mealId = itemId
 
                 binding.btnNextReview.setOnClickListener {
@@ -152,14 +152,14 @@ class ReviewActivity :
 
         // 다시 데이터를 로드하고 어댑터를 업데이트
         when (menuType) {
-            "FIX" -> {
-                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
-                viewModel.loadMenuReviewInfo(MenuType.FIX, itemId)
+            "FIXED" -> {
+                viewModel.loadReviewList(MenuType.FIXED, 0, itemId)
+                viewModel.loadMenuReviewInfo(itemId)
             }
 
-            "CHANGE" -> {
-                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
-                viewModel.loadMealReviewInfo(MenuType.CHANGE, itemId)
+            "VARIABLE" -> {
+                viewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
+                viewModel.loadMealReviewInfo(itemId)
             }
 
             else -> {
