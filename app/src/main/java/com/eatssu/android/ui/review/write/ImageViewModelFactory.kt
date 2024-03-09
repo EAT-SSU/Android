@@ -2,15 +2,15 @@ package com.eatssu.android.ui.review.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.data.service.ImageService
 
-class UploadReviewViewModelFactory(private val reviewService: ReviewService) :
+class ImageViewModelFactory(private val imageService: ImageService) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(UploadReviewViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(ImageViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return UploadReviewViewModel(reviewService) as T
+            return ImageViewModel(imageService) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

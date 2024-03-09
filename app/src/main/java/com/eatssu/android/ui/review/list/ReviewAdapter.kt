@@ -15,14 +15,14 @@ import com.eatssu.android.ui.review.etc.MyReviewDialogActivity
 import com.eatssu.android.ui.review.etc.ReportActivity
 
 
-class ReviewAdapter(private val dataList: GetReviewListResponse) :
+class ReviewAdapter(private val dataList: GetReviewListResponse?) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            val data = dataList.dataList?.get(position)
+            val data = dataList?.dataList?.get(position)
             binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
             binding.tvReviewItemDate.text = data?.writeDate
@@ -62,7 +62,7 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            val data = dataList.dataList?.get(position)
+            val data = dataList?.dataList?.get(position)
             binding.tvWriterNickname.text = data?.writerNickname.toString()
             binding.tvReviewItemComment.text = data?.content
             binding.tvReviewItemDate.text = data?.writeDate
@@ -120,14 +120,14 @@ class ReviewAdapter(private val dataList: GetReviewListResponse) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (dataList.dataList?.get(position)?.isWriter == true) {
+        return if (dataList?.dataList?.get(position)?.isWriter == true) {
             VIEW_TYPE_MY_REVIEW
         } else {
             VIEW_TYPE_OTHERS_REVIEW
         }
     }
 
-    override fun getItemCount(): Int = dataList.dataList?.size ?: 0
+    override fun getItemCount(): Int = dataList?.dataList?.size ?: 0
 
     companion object {
         private const val VIEW_TYPE_MY_REVIEW = 1

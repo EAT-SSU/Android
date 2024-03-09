@@ -24,8 +24,11 @@ class DeleteViewModel : ViewModel() {
         val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
         viewModelScope.launch(Dispatchers.IO) {
-            service.delReview(reviewId).enqueue(object : Callback<BaseResponse<Void>> {
-                override fun onResponse(call: Call<BaseResponse<Void>>, response: Response<BaseResponse<Void>>) {
+            service.deleteReview(reviewId).enqueue(object : Callback<BaseResponse<Void>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<Void>>,
+                    response: Response<BaseResponse<Void>>,
+                ) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
                             handleSuccessResponse("삭제가 완료되었습니다.")

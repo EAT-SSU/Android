@@ -1,7 +1,10 @@
 package com.eatssu.android.data.dto.request
 
+import com.google.gson.annotations.SerializedName
+
 data class ModifyReviewRequest(
-    val content: String,
-    val grade: Int,
-    val reviewTags: List<String>,
+    @SerializedName("mainRate") var mainRate: Int? = null,
+    @SerializedName("amountRate") var amountRate: Int? = null,
+    @SerializedName("tasteRate") var tasteRate: Int? = null,
+    @SerializedName("content") var content: String? = null,
 )

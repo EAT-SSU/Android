@@ -1,7 +1,7 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.model.request.InquiriesRequest
+import com.eatssu.android.data.dto.request.InquiriesRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

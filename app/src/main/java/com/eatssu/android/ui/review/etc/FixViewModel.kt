@@ -5,12 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.util.RetrofitImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,14 +25,7 @@ class FixViewModel : ViewModel() {
     fun postData(reviewId: Long, comment: String, mainGrade: Int, amountGrade: Int, tasteGrade: Int) {
         val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-        val reviewData = """
-            {
-                "mainGrade": $mainGrade,
-                "amountGrade": $amountGrade,
-                "tasteGrade": $tasteGrade,
-                "content": "$comment"
-            }
-        """.trimIndent().toRequestBody("application/json".toMediaTypeOrNull())
+        val reviewData = ModifyReviewRequest(mainGrade, amountGrade, tasteGrade, comment)
 
         viewModelScope.launch(Dispatchers.IO) {
             service.modifyReview(reviewId, reviewData).enqueue(object : Callback<BaseResponse<Void>> {
