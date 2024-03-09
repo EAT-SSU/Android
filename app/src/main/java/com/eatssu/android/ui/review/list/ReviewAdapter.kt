@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.databinding.ItemOthersReviewBinding
 import com.eatssu.android.databinding.ItemReviewBinding
-import com.eatssu.android.ui.review.etc.MyReviewDialogActivity
-import com.eatssu.android.ui.review.etc.ReportActivity
+import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
+import com.eatssu.android.ui.review.report.ReportActivity
 
 
 class ReviewAdapter(private val dataList: GetReviewListResponse?) :

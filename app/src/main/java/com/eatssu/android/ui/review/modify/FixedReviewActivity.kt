@@ -1,19 +1,11 @@
-package com.eatssu.android.ui.review.etc
+package com.eatssu.android.ui.review.modify
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityFixMenuBinding
-import com.eatssu.android.ui.review.etc.FixViewModel
-import com.eatssu.android.util.RetrofitImpl
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class FixedReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 

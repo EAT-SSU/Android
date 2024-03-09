@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.etc
+package com.eatssu.android.ui.review.report
 
 import android.os.Bundle
 import android.util.Log

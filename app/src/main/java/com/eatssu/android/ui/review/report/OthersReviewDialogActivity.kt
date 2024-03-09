@@ -1,9 +1,9 @@
-package com.eatssu.android.ui.review.etc
+package com.eatssu.android.ui.review.report
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityOthersReviewDialogBinding
 
 class OthersReviewDialogActivity : AppCompatActivity() {

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.dto.response.GetMyReviewResponse
 import com.eatssu.android.databinding.ItemReviewBinding
-import com.eatssu.android.ui.review.etc.MyReviewDialogActivity
+import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
 
 
