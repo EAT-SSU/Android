@@ -42,6 +42,12 @@ class ReviewActivity :
                 ReviewViewModelFactory(reviewService)
             )[ReviewViewModel::class.java]
 
+        getIndex()
+        setClickListener()
+        bindData()
+    }
+
+    private fun getIndex() {
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
@@ -49,7 +55,9 @@ class ReviewActivity :
 
         Log.d("ReviewActivity", "메뉴는 ${itemName}")
         Log.d("ReviewActivity", "메뉴는 ${menuType} ${itemId}")
+    }
 
+    private fun setClickListener() {
         when (menuType) {
             "FIXED" -> {
                 viewModel.loadReviewList(MenuType.FIXED, 0, itemId)
@@ -91,11 +99,9 @@ class ReviewActivity :
                 Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
             }
         }
-
-        setData()
     }
 
-    private fun setData() {
+    private fun bindData() {
         lifecycleScope.launch {
             viewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
@@ -138,7 +144,6 @@ class ReviewActivity :
                             binding.progressBar4.max = totalReviewCount
                             binding.progressBar5.max = totalReviewCount
 
-
                             binding.progressBar1.progress = one
                             binding.progressBar2.progress = two
                             binding.progressBar3.progress = three
@@ -147,67 +152,7 @@ class ReviewActivity :
                         }
                     }
                 }
-
             }
         }
     }
-
-    override fun onRestart() {
-        super.onRestart()
-
-        Log.d("post", "onRestart")
-
-        // 다시 데이터를 로드하고 어댑터를 업데이트
-        when (menuType) {
-            "FIXED" -> {
-                viewModel.loadReviewList(MenuType.FIXED, 0, itemId)
-                viewModel.loadMenuReviewInfo(itemId)
-            }
-
-            "VARIABLE" -> {
-                viewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
-                viewModel.loadMealReviewInfo(itemId)
-            }
-
-            else -> {
-                Log.d("post", "잘못된 식당 정보입니다.")
-            }
-        }
-        Log.d("post", "onRestart")
-
-
-        setData()
-
-        Log.d("post", "onRestart")
-    }
-
-//    override fun onResume() {
-//        super.onResume()
-//        Log.d("post", "resume")
-//
-//        // 다시 데이터를 로드하고 어댑터를 업데이트
-//        when (menuType) {
-//            "FIX" -> {
-//                viewModel.loadReviewList(MenuType.FIX, 0, itemId)
-//                viewModel.loadMenuReviewInfo(MenuType.FIX, itemId)
-//            }
-//
-//            "CHANGE" -> {
-//                viewModel.loadReviewList(MenuType.CHANGE, itemId, 0)
-//                viewModel.loadMealReviewInfo(MenuType.CHANGE, itemId)
-//            }
-//
-//            else -> {
-//                Log.d("post", "잘못된 식당 정보입니다.")
-//            }
-//        }
-//        Log.d("post", "resume시작")
-//
-//
-//        Log.d("post", "resume중간")
-//
-//        setListData()
-//
-//        Log.d("post", "resume끝")
-//    }
 }
