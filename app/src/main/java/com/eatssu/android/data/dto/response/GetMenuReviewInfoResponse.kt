@@ -5,20 +5,20 @@ import com.google.gson.annotations.SerializedName
 
 data class GetMenuReviewInfoResponse(
 
-    @SerializedName("menuName") var menuName: String? = null,
-    @SerializedName("totalReviewCount") var totalReviewCount: Int? = null,
+    @SerializedName("menuName") var menuName: String,
+    @SerializedName("totalReviewCount") var totalReviewCount: Int,
     @SerializedName("mainRating") var mainRating: Double? = null,
     @SerializedName("amountRating") var amountRating: Double? = null,
     @SerializedName("tasteRating") var tasteRating: Double? = null,
-    @SerializedName("reviewRatingCount") var reviewRatingCount: ReviewRatingCount = ReviewRatingCount(),
+    @SerializedName("reviewRatingCount") var reviewRatingCount: ReviewRatingCount,
 ) {
     data class ReviewRatingCount(
 
-        @SerializedName("oneStarCount") var oneStarCount: Int? = null,
-        @SerializedName("twoStarCount") var twoStarCount: Int? = null,
-        @SerializedName("threeStarCount") var threeStarCount: Int? = null,
-        @SerializedName("fourStarCount") var fourStarCount: Int? = null,
-        @SerializedName("fiveStarCount") var fiveStarCount: Int? = null,
+        @SerializedName("oneStarCount") var oneStarCount: Int,
+        @SerializedName("twoStarCount") var twoStarCount: Int,
+        @SerializedName("threeStarCount") var threeStarCount: Int,
+        @SerializedName("fourStarCount") var fourStarCount: Int,
+        @SerializedName("fiveStarCount") var fiveStarCount: Int,
 
         )
 
@@ -26,14 +26,15 @@ data class GetMenuReviewInfoResponse(
 
 fun GetMenuReviewInfoResponse.asReviewInfo() = ReviewInfo(
 
-    name = menuName ?: "",
-    reviewCnt = totalReviewCount ?: 0,
+    name = menuName,
+    reviewCnt = totalReviewCount,
     mainRating = mainRating ?: 0.0,
     amountRating = amountRating ?: 0.0,
     tasteRating = tasteRating ?: 0.0,
-    one = reviewRatingCount.oneStarCount ?: 0,
-    two = reviewRatingCount.twoStarCount ?: 0,
-    three = reviewRatingCount.threeStarCount ?: 0,
-    four = reviewRatingCount.fourStarCount ?: 0,
-    five = reviewRatingCount.fiveStarCount ?: 0,
-)
+    one = reviewRatingCount.oneStarCount,
+    two = reviewRatingCount.twoStarCount,
+    three = reviewRatingCount.threeStarCount,
+    four = reviewRatingCount.fourStarCount,
+    five = reviewRatingCount.fiveStarCount,
+
+    )
