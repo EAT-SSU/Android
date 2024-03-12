@@ -53,7 +53,16 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                             // 정상적으로 통신이 성공된 경우
                             Log.d("post", "onResponse 성공: " + response.body().toString())
 
-                            if (data.mainRating != null) {
+                            if (data.mainRating == null) {
+                                _uiState.update {
+                                    it.copy(
+                                        loading = false,
+                                        error = false,
+                                        reviewInfo = data.asReviewInfo(),
+                                        isEmpty = true
+                                    )
+                                }
+                            } else {
                                 _uiState.update {
                                     it.copy(
                                         loading = false,
@@ -82,10 +91,10 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
     }
 
     fun loadMealReviewInfo(
-        menuId: Long,
+        mealId: Long,
     ) {
         viewModelScope.launch {
-            reviewService.getMealReviewInfo(menuId)
+            reviewService.getMealReviewInfo(mealId)
                 .enqueue(object : Callback<BaseResponse<GetMealReviewInfoResponse>> {
                     override fun onResponse(
                         call: Call<BaseResponse<GetMealReviewInfoResponse>>,
@@ -137,26 +146,25 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                         response: Response<BaseResponse<GetReviewListResponse>>,
                     ) {
                         if (response.isSuccessful) {
+                            Log.d("post", "onResponse 성공: " + response.body().toString())
 
                             val data = response.body()?.result!!
 
-                            if (data.dataList?.isNotEmpty() == true) {
-                                Log.d("post", "onResponse 성공: " + response.body().toString())
+                            if (data.numberOfElements == 0) { //리뷰 없어 시방
+                                _uiState.update {
+                                    it.copy(
+                                        loading = false,
+                                        error = false,
+                                        isEmpty = true
+                                    )
+                                }
+                            } else { //리뷰 있음
                                 _uiState.update {
                                     it.copy(
                                         loading = false,
                                         error = false,
                                         reviewList = data.toReviewList(),
                                         isEmpty = false
-                                    )
-                                }
-
-                            } else {
-                                _uiState.update {
-                                    it.copy(
-                                        loading = false,
-                                        error = false,
-                                        isEmpty = true
                                     )
                                 }
                             }
