@@ -7,8 +7,11 @@ import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
+import com.eatssu.android.data.dto.response.asReviewInfo
+import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.Review
+import com.eatssu.android.data.model.ReviewInfo
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,18 +25,15 @@ import retrofit2.Response
 
 class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
+//    var menuType: MenuType,
+//    var itemId: Long? = 0,
+
     private val _itemState: MutableStateFlow<ItemState> =
         MutableStateFlow(ItemState(MenuType.FIXED, 0))
     val ItemState: StateFlow<ItemState> = _itemState.asStateFlow()
 
-    private val _state: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
-    val state: StateFlow<ReviewState> = _state.asStateFlow()
-
-//    private val _reviewList = MutableLiveData<GetReviewListResponse>()
-//    val reviewList: LiveData<GetReviewListResponse> = _reviewList
-//
-//    private val _reviewInfo = MutableLiveData<GetReviewInfoResponse>()
-//    val reviewInfo: LiveData<GetReviewInfoResponse> = _reviewInfo
+    private val _uiState: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
+    val uiState: StateFlow<ReviewState> = _uiState.asStateFlow()
 
 
     fun loadMenuReviewInfo(
@@ -50,13 +50,18 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                         if (response.isSuccessful) {
                             val data = response.body()?.result!!
 
-
                             // 정상적으로 통신이 성공된 경우
                             Log.d("post", "onResponse 성공: " + response.body().toString())
-                            _state.update {
-                                it.copy(
-//                                    review = data.asReview()
-                                )
+
+                            if (data.mainRating != null) {
+                                _uiState.update {
+                                    it.copy(
+                                        loading = false,
+                                        error = false,
+                                        reviewInfo = data.asReviewInfo(),
+                                        isEmpty = false
+                                    )
+                                }
                             }
 
                         } else {
@@ -91,9 +96,11 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                             val data = response.body()?.result!!
                             // 정상적으로 통신이 성공된 경우
                             Log.d("post", "onResponse 성공: " + response.body().toString())
-                            _state.update {
+                            _uiState.update {
                                 it.copy(
-//                                    review = data.asReview()
+                                    loading = false,
+                                    error = false,
+                                    reviewInfo = data.asReviewInfo()
                                 )
                             }
                         } else {
@@ -133,16 +140,25 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
                             val data = response.body()?.result!!
 
-                            if (data.dataList!!.isNotEmpty()) {
+                            if (data.dataList?.isNotEmpty() == true) {
                                 Log.d("post", "onResponse 성공: " + response.body().toString())
-                                _state.update {
+                                _uiState.update {
                                     it.copy(
-                                        error = true,
-                                        reviewList = data,
+                                        loading = false,
+                                        error = false,
+                                        reviewList = data.toReviewList(),
                                         isEmpty = false
                                     )
                                 }
 
+                            } else {
+                                _uiState.update {
+                                    it.copy(
+                                        loading = false,
+                                        error = false,
+                                        isEmpty = true
+                                    )
+                                }
                             }
                             // 정상적으로 통신이 성공된 경우
 
@@ -171,13 +187,11 @@ data class ItemState(
 )
 
 data class ReviewState(
-//    var toastMessage: String = "",
     var loading: Boolean = true,
     var error: Boolean = false,
-//    var tokens: TokenResponse? = null,
-    var review: Review? = null,
-    var reviewList: GetReviewListResponse? = null,
-    var isEmpty: Boolean = true,
-    var menuType: MenuType? = MenuType.FIXED,
-    var itemId: Long? = 0,
+
+    var isEmpty: Boolean = true, //리뷰 없다~
+
+    var reviewInfo: ReviewInfo? = null,
+    var reviewList: List<Review>? = null,
 )

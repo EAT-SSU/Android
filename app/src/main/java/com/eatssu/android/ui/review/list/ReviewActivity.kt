@@ -37,7 +37,10 @@ class ReviewActivity :
 
         reviewService = retrofit.create(ReviewService::class.java)
         viewModel =
-            ViewModelProvider(this, ReviewViewModelFactory(reviewService))[ReviewViewModel::class.java]
+            ViewModelProvider(
+                this,
+                ReviewViewModelFactory(reviewService)
+            )[ReviewViewModel::class.java]
 
         //get menuId
         menuType = intent.getStringExtra("menuType").toString()
@@ -94,37 +97,41 @@ class ReviewActivity :
 
     private fun setData() {
         lifecycleScope.launch {
-            viewModel.state.collectLatest {
+            viewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
-                    it.reviewList
+
                     if (it.isEmpty) {
                         Log.d("ReviewListActivity", "리뷰가 없음")
                         binding.llNonReview.visibility = View.VISIBLE
                         binding.rvReview.visibility = View.INVISIBLE
-                    } else {
+                    } else { //리뷰 있다.
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
                         adapter = ReviewAdapter(it.reviewList)
-                        val recyclerView = binding.rvReview
-                        recyclerView.adapter = adapter
-                        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-                        recyclerView.setHasFixedSize(true)
+
+                        binding.rvReview.apply {
+                            adapter = adapter
+                            layoutManager = LinearLayoutManager(applicationContext)
+                            setHasFixedSize(true)
+                        }
 
 
-                        it.review?.apply {
-                            binding.tvMenu.text = name.toString().replace(Regex("[\\[\\]]"), "")
-                            binding.tvRate.text =
-                                String.format("%.1f", mainRating?.toFloat())
-                                    .toFloat().toString()
-                            binding.tvGradeTaste.text =
-                                String.format("%.1f", tasteRating?.toFloat())
-                                    .toFloat().toString()
-                            binding.tvGradeAmount.text =
-                                String.format("%.1f", amountRating?.toFloat())
-                                    .toFloat().toString()
+                        it.reviewInfo?.apply {
+                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+
                             binding.tvReviewNumCount.text = reviewCnt.toString()
 
-                            val totalReviewCount = reviewCnt ?: 0
+                            binding.tvRate.text =
+                                String.format("%.1f", mainRating.toFloat())
+                                    .toFloat().toString()
+                            binding.tvGradeTaste.text =
+                                String.format("%.1f", tasteRating.toFloat())
+                                    .toFloat().toString()
+                            binding.tvGradeAmount.text =
+                                String.format("%.1f", amountRating.toFloat())
+                                    .toFloat().toString()
+
+                            val totalReviewCount = reviewCnt
                             binding.progressBar1.max = totalReviewCount
                             binding.progressBar2.max = totalReviewCount
                             binding.progressBar3.max = totalReviewCount
@@ -132,11 +139,11 @@ class ReviewActivity :
                             binding.progressBar5.max = totalReviewCount
 
 
-                            binding.progressBar1.progress = ratingDetails.one
-                            binding.progressBar2.progress = ratingDetails.two
-                            binding.progressBar3.progress = ratingDetails.three
-                            binding.progressBar4.progress = ratingDetails.four
-                            binding.progressBar5.progress = ratingDetails.five
+                            binding.progressBar1.progress = one
+                            binding.progressBar2.progress = two
+                            binding.progressBar3.progress = three
+                            binding.progressBar4.progress = four
+                            binding.progressBar5.progress = five
                         }
                     }
                 }
