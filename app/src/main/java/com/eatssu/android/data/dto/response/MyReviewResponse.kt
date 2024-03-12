@@ -1,6 +1,6 @@
 package com.eatssu.android.data.dto.response
 
-data class GetMyReviewResponse(
+data class MyReviewResponse(
     val dataList: List<Data>,
     val hasNext: Boolean,
     val numberOfElements: Int,

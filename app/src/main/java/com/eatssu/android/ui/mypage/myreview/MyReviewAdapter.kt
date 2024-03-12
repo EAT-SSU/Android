@@ -8,13 +8,13 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.eatssu.android.data.dto.response.GetMyReviewResponse
+import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
 
 
-class MyReviewAdapter(private val dataList: List<GetMyReviewResponse.Data>) :
+class MyReviewAdapter(private val dataList: List<MyReviewResponse.Data>) :
     RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
