@@ -35,30 +35,3 @@ fun ArrayList<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
 
     return menuList
 }
-
-//fun GetTodayMealResponse.combineMenuInformation(): List<Menu> {
-//    val menus = mutableListOf<Menu>()
-//    menusInformationList.forEach { menuInfo ->
-//        val menu = Menu(menuInfo.name, menuInfo.menuId)
-//        menus.add(menu)
-//    }
-//    return menus
-//
-//fun GetTodayMealResponseDto.mapTodayMenuResponseToMenu(): List<Menu> {
-//    val menuList = mutableListOf<Menu>()
-//
-//    mealInformationResponseList.forEach { mealInfo ->
-//        val nameList = mealInfo.menusInformation.mapNotNull { it.name } // Filter out null names
-//        if (nameList.isNotEmpty()) {
-//            val name = nameList.joinToString("+")
-//            val menu = Menu(
-//                id = mealInfo.mealId ?: -1, // Default value if mealId is null
-//                name = name,
-//                price = mealInfo.price ?: 0, // Default value if price is null
-//                rate = mealInfo.mainRating ?: ""
-//            )
-//            menuList.add(menu)
-//        }
-//    }
-//
-//    return menuList

@@ -1,40 +1,44 @@
 package com.eatssu.android.data.dto.response
 
+import com.eatssu.android.data.model.Review
 import com.google.gson.annotations.SerializedName
 
 data class GetReviewListResponse(
     @SerializedName("numberOfElements") var numberOfElements: Int? = null,
     @SerializedName("hasNext") var hasNext: Boolean? = null,
-    @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf(),
-)
+    @SerializedName("dataList") var dataList: ArrayList<DataList>? = arrayListOf(),
+) {
 
-data class DataList(
+    data class DataList(
 
-    @SerializedName("reviewId") var reviewId: Int? = null,
-    @SerializedName("menu") var menu: String? = null,
-    @SerializedName("writerId") var writerId: Int? = null,
-    @SerializedName("isWriter") var isWriter: Boolean? = null,
-    @SerializedName("writerNickname") var writerNickname: String? = null,
-    @SerializedName("mainRating") var mainRating: Int? = null,
-    @SerializedName("amountRating") var amountRating: Int? = null,
-    @SerializedName("tasteRating") var tasteRating: Int? = null,
-    @SerializedName("writedAt") var writedAt: String? = null,
-    @SerializedName("content") var content: String? = null,
-    @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
+        @SerializedName("reviewId") var reviewId: Long,
+        @SerializedName("menu") var menu: String,
+        @SerializedName("writerId") var writerId: Long,
+        @SerializedName("isWriter") var isWriter: Boolean,
+        @SerializedName("writerNickname") var writerNickname: String,
+        @SerializedName("mainRating") var mainRating: Int,
+        @SerializedName("amountRating") var amountRating: Int,
+        @SerializedName("tasteRating") var tasteRating: Int,
+        @SerializedName("writedAt") var writedAt: String,
+        @SerializedName("content") var content: String,
+        @SerializedName("imageUrls") var imageUrls: ArrayList<String?> = arrayListOf(),
 
-    )
+        )
+}
 
-//fun GetReviewListResponse.toReviewList(): List<Reviews> {
-//    return dataList.orEmpty().map { data ->
-//        Reviews(
-//            menu = data.menu,
-//            writerNickname = data.writerNickname,
-//            mainGrade = data.mainGrade,
-//            amountGrade = data.amountGrade,
-//            tasteGrade = data.tasteGrade,
-//            writeDate = data.writeDate,
-//            content = data.content,
-//            imgUrlList = data.imgUrlList
-//        )
-//    }
-//}
+fun GetReviewListResponse.toReviewList(): List<Review> {
+    return dataList!!.map { data ->
+        Review(
+            reviewId = data.reviewId,
+            isWriter = data.isWriter,
+            menu = data.menu,
+            writerNickname = data.writerNickname,
+            mainGrade = data.mainRating,
+            amountGrade = data.amountRating,
+            tasteGrade = data.tasteRating,
+            writeDate = data.writedAt,
+            content = data.content,
+            imgUrlList = data.imageUrls[0] ?: ""
+        )
+    }
+}
