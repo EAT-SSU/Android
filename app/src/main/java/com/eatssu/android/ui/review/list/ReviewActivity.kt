@@ -28,7 +28,7 @@ class ReviewActivity :
     private var itemId by Delegates.notNull<Long>()
 
     private lateinit var itemName: String
-    var adapter: ReviewAdapter? = null
+    private var reviewAdapter: ReviewAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,16 +107,19 @@ class ReviewActivity :
                 if (!it.error && !it.loading) {
 
                     if (it.isEmpty) {
+
                         Log.d("ReviewListActivity", "리뷰가 없음")
                         binding.llNonReview.visibility = View.VISIBLE
                         binding.rvReview.visibility = View.INVISIBLE
+
                     } else { //리뷰 있다.
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
-                        adapter = ReviewAdapter(it.reviewList)
+                        reviewAdapter = ReviewAdapter(it.reviewList)
+                        Log.d("ReviewListActivity", "리뷰가 있음")
 
                         binding.rvReview.apply {
-                            adapter = adapter
+                            adapter = reviewAdapter
                             layoutManager = LinearLayoutManager(applicationContext)
                             setHasFixedSize(true)
                         }
