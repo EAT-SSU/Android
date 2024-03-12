@@ -27,7 +27,6 @@ import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -293,18 +292,15 @@ class ReviewWriteRateActivity :
         viewModel.postReview()
 
         lifecycleScope.launch {
-            viewModel.state.collectLatest {
+            viewModel.state.collect {
                 if (it.error) {
                     showToast(viewModel.state.value.toastMessage)
                 }
                 if (it.isUpload) {
                     showToast(viewModel.state.value.toastMessage)
-//                    finish()
+                    finish()
                 }
-
             }
-
-            Log.d("ReviewWriteRateActivity", "리뷰 씀")
         }
 
 
