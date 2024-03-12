@@ -153,3 +153,14 @@ class MenuViewModel(private val menuService: MenuService, private val mealServic
         }
     }
 }
+
+data class MenuState(
+    var toastMessage: String = "",
+    var loading: Boolean = true,
+    var error: Boolean = false,
+    var haksikMeal: ArrayList<GetMealResponse>? = null,
+    var dodamMeal: ArrayList<GetMealResponse>? = null,
+    var dormitoryMeal: ArrayList<GetMealResponse>? = null,
+    var snackMenu: GetFixedMenuResponse? = null,
+    var foodcourtMenu: GetFixedMenuResponse? = null,
+)
