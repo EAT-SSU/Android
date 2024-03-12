@@ -28,6 +28,7 @@ class MenuSubAdapter(
                 when (dataList[position].rate.toString()) {
                     "0.0" -> "-"
                     "NaN" -> "-"
+                    "null" -> "-"
                     else -> dataList[position].rate.toString()
                 }
         }
@@ -46,18 +47,20 @@ class MenuSubAdapter(
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
 
-            if (menuType == MenuType.FIXED) {
-                Log.d("SubMenuAdapter", "고정메뉴${dataList[position].name}")
-                intent.putExtra("itemId", dataList[position].id)
-                intent.putExtra("itemName", dataList[position].name)
-                intent.putExtra("menuType", MenuType.FIXED.toString())
-            }
+            when (menuType) {
+                MenuType.FIXED -> {
+                    Log.d("SubMenuAdapter", "고정메뉴${dataList[position].name}")
+                    intent.putExtra("itemId", dataList[position].id)
+                    intent.putExtra("itemName", dataList[position].name)
+                    intent.putExtra("menuType", MenuType.FIXED.toString())
+                }
 
-            if (menuType == MenuType.VARIABLE) {
-                Log.d("SubMenuAdapter", "변동메뉴${dataList[position].name}")
-                intent.putExtra("itemId", dataList[position].id)
-                intent.putExtra("itemName", dataList[position].name)
-                intent.putExtra("menuType", MenuType.VARIABLE.toString())
+                MenuType.VARIABLE -> {
+                    Log.d("SubMenuAdapter", "변동메뉴${dataList[position].name}")
+                    intent.putExtra("itemId", dataList[position].id)
+                    intent.putExtra("itemName", dataList[position].name)
+                    intent.putExtra("menuType", MenuType.VARIABLE.toString())
+                }
             }
             ContextCompat.startActivity(holder.itemView.context, intent, null)
 
