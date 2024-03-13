@@ -42,6 +42,15 @@ class ReviewActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
+        initViewModel()
+        getIndex()
+        lodeData()
+        bindData()
+        setClickListener()
+
+    }
+
+    private fun initViewModel() {
         reviewService = retrofit.create(ReviewService::class.java)
 //        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -56,13 +65,6 @@ class ReviewActivity :
             )[ReviewViewModel::class.java]
 
         binding.viewModel = reviewViewModel
-
-
-        getIndex()
-        lodeData()
-        bindData()
-        setClickListener()
-
     }
 
     private fun lodeData() {
@@ -70,13 +72,11 @@ class ReviewActivity :
             "FIXED" -> {
                 reviewViewModel.loadReviewList(MenuType.FIXED, 0, itemId)
                 reviewViewModel.loadMenuReviewInfo(itemId)
-
             }
 
             "VARIABLE" -> {
                 reviewViewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
                 reviewViewModel.loadMealReviewInfo(itemId)
-
             }
 
             else -> {
@@ -134,10 +134,11 @@ class ReviewActivity :
                         binding.rvReview.visibility = View.INVISIBLE
 
                     } else { //리뷰 있다.
+
+                        Log.d("ReviewActivity", "리뷰가 있음")
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
                         reviewAdapter = ReviewAdapter(it.reviewList)
-                        Log.d("ReviewActivity", "리뷰가 있음")
 
                         binding.rvReview.apply {
                             adapter = reviewAdapter
