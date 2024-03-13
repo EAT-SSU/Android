@@ -106,7 +106,7 @@ class LoginActivity :
                     loginViewModel.state.collectLatest {
                         if (!it.error && !it.loading) {
                             Log.d("login", it.toString())
-                            showToast(loginViewModel.state.value.toastMessage.toString())
+                            showToast(loginViewModel.state.value.toastMessage)
                             startActivity<MainActivity>()
                         }
                     }
