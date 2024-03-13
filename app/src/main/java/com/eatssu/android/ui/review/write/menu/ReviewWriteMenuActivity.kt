@@ -30,18 +30,14 @@ class ReviewWriteMenuActivity :
 
         val mealId = intent.getLongExtra("itemId", -1)
 
-        initServices()
         initViewModel()
         bindData(mealId)
-
-        initNextButtonClickListener()
+        setClickListener()
     }
 
-    private fun initServices() {
-        mealService = retrofit.create(MealService::class.java)
-    }
 
     private fun initViewModel() {
+        mealService = retrofit.create(MealService::class.java)
         viewModel = ViewModelProvider(
             this,
             VariableMenuModelFactory(mealService)
@@ -67,7 +63,7 @@ class ReviewWriteMenuActivity :
         }
     }
 
-    private fun initNextButtonClickListener() {
+    private fun setClickListener() {
         binding.btnNextReview.setOnClickListener {
             sendNextItem(variableMenuPickAdapter.sendCheckedItem())
         }
