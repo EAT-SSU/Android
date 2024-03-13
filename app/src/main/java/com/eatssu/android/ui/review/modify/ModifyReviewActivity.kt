@@ -14,15 +14,18 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
 
     private lateinit var viewModel: ModifyViewModel
     private var reviewId = -1L
-    private lateinit var menu: String
-    private var comment: String? = null
-
+    private var menu = ""
+    private var amount = 0
+    private var taste = 0
+    private var main = 0
+    private var content = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 수정하기" // 툴바 제목 설정
 
         initViewModel()
         getIndex()
+        setData()
         setOnClickListener()
         observeViewModel()
     }
@@ -30,18 +33,6 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
     fun setOnClickListener() {
         binding.btnDone.setOnClickListener {
             postData(reviewId)
-
-            lifecycleScope.launch {
-                viewModel.uiState.collectLatest {
-                    if (!it.error && !it.loading) {
-                        showToast(it.toastMessage)
-                        finish()
-                    }
-                    if (it.error) {
-                        showToast(it.toastMessage)
-                    }
-                }
-            }
         }
     }
 
@@ -52,9 +43,23 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
 
     private fun getIndex() {
         reviewId = intent.getLongExtra("reviewId", -1L)
-        binding.menu.text = intent.getStringExtra("menu").toString()
+        menu = intent.getStringExtra("menu").toString()
+        content = intent.getStringExtra("comment").toString()
 
-        Log.d("ReviewFixedActivity", reviewId.toString())
+        main = intent.getIntExtra("mainRating", 0)
+        amount = intent.getIntExtra("amountRating", 0)
+        taste = intent.getIntExtra("tasteRating", 0)
+
+        Log.d("ReviewFixedActivity", reviewId.toString() + menu)
+        Log.d("ReviewFixedActivity", content)
+    }
+
+    private fun setData() {
+        binding.menu.text = intent.getStringExtra("menu").toString()
+        binding.etReview2Comment.setText(intent.getStringExtra("content"))
+        binding.rbMain.rating = intent.getIntExtra("mainRating", 0).toFloat()
+        binding.rbAmount.rating = intent.getIntExtra("amountRating", 0).toFloat()
+        binding.rbTaste.rating = intent.getIntExtra("tasteRating", 0).toFloat()
     }
 
     private fun postData(reviewId: Long) {

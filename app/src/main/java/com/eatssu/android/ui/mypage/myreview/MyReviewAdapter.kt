@@ -32,10 +32,8 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.Data>) :
             val imgUrlList: List<String> =
                 dataList[position].imgUrlList// The list of image URLs
 
-            // Get the ImageView reference from your layout
-            val imageView: ImageView =
-                binding.ivReviewPhoto// Replace R.id.imageView with the ID of your ImageView
-            // Check if the imgUrlList is not empty before loading the image
+            val imageView: ImageView = binding.ivReviewPhoto
+
             if (dataList[position].imgUrlList.isEmpty()) {
                 imageView.visibility = View.GONE
             } else {
@@ -52,6 +50,10 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.Data>) :
                 val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
                 intent.putExtra("reviewId", dataList[position].reviewId.toLong())
                 intent.putExtra("menu", dataList[position].menuName)
+                intent.putExtra("comment", dataList[position].content)
+                intent.putExtra("amountRating", dataList[position].amountGrade)
+                intent.putExtra("tasteRating", dataList[position].tasteGrade)
+                intent.putExtra("mainRating", dataList[position].mainGrade)
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }

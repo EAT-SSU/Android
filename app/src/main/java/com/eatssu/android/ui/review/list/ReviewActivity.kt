@@ -138,7 +138,7 @@ class ReviewActivity :
                         Log.d("ReviewActivity", "리뷰가 있음")
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
-                        reviewAdapter = ReviewAdapter(it.reviewList)
+                        reviewAdapter = it.reviewList?.let { review -> ReviewAdapter(review) }
 
                         binding.rvReview.apply {
                             adapter = reviewAdapter
