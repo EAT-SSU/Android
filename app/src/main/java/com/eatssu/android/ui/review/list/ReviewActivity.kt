@@ -139,7 +139,6 @@ class ReviewActivity :
         lifecycleScope.launch {
             reviewViewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
-
                     if (it.isEmpty) {
 
                         Log.d("ReviewActivity", "리뷰가 없음")

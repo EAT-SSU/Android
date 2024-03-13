@@ -27,13 +27,14 @@ import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 
 class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
-    private lateinit var viewModel: UploadReviewViewModel
+    private lateinit var uploadReviewViewModel: UploadReviewViewModel
     private lateinit var imageviewModel: ImageViewModel
 
     private lateinit var reviewService: ReviewService
@@ -78,12 +79,14 @@ class ReviewWriteRateActivity :
         reviewService = retrofit.create(ReviewService::class.java)
 
 
-        viewModel = ViewModelProvider(
+        uploadReviewViewModel = ViewModelProvider(
             this,
             ReviewWriteViewModelFactory(reviewService)
         )[UploadReviewViewModel::class.java]
         imageviewModel =
             ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
+
+        binding.viewModel = uploadReviewViewModel
 
         setupUI()
     }
@@ -280,7 +283,7 @@ class ReviewWriteRateActivity :
         //Todo imageurl을 체크해야하는 이유?
 
 
-        viewModel.setReviewData(
+        uploadReviewViewModel.setReviewData(
             itemId,
             binding.rbMain.rating.toInt(),
             binding.rbAmount.rating.toInt(),
@@ -289,24 +292,25 @@ class ReviewWriteRateActivity :
             imageviewModel.imageUrl.value ?: ""
         )
 
-        viewModel.postReview()
+        uploadReviewViewModel.postReview()
+        Log.d("ReviewWriteRateActivity", "리뷰 전송")
+
 
         lifecycleScope.launch {
-            viewModel.state.collect {
+            uploadReviewViewModel.state.collectLatest {
                 if (it.error) {
-                    showToast(viewModel.state.value.toastMessage)
+                    showToast(uploadReviewViewModel.state.value.toastMessage)
                 }
-                if (it.isUpload) {
-                    showToast(viewModel.state.value.toastMessage)
+                if (!it.error && !it.loading && it.isUpload) {
+                    showToast(uploadReviewViewModel.state.value.toastMessage)
+//                    finish()
+                    Log.d("ReviewWriteRateActivity", "리뷰 작성 성공")
                     finish()
                 }
             }
         }
 
 
-        val resultIntent = Intent()
-        setResult(RESULT_OK, resultIntent)
-        Log.d("ReviewWriteRateActivity", "리뷰 다씀")
     }
 
     companion object {
