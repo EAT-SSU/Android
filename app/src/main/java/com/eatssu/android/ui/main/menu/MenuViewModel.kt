@@ -6,21 +6,31 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.dto.response.GetFixedMenuResponse
 import com.eatssu.android.data.dto.response.GetMealResponse
+import com.eatssu.android.data.dto.response.MenuOfMealResponse
+import com.eatssu.android.data.dto.response.asMenuOfMeal
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
+import com.eatssu.android.data.model.MenuMini
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class MenuViewModel(private val menuService: MenuService, private val mealService: MealService) :
+class MenuViewModel(
+    private val menuService: MenuService,
+    private val mealService: MealService,
+) :
     ViewModel() {
+
 
     private val _todayMealDataDodam = MutableLiveData<ArrayList<GetMealResponse>>()
     val todayMealDataDodam: LiveData<ArrayList<GetMealResponse>> = _todayMealDataDodam
@@ -40,8 +50,8 @@ class MenuViewModel(private val menuService: MenuService, private val mealServic
     private val _fixedMenuDataFood = MutableLiveData<GetFixedMenuResponse>()
     val fixedMenuDataFood: MutableLiveData<GetFixedMenuResponse> = _fixedMenuDataFood
 
-    private val _menuBymealId = MutableLiveData<ChangeMenuInfoListDto>()
-    val menuBymealId: MutableLiveData<ChangeMenuInfoListDto> = _menuBymealId
+    private val _uiState: MutableStateFlow<MenuState> = MutableStateFlow(MenuState())
+    val uiState: StateFlow<MenuState> = _uiState.asStateFlow()
 
 
     fun loadTodayMeal(
@@ -127,24 +137,26 @@ class MenuViewModel(private val menuService: MenuService, private val mealServic
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
             mealService.getMenuInfoByMealId(mealId)
-                .enqueue(object : Callback<BaseResponse<ChangeMenuInfoListDto>> {
+                .enqueue(object : Callback<BaseResponse<MenuOfMealResponse>> {
                     override fun onResponse(
-                        call: Call<BaseResponse<ChangeMenuInfoListDto>>,
-                        response: Response<BaseResponse<ChangeMenuInfoListDto>>,
+                        call: Call<BaseResponse<MenuOfMealResponse>>,
+                        response: Response<BaseResponse<MenuOfMealResponse>>,
                     ) {
                         if (response.isSuccessful) {
-                            val data = response.body()?.result!!
+                            val data = response.body()?.result
                             Log.d("post", "onResponse 성공" + response.body())
-
-                            menuBymealId.postValue(data)
-
+                            _uiState.update {
+                                it.copy(
+                                    menuOfMeal = response.body()?.result?.asMenuOfMeal()
+                                )
+                            }
                         } else {
                             Log.d("post", "onResponse 실패")
                         }
                     }
 
                     override fun onFailure(
-                        call: Call<BaseResponse<ChangeMenuInfoListDto>>,
+                        call: Call<BaseResponse<MenuOfMealResponse>>,
                         t: Throwable,
                     ) {
                         Log.d("post", "onFailure 에러: ${t.message}")
@@ -163,4 +175,5 @@ data class MenuState(
     var dormitoryMeal: ArrayList<GetMealResponse>? = null,
     var snackMenu: GetFixedMenuResponse? = null,
     var foodcourtMenu: GetFixedMenuResponse? = null,
+    var menuOfMeal: List<MenuMini>? = null,
 )

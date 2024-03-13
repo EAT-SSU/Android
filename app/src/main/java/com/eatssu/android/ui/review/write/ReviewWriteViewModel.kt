@@ -18,8 +18,9 @@ import retrofit2.Response
 
 class UploadReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
-    private val _state: MutableStateFlow<UploadReviewState> = MutableStateFlow(UploadReviewState())
-    val state: StateFlow<UploadReviewState> = _state.asStateFlow()
+    private val _uiState: MutableStateFlow<UploadReviewState> =
+        MutableStateFlow(UploadReviewState())
+    val uiState: StateFlow<UploadReviewState> = _uiState.asStateFlow()
 
     private val _reviewData: MutableStateFlow<WriteReviewRequest> =
         MutableStateFlow(WriteReviewRequest())
@@ -54,7 +55,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                     if (response.isSuccessful) {
                         if (response.body()?.isSuccess == true) {
 
-                            _state.update {
+                            _uiState.update {
                                 it.copy(
                                     loading = false,
                                     error = false,
@@ -71,7 +72,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                         }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                        _state.update {
+                        _uiState.update {
                             it.copy(
                                 loading = false,
                                 error = true,
@@ -85,7 +86,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
 
                 override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    _state.update {
+                    _uiState.update {
                         it.copy(
                             loading = false,
                             error = true,

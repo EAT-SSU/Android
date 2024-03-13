@@ -1,13 +1,13 @@
-package com.eatssu.android.ui.review.write
+package com.eatssu.android.ui.review.write.menu
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
+import com.eatssu.android.data.model.MenuMini
 import com.eatssu.android.databinding.ItemMenuPickBinding
 
-class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
-    RecyclerView.Adapter<MenuPickAdapter.ViewHolder>() {
+class VariableMenuPickAdapter(private val menuList: List<MenuMini>) :
+    RecyclerView.Adapter<VariableMenuPickAdapter.ViewHolder>() {
 
     private val checkedItems: ArrayList<Pair<String, Long>> = ArrayList()
 
@@ -15,9 +15,9 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            val menuItem = menuList.menuInfoList[position]
+            val menuItem = menuList[position]
             with(binding) {
-                tvMenuName.text = menuItem.menusInformation[position].name
+                tvMenuName.text = menuItem.name
                 checkBox.isChecked = checkedItems.contains(getItem(position))
                 checkBox.setOnClickListener { onCheckBoxClick(position) }
             }
@@ -34,11 +34,11 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = menuList.menuInfoList.size
+    override fun getItemCount(): Int = menuList.size
 
     private fun getItem(position: Int): Pair<String, Long> {
-        val menuItem = menuList.menuInfoList[position].menusInformation[position]
-        return Pair(menuItem.name, menuItem.menuId)
+        val menuItem = menuList[position]
+        return Pair(menuItem.name, menuItem.id)
     }
 
     private fun onCheckBoxClick(position: Int) {
@@ -50,5 +50,5 @@ class MenuPickAdapter(private val menuList: ChangeMenuInfoListDto) :
         }
     }
 
-    fun sendItem(): ArrayList<Pair<String, Long>> = checkedItems
+    fun sendCheckedItem(): ArrayList<Pair<String, Long>> = checkedItems
 }

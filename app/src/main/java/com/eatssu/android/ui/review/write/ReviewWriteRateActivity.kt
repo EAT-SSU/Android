@@ -127,7 +127,7 @@ class ReviewWriteRateActivity :
     }
 
     // 이미지 실제 경로 반환
-    fun getRealPathFromURI(uri: Uri): String {
+    private fun getRealPathFromURI(uri: Uri): String {
 
         val buildName = Build.MANUFACTURER
         if (buildName.equals("Xiaomi")) {
@@ -297,12 +297,12 @@ class ReviewWriteRateActivity :
 
 
         lifecycleScope.launch {
-            uploadReviewViewModel.state.collectLatest {
+            uploadReviewViewModel.uiState.collectLatest {
                 if (it.error) {
-                    showToast(uploadReviewViewModel.state.value.toastMessage)
+                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
                 }
                 if (!it.error && !it.loading && it.isUpload) {
-                    showToast(uploadReviewViewModel.state.value.toastMessage)
+                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
 //                    finish()
                     Log.d("ReviewWriteRateActivity", "리뷰 작성 성공")
                     finish()

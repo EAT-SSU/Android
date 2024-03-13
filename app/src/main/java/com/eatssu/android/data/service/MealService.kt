@@ -1,10 +1,11 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.response.ChangeMenuInfoListDto
 import com.eatssu.android.data.dto.response.GetMealResponse
+import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MealService {
@@ -17,7 +18,7 @@ interface MealService {
 
     @GET("meals/{mealId}/menus-info") //메뉴 정보 리스트 조회
     fun getMenuInfoByMealId(
-        @Query("mealId") mealId: Long,
-    ): Call<BaseResponse<ChangeMenuInfoListDto>>
+        @Path("mealId") mealId: Long,
+    ): Call<BaseResponse<MenuOfMealResponse>>
 
 }
