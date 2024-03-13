@@ -29,7 +29,7 @@ class MenuSubAdapter(
                     "0.0" -> "-"
                     "NaN" -> "-"
                     "null" -> "-"
-                    else -> dataList[position].rate.toString()
+                    else -> String.format("%.1f", dataList[position].rate)
                 }
         }
     }

@@ -153,15 +153,9 @@ class ReviewActivity :
 
                             binding.tvReviewNumCount.text = reviewCnt.toString()
 
-                            binding.tvRate.text =
-                                String.format("%.1f", mainRating.toFloat())
-                                    .toFloat().toString()
-                            binding.tvGradeTaste.text =
-                                String.format("%.1f", tasteRating.toFloat())
-                                    .toFloat().toString()
-                            binding.tvGradeAmount.text =
-                                String.format("%.1f", amountRating.toFloat())
-                                    .toFloat().toString()
+                            binding.tvRate.text = String.format("%.1f", mainRating)
+                            binding.tvGradeTaste.text = String.format("%.1f", tasteRating)
+                            binding.tvGradeAmount.text = String.format("%.1f", amountRating)
 
                             val totalReviewCount = reviewCnt
                             binding.progressBar1.max = totalReviewCount
