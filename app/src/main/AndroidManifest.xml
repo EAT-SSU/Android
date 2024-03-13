@@ -40,7 +40,7 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
-            android:name=".ui.mypage.Inquire.InquireActivity"
+            android:name=".ui.mypage.inquire.InquireActivity"
             android:exported="false" />
         <activity
             android:name=".ui.review.write.ReviewWriteRateActivity"
