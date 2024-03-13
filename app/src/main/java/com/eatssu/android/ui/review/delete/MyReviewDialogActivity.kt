@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
-import com.eatssu.android.ui.review.modify.FixedReviewActivity
+import com.eatssu.android.ui.review.modify.ModifyReviewActivity
 
 class MyReviewDialogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewDialogBinding
@@ -32,7 +32,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
         Log.d("reviewId", reviewId.toString())
 
         binding.btnReviewFix.setOnClickListener {
-            val intent = Intent(this, FixedReviewActivity::class.java)
+            val intent = Intent(this, ModifyReviewActivity::class.java)
             intent.putExtra("reviewId", reviewId)
             intent.putExtra("menu", menu)
             startActivity(intent)

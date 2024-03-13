@@ -168,7 +168,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.modify.FixedReviewActivity"
+            android:name=".ui.review.modify.ModifyReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
