@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.data.service.ReviewService
 
-class ReviewViewModelFactory(private val reviewService: ReviewService) :
+class ReviewViewModelFactory(
+    private val reviewService: ReviewService,
+//    private val repository: ReviewRepository
+) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -41,6 +41,10 @@ interface ReviewService {
 //        @Query("sort") sort: List<String>? = arrayListOf("date","DESC")
     ): Call<BaseResponse<GetReviewListResponse>>
 
+    //    @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
+//    fun getMenuReviewInfo(
+//        @Path("menuId") menuId: Long,
+//    ): BaseResponse<GetMenuReviewInfoResponse>
     @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
     fun getMenuReviewInfo(
         @Path("menuId") menuId: Long,

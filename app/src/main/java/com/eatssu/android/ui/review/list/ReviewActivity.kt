@@ -9,20 +9,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.write.ReviewWriteMenuActivity
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
+@AndroidEntryPoint
 class ReviewActivity :
     BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
-    private lateinit var viewModel: ReviewViewModel
+//    private val viewModel: ReviewViewModel by viewModels()
+
+    private lateinit var reviewViewModel: ReviewViewModel
+
     private lateinit var reviewService: ReviewService
+    private lateinit var reviewRepository: ReviewRepository
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
@@ -36,16 +43,48 @@ class ReviewActivity :
         toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
         reviewService = retrofit.create(ReviewService::class.java)
-        viewModel =
+//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        reviewRepository = ReviewRepository(reviewService)
+        reviewViewModel =
             ViewModelProvider(
                 this,
-                ReviewViewModelFactory(reviewService)
+                ReviewViewModelFactory(
+                    reviewService,
+//                    reviewRepository
+                )
             )[ReviewViewModel::class.java]
 
+        binding.viewModel = reviewViewModel
+
+
         getIndex()
-        setClickListener()
+        lodeData()
         bindData()
+        setClickListener()
+
     }
+
+    private fun lodeData() {
+        when (menuType) {
+            "FIXED" -> {
+                reviewViewModel.loadReviewList(MenuType.FIXED, 0, itemId)
+                reviewViewModel.loadMenuReviewInfo(itemId)
+
+            }
+
+            "VARIABLE" -> {
+                reviewViewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
+                reviewViewModel.loadMealReviewInfo(itemId)
+
+            }
+
+            else -> {
+                Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
+            }
+        }
+    }
+
 
     private fun getIndex() {
         //get menuId
@@ -60,9 +99,6 @@ class ReviewActivity :
     private fun setClickListener() {
         when (menuType) {
             "FIXED" -> {
-                viewModel.loadReviewList(MenuType.FIXED, 0, itemId)
-                viewModel.loadMenuReviewInfo(itemId)
-
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
@@ -75,8 +111,6 @@ class ReviewActivity :
             }
 
             "VARIABLE" -> {
-                viewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
-                viewModel.loadMealReviewInfo(itemId)
                 val mealId = itemId
 
                 binding.btnNextReview.setOnClickListener {
@@ -103,12 +137,12 @@ class ReviewActivity :
 
     private fun bindData() {
         lifecycleScope.launch {
-            viewModel.uiState.collectLatest {
+            reviewViewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
 
                     if (it.isEmpty) {
 
-                        Log.d("ReviewListActivity", "리뷰가 없음")
+                        Log.d("ReviewActivity", "리뷰가 없음")
                         binding.llNonReview.visibility = View.VISIBLE
                         binding.rvReview.visibility = View.INVISIBLE
 
@@ -116,7 +150,7 @@ class ReviewActivity :
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
                         reviewAdapter = ReviewAdapter(it.reviewList)
-                        Log.d("ReviewListActivity", "리뷰가 있음")
+                        Log.d("ReviewActivity", "리뷰가 있음")
 
                         binding.rvReview.apply {
                             adapter = reviewAdapter
@@ -127,6 +161,8 @@ class ReviewActivity :
 
                         it.reviewInfo?.apply {
                             binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+
+                            Log.d("ReviewActivity", it.reviewInfo.toString())
 
                             binding.tvReviewNumCount.text = reviewCnt.toString()
 
@@ -158,4 +194,21 @@ class ReviewActivity :
             }
         }
     }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("post", "onRestart")
+
+        lodeData()
+        bindData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("post", "resume")
+
+        lodeData()
+        bindData()
+    }
+
 }

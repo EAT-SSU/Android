@@ -13,6 +13,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.data.model.ReviewInfo
 import com.eatssu.android.data.service.ReviewService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,14 +24,19 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
+@HiltViewModel
+class ReviewViewModel(
+//@Inject constructor(
+    private val reviewService: ReviewService,
+//    private val reviewRepository: ReviewRepository,
+) : ViewModel() {
 
 //    var menuType: MenuType,
 //    var itemId: Long? = 0,
 
-    private val _itemState: MutableStateFlow<ItemState> =
-        MutableStateFlow(ItemState(MenuType.FIXED, 0))
-    val ItemState: StateFlow<ItemState> = _itemState.asStateFlow()
+//    private val _itemState: MutableStateFlow<ItemState> =
+//        MutableStateFlow(ItemState(MenuType.FIXED, 0))
+//    val ItemState: StateFlow<ItemState> = _itemState.asStateFlow()
 
     private val _uiState: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
     val uiState: StateFlow<ReviewState> = _uiState.asStateFlow()
@@ -40,6 +46,15 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
         menuId: Long,
     ) {
         viewModelScope.launch {
+//            reviewRepository.getMenuReviewInfo(menuId)
+//                .catch {
+//                    _uiState.value.error = true
+//                }
+//                .collect {
+//                    _uiState.value.reviewInfo = it.result?.asReviewInfo()
+//                    Log.d("it.result?.asReviewInfo()",it.result.toString())
+//                }
+
 
             reviewService.getMenuReviewInfo(menuId)
                 .enqueue(object : Callback<BaseResponse<GetMenuReviewInfoResponse>> {
@@ -51,7 +66,7 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                             val data = response.body()?.result!!
 
                             // 정상적으로 통신이 성공된 경우
-                            Log.d("post", "onResponse 성공: " + response.body().toString())
+                            Log.d("ReviewViewModel", "onResponse 성공: " + response.body().toString())
 
                             if (data.mainRating == null) {
                                 _uiState.update {
@@ -71,11 +86,12 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                                         isEmpty = false
                                     )
                                 }
+                                Log.d("ReviewViewModel", "리뷰 있다고")
                             }
 
                         } else {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            Log.d("post", "onResponse 실패")
+                            Log.d("ReviewViewModel", "onResponse 실패")
                         }
                     }
 
@@ -84,9 +100,10 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
                         t: Throwable,
                     ) {
                         // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                        Log.d("post", "onFailure 에러: " + t.message.toString())
+                        Log.d("ReviewViewModel", "onFailure 에러: " + t.message.toString())
                     }
                 })
+
         }
     }
 
@@ -189,10 +206,10 @@ class ReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
     }
 }
 
-data class ItemState(
-    var menuType: MenuType,
-    var itemid: Long,
-)
+//data class ItemState(
+//    var menuType: MenuType,
+//    var itemid: Long,
+//)
 
 data class ReviewState(
     var loading: Boolean = true,
