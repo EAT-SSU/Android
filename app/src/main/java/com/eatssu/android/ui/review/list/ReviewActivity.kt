@@ -102,30 +102,18 @@ class ReviewActivity :
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
-                    intent.putExtra("menuType", menuType)
-//                    intent.putStringArrayListExtra("itemName", itemName)
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("menuType", menuType)
-                    startActivity(intent)  // 화면 전환을 시켜줌
+                    startActivity(intent)
                 }
             }
 
             "VARIABLE" -> {
-                val mealId = itemId
-
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteMenuActivity::class.java)  // 인텐트를 생성해줌,
                     intent.putExtra("itemId", itemId)
-                    intent.putExtra("mealId", mealId)
                     intent.putExtra("menuType", menuType)
-//                    intent.putStringArrayListExtra("menuNameArray", menuNameArray)
-//                    intent.putExtra("menuIdArray", menuIdArray)
-//
-//                    if (menuNameArray != null) {
-//                        Log.d("post", (menuNameArray + menuIdArray).toString())
-//                    }
-
-                    startActivity(intent)  // 화면 전환을 시켜줌
+                    startActivity(intent)
                 }
             }
 
@@ -204,7 +192,7 @@ class ReviewActivity :
 
     override fun onResume() {
         super.onResume()
-        Log.d("post", "resume")
+        Log.d("post", "onResume")
 
         lodeData()
         bindData()

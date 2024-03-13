@@ -28,7 +28,7 @@ class ReviewWriteMenuActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
-        val mealId = intent.getLongExtra("mealId", -1)
+        val mealId = intent.getLongExtra("itemId", -1)
 
         initServices()
         initViewModel()
