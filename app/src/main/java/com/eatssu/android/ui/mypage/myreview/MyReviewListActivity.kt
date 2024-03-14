@@ -25,7 +25,7 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(ActivityM
         lodeReview()
     }
 
-    private fun setAdapter(reviewList: List<MyReviewResponse.Data>) {
+    private fun setAdapter(reviewList: List<MyReviewResponse.DataList>) {
         val listAdapter = MyReviewAdapter(reviewList)
         val linearLayoutManager = LinearLayoutManager(this)
 

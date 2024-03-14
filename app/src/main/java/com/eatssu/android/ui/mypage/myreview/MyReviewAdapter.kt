@@ -14,7 +14,7 @@ import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
 
 
-class MyReviewAdapter(private val dataList: List<MyReviewResponse.Data>) :
+class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
     RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
@@ -24,36 +24,40 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.Data>) :
             binding.tvReviewItemComment.text = dataList[position].content
             binding.tvReviewItemDate.text = dataList[position].writeDate
             binding.tvMenuName.text = dataList[position].menuName
-            binding.tvTotalRating.text = dataList[position].mainGrade.toString()
-            binding.tvTasteRating.text = dataList[position].tasteGrade.toString()
-            binding.tvAmountRating.text = dataList[position].amountGrade.toString()
+            binding.tvTotalRating.text = dataList[position].mainRating.toString()
+            binding.tvTasteRating.text = dataList[position].tasteRating.toString()
+            binding.tvAmountRating.text = dataList[position].amountRating.toString()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
-
-            val imgUrlList: List<String> =
-                dataList[position].imgUrlList// The list of image URLs
+            val img: String = dataList[position].imgUrlList[0]// The list of image URLs
 
             val imageView: ImageView = binding.ivReviewPhoto
 
-            if (dataList[position].imgUrlList.isEmpty()) {
+            if (dataList[position].imgUrlList[0].isEmpty()) {
                 imageView.visibility = View.GONE
             } else {
-                val imageUrl =
-                    imgUrlList[0] // Assuming you want to load the first image from the list
-
                 Glide.with(itemView)
-                    .load(imageUrl)
+                    .load(dataList[position].imgUrlList[0])
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
             }
+//
+//
+//            if (dataList[position].imgUrlList.isEmpty()) {
+//            } else {
+//                val imageUrl =
+//                    imgUrlList[0] // Assuming you want to load the first image from the list
+//
+//
+//            }
 
             binding.btnDetail.setOnClickListener {
                 val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
                 intent.putExtra("reviewId", dataList[position].reviewId.toLong())
                 intent.putExtra("menu", dataList[position].menuName)
                 intent.putExtra("comment", dataList[position].content)
-                intent.putExtra("amountRating", dataList[position].amountGrade)
-                intent.putExtra("tasteRating", dataList[position].tasteGrade)
-                intent.putExtra("mainRating", dataList[position].mainGrade)
+                intent.putExtra("amountRating", dataList[position].amountRating)
+                intent.putExtra("tasteRating", dataList[position].tasteRating)
+                intent.putExtra("mainRating", dataList[position].amountRating)
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }
