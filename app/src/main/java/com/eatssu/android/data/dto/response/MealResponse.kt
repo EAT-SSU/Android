@@ -25,8 +25,8 @@ fun ArrayList<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
         val menuNames =
             mealResponse.menusInformationList.joinToString(separator = "+") { it.name ?: "" }
         val mealId = mealResponse.mealId ?: -1
-        val price = mealResponse.price ?: -1
-        val mainRating = mealResponse.mainRating ?: -1.0
+        val price = mealResponse.price ?: 0
+        val mainRating = mealResponse.mainRating ?: 0.0
 
         val menu = Menu(mealId, menuNames, price, mainRating)
 

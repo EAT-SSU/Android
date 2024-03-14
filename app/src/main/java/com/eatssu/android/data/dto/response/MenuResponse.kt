@@ -58,19 +58,3 @@ fun GetFixedMenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
 
     return menus
 }
-
-//fun GetFixedMenuResponse.combineMenuInformation(): List<Menu> {
-//    val menus = mutableListOf<Menu>()
-//    categoryMenuListCollection.forEach { categoryMenuList ->
-//        categoryMenuList.menuInformationList.forEach { menuInfo ->
-//            val menu = Menu(
-//                id = menuInfo.menuId ?: 0,
-//                name = menuInfo.name ?: "",
-//                price = menuInfo.price ?: 0,
-//                rate = menuInfo.mainRating ?: 0.0
-//            )
-//            menus.add(menu)
-//        }
-//    }
-//    return menus
-//}
