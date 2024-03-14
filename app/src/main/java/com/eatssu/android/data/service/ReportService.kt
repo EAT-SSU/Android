@@ -7,7 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ReportService {
-    @POST("reports/") //리뷰 신고하기
+    @POST("reports") //리뷰 신고하기
     fun reportReview(
         @Body request: ReportRequest,
     ): Call<BaseResponse<Void>>

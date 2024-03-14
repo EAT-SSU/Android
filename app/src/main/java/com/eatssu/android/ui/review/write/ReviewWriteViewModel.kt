@@ -9,6 +9,7 @@ import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,8 +18,9 @@ import retrofit2.Response
 
 class UploadReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
 
-    private val _state: MutableStateFlow<UploadReviewState> = MutableStateFlow(UploadReviewState())
-    val state: StateFlow<UploadReviewState> = _state.asStateFlow()
+    private val _uiState: MutableStateFlow<UploadReviewState> =
+        MutableStateFlow(UploadReviewState())
+    val uiState: StateFlow<UploadReviewState> = _uiState.asStateFlow()
 
     private val _reviewData: MutableStateFlow<WriteReviewRequest> =
         MutableStateFlow(WriteReviewRequest())
@@ -53,8 +55,14 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                     if (response.isSuccessful) {
                         if (response.body()?.isSuccess == true) {
 
-                            _state.value.toastMessage = "리뷰 작성에 성공하였습니다. "
-                            _state.value.isUpload = true
+                            _uiState.update {
+                                it.copy(
+                                    loading = false,
+                                    error = false,
+                                    toastMessage = "리뷰 작성에 성공하였습니다.",
+                                    isUpload = true,
+                                )
+                            }
 
                             Log.d(
                                 "UploadReviewViewModel",
@@ -64,17 +72,28 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                         }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                        _state.value.error = true
-                        _state.value.toastMessage = "리뷰 작성에 실패하였습니다. "
-
+                        _uiState.update {
+                            it.copy(
+                                loading = false,
+                                error = true,
+                                toastMessage = "리뷰 작성에 실패하였습니다.",
+                                isUpload = false,
+                            )
+                        }
                         Log.d("UploadReviewViewModel", "onResponse 리뷰 작성 실패")
                     }
                 }
 
                 override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
                     // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    _state.value.error = true
-                    _state.value.toastMessage = "리뷰 작성에 실패하였습니다. "
+                    _uiState.update {
+                        it.copy(
+                            loading = false,
+                            error = true,
+                            toastMessage = "리뷰 작성에 실패하였습니다.",
+                            isUpload = false,
+                        )
+                    }
 
                     Log.d("UploadReviewViewModel", "onFailure 에러: " + t.message.toString())
                 }

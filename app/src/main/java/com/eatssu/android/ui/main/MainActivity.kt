@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -23,24 +22,27 @@ import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.mypage.MyPageActivity
-import com.eatssu.android.ui.mypage.MypageViewModel
-import com.eatssu.android.ui.mypage.MypageViewModelFactory
+import com.eatssu.android.ui.mypage.MyPageViewModel
+import com.eatssu.android.ui.mypage.MyPageViewModelFactory
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.CalendarUtils
 import com.eatssu.android.util.CalendarUtils.daysInWeekArray
 import com.eatssu.android.util.CalendarUtils.monthYearFromDate
 import com.eatssu.android.util.RetrofitImpl
+import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
 
-    private lateinit var viewModel: MypageViewModel
-    private lateinit var calendarViewModel : CalendarViewModel
+    private lateinit var viewModel: MyPageViewModel
+    private lateinit var calendarViewModel: CalendarViewModel
 
     private var monthYearText: TextView? = null
     private var calendarRecyclerView: RecyclerView? = null
@@ -158,8 +160,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val userService = RetrofitImpl.retrofit.create(UserService::class.java)
         viewModel = ViewModelProvider(
             this,
-            MypageViewModelFactory(userService)
-        )[MypageViewModel::class.java]
+            MyPageViewModelFactory(userService)
+        )[MyPageViewModel::class.java]
     }
 
     private fun setupMyPageViewModel(){
@@ -167,17 +169,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private fun observeMyPageViewModel() {
-        viewModel.isNull.observe(this){ it ->
-            if(it) {
-                Log.d("MainActivity", viewModel.nickname.value.toString())
-                val intent = Intent(this, UserNameChangeActivity::class.java)
-                startActivity(intent)
 
+        lifecycleScope.launch {
+            viewModel.uiState.collectLatest {
+                if (it.isNicknameNull) {
+                    startActivity<UserNameChangeActivity>()
+                    showToast(it.toastMessage)
+                }
             }
-        }
-
-        viewModel.toastMessage.observe(this) { message ->
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 

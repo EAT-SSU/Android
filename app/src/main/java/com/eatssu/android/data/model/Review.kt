@@ -1,24 +1,9 @@
 package com.eatssu.android.data.model
 
 data class Review(
-    var name: String? = null,
-    var reviewCnt: Int? = null,
-    var mainRating: Double? = null,
-    var amountRating: Double? = null,
-    var tasteRating: Double? = null,
-    var ratingDetails: RatingDetails,
-    var reviewList: List<Reviews>? = null,
-)
+    val isWriter: Boolean,
+    val reviewId: Long,
 
-data class RatingDetails(
-    var one: Int,
-    var two: Int,
-    var three: Int,
-    var four: Int,
-    var five: Int,
-)
-
-data class Reviews(
     val menu: String,
     val writerNickname: String,
 
@@ -29,5 +14,5 @@ data class Reviews(
     val writeDate: String,
 
     val content: String,
-    val imgUrlList: List<String>,
+    val imgUrlList: String,
 )

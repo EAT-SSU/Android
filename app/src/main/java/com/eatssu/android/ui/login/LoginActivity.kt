@@ -42,8 +42,6 @@ class LoginActivity :
             ViewModelProvider(this, LoginViewModelFactory(oauthService))[LoginViewModel::class.java]
 
 
-//        MainScope().launch {  loginViewModel }
-
         // 툴바 사용하지 않도록 설정
         toolbar.let {
             toolbar.visibility = View.GONE
@@ -108,7 +106,7 @@ class LoginActivity :
                     loginViewModel.state.collectLatest {
                         if (!it.error && !it.loading) {
                             Log.d("login", it.toString())
-                            showToast(loginViewModel.state.value.toastMessage.toString())
+                            showToast(loginViewModel.state.value.toastMessage)
                             startActivity<MainActivity>()
                         }
                     }

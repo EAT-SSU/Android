@@ -34,7 +34,7 @@ import java.io.File
 class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
-    private lateinit var viewModel: UploadReviewViewModel
+    private lateinit var uploadReviewViewModel: UploadReviewViewModel
     private lateinit var imageviewModel: ImageViewModel
 
     private lateinit var reviewService: ReviewService
@@ -79,12 +79,14 @@ class ReviewWriteRateActivity :
         reviewService = retrofit.create(ReviewService::class.java)
 
 
-        viewModel = ViewModelProvider(
+        uploadReviewViewModel = ViewModelProvider(
             this,
             ReviewWriteViewModelFactory(reviewService)
         )[UploadReviewViewModel::class.java]
         imageviewModel =
             ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
+
+        binding.viewModel = uploadReviewViewModel
 
         setupUI()
     }
@@ -125,7 +127,7 @@ class ReviewWriteRateActivity :
     }
 
     // 이미지 실제 경로 반환
-    fun getRealPathFromURI(uri: Uri): String {
+    private fun getRealPathFromURI(uri: Uri): String {
 
         val buildName = Build.MANUFACTURER
         if (buildName.equals("Xiaomi")) {
@@ -281,7 +283,7 @@ class ReviewWriteRateActivity :
         //Todo imageurl을 체크해야하는 이유?
 
 
-        viewModel.setReviewData(
+        uploadReviewViewModel.setReviewData(
             itemId,
             binding.rbMain.rating.toInt(),
             binding.rbAmount.rating.toInt(),
@@ -290,27 +292,25 @@ class ReviewWriteRateActivity :
             imageviewModel.imageUrl.value ?: ""
         )
 
-        viewModel.postReview()
+        uploadReviewViewModel.postReview()
+        Log.d("ReviewWriteRateActivity", "리뷰 전송")
+
 
         lifecycleScope.launch {
-            viewModel.state.collectLatest {
+            uploadReviewViewModel.uiState.collectLatest {
                 if (it.error) {
-                    showToast(viewModel.state.value.toastMessage)
+                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
                 }
-                if (it.isUpload) {
-                    showToast(viewModel.state.value.toastMessage)
+                if (!it.error && !it.loading && it.isUpload) {
+                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
 //                    finish()
+                    Log.d("ReviewWriteRateActivity", "리뷰 작성 성공")
+                    finish()
                 }
-
             }
-
-            Log.d("ReviewWriteRateActivity", "리뷰 씀")
         }
 
 
-        val resultIntent = Intent()
-        setResult(RESULT_OK, resultIntent)
-        Log.d("ReviewWriteRateActivity", "리뷰 다씀")
     }
 
     companion object {

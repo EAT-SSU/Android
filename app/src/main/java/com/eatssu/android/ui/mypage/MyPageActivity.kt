@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.base.BaseActivity
@@ -16,13 +17,15 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
-import com.eatssu.android.ui.mypage.Inquire.InquireActivity
+import com.eatssu.android.ui.mypage.inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,32 +34,36 @@ import retrofit2.Response
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
     private lateinit var userService: UserService
 
-    private lateinit var myPageViewModel: MypageViewModel
+    private lateinit var myPageViewModel: MyPageViewModel
     private lateinit var versionViewModel: VersionViewModel
 
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
 
-        initializeViewModel()
-        setupViewModel()
-        observeViewModel()
-
+        initViewModel()
+        lodeData()
         bindData()
+        setOnClickListener()
+        setData()
     }
 
     override fun onResume() {
         super.onResume()
 
-        setupViewModel()
+        lodeData()
     }
 
-    private fun bindData(){
+    override fun onRestart() {
+        super.onRestart()
 
+        lodeData()
+    }
+
+    private fun setOnClickListener() {
 
         binding.llNickname.setOnClickListener {
             startActivity<UserNameChangeActivity>()
@@ -78,39 +85,48 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             showSignoutDialog()
         }
 
-        binding.tvAppVersion.text = BuildConfig.VERSION_NAME
-
-        binding.tvStoreAppVersion.text = versionViewModel.checkAppVersion()
-
-        binding.llStoreAppVersion.setOnClickListener{
+        binding.llStoreAppVersion.setOnClickListener {
             moveToStore()
         }
 
     }
 
-    private fun initializeViewModel(){
+    private fun setData() {
+        binding.tvAppVersion.text = BuildConfig.VERSION_NAME
+
+        binding.tvStoreAppVersion.text = versionViewModel.checkAppVersion()
+    }
+
+    private fun initViewModel() {
         userService = RetrofitImpl.retrofit.create(UserService::class.java)
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
         myPageViewModel = ViewModelProvider(
             this,
-            MypageViewModelFactory(userService)
-        )[MypageViewModel::class.java]
+            MyPageViewModelFactory(userService)
+        )[MyPageViewModel::class.java]
         versionViewModel = ViewModelProvider(
             this,
             VersionViewModelFactory(firebaseRemoteConfigRepository)
         )[VersionViewModel::class.java]
     }
 
-    private fun setupViewModel() {
+
+    private fun lodeData() {
         myPageViewModel.checkMyInfo()
+
     }
 
-    private fun observeViewModel() {
-        myPageViewModel.nickname.observe(this) { userNickname ->
-            binding.tvNickname.text = userNickname
+    private fun bindData() {
+        lifecycleScope.launch {
+            myPageViewModel.uiState.collectLatest {
+                if (!it.error && !it.loading) {
+                    binding.tvNickname.text = it.nickname
+                }
+            }
         }
     }
+
 
     private fun showLogoutDialog() {
 
@@ -118,7 +134,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         val builder = AlertDialog.Builder(this)
         builder.setTitle("로그아웃")
             .setMessage("로그아웃 하시겠습니까?")
-            .setPositiveButton("로그아웃"
+            .setPositiveButton(
+                "로그아웃"
             ) { _, _ ->
                 //로그아웃
                 MySharedPreferences.clearUser(this)
@@ -177,8 +194,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         })
     }
 
-    private fun moveToStore()
-    {
+    private fun moveToStore() {
         val appPackageName = packageName
         try {
             startActivity(

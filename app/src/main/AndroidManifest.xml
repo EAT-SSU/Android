@@ -40,7 +40,7 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
-            android:name=".ui.mypage.Inquire.InquireActivity"
+            android:name=".ui.mypage.inquire.InquireActivity"
             android:exported="false" />
         <activity
             android:name=".ui.review.write.ReviewWriteRateActivity"
@@ -50,7 +50,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.write.ReviewWriteMenuActivity"
+            android:name=".ui.review.write.menu.ReviewWriteMenuActivity"
             android:exported="false" />
         <activity
             android:name=".ui.login.LoginActivity"
@@ -145,7 +145,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.etc.OthersReviewDialogActivity"
+            android:name=".ui.review.report.OthersReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -153,7 +153,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.etc.MyReviewDialogActivity"
+            android:name=".ui.review.delete.MyReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -161,14 +161,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.etc.ReportActivity"
+            android:name=".ui.review.report.ReportActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.etc.FixedReviewActivity"
+            android:name=".ui.review.modify.ModifyReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

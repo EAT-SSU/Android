@@ -18,6 +18,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.Section
+import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
@@ -26,8 +27,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
-import java.util.Locale
 
 class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
@@ -35,7 +34,9 @@ class MenuFragment : Fragment() {
 
     private lateinit var calendarViewModel: CalendarViewModel
     private lateinit var menuViewModel: MenuViewModel
+
     private lateinit var menuService: MenuService
+    private lateinit var mealService: MealService
 
     private lateinit var menuDate: String
 
@@ -85,6 +86,7 @@ class MenuFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun observeViewModel(){
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
+        mealService = RetrofitImpl.retrofit.create(MealService::class.java)
 
         Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
 
@@ -93,7 +95,10 @@ class MenuFragment : Fragment() {
 
 //        menuRepository = MenuRepository(menuService)
         menuViewModel =
-            ViewModelProvider(this, MenuViewModelFactory(menuService))[MenuViewModel::class.java]
+            ViewModelProvider(
+                this,
+                MenuViewModelFactory(menuService, mealService)
+            )[MenuViewModel::class.java]
 
         // ViewModel에서 데이터 가져오기
         calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
@@ -121,7 +126,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
                         Section(
-                            MenuType.FIX,
+                            MenuType.FIXED,
                             Restaurant.FOOD_COURT,
                             result.mapFixedMenuResponseToMenu()
                         )
@@ -135,7 +140,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
                     totalMenuList.add(
                         Section(
-                            MenuType.FIX,
+                            MenuType.FIXED,
                             Restaurant.SNACK_CORNER,
                             result.mapFixedMenuResponseToMenu()
                         )
@@ -165,10 +170,10 @@ class MenuFragment : Fragment() {
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
             menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
-                if (result.mealInformationResponseList.isNotEmpty()) {
+                if (result.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
-                            MenuType.CHANGE,
+                            MenuType.VARIABLE,
                             Restaurant.HAKSIK,
                             result.mapTodayMenuResponseToMenu()
                         )
@@ -183,10 +188,10 @@ class MenuFragment : Fragment() {
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
-                if (result.mealInformationResponseList.isNotEmpty()) {
+                if (result.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
-                            MenuType.CHANGE,
+                            MenuType.VARIABLE,
                             Restaurant.DODAM,
                             result.mapTodayMenuResponseToMenu()
                         )
@@ -199,10 +204,10 @@ class MenuFragment : Fragment() {
             //기숙사식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
             menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
-                if (result.mealInformationResponseList.isNotEmpty()) {
+                if (result.isNotEmpty()) {
                     totalMenuList.add(
                         Section(
-                            MenuType.CHANGE,
+                            MenuType.VARIABLE,
                             Restaurant.DORMITORY,
                             result.mapTodayMenuResponseToMenu()
                         )

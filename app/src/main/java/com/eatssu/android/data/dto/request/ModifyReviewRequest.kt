@@ -3,8 +3,8 @@ package com.eatssu.android.data.dto.request
 import com.google.gson.annotations.SerializedName
 
 data class ModifyReviewRequest(
-    @SerializedName("mainRate") var mainRate: Int? = null,
-    @SerializedName("amountRate") var amountRate: Int? = null,
-    @SerializedName("tasteRate") var tasteRate: Int? = null,
+    @SerializedName("mainRating") var mainRating: Int? = null,
+    @SerializedName("amountRating") var amountRating: Int? = null,
+    @SerializedName("tasteRating") var tasteRating: Int? = null,
     @SerializedName("content") var content: String? = null,
 )
