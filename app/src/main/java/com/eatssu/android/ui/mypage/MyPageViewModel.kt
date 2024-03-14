@@ -30,7 +30,7 @@ class MyPageViewModel(private val userService: UserService) : ViewModel() {
                         it.copy(
                             loading = false,
                             error = false,
-                            nickname = response.body()?.result!!.nickname,
+                            nickname = response.body()?.result?.nickname.toString(),
                             platform = response.body()?.result!!.provider
                         )
                     }
