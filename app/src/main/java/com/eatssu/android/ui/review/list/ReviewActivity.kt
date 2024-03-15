@@ -133,6 +133,10 @@ class ReviewActivity :
                         binding.llNonReview.visibility = View.VISIBLE
                         binding.rvReview.visibility = View.INVISIBLE
 
+                        it.reviewInfo?.apply {
+                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+                        }
+
                     } else { //리뷰 있다.
 
                         Log.d("ReviewActivity", "리뷰가 있음")
