@@ -38,7 +38,7 @@ fun GetReviewListResponse.toReviewList(): List<Review> {
             tasteGrade = data.tasteRating,
             writeDate = data.writedAt,
             content = data.content,
-            imgUrlList = data.imageUrls[0] ?: ""
+            imgUrlList = data.imageUrls
         )
     }
 }

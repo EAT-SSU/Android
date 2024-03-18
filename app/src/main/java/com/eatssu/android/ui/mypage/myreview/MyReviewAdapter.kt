@@ -28,11 +28,11 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
             binding.tvTasteRating.text = dataList[position].tasteRating.toString()
             binding.tvAmountRating.text = dataList[position].amountRating.toString()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
-            val img: String = dataList[position].imgUrlList[0]// The list of image URLs
+//            val img: String = dataList[position].imgUrlList[0]// The list of image URLs
 
             val imageView: ImageView = binding.ivReviewPhoto
 
-            if (dataList[position].imgUrlList[0].isEmpty()) {
+            if (dataList[position].imgUrlList.isEmpty()) {
                 imageView.visibility = View.GONE
             } else {
                 Glide.with(itemView)
