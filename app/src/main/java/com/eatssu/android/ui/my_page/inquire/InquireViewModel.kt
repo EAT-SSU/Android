@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage.inquire
+package com.eatssu.android.ui.my_page.inquire
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

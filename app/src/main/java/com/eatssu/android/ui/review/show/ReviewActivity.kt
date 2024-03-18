@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.list
+package com.eatssu.android.ui.review.show
 
 import android.content.Intent
 import android.os.Bundle

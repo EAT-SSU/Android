@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage.my_review
+package com.eatssu.android.ui.my_page.my_review
 
 import android.content.Intent
 import android.view.LayoutInflater

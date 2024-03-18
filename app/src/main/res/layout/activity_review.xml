@@ -7,14 +7,14 @@
 
         <variable
             name="viewModel"
-            type="com.eatssu.android.ui.review.list.ReviewViewModel" />
+            type="com.eatssu.android.ui.review.show.ReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
-        tools:context=".ui.review.list.ReviewActivity">
+        tools:context=".ui.review.show.ReviewActivity">
 
         <ScrollView
             android:id="@+id/sv_review"

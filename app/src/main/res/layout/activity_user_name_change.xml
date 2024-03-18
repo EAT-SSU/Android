@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.mypage.user_name_change.UserNameChangeActivity">
+    tools:context=".ui.my_page.user_name_change.UserNameChangeActivity">
 
 
     <TextView

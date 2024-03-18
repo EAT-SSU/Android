@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.Menu
 import com.eatssu.android.databinding.ItemMenuBinding
-import com.eatssu.android.ui.review.list.ReviewActivity
+import com.eatssu.android.ui.review.show.ReviewActivity
 
 
 class MenuSubAdapter(

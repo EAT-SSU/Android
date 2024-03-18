@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage.user_name_change
+package com.eatssu.android.ui.my_page.user_name_change
 
 import android.os.Bundle
 import android.text.Editable

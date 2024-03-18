@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage
+package com.eatssu.android.ui.my_page
 
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.base.BaseResponse

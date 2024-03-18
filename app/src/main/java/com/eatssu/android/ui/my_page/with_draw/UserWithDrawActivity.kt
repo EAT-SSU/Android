@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage.with_draw
+package com.eatssu.android.ui.my_page.with_draw
 
 import android.os.Bundle
 import com.eatssu.android.base.BaseActivity

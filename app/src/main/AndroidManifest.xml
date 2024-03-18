@@ -40,10 +40,10 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
-            android:name=".ui.mypage.with_draw.UserWithDrawActivity"
+            android:name=".ui.my_page.with_draw.UserWithDrawActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.mypage.inquire.InquireActivity"
+            android:name=".ui.my_page.inquire.InquireActivity"
             android:exported="false" />
         <activity
             android:name=".ui.review.write.ReviewWriteRateActivity"
@@ -104,7 +104,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.user_name_change.UserNameChangeActivity"
+            android:name=".ui.my_page.user_name_change.UserNameChangeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data
@@ -112,21 +112,21 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.my_review.MyReviewListActivity"
+            android:name=".ui.my_page.my_review.MyReviewListActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.list.ReviewActivity"
+            android:name=".ui.review.show.ReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.MyPageActivity"
+            android:name=".ui.my_page.MyPageActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
