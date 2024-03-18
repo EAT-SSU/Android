@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.databinding.ItemReviewBinding
-import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
+import com.eatssu.android.ui.review.delete.DeleteReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
 
 
@@ -51,7 +51,8 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
 //            }
 
             binding.btnDetail.setOnClickListener {
-                val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
+                val intent =
+                    Intent(binding.btnDetail.context, DeleteReviewDialogActivity::class.java)
                 intent.putExtra("reviewId", dataList[position].reviewId.toLong())
                 intent.putExtra("menu", dataList[position].menuName)
                 intent.putExtra("comment", dataList[position].content)

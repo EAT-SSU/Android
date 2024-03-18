@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
 import com.eatssu.android.ui.review.modify.ModifyReviewActivity
 
-class MyReviewDialogActivity : AppCompatActivity() {
+class DeleteReviewDialogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewDialogBinding
-    private lateinit var viewModel: DeleteViewModel
+    private lateinit var viewModel: DeleteReviewViewModel
     var reviewId = -1L
     var menu = ""
 
@@ -24,7 +24,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this).get(DeleteViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(DeleteReviewViewModel::class.java)
 
         reviewId = intent.getLongExtra("reviewId", -1L)
         menu = intent.getStringExtra("menu").toString()
@@ -57,7 +57,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.toastMessage.observe(this, Observer { result ->
-            Toast.makeText(this@MyReviewDialogActivity, result, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@DeleteReviewDialogActivity, result, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.isDone.observe(this) { isDone ->

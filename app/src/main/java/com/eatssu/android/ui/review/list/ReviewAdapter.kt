@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.databinding.ItemOthersReviewBinding
 import com.eatssu.android.databinding.ItemReviewBinding
-import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
+import com.eatssu.android.ui.review.delete.DeleteReviewDialogActivity
 import com.eatssu.android.ui.review.report.ReportActivity
 
 
@@ -48,7 +48,7 @@ class ReviewAdapter(private val dataList: List<Review>) :
             binding.btnDetail.setOnClickListener {
                 if (data.isWriter) {
                     val intent =
-                        Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
+                        Intent(binding.btnDetail.context, DeleteReviewDialogActivity::class.java)
                     intent.putExtra("reviewId", data.reviewId)
                     intent.putExtra("menu", data.menu)
                     intent.putExtra("comment", data.content)

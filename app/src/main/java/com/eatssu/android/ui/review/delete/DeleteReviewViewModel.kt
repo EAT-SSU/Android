@@ -13,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DeleteViewModel : ViewModel() {
+class DeleteReviewViewModel : ViewModel() {
     private val _isDone = MutableLiveData<Boolean>()
     val isDone: LiveData<Boolean> get() = _isDone
 
