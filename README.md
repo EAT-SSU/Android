@@ -9,16 +9,16 @@ com.eatssu.android
 ├── data
 │   ├── dto
 │   │   ├── request
-│   │   ├── response
+│   │   └── response
 │   ├── enums
 │   ├── model
 │   ├── repository
 │   └── service
 ├── ui
 │   ├── common
-│   ├── feature[info, login, main, mypage, review]
-│   │   ├── ViewModel
-│   │   └── View
+│   └── feature[info, login, main, mypage, review]
+│       ├── ViewModel
+│       └── View
 └── util
 ```
 
