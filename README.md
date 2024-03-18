@@ -25,8 +25,8 @@ com.eatssu.android
 ## 🐚 Convertion
 [Convention Docs](https://github.com/EAT-SSU/EatSSU-Android/wiki/Convention)
 
-## 🦩 Framework
-- Android Studio : Flamingo 2022.2.1 Patch 2
+## 🤖 Android
+- Android Studio : Android Studio Hedgehog | 2023.1.1 Patch 2
 - JDK : 17
-- minSDK : 21
+- minSDK : 23
 - targetSDK : 34
