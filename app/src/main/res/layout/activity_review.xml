@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.eatssu.android.ui.review.list.viewmodel.ReviewViewModel" />
+            type="com.eatssu.android.ui.review.list.ReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

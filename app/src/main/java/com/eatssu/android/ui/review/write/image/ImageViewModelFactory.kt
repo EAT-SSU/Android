@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.write
+package com.eatssu.android.ui.review.write.image
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

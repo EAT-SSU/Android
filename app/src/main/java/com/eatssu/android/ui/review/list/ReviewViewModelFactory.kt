@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.list.viewmodel
+package com.eatssu.android.ui.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

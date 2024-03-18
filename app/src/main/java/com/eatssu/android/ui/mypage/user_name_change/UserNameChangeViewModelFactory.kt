@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage.usernamechange
+package com.eatssu.android.ui.mypage.user_name_change
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

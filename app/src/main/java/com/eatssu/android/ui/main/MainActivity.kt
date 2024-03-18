@@ -24,7 +24,7 @@ import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.mypage.MyPageViewModel
 import com.eatssu.android.ui.mypage.MyPageViewModelFactory
-import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.ui.mypage.user_name_change.UserNameChangeActivity
 import com.eatssu.android.util.CalendarUtils
 import com.eatssu.android.util.CalendarUtils.daysInWeekArray
 import com.eatssu.android.util.CalendarUtils.monthYearFromDate

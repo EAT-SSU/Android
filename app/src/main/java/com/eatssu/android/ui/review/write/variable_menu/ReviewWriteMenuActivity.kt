@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.write.menu
+package com.eatssu.android.ui.review.write.variable_menu
 
 import android.content.Intent
 import android.os.Build

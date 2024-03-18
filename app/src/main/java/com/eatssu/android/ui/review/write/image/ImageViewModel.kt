@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.write
+package com.eatssu.android.ui.review.write.image
 
 import android.util.Log
 import androidx.lifecycle.LiveData

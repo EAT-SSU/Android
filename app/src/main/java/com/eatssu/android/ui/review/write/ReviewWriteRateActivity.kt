@@ -24,6 +24,8 @@ import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
+import com.eatssu.android.ui.review.write.image.ImageViewModel
+import com.eatssu.android.ui.review.write.image.ImageViewModelFactory
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast

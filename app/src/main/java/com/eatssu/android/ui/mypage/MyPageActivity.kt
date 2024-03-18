@@ -18,8 +18,8 @@ import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.inquire.InquireActivity
-import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
-import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.ui.mypage.my_review.MyReviewListActivity
+import com.eatssu.android.ui.mypage.user_name_change.UserNameChangeActivity
 import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.util.extension.showToast

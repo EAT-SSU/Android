@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityOthersReviewDialogBinding
 
-class OthersReviewDialogActivity : AppCompatActivity() {
+class ReportDialogActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOthersReviewDialogBinding
     var reviewId = -1L

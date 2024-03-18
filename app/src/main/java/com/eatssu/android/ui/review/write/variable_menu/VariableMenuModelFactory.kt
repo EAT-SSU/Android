@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.review.write.menu
+package com.eatssu.android.ui.review.write.variable_menu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

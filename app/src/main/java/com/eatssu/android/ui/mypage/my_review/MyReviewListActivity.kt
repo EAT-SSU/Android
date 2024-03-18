@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.mypage.myreview
+package com.eatssu.android.ui.mypage.my_review
 
 import android.os.Bundle
 import android.util.Log

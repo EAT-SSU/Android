@@ -12,10 +12,8 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewBinding
-import com.eatssu.android.ui.review.list.viewmodel.ReviewViewModel
-import com.eatssu.android.ui.review.list.viewmodel.ReviewViewModelFactory
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
-import com.eatssu.android.ui.review.write.menu.ReviewWriteMenuActivity
+import com.eatssu.android.ui.review.write.variable_menu.ReviewWriteMenuActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

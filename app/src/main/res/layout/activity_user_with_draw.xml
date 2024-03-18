@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.mypage.withdraw.UserWithDrawActivity">
+    tools:context=".ui.mypage.with_draw.UserWithDrawActivity">
 
     <TextView
         android:id="@+id/textView7"
