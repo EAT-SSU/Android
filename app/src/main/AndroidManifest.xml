@@ -40,6 +40,9 @@
         tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
         <activity
+            android:name=".ui.mypage.withdraw.UserWithDrawActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.mypage.inquire.InquireActivity"
             android:exported="false" />
         <activity
@@ -153,7 +156,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.delete.MyReviewDialogActivity"
+            android:name=".ui.review.delete.DeleteReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
