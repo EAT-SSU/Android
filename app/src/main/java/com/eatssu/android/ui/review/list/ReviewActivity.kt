@@ -129,6 +129,11 @@ class ReviewActivity :
                 if (!it.error && !it.loading) {
                     if (it.isEmpty) {
 
+                        //리뷰 없어도 메뉴명은 있음
+                        it.reviewInfo?.apply {
+                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+                        }
+
                         Log.d("ReviewActivity", "리뷰가 없음")
                         binding.llNonReview.visibility = View.VISIBLE
                         binding.rvReview.visibility = View.INVISIBLE

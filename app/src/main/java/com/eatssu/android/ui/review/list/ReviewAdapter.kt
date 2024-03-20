@@ -34,12 +34,14 @@ class ReviewAdapter(private val dataList: List<Review>) :
             }
 
             binding.ivReviewPhoto.let {
-                if (data.imgUrlList.isEmpty()) {
+                if (data.imgUrl?.isEmpty() == true) {
+                    Log.d("qwer", "없")
                     it.visibility = View.GONE
                 } else {
 
+                    Log.d("qwer", "있")
                     Glide.with(itemView)
-                        .load(data.imgUrlList[0])
+                        .load(data.imgUrl)
                         .into(it)
                     it.visibility = View.VISIBLE
                 }
@@ -79,12 +81,12 @@ class ReviewAdapter(private val dataList: List<Review>) :
             }
 
             binding.ivReviewPhoto.let {
-                if (data.imgUrlList.isEmpty()) {
+                if (data.imgUrl?.isEmpty() == true) {
                     it.visibility = View.GONE
                 } else {
 
                     Glide.with(itemView)
-                        .load(data.imgUrlList[0])
+                        .load(data.imgUrl)
                         .into(it)
                     it.visibility = View.VISIBLE
                 }

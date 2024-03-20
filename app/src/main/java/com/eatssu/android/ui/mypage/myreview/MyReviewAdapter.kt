@@ -1,6 +1,7 @@
 package com.eatssu.android.ui.mypage.myreview
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,10 +32,12 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
 //            val img: String = dataList[position].imgUrlList[0]// The list of image URLs
 
             val imageView: ImageView = binding.ivReviewPhoto
+            val imgurl: String = dataList[position].imgUrlList[0] ?: ""
 
-            if (dataList[position].imgUrlList.isEmpty()) {
+            if (imgurl.isEmpty()) {
                 imageView.visibility = View.GONE
             } else {
+                Log.d("qwer", "사진 있다")
                 Glide.with(itemView)
                     .load(dataList[position].imgUrlList[0])
                     .into(imageView)
