@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
@@ -53,21 +54,23 @@ class LoginActivity :
 
 
         // SharedPreferences 안에 값이 저장되어 있을 때-> Login 패스하기
-        if (MySharedPreferences.getUserEmail(this).isNotBlank()) {
+        if (MySharedPreferences.getUserEmail(this)
+                .isNotBlank() && App.token_prefs.accessToken?.isNotBlank() == true
+        ) {
             // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
-            Toast.makeText(
-                this,
-                "자동 로그인 되었습니다.",
-                Toast.LENGTH_SHORT
-            ).show()
+
+            val userEmail = MySharedPreferences.getUserEmail(this).toString()
+            val token = App.token_prefs.accessToken
+
+            Toast.makeText(this, "자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+            Log.d("LoginActivity", "자동 로그인 $userEmail $token")
+
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
 
         val context = this
-
-
         binding.mcvKakaoLogin.setOnClickListener {
 
             Log.d("LoginActivity", "버튼 클릭")

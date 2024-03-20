@@ -16,6 +16,6 @@ data class MyReviewResponse(
         @SerializedName("writeDate") var writeDate: String,
         @SerializedName("menuName") var menuName: String,
         @SerializedName("content") var content: String,
-        @SerializedName("imgUrlList") var imgUrlList: List<String>,
+        @SerializedName("imgUrlList") var imgUrlList: List<String?>,
     )
 }
