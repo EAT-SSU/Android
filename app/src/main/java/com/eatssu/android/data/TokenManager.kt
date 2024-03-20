@@ -1,4 +1,4 @@
-package com.eatssu.android.util
+package com.eatssu.android.data
 
 import android.util.Log
 import com.eatssu.android.App

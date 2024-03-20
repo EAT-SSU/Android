@@ -22,7 +22,7 @@ import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
-import com.eatssu.android.util.RetrofitImpl
+import com.eatssu.android.data.RetrofitImpl
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime

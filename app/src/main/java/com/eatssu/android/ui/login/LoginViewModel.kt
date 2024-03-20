@@ -8,7 +8,7 @@ import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.data.service.OauthService
-import com.eatssu.android.util.MySharedPreferences
+import com.eatssu.android.data.MySharedPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

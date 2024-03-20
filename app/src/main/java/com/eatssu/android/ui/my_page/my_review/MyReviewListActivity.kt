@@ -9,7 +9,7 @@ import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
-import com.eatssu.android.util.RetrofitImpl.retrofit
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

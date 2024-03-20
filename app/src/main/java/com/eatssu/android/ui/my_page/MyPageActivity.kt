@@ -20,10 +20,10 @@ import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.my_page.inquire.InquireActivity
 import com.eatssu.android.ui.my_page.my_review.MyReviewListActivity
 import com.eatssu.android.ui.my_page.user_name_change.UserNameChangeActivity
-import com.eatssu.android.util.MySharedPreferences
-import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.extension.showToast
-import com.eatssu.android.util.extension.startActivity
+import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.util.showToast
+import com.eatssu.android.util.startActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import retrofit2.Call

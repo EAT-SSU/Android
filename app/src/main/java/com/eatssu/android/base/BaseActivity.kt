@@ -20,7 +20,7 @@ import com.eatssu.android.ui.common.AndroidMessageDialogActivity
 import com.eatssu.android.ui.common.ForceUpdateDialogActivity
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
-import com.eatssu.android.util.NetworkConnection
+import com.eatssu.android.data.NetworkConnection
 import com.google.android.material.card.MaterialCardView
 
 

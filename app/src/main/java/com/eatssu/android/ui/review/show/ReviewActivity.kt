@@ -14,7 +14,7 @@ import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.ui.review.write.variable_menu.ReviewWriteMenuActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

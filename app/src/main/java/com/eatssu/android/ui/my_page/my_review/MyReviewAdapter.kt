@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.DeleteReviewDialogActivity
-import com.eatssu.android.util.MySharedPreferences
+import com.eatssu.android.data.MySharedPreferences
 
 
 class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :

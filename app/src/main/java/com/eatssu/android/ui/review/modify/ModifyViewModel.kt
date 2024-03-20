@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.util.RetrofitImpl
+import com.eatssu.android.data.RetrofitImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

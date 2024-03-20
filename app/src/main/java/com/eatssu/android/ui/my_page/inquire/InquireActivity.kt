@@ -6,9 +6,9 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.InquiresService
 import com.eatssu.android.databinding.ActivityInquireBinding
-import com.eatssu.android.util.MySharedPreferences
-import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.extension.showToast
+import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.util.showToast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

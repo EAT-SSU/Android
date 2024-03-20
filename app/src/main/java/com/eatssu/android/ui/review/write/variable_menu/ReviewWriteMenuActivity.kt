@@ -12,7 +12,7 @@ import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

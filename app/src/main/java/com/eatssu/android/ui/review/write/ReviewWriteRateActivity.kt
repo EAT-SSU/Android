@@ -25,9 +25,9 @@ import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.ui.review.write.image.ImageViewModel
 import com.eatssu.android.ui.review.write.image.ImageViewModelFactory
-import com.eatssu.android.util.RetrofitImpl.mRetrofit
-import com.eatssu.android.util.RetrofitImpl.retrofit
-import com.eatssu.android.util.extension.showToast
+import com.eatssu.android.data.RetrofitImpl.mRetrofit
+import com.eatssu.android.data.RetrofitImpl.retrofit
+import com.eatssu.android.util.showToast
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

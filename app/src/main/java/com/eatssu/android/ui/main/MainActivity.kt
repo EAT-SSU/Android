@@ -28,9 +28,9 @@ import com.eatssu.android.ui.my_page.user_name_change.UserNameChangeActivity
 import com.eatssu.android.util.CalendarUtils
 import com.eatssu.android.util.CalendarUtils.daysInWeekArray
 import com.eatssu.android.util.CalendarUtils.monthYearFromDate
-import com.eatssu.android.util.RetrofitImpl
-import com.eatssu.android.util.extension.showToast
-import com.eatssu.android.util.extension.startActivity
+import com.eatssu.android.data.RetrofitImpl
+import com.eatssu.android.util.showToast
+import com.eatssu.android.util.startActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
