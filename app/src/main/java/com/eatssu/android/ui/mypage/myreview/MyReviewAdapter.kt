@@ -32,9 +32,9 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
 //            val img: String = dataList[position].imgUrlList[0]// The list of image URLs
 
             val imageView: ImageView = binding.ivReviewPhoto
-            val imgurl: String = dataList[position].imgUrlList[0] ?: ""
+//            val imgurl: String = dataList[position].imgUrlList[0] ?: ""
 
-            if (imgurl.isEmpty()) {
+            if (dataList[position].imgUrlList.isEmpty()) {
                 imageView.visibility = View.GONE
             } else {
                 Log.d("qwer", "사진 있다")
