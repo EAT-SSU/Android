@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.review.report.OthersReviewDialogActivity">
+    tools:context=".ui.review.report.ReportDialogActivity">
 
     <TextView
         android:id="@+id/btn_review_report"

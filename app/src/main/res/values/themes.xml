@@ -96,7 +96,7 @@
     <style name="AndroidCaption2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingExtra">18sp</item>
+<!--        <item name="android:lineSpacingExtra">18sp</item>-->
     </style>
 
     <style name="AndroidCaption3">
@@ -106,7 +106,7 @@
     </style>
 
     <style name="AndroidButton1">
-        <item name="android:fontFamily">@font/noto_bold</item>
+        <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
