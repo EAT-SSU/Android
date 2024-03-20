@@ -14,5 +14,5 @@ data class Review(
     val writeDate: String,
 
     val content: String,
-    val imgUrlList: ArrayList<String?>,
+    val imgUrl: ArrayList<String>?,
 )
