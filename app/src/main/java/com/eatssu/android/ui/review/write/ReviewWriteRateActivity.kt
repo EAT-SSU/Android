@@ -17,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
@@ -27,9 +26,13 @@ import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.util.RetrofitImpl.mRetrofit
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast
+import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.DecimalFormat
+import kotlin.math.log10
+import kotlin.math.pow
 
 class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
@@ -45,9 +48,10 @@ class ReviewWriteRateActivity :
     private var itemId: Long = 0
     private lateinit var itemName: String
     private var comment: String? = ""
-//    private var imageUrlString = ""
 
-    private lateinit var imageFile: File
+
+    private var imageFile: File? = null
+    private var compressedImage: File? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,12 +72,8 @@ class ReviewWriteRateActivity :
         // 텍스트 리뷰 입력 관련 설정
         setupTextReviewInput()
 
-        // 이미지 추가 버튼 클릭 리스너 설정
-        binding.ibAddPic.setOnClickListener {
-            Log.d("re", "클릭")
+        setOnClickListener()
 
-            checkPermission()
-        }
 
         imageService = mRetrofit.create(ImageService::class.java)
         reviewService = retrofit.create(ReviewService::class.java)
@@ -88,7 +88,93 @@ class ReviewWriteRateActivity :
 
         binding.viewModel = uploadReviewViewModel
 
-        setupUI()
+    }
+
+    fun setOnClickListener() {
+        // 이미지 추가 버튼 클릭 리스너 설정
+        binding.ibAddPic.setOnClickListener {
+            Log.d("ReviewWriteRateActivity", "클릭")
+
+            checkPermission()
+        }
+
+        binding.btnNextReview2.setOnClickListener {
+            if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
+                Toast.makeText(this, "별점을 등록해주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if ((comment?.trim()?.length ?: 0) < 3) {
+                Toast.makeText(this, "3자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            //파일 업로드가 끝났거나, 파일을 첨부하지 않거나
+            if (imageFile?.exists() == true) {
+                compressImage()
+
+                Log.d("ImageViewMdoel", "s3 시작")
+
+            } else {
+                postReview()
+
+            }
+        }
+
+        binding.btnDelete.setOnClickListener { deleteImage() }
+
+    }
+
+
+    private fun compressImage() {
+        imageFile?.let { imageFile ->
+            lifecycleScope.launch {
+                // Default compression
+                compressedImage = Compressor.compress(this@ReviewWriteRateActivity, imageFile)
+                Log.d("ImageViewModel", "압축 됨+" + (compressedImage?.length()?.div(1024)).toString())
+                setCompressedImage()
+            }
+        } ?: showError("Please choose an image!")
+    }
+
+    private fun showError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setCompressedImage() {
+        compressedImage?.let {
+            imageviewModel.setImageFile(it)
+            imageviewModel.saveS3() //이미지 url 반환 api 호출
+            lifecycleScope.launch {
+                imageviewModel.uiState.collectLatest {
+                    if (it.isDone) {
+                        postReview()
+                    }
+                }
+            }
+//            post()
+
+//            compressedImageView.setImageBitmap(BitmapFactory.decodeFile(it.absolutePath))
+//            compressedSizeTextView.text = String.format("Size : %s", getReadableFileSize(it.length()))
+//            Toast.makeText(this, "Compressed image save in " + it.path, Toast.LENGTH_LONG).show()
+            Log.d("Compressor", "Compressed image save in " + getReadableFileSize(it.length()))
+        }
+    }
+
+//    fun post(){
+//        imageviewModel.imageUrl.value?.let {
+//            postReview()
+//        }
+//    }
+
+    private fun getReadableFileSize(size: Long): String {
+        if (size <= 0) {
+            return "0"
+        }
+        val units = arrayOf("B", "KB", "MB", "GB", "TB")
+        val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
+        return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
     }
 
 
@@ -111,13 +197,6 @@ class ReviewWriteRateActivity :
                     .apply(RequestOptions().override(500, 500))
                     .into(binding.ivImage)
 
-
-                imageviewModel.viewModelScope.launch {
-
-                    imageviewModel.setImageFile(imageFile)
-                    imageviewModel.saveS3() //이미지 url 반환 api 호출
-
-                }
 
                 binding.ivImage.visibility = View.VISIBLE
                 binding.btnDelete.visibility = View.VISIBLE
@@ -209,24 +288,6 @@ class ReviewWriteRateActivity :
         imageResult.launch(intent)
     }
 
-
-    private fun setupUI() {
-        binding.btnNextReview2.setOnClickListener { postReview() }
-        binding.btnDelete.setOnClickListener { deleteImage() }
-    }
-
-//    private fun observeViewModel() {
-//        viewModel.isUpload.observe(this) { isUpload ->
-//            if (isUpload == true) {
-//                finish()
-//            }
-//
-//        }
-//        viewModel.toastMessage.observe(this) { message ->
-//            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
     private fun requestStoragePermission() {
         if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
             PackageManager.PERMISSION_GRANTED
@@ -251,17 +312,31 @@ class ReviewWriteRateActivity :
         })
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (imageFile?.exists() == true) {
+            Toast.makeText(this, "리뷰 작성을 중지합니다.", Toast.LENGTH_SHORT).show()
+            binding.ivImage.setImageDrawable(null)
+            imageFile!!.delete() //file을 날린다.
+            compressedImage?.delete() //file을 날린다.
+
+        }
+    }
+
 
     private fun deleteImage() {
         Log.d("ReviewWriteRateActivity", imageFile.toString())
-        if (imageFile.exists()) {
+        if (imageFile?.exists() == true) {
             Toast.makeText(this, "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
             binding.ivImage.setImageDrawable(null)
-            imageFile.delete() //file을 날린다.
+            imageFile!!.delete() //file을 날린다.
+            compressedImage?.delete() //file을 날린다.
+
             binding.ivImage.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
 
             imageviewModel.deleteFile()
+
         } else {
             Toast.makeText(this, "이미지를 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
@@ -269,20 +344,7 @@ class ReviewWriteRateActivity :
 
     private fun postReview() {
 
-        if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
-            Toast.makeText(this, "별점을 등록해주세요", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if ((comment?.trim()?.length ?: 0) < 3) {
-            Toast.makeText(this, "3자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-
         //Todo imageurl을 체크해야하는 이유?
-
-
         uploadReviewViewModel.setReviewData(
             itemId,
             binding.rbMain.rating.toInt(),
@@ -303,7 +365,6 @@ class ReviewWriteRateActivity :
                 }
                 if (!it.error && !it.loading && it.isUpload) {
                     showToast(uploadReviewViewModel.uiState.value.toastMessage)
-//                    finish()
                     Log.d("ReviewWriteRateActivity", "리뷰 작성 성공")
                     finish()
                 }
