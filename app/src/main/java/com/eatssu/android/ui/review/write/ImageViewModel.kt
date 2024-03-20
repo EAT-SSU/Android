@@ -39,7 +39,7 @@ class ImageViewModel(
 
     private suspend fun compressImage(imageFile: File): MultipartBody.Part {
 
-        val compressedFile = Compressor.compress(App.appContext, imageFile) { quality(80) }
+        val compressedFile = Compressor.compress(App.appContext, imageFile) { quality(50) }
         val requestFile = compressedFile.asRequestBody("image/*".toMediaTypeOrNull())
 
         return MultipartBody.Part.createFormData(
