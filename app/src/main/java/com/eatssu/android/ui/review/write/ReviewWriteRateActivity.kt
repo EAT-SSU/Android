@@ -20,13 +20,13 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.RetrofitImpl.mRetrofit
+import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.ui.review.write.image.ImageViewModel
 import com.eatssu.android.ui.review.write.image.ImageViewModelFactory
-import com.eatssu.android.data.RetrofitImpl.mRetrofit
-import com.eatssu.android.data.RetrofitImpl.retrofit
 import com.eatssu.android.util.showToast
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.collectLatest
@@ -138,11 +138,7 @@ class ReviewWriteRateActivity :
                 Log.d("ImageViewModel", "압축 됨+" + (compressedImage?.length()?.div(1024)).toString())
                 setCompressedImage()
             }
-        } ?: showError("Please choose an image!")
-    }
-
-    private fun showError(errorMessage: String) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setCompressedImage() {
