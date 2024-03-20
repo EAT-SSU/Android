@@ -61,7 +61,7 @@ class ReviewWriteRateActivity :
         itemName = intent.getStringExtra("itemName").toString()
         Log.d("post", "고정메뉴${itemName}")
 
-        itemId = intent.getLongExtra("itemId", 16)
+        itemId = intent.getLongExtra("itemId", -1)
 
         // 현재 메뉴명을 표시합니다.
         binding.menu.text = itemName
@@ -112,6 +112,7 @@ class ReviewWriteRateActivity :
 
             //파일 업로드가 끝났거나, 파일을 첨부하지 않거나
             if (imageFile?.exists() == true) {
+                showToast("리뷰 업로드 중")
                 compressImage()
 
                 Log.d("ImageViewMdoel", "s3 시작")
@@ -153,20 +154,10 @@ class ReviewWriteRateActivity :
                     }
                 }
             }
-//            post()
-
-//            compressedImageView.setImageBitmap(BitmapFactory.decodeFile(it.absolutePath))
-//            compressedSizeTextView.text = String.format("Size : %s", getReadableFileSize(it.length()))
-//            Toast.makeText(this, "Compressed image save in " + it.path, Toast.LENGTH_LONG).show()
             Log.d("Compressor", "Compressed image save in " + getReadableFileSize(it.length()))
         }
     }
 
-//    fun post(){
-//        imageviewModel.imageUrl.value?.let {
-//            postReview()
-//        }
-//    }
 
     private fun getReadableFileSize(size: Long): String {
         if (size <= 0) {

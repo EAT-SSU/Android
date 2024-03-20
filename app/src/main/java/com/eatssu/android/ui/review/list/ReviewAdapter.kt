@@ -33,12 +33,22 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvAmountRating.text = amountGrade.toString()
             }
 
+
+
             if (data.imgUrl?.size != 0) {
                 Log.d("ReviewAdapter", data.content + data.imgUrl?.size.toString())
                 Glide.with(itemView)
                     .load(data.imgUrl?.get(0))
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
+
+                if (data.imgUrl?.get(0) == "") {
+                    binding.ivReviewPhoto.visibility = View.GONE
+
+                }
+                if (data.imgUrl?.get(0) == null) {
+                    binding.ivReviewPhoto.visibility = View.GONE
+                }
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE
             }
@@ -77,15 +87,6 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvAmountRating.text = amountGrade.toString()
             }
 
-            if (data.imgUrl?.size != 0) {
-                Log.d("ReviewAdapter", data.content + data.imgUrl?.size.toString())
-                Glide.with(itemView)
-                    .load(data.imgUrl?.get(0))
-                    .into(binding.ivReviewPhoto)
-                binding.ivReviewPhoto.visibility = View.VISIBLE
-            } else {
-                binding.ivReviewPhoto.visibility = View.GONE
-            }
 
             if (data.imgUrl?.size != 0) {
                 Glide.with(itemView)
@@ -103,13 +104,6 @@ class ReviewAdapter(private val dataList: List<Review>) :
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE
             }
-
-//            data.imgUrl?.get(0)?.let {
-//                Log.d("qwer", "있")
-//
-//
-//
-//            } ?: run {}
 
 
             binding.tvReviewItemReport.setOnClickListener {
