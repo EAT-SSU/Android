@@ -122,7 +122,7 @@ object RetrofitImpl {
                     Log.d("AppInterceptor", "토큰 재발급 실패"+response)
 //                    e.printStackTrace() //이거 빼니까 강제종료 안된다
                     // 리프레시 토큰이 만료되어 재발급에 실패했을 때 로그아웃 처리
-                    if (response.code == 403) {
+                    if (response.code == 401) {
                         MySharedPreferences.clearUser(context) //자동 로그인
                         App.token_prefs.clearTokens() // 토큰 제거
                         Handler(Looper.getMainLooper()).post {
