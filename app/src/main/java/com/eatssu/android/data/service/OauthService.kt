@@ -16,8 +16,7 @@ interface OauthService { //여기는 토큰이 없는 레트로핏을 끼웁니�
             : Call<BaseResponse<TokenResponse>>
 
     @POST("oauths/kakao")
-    fun loginWithKakao(
+    suspend fun loginWithKakao(
         @Body request: LoginWithKakaoRequest,
-    )
-            : Call<BaseResponse<TokenResponse>>
+    ): BaseResponse<TokenResponse>
 }
