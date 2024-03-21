@@ -50,6 +50,34 @@ object MySharedPreferences {
         return prefs.getString("MY_NAME", "").toString()
     }
 
+    fun setAccessToken(context: Context, input: String) {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = prefs.edit()
+        editor.putString("ACCESS_TOKEN", input)
+        editor.commit()
+    }
+
+    fun getAccessToken(context: Context): String {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getString("ACCESS_TOKEN", "").toString()
+    }
+
+    fun setRefreshToken(context: Context, input: String) {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = prefs.edit()
+        editor.putString("REFRESH_TOKEN", input)
+        editor.commit()
+    }
+
+    fun getRefreshToken(context: Context): String {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getString("REFRESH_TOKEN", "").toString()
+    }
+
     fun clearUser(context: Context) {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)

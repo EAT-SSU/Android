@@ -5,11 +5,11 @@ import com.eatssu.android.App
 import com.eatssu.android.util.MySharedPreferences
 import javax.inject.Inject
 
-class SetAccessTokenUseCase @Inject constructor(
+class SetRefreshTokenUseCase @Inject constructor(
 //    private val preferencesRepository: PreferencesRepository,
 ) {
-    suspend operator fun invoke(accessToken: String) {
-        MySharedPreferences.setAccessToken(App.appContext, accessToken)
+    suspend operator fun invoke(refreshToken: String) {
+        MySharedPreferences.setRefreshToken(App.appContext, refreshToken)
 
         Log.d("accessToken", "로그아웃")
 
