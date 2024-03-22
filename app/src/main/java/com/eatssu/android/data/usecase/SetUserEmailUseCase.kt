@@ -10,7 +10,7 @@ class SetUserEmailUseCase @Inject constructor(
     suspend operator fun invoke(email: String) {
         MySharedPreferences.setUserEmail(App.appContext, email)
 
-        Log.d("SetUserEmailUseCase", "email")
+        Log.d("SetUserEmailUseCase", email)
 
     }
 }
