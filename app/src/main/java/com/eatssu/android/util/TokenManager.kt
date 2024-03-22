@@ -8,13 +8,14 @@ object TokenManager {
     private val oauthService = RetrofitImpl.nonRetrofit.create(OauthService::class.java)
 
     fun refreshToken(): String {
-        val refreshToken = "Bearer " + App.token_prefs.refreshToken
+        val refreshToken = "Bearer " + MySharedPreferences.getRefreshToken(App.appContext)
         val response = oauthService.getNewToken(refreshToken).execute()
         if (response.code() == 200) {
             Log.d("tokenManager", "토큰 다시 나옴")
-            response.body()?.result.let { it ->
-                App.token_prefs.accessToken = it!!.accessToken
-                App.token_prefs.refreshToken = it.refreshToken
+            response.body()?.result?.let { it ->
+                MySharedPreferences.setAccessToken(App.appContext, it.accessToken)
+                MySharedPreferences.setRefreshToken(App.appContext, it.refreshToken)
+
                 return it.accessToken
             }
         }
