@@ -3,6 +3,7 @@ package com.eatssu.android.di
 
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenInterceptor
 import dagger.Module
 import dagger.Provides
@@ -63,6 +64,12 @@ object NetworkModule {
     @Singleton
     fun provideOauthService(retrofit: Retrofit): OauthService {
         return retrofit.create(OauthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
 
     /*
