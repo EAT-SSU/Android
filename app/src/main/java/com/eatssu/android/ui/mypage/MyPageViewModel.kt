@@ -1,5 +1,6 @@
 package com.eatssu.android.ui.mypage
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
@@ -26,13 +27,16 @@ class MyPageViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
-//    private val userService: UserService
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MyPageState> = MutableStateFlow(MyPageState())
     val uiState: StateFlow<MyPageState> = _uiState.asStateFlow()
 
-    fun checkMyInfo() {
+    init {
+        getMyInfo()
+    }
+
+    fun getMyInfo() {
         viewModelScope.launch {
             getUserInfoUseCase().onStart {
                 _uiState.update { it.copy(loading = true) }
@@ -40,8 +44,9 @@ class MyPageViewModel @Inject constructor(
                 _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-//                Log.e(LoginViewModel.TAG, "kakaoLogin: ", e)
+                Log.e(TAG, e.toString())
             }.collectLatest { result ->
+                Log.d(TAG, result.toString())
                 result.result?.apply {
                     if (this.nickname.isNullOrBlank()) {
                         _uiState.update {
@@ -102,6 +107,10 @@ class MyPageViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        val TAG = "MyPageViewModel"
     }
 }
 

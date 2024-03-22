@@ -3,6 +3,7 @@ package com.eatssu.android.ui.mypage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
@@ -38,22 +39,16 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
 
         initViewModel()
-        lodeData()
-        bindData()
         setOnClickListener()
         setData()
     }
 
     override fun onResume() {
         super.onResume()
-
-        lodeData()
     }
 
     override fun onRestart() {
         super.onRestart()
-
-        lodeData()
     }
 
     private fun setOnClickListener() {
@@ -79,15 +74,25 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
 
         binding.llStoreAppVersion.setOnClickListener {
-            moveToStore()
+            moveToPlayStore()
         }
 
     }
 
     private fun setData() {
         binding.tvAppVersion.text = BuildConfig.VERSION_NAME
-
         binding.tvStoreAppVersion.text = versionViewModel.checkAppVersion()
+
+        myPageViewModel.getMyInfo()
+
+        lifecycleScope.launch {
+            Log.d(TAG, "관찰시작")
+            myPageViewModel.uiState.collectLatest {
+                if (!it.error && !it.loading) {
+                    binding.tvNickname.text = it.nickname
+                }
+            }
+        }
     }
 
     private fun initViewModel() {
@@ -101,24 +106,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
 
-    private fun lodeData() {
-        myPageViewModel.checkMyInfo()
-
-    }
-
-    private fun bindData() {
-        lifecycleScope.launch {
-            myPageViewModel.uiState.collectLatest {
-                if (!it.error && !it.loading) {
-                    binding.tvNickname.text = it.nickname
-                }
-            }
-        }
-    }
-
 
     private fun showLogoutDialog() {
-
 
         // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
         val builder = AlertDialog.Builder(this)
@@ -175,7 +164,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
 
-    private fun moveToStore() {
+    private fun moveToPlayStore() {
         val appPackageName = packageName
         try {
             startActivity(
@@ -192,5 +181,9 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 )
             )
         }
+    }
+
+    companion object {
+        val TAG = "MyPageActivity"
     }
 }
