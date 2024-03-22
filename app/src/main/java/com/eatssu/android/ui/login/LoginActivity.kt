@@ -5,11 +5,9 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.App
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.ui.main.MainActivity
-import com.eatssu.android.util.MySharedPreferences
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
 import com.kakao.sdk.common.model.ClientError
@@ -38,24 +36,11 @@ class LoginActivity :
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-
-        // SharedPreferences 안에 값이 저장되어 있을 때-> Login 패스하기
-        if (MySharedPreferences.getUserEmail(this)
-                .isNotBlank() && App.token_prefs.accessToken?.isNotBlank() == true
-        ) {
-            // SharedPreferences 안에 값이 저장되어 있을 때 -> MainActivity로 이동
-
-            val userEmail = MySharedPreferences.getUserEmail(this).toString()
-            val token = App.token_prefs.accessToken
+        setOnClickListener()
+    }
 
 
-            showToast("자동 로그인 되었습니다.")
-            Log.d(TAG, "자동 로그인 $userEmail $token")
-
-            startActivity<MainActivity>()
-            finish()
-        }
-
+    fun setOnClickListener() {
         val context = this
         binding.mcvKakaoLogin.setOnClickListener {
 
