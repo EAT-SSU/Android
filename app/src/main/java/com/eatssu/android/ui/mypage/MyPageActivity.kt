@@ -45,10 +45,14 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     override fun onResume() {
         super.onResume()
+
+        setData() //Todo 최선일까?
     }
 
     override fun onRestart() {
         super.onRestart()
+
+        setData()
     }
 
     private fun setOnClickListener() {
@@ -95,7 +99,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
     }
 
-    private fun initViewModel() {
+    private fun initViewModel() { //Todo 리팩토링하기
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
 

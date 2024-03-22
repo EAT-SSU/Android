@@ -8,9 +8,11 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityUserNameChangeBinding
 import com.eatssu.android.util.extension.showToast
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(ActivityUserNameChangeBinding::inflate) {
 
     private val userNameChangeViewModel: UserNameChangeViewModel by viewModels()
@@ -52,7 +54,7 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
                 userNameChangeViewModel.uiState.collectLatest {
                     if (it.isEnableName) {
                         binding.btnComplete.isEnabled = true
-                        showToast(it.toastMessage)
+                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
                     }
                 }
             }

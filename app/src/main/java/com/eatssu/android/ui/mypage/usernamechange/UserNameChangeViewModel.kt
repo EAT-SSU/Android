@@ -40,10 +40,14 @@ class UserNameChangeViewModel @Inject constructor(
                 Log.e(TAG, e.toString())
             }.collectLatest { result ->
                 if (result.result == true) {
-                    _uiState.update { it.copy(toastMessage = "사용가능한 닉네임 입니다.") }
+                    _uiState.update {
+                        it.copy(
+                            isEnableName = true,
+                            toastMessage = "사용가능한 닉네임 입니다."
+                        )
+                    }
                 } else {
                     _uiState.update { it.copy(toastMessage = "이미 사용 중인 닉네임 입니다.") }
-
                 }
             }
         }
@@ -59,7 +63,7 @@ class UserNameChangeViewModel @Inject constructor(
                 _uiState.update { it.copy(error = true, toastMessage = "닉네임 설정에 실패했습니다.") }
                 Log.e(TAG, e.toString())
             }.collectLatest { result ->
-                _uiState.update { it.copy(toastMessage = "닉네임 설정에 성공했습니다.") }
+                _uiState.update { it.copy(isDone = true, toastMessage = "닉네임 설정에 성공했습니다.") }
             }
         }
     }
