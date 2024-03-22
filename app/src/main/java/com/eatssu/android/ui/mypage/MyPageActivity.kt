@@ -3,16 +3,13 @@ package com.eatssu.android.ui.mypage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
@@ -20,21 +17,17 @@ import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
-import com.eatssu.android.util.MySharedPreferences
-import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-
+@AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
-    private lateinit var userService: UserService
 
-    private lateinit var myPageViewModel: MyPageViewModel
+    private val myPageViewModel: MyPageViewModel by viewModels()
+
     private lateinit var versionViewModel: VersionViewModel
 
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
@@ -98,13 +91,9 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     private fun initViewModel() {
-        userService = RetrofitImpl.retrofit.create(UserService::class.java)
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        myPageViewModel = ViewModelProvider(
-            this,
-            MyPageViewModelFactory(userService)
-        )[MyPageViewModel::class.java]
+
         versionViewModel = ViewModelProvider(
             this,
             VersionViewModelFactory(firebaseRemoteConfigRepository)
@@ -130,6 +119,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private fun showLogoutDialog() {
 
+
         // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
         val builder = AlertDialog.Builder(this)
         builder.setTitle("로그아웃")
@@ -138,10 +128,17 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 "로그아웃"
             ) { _, _ ->
                 //로그아웃
-                MySharedPreferences.clearUser(this)
-                showToast("로그아웃 되었습니다.")
-                App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                startActivity<LoginActivity>()
+                myPageViewModel.loginOut()
+
+                lifecycleScope.launch {
+                    myPageViewModel.uiState.collectLatest {
+                        if (it.isLoginOuted) {
+                            showToast(it.toastMessage)
+                            startActivity<LoginActivity>()
+                        }
+
+                    }
+                }
             }
             .setNegativeButton("취소") { _, _ ->
             }
@@ -159,11 +156,17 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 "탈퇴하기"
             ) { _, _ ->
                 //탈퇴처리
-                MySharedPreferences.clearUser(this)
-                signOut() //탈퇴하기
-                showToast("탈퇴 되었습니다.")
-                App.token_prefs.clearTokens() //자동로그인 토큰 날리기
-                startActivity<LoginActivity>()
+                myPageViewModel.signOut()
+
+                lifecycleScope.launch {
+                    myPageViewModel.uiState.collectLatest {
+                        if (it.isSignOuted) {
+                            showToast(it.toastMessage)
+                            startActivity<LoginActivity>()
+                        }
+
+                    }
+                }
             }
             .setNegativeButton("취소") { _, _ ->
             }
@@ -171,28 +174,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         builder.show()
     }
 
-
-    private fun signOut() {
-        userService.signOut().enqueue(object : Callback<BaseResponse<Boolean>> {
-            override fun onResponse(
-                call: Call<BaseResponse<Boolean>>,
-                response: Response<BaseResponse<Boolean>>,
-            ) {
-                if (response.isSuccessful) {
-                    if (response.code() == 200) {
-                        Log.d("MyPageActivity", "onResponse 성공: 탈퇴" + response.body().toString())
-
-                    } else {
-                        Log.d("MyPageActivity", "onResponse 오류: 탈퇴" + response.body().toString())
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<BaseResponse<Boolean>>, t: Throwable) {
-                Log.d("MyPageActivity", "onFailure 에러: 탈퇴" + t.message.toString())
-            }
-        })
-    }
 
     private fun moveToStore() {
         val appPackageName = packageName
