@@ -3,11 +3,11 @@ package com.eatssu.android.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.App
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.data.usecase.LoginUseCase
-import com.eatssu.android.util.MySharedPreferences
+import com.eatssu.android.data.usecase.SetAccessTokenUseCase
+import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
+import com.eatssu.android.data.usecase.SetUserEmailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+    private val setAccessTokenUseCase: SetAccessTokenUseCase,
+    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
+    private val setUserEmailUseCase: SetUserEmailUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
@@ -40,19 +43,16 @@ class LoginViewModel @Inject constructor(
             }.collectLatest { result ->
                 _uiState.update { it.copy(loading = false, error = false) }
 
-                MySharedPreferences.setUserEmail(App.appContext, email)
-                MySharedPreferences.setUserPlatform(App.appContext, "KAKAO")
-
                 /*토큰 저장*/
-                result.let {
-                    Log.d(TAG, it.result?.accessToken.toString())
+                result.result?.let {
 
-                    App.token_prefs.accessToken = it.result?.accessToken
-                    App.token_prefs.refreshToken = it.result?.refreshToken //헤더에 붙일 토큰 저장
+                    Log.d(TAG, it.accessToken)
+
+                    //헤더에 토큰 붙이기
+                    setAccessTokenUseCase(it.accessToken)
+                    setRefreshTokenUseCase(it.refreshToken)
+                    setUserEmailUseCase(email)
                 }
-//                setAccessTokenUseCase(result.accessToken)
-//                setRefreshTokenUseCase(result.refreshToken)
-//                _uiState.update { it.copy(isRegistered = result.isRegistered) }
             }
         }
     }
@@ -66,5 +66,4 @@ data class LoginState(
     var toastMessage: String = "",
     var loading: Boolean = true,
     var error: Boolean = false,
-    var tokens: TokenResponse? = null,
 )
