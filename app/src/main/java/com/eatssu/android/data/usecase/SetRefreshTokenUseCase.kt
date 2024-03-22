@@ -11,7 +11,7 @@ class SetRefreshTokenUseCase @Inject constructor(
     suspend operator fun invoke(refreshToken: String) {
         MySharedPreferences.setRefreshToken(App.appContext, refreshToken)
 
-        Log.d("accessToken", "로그아웃")
+        Log.d("SetRefreshTokenUseCase", refreshToken)
 
     }
 }

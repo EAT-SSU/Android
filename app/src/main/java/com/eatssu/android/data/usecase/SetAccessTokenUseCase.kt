@@ -11,7 +11,7 @@ class SetAccessTokenUseCase @Inject constructor(
     suspend operator fun invoke(accessToken: String) {
         MySharedPreferences.setAccessToken(App.appContext, accessToken)
 
-        Log.d("accessToken", "로그아웃")
+        Log.d("SetAccessTokenUseCase", accessToken)
 
     }
 }
