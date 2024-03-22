@@ -9,11 +9,6 @@ import retrofit2.http.*
 
 interface UserService {
 
-    @POST("users/validate/email/{email}") //이메일 중복 체크
-    fun checkEmail(
-        @Path("email") email: String,
-    ): Call<BaseResponse<Boolean>>
-
     @PATCH("users/nickname") //닉네임 수정
     fun changeNickname(@Body request: ChangeNicknameRequest)
             : Call<BaseResponse<Void>>
