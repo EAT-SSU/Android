@@ -10,6 +10,12 @@ import javax.inject.Inject
 
 class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthService) :
     OauthRepository {
+    override suspend fun reissueToken(refreshToken: String): Flow<BaseResponse<TokenResponse>> =
+        flow {
+            emit(oauthService.getNewToken(refreshToken))
+        }
+
+
     override suspend fun login(body: LoginWithKakaoRequest): Flow<BaseResponse<TokenResponse>> =
         flow {
             emit(oauthService.loginWithKakao(body))

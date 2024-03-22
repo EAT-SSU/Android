@@ -6,9 +6,9 @@ import com.eatssu.android.data.dto.response.TokenResponse
 import kotlinx.coroutines.flow.Flow
 
 interface OauthRepository {
-//    suspend fun reissueToken(
-//        refreshToken: String
-//    ): Flow<>
+    suspend fun reissueToken(
+        refreshToken: String,
+    ): Flow<BaseResponse<TokenResponse>>
 
     suspend fun login(body: LoginWithKakaoRequest): Flow<BaseResponse<TokenResponse>>
 

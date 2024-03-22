@@ -7,9 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.App
 import com.eatssu.android.data.usecase.GetAccessTokenUseCase
+import com.eatssu.android.data.usecase.GetRefreshTokenUseCase
 import com.eatssu.android.data.usecase.LogoutUseCase
+import com.eatssu.android.data.usecase.ReissueTokenUseCase
 import com.eatssu.android.ui.login.LoginActivity
-import com.eatssu.android.util.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -17,7 +18,9 @@ import javax.inject.Inject
 
 class TokenInterceptor @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
+    private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
+    private val reissueTokenUseCase: ReissueTokenUseCase,
 ) : Interceptor {
 
     companion object {
@@ -30,10 +33,15 @@ class TokenInterceptor @Inject constructor(
 
             "/oauths/**", "/users/**",
             "/menus/**", "/meals/**", "/restaurants/**", "/reviews/**",
+
             "/inquiries/{userInquiriesId}",
             "/inquiries/list",
+
             "/admin/login"
         )
+
+        const val TAG = "TokenInterceptor"
+
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -52,10 +60,11 @@ class TokenInterceptor @Inject constructor(
             // refresh token
             response.close()
 
-            Log.d("AppInterceptor", "토큰 재발급 시도")
+            Log.d(TAG, "토큰 재발급 시도")
             try {
+                val refreshToken = runBlocking { getRefreshTokenUseCase() }
+                val newAccessToken = runBlocking { reissueTokenUseCase(refreshToken) }
 
-                val newAccessToken = TokenManager.refreshToken()
                 // 재발급 받은 토큰으로 새로운 요청 생성
                 val newRequest = request.newBuilder()
                     .removeHeader("Authorization")
@@ -64,11 +73,11 @@ class TokenInterceptor @Inject constructor(
 
                 chain.proceed(newRequest)
             } catch (e: Exception) {
-                Log.d("AppInterceptor", "토큰 재발급 실패" + response)
+                Log.d(TAG, "토큰 재발급 실패" + response)
 //                    e.printStackTrace() //이거 빼니까 강제종료 안된다
 
                 // 리프레시 토큰이 만료되어 재발급에 실패했을 때 로그아웃 처리
-                if (response.code == 403) {
+//                if (response.code == 403) {
                     runBlocking { logoutUseCase() }
 
                     Handler(Looper.getMainLooper()).post {
@@ -77,7 +86,7 @@ class TokenInterceptor @Inject constructor(
                         val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
-                    }
+//                    }
                 }
             }
 
