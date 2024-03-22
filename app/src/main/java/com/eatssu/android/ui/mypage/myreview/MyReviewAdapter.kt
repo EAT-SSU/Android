@@ -9,13 +9,13 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.eatssu.android.data.dto.response.MyReviewResponse
+import com.eatssu.android.data.model.Review
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
 
 
-class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
+class MyReviewAdapter(private val dataList: List<Review>) :
     RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
@@ -24,39 +24,36 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
         fun bind(position: Int) {
             binding.tvReviewItemComment.text = dataList[position].content
             binding.tvReviewItemDate.text = dataList[position].writeDate
-            binding.tvMenuName.text = dataList[position].menuName
-            binding.tvTotalRating.text = dataList[position].mainRating.toString()
-            binding.tvTasteRating.text = dataList[position].tasteRating.toString()
-            binding.tvAmountRating.text = dataList[position].amountRating.toString()
+            binding.tvMenuName.text = dataList[position].menu
+            binding.tvTotalRating.text = dataList[position].mainGrade.toString()
+            binding.tvTasteRating.text = dataList[position].tasteGrade.toString()
+            binding.tvAmountRating.text = dataList[position].amountGrade.toString()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
 
             val imageView: ImageView = binding.ivReviewPhoto
 
-            if (dataList[position].imgUrlList.isEmpty()) {
+            if (dataList[position].imgUrl?.isEmpty() == true) {
                 imageView.visibility = View.GONE
             } else {
                 Log.d("qwer", "사진 있다")
                 Glide.with(itemView)
-                    .load(dataList[position].imgUrlList[0])
+                    .load(dataList[position].imgUrl?.get(0))
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
-                if (dataList[position].imgUrlList[0] == "") {
-                    binding.ivReviewPhoto.visibility = View.GONE
 
-                }
-                if (dataList[position].imgUrlList[0] == null) {
+                if (dataList[position].imgUrl?.get(0) == "" || dataList[position].imgUrl?.get(0) == null) {
                     binding.ivReviewPhoto.visibility = View.GONE
                 }
             }
 
             binding.btnDetail.setOnClickListener {
                 val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
-                intent.putExtra("reviewId", dataList[position].reviewId.toLong())
-                intent.putExtra("menu", dataList[position].menuName)
+                intent.putExtra("reviewId", dataList[position].reviewId)
+                intent.putExtra("menu", dataList[position].menu)
                 intent.putExtra("comment", dataList[position].content)
-                intent.putExtra("amountRating", dataList[position].amountRating)
-                intent.putExtra("tasteRating", dataList[position].tasteRating)
-                intent.putExtra("mainRating", dataList[position].amountRating)
+                intent.putExtra("amountRating", dataList[position].amountGrade)
+                intent.putExtra("tasteRating", dataList[position].tasteGrade)
+                intent.putExtra("mainRating", dataList[position].mainGrade)
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }
