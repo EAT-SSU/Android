@@ -121,4 +121,6 @@
     <string name="leave_email">답변받을 이메일 주소를 남겨주세요.</string>
     <string name="inquire_content">문의 내용</string>
     <string name="send">전송하기</string>
+
+    <string name="logout_description">로그아웃 되었습니다.</string>
 </resources>
