@@ -13,7 +13,6 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.data.model.ReviewInfo
 import com.eatssu.android.data.service.ReviewService
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-@HiltViewModel
+//@HiltViewModel
 class ReviewViewModel(
 //@Inject constructor(
     private val reviewService: ReviewService,
