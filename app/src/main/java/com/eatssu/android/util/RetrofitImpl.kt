@@ -95,7 +95,10 @@ object RetrofitImpl {
             val requestBuilder = originalRequest.newBuilder()
                 .addHeader("accept", "application/hal+json")
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer ${App.token_prefs.accessToken}")
+                .addHeader(
+                    "Authorization",
+                    "Bearer ${MySharedPreferences.getAccessToken(App.appContext)}"
+                )
 
             val request = requestBuilder.build()
             response = proceed(request)
@@ -107,13 +110,13 @@ object RetrofitImpl {
                 Log.d("AppInterceptor", "토큰 재발급 시도")
 
                 try {
-                    val newAccessToken = TokenManager.refreshToken()
-                    Log.d("AppInterceptor", "토큰 재발급 성공 : $newAccessToken")
+//                    val newAccessToken = TokenManager.refreshToken()
+//                    Log.d("AppInterceptor", "/토큰 재발급 성공 : $newAccessToken")
 
                     // 재발급 받은 토큰으로 새로운 요청 생성
                     val newRequest = request.newBuilder()
                         .removeHeader("Authorization")
-                        .addHeader("Authorization", "Bearer $newAccessToken")
+//                        .addHeader("Authorization", "Bearer $newAccessToken")
                         .build()
 
                     // 새로운 요청으로 다시 시도
@@ -124,7 +127,7 @@ object RetrofitImpl {
                     // 리프레시 토큰이 만료되어 재발급에 실패했을 때 로그아웃 처리
                     if (response.code == 401) {
                         MySharedPreferences.clearUser(context) //자동 로그인
-                        App.token_prefs.clearTokens() // 토큰 제거
+//                        MySharedPreferences.clearUser() // 토큰 제거
                         Handler(Looper.getMainLooper()).post {
                             Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                             val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
@@ -145,7 +148,7 @@ object RetrofitImpl {
         override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
             val requestBuilder = request().newBuilder()
                 .addHeader("Content-Type", "multipart/form-data")
-                .addHeader("Authorization", "Bearer ${App.token_prefs.accessToken}")
+//                .addHeader("Authorization", "Bearer ${MySharedPreferences.getAccessToken(App.appContext)}")
 
             val newRequest = requestBuilder.build()
             proceed(newRequest)

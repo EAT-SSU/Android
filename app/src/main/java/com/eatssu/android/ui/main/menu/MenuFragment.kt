@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.App
 import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
 import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.enums.MenuType
@@ -88,8 +87,7 @@ class MenuFragment : Fragment() {
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         mealService = RetrofitImpl.retrofit.create(MealService::class.java)
 
-        Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
-
+//        Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 

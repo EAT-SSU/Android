@@ -4,6 +4,7 @@ package com.eatssu.android.di
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.UserService
+//import com.eatssu.android.di.network.AuthAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
 import dagger.Module
 import dagger.Provides
@@ -40,11 +41,13 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(
         tokenInterceptor: TokenInterceptor,
+//        authAuthenticator: AuthAuthenticator,
     ) = if (BuildConfig.DEBUG) {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(tokenInterceptor)
+//            .authenticator(authAuthenticator)
             .build()
     } else {
         OkHttpClient.Builder().build()
