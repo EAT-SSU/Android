@@ -1,8 +1,6 @@
 package com.eatssu.android.di.network
 
-//import com.eatssu.android.data.usecase.ReissueTokenUseCase
 
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
@@ -20,7 +18,6 @@ import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.ui.login.LoginActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -28,9 +25,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.lang.reflect.Type
 import javax.inject.Inject
-
-
-//@Singleton
 class TokenInterceptor @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
@@ -38,11 +32,6 @@ class TokenInterceptor @Inject constructor(
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
-    @ApplicationContext private val context: Context,
-//    private val appDispatcher: AppDispatchers,
-
-
-//    private val reissueTokenUseCase: ReissueTokenUseCase,
 ) : Interceptor {
 
     companion object {
@@ -71,9 +60,6 @@ class TokenInterceptor @Inject constructor(
     private lateinit var newAccessToken: String
     private lateinit var newRefreshToken: String
 
-    private lateinit var response: Response
-
-    //    private val json: Json = TODO()
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = runBlocking { getAccessTokenUseCase() }
         val refreshToken = runBlocking { getRefreshTokenUseCase() }
