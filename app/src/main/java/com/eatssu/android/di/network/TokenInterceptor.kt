@@ -1,26 +1,48 @@
 package com.eatssu.android.di.network
 
+//import com.eatssu.android.data.usecase.ReissueTokenUseCase
+
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.App
+import com.eatssu.android.BuildConfig.BASE_URL
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.data.usecase.GetAccessTokenUseCase
 import com.eatssu.android.data.usecase.GetRefreshTokenUseCase
 import com.eatssu.android.data.usecase.LogoutUseCase
-import com.eatssu.android.data.usecase.ReissueTokenUseCase
+import com.eatssu.android.data.usecase.SetAccessTokenUseCase
+import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.ui.login.LoginActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import java.lang.reflect.Type
 import javax.inject.Inject
 
+
+//@Singleton
 class TokenInterceptor @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
+
+    private val setAccessTokenUseCase: SetAccessTokenUseCase,
+    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val reissueTokenUseCase: ReissueTokenUseCase,
+    @ApplicationContext private val context: Context,
+//    private val appDispatcher: AppDispatchers,
+
+
+//    private val reissueTokenUseCase: ReissueTokenUseCase,
 ) : Interceptor {
 
     companion object {
@@ -31,66 +53,103 @@ class TokenInterceptor @Inject constructor(
             "/oauths/reissue/token",
             "/oauths/kakao",
 
-            "/oauths/**", "/users/**",
-            "/menus/**", "/meals/**", "/restaurants/**", "/reviews/**",
-
-            "/inquiries/{userInquiriesId}",
-            "/inquiries/list",
-
-            "/admin/login"
+//            "/oauths/**", "/users/**",
+//            "/menus/**", "/meals/**", "/restaurants/**", "/reviews/**",
+//
+//            "/inquiries/{userInquiriesId}",
+//            "/inquiries/list",
         )
 
         const val TAG = "TokenInterceptor"
 
+        private const val CODE_TOKEN_EXPIRED = 401
+        private const val HEADER_AUTHORIZATION = "Authorization"
+        private const val HEADER_ACCESS_TOKEN = "X-ACCESS-AUTH"
+        private const val HEADER_REFRESH_TOKEN = "X-REFRESH-AUTH"
     }
 
+    private lateinit var newAccessToken: String
+    private lateinit var newRefreshToken: String
+
+    private lateinit var response: Response
+
+    //    private val json: Json = TODO()
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = runBlocking { getAccessTokenUseCase() }
+        val accessToken = runBlocking { getAccessTokenUseCase() }
+        val refreshToken = runBlocking { getRefreshTokenUseCase() }
+
         val originalRequest = chain.request()
         val request = chain.request().newBuilder().apply {
             if (EXCEPT_LIST.none { originalRequest.url.encodedPath.endsWith(it) }) {
                 addHeader("accept", "application/hal+json")
                 addHeader("Content-Type", "application/json")
-                addHeader("Authorization", "Bearer $token")
+                addHeader("Authorization", "Bearer $accessToken")
             }
         }.build()
+
         val response = chain.proceed(request)
+
         if (response.code == 401) {
-//        if (response.code == 401 && !response.request.url.toString().contains("reissue")) {
-            // refresh token
+            Log.d(TAG, "토큰 퉤퉤")
             response.close()
 
-            Log.d(TAG, "토큰 재발급 시도")
             try {
-                val refreshToken = runBlocking { getRefreshTokenUseCase() }
-                val newAccessToken = runBlocking { reissueTokenUseCase(refreshToken) }
-
-                // 재발급 받은 토큰으로 새로운 요청 생성
-                val newRequest = request.newBuilder()
-                    .removeHeader("Authorization")
-                    .addHeader("Authorization", "Bearer $newAccessToken")
+                val refreshTokenRequest = originalRequest.newBuilder()
+                    .post("".toRequestBody())
+                    .url("$BASE_URL/oauths/reissue/token")
+                    .addHeader("Authorization", "Bearer $refreshToken")
                     .build()
 
-                chain.proceed(newRequest)
+                Log.d(TAG, "재발급 중")
+
+                val refreshTokenResponse = chain.proceed(refreshTokenRequest)
+                Log.d(TAG, " : ${refreshTokenResponse.toString()}")
+
+                if (refreshTokenResponse.isSuccessful) {
+                    Log.d(TAG, "재발급 성공")
+
+                    val responseToken = parseRefreshTokenResponse(refreshTokenResponse)
+
+                    responseToken?.result?.let {
+                        runBlocking {
+                            setAccessTokenUseCase(it.accessToken)
+                            setRefreshTokenUseCase(it.refreshToken)
+
+                            newAccessToken = it.accessToken
+                        }
+                    }
+
+                    refreshTokenResponse.close()
+                    val newRequest = originalRequest.newAuthBuilder().build()
+                    return chain.proceed(newRequest)
+                }
+
             } catch (e: Exception) {
-                Log.d(TAG, "토큰 재발급 실패" + response)
-//                    e.printStackTrace() //이거 빼니까 강제종료 안된다
+                runBlocking { logoutUseCase() }
+                Log.d(TAG, "재발급 실패 $e")
 
-                // 리프레시 토큰이 만료되어 재발급에 실패했을 때 로그아웃 처리
-//                if (response.code == 403) {
-                    runBlocking { logoutUseCase() }
-
-                    Handler(Looper.getMainLooper()).post {
-                        val context = App.appContext
-                        Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        context.startActivity(intent)
-//                    }
+                Handler(Looper.getMainLooper()).post {
+                    val context = App.appContext
+                    Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    context.startActivity(intent)
                 }
             }
-
         }
         return response
+    }
+
+    private fun Request.newAuthBuilder() =
+        this.newBuilder().addHeader("Authorization", "Bearer $newAccessToken")
+
+    private fun parseRefreshTokenResponse(response: Response): BaseResponse<TokenResponse>? {
+        return try {
+            val gson = Gson()
+            val responseType: Type = object : TypeToken<BaseResponse<TokenResponse>>() {}.type
+            gson.fromJson(response.body?.string(), responseType)
+        } catch (e: Exception) {
+            null
+        }
     }
 }
