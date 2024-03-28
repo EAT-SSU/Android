@@ -3,8 +3,10 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
+import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
+import com.eatssu.android.data.dto.response.GetReviewListResponse
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.PATCH
 
 interface ReviewRepository {
 
@@ -17,22 +19,24 @@ interface ReviewRepository {
         reviewId: Long,
     ): Flow<BaseResponse<Void>>
 
-    @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
     suspend fun modifyReview(
         reviewId: Long,
         body: ModifyReviewRequest,
     ): Flow<BaseResponse<Void>>
 
-//    override suspend fun reissueToken(
-//        refreshToken: String
-//    ): Flow<ReissueResponse> = flow {
-//        emit(authService.reissueToken(refreshToken))
-//    }
+    suspend fun getReviewList(
+        menuType: String,
+        mealId: Long?,
+        menuId: Long?,
+    ): Flow<BaseResponse<GetReviewListResponse>>
 
-//    suspend fun getMenuReviewInfo(menuId: Long)
-//    : Flow<BaseResponse<GetMenuReviewInfoResponse>> =
-//        flow {
-//            emit(reviewService.getMenuReviewInfo(menuId))
-//        }
+    suspend fun getMenuReviewInfo(
+        menuId: Long,
+    ): Flow<BaseResponse<GetMenuReviewInfoResponse>>
+
+
+    suspend fun getMealReviewInfo(
+        mealId: Long,
+    ): Flow<BaseResponse<GetMealReviewInfoResponse>>
 
 }
