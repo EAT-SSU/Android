@@ -96,8 +96,12 @@ class MyPageViewModel @Inject constructor(
                 _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
+                Log.d(TAG, e.toString())
+
             }.collectLatest { result ->
+                Log.d(TAG, result.toString())
                 if (result.result == true) {
+                    logoutUseCase()
                     _uiState.update {
                         it.copy(
                             isSignOuted = true,

@@ -19,9 +19,13 @@ class IntroViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<IntroState> = MutableStateFlow(IntroState())
     val uiState: StateFlow<IntroState> = _uiState.asStateFlow()
 
+    init {
+        autoLogin()
+    }
+
     fun autoLogin() {
         viewModelScope.launch {
-            if (getAccessTokenUseCase().isNotEmpty()) {
+            if (getAccessTokenUseCase().isEmpty()) {
                 _uiState.update { it.copy(isAutoLogined = false) }
             } else {
                 _uiState.update { it.copy(isAutoLogined = true) }
