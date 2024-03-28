@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.login
+package com.eatssu.android.ui.intro
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

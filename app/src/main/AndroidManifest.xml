@@ -41,7 +41,7 @@
             android:name=".ui.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.IntroActivity"
+            android:name=".ui.intro.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

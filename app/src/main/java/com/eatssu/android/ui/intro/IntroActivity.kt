@@ -1,4 +1,4 @@
-package com.eatssu.android.ui.login
+package com.eatssu.android.ui.intro
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
+import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.util.extension.startActivity
 import dagger.hilt.android.AndroidEntryPoint
