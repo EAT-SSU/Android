@@ -3,6 +3,7 @@ package com.eatssu.android.di
 
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenInterceptor
 import dagger.Module
 import dagger.Provides
@@ -65,98 +66,9 @@ object NetworkModule {
         return retrofit.create(OauthService::class.java)
     }
 
-    /*
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class AuthClient
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class MultiClient
-
     @Provides
     @Singleton
-    fun provideGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create()
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideAppInterceptor(): AppInterceptor {
-        return AppInterceptor(App.appContext)
-    }
-
-    @Singleton
-    @Provides
-    fun provideClient(//일반
-//        authorizationInterceptor: Interceptor,
-//        tokenAuthenticator: Authenticator,
-//        cacheInterceptor: CacheInterceptor
-        appInterceptor: AppInterceptor
-    ): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        builder.apply {
-            addInterceptor(loggingInterceptor)
-            addInterceptor(appInterceptor)
-
-//            addInterceptor(cacheInterceptor)
-//            addInterceptor(authorizationInterceptor)
-        }
-//        builder.authenticator(tokenAuthenticator)
-        return builder.build()
-    }
-
-    @AuthClient
-    @Singleton
-    @Provides
-    fun provideAuthClient( //이게 토큰 없는거
-//        authorizationInterceptor: Interceptor,
-        appInterceptor: AppInterceptor,
-//        cacheInterceptor: CacheInterceptor
-    ): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        builder.apply {
-            addInterceptor(loggingInterceptor)
-//            addInterceptor(appInterceptor)
-//            addInterceptor(cacheInterceptor)
-//            addInterceptor(authorizationInterceptor)
-        }
-        return builder.build()
-    }
-
-
-    @MultiClient
-    @Singleton
-    @Provides
-    fun provideMultiClient(
-//        authorizationInterceptor: Interceptor,
-        multiAppInterceptor: MultiAppInterceptor,
-//        cacheInterceptor: CacheInterceptor,
-    ): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        builder.apply {
-            addInterceptor(loggingInterceptor)
-            addInterceptor(multiAppInterceptor)
-//            addInterceptor(cacheInterceptor)
-//            addInterceptor(authorizationInterceptor)
-        }
-        return builder.build()
-    }
-*/
 }

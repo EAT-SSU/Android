@@ -1,13 +1,16 @@
 package com.eatssu.android.ui.main
 
+//import com.eatssu.android.ui.mypage.MyPageViewModelFactory
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -16,38 +19,37 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.mypage.MyPageActivity
-import com.eatssu.android.ui.mypage.MyPageViewModel
-import com.eatssu.android.ui.mypage.MyPageViewModelFactory
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.CalendarUtils
 import com.eatssu.android.util.CalendarUtils.daysInWeekArray
 import com.eatssu.android.util.CalendarUtils.monthYearFromDate
-import com.eatssu.android.util.RetrofitImpl
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
 
-    private lateinit var viewModel: MyPageViewModel
+    private val mainViewModel: MainViewModel by viewModels()
+
     private lateinit var calendarViewModel: CalendarViewModel
 
     private var monthYearText: TextView? = null
     private var calendarRecyclerView: RecyclerView? = null
 
-    private var mainPosition : Int = -1
+    private var mainPosition: Int = -1
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
@@ -56,9 +58,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         setupNoToolbar()
 
-        initializeMyPageViewModel()
-        setupMyPageViewModel()
-        observeMyPageViewModel()
+        checkNicknameIsNull()
 
         // 1) ViewPager2 참조
         val viewPager: ViewPager2 = binding.vpMain
@@ -156,22 +156,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    private fun initializeMyPageViewModel() {
-        val userService = RetrofitImpl.retrofit.create(UserService::class.java)
-        viewModel = ViewModelProvider(
-            this,
-            MyPageViewModelFactory(userService)
-        )[MyPageViewModel::class.java]
-    }
 
-    private fun setupMyPageViewModel(){
-        viewModel.checkMyInfo()
-    }
-
-    private fun observeMyPageViewModel() {
+    private fun checkNicknameIsNull() {
+        Log.d(TAG, "관찰 시작")
 
         lifecycleScope.launch {
-            viewModel.uiState.collectLatest {
+            mainViewModel.uiState.collectLatest {
                 if (it.isNicknameNull) {
                     startActivity<UserNameChangeActivity>()
                     showToast(it.toastMessage)
@@ -179,6 +169,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -195,5 +186,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        val TAG = "MainActivity"
     }
 }

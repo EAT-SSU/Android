@@ -1,89 +1,88 @@
 package com.eatssu.android.ui.mypage.usernamechange
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
-import com.eatssu.android.data.service.UserService
-import kotlinx.coroutines.Dispatchers
+import com.eatssu.android.data.usecase.GetUserNameUseCase
+import com.eatssu.android.data.usecase.SetUserNameUseCase
+import com.eatssu.android.data.usecase.ValidateUserNameUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import javax.inject.Inject
 
+@HiltViewModel
+class UserNameChangeViewModel @Inject constructor(
+    private val setUserNameUseCase: SetUserNameUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
+    private val validateUserNameUseCase: ValidateUserNameUseCase,
+) : ViewModel() {
 
-class UserNameChangeViewModel(private val userService: UserService) : ViewModel() {
-
-    private val _isEnableNickname = MutableLiveData<Boolean>()
-    val isEnableNickname: LiveData<Boolean> get() = _isEnableNickname
-
-    private val _isDone = MutableLiveData<Boolean>()
-    val isDone: LiveData<Boolean> get() = _isDone
-
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
+    private val _uiState: MutableStateFlow<UserNameChangeState> =
+        MutableStateFlow(UserNameChangeState())
+    val uiState: StateFlow<UserNameChangeState> = _uiState.asStateFlow()
 
     fun checkNickname(inputNickname: String) {
-        userService.checkNickname(inputNickname).enqueue(object : Callback<BaseResponse<Boolean>> {
-            override fun onResponse(
-                call: Call<BaseResponse<Boolean>>,
-                response: Response<BaseResponse<Boolean>>,
-            ) {
-                if (response.isSuccessful) {
-                    if (response.body()?.result == true) {
-                        handleSuccessResponse("사용가능한 닉네임 입니다.")
-                    } else {
-                        handleErrorResponse("이미 사용 중인 닉네임 입니다.")
+        viewModelScope.launch {
+            validateUserNameUseCase(inputNickname).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update { it.copy(error = true, toastMessage = "닉네임 중복 확인에 실패했습니다.") }
+                Log.e(TAG, e.toString())
+            }.collectLatest { result ->
+                if (result.result == true) {
+                    _uiState.update {
+                        it.copy(
+                            isEnableName = true,
+                            toastMessage = "사용가능한 닉네임 입니다."
+                        )
                     }
                 } else {
-                    handleErrorResponse("닉네임 중복 확인에 실패했습니다.")
+                    _uiState.update { it.copy(toastMessage = "이미 사용 중인 닉네임 입니다.") }
                 }
             }
-
-            override fun onFailure(call: Call<BaseResponse<Boolean>>, t: Throwable) {
-                handleErrorResponse("닉네임 중복 확인에 실패했습니다.")
-            }
-        })
+        }
     }
 
     fun changeNickname(inputNickname: String) {
-        userService.changeNickname(ChangeNicknameRequest(inputNickname))
-            .enqueue(object : Callback<BaseResponse<Void>> {
-                override fun onResponse(
-                    call: Call<BaseResponse<Void>>,
-                    response: Response<BaseResponse<Void>>,
-                ) {
-                    if (response.isSuccessful) {
-                        handleSuccessResponse("닉네임 설정에 성공했습니다.")
-                    } else {
-                        handleErrorResponse("닉네임 설정에 실패했습니다.")
-                    }
-                }
-
-                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
-                    handleErrorResponse("닉네임 설정에 실패했습니다.")
+        viewModelScope.launch {
+            setUserNameUseCase(inputNickname).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update { it.copy(error = true, toastMessage = "닉네임 설정에 실패했습니다.") }
+                Log.e(TAG, e.toString())
+            }.collectLatest { result ->
+                _uiState.update { it.copy(isDone = true, toastMessage = "닉네임 설정에 성공했습니다.") }
             }
-        })
-    }
-
-    private fun handleSuccessResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-            _isEnableNickname.value = true
-            _isDone.value = true
-
         }
     }
 
 
-
-    private fun handleErrorResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-            _isEnableNickname.value = false
-            _isDone.value = false
-        }
+    companion object {
+        val TAG = "UserNameChangeViewModel"
     }
 }
+
+
+data class UserNameChangeState(
+    var loading: Boolean = true,
+    var error: Boolean = false,
+
+    var toastMessage: String = "",
+
+    var nickname: String = "",
+
+    var isEnableName: Boolean = false,
+    var isDone: Boolean = false,
+)

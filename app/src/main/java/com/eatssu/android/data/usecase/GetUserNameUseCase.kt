@@ -4,11 +4,11 @@ import com.eatssu.android.App
 import com.eatssu.android.util.MySharedPreferences
 import javax.inject.Inject
 
-class GetUseEmailUseCase @Inject constructor(
+class GetUserNameUseCase @Inject constructor(
 //    private val preferencesRepository: PreferencesRepository,
 ) {
     suspend operator fun invoke(): String {
 
-        return MySharedPreferences.getUserEmail(App.appContext)
+        return MySharedPreferences.getUserName(App.appContext)
     }
 }
