@@ -1,6 +1,8 @@
 package com.eatssu.android.di
 
 
+import com.eatssu.android.data.repository.MenuRepository
+import com.eatssu.android.data.repository.MenuRepositoryImpl
 import com.eatssu.android.data.repository.OauthRepository
 import com.eatssu.android.data.repository.OauthRepositoryImpl
 import com.eatssu.android.data.repository.UserRepository
@@ -24,4 +26,8 @@ abstract class DataModule {
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
 
+    @Binds
+    internal abstract fun bindsMenuRepository(
+        menuRepositoryImpl: MenuRepositoryImpl,
+    ): MenuRepository
 }
