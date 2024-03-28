@@ -7,7 +7,6 @@ import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
-import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -39,20 +38,16 @@ interface ReviewService {
 //        @Query("page") page: Int? =
 //        @Query("size") size: Int? = 20
 //        @Query("sort") sort: List<String>? = arrayListOf("date","DESC")
-    ): Call<BaseResponse<GetReviewListResponse>>
+    ): BaseResponse<GetReviewListResponse>
 
-    //    @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
-//    fun getMenuReviewInfo(
-//        @Path("menuId") menuId: Long,
-//    ): BaseResponse<GetMenuReviewInfoResponse>
     @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
     fun getMenuReviewInfo(
         @Path("menuId") menuId: Long,
-    ): Call<BaseResponse<GetMenuReviewInfoResponse>>
+    ): BaseResponse<GetMenuReviewInfoResponse>
 
     @GET("/reviews/meals/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
     fun getMealReviewInfo(
         @Path("mealId") mealId: Long,
-    ): Call<BaseResponse<GetMealReviewInfoResponse>>
+    ): BaseResponse<GetMealReviewInfoResponse>
 
 }
