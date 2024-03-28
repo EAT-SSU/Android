@@ -25,10 +25,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.lang.reflect.Type
 import javax.inject.Inject
+
 class TokenInterceptor @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
-
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
@@ -36,17 +36,8 @@ class TokenInterceptor @Inject constructor(
 
     companion object {
         val EXCEPT_LIST = listOf(
-            "/login/google", "/reissue", "/users",
-            "/",
-
             "/oauths/reissue/token",
             "/oauths/kakao",
-
-//            "/oauths/**", "/users/**",
-//            "/menus/**", "/meals/**", "/restaurants/**", "/reviews/**",
-//
-//            "/inquiries/{userInquiriesId}",
-//            "/inquiries/list",
         )
 
         const val TAG = "TokenInterceptor"
@@ -69,7 +60,7 @@ class TokenInterceptor @Inject constructor(
             if (EXCEPT_LIST.none { originalRequest.url.encodedPath.endsWith(it) }) {
                 addHeader("accept", "application/hal+json")
                 addHeader("Content-Type", "application/json")
-                addHeader("Authorization", "Bearer $accessToken")
+                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
             }
         }.build()
 
@@ -83,13 +74,13 @@ class TokenInterceptor @Inject constructor(
                 val refreshTokenRequest = originalRequest.newBuilder()
                     .post("".toRequestBody())
                     .url("$BASE_URL/oauths/reissue/token")
-                    .addHeader("Authorization", "Bearer $refreshToken")
+                    .addHeader(HEADER_AUTHORIZATION, "Bearer $refreshToken")
                     .build()
 
                 Log.d(TAG, "재발급 중")
 
                 val refreshTokenResponse = chain.proceed(refreshTokenRequest)
-                Log.d(TAG, " : ${refreshTokenResponse.toString()}")
+                Log.d(TAG, "refreshTokenResponse : $refreshTokenResponse")
 
                 if (refreshTokenResponse.isSuccessful) {
                     Log.d(TAG, "재발급 성공")
@@ -123,11 +114,25 @@ class TokenInterceptor @Inject constructor(
                 }
             }
         }
+
+        if (response.code == 404) {
+            runBlocking { logoutUseCase() }
+            Log.e(TAG, "다른 유저!")
+
+            Handler(Looper.getMainLooper()).post {
+                val context = App.appContext
+                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                context.startActivity(intent)
+            }
+        }
+
         return response
     }
 
     private fun Request.newAuthBuilder() =
-        this.newBuilder().addHeader("Authorization", "Bearer $newAccessToken")
+        this.newBuilder().addHeader(HEADER_AUTHORIZATION, "Bearer $newAccessToken")
 
     private fun parseRefreshTokenResponse(response: Response): BaseResponse<TokenResponse>? {
         return try {
