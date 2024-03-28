@@ -3,6 +3,8 @@ package com.eatssu.android.ui.review.modify
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.App
+import com.eatssu.android.R
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.usecase.ModifyReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +42,7 @@ class ModifyViewModel @Inject constructor(
                         loading = false,
                         error = false,
                         isDone = true,
-                        toastMessage = "수정이 실패하였습니다."
+                        toastMessage = App.appContext.getString(R.string.modify_not)
                     )
                 }
                 Log.d(TAG, e.toString())
@@ -51,7 +53,7 @@ class ModifyViewModel @Inject constructor(
                         loading = false,
                         error = false,
                         isDone = true,
-                        toastMessage = "수정이 완료되었습니다."
+                        toastMessage = App.appContext.getString(R.string.modify_done)
                     )
                 }
             }
