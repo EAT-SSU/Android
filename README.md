@@ -1,6 +1,24 @@
-# EatSSU-Android
-숭실대에서 먹자, 잇슈!
+# 숭실대에서 먹자, 잇슈!
 
+
+## 📌 프로젝트 소개
+
+- 숭실대 학식 리뷰 앱
+- 기간: 2023.03 ~
+- PlayStore : [EAT-SSU](https://play.google.com/store/apps/details?id=com.eassu.android)
+
+## 🛠 Tech Stack
+- `Kotlin`
+- `MVVM` + `Clean Architecture`
+- `Coroutine`
+- `Flow`
+- `UiState`
+- `Hilt`
+
+## 🤔 Not Yet..
+- `Modularization`
+- `Jetpack Compose`
+- `DataSource` + `Repositody Pattern`
 
 ## 📄 Package
 ```
@@ -14,6 +32,7 @@ com.eatssu.android
 │   ├── model
 │   ├── repository
 │   └── service
+├── di
 ├── ui
 │   ├── common
 │   └── feature[info, login, main, mypage, review]
