@@ -5,7 +5,7 @@ import com.eatssu.android.data.model.Menu
 import com.google.gson.annotations.SerializedName
 
 
-data class GetFixedMenuResponse(
+data class MenuResponse(
 
     @SerializedName("categoryMenuListCollection") var categoryMenuListCollection: ArrayList<CategoryMenuListCollection> = arrayListOf(),
 
@@ -39,7 +39,7 @@ data class MenuInformationList(
 //}
 
 
-fun GetFixedMenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
+fun MenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
     val menus = mutableListOf<Menu>()
 
     categoryMenuListCollection.forEach { categoryMenuList ->
