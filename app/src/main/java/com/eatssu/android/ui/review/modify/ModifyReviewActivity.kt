@@ -89,4 +89,6 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
             }
         }
     }
+
+    //Todo 쓰다 뒤로 갔을 때 undo
 }
