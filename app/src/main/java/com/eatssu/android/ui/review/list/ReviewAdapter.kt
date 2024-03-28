@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -32,22 +31,28 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvTotalRating.text = mainGrade.toString()
                 binding.tvTasteRating.text = tasteGrade.toString()
                 binding.tvAmountRating.text = amountGrade.toString()
-
             }
 
-            val imgUrl: String? = data.imgUrlList
 
-            val imageView: ImageView = binding.ivReviewPhoto
 
-            if (imgUrl.isNullOrEmpty()) {
-                imageView.visibility = View.GONE
-            } else {
-
+            if (data.imgUrl?.size != 0) {
+                Log.d("ReviewAdapter", data.content + data.imgUrl?.size.toString())
                 Glide.with(itemView)
-                    .load(imgUrl)
-                    .into(imageView)
-                imageView.visibility = View.VISIBLE
+                    .load(data.imgUrl?.get(0))
+                    .into(binding.ivReviewPhoto)
+                binding.ivReviewPhoto.visibility = View.VISIBLE
+
+                if (data.imgUrl?.get(0) == "") {
+                    binding.ivReviewPhoto.visibility = View.GONE
+
+                }
+                if (data.imgUrl?.get(0) == null) {
+                    binding.ivReviewPhoto.visibility = View.GONE
+                }
+            } else {
+                binding.ivReviewPhoto.visibility = View.GONE
             }
+
 
             binding.btnDetail.setOnClickListener {
                 if (data.isWriter) {
@@ -70,34 +75,41 @@ class ReviewAdapter(private val dataList: List<Review>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            val data = dataList?.get(position)
-            binding.tvWriterNickname.text = data?.writerNickname.toString()
-            binding.tvReviewItemComment.text = data?.content
-            binding.tvReviewItemDate.text = data?.writeDate
-            binding.tvMenuName.text = data?.menu
 
-            binding.tvTotalRating.text = data?.mainGrade?.toString()
-            binding.tvTasteRating.text = data?.tasteGrade?.toString()
-            binding.tvAmountRating.text = data?.amountGrade?.toString()
+            val data = dataList[position].apply {
+                binding.tvWriterNickname.text = writerNickname
+                binding.tvReviewItemComment.text = content
+                binding.tvReviewItemDate.text = writeDate
+                binding.tvMenuName.text = menu
 
-            val imgUrlList: String? = data?.imgUrlList
-
-            val imageView: ImageView = binding.ivReviewPhoto
-
-            if (imgUrlList.isNullOrEmpty()) {
-                imageView.visibility = View.GONE
-            } else {
-                val imageUrl = imgUrlList[0]
-
-                Glide.with(itemView)
-                    .load(imageUrl)
-                    .into(imageView)
-                imageView.visibility = View.VISIBLE
+                binding.tvTotalRating.text = mainGrade.toString()
+                binding.tvTasteRating.text = tasteGrade.toString()
+                binding.tvAmountRating.text = amountGrade.toString()
             }
 
+
+            if (data.imgUrl?.size != 0) {
+                Glide.with(itemView)
+                    .load(data.imgUrl?.get(0))
+                    .into(binding.ivReviewPhoto)
+                binding.ivReviewPhoto.visibility = View.VISIBLE
+
+                if (data.imgUrl?.get(0) == "") {
+                    binding.ivReviewPhoto.visibility = View.GONE
+
+                }
+                if (data.imgUrl?.get(0) == null) {
+                    binding.ivReviewPhoto.visibility = View.GONE
+                }
+            } else {
+                binding.ivReviewPhoto.visibility = View.GONE
+            }
+
+
             binding.tvReviewItemReport.setOnClickListener {
-                if (data?.isWriter == false) {
-                    val intent = Intent(binding.tvReviewItemReport.context, ReportActivity::class.java)
+                if (!data.isWriter) {
+                    val intent =
+                        Intent(binding.tvReviewItemReport.context, ReportActivity::class.java)
                     intent.putExtra("reviewId", data.reviewId)
                     intent.putExtra("menu", data.menu)
                     ContextCompat.startActivity(binding.tvReviewItemReport.context, intent, null)
@@ -109,13 +121,20 @@ class ReviewAdapter(private val dataList: List<Review>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_MY_REVIEW -> {
-                val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val binding =
+                    ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 ViewHolder(binding)
             }
+
             VIEW_TYPE_OTHERS_REVIEW -> {
-                val othersBinding = ItemOthersReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val othersBinding = ItemOthersReviewBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
                 OthersViewHolder(othersBinding)
             }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -128,14 +147,14 @@ class ReviewAdapter(private val dataList: List<Review>) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (dataList?.get(position)?.isWriter == true) {
+        return if (dataList[position].isWriter) {
             VIEW_TYPE_MY_REVIEW
         } else {
             VIEW_TYPE_OTHERS_REVIEW
         }
     }
 
-    override fun getItemCount(): Int = dataList?.size ?: 0
+    override fun getItemCount(): Int = dataList.size
 
     companion object {
         private const val VIEW_TYPE_MY_REVIEW = 1

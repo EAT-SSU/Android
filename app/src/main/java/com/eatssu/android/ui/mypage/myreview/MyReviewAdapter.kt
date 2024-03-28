@@ -1,6 +1,7 @@
 package com.eatssu.android.ui.mypage.myreview
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,27 +29,25 @@ class MyReviewAdapter(private val dataList: List<MyReviewResponse.DataList>) :
             binding.tvTasteRating.text = dataList[position].tasteRating.toString()
             binding.tvAmountRating.text = dataList[position].amountRating.toString()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
-            val img: String = dataList[position].imgUrlList[0]// The list of image URLs
 
             val imageView: ImageView = binding.ivReviewPhoto
 
-            if (dataList[position].imgUrlList[0].isEmpty()) {
+            if (dataList[position].imgUrlList.isEmpty()) {
                 imageView.visibility = View.GONE
             } else {
+                Log.d("qwer", "사진 있다")
                 Glide.with(itemView)
                     .load(dataList[position].imgUrlList[0])
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
+                if (dataList[position].imgUrlList[0] == "") {
+                    binding.ivReviewPhoto.visibility = View.GONE
+
+                }
+                if (dataList[position].imgUrlList[0] == null) {
+                    binding.ivReviewPhoto.visibility = View.GONE
+                }
             }
-//
-//
-//            if (dataList[position].imgUrlList.isEmpty()) {
-//            } else {
-//                val imageUrl =
-//                    imgUrlList[0] // Assuming you want to load the first image from the list
-//
-//
-//            }
 
             binding.btnDetail.setOnClickListener {
                 val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)

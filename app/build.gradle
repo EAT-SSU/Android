@@ -21,8 +21,8 @@ android {
         minSdk 23
         compileSdkVersion 34
         targetSdk 34
-        versionCode 6
-        versionName "1.1.4"
+        versionCode 9
+        versionName "1.1.7"
 
 
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]

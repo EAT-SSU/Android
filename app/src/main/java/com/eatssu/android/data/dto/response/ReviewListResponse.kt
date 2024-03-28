@@ -21,7 +21,7 @@ data class GetReviewListResponse(
         @SerializedName("tasteRating") var tasteRating: Int,
         @SerializedName("writedAt") var writedAt: String,
         @SerializedName("content") var content: String,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String?> = arrayListOf(),
+        @SerializedName("imageUrls") var imageUrls: ArrayList<String>? = arrayListOf(),
 
         )
 }
@@ -38,7 +38,7 @@ fun GetReviewListResponse.toReviewList(): List<Review> {
             tasteGrade = data.tasteRating,
             writeDate = data.writedAt,
             content = data.content,
-            imgUrlList = data.imageUrls[0] ?: ""
+            imgUrl = data.imageUrls
         )
     }
 }

@@ -59,7 +59,7 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
                                 it.copy(
                                     loading = false,
                                     error = false,
-                                    toastMessage = "리뷰 작성에 성공하였습니다.",
+                                    toastMessage = "리뷰가 작성되었습니다.",
                                     isUpload = true,
                                 )
                             }
