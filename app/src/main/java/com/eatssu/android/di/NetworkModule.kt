@@ -2,6 +2,7 @@ package com.eatssu.android.di
 
 
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenInterceptor
@@ -70,5 +71,11 @@ object NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMenuService(retrofit: Retrofit): MenuService {
+        return retrofit.create(MenuService::class.java)
     }
 }
