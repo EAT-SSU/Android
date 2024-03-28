@@ -6,8 +6,8 @@
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
-    </queries>
-    <!--갤러리 권한-->
+    </queries> 
+
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -41,6 +41,16 @@
             android:name=".ui.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.login.IntroActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
             android:name=".ui.mypage.inquire.InquireActivity"
             android:exported="false" />
         <activity
@@ -56,12 +66,6 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -122,6 +122,7 @@
     <string name="inquire_content">문의 내용</string>
     <string name="send">전송하기</string>
 
+    <string name="logout_description">로그아웃 되었습니다.</string>
     <string name="policy">개인정보 처리방침</string>
     <string name="terms">서비스 이용약관</string>
 
