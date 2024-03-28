@@ -81,4 +81,10 @@ object NetworkModule {
     fun provideReportService(retrofit: Retrofit): ReportService {
         return retrofit.create(ReportService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideReviewService(retrofit: Retrofit): ReviewService {
+        return retrofit.create(ReviewService::class.java)
+    }
 }
