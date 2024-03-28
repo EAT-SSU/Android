@@ -93,15 +93,15 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         binding.llServiceRule.setOnClickListener {
             val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra(WebViewActivity.URL, getString(R.string.terms_url))
-            intent.putExtra(WebViewActivity.TITLE, R.string.terms)
+            intent.putExtra("URL", getString(R.string.terms_url))
+            intent.putExtra("TITLE", getString(R.string.terms))
             startActivity(intent)
         }
 
         binding.llPrivateInformation.setOnClickListener {
             val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra(WebViewActivity.URL, getString(R.string.policy_url))
-            intent.putExtra(WebViewActivity.TITLE, R.string.policy)
+            intent.putExtra("URL", getString(R.string.policy_url))
+            intent.putExtra("TITLE", getString(R.string.policy))
             startActivity(intent)
         }
 
