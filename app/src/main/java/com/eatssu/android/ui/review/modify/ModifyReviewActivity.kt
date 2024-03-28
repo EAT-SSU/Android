@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 
-    private lateinit var viewModel: ModifyViewModel
+    private val viewModel: ModifyViewModel by viewModels()
 
     private var reviewId = -1L
     private var menu = ""
@@ -22,11 +22,11 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
     private var main = 0
     private var amount = 0
     private var taste = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 수정하기" // 툴바 제목 설정
 
-        initViewModel()
         getIndex()
         setData()
         setOnClickListener()
@@ -39,10 +39,6 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         }
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[ModifyViewModel::class.java]
-
-    }
 
     private fun getIndex() {
 
@@ -72,19 +68,21 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         val amountGrade = binding.rbAmount.rating.toInt()
         val tasteGrade = binding.rbTaste.rating.toInt()
 
-        viewModel.modifyMyReview(reviewId, comment, mainGrade, amountGrade, tasteGrade)
+        viewModel.modifyMyReview(
+            reviewId,
+            ModifyReviewRequest(mainGrade, amountGrade, tasteGrade, comment)
+        )
     }
 
     private fun observeViewModel() {
 
         lifecycleScope.launch {
             viewModel.uiState.collectLatest {
-                if (!it.error && !it.loading) {
-                    if (it.isDone) {
-                        showToast(it.toastMessage)
-                        finish()
-                    }
+                if (it.isDone) {
+                    showToast(it.toastMessage)
+                    finish()
                 }
+
                 if (it.error) {
                     showToast(it.toastMessage)
                 }
