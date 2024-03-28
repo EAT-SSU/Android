@@ -10,7 +10,4 @@ class SignOutUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Flow<BaseResponse<Boolean>> =
         userRepository.signOut()
-//        MySharedPreferences.clearUser(App.appContext)
-
-//        return userRepository.signOut()
 }
