@@ -1,8 +1,27 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.request.ModifyReviewRequest
+import com.eatssu.android.data.dto.request.WriteReviewRequest
+import kotlinx.coroutines.flow.Flow
+import retrofit2.http.PATCH
 
-class ReviewRepository(private val reviewService: ReviewService) {
+interface ReviewRepository {
+
+    suspend fun writeReview(
+        menuId: Long,
+        body: WriteReviewRequest,
+    ): Flow<BaseResponse<Void>>
+
+    suspend fun deleteReview(
+        reviewId: Long,
+    ): Flow<BaseResponse<Void>>
+
+    @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
+    suspend fun modifyReview(
+        reviewId: Long,
+        body: ModifyReviewRequest,
+    ): Flow<BaseResponse<Void>>
 
 //    override suspend fun reissueToken(
 //        refreshToken: String

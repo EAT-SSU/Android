@@ -16,18 +16,18 @@ interface ReviewService {
     fun writeReview(
         @Path("menuId") menuId: Long,
         @Body request: WriteReviewRequest,
-    ): Call<BaseResponse<Void>>
+    ): BaseResponse<Void>
 
     @DELETE("/reviews/{reviewId}") //리뷰 삭제
-    fun deleteReview(
+    suspend fun deleteReview(
         @Path("reviewId") reviewId: Long,
-    ): Call<BaseResponse<Void>>
+    ): BaseResponse<Void>
 
     @PATCH("/reviews/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
         @Path("reviewId") reviewId: Long,
         @Body request: ModifyReviewRequest,
-    ): Call<BaseResponse<Void>>
+    ): BaseResponse<Void>
 
     //Todo paging 라이브러리 써보기
     @GET("/reviews") //리뷰 리스트 조회
