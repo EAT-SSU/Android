@@ -3,12 +3,14 @@ package com.eatssu.android.di
 
 import com.eatssu.android.data.repository.OauthRepository
 import com.eatssu.android.data.repository.OauthRepositoryImpl
+import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.repository.UserRepository
 import com.eatssu.android.data.repository.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import com.eatssu.android.data.repository.ReviewRepositoryImpl as ReviewRepositoryImpl1
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -23,5 +25,10 @@ abstract class DataModule {
     internal abstract fun bindsUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
+
+    @Binds
+    internal abstract fun bindsReivewRepository(
+        reviewRepositoryImpl: ReviewRepositoryImpl1,
+    ): ReviewRepository
 
 }

@@ -3,6 +3,7 @@ package com.eatssu.android.di
 
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenInterceptor
 import dagger.Module
@@ -70,5 +71,11 @@ object NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReviewService(retrofit: Retrofit): ReviewService {
+        return retrofit.create(ReviewService::class.java)
     }
 }
