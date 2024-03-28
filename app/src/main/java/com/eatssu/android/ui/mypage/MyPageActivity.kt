@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.databinding.ActivityMyPageBinding
@@ -17,6 +18,7 @@ import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
+import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
@@ -79,6 +81,20 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         binding.llStoreAppVersion.setOnClickListener {
             moveToPlayStore()
+        }
+
+        binding.llServiceRule.setOnClickListener {
+            val intent = Intent(this, WebViewActivity::class.java)
+            intent.putExtra("URL", getString(R.string.terms_url))
+            intent.putExtra("TITLE", getString(R.string.terms))
+            startActivity(intent)
+        }
+
+        binding.llPrivateInformation.setOnClickListener {
+            val intent = Intent(this, WebViewActivity::class.java)
+            intent.putExtra("URL", getString(R.string.policy_url))
+            intent.putExtra("TITLE", getString(R.string.policy))
+            startActivity(intent)
         }
 
     }
