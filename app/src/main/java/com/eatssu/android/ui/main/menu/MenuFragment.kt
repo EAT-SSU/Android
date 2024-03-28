@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
 import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
@@ -21,6 +21,8 @@ import com.eatssu.android.data.model.Section
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -47,6 +49,9 @@ class MenuFragment : Fragment() {
 
 
     companion object {
+
+        val TAG = "MenuFragment"
+
         fun newInstance(time: Time): MenuFragment {
             val fragment = MenuFragment()
             val args = Bundle()
@@ -105,42 +110,37 @@ class MenuFragment : Fragment() {
             val formattedDate = LocalDate.parse(menuDate, DateTimeFormatter.BASIC_ISO_DATE)
 
             val dayOfWeek = formattedDate.dayOfWeek
-            Log.d("menudate", menuDate)
+            Log.d(TAG, "menudate: " + menuDate)
 
             if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
-                // The date is not on a weekend
-                //푸드코트
-                menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
-                menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
-                    if (result.categoryMenuListCollection.isNotEmpty()) {
+                // 주중&점심: 푸드코트, 스낵코너, 더키친
 
-                        totalMenuList.add(
-                            Section(
-                                MenuType.FIXED,
-                                Restaurant.FOOD_COURT,
-                                result.mapFixedMenuResponseToMenu()
-                            )
-                        )
-                        foodCourtDataLoaded.value = true
-                        checkDataLoaded()
-                    }
-                }
+                loadFoodCourt() //푸드코트
+                loadSnackCorner()//스낵코너
 
-                //스낵코너
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
-                menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
-                    if (result.categoryMenuListCollection.isNotEmpty()) {
+                lifecycleScope.launch {
+                    Log.d(TAG, "관찰시작")
+                    menuViewModel.uiState.collectLatest {
+//                if (!it.error && !it.loading) {
+
                         totalMenuList.add(
                             Section(
                                 MenuType.FIXED,
                                 Restaurant.SNACK_CORNER,
-                                result.mapFixedMenuResponseToMenu()
+                                it.snackMenu
                             )
+
                         )
-                        snackCornerDataLoaded.value = true
+                        Log.d(TAG, it.snackMenu.toString())
+
+                        foodCourtDataLoaded.value = true
                         checkDataLoaded()
+//                }
                     }
                 }
+                checkDataLoaded()
+
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
             }
 
@@ -209,6 +209,61 @@ class MenuFragment : Fragment() {
                 checkDataLoaded()
             }
         }
+    }
+
+    fun loadFoodCourt() {
+        menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
+        lifecycleScope.launch {
+            Log.d(TAG, "관찰시작")
+            menuViewModel.uiState.collectLatest {
+//                if (!it.error && !it.loading) {
+
+                totalMenuList.add(
+                    Section(
+                        MenuType.FIXED,
+                        Restaurant.FOOD_COURT,
+                        it.foodCourtMenu
+                    )
+                )
+                foodCourtDataLoaded.value = true
+                checkDataLoaded()
+            }
+//            }
+        }
+    }
+
+    fun loadSnackCorner() {
+//        menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
+//        lifecycleScope.launch {
+//            Log.d(TAG, "관찰시작")
+//            menuViewModel.uiState.collectLatest {
+////                if (!it.error && !it.loading) {
+//
+//                    totalMenuList.add(
+//                        Section(
+//                            MenuType.FIXED,
+//                            Restaurant.SNACK_CORNER,
+//                            it.snackMenu
+//                        )
+//                    )
+//                    foodCourtDataLoaded.value = true
+//                    checkDataLoaded()
+////                }
+//            }
+//        }
+//        menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
+//            if (result.categoryMenuListCollection.isNotEmpty()) {
+//                totalMenuList.add(
+//                    Section(
+//                        MenuType.FIXED,
+//                        Restaurant.SNACK_CORNER,
+//                        result.mapFixedMenuResponseToMenu()
+//                    )
+//                )
+//                snackCornerDataLoaded.value = true
+//                checkDataLoaded()
+//            }
+//        }
     }
 
     private fun setupTodayRecyclerView() {

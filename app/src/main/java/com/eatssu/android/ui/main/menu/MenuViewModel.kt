@@ -14,7 +14,6 @@ import com.eatssu.android.data.model.Menu
 import com.eatssu.android.data.model.MenuMini
 import com.eatssu.android.data.usecase.GetMealUseCase
 import com.eatssu.android.data.usecase.GetMenuUseCase
-import com.eatssu.android.ui.mypage.MyPageViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,16 +62,16 @@ class MenuViewModel @Inject constructor(
         time: Time,
     ) {
         viewModelScope.launch {
-            getMenuUseCase(restaurantType.toString()).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Log.e(MyPageViewModel.TAG, e.toString())
-            }.collectLatest { result ->
-                Log.d(MyPageViewModel.TAG, result.toString())
-            }
+//            getMenuUseCase(restaurantType.toString()).onStart {
+//                _uiState.update { it.copy(loading = true) }
+//            }.onCompletion {
+//                _uiState.update { it.copy(loading = false, error = true) }
+//            }.catch { e ->
+//                _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
+//                Log.e(MyPageViewModel.TAG, e.toString())
+//            }.collectLatest { result ->
+//                Log.d(MyPageViewModel.TAG, result.toString())
+//            }
         }
 
 //                    mealService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
@@ -126,6 +125,7 @@ class MenuViewModel @Inject constructor(
             }.collectLatest { result ->
                 result.result?.apply {
                     Log.d(TAG, result.toString())
+                    Log.d(TAG, restaurantType.toString() + mapFixedMenuResponseToMenu().toString())
 
                     when (restaurantType) {
 //                    Restaurant.THE_KITCHEN -> _uiState.update { it.copy(ki = add) }
@@ -139,6 +139,7 @@ class MenuViewModel @Inject constructor(
                 }
             }
         }
+    }
 
 
 //        viewModelScope.launch {
@@ -173,7 +174,7 @@ class MenuViewModel @Inject constructor(
 //                    }
 //                })
 //        }
-    }
+
 
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
