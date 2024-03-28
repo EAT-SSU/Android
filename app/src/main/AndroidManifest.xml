@@ -7,7 +7,6 @@
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
-
     <!--갤러리 권한-->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission
@@ -16,7 +15,6 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -27,6 +25,7 @@
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/image_logo_none"
@@ -36,9 +35,11 @@
         android:roundIcon="@drawable/image_logo_none"
         android:supportsRtl="true"
         android:theme="@style/Theme.EatSSUAndroid"
-        android:usesCleartextTraffic="true"
-        tools:replace="android:usesCleartextTraffic"
         tools:targetApi="31">
+
+        <activity
+            android:name=".ui.mypage.terms.WebViewActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.mypage.inquire.InquireActivity"
             android:exported="false" />
