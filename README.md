@@ -35,7 +35,7 @@ com.eatssu.android
 ├── di
 ├── ui
 │   ├── common
-│   └── feature[info, login, main, mypage, review]
+│   └── feature
 │       ├── ViewModel
 │       └── View
 └── util
