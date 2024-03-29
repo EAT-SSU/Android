@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
         android:gravity="center"
-        android:text="@string/fix" />
+        android:text="@string/modify" />
 
     <TextView
         android:id="@+id/btn_review_delete"

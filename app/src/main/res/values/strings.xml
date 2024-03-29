@@ -70,8 +70,19 @@
     <string name="taste">맛</string>
     <string name="amount">양</string>
     <string name="report">신고</string>
-    <string name="fix">수정하기</string>
-    <string name="delete">삭제하기</string>
+
+    <string name="modify">수정하기</string>
+    <string name="modify_description">리뷰를 수정하시겠습니까?</string>
+    <string name="modify_done">리뷰가 수정되었습니다.</string>
+    <string name="modify_not">리뷰 수정이 실패하였습니다.</string>
+    <string name="modify_undo">리뷰 수정을 취소하시겠습니까?</string>
+
+    <string name="delete">리뷰삭제</string>
+    <string name="delete_description">리뷰를 삭제하시겠습니까?</string>
+    <string name="delete_done">리뷰가 삭제 되었습니다.</string>
+    <string name="delete_not">리뷰 삭제가 실패 하였습니다.</string>
+    <string name="delete_undo">리뷰 삭제를 취소하시겠습니까?</string>
+
     <string name="myreview">작성한 리뷰</string>
     <string name="none_review">아직 작성한 리뷰가 없어요</string>
     <string name="none_review_my">첫 리뷰를 남겨 주세요!</string>
