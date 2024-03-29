@@ -12,7 +12,7 @@ import retrofit2.http.*
 
 interface ReviewService {
     @POST("/reviews/write/{menuId}") //리뷰 작성
-    fun writeReview(
+    suspend fun writeReview(
         @Path("menuId") menuId: Long,
         @Body request: WriteReviewRequest,
     ): BaseResponse<Void>
@@ -23,14 +23,14 @@ interface ReviewService {
     ): BaseResponse<Void>
 
     @PATCH("/reviews/{reviewId}") //리뷰 수정(글 수정)
-    fun modifyReview(
+    suspend fun modifyReview(
         @Path("reviewId") reviewId: Long,
         @Body request: ModifyReviewRequest,
     ): BaseResponse<Void>
 
     //Todo paging 라이브러리 써보기
     @GET("/reviews") //리뷰 리스트 조회
-    fun getReviewList(
+    suspend fun getReviewList(
         @Query("menuType") menuType: String,
         @Query("mealId") mealId: Long?,
         @Query("menuId") menuId: Long?,
@@ -41,12 +41,12 @@ interface ReviewService {
     ): BaseResponse<GetReviewListResponse>
 
     @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
-    fun getMenuReviewInfo(
+    suspend fun getMenuReviewInfo(
         @Path("menuId") menuId: Long,
     ): BaseResponse<GetMenuReviewInfoResponse>
 
     @GET("/reviews/meals/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
-    fun getMealReviewInfo(
+    suspend fun getMealReviewInfo(
         @Path("mealId") mealId: Long,
     ): BaseResponse<GetMealReviewInfoResponse>
 
