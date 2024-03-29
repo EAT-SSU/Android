@@ -4,17 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.repository.ReviewRepository
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.ui.review.write.menu.ReviewWriteMenuActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,12 +20,7 @@ import kotlin.properties.Delegates
 class ReviewActivity :
     BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
-//    private val viewModel: ReviewViewModel by viewModels()
-
-    private lateinit var reviewViewModel: ReviewViewModel
-
-    private lateinit var reviewService: ReviewService
-    private lateinit var reviewRepository: ReviewRepository
+    private val reviewViewModel: ReviewViewModel by viewModels()
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
@@ -42,7 +33,6 @@ class ReviewActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
-        initViewModel()
         getIndex()
         lodeData()
         bindData()
@@ -50,39 +40,13 @@ class ReviewActivity :
 
     }
 
-    private fun initViewModel() {
-        reviewService = retrofit.create(ReviewService::class.java)
-//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        reviewRepository = ReviewRepository(reviewService)
-        reviewViewModel =
-            ViewModelProvider(
-                this,
-                ReviewViewModelFactory(
-                    reviewService,
-//                    reviewRepository
-                )
-            )[ReviewViewModel::class.java]
-
-        binding.viewModel = reviewViewModel
-    }
-
     private fun lodeData() {
-        when (menuType) {
-            "FIXED" -> {
-                reviewViewModel.loadReviewList(MenuType.FIXED, 0, itemId)
-                reviewViewModel.loadMenuReviewInfo(itemId)
-            }
+        //Todo 여기서는 메뉴 타입이 뭔지 몰라도 됨. 추상화 해도 됨
 
-            "VARIABLE" -> {
-                reviewViewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
-                reviewViewModel.loadMealReviewInfo(itemId)
-            }
+        reviewViewModel.loadReview(menuType, itemId)
+//        reviewViewModel.loadReviewList(menuType,itemId)
 
-            else -> {
-                Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
-            }
-        }
+
     }
 
 
