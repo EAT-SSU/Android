@@ -6,9 +6,11 @@ import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
+import com.eatssu.android.data.dto.response.ImageResponse
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class ReviewRepositoryImpl @Inject constructor(private val reviewService: ReviewService) :
@@ -51,6 +53,13 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
     override suspend fun getMealReviewInfo(mealId: Long): Flow<BaseResponse<GetMealReviewInfoResponse>> =
         flow {
             emit(reviewService.getMealReviewInfo(mealId))
+        }
+
+    override suspend fun getImageString(
+        image: MultipartBody.Part,
+    ): Flow<BaseResponse<ImageResponse>> =
+        flow {
+            emit(reviewService.getImageUrl(image))
         }
 
 }
