@@ -82,6 +82,7 @@ class LoginActivity :
                             Log.d(TAG, it.toString())
                             showToast(loginViewModel.uiState.value.toastMessage)
                             startActivity<MainActivity>()
+                            finish()
                         }
                     }
                 }
