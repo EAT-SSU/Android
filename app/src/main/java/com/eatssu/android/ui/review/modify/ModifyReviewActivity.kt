@@ -7,12 +7,14 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.util.extension.showToast
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 
-    private val viewModel: ModifyViewModel by viewModels()
+    private val modifyViewModel: ModifyViewModel by viewModels()
 
     private var reviewId = -1L
     private var menu = ""
@@ -68,7 +70,7 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         val amountGrade = binding.rbAmount.rating.toInt()
         val tasteGrade = binding.rbTaste.rating.toInt()
 
-        viewModel.modifyMyReview(
+        modifyViewModel.modifyMyReview(
             reviewId,
             ModifyReviewRequest(mainGrade, amountGrade, tasteGrade, comment)
         )
@@ -77,7 +79,7 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
     private fun observeViewModel() {
 
         lifecycleScope.launch {
-            viewModel.uiState.collectLatest {
+            modifyViewModel.uiState.collectLatest {
                 if (it.isDone) {
                     showToast(it.toastMessage)
                     finish()
