@@ -3,20 +3,25 @@ package com.eatssu.android.ui.review.write
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.data.usecase.WriteReviewUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import javax.inject.Inject
 
 
-class UploadReviewViewModel(private val reviewService: ReviewService) : ViewModel() {
+@HiltViewModel
+class UploadReviewViewModel @Inject constructor(
+    private val writeReviewUseCase: WriteReviewUseCase,
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UploadReviewState> =
         MutableStateFlow(UploadReviewState())
@@ -45,60 +50,38 @@ class UploadReviewViewModel(private val reviewService: ReviewService) : ViewMode
 
     fun postReview() {
         viewModelScope.launch {
-            reviewService.writeReview(
+            writeReviewUseCase(
                 menuId.value, reviewData.value
-            ).enqueue(object : Callback<BaseResponse<Void>> {
-                override fun onResponse(
-                    call: Call<BaseResponse<Void>>,
-                    response: Response<BaseResponse<Void>>,
-                ) {
-                    if (response.isSuccessful) {
-                        if (response.body()?.isSuccess == true) {
-
-                            _uiState.update {
-                                it.copy(
-                                    loading = false,
-                                    error = false,
-                                    toastMessage = "리뷰가 작성되었습니다.",
-                                    isUpload = true,
-                                )
-                            }
-
-                            Log.d(
-                                "UploadReviewViewModel",
-                                "onResponse 리뷰 작성 성공: " + response.body().toString()
-                            )
-
-                        }
-                    } else {
-                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = true,
-                                toastMessage = "리뷰 작성에 실패하였습니다.",
-                                isUpload = false,
-                            )
-                        }
-                        Log.d("UploadReviewViewModel", "onResponse 리뷰 작성 실패")
-                    }
+            ).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update {
+                    it.copy(
+                        loading = false,
+                        error = true,
+                        toastMessage = "리뷰 작성에 실패하였습니다.",
+                        isUpload = false,
+                    )
                 }
-
-                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
-                    // 통신 실패 (인터넷 끊킴, 예외 발생 등 시스템적인 이유)
-                    _uiState.update {
-                        it.copy(
-                            loading = false,
-                            error = true,
-                            toastMessage = "리뷰 작성에 실패하였습니다.",
-                            isUpload = false,
-                        )
-                    }
-
-                    Log.d("UploadReviewViewModel", "onFailure 에러: " + t.message.toString())
+                Log.d(TAG, e.toString())
+            }.collectLatest { result ->
+                Log.d(TAG, result.toString())
+                _uiState.update {
+                    it.copy(
+                        loading = false,
+                        error = false,
+                        toastMessage = "리뷰가 작성되었습니다.",
+                        isUpload = true,
+                    )
                 }
-            })
+            }
         }
+    }
+
+    companion object {
+        private val TAG = "ReviewWriteViewModel"
     }
 }
 
