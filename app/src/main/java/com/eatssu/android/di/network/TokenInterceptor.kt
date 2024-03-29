@@ -35,15 +35,18 @@ class TokenInterceptor @Inject constructor(
 ) : Interceptor {
 
     companion object {
+        const val TAG = "TokenInterceptor"
+
         val EXCEPT_LIST = listOf(
             "/oauths/reissue/token",
             "/oauths/kakao",
         )
-
-        const val TAG = "TokenInterceptor"
+        val MULTI_PART = "/reviews/upload/image"
 
         private const val CODE_TOKEN_EXPIRED = 401
         private const val HEADER_AUTHORIZATION = "Authorization"
+        private const val HEADER_CONTENT_TYPE = "Content-Type"
+
         private const val HEADER_ACCESS_TOKEN = "X-ACCESS-AUTH"
         private const val HEADER_REFRESH_TOKEN = "X-REFRESH-AUTH"
     }
@@ -59,7 +62,10 @@ class TokenInterceptor @Inject constructor(
         val request = chain.request().newBuilder().apply {
             if (EXCEPT_LIST.none { originalRequest.url.encodedPath.endsWith(it) }) {
                 addHeader("accept", "application/hal+json")
-                addHeader("Content-Type", "application/json")
+                addHeader(HEADER_CONTENT_TYPE, "application/json")
+                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
+            } else if (MULTI_PART.any { originalRequest.url.encodedPath.endsWith(it) }) {
+                addHeader(HEADER_CONTENT_TYPE, "multipart/form-data")
                 addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
             }
         }.build()
@@ -67,7 +73,7 @@ class TokenInterceptor @Inject constructor(
         val response = chain.proceed(request)
 
         if (response.code == 401) {
-            Log.d(TAG, "토큰 퉤퉤")
+            Log.d(TAG, "토큰 401")
             response.close()
 
             try {
@@ -77,7 +83,7 @@ class TokenInterceptor @Inject constructor(
                     .addHeader(HEADER_AUTHORIZATION, "Bearer $refreshToken")
                     .build()
 
-                Log.d(TAG, "재발급 중")
+                Log.d(TAG, "토큰 재발급 중")
 
                 val refreshTokenResponse = chain.proceed(refreshTokenRequest)
                 Log.d(TAG, "refreshTokenResponse : $refreshTokenResponse")
@@ -115,18 +121,18 @@ class TokenInterceptor @Inject constructor(
             }
         }
 
-        if (response.code == 404) {
-            runBlocking { logoutUseCase() }
-            Log.e(TAG, "다른 유저!")
-
-            Handler(Looper.getMainLooper()).post {
-                val context = App.appContext
-                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
-            }
-        }
+//        if (response.code == 404) {
+//            runBlocking { logoutUseCase() }
+//            Log.e(TAG, "다른 유저!")
+//
+//            Handler(Looper.getMainLooper()).post {
+//                val context = App.appContext
+//                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                context.startActivity(intent)
+//            }
+//        }
 
         return response
     }
