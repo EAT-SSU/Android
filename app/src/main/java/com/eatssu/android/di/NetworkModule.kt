@@ -2,7 +2,6 @@ package com.eatssu.android.di
 
 
 import com.eatssu.android.BuildConfig
-import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.data.service.UserService
@@ -88,9 +87,4 @@ object NetworkModule {
         return retrofit.create(ReviewService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideImageService(retrofit: Retrofit): ImageService {
-        return retrofit.create(ImageService::class.java)
-    }
 }

@@ -43,11 +43,12 @@ class TokenInterceptor @Inject constructor(
             "/oauths/reissue/token",
             "/oauths/kakao",
         )
-        val MULTI_PART = "/reviews/upload/image"
+        val MULTI_PART = listOf("/reviews/upload/image")
 
         private const val CODE_TOKEN_EXPIRED = 401
         private const val HEADER_AUTHORIZATION = "Authorization"
         private const val HEADER_CONTENT_TYPE = "Content-Type"
+        private const val HEADER_ACCEPT = "accept"
 
         private const val HEADER_ACCESS_TOKEN = "X-ACCESS-AUTH"
         private const val HEADER_REFRESH_TOKEN = "X-REFRESH-AUTH"
@@ -63,13 +64,16 @@ class TokenInterceptor @Inject constructor(
         val originalRequest = chain.request()
         val request = chain.request().newBuilder().apply {
             if (EXCEPT_LIST.none { originalRequest.url.encodedPath.endsWith(it) }) {
-                addHeader("accept", "application/hal+json")
+                addHeader(HEADER_ACCEPT, "application/hal+json")
                 addHeader(HEADER_CONTENT_TYPE, "application/json")
                 addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
-            } else if (MULTI_PART.any { originalRequest.url.encodedPath.endsWith(it) }) {
-                addHeader(HEADER_CONTENT_TYPE, "multipart/form-data")
-                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
             }
+//            if (MULTI_PART.any { originalRequest.url.encodedPath.endsWith(it) }) {
+//                Log.d(TAG, "멀티파트 시작!")
+//                addHeader(HEADER_ACCEPT, "application/hal+json")
+//                addHeader(HEADER_CONTENT_TYPE, "multipart/form-data")
+//                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
+//            }
         }.build()
 
         val response = chain.proceed(request)
