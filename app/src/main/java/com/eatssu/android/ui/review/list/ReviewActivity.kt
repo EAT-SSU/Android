@@ -27,13 +27,8 @@ import kotlin.properties.Delegates
 class ReviewActivity :
     BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
-//    private val viewModel: ReviewViewModel by viewModels()
-
-    private lateinit var reviewViewModel: ReviewViewModel
     private lateinit var deleteViewModel: DeleteViewModel
-
-    private lateinit var reviewService: ReviewService
-    private lateinit var reviewRepository: ReviewRepository
+    private val reviewViewModel: ReviewViewModel by viewModels()
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
@@ -46,7 +41,6 @@ class ReviewActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
-        initViewModel()
         getIndex()
         lodeData()
         bindData()
@@ -75,21 +69,12 @@ class ReviewActivity :
     }
 
     private fun lodeData() {
-        when (menuType) {
-            "FIXED" -> {
-                reviewViewModel.loadReviewList(MenuType.FIXED, 0, itemId)
-                reviewViewModel.loadMenuReviewInfo(itemId)
-            }
+        //Todo 여기서는 메뉴 타입이 뭔지 몰라도 됨. 추상화 해도 됨
 
-            "VARIABLE" -> {
-                reviewViewModel.loadReviewList(MenuType.VARIABLE, itemId, 0)
-                reviewViewModel.loadMealReviewInfo(itemId)
-            }
+        reviewViewModel.loadReview(menuType, itemId)
+//        reviewViewModel.loadReviewList(menuType,itemId)
 
-            else -> {
-                Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
-            }
-        }
+
     }
 
 
@@ -216,6 +201,7 @@ class ReviewActivity :
 
     override fun onRestart() {
         super.onRestart()
+        Log.d("post", "onRestart")
 
         lodeData()
         bindData()
@@ -223,8 +209,10 @@ class ReviewActivity :
 
     override fun onResume() {
         super.onResume()
+        Log.d("post", "onResume")
 
         lodeData()
         bindData()
     }
+
 }
