@@ -18,7 +18,7 @@
 ## 🤔 Not Yet..
 - `Modularization`
 - `Jetpack Compose`
-- `DataSource` + `Repositody Pattern`
+- `DataSource` + `Repository Pattern`
 
 ## 📄 Package
 ```
