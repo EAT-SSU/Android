@@ -31,7 +31,8 @@ com.eatssu.android
 │   ├── enums
 │   ├── model
 │   ├── repository
-│   └── service
+│   ├── service
+│   └── usecase
 ├── di
 ├── ui
 │   ├── common
