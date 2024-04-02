@@ -3,7 +3,6 @@ package com.eatssu.android.ui.mypage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +24,7 @@ import com.eatssu.android.util.extension.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
@@ -100,13 +100,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     private fun setData() {
-        binding.tvAppVersion.text = BuildConfig.VERSION_NAME
-        binding.tvStoreAppVersion.text = versionViewModel.checkAppVersion()
+        binding.tvAppVersion.text = BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"
+        binding.tvStoreAppVersion.text = versionViewModel.checkVersionCode().toString()
 
         myPageViewModel.getMyInfo()
 
         lifecycleScope.launch {
-            Log.d(TAG, "관찰시작")
+            Timber.d("관찰시작")
             myPageViewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
                     binding.tvNickname.text = it.nickname
@@ -201,9 +201,5 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 )
             )
         }
-    }
-
-    companion object {
-        val TAG = "MyPageActivity"
     }
 }

@@ -1,6 +1,5 @@
 package com.eatssu.android.data.repository
 
-import android.util.Log
 import com.eatssu.android.R
 import com.eatssu.android.data.model.AndroidMessage
 import com.eatssu.android.data.model.RestaurantInfo
@@ -8,6 +7,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson
 import org.json.JSONArray
+import timber.log.Timber
 
 class FirebaseRemoteConfigRepository {
     private val instance = FirebaseRemoteConfig.getInstance()
@@ -23,10 +23,10 @@ class FirebaseRemoteConfigRepository {
         // Set the default values locally
         instance.fetchAndActivate().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("FirebaseRemoteConfigRepository", "fetchAndActivate 성공")
+                Timber.d("fetchAndActivate 성공")
             } else {
                 // Handle error
-                Log.d("FirebaseRemoteConfigRepository", "fetchAndActivate error")
+                Timber.d("fetchAndActivate error")
                 instance.setDefaultsAsync(R.xml.firebase_remote_config)
 //                throw RuntimeException("fetchAndActivate 실패")
             }
@@ -53,6 +53,10 @@ class FirebaseRemoteConfigRepository {
         return instance.getString("app_version")
     }
 
+    fun getVersionCode(): Long {
+        return instance.getLong("android_version_code")
+    }
+
     fun getCafeteriaInfo(): ArrayList<RestaurantInfo> {
         return parsingJson(instance.getString("cafeteria_info"))
     }
@@ -70,7 +74,7 @@ class FirebaseRemoteConfigRepository {
             val etc = jsonObject.optString("etc", "")
 
             val restaurantInfo = RestaurantInfo(name, location, time, etc)
-            Log.d("FirebaseRemoteConfigRepository", restaurantInfo.toString())
+            Timber.d(restaurantInfo.toString())
             list.add(restaurantInfo)
         }
         return list
