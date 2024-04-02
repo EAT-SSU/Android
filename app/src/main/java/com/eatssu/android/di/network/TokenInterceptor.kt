@@ -4,7 +4,6 @@ package com.eatssu.android.di.network
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig.BASE_URL
@@ -23,6 +22,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import timber.log.Timber
 import java.lang.reflect.Type
 import javax.inject.Inject
 
@@ -66,18 +66,18 @@ class TokenInterceptor @Inject constructor(
                 addHeader(HEADER_CONTENT_TYPE, "application/json")
                 addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
             }
-//            if (MULTI_PART.any { originalRequest.url.encodedPath.endsWith(it) }) {
-//                Log.d(TAG, "멀티파트 시작!")
-//                addHeader(HEADER_ACCEPT, "application/hal+json")
-//                addHeader(HEADER_CONTENT_TYPE, "multipart/form-data")
-//                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
-//            }
+            if (MULTI_PART.any { originalRequest.url.encodedPath.endsWith(it) }) {
+                Timber.d("멀티파트 시작!")
+                addHeader(HEADER_ACCEPT, "application/hal+json")
+                addHeader(HEADER_CONTENT_TYPE, "multipart/form-data")
+                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
+            }
         }.build()
 
         val response = chain.proceed(request)
 
         if (response.code == 401) {
-            Log.d(TAG, "토큰 401")
+            Timber.d("토큰 401")
             response.close()
 
             try {
@@ -87,13 +87,13 @@ class TokenInterceptor @Inject constructor(
                     .addHeader(HEADER_AUTHORIZATION, "Bearer $refreshToken")
                     .build()
 
-                Log.d(TAG, "토큰 재발급 중")
+                Timber.d("토큰 재발급 중")
 
                 val refreshTokenResponse = chain.proceed(refreshTokenRequest)
-                Log.d(TAG, "refreshTokenResponse : $refreshTokenResponse")
+                Timber.d("refreshTokenResponse : $refreshTokenResponse")
 
                 if (refreshTokenResponse.isSuccessful) {
-                    Log.d(TAG, "재발급 성공")
+                    Timber.d("재발급 성공")
 
                     val responseToken = parseRefreshTokenResponse(refreshTokenResponse)
 
@@ -113,7 +113,7 @@ class TokenInterceptor @Inject constructor(
 
             } catch (e: Exception) {
                 runBlocking { logoutUseCase() }
-                Log.e(TAG, "재발급 실패 $e")
+                Timber.e("재발급 실패 " + e)
 
                 Handler(Looper.getMainLooper()).post {
                     val context = App.appContext
