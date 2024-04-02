@@ -22,8 +22,8 @@ android {
         minSdk 23
         compileSdkVersion 34
         targetSdk 34
-        versionCode 10
-        versionName "1.1.8"
+        versionCode 11
+        versionName "1.1.9"
 
 
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]
@@ -125,6 +125,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.2.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics'
+
+    //Timer
+    implementation "com.jakewharton.timber:timber:5.0.1"
 }
 
 kapt {
