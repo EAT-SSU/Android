@@ -35,6 +35,10 @@ class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) :
         return repository.getVersionCode()
     }
 
+    fun checkVersionCode(): Long {
+        return repository.getVersionCode()
+    }
+
     fun checkAndroidMessage(): AndroidMessage {
         return repository.getAndroidMessage()
     }
