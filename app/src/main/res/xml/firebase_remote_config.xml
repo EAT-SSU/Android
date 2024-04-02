@@ -5,6 +5,10 @@
         <value>false</value>
     </entry>
     <entry>
+        <key>android_version_code</key>
+        <value>1</value>
+    </entry>
+    <entry>
         <key>latest_app_version</key>
         <value>1.0.0</value>
     </entry>

@@ -83,7 +83,7 @@ class MenuFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun observeViewModel(){
+    fun observeViewModel() {
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         mealService = RetrofitImpl.retrofit.create(MealService::class.java)
 
@@ -108,7 +108,8 @@ class MenuFragment : Fragment() {
         // ViewModel에서 데이터 가져오기
         calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
 
-            val parsedDate = LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val parsedDate =
+                LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             menuDate = parsedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
             // Assuming menuDate is a String in the format "yyyyMMdd"
@@ -122,30 +123,37 @@ class MenuFragment : Fragment() {
                 //푸드코트
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
                 menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
-                    totalMenuList.add(
-                        Section(
-                            MenuType.FIXED,
-                            Restaurant.FOOD_COURT,
-                            result.mapFixedMenuResponseToMenu()
+                    if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
+                        Log.d("menu", result.categoryMenuListCollection.toString())
+                        totalMenuList.add(
+                            Section(
+                                MenuType.FIXED,
+                                Restaurant.FOOD_COURT,
+                                result.mapFixedMenuResponseToMenu()
+                            )
                         )
-                    )
+                    }
                     foodCourtDataLoaded.value = true
                     checkDataLoaded()
+//
                 }
 
                 //스낵코너
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
                 menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
-                    totalMenuList.add(
-                        Section(
-                            MenuType.FIXED,
-                            Restaurant.SNACK_CORNER,
-                            result.mapFixedMenuResponseToMenu()
+                    if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
+                        totalMenuList.add(
+                            Section(
+                                MenuType.FIXED,
+                                Restaurant.SNACK_CORNER,
+                                result.mapFixedMenuResponseToMenu()
+                            )
                         )
-                    )
+                    }
                     snackCornerDataLoaded.value = true
                     checkDataLoaded()
                 }
+
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
             }
 
@@ -157,12 +165,11 @@ class MenuFragment : Fragment() {
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
             }
 
-            if(time!= Time.LUNCH){
+            if (time != Time.LUNCH) {
                 foodCourtDataLoaded.value = true //푸드코트
                 snackCornerDataLoaded.value = true //스낵코너
                 checkDataLoaded()
             }
-
 
 
             //학생식당
