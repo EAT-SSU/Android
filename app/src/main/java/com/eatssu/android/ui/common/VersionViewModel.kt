@@ -18,7 +18,7 @@ class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) :
         val versionCode = checkVersionCode() //얘가 파이어베이스에 있는 최신 버전
         val thisCheckVersionCode = VERSION_CODE
 
-        Timber.d("앱의 versionCode는 " + thisCheckVersionCode + " 배포된 최신 버전은 " + versionCode)
+        Timber.d("앱의 versionCode는 $thisCheckVersionCode 배포된 최신 버전은 $versionCode")
 
         if (thisCheckVersionCode < versionCode) { //배포된 버전이 크면 강제 업데이트
             Timber.d("강제업데이트")
