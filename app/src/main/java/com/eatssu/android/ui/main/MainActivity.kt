@@ -163,6 +163,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         lifecycleScope.launch {
             mainViewModel.uiState.collectLatest {
                 if (it.isNicknameNull) {
+                    //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
+                    intent.putExtra("force", true)
                     startActivity<UserNameChangeActivity>()
                     showToast(it.toastMessage)
                 } else {
