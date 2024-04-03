@@ -16,11 +16,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
+import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
@@ -36,7 +39,12 @@ class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
     private val uploadReviewViewModel: UploadReviewViewModel by viewModels()
-    private val imageviewModel: ImageViewModel by viewModels()
+//    private val imageviewModel: ImageViewModel by viewModels()
+
+    private lateinit var imageviewModel: ImageViewModel
+
+    //    private lateinit var reviewService: ReviewService
+    private lateinit var imageService: ImageService
 
     private val PERMISSION_REQUEST_CODE = 1
 
@@ -68,9 +76,12 @@ class ReviewWriteRateActivity :
         setupTextReviewInput()
 
         setOnClickListener()
+        imageService = retrofit.create(ImageService::class.java)
 
 
         binding.viewModel = uploadReviewViewModel
+        imageviewModel =
+            ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
 
     }
 
