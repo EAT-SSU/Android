@@ -2,6 +2,8 @@ package com.eatssu.android.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.App
+import com.eatssu.android.R
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.usecase.LoginUseCase
 import com.eatssu.android.data.usecase.SetAccessTokenUseCase
@@ -41,7 +43,13 @@ class LoginViewModel @Inject constructor(
                 _uiState.update { it.copy(error = true) }
                 Timber.e(e, "kakaoLogin: ")
             }.collectLatest { result ->
-                _uiState.update { it.copy(loading = false, error = false) }
+                _uiState.update {
+                    it.copy(
+                        loading = false, error = false,
+                        toastMessage = App.appContext.getString(R.string.login_done)
+                    )
+                    //Todo 로그인과 회원가입에 따른 토스트 메시지 구분하기
+                }
 
                 /*토큰 저장*/
                 result.result?.let {
