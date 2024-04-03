@@ -50,5 +50,5 @@ com.eatssu.android
 - targetSDK : 34
 
 ## 🐚 Convertion
-[Android Convention Docs](https://github.com/EAT-SSU/Android/wiki/Android-convention)
-[Git Convention Docs](https://github.com/EAT-SSU/Android/wiki/Git-convention)
+- [Android Convention Docs](https://github.com/EAT-SSU/Android/wiki/Android-convention)  
+- [Git Convention Docs](https://github.com/EAT-SSU/Android/wiki/Git-convention)
