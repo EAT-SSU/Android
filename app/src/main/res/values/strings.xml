@@ -42,7 +42,6 @@
     </string-array>
 
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_review">내가 쓴 리뷰</string>
     <string name="change_pw">비밀번호 변경</string>
     <string name="announce">공지사항</string>
@@ -80,9 +79,17 @@
     <string name="back_btn">back</string>
     <string name="kakao">카카오</string>
     <string name="connect_account">연결된 계정</string>
+
+    <string name="login_done">환영합니다!</string>
+    <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
+
+    <string name="not_found">"정보를 불러올 수 없습니다.</string>
+    <string name="hello_user">"%1$s님 반갑습니다!</string>
+
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
     <string name="set_nickname_2_8">2~8글자를 입력해주세요.</string>
+
     <string name="report_btn">EAT SSU에게 보내기</string>
     <string name="location">식당 위치</string>
     <string name="etc">비고</string>
@@ -106,7 +113,8 @@
     <string name="report_title">리뷰를 신고하는 이유를 선택해주세요.</string>
     <string name="write_text">내용을 작성해주세요</string>
     <string name="menu">메뉴</string>
-    <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
+
+
     <string name="eat_ssu">EAT SSU</string>
     <string name="recomented">\'를 추천하시겠어요?</string>
     <string name="max_300">최대 300자</string>

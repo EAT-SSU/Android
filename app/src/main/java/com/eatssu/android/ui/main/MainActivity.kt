@@ -1,11 +1,9 @@
 package com.eatssu.android.ui.main
 
-//import com.eatssu.android.ui.mypage.MyPageViewModelFactory
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -36,6 +34,7 @@ import com.prolificinteractive.materialcalendarview.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import java.util.*
 
@@ -106,15 +105,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun previousWeekAction(view: View?) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.minusWeeks(1)
+    fun previousWeekAction() {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1)
         onItemClick(mainPosition, CalendarUtils.selectedDate)
         setWeekView()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun nextWeekAction(view: View?) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.plusWeeks(1)
+    fun nextWeekAction() {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1)
         onItemClick(mainPosition, CalendarUtils.selectedDate)
         setWeekView()
     }
@@ -158,13 +157,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
 
     private fun checkNicknameIsNull() {
-        Log.d(TAG, "관찰 시작")
+        Timber.d("관찰 시작")
+        mainViewModel.checkNameNull()
 
         lifecycleScope.launch {
             mainViewModel.uiState.collectLatest {
                 if (it.isNicknameNull) {
+                    //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
+                    intent.putExtra("force", true)
                     startActivity<UserNameChangeActivity>()
                     showToast(it.toastMessage)
+                } else {
+                    showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸
                 }
             }
         }
@@ -188,7 +192,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    companion object {
-        val TAG = "MainActivity"
-    }
 }

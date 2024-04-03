@@ -23,6 +23,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import timber.log.Timber
 import java.lang.reflect.Type
 import javax.inject.Inject
 
@@ -103,7 +104,7 @@ class TokenInterceptor @Inject constructor(
 
             } catch (e: Exception) {
                 runBlocking { logoutUseCase() }
-                Log.d(TAG, "재발급 실패 $e")
+                Timber.tag(TAG).d("재발급 실패 " + e)
 
                 Handler(Looper.getMainLooper()).post {
                     val context = App.appContext
@@ -117,7 +118,20 @@ class TokenInterceptor @Inject constructor(
 
         if (response.code == 404) {
             runBlocking { logoutUseCase() }
-            Log.e(TAG, "다른 유저!")
+            Timber.e("404 + 다른 유저!")
+
+            Handler(Looper.getMainLooper()).post {
+                val context = App.appContext
+                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                context.startActivity(intent)
+            }
+        }
+
+        if (response.code == 500) {
+            runBlocking { logoutUseCase() }
+            Timber.e("500 + 다른 유저")
 
             Handler(Looper.getMainLooper()).post {
                 val context = App.appContext
