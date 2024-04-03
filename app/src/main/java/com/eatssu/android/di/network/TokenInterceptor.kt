@@ -42,7 +42,7 @@ class TokenInterceptor @Inject constructor(
             "/oauths/reissue/token",
             "/oauths/kakao",
         )
-        val MULTI_PART = listOf("/reviews/upload/image")
+//        val MULTI_PART = "/reviews/upload/image"
 
         private const val CODE_TOKEN_EXPIRED = 401
         private const val HEADER_AUTHORIZATION = "Authorization"
@@ -67,12 +67,13 @@ class TokenInterceptor @Inject constructor(
                 addHeader(HEADER_CONTENT_TYPE, "application/json")
                 addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
             }
-            if (MULTI_PART.any { originalRequest.url.encodedPath.endsWith(it) }) {
-                Timber.d("멀티파트 시작!")
-                addHeader(HEADER_ACCEPT, "application/hal+json")
-                addHeader(HEADER_CONTENT_TYPE, "multipart/form-data")
-                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
-            }
+//            else if (MULTI_PART.none { originalRequest.url.encodedPath.endsWith(it) }) {
+//                Timber.d("멀티파트 시작!")
+//                addHeader(HEADER_ACCEPT, "application/hal+json")
+//                removeHeader("Content-Type")
+//                addHeader("Content-Type", "multipart/form-data")
+//                addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
+//            }
         }.build()
 
         val response = chain.proceed(request)
