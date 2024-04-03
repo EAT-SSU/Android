@@ -26,9 +26,9 @@ class MainViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
     val uiState: StateFlow<MainState> = _uiState.asStateFlow()
 
-    init {
-        checkNameNull()
-    }
+//    init {
+//        checkNameNull()
+//    } 얘 떄문에 두번씩 처리됨.
 
     fun checkNameNull() {
         viewModelScope.launch {
