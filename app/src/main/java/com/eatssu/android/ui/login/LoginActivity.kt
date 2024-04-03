@@ -82,6 +82,7 @@ class LoginActivity :
                             Timber.d(it.toString())
                             showToast(it.toastMessage)
                             startActivity<MainActivity>()
+                            finishAffinity()
                         }
                     }
                 }
