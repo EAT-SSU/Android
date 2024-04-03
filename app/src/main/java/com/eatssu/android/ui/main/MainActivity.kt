@@ -166,7 +166,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     startActivity<UserNameChangeActivity>()
                     showToast(it.toastMessage)
                 } else {
-                    showToast(it.toastMessage)
+                    showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸
                 }
             }
         }
