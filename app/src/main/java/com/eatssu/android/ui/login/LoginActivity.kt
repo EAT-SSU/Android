@@ -89,4 +89,10 @@ class LoginActivity :
             }
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+        //탈퇴나 로그아웃 하고 로그인 화면으로 오고, 그 뒤에 뒤로 가기를 눌렀을 때에 백스택 방지
+    }
 }

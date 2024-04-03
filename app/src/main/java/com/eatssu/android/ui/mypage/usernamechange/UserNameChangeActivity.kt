@@ -19,9 +19,17 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
 
     private var inputNickname: String = ""
 
+    private var force: Boolean = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "닉네임 설정" // 툴바 제목 설정
+
+
+        force = intent.getBooleanExtra("force", false)
+        //Todo null 일때 한정으로 화면에서 못 벗어나게 기능 추가
+
 
         binding.btnCheckNickname.isEnabled = false
         binding.btnComplete.isEnabled = false
@@ -45,6 +53,17 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
 
         setOnClickListener()
     }
+
+//    override fun onBackPressed() {
+//        if (force) {
+//            // force가 true일 때는 뒤로가기 버튼을 무시하고 현재 화면에 머물게 함
+//            // 여기에 다른 동작을 추가할 수도 있음
+//            showToast("닉네임 설정 후, 서비스를 이용하실 수 있습니다.")
+//        } else {
+//            // force가 false일 때는 기본 뒤로가기 동작을 수행
+//            super.onBackPressed()
+//        }
+//    }
 
     private fun setOnClickListener() {
         binding.btnCheckNickname.setOnClickListener {
