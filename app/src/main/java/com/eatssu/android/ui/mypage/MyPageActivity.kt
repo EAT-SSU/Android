@@ -108,7 +108,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         lifecycleScope.launch {
             Timber.d("관찰시작")
             myPageViewModel.uiState.collectLatest {
-                if (!it.error && !it.loading) {
+                if (it.nickname.isNotEmpty()) {
                     binding.tvNickname.text = it.nickname
                 }
             }
@@ -144,6 +144,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         if (it.isLoginOuted) {
                             showToast(it.toastMessage)
                             startActivity<LoginActivity>()
+                            finishAffinity()
                         }
 
                     }
@@ -172,6 +173,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         if (it.isSignOuted) {
                             showToast(it.toastMessage)
                             startActivity<LoginActivity>()
+                            finishAffinity()
                         }
 
                     }
