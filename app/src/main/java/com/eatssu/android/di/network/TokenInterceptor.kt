@@ -113,7 +113,7 @@ class TokenInterceptor @Inject constructor(
 
             } catch (e: Exception) {
                 runBlocking { logoutUseCase() }
-                Timber.e("재발급 실패 " + e)
+                Timber.e("재발급 실패 $e")
 
                 Handler(Looper.getMainLooper()).post {
                     val context = App.appContext
