@@ -106,15 +106,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun previousWeekAction(view: View?) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.minusWeeks(1)
+    fun previousWeekAction() {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1)
         onItemClick(mainPosition, CalendarUtils.selectedDate)
         setWeekView()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun nextWeekAction(view: View?) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate!!.plusWeeks(1)
+    fun nextWeekAction() {
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1)
         onItemClick(mainPosition, CalendarUtils.selectedDate)
         setWeekView()
     }
