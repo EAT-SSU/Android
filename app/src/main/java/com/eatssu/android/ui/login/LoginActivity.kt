@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +15,7 @@ import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -44,19 +44,19 @@ class LoginActivity :
         val context = this
         binding.mcvKakaoLogin.setOnClickListener {
 
-            Log.d(TAG, "버튼 클릭")
+            Timber.d("버튼 클릭")
             lifecycleScope.launch {
                 try {
                     // 서비스 코드에서는 간단하게 로그인 요청하고 oAuthToken 을 받아올 수 있다.
                     val oAuthToken = UserApiClient.loginWithKakao(context)
-                    Log.d(TAG, "beanbean > $oAuthToken")
+                    Timber.d("beanbean > $oAuthToken")
                     postUserInfo()
 
                 } catch (error: Throwable) {
                     if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                        Log.d(TAG, "사용자가 명시적으로 취소")
+                        Timber.d("사용자가 명시적으로 취소")
                     } else {
-                        Log.e(TAG, "인증 에러 발생", error)
+                        Timber.e(error, "인증 에러 발생")
                     }
                 }
             }
@@ -68,10 +68,10 @@ class LoginActivity :
         UserApiClient.instance.me { user, error ->
             if (user != null) {
                 // 유저의 아이디
-                Log.d(Companion.TAG, "invoke: id =" + user.id)
+                Timber.d("invoke: id =" + user.id)
                 val providerID = user.id.toString()
                 // 유저의 이메일
-                Log.d(Companion.TAG, "invoke: email =" + user.kakaoAccount!!.email)
+                Timber.d("invoke: email =" + user.kakaoAccount!!.email)
                 val email = user.kakaoAccount!!.email.toString()
 
                 loginViewModel.getLogin(email, providerID)
@@ -79,17 +79,13 @@ class LoginActivity :
                 lifecycleScope.launch {
                     loginViewModel.uiState.collectLatest {
                         if (!it.error && !it.loading) {
-                            Log.d(TAG, it.toString())
-                            showToast(loginViewModel.uiState.value.toastMessage)
+                            Timber.d(it.toString())
+                            showToast(it.toastMessage)
                             startActivity<MainActivity>()
                         }
                     }
                 }
             }
         }
-    }
-
-    companion object {
-        const val TAG = "LoginActivity"
     }
 }
