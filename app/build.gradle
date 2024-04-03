@@ -20,7 +20,6 @@ android {
     defaultConfig {
         applicationId "com.eatssu.android"
         minSdk 23
-        compileSdkVersion 34
         targetSdk 34
         versionCode 12
         versionName "1.1.10"
