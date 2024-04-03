@@ -33,9 +33,6 @@ class IntroViewModel @Inject constructor(
         }
     }
 
-    companion object {
-        const val TAG = "IntroViewModel"
-    }
 }
 
 data class IntroState(
