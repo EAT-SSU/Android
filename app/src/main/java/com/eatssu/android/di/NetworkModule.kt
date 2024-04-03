@@ -47,7 +47,11 @@ object NetworkModule {
         OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(tokenInterceptor)
             .build()
     } else {
-        OkHttpClient.Builder().build()
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(tokenInterceptor)
+            .build()
     }
 
     @Singleton
