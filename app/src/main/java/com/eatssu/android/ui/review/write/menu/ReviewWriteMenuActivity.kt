@@ -3,7 +3,6 @@ package com.eatssu.android.ui.review.write.menu
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +14,7 @@ import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ReviewWriteMenuActivity :
     BaseActivity<ActivityReviewWriteMenuBinding>(ActivityReviewWriteMenuBinding::inflate) {
@@ -50,7 +50,7 @@ class ReviewWriteMenuActivity :
         lifecycleScope.launch {
             viewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
-                    Log.d("ReviewWriteMenuActivity", "!!!받은" + it.menuOfMeal.toString())
+                    Timber.d("받은" + it.menuOfMeal.toString())
 
                     variableMenuPickAdapter = VariableMenuPickAdapter(it.menuOfMeal!!)
                     binding.rvMenuPicker.apply {
@@ -71,7 +71,7 @@ class ReviewWriteMenuActivity :
 
     private fun sendNextItem(items: ArrayList<Pair<String, Long>>) {
         for (i in 0 until items.size) {
-            Log.d("sendNextItem", items.size.toString())
+            Timber.d("sendNextItem: " + items.size.toString())
             // 현재 아이템을 가져옴
 
             val currentItem = items[i]

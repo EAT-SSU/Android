@@ -2,7 +2,6 @@ package com.eatssu.android.ui.review.delete
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import com.eatssu.android.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MyReviewDialogActivity : AppCompatActivity() {
@@ -34,7 +34,7 @@ class MyReviewDialogActivity : AppCompatActivity() {
         reviewId = intent.getLongExtra("reviewId", -1L)
         menu = intent.getStringExtra("menu").toString()
 
-        Log.d("reviewId", reviewId.toString())
+        Timber.d(reviewId.toString())
 
         binding.btnReviewFix.setOnClickListener {
             val intent = Intent(this, ModifyReviewActivity::class.java)

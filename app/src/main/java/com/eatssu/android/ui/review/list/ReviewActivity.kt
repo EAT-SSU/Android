@@ -2,7 +2,6 @@ package com.eatssu.android.ui.review.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +13,7 @@ import com.eatssu.android.ui.review.write.menu.ReviewWriteMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
@@ -40,15 +40,22 @@ class ReviewActivity :
 
     }
 
-    private fun lodeData() {
-        //Todo 여기서는 메뉴 타입이 뭔지 몰라도 됨. 추상화 해도 됨
+    //Todo 이게 최선일까?
+    override fun onRestart() {
+        super.onRestart()
+        Timber.d("onRestart")
 
-        reviewViewModel.loadReview(menuType, itemId)
-//        reviewViewModel.loadReviewList(menuType,itemId)
-
-
+        lodeData()
+        bindData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+
+        lodeData()
+        bindData()
+    }
 
     private fun getIndex() {
         //get menuId
@@ -56,8 +63,13 @@ class ReviewActivity :
         itemId = intent.getLongExtra("itemId", 0)
         itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
 
-        Log.d("ReviewActivity", "메뉴는 ${itemName}")
-        Log.d("ReviewActivity", "메뉴는 ${menuType} ${itemId}")
+        Timber.d("메뉴는 $itemName $menuType $itemId")
+    }
+
+    private fun lodeData() {
+        //Todo 여기서는 메뉴 타입이 뭔지 몰라도 됨. 추상화 해도 됨
+
+        reviewViewModel.loadReview(menuType, itemId)
     }
 
     private fun setClickListener() {
@@ -82,7 +94,7 @@ class ReviewActivity :
             }
 
             else -> {
-                Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
+                Timber.d("잘못된 식당 정보입니다.")
             }
         }
     }
@@ -98,13 +110,13 @@ class ReviewActivity :
                             binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
                         }
 
-                        Log.d("ReviewActivity", "리뷰가 없음")
+                        Timber.d("리뷰가 없음")
                         binding.llNonReview.visibility = View.VISIBLE
                         binding.rvReview.visibility = View.INVISIBLE
 
                     } else { //리뷰 있다.
 
-                        Log.d("ReviewActivity", "리뷰가 있음")
+                        Timber.d("리뷰가 있음")
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
                         reviewAdapter = it.reviewList?.let { review -> ReviewAdapter(review) }
@@ -119,7 +131,7 @@ class ReviewActivity :
                         it.reviewInfo?.apply {
                             binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
 
-                            Log.d("ReviewActivity", it.reviewInfo.toString())
+                            Timber.d(it.reviewInfo.toString())
 
                             binding.tvReviewNumCount.text = reviewCnt.toString()
 
@@ -145,21 +157,4 @@ class ReviewActivity :
             }
         }
     }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d("post", "onRestart")
-
-        lodeData()
-        bindData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("post", "onResume")
-
-        lodeData()
-        bindData()
-    }
-
 }

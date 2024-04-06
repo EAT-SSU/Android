@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.review.write.menu
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.base.BaseResponse
@@ -17,6 +16,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 
 class VariableMenuViewModel(
@@ -38,7 +38,7 @@ class VariableMenuViewModel(
                     ) {
                         if (response.isSuccessful) {
                             val data = response.body()?.result
-                            Log.d("post", "onResponse 성공" + response.body())
+                            Timber.d("onResponse 성공" + response.body())
                             _uiState.update {
                                 it.copy(
                                     loading = false,
@@ -47,7 +47,7 @@ class VariableMenuViewModel(
                                 )
                             }
                         } else {
-                            Log.d("post", "onResponse 실패")
+                            Timber.e("onResponse 실패")
                         }
                     }
 
@@ -55,7 +55,7 @@ class VariableMenuViewModel(
                         call: Call<BaseResponse<MenuOfMealResponse>>,
                         t: Throwable,
                     ) {
-                        Log.d("post", "onFailure 에러: ${t.message}")
+                        Timber.e("onFailure")
                     }
                 })
         }
