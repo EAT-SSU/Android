@@ -1,6 +1,5 @@
 package com.eatssu.android.ui.review.list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.asReviewInfo
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -50,7 +50,7 @@ class ReviewViewModel @Inject constructor(
             }
 
             else -> {
-                Log.d("ReviewActivity", "잘못된 식당 정보입니다.")
+                Timber.d("잘못된 식당 정보입니다.")
 
             }
         }
@@ -70,7 +70,7 @@ class ReviewViewModel @Inject constructor(
                         error = false,
                     )
                 }
-                Log.d(TAG, e.toString())
+                Timber.d(e.toString())
             }.collectLatest { result ->
                 result.result?.apply {
                     if (mainRating == null) {
@@ -91,7 +91,7 @@ class ReviewViewModel @Inject constructor(
                                 isEmpty = false
                             )
                         }
-                        Log.d("ReviewViewModel", "리뷰 있다고")
+                        Timber.d("리뷰 있다")
                     }
                 }
             }
@@ -113,7 +113,7 @@ class ReviewViewModel @Inject constructor(
                         error = false,
                     )
                 }
-                Log.d(TAG, e.toString())
+                Timber.e(e.toString())
             }.collectLatest { result ->
                 result.result?.apply {
                     if (mainRating == null) {
@@ -134,7 +134,7 @@ class ReviewViewModel @Inject constructor(
                                 isEmpty = false
                             )
                         }
-                        Log.d("ReviewViewModel", "리뷰 있다고")
+                        Timber.d("리뷰 있다")
                     }
                 }
             }
@@ -156,7 +156,7 @@ class ReviewViewModel @Inject constructor(
                         error = false,
                     )
                 }
-                Log.d(TAG, e.toString())
+                Timber.e(e.toString())
             }.collectLatest { result ->
                 result.result?.apply {
                     if (numberOfElements == 0) { //리뷰 없음
@@ -197,7 +197,7 @@ class ReviewViewModel @Inject constructor(
                         error = false,
                     )
                 }
-                Log.d(TAG, e.toString())
+                Timber.e(e.toString())
             }.collectLatest { result ->
                 result.result?.apply {
                     if (numberOfElements == 0) { //리뷰 없음
@@ -221,10 +221,6 @@ class ReviewViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    companion object {
-        private val TAG = "ReviewViewModel"
     }
 }
 

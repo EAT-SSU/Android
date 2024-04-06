@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.mypage.myreview
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import com.eatssu.android.data.model.Review
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
+import timber.log.Timber
 
 
 class MyReviewAdapter(private val dataList: List<Review>) :
@@ -34,7 +34,7 @@ class MyReviewAdapter(private val dataList: List<Review>) :
             if (dataList[position].imgUrl?.isEmpty() == true) {
                 imageView.visibility = View.GONE
             } else {
-                Log.d("qwer", "사진 있다")
+                Timber.d("사진 있다")
                 Glide.with(itemView)
                     .load(dataList[position].imgUrl?.get(0))
                     .into(imageView)

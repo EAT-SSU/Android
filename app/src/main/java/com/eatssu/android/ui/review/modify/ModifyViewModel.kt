@@ -1,6 +1,5 @@
 package com.eatssu.android.ui.review.modify
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.App
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,9 +45,9 @@ class ModifyViewModel @Inject constructor(
                         toastMessage = App.appContext.getString(R.string.modify_not)
                     )
                 }
-                Log.d(TAG, e.toString())
+                Timber.e(e.toString())
             }.collectLatest { result ->
-                Log.d(TAG, result.toString())
+                Timber.d(result.toString())
                 _uiState.update {
                     it.copy(
                         loading = false,
@@ -58,10 +58,6 @@ class ModifyViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    companion object {
-        private val TAG = "ModifyViewModel"
     }
 }
 

@@ -1,15 +1,16 @@
 package com.eatssu.android.ui.review.modify
 
 import android.os.Bundle
-import android.util.Log
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
@@ -52,8 +53,8 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         amount = intent.getIntExtra("amountGrade", 0)
         taste = intent.getIntExtra("tasteGrade", 0)
 
-        Log.d("ReviewFixedActivity", reviewId.toString() + menu)
-        Log.d("ReviewFixedActivity", content)
+        Timber.tag("ReviewFixedActivity")
+            .d("reviewID: %s, menu: %s, content: %s", reviewId.toString(), menu, content)
     }
 
     private fun setData() {
