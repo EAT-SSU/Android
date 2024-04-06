@@ -9,14 +9,12 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -29,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import java.text.DecimalFormat
 import kotlin.math.log10
@@ -39,11 +38,10 @@ class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
     private val uploadReviewViewModel: UploadReviewViewModel by viewModels()
-//    private val imageviewModel: ImageViewModel by viewModels()
+    private val imageviewModel: ImageViewModel by viewModels()
 
-    private lateinit var imageviewModel: ImageViewModel
+//    private lateinit var imageviewModel: ImageViewModel
 
-    //    private lateinit var reviewService: ReviewService
     private lateinit var imageService: ImageService
 
     private val PERMISSION_REQUEST_CODE = 1
@@ -62,7 +60,7 @@ class ReviewWriteRateActivity :
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
         itemName = intent.getStringExtra("itemName").toString()
-        Log.d("post", "고정메뉴${itemName}")
+        Timber.d("고정메뉴 $itemName")
 
         itemId = intent.getLongExtra("itemId", -1)
 
@@ -80,15 +78,15 @@ class ReviewWriteRateActivity :
 
 
         binding.viewModel = uploadReviewViewModel
-        imageviewModel =
-            ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
+//        imageviewModel =
+//            ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
 
     }
 
     fun setOnClickListener() {
         // 이미지 추가 버튼 클릭 리스너 설정
         binding.ibAddPic.setOnClickListener {
-            Log.d(TAG, "클릭")
+            Timber.d("클릭")
 
             checkPermission()
         }
@@ -110,7 +108,7 @@ class ReviewWriteRateActivity :
                 showToast("리뷰 업로드 중")
                 compressImage()
 
-                Log.d("ImageViewMdoel", "s3 시작")
+                Timber.d("s3 시작")
 
             } else {
                 postReview()
@@ -128,7 +126,7 @@ class ReviewWriteRateActivity :
             lifecycleScope.launch {
                 // Default compression
                 compressedImage = Compressor.compress(this@ReviewWriteRateActivity, imageFile)
-                Log.d(TAG, "압축 됨+" + (compressedImage?.length()?.div(1024)).toString())
+                Timber.d("압축 된 사이즈+" + (compressedImage?.length()?.div(1024)).toString())
                 setCompressedImage()
             }
         } ?: showError("Please choose an image!")
@@ -149,7 +147,7 @@ class ReviewWriteRateActivity :
                     }
                 }
             }
-            Log.d(TAG, "Compressed image save in " + getReadableFileSize(it.length()))
+            Timber.d("Compressed image save in " + getReadableFileSize(it.length()))
         }
     }
 
@@ -207,7 +205,7 @@ class ReviewWriteRateActivity :
         val result = cursor.getString(columnIndex)
         cursor.close()
 
-        Log.d(TAG, result)
+        Timber.d("realPath: $result")
         return result
     }
 
@@ -228,7 +226,7 @@ class ReviewWriteRateActivity :
                         Manifest.permission.READ_MEDIA_IMAGES,
                     ), REQ_GALLERY
                 )
-                Log.d(TAG, "권한 없음")
+                Timber.e("권한 없음")
 
             } else {
                 openGallery()
@@ -254,7 +252,7 @@ class ReviewWriteRateActivity :
                         Manifest.permission.READ_EXTERNAL_STORAGE
                     ), REQ_GALLERY
                 )
-                Log.d(TAG, "권한 없음")
+                Timber.e("권한 없음")
 
             } else {
                 openGallery()
@@ -311,7 +309,7 @@ class ReviewWriteRateActivity :
 
 
     private fun deleteImage() {
-        Log.d(TAG, imageFile.toString())
+        Timber.d("imageFile: " + imageFile.toString())
         if (imageFile?.exists() == true) {
             showToast("이미지가 삭제되었습니다.")
             binding.ivImage.setImageDrawable(null)
@@ -341,7 +339,7 @@ class ReviewWriteRateActivity :
         )
 
         uploadReviewViewModel.postReview()
-        Log.d(TAG, "리뷰 전송")
+        Timber.d("리뷰 전송")
 
 
         lifecycleScope.launch {
@@ -351,7 +349,7 @@ class ReviewWriteRateActivity :
                 }
                 if (!it.error && !it.loading && it.isUpload) {
                     showToast(uploadReviewViewModel.uiState.value.toastMessage)
-                    Log.d(TAG, "리뷰 작성 성공")
+                    Timber.d("리뷰 작성 성공")
                     finish()
                 }
             }
