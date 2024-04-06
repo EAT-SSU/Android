@@ -124,11 +124,15 @@
     <string name="inquire">문의하기</string>
     <string name="service_rule">서비스 이용약관</string>
     <string name="private_information">개인정보 처리방침</string>
+
+
     <string name="leave_inquiry">문의할 내용을 남겨주세요.</string>
     <string name="email">이메일</string>
     <string name="leave_email">답변받을 이메일 주소를 남겨주세요.</string>
     <string name="inquire_content">문의 내용</string>
     <string name="send">전송하기</string>
+    <string name="inquiry_send_done">문의 전송이 완료되었습니다. 답변은 영업일 기준 2~3일 소요됩니다.</string>
+    <string name="inquiry_send_not">문의 전송이 실패하였습니다. 다시 시도 해주세요.</string>
 
     <string name="logout_description">로그아웃 되었습니다.</string>
     <string name="policy">개인정보 처리방침</string>
