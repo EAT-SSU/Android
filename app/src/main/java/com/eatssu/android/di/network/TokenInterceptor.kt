@@ -100,11 +100,27 @@ class TokenInterceptor @Inject constructor(
                     refreshTokenResponse.close()
                     val newRequest = originalRequest.newAuthBuilder().build()
                     return chain.proceed(newRequest)
+                } else {
+                    /*
+                    refreshTokenResponse : Response{protocol=http/1.1, code=401, message=, url=https://prod.eat-ssu.shop/oauths/reissue/token}
+                    위 상황에서도 로그아웃
+                    **리프레쉬도 상한 상태
+                     */
+                    runBlocking { logoutUseCase() }
+                    Timber.e("재발급에서의 401")
+
+                    Handler(Looper.getMainLooper()).post {
+                        val context = App.appContext
+                        Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+                    }
                 }
 
             } catch (e: Exception) {
                 runBlocking { logoutUseCase() }
-                Timber.tag(TAG).d("재발급 실패 " + e)
+                Timber.e("재발급 실패 $e")
 
                 Handler(Looper.getMainLooper()).post {
                     val context = App.appContext
