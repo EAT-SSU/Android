@@ -1,6 +1,5 @@
 package com.eatssu.android.ui.mypage.inquire
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.InquiriesRequest
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 
 class InquireViewModel(private val inquiresService: InquiresService) : ViewModel() {
@@ -28,10 +28,7 @@ class InquireViewModel(private val inquiresService: InquiresService) : ViewModel
                 ) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
-                            Log.d(
-                                "InquireActivity",
-                                "onResponse 성공: 문의하기" + response.body().toString()
-                            )
+                            Timber.d("onResponse 성공: 문의하기" + response.body().toString())
 
                             _uiState.update {
                                 it.copy(
@@ -42,10 +39,7 @@ class InquireViewModel(private val inquiresService: InquiresService) : ViewModel
                             }
 
                         } else {
-                            Log.d(
-                                "InquireActivity",
-                                "onResponse 오류: 문의하기" + response.body().toString()
-                            )
+                            Timber.e("onResponse 오류: 문의하기" + response.body().toString())
                             _uiState.update {
                                 it.copy(
                                     loading = false,
@@ -58,7 +52,7 @@ class InquireViewModel(private val inquiresService: InquiresService) : ViewModel
                 }
 
                 override fun onFailure(call: Call<BaseResponse<InquiriesRequest>>, t: Throwable) {
-                    Log.d("InquireActivity", "onFailure 에러: 문의하기" + t.message.toString())
+                    Timber.e("onFailure 에러: 문의하기" + t.message.toString())
                     _uiState.update {
                         it.copy(
                             loading = false,

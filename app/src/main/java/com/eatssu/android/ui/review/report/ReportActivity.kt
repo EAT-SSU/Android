@@ -1,12 +1,12 @@
 package com.eatssu.android.ui.review.report
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.databinding.ActivityReportBinding
+import timber.log.Timber
 
 class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
     private var reviewId = -1L
@@ -37,8 +37,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             content =
                 getString(selectedReportType.description) ?: binding.etReportComment.text.toString()
 
-            Log.d("ReportActivity", reportType)
-            Log.d("ReportActivity", reviewId.toString())
+            Timber.d(reportType + reviewId.toString())
 
             viewModel.postData(reviewId, reportType, content)
         }

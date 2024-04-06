@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.review.list
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import com.eatssu.android.databinding.ItemOthersReviewBinding
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.ui.review.report.ReportActivity
+import timber.log.Timber
 
 
 class ReviewAdapter(private val dataList: List<Review>) :
@@ -36,7 +36,7 @@ class ReviewAdapter(private val dataList: List<Review>) :
 
 
             if (data.imgUrl?.size != 0) {
-                Log.d("ReviewAdapter", data.content + data.imgUrl?.size.toString())
+                Timber.d(data.content + data.imgUrl?.size.toString())
                 Glide.with(itemView)
                     .load(data.imgUrl?.get(0))
                     .into(binding.ivReviewPhoto)
@@ -64,7 +64,7 @@ class ReviewAdapter(private val dataList: List<Review>) :
                     intent.putExtra("mainRating", data.mainGrade)
                     intent.putExtra("amountRating", data.amountGrade)
                     intent.putExtra("tasteRating", data.tasteGrade)
-                    Log.d("ReviewAdapter", data.toString())
+                    Timber.d(data.toString())
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }
