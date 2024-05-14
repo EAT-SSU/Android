@@ -7,8 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivitySocialLoginBinding
 import com.eatssu.android.ui.main.MainActivity
-import com.eatssu.android.util.extension.showToast
-import com.eatssu.android.util.extension.startActivity
+import com.eatssu.android.util.showToast
+import com.eatssu.android.util.startActivity
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
