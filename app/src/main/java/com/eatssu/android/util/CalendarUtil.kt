@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-object CalendarUtils {
+object CalendarUtil {
     lateinit var selectedDate: LocalDate
 
     @RequiresApi(Build.VERSION_CODES.O)

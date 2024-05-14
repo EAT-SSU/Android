@@ -23,11 +23,11 @@ import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.mypage.MyPageActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
-import com.eatssu.android.util.CalendarUtils
-import com.eatssu.android.util.CalendarUtils.daysInWeekArray
-import com.eatssu.android.util.CalendarUtils.monthYearFromDate
-import com.eatssu.android.util.extension.showToast
-import com.eatssu.android.util.extension.startActivity
+import com.eatssu.android.util.CalendarUtil
+import com.eatssu.android.util.CalendarUtil.daysInWeekArray
+import com.eatssu.android.util.CalendarUtil.monthYearFromDate
+import com.eatssu.android.util.showToast
+import com.eatssu.android.util.startActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.prolificinteractive.materialcalendarview.*
@@ -82,7 +82,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
 
         initWidgets()
-        CalendarUtils.selectedDate = LocalDate.now()
+        CalendarUtil.selectedDate = LocalDate.now()
         calendarViewModel.setData(LocalDate.now())
         setWeekView()
     }
@@ -95,8 +95,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setWeekView() {
-        monthYearText?.setText(CalendarUtils.selectedDate?.let { monthYearFromDate(it) })
-        val days: ArrayList<LocalDate>? = CalendarUtils.selectedDate?.let { daysInWeekArray(it) }
+        monthYearText?.setText(CalendarUtil.selectedDate?.let { monthYearFromDate(it) })
+        val days: ArrayList<LocalDate>? = CalendarUtil.selectedDate?.let { daysInWeekArray(it) }
         val calendarAdapter = days?.let { CalendarAdapter(it, this) }
         val gridLayoutManager = GridLayoutManager(applicationContext, 7)
 
@@ -106,21 +106,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun previousWeekAction(view: View?) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1)
-        onItemClick(mainPosition, CalendarUtils.selectedDate)
+        CalendarUtil.selectedDate = CalendarUtil.selectedDate.minusWeeks(1)
+        onItemClick(mainPosition, CalendarUtil.selectedDate)
         setWeekView()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun nextWeekAction(view: View?) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1)
-        onItemClick(mainPosition, CalendarUtils.selectedDate)
+        CalendarUtil.selectedDate = CalendarUtil.selectedDate.plusWeeks(1)
+        onItemClick(mainPosition, CalendarUtil.selectedDate)
         setWeekView()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(position: Int, date: LocalDate) {
-        CalendarUtils.selectedDate = date
+        CalendarUtil.selectedDate = date
         calendarViewModel.setData(date)
         mainPosition = position
 

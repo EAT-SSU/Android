@@ -8,10 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemCalendarListBinding
-import com.eatssu.android.util.CalendarUtils
+import com.eatssu.android.util.CalendarUtil
 import java.time.LocalDate
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Locale
 
 
 internal class CalendarAdapter(
@@ -41,12 +41,21 @@ internal class CalendarAdapter(
         holder.dayText.text =
             date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN).toString()
 
-        if (date == CalendarUtils.selectedDate) {
+        if (date == CalendarUtil.selectedDate) {
             holder.parentView.setBackgroundResource(R.drawable.selector_background_blue)
-            holder.dayOfMonth.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.selector_calendar_colortext))
-            holder.dayText.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.selector_calendar_colortext))
-        }
-        else {
+            holder.dayOfMonth.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.selector_calendar_colortext
+                )
+            )
+            holder.dayText.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.selector_calendar_colortext
+                )
+            )
+        } else {
             holder.parentView.setBackgroundResource(R.drawable.ic_selector_background_white)
         }
     }
