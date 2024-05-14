@@ -58,9 +58,15 @@ class MyReviewDialogActivity : AppCompatActivity() {
     }
 
     private fun showReviewDeleteDialog() {
-        DialogUtil.createDialog(
-            "리뷰 삭제", "작성한 리뷰를 삭제하시겠습니까?", this@MyReviewDialogActivity,
+        DialogUtil.createDialogWithCancelButton(
+            "리뷰 삭제",
+            this@MyReviewDialogActivity,
+            "작성한 리뷰를 삭제하시겠습니까?",
+            "취소",
+            "삭제"
         ) { _, _ ->
+//            ActivityCompat.finishAffinity(this)
+//            exitProcess(0)
             viewModel.postData(reviewId)
             finish()
         }
