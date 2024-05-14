@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityFixMenuBinding
-import com.eatssu.android.util.extension.showToast
+import com.eatssu.android.util.showToast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

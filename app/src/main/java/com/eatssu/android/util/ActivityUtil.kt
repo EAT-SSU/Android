@@ -1,4 +1,4 @@
-package com.eatssu.android.util.extension
+package com.eatssu.android.util
 
 import android.app.Activity
 import android.content.Intent

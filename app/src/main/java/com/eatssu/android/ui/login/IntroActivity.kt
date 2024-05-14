@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
 import com.eatssu.android.ui.main.MainActivity
-import com.eatssu.android.util.extension.startActivity
+import com.eatssu.android.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemCalendarListBinding
-import com.eatssu.android.util.CalendarUtils
+import com.eatssu.android.util.CalendarUtil
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -47,7 +47,7 @@ internal class CalendarAdapter(
          * 2. 오늘 날짜 != 선택한 날짜 일 경우에는, 오늘 날짜의 text 색상을 primary color 표기하여, 오늘 날짜를 강조합니다.
          */
 
-        if (date == CalendarUtils.selectedDate) { //셀렉트 된 날짜
+        if (date == CalendarUtil.selectedDate) { //셀렉트 된 날짜
             holder.dayOfMonth.setBackgroundResource(R.drawable.selector_background_blue)
             holder.dayOfMonth.setTextColor(
                 ContextCompat.getColor(
@@ -55,7 +55,7 @@ internal class CalendarAdapter(
                     R.color.selector_calendar_colortext
                 )
             )
-        } else if (date == LocalDate.now() && date != CalendarUtils.selectedDate) {
+        } else if (date == LocalDate.now() && date != CalendarUtil.selectedDate) {
             //오늘 날짜가 선택 되지 않았을 때, 오늘 날 text 색 지정
             holder.dayOfMonth.setTextColor(
                 ContextCompat.getColor(
