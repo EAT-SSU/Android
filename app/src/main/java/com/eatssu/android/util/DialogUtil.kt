@@ -6,20 +6,6 @@ import android.content.DialogInterface
 
 object DialogUtil {
 
-//    fun createDialog(positiveMessage: String,
-//                     message: String,
-//                     context: Context,
-//                     listener: DialogInterface.OnClickListener? = null
-//    ) {
-//        var builder: AlertDialog.Builder = AlertDialog.Builder(context)
-//        builder.setMessage(message)
-//        builder.setPositiveButton(positiveMessage, listener) { dialogInterface, i ->
-//            dialogInterface.dismiss()
-//        }
-//        builder.create().show()
-//    }
-
-
     fun createDialogWithTitleAndMessage(
         title: String,
         message: String,
