@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.BuildConfig
@@ -19,8 +18,9 @@ import com.eatssu.android.ui.mypage.inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
-import com.eatssu.android.util.extension.showToast
-import com.eatssu.android.util.extension.startActivity
+import com.eatssu.android.util.DialogUtil
+import com.eatssu.android.util.showToast
+import com.eatssu.android.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -116,7 +116,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     private fun initViewModel() { //Todo 리팩토링하기
-
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
 
         versionViewModel = ViewModelProvider(
@@ -129,61 +128,56 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private fun showLogoutDialog() {
 
-        // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("로그아웃")
-            .setMessage("로그아웃 하시겠습니까?")
-            .setPositiveButton(
-                "로그아웃"
-            ) { _, _ ->
-                //로그아웃
-                myPageViewModel.loginOut()
+        DialogUtil.createDialogWithCancelButton(
+            "로그아웃",
+            this@MyPageActivity,
+            "로그아웃 하시겠습니까?",
+            "취소",
+            "로그아웃"
+        ) { _, _ ->
+//            ActivityCompat.finishAffinity(this)
+//            exitProcess(0)
+            //로그아웃
+            myPageViewModel.loginOut()
 
-                lifecycleScope.launch {
-                    myPageViewModel.uiState.collectLatest {
-                        if (it.isLoginOuted) {
-                            showToast(it.toastMessage)
-                            startActivity<LoginActivity>()
-                            finishAffinity()
-                        }
-
+            lifecycleScope.launch {
+                myPageViewModel.uiState.collectLatest {
+                    if (it.isLoginOuted) {
+                        showToast(it.toastMessage)
+                        startActivity<LoginActivity>()
+                        finishAffinity()
                     }
+
                 }
             }
-            .setNegativeButton("취소") { _, _ ->
-            }
-        // 다이얼로그를 띄워주기
-        builder.show()
+        }
     }
+
 
     private fun showSignoutDialog() {
+        DialogUtil.createDialogWithCancelButton(
+            "탈퇴하기",
+            this@MyPageActivity,
+            "탈퇴 하시겠습니까?",
+            "취소",
+            "탈퇴하기"
+        ) { _, _ ->
+//            ActivityCompat.finishAffinity(this)
+//            exitProcess(0)
+            myPageViewModel.signOut()
 
-        // 다이얼로그를 생성하기 위해 Builder 클래스 생성자를 이용해 줍니다.
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("탈퇴하기")
-            .setMessage("탈퇴 하시겠습니까?")
-            .setPositiveButton(
-                "탈퇴하기"
-            ) { _, _ ->
-                //탈퇴처리
-                myPageViewModel.signOut()
-
-                lifecycleScope.launch {
-                    myPageViewModel.uiState.collectLatest {
-                        if (it.isSignOuted) {
-                            showToast(it.toastMessage)
-                            startActivity<LoginActivity>()
-                            finishAffinity()
-                        }
+            lifecycleScope.launch {
+                myPageViewModel.uiState.collectLatest {
+                    if (it.isSignOuted) {
+                        showToast(it.toastMessage)
+                        startActivity<LoginActivity>()
+                        finishAffinity()
+                    }
 
                     }
                 }
             }
-            .setNegativeButton("취소") { _, _ ->
             }
-        // 다이얼로그를 띄워주기
-        builder.show()
-    }
 
 
     private fun moveToPlayStore() {
