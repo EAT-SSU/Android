@@ -32,6 +32,7 @@ class InquiryActivity : BaseActivity<ActivityInquireBinding>(ActivityInquireBind
 
     private fun bindData() {
         // 카카오 로그인으로 받아온 이메일 정보 가져오기
+        // Todo 뷰모델에서 하게끔 수정하기
         email = MySharedPreferences.getUserEmail(this)
         // EditText에 이메일 정보 설정
         binding.etEmail.setText(email)
