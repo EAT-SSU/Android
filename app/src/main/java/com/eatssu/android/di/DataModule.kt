@@ -1,6 +1,8 @@
 package com.eatssu.android.di
 
 
+import com.eatssu.android.data.repository.InquiryRepository
+import com.eatssu.android.data.repository.InquiryRepositoryImpl
 import com.eatssu.android.data.repository.OauthRepository
 import com.eatssu.android.data.repository.OauthRepositoryImpl
 import com.eatssu.android.data.repository.UserRepository
@@ -23,5 +25,10 @@ abstract class DataModule {
     internal abstract fun bindsUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
+
+    @Binds
+    internal abstract fun bindsInquiryRepository(
+        inquiryRepositoryImpl: InquiryRepositoryImpl,
+    ): InquiryRepository
 
 }

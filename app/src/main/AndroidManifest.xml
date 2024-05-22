@@ -51,7 +51,7 @@
 
         </activity>
         <activity
-            android:name=".ui.mypage.inquire.InquireActivity"
+            android:name=".ui.mypage.inquire.InquiryActivity"
             android:exported="false" />
         <activity
             android:name=".ui.review.write.ReviewWriteRateActivity"
