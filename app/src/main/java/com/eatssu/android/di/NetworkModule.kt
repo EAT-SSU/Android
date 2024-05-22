@@ -2,6 +2,7 @@ package com.eatssu.android.di
 
 
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.data.service.InquiryService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenInterceptor
@@ -74,5 +75,11 @@ object NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInquiryService(retrofit: Retrofit): InquiryService {
+        return retrofit.create(InquiryService::class.java)
     }
 }
