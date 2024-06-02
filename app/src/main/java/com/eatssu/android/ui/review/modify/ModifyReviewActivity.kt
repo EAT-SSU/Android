@@ -52,7 +52,7 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
 
         main = intent.getIntExtra("mainGrade", 0)
         amount = intent.getIntExtra("amountGrade", 0)
-        taste = intent.getIntExtra("amountGrade", 0)
+        taste = intent.getIntExtra("tasteGrade", 0)
 
         Log.d("ReviewFixedActivity", reviewId.toString() + menu)
         Log.d("ReviewFixedActivity", content)
@@ -63,7 +63,7 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         binding.etReview2Comment.setText(content)
         binding.rbMain.rating = main.toFloat()
         binding.rbAmount.rating = intent.getIntExtra("amountGrade", 0).toFloat()
-        binding.rbTaste.rating = intent.getIntExtra("amountGrade", 0).toFloat()
+        binding.rbTaste.rating = intent.getIntExtra("tasteGrade", 0).toFloat()
     }
 
     private fun postData(reviewId: Long) {
