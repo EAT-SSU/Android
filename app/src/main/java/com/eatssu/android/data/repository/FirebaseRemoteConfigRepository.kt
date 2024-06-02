@@ -1,6 +1,7 @@
 package com.eatssu.android.data.repository
 
 import com.eatssu.android.R
+import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.model.AndroidMessage
 import com.eatssu.android.data.model.RestaurantInfo
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -65,7 +66,7 @@ class FirebaseRemoteConfigRepository {
     }
 
     fun getCafeteriaInfo(): ArrayList<RestaurantInfo> {
-        return parsingJson(instance.getString("cafeteria_info"))
+        return parsingJson(instance.getString("restraunt_info"))
     }
 
     private fun parsingJson(json: String): ArrayList<RestaurantInfo> {
@@ -75,12 +76,13 @@ class FirebaseRemoteConfigRepository {
         for (index in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(index)
 
+            val enum = jsonObject.optString("enum", "") as Restaurant
             val name = jsonObject.optString("name", "")
             val location = jsonObject.optString("location", "")
             val time = jsonObject.optString("time", "")
             val etc = jsonObject.optString("etc", "")
 
-            val restaurantInfo = RestaurantInfo(name, location, time, etc)
+            val restaurantInfo = RestaurantInfo(enum, name, location, time, etc)
             Timber.d(restaurantInfo.toString())
             list.add(restaurantInfo)
         }
