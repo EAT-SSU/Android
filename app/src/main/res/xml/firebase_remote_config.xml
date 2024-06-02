@@ -4,52 +4,65 @@
         <key>force_update_required</key>
         <value>false</value>
     </entry>
+
     <entry>
         <key>android_version_code</key>
         <value>1</value>
     </entry>
+
     <entry>
         <key>latest_app_version</key>
         <value>1.0.0</value>
     </entry>
+
     <entry>
-        <key>cafeteria_info</key>
-        <value>{
-            "name": "숭실도담",
+        <key>restraunt_info</key>
+        <value>
+            {
+            "enum": "DODAM",
+            "name": "도담 식당",
             "location": "신양관 2층",
-            "time": "11:20~14:00\n17:00~18:30",
-            "etc": "대면 배식+웰빙코너\n토요일 11:30~13:30"
+            "time": "11:20~14:00(점심)\n17:00~18:30(저녁)",
+            "etc": "2개 코너 운영\n대면 배식,웰빙코너\n토요일 11:30~13:30"
             },
             {
-            "name": "학생식당",
+            "enum": "HAKSIK",
+            "name": "학생 식당",
             "location": "학생회관 3층",
-            "time": "11:20~16:00\n(식사 14:00 마감)",
+            "time": "08:10~09:20(천원의 아침밥, 100개 한정,
+            24.03.11~06.14)\n11:20~14:00\n(점심)\n14:00~17:00(공간 개방)",
             "etc": "3개 코너 운영\n뚝배기찌개, 덮밥, 양식"
             },
             {
-            "name": "스낵코너",
+            "enum": "SNACK_CORNER",
+            "name": "스낵 코너",
             "location": "학생회관 3층",
             "time": "11:00~16:00",
-            "etc": "분식류, 옛날도시락, 컵밥 등"
+            "etc": "분식류, 옛날도시락, 컵밥 등. 주말 휴무"
             },
             {
-            "name": "FOOD COURT",
+            "enum": "FOOD_COURT",
+            "name": "푸드 코트",
             "location": "학생회관 2층",
-            "time": "11:30~16:00",
-            "etc": "아시안푸드, 돈까스, 샐러드, 국밥 등 + 카페"
+            "time": "휴무",
+            "etc": "준비 중"
             },
             {
+            "enum": "DORMITORY",
             "name": "기숙사 식당",
             "location": "레지던스홀 지하 1층",
             "time": "08:00~09:30\n11:00~14:00\n17:00~18:30",
             "etc": "주말 조식은 운영되지 않습니다."
             }
-            ]
         </value>
     </entry>
+
     <entry>
         <key>android_message</key>
-        <value>{"dialog":false,"message":"지금은 서버 점검 중입니다. "}
+        <value>{
+            "dialog":false,
+            "message":"지금은 서버 점검 중입니다. "
+            }
         </value>
     </entry>
 </defaultsMap>

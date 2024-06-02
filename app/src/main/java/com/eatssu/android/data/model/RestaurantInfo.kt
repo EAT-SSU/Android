@@ -1,6 +1,9 @@
 package com.eatssu.android.data.model
 
+import com.eatssu.android.data.enums.Restaurant
+
 data class RestaurantInfo(
+    val enum: Restaurant,
     val name: String,
     val location: String,
     val time: String,
