@@ -60,11 +60,15 @@ class ReviewAdapter(private val dataList: List<Review>) :
                         Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
                     intent.putExtra("reviewId", data.reviewId)
                     intent.putExtra("menu", data.menu)
-                    intent.putExtra("comment", data.content)
-                    intent.putExtra("mainRating", data.mainGrade)
-                    intent.putExtra("amountRating", data.amountGrade)
-                    intent.putExtra("tasteRating", data.tasteGrade)
-                    Log.d("ReviewAdapter", data.toString())
+                    intent.putExtra("content", data.content)
+                    intent.putExtra("mainGrade", data.mainGrade)
+                    intent.putExtra("amountGrade", data.amountGrade)
+                    intent.putExtra("tasteGrade", data.tasteGrade)
+
+                    Log.d("ReviewFixedActivity", "전전:" + data.reviewId)
+                    Log.d("ReviewFixedActivity", "전전:" + data.menu)
+                    Log.d("ReviewFixedActivity", "전전:" + data.content)
+////                    Timber.d("내용: "+data.content)
                     ContextCompat.startActivity(binding.btnDetail.context, intent, null)
                 }
             }
