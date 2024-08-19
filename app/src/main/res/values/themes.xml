@@ -2,26 +2,26 @@
     <!-- Base application theme. -->
     <style name="Theme.EatSSUAndroid" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/Primary</item>
-<!--        <item name="colorPrimaryVariant">@color/gray600</item>-->
-<!--        <item name="colorOnPrimary">@color/white</item>-->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/gray600</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/Secondary</item>
-<!--        <item name="colorSecondaryVariant">@color/gray200</item>-->
-<!--        <item name="colorOnSecondary">@color/black</item>-->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/gray200</item>
+        <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
 <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
         <item name="android:windowContentOverlay">@null</item>
 
-        <item name="android:statusBarColor" >@color/White</item> <!--Status Bar의 배경색-->
+        <item name="android:statusBarColor" >@color/white</item> <!--Status Bar의 배경색-->
         <item name="android:windowLightStatusBar" >true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
 
 <!--        <item name="colorControlHighlight">@color/gray200</item>-->
 
         <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
-<!--        <item name="actionMenuTextColor">@color/Primary_Light</item> &lt;!&ndash;액션 메뉴의 텍스트 색상&ndash;&gt;-->
-<!--        <item name="colorControlNormal">@color/Primary_Light</item> &lt;!&ndash;홈/뒤로가기 버튼의 색상&ndash;&gt;-->
+        <item name="actionMenuTextColor">@color/secondary</item> <!--액션 메뉴의 텍스트 색상-->
+        <item name="colorControlNormal">@color/secondary</item> <!--홈/뒤로가기 버튼의 색상-->
     </style>
 
     <!--Toolbar 스타일-->
@@ -30,17 +30,17 @@
         <item name="android:textSize">22sp</item>
     </style>
 
-<!--    &lt;!&ndash; Toolbar의 타이틀 텍스트&ndash;&gt;-->
-<!--    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">-->
-<!--&lt;!&ndash;        <item name="android:textColor">@color/Primary_Light</item> &lt;!&ndash; Toolbar의 타이틀 텍스트 색상&ndash;&gt;&ndash;&gt;-->
-<!--        <item name="android:textSize">15sp</item> &lt;!&ndash; Toolbar의 타이틀 텍스트 사이즈&ndash;&gt;-->
-<!--    </style>-->
+    <!-- Toolbar의 타이틀 텍스트-->
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+<!--        <item name="android:textColor">@color/Primary_Light</item> &lt;!&ndash; Toolbar의 타이틀 텍스트 색상&ndash;&gt;-->
+        <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
+    </style>
 
-<!--    &lt;!&ndash; Toolbar의 서브타이틀 텍스트&ndash;&gt;-->
-<!--    <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">-->
-<!--&lt;!&ndash;        <item name="android:textColor">@color/Primary_Light</item> &lt;!&ndash; Toolbar의 서브타이틀 텍스트 색상&ndash;&gt;&ndash;&gt;-->
-<!--        <item name="android:textSize">12sp</item> &lt;!&ndash; Toolbar의 서브타이틀 텍스트 사이즈&ndash;&gt;-->
-<!--    </style>-->
+    <!-- Toolbar의 서브타이틀 텍스트-->
+    <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+<!--        <item name="android:textColor">@color/Primary_Light</item> &lt;!&ndash; Toolbar의 서브타이틀 텍스트 색상&ndash;&gt;-->
+        <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
+    </style>
 
 
     <!-- Eat-SSU 기본 폰트 설정-->
@@ -165,7 +165,7 @@
         <item name="android:textColor">@android:color/darker_gray</item>
     </style>
     <style name="CustomDateTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
-        <item name="android:textColor">@color/Primary_Light
+        <item name="android:textColor">@color/secondary
         </item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
