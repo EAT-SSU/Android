@@ -91,8 +91,8 @@ dependencies {
     implementation(libs.material.calendarview)
     implementation(libs.recyclerview)
     implementation(libs.transport.runtime)
-    implementation(libs.activity.ktx)
-    implementation(libs.fragment.ktx)
+    implementation(libs.activity)
+    implementation(libs.fragment)
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -120,7 +120,7 @@ dependencies {
     // Coroutines for concurrency
     implementation(libs.coroutines)
     implementation(libs.coroutines.core)
-    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime)
 
     // Kakao login SDK
     implementation(libs.kakao.login)
@@ -130,8 +130,8 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     // ViewModel and LiveData
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.livedata)
 
     // Firebase
     implementation(libs.play.services.base)
