@@ -76,13 +76,14 @@ class FirebaseRemoteConfigRepository {
         for (index in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(index)
 
-            val enum = jsonObject.optString("enum", "") as Restaurant
+            val enumString = jsonObject.optString("enum", "")
+            val enumValue = enumValues<Restaurant>().find { it.name == enumString } ?: Restaurant.HAKSIK
             val name = jsonObject.optString("name", "")
             val location = jsonObject.optString("location", "")
             val time = jsonObject.optString("time", "")
             val etc = jsonObject.optString("etc", "")
 
-            val restaurantInfo = RestaurantInfo(enum, name, location, time, etc)
+            val restaurantInfo = RestaurantInfo(enumValue, name, location, time, etc)
             Timber.d(restaurantInfo.toString())
             list.add(restaurantInfo)
         }
