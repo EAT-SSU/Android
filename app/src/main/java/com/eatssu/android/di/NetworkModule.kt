@@ -2,6 +2,7 @@ package com.eatssu.android.di
 
 
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.data.service.InquiryService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.UserService
@@ -34,8 +35,6 @@ class NullOnEmptyConverterFactory : Converter.Factory() {
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    private const val BASE_URL = BuildConfig.BASE_URL
 
     @Singleton
     @Provides

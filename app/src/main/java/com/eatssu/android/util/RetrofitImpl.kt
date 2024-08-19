@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.di.network.TokenInterceptor
@@ -25,7 +26,6 @@ import java.io.IOException
 import java.lang.reflect.Type
 
 object RetrofitImpl {
-    private const val BASE_URL = BuildConfig.BASE_URL
 
     val size = 10 * 1024 * 1024 // 10MB Cache size
 
