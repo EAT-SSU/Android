@@ -1,0 +1,94 @@
+[versions]
+android = "8.2.2"
+androidx-core = "1.7.0"
+androidx-appcompat = "1.6.1"
+material = "1.8.0"
+constraintlayout = "2.1.4"
+threetenabp = "1.4.4"
+material-calendarview = "1.4.3"
+recyclerview = "1.3.2"
+transport-runtime = "3.1.2"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+activity = "1.8.2"
+fragment = "1.6.2"
+databinding-compiler = "3.1.4"
+retrofit = "2.9.0"
+converter-gson = "2.9.0"
+gson = "2.10.1"
+okhttp = "4.12.0"
+glide = "4.15.1"
+glide-compiler = "4.12.0"
+compressor = "3.0.1"
+coroutines = "1.7.3"
+lifecycle-runtime = "2.7.0"
+lifecycle-viewmodel = "2.7.0"
+lifecycle-livedata = "2.7.0"
+kakao-login = "2.8.6"
+hilt = "2.50"
+play-services-base = "18.0.1"
+firebase-config = "21.4.1"
+firebase-bom = "32.2.2"
+firebase-crashlytics = "2.9.9"
+timber = "5.0.1"
+google-services = "4.4.2"
+kotlin-android  = "1.8.10"
+
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
+material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "material-calendarview" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+transport-runtime = { group = "com.google.android.datatransport", name = "transport-runtime", version.ref = "transport-runtime" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
+fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
+databinding-compiler = { group = "com.android.databinding", name = "compiler", version.ref = "databinding-compiler" }
+
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter_gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" }
+
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide_compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide-compiler" }
+compressor = { group = "id.zelory", name = "compressor", version.ref = "compressor" }
+
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+
+lifecycle_runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle-livedata" }
+
+kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-login" }
+
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+
+play_services_base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx", version.ref = "firebase-config" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android" }
+android-library = { id = "com.android.library", version.ref = "android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
