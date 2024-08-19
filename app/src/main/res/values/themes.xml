@@ -17,7 +17,7 @@
         <item name="android:statusBarColor" >@color/white</item> <!--Status Bar의 배경색-->
         <item name="android:windowLightStatusBar" >true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
 
-<!--        <item name="colorControlHighlight">@color/gray200</item>-->
+        <item name="colorControlHighlight">@color/gray200</item>
 
         <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
         <item name="actionMenuTextColor">@color/secondary</item> <!--액션 메뉴의 텍스트 색상-->
@@ -32,13 +32,13 @@
 
     <!-- Toolbar의 타이틀 텍스트-->
     <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-<!--        <item name="android:textColor">@color/Primary_Light</item> &lt;!&ndash; Toolbar의 타이틀 텍스트 색상&ndash;&gt;-->
+        <item name="android:textColor">@color/secondary</item> <!-- Toolbar의 타이틀 텍스트 색상-->
         <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Toolbar의 서브타이틀 텍스트-->
     <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-<!--        <item name="android:textColor">@color/Primary_Light</item> &lt;!&ndash; Toolbar의 서브타이틀 텍스트 색상&ndash;&gt;-->
+        <item name="android:textColor">@color/secondary</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
         <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
     </style>
 
