@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/tv_writer_nickname"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/tv_menu_name"
-            style="@style/AndroidCaption1"
+            style="@style/Caption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -59,7 +59,7 @@
 
         <TextView
             android:id="@+id/tv_review_item_report"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/report"
@@ -95,7 +95,7 @@
 
         <TextView
             android:id="@+id/tv_total_rating"
-            style="@style/AndroidBody2"
+            style="@style/Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -104,7 +104,7 @@
             android:textColor="@color/Primary_Light" />
 
         <TextView
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -130,7 +130,7 @@
 
         <TextView
             android:id="@+id/tv_taste_rating"
-            style="@style/AndroidBody2"
+            style="@style/Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -139,7 +139,7 @@
             android:textColor="@color/Primary_Light" />
 
         <TextView
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -165,7 +165,7 @@
 
         <TextView
             android:id="@+id/tv_amount_rating"
-            style="@style/AndroidBody2"
+            style="@style/Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -181,7 +181,7 @@
 
         <TextView
             android:id="@+id/tv_review_item_date"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/tv_ch_nickname"
-        style="@style/AndroidSubtitle2"
+        style="@style/Subtitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_nickname"
@@ -28,7 +28,7 @@
 
         <EditText
             android:id="@+id/et_ch_nickname"
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -42,7 +42,7 @@
 
         <Button
             android:id="@+id/btn_check_nickname"
-            style="@style/AndroidButton2"
+            style="@style/Button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -54,7 +54,7 @@
 
     <TextView
         android:id="@+id/tv_nickname_2_8"
-        style="@style/AndroidCaption2"
+        style="@style/Caption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_nickname_2_8"
@@ -65,7 +65,7 @@
 
     <Button
         android:id="@+id/btn_complete"
-        style="@style/AndroidButton1"
+        style="@style/Button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"

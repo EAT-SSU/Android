@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    &lt;!&ndash; Eat-SSU 기본 폰트 설정&ndash;&gt;-->
+<!--    <style name="H1">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <item name="android:textSize">20px</item>-->
+<!--        <item name="android:lineHeight">26px</item>-->
+<!--    </style>-->
+
+<!--    <style name="H2">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <item name="android:textSize">18px</item>-->
+<!--        <item name="android:lineHeight">24px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Subtitle1">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <ite name="android:textSize">16px</ite>-->
+<!--        <item name="android:lineHeight">24px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Subtitle2">-->
+<!--        <item name="android:fontFamily">@font/pretendard_semibold</item>-->
+<!--        <item name="android:textSize">16px</item>-->
+<!--        <item name="android:lineHeight">24px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Body1">-->
+<!--        <item name="android:fontFamily">@font/pretendard_medium</item>-->
+<!--        <item name="android:textSize">16px</item>-->
+<!--        <item name="android:lineHeight">24px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Body2">-->
+<!--        <item name="android:fontFamily">@font/pretendard_medium</item>-->
+<!--        <item name="android:textSize">14px</item>-->
+<!--        <item name="android:lineHeight">20px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Body3">-->
+<!--        <item name="android:fontFamily">@font/pretendard_regular</item>-->
+<!--        <item name="android:textSize">14px</item>-->
+<!--        <item name="android:lineHeight">20px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Caption1">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <item name="android:textSize">12px</item>-->
+<!--        <item name="android:lineHeight">18px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Caption2">-->
+<!--        <item name="android:fontFamily">@font/pretendard_medium</item>-->
+<!--        <item name="android:textSize">12px</item>-->
+<!--        <item name="android:lineHeight">18px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Caption3">-->
+<!--        <item name="android:fontFamily">@font/pretendard_medium</item>-->
+<!--        <item name="android:textSize">10px</item>-->
+<!--        <item name="android:lineHeight">12px</item>-->
+
+<!--    </style>-->
+
+<!--    <style name="Button1">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <item name="android:textSize">18px</item>-->
+<!--        <item name="android:lineHeight">24px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Button2">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <item name="android:textSize">14px</item>-->
+<!--        <item name="android:lineHeight">20px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Rate">-->
+<!--        <item name="android:fontFamily">@font/pretendard_medium</item>-->
+<!--        <item name="android:textSize">40px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Widget1">-->
+<!--        <item name="android:fontFamily">@font/pretendard_medium</item>-->
+<!--        <item name="android:textSize">8px</item>-->
+<!--        <item name="android:lineHeight">12px</item>-->
+<!--    </style>-->
+
+<!--    <style name="Widget2">-->
+<!--        <item name="android:fontFamily">@font/pretendard_bold</item>-->
+<!--        <item name="android:textSize">10px</item>-->
+<!--        <item name="android:lineHeight">18px</item>-->
+<!--    </style>-->
+</resources>

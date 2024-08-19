@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tv_report"
-        style="@style/AndroidSubtitle1"
+        style="@style/Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/textView"
-        style="@style/AndroidCaption2"
+        style="@style/Caption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/report_sub"
@@ -39,7 +39,7 @@
 
         <RadioButton
             android:id="@+id/radio_bt1"
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report1"
@@ -48,7 +48,7 @@
         <RadioButton
             android:id="@+id/radio_bt2"
 
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report2"
@@ -56,7 +56,7 @@
 
         <RadioButton
             android:id="@+id/radio_bt3"
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report3"
@@ -64,7 +64,7 @@
 
         <RadioButton
             android:id="@+id/radio_bt4"
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report4"
@@ -72,7 +72,7 @@
 
         <RadioButton
             android:id="@+id/radio_bt5"
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report5"
@@ -80,7 +80,7 @@
 
         <RadioButton
             android:id="@+id/radio_bt6"
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report6"
@@ -90,7 +90,7 @@
 
     <EditText
         android:id="@+id/et_report_comment"
-        style="@style/AndroidBody3"
+        style="@style/Body3"
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginTop="10dp"
@@ -111,7 +111,7 @@
 
     <TextView
         android:id="@+id/tv_maxtext"
-        style="@style/AndroidCaption2"
+        style="@style/Caption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/max_150"
@@ -121,7 +121,7 @@
 
     <Button
         android:id="@+id/btn_send_report"
-        style="@style/AndroidButton1"
+        style="@style/Button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"

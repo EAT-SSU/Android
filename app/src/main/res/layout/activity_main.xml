@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2023. 11"
-                style="@style/AndroidSubtitle2"
+                style="@style/Subtitle2"
                 android:textSize="20sp"
                 android:textAlignment="center"
                 android:textColor="@color/black"/>
@@ -180,7 +180,7 @@
         <!-- TabLayou 을 배치한다. -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            style="@style/AndroidSubtitle2"
+            style="@style/Subtitle2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

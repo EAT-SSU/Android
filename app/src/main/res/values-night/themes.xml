@@ -43,79 +43,79 @@
 
     <!-- Eat-SSU 기본 폰트 설정-->
 
-    <style name="AndroidH1">
+    <style name="H1">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingExtra">26sp</item>
     </style>
 
-    <style name="AndroidH2">
+    <style name="H2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
 
-    <style name="AndroidSubtitle1">
+    <style name="Subtitle1">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
 
-    <style name="AndroidSubtitle2">
+    <style name="Subtitle2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
 
-    <style name="AndroidBody1">
+    <style name="Body1">
         <item name="android:fontFamily">@font/noto_regular</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
 
-    <style name="AndroidBody2">
+    <style name="Body2">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
     </style>
 
-    <style name="AndroidBody3">
+    <style name="Body3">
         <item name="android:fontFamily">@font/noto_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
     </style>
 
-    <style name="AndroidCaption1">
+    <style name="Caption1">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
     </style>
 
-    <style name="AndroidCaption2">
+    <style name="Caption2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">18sp</item>
     </style>
 
-    <style name="AndroidCaption3">
+    <style name="Caption3">
         <item name="android:fontFamily">@font/noto_regular</item>
         <item name="android:textSize">10sp</item>
         <item name="android:lineSpacingExtra">12sp</item>
     </style>
 
-    <style name="AndroidButton1">
+    <style name="Button1">
         <item name="android:fontFamily">@font/noto_bold</item>
         <item name="android:textSize">18sp</item>
         <item name="android:lineSpacingExtra">24sp</item>
     </style>
 
-    <style name="AndroidButton2">
+    <style name="Button2">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">20sp</item>
     </style>
 
-    <style name="AndroidRate">
+    <style name="Rate">
         <item name="android:fontFamily">@font/noto_medium</item>
         <item name="android:textSize">36sp</item>
     </style>

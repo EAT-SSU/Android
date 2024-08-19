@@ -24,7 +24,7 @@
 
             <TextView
                 android:id="@+id/tv_menu"
-                style="@style/AndroidBody3"
+                style="@style/Body3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -36,7 +36,7 @@
 
             <TextView
                 android:id="@+id/tv_price"
-                style="@style/AndroidBody3"
+                style="@style/Body3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
@@ -47,7 +47,7 @@
 
             <TextView
                 android:id="@+id/tv_rate"
-                style="@style/AndroidBody3"
+                style="@style/Body3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
