@@ -23,7 +23,7 @@ interface ReviewService {
         @Path("reviewId") reviewId: Long,
     ): Call<BaseResponse<Void>>
 
-    @PATCH("/review/{reviewId}") //리뷰 수정(글 수정)
+    @PATCH("/reviews/{reviewId}") //리뷰 수정(글 수정)
     fun modifyReview(
         @Path("reviewId") reviewId: Long,
         @Body request: ModifyReviewRequest,
