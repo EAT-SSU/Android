@@ -13,12 +13,15 @@ import kotlinx.coroutines.launch
 class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 
     private lateinit var viewModel: ModifyViewModel
+
     private var reviewId = -1L
     private var menu = ""
+
+    private var content = ""
+
+    private var main = 0
     private var amount = 0
     private var taste = 0
-    private var main = 0
-    private var content = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 수정하기" // 툴바 제목 설정
@@ -42,24 +45,25 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
     }
 
     private fun getIndex() {
+
         reviewId = intent.getLongExtra("reviewId", -1L)
         menu = intent.getStringExtra("menu").toString()
-        content = intent.getStringExtra("comment").toString()
+        content = intent.getStringExtra("content").toString()
 
-        main = intent.getIntExtra("mainRating", 0)
-        amount = intent.getIntExtra("amountRating", 0)
-        taste = intent.getIntExtra("tasteRating", 0)
+        main = intent.getIntExtra("mainGrade", 0)
+        amount = intent.getIntExtra("amountGrade", 0)
+        taste = intent.getIntExtra("tasteGrade", 0)
 
         Log.d("ReviewFixedActivity", reviewId.toString() + menu)
         Log.d("ReviewFixedActivity", content)
     }
 
     private fun setData() {
-        binding.menu.text = intent.getStringExtra("menu").toString()
-        binding.etReview2Comment.setText(intent.getStringExtra("content"))
-        binding.rbMain.rating = intent.getIntExtra("mainRating", 0).toFloat()
-        binding.rbAmount.rating = intent.getIntExtra("amountRating", 0).toFloat()
-        binding.rbTaste.rating = intent.getIntExtra("tasteRating", 0).toFloat()
+        binding.menu.text = menu
+        binding.etReview2Comment.setText(content)
+        binding.rbMain.rating = main.toFloat()
+        binding.rbAmount.rating = intent.getIntExtra("amountGrade", 0).toFloat()
+        binding.rbTaste.rating = intent.getIntExtra("tasteGrade", 0).toFloat()
     }
 
     private fun postData(reviewId: Long) {
