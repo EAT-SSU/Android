@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp">
 
     <ImageView
@@ -34,6 +35,21 @@
             android:textColor="@color/gray700"
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <RatingBar
+            android:id="@+id/rb_rate"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:isIndicator="true"
+            android:max="5"
+            android:numStars="5"
+            android:progressBackgroundTint="@color/gray300"
+            android:progressTint="@color/star"
+            android:rating="2"
+            android:secondaryProgressTint="@color/star"
+            android:stepSize="1" />
 
         <TextView
             android:id="@+id/tv_menu_name"
@@ -78,98 +94,12 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
 
-        <RatingBar
-            android:id="@+id/rb_review_item_rate"
-            style="?android:attr/ratingBarStyleSmall"
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:rating="1"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_total_rating"
-            style="@style/Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="5"
-            android:includeFontPadding="false"
-            android:textColor="@color/primary" />
-
-        <TextView
-            style="@style/Body3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:text="@string/taste"
-            android:includeFontPadding="false"
-            android:textColor="@color/black" />
-
-        <RatingBar
-            android:id="@+id/rb_taste"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:progressBackgroundTint="@color/primary"
-            android:progressTint="@color/primary"
-            android:rating="2"
-            android:secondaryProgressTint="@color/primary"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_taste_rating"
-            style="@style/Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="3"
-            android:textColor="@color/primary" />
-
-        <TextView
-            style="@style/Body3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:includeFontPadding="false"
-            android:text="@string/amount"
-            android:textColor="@color/black" />
-
-        <RatingBar
-            android:id="@+id/rb_amount"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:progressBackgroundTint="@color/primary"
-            android:progressTint="@color/primary"
-            android:rating="2"
-            android:secondaryProgressTint="@color/primary"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_amount_rating"
-            style="@style/Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:layout_gravity="center"
-            android:text="2"
-            android:textColor="@color/primary" />
-
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            tools:listitem="@layout/item_menu_name" />
 
         <View
             android:layout_width="0dp"

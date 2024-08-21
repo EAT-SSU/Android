@@ -28,9 +28,7 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvReviewItemDate.text = writeDate
                 binding.tvMenuName.text = menu
 
-                binding.tvTotalRating.text = mainGrade.toString()
-                binding.tvTasteRating.text = tasteGrade.toString()
-                binding.tvAmountRating.text = amountGrade.toString()
+                binding.rbRate.rating = mainGrade.toFloat()
             }
 
 
@@ -84,11 +82,9 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvWriterNickname.text = writerNickname
                 binding.tvReviewItemComment.text = content
                 binding.tvReviewItemDate.text = writeDate
-                binding.tvMenuName.text = menu
 
-                binding.tvTotalRating.text = mainGrade.toString()
-                binding.tvTasteRating.text = tasteGrade.toString()
-                binding.tvAmountRating.text = amountGrade.toString()
+
+                binding.rbRate.rating = mainGrade.toFloat()
             }
 
 

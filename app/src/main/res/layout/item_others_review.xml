@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
-
+    android:layout_margin="24dp">
 
     <ImageView
         android:id="@+id/iv_profile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_profile"
         app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,9 +19,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_profile"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -37,18 +36,21 @@
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_menu_name"
-            style="@style/Caption1"
+        <RatingBar
+            android:id="@+id/rb_rate"
+            style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:includeFontPadding="false"
-            android:text="@string/menu"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@+id/tv_writer_nickname"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="8dp"
+            android:isIndicator="true"
+            android:max="5"
+            android:numStars="5"
+            android:progressBackgroundTint="@color/gray300"
+            android:progressTint="@color/star"
+            android:rating="2"
+            android:secondaryProgressTint="@color/star"
+            android:stepSize="1" />
 
 
         <View
@@ -56,17 +58,15 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-
         <TextView
             android:id="@+id/tv_review_item_report"
             style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/report"
-            android:textColor="@color/primary"
+            android:textColor="@color/gray400"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
     </LinearLayout>
 
@@ -74,105 +74,20 @@
         android:id="@+id/ll_review_item_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
 
-        <RatingBar
-            android:id="@+id/rb_review_item_rate"
-            style="?android:attr/ratingBarStyleSmall"
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:rating="1"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_total_rating"
-            style="@style/Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="5"
-            android:textColor="@color/primary" />
-
-        <TextView
-            style="@style/Body3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:includeFontPadding="false"
-            android:text="@string/taste"
-            android:textColor="@color/black" />
-
-        <RatingBar
-            android:id="@+id/rb_taste"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:progressBackgroundTint="@color/primary"
-            android:progressTint="@color/primary"
-            android:rating="2"
-            android:secondaryProgressTint="@color/primary"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_taste_rating"
-            style="@style/Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="3"
-            android:textColor="@color/primary" />
-
-        <TextView
-            style="@style/Body3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:includeFontPadding="false"
-            android:text="@string/amount"
-            android:textColor="@color/black" />
-
-        <RatingBar
-            android:id="@+id/rb_amount"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:progressBackgroundTint="@color/primary"
-            android:progressTint="@color/primary"
-            android:rating="2"
-            android:secondaryProgressTint="@color/primary"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_amount_rating"
-            style="@style/Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="2"
-            android:textColor="@color/primary" />
-
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            tools:listitem="@layout/item_menu_name" />
 
         <View
             android:layout_width="0dp"
@@ -187,7 +102,7 @@
             android:layout_gravity="center"
             android:includeFontPadding="false"
             android:text="2023-09-23"
-            android:textColor="@color/gray700" />
+            android:textColor="@color/gray600" />
 
 
     </LinearLayout>
@@ -198,6 +113,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/review"
+        style="@style/Body3"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -213,4 +129,6 @@
         app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
         app:layout_constraintStart_toStartOf="@+id/tv_review_item_comment"
         app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

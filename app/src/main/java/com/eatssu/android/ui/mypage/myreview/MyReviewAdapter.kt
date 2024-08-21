@@ -25,9 +25,7 @@ class MyReviewAdapter(private val dataList: List<Review>) :
             binding.tvReviewItemComment.text = dataList[position].content
             binding.tvReviewItemDate.text = dataList[position].writeDate
             binding.tvMenuName.text = dataList[position].menu
-            binding.tvTotalRating.text = dataList[position].mainGrade.toString()
-            binding.tvTasteRating.text = dataList[position].tasteGrade.toString()
-            binding.tvAmountRating.text = dataList[position].amountGrade.toString()
+            binding.rbRate.rating = dataList[position].mainGrade.toFloat()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
 
             val imageView: ImageView = binding.ivReviewPhoto
