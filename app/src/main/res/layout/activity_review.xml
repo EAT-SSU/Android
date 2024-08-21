@@ -112,60 +112,39 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center">
 
-                                <TextView
-                                    style="@style/Body3"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/taste"
-                                    android:textColor="@color/black" />
+                                <ImageView
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_good_28" />
 
-                                <RatingBar
-                                    android:id="@+id/rb_taste"
-                                    style="@style/Widget.AppCompat.RatingBar.Small"
+                                <TextView
+                                    android:id="@+id/tv_good"
+                                    style="@style/Subtitle1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:isIndicator="true"
-                                    android:max="1"
-                                    android:numStars="1"
-                                    android:rating="2"
-                                    android:stepSize="1" />
-
-                                <TextView
-                                    android:id="@+id/tv_grade_taste"
-                                    style="@style/Body2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="5dp"
-                                    android:text="@{String.valueOf(viewModel.uiState.reviewInfo.tasteRating)}"
-                                    android:textColor="@color/primary" />
-
-                                <TextView
-                                    style="@style/Body3"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/amount"
+                                    android:text="20"
                                     android:textColor="@color/black" />
 
-                                <RatingBar
-                                    android:id="@+id/rb_amount"
-                                    style="@style/Widget.AppCompat.RatingBar.Small"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <ImageView
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
                                     android:layout_gravity="center"
-                                    android:isIndicator="true"
-                                    android:max="1"
-                                    android:numStars="1"
-                                    android:rating="2"
-                                    android:stepSize="1" />
+                                    android:src="@drawable/ic_bad_28" />
 
                                 <TextView
-                                    android:id="@+id/tv_grade_amount"
-                                    style="@style/Body2"
+                                    android:id="@+id/tv_bad"
+                                    style="@style/Subtitle1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@{String.valueOf(viewModel.uiState.reviewInfo.amountRating)}"
-                                    android:textColor="@color/primary" />
+                                    android:text="17"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black" />
+
+                                <!--                                    android:text="@{String.valueOf(viewModel.uiState.reviewInfo.tasteRating)}"-->
+
+
                             </LinearLayout>
                         </LinearLayout>
 
