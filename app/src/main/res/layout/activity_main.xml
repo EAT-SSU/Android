@@ -1,53 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray100"
     tools:context=".ui.main.MainActivity">
 
-    <ImageView
-        android:id="@+id/tv_eat_ssu"
-        android:layout_width="150dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fl_action_bar"
+        android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
-        android:gravity="center"
-        android:src="@drawable/img_app_bar"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mcv_setting"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:backgroundTint="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_marginTop="-5dp"
-        android:layout_marginEnd="20dp"
-        app:cardCornerRadius="27.5dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_eat_ssu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_eat_ssu"
-        app:rippleColor="#fff">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
-            android:id="@+id/btn_setting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_dot" />
+            android:id="@+id/tv_eat_ssu"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="@color/white"
+            android:src="@drawable/img_app_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_setting"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="27.5dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_eat_ssu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_eat_ssu"
+            app:rippleColor="#fff">
+
+
+            <ImageView
+                android:id="@+id/btn_setting"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_menu_24" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,147 +65,93 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_eat_ssu">
+        app:layout_constraintTop_toBottomOf="@id/fl_action_bar">
 
 
+        <!--  주간 캘린더 이동 버튼  -->
         <LinearLayout
             android:id="@+id/rv_main_weekcalendar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:gravity="center"
+
             android:orientation="horizontal">
 
             <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
                 android:background="@android:color/transparent"
-                android:layout_gravity="center_vertical"
+                android:onClick="previousWeekAction"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_left_arrow"
-                android:onClick="previousWeekAction"/>
+                android:src="@drawable/ic_arrow_left" />
 
             <TextView
                 android:id="@+id/monthYearTV"
+                style="@style/Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
                 android:text="2023. 11"
-                style="@style/Subtitle2"
-                android:textSize="20sp"
-                android:textAlignment="center"
-                android:textColor="@color/black"/>
+                android:textColor="@color/gray600" />
 
             <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:background="@android:color/transparent"
-                android:layout_gravity="center_vertical"
+                android:onClick="nextWeekAction"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_right_arrow"
-                android:onClick="nextWeekAction"/>
+                android:src="@drawable/ic_arrow_right" />
 
         </LinearLayout>
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="일"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="월"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="화"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="수"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="목"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="금"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="토"
-                android:textStyle="normal"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-
-        </LinearLayout>-->
-
+        <!-- 주간 캘린더 -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/week_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:numColumns="7"
+            android:background="@color/white"
             android:gravity="center_horizontal"
-            android:overScrollMode="never" />
+            android:numColumns="7"
+            android:overScrollMode="never"
+            android:paddingTop="8dp"
+            tools:listitem="@layout/item_calendar_list" />
 
-        <!-- TabLayou 을 배치한다. -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            style="@style/Subtitle2"
+
+        <!--   TabLayout(아침/점심/저녁 구분) + 그림자     -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week_recycler"
-            tools:ignore="NotSibling" />
+            android:background="@color/gray100">
 
+            <!-- TabLayout 아침/점심/저녁 -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                style="@style/Subtitle2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_cafeteria_corner"
+                android:elevation="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/week_recycler"
+                app:tabTextAppearance="@style/Subtitle2"
+                tools:ignore="NotSibling" />
 
+        </FrameLayout>
+
+        <!-- ViewPager2 - fragment 3개 -->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gray100"
             android:layout_gravity="top"
+            android:background="@color/gray100"
             android:nestedScrollingEnabled="false"
             tools:ignore="MissingConstraints" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
