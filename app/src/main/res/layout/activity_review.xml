@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.eatssu.android.ui.review.list.ReviewViewModel" />
@@ -13,7 +12,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
         tools:context=".ui.review.list.ReviewActivity">
 
         <ScrollView
@@ -29,6 +27,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="16dp"
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,6 +59,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginTop="13dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_menu">
@@ -84,10 +84,10 @@
                                     android:isIndicator="true"
                                     android:max="1"
                                     android:numStars="1"
-                                    android:progressBackgroundTint="@color/primary"
-                                    android:progressTint="@color/primary"
+                                    android:progressBackgroundTint="@color/star"
+                                    android:progressTint="@color/star"
                                     android:rating="2"
-                                    android:secondaryProgressTint="@color/primary"
+                                    android:secondaryProgressTint="@color/star"
                                     android:stepSize="1" />
 
                                 <TextView
@@ -124,6 +124,7 @@
                                     android:isIndicator="true"
                                     android:max="1"
                                     android:numStars="1"
+
                                     android:rating="2"
                                     android:stepSize="1" />
 
