@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/tv_writer_nickname"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tv_menu_name"
-            style="@style/AndroidCaption1"
+            style="@style/Caption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -49,7 +49,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -92,16 +92,16 @@
 
         <TextView
             android:id="@+id/tv_total_rating"
-            style="@style/AndroidBody2"
+            style="@style/Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="5"
             android:includeFontPadding="false"
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
 
         <TextView
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -119,24 +119,24 @@
             android:isIndicator="true"
             android:max="1"
             android:numStars="1"
-            android:progressBackgroundTint="@color/Primary_Light"
-            android:progressTint="@color/Primary_Light"
+            android:progressBackgroundTint="@color/primary"
+            android:progressTint="@color/primary"
             android:rating="2"
-            android:secondaryProgressTint="@color/Primary_Light"
+            android:secondaryProgressTint="@color/primary"
             android:stepSize="1" />
 
         <TextView
             android:id="@+id/tv_taste_rating"
-            style="@style/AndroidBody2"
+            style="@style/Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:includeFontPadding="false"
             android:text="3"
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
 
         <TextView
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -154,31 +154,31 @@
             android:isIndicator="true"
             android:max="1"
             android:numStars="1"
-            android:progressBackgroundTint="@color/Primary_Light"
-            android:progressTint="@color/Primary_Light"
+            android:progressBackgroundTint="@color/primary"
+            android:progressTint="@color/primary"
             android:rating="2"
-            android:secondaryProgressTint="@color/Primary_Light"
+            android:secondaryProgressTint="@color/primary"
             android:stepSize="1" />
 
         <TextView
             android:id="@+id/tv_amount_rating"
-            style="@style/AndroidBody2"
+            style="@style/Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:layout_gravity="center"
             android:text="2"
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
 
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_review_item_date"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -195,7 +195,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/review"
-        android:fontFamily="@font/noto_regular"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

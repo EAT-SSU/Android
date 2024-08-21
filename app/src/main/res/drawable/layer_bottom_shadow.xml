@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 하단에 그림자 표시 -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:endColor="@android:color/transparent"
+                android:startColor="#55000000" />
+        </shape>
+    </item>
+
+</layer-list>

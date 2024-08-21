@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                style="@style/AndroidSubtitle1"
+                style="@style/Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" '"
@@ -35,14 +35,14 @@
 
             <TextView
                 android:id="@+id/menu"
-                style="@style/AndroidSubtitle1"
+                style="@style/Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/menu"
                 android:textColor="@color/black" />
 
             <TextView
-                style="@style/AndroidSubtitle1"
+                style="@style/Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/recomented"
@@ -64,7 +64,7 @@
 
         <TextView
             android:id="@+id/textView3"
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -91,7 +91,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/AndroidSubtitle1"
+                    style="@style/Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -123,7 +123,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/AndroidSubtitle1"
+                    style="@style/Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/amount"
@@ -151,7 +151,7 @@
 
         <EditText
             android:id="@+id/et_review2_comment"
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:layout_marginLeft="15dp"
@@ -174,7 +174,7 @@
 
         <TextView
             android:id="@+id/tv_maxtext"
-            style="@style/AndroidCaption2"
+            style="@style/Caption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/max_300"
@@ -218,7 +218,7 @@
 
 
         <TextView
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pic_not_patch"
@@ -229,7 +229,7 @@
 
         <Button
             android:id="@+id/btn_next_review2"
-            style="@style/AndroidButton1"
+            style="@style/Button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
