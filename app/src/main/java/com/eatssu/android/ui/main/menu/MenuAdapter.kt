@@ -28,6 +28,8 @@ class MenuAdapter(
             }
 
             binding.tvCafeteria.text = sectionModel.cafeteria.displayName
+            binding.tvCafeteriaLocation.text = sectionModel.cafeteriaLocation
+
             binding.rvMenu.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)

@@ -17,9 +17,12 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.Section
+import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
+import com.eatssu.android.ui.info.InfoViewModel
+import com.eatssu.android.ui.info.InfoViewModelFactory
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.util.RetrofitImpl
 import java.time.DayOfWeek
@@ -38,6 +41,7 @@ class MenuFragment : Fragment() {
     private lateinit var mealService: MealService
 
     private lateinit var menuDate: String
+    private lateinit var cafeteriaLocation: String
 
     val foodCourtDataLoaded = MutableLiveData<Boolean>()
     val snackCornerDataLoaded = MutableLiveData<Boolean>()
@@ -46,6 +50,10 @@ class MenuFragment : Fragment() {
     val dormitoryDataLoaded = MutableLiveData<Boolean>()
 
     private val totalMenuList = ArrayList<Section>()
+
+    private lateinit var infoViewModel: InfoViewModel
+    private lateinit var restaurantType: Restaurant
+    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
 
     companion object {
@@ -67,6 +75,13 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
+
+        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
+        infoViewModel = ViewModelProvider(
+            this,
+            InfoViewModelFactory(firebaseRemoteConfigRepository)
+        )[InfoViewModel::class.java]
+
         return binding.root
     }
 
@@ -129,7 +144,8 @@ class MenuFragment : Fragment() {
                             Section(
                                 MenuType.FIXED,
                                 Restaurant.FOOD_COURT,
-                                result.mapFixedMenuResponseToMenu()
+                                result.mapFixedMenuResponseToMenu(),
+                                infoViewModel.foodLocation.value.toString()
                             )
                         )
                     }
@@ -146,7 +162,8 @@ class MenuFragment : Fragment() {
                             Section(
                                 MenuType.FIXED,
                                 Restaurant.SNACK_CORNER,
-                                result.mapFixedMenuResponseToMenu()
+                                result.mapFixedMenuResponseToMenu(),
+                                infoViewModel.snackLocation.value.toString()
                             )
                         )
                     }
@@ -180,7 +197,8 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.VARIABLE,
                             Restaurant.HAKSIK,
-                            result.mapTodayMenuResponseToMenu()
+                            result.mapTodayMenuResponseToMenu(),
+                            infoViewModel.haksikLocation.value.toString()
                         )
                     )
 
@@ -198,7 +216,8 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.VARIABLE,
                             Restaurant.DODAM,
-                            result.mapTodayMenuResponseToMenu()
+                            result.mapTodayMenuResponseToMenu(),
+                            infoViewModel.dodamLocation.value.toString()
                         )
                     )
                 }
@@ -214,7 +233,8 @@ class MenuFragment : Fragment() {
                         Section(
                             MenuType.VARIABLE,
                             Restaurant.DORMITORY,
-                            result.mapTodayMenuResponseToMenu()
+                            result.mapTodayMenuResponseToMenu(),
+                            infoViewModel.dormitoryLocation.value.toString()
                         )
                     )
                 }
