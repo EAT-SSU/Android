@@ -42,7 +42,7 @@
 
                     <TextView
                         android:id="@+id/tv_menu"
-                        style="@style/AndroidH2"
+                        style="@style/H2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -84,15 +84,15 @@
                                     android:isIndicator="true"
                                     android:max="1"
                                     android:numStars="1"
-                                    android:progressBackgroundTint="@color/Primary_Light"
-                                    android:progressTint="@color/Primary_Light"
+                                    android:progressBackgroundTint="@color/primary"
+                                    android:progressTint="@color/primary"
                                     android:rating="2"
-                                    android:secondaryProgressTint="@color/Primary_Light"
+                                    android:secondaryProgressTint="@color/primary"
                                     android:stepSize="1" />
 
                                 <TextView
                                     android:id="@+id/tv_rate"
-                                    style="@style/AndroidRate"
+                                    style="@style/Rate"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -109,7 +109,7 @@
                                 android:layout_gravity="center">
 
                                 <TextView
-                                    style="@style/AndroidBody3"
+                                    style="@style/Body3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/taste"
@@ -129,15 +129,15 @@
 
                                 <TextView
                                     android:id="@+id/tv_grade_taste"
-                                    style="@style/AndroidBody2"
+                                    style="@style/Body2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="5dp"
                                     android:text="@{String.valueOf(viewModel.uiState.reviewInfo.tasteRating)}"
-                                    android:textColor="@color/Primary_Light" />
+                                    android:textColor="@color/primary" />
 
                                 <TextView
-                                    style="@style/AndroidBody3"
+                                    style="@style/Body3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/amount"
@@ -157,11 +157,11 @@
 
                                 <TextView
                                     android:id="@+id/tv_grade_amount"
-                                    style="@style/AndroidBody2"
+                                    style="@style/Body2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@{String.valueOf(viewModel.uiState.reviewInfo.amountRating)}"
-                                    android:textColor="@color/Primary_Light" />
+                                    android:textColor="@color/primary" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -179,7 +179,7 @@
 
                                 <TextView
                                     android:id="@+id/tv_review_num"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/total_review_num"
@@ -190,13 +190,13 @@
 
                                 <TextView
                                     android:id="@+id/tv_review_num_count"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="10dp"
                                     android:text="@{String.valueOf(viewModel.uiState.reviewInfo.reviewCnt)}"
                                     android:textAlignment="center"
-                                    android:textColor="@color/Primary_Light"
+                                    android:textColor="@color/primary"
                                     app:layout_constraintBottom_toBottomOf="@id/tv_review_num"
                                     app:layout_constraintStart_toEndOf="@id/tv_review_num" />
                             </LinearLayout>
@@ -208,7 +208,7 @@
 
                                 <TextView
                                     android:id="@+id/rate5"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
@@ -236,7 +236,7 @@
 
                                 <TextView
                                     android:id="@+id/rate4"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
@@ -264,7 +264,7 @@
 
                                 <TextView
                                     android:id="@+id/rate3"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
@@ -292,7 +292,7 @@
 
                                 <TextView
                                     android:id="@+id/rate2"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
@@ -319,7 +319,7 @@
 
                                 <TextView
                                     android:id="@+id/rate1"
-                                    style="@style/AndroidCaption2"
+                                    style="@style/Caption2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
@@ -345,7 +345,7 @@
 
                     <Button
                         android:id="@+id/btn_next_review"
-                        style="@style/AndroidButton2"
+                        style="@style/Button2"
                         android:layout_width="240dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
@@ -382,7 +382,7 @@
                         app:tint="@color/gray700" />
 
                     <TextView
-                        style="@style/AndroidBody1"
+                        style="@style/Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -391,7 +391,7 @@
                         android:textColor="@color/gray700" />
 
                     <TextView
-                        style="@style/AndroidCaption2"
+                        style="@style/Caption2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -402,7 +402,7 @@
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@style/AndroidH1"
+                    style="@style/H1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/review"

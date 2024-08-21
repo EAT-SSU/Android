@@ -25,7 +25,7 @@
 
             <TextView
                 android:id="@+id/tv_name"
-                style="@style/AndroidH1"
+                style="@style/H1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -36,7 +36,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@color/Primary_Light" />
+            android:background="@color/primary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/tv_location_info"
-                style="@style/AndroidH2"
+                style="@style/H2"
                 android:layout_width="0dp"
 
                 android:lineSpacingExtra="-4dp"
@@ -58,7 +58,7 @@
 
             <TextView
                 android:id="@+id/tv_location"
-                style="@style/AndroidBody1"
+                style="@style/Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
@@ -78,7 +78,7 @@
 
             <TextView
                 android:id="@+id/tv_time_info"
-                style="@style/AndroidH2"
+                style="@style/H2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -90,7 +90,7 @@
 
             <TextView
                 android:id="@+id/tv_time"
-                style="@style/AndroidBody1"
+                style="@style/Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
@@ -110,7 +110,7 @@
 
             <TextView
                 android:id="@+id/tv_etc_info"
-                style="@style/AndroidH2"
+                style="@style/H2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -122,7 +122,7 @@
 
             <TextView
                 android:id="@+id/tv_etc"
-                style="@style/AndroidBody1"
+                style="@style/Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"

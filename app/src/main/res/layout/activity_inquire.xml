@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tv_report"
-        style="@style/AndroidSubtitle1"
+        style="@style/Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_report">
 
         <TextView
-            style="@style/AndroidBody1"
+            style="@style/Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/email"
@@ -40,7 +40,7 @@
 
         <EditText
             android:id="@+id/et_email"
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:hint="@string/leave_email"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -53,7 +53,7 @@
 
     <TextView
         android:id="@+id/tv_inquire_content"
-        style="@style/AndroidBody1"
+        style="@style/Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -66,7 +66,7 @@
 
     <EditText
         android:id="@+id/et_report_comment"
-        style="@style/AndroidBody3"
+        style="@style/Body3"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginTop="10dp"
@@ -87,7 +87,7 @@
 
     <TextView
         android:id="@+id/tv_maxtext"
-        style="@style/AndroidCaption2"
+        style="@style/Caption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/max_500"
@@ -97,7 +97,7 @@
 
     <Button
         android:id="@+id/btn_send_report"
-        style="@style/AndroidButton1"
+        style="@style/Button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
