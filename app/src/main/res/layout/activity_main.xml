@@ -7,6 +7,7 @@
     android:background="@color/gray100"
     tools:context=".ui.main.MainActivity">
 
+    <!--  로고 및 상단 바  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fl_action_bar"
         android:layout_width="match_parent"
@@ -127,7 +128,6 @@
             android:layout_height="wrap_content"
             android:background="@color/gray100">
 
-            <!-- TabLayout 아침/점심/저녁 -->
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 style="@style/Subtitle2"

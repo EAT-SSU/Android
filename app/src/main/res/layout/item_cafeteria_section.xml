@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    android:layout_marginBottom="24dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -10,23 +13,15 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btn_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:background="@android:color/transparent"
-            android:gravity="start"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_location" />
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_cafeteria"
-            style="@style/H2"
+            style="@style/Subtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -35,20 +30,38 @@
             android:text="@string/student_cafeteria"
             android:textColor="@color/black" />
 
+        <TextView
+            style="@style/Caption3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="레지던스 홀 1층" />
+
+        <ImageButton
+            android:id="@+id/btn_info"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="start"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_info_12" />
     </LinearLayout>
 
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:id="@+id/cardView"
         android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="20dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        android:background="@drawable/shape_cafeteria_section"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,14 +71,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginBottom="18dp"
                 android:orientation="horizontal"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
                 android:weightSum="10">
 
                 <TextView
-                    style="@style/Caption2"
+                    style="@style/Body2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
@@ -74,7 +88,7 @@
 
 
                 <TextView
-                    style="@style/Caption2"
+                    style="@style/Body2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
@@ -84,7 +98,7 @@
 
 
                 <TextView
-                    style="@style/Caption2"
+                    style="@style/Body2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
@@ -98,7 +112,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/primary" />
+                android:background="@color/gray200" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -107,11 +121,12 @@
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:overScrollMode="never"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="18dp"
                 tools:listitem="@layout/item_menu" />
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.Section
-import com.eatssu.android.databinding.ItemSectionBinding
+import com.eatssu.android.databinding.ItemCafeteriaSectionBinding
 import com.eatssu.android.ui.info.InfoActivity
 
 class MenuAdapter(
@@ -16,7 +16,7 @@ class MenuAdapter(
 ) : RecyclerView.Adapter<MenuAdapter.MyViewHolder>() {
 
     class MyViewHolder(
-        private val binding: ItemSectionBinding
+        private val binding: ItemCafeteriaSectionBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(sectionModel: Section) {
@@ -39,7 +39,8 @@ class MenuAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder(ItemSectionBinding.inflate(
+        return MyViewHolder(
+            ItemCafeteriaSectionBinding.inflate(
             LayoutInflater.from(parent.context),
             parent, false))
     }
