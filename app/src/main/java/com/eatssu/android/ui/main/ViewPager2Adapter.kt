@@ -38,13 +38,12 @@ class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
         // 예를 들어, 첫 번째 Fragment를 디폴트로 설정하려면 0을 반환합니다.
 
         val time = LocalTime.now()
-        var selectedIndex: Int
 
-        when (time.hour) {
-            in 0..10 -> selectedIndex = 0
-            in 10..16 -> selectedIndex = 1
-            in 16..24 -> selectedIndex = 2
-            else -> selectedIndex = 1
+        val selectedIndex: Int = when (time.hour) {
+            in 0..10 -> 0 //아침
+            in 10..16 -> 1 //점심
+            in 16..24 -> 2 //저녁
+            else -> 1
         }
         return selectedIndex
     }
