@@ -98,7 +98,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/Primary_Light" />
+                android:background="@color/primary" />
 
 
             <androidx.recyclerview.widget.RecyclerView

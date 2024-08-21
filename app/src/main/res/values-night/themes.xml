@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/gray600</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondary">@color/primary</item>
         <item name="colorSecondaryVariant">@color/gray200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -19,8 +19,8 @@
 
         <item name="colorControlHighlight">@color/gray200</item>
 
-        <item name="actionMenuTextColor">@color/secondary</item> <!--액션 메뉴의 텍스트 색상-->
-        <item name="colorControlNormal">@color/secondary</item> <!--홈/뒤로가기 버튼의 색상-->
+        <item name="actionMenuTextColor">@color/primary</item> <!--액션 메뉴의 텍스트 색상-->
+        <item name="colorControlNormal">@color/primary</item> <!--홈/뒤로가기 버튼의 색상-->
     </style>
 
     <!--Toolbar 스타일-->
@@ -31,13 +31,13 @@
 
     <!-- Toolbar의 타이틀 텍스트-->
     <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/secondary</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+        <item name="android:textColor">@color/primary</item> <!-- Toolbar의 타이틀 텍스트 색상-->
         <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Toolbar의 서브타이틀 텍스트-->
     <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/secondary</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
+        <item name="android:textColor">@color/primary</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
         <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
     </style>
 
@@ -178,7 +178,7 @@
     </style>
 
     <style name="CustomDateTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
-        <item name="android:textColor">@color/secondary
+        <item name="android:textColor">@color/primary
         </item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->

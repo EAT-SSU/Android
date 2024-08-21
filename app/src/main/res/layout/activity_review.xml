@@ -84,10 +84,10 @@
                                     android:isIndicator="true"
                                     android:max="1"
                                     android:numStars="1"
-                                    android:progressBackgroundTint="@color/Primary_Light"
-                                    android:progressTint="@color/Primary_Light"
+                                    android:progressBackgroundTint="@color/primary"
+                                    android:progressTint="@color/primary"
                                     android:rating="2"
-                                    android:secondaryProgressTint="@color/Primary_Light"
+                                    android:secondaryProgressTint="@color/primary"
                                     android:stepSize="1" />
 
                                 <TextView
@@ -134,7 +134,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="5dp"
                                     android:text="@{String.valueOf(viewModel.uiState.reviewInfo.tasteRating)}"
-                                    android:textColor="@color/Primary_Light" />
+                                    android:textColor="@color/primary" />
 
                                 <TextView
                                     style="@style/Body3"
@@ -161,7 +161,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@{String.valueOf(viewModel.uiState.reviewInfo.amountRating)}"
-                                    android:textColor="@color/Primary_Light" />
+                                    android:textColor="@color/primary" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -196,7 +196,7 @@
                                     android:layout_marginStart="10dp"
                                     android:text="@{String.valueOf(viewModel.uiState.reviewInfo.reviewCnt)}"
                                     android:textAlignment="center"
-                                    android:textColor="@color/Primary_Light"
+                                    android:textColor="@color/primary"
                                     app:layout_constraintBottom_toBottomOf="@id/tv_review_num"
                                     app:layout_constraintStart_toEndOf="@id/tv_review_num" />
                             </LinearLayout>

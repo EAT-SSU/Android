@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text=""
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
     </androidx.appcompat.widget.Toolbar>
 
 

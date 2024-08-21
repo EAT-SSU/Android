@@ -51,7 +51,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/report"
-            android:textColor="@color/Primary_Light"
+            android:textColor="@color/primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -101,7 +101,7 @@
             android:layout_gravity="center"
             android:includeFontPadding="false"
             android:text="5"
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
 
         <TextView
             style="@style/Body3"
@@ -122,10 +122,10 @@
             android:isIndicator="true"
             android:max="1"
             android:numStars="1"
-            android:progressBackgroundTint="@color/Primary_Light"
-            android:progressTint="@color/Primary_Light"
+            android:progressBackgroundTint="@color/primary"
+            android:progressTint="@color/primary"
             android:rating="2"
-            android:secondaryProgressTint="@color/Primary_Light"
+            android:secondaryProgressTint="@color/primary"
             android:stepSize="1" />
 
         <TextView
@@ -136,7 +136,7 @@
             android:layout_gravity="center"
             android:includeFontPadding="false"
             android:text="3"
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
 
         <TextView
             style="@style/Body3"
@@ -157,10 +157,10 @@
             android:isIndicator="true"
             android:max="1"
             android:numStars="1"
-            android:progressBackgroundTint="@color/Primary_Light"
-            android:progressTint="@color/Primary_Light"
+            android:progressBackgroundTint="@color/primary"
+            android:progressTint="@color/primary"
             android:rating="2"
-            android:secondaryProgressTint="@color/Primary_Light"
+            android:secondaryProgressTint="@color/primary"
             android:stepSize="1" />
 
         <TextView
@@ -171,10 +171,10 @@
             android:layout_gravity="center"
             android:includeFontPadding="false"
             android:text="2"
-            android:textColor="@color/Primary_Light" />
+            android:textColor="@color/primary" />
 
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -197,7 +197,6 @@
         android:id="@+id/tv_review_item_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_regular"
         android:text="@string/review"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"

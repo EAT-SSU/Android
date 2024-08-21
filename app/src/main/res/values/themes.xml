@@ -31,13 +31,13 @@
 
     <!-- Toolbar의 타이틀 텍스트-->
     <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/secondary</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+        <item name="android:textColor">@color/primary</item> <!-- Toolbar의 타이틀 텍스트 색상-->
         <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Toolbar의 서브타이틀 텍스트-->
     <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/secondary</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
+        <item name="android:textColor">@color/primary</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
         <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
     </style>
 
@@ -178,7 +178,7 @@
     </style>
 
     <style name="CustomDateTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
-        <item name="android:textColor">@color/secondary
+        <item name="android:textColor">@color/primary
         </item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
