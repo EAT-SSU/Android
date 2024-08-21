@@ -1,43 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/week_cardview"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weekCardview"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
     android:layout_marginStart="2dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="48dp"
+    <TextView
+        android:id="@+id/day"
+        style="@style/Caption3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:text="월"
+        android:textColor="@color/selector_calendar_colortext" />
 
-        <TextView
-            android:id="@+id/day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="월"
-            style="@style/Button2"
-            android:includeFontPadding="false"
-            android:paddingTop="3dp"
-            android:paddingBottom="1dp"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textColor="@color/selector_calendar_colortext"/>
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="19"
-            android:paddingTop="1dp"
-            android:paddingBottom="3dp"
-            style="@style/Button2"
-            android:includeFontPadding="false"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textColor="@color/selector_calendar_colortext"/>
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/date"
+        style="@style/Body2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:text="19"
+        android:textColor="@color/selector_calendar_colortext" />
+</LinearLayout>
