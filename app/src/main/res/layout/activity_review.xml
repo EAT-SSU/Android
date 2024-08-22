@@ -9,9 +9,10 @@
             type="com.eatssu.android.ui.review.list.ReviewViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:padding="16dp"
         tools:context=".ui.review.list.ReviewActivity">
 
@@ -19,6 +20,7 @@
             android:id="@+id/sv_review"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -413,6 +415,7 @@
         </ScrollView>
 
         <LinearLayout
+            android:id="@+id/ll_btn_write_review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="30dp"
@@ -435,5 +438,5 @@
                 android:text="@string/write_review" />
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>
