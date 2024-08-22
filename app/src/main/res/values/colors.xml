@@ -2,8 +2,8 @@
 <resources>
     <color name="primary">#66D4C2</color>"
     <color name="secondary">#EEFBF8</color>"
-    <color name="star">#EEFBF8</color>
-    <color name="error">#EEFBF8</color>
+    <color name="star">#FFC700</color>
+    <color name="error">#FF3F3F</color>
 
     <color name="white">#FFFFFF</color>
     <color name="gray100">#FAFAFB</color>
