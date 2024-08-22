@@ -39,6 +39,7 @@
                 <TextView
                     android:id="@+id/tv_nickname"
                     style="@style/Body1"
+                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nickname"
@@ -48,6 +49,7 @@
                     android:id="@+id/tv_nickname_change_btn"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
+                    android:layout_gravity="center"
                     android:layout_marginStart="8dp"
                     android:background="@android:color/transparent"
                     android:backgroundTint="@color/black"

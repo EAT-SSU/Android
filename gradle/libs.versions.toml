@@ -34,6 +34,7 @@ firebase-crashlytics = "2.9.9"
 timber = "5.0.1"
 google-services = "4.4.2"
 kotlin-android  = "1.8.10"
+activity-version = "1.9.1"
 
 
 [libraries]
@@ -83,6 +84,7 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity-version" }
 
 
 [plugins]

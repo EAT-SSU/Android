@@ -89,6 +89,8 @@
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
     <string name="set_nickname_2_8">2~8글자를 입력해주세요.</string>
+    <string name="set_nickname_able">사용 가능한 닉네임입니다!</string>
+    <string name="set_nickname_unable">이미 사용 중인 닉네임입니다.</string>
 
     <string name="report_btn">EAT SSU에게 보내기</string>
     <string name="location">식당 위치</string>
@@ -126,7 +128,6 @@
     <string name="private_information">개인정보 처리방침</string>
     <string name="developer">만든 사람들</string>
 
-
     <string name="leave_inquiry">문의할 내용을 남겨주세요.</string>
     <string name="email">이메일</string>
     <string name="leave_email">답변받을 이메일 주소를 남겨주세요.</string>
@@ -138,6 +139,10 @@
     <string name="logout_description">로그아웃 되었습니다.</string>
     <string name="policy">개인정보 처리방침</string>
     <string name="terms">서비스 이용약관</string>
+
+    <string name="signout_question">정말 탈퇴하시겠습니까?</string>
+    <string name="signout_description">작성한 리뷰는 삭제되지 않으며, (알수없음)으로 표시됩니다.\n자세한 내용은 서비스 이용약관 및 개인정보처리방침을 확인해 주세요.</string>
+    <string name="signout_nickname">닉네임을 입력해주세요</string>
 
     <string name="policy_url">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8</string>
     <string name="terms_url">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80</string>
