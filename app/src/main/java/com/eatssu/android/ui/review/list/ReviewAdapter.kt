@@ -39,6 +39,8 @@ class ReviewAdapter(private val dataList: List<Review>) :
                     .load(data.imgUrl?.get(0))
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
+                binding.ivReviewPhoto.clipToOutline = true
+
 
                 if (data.imgUrl?.get(0) == "") {
                     binding.ivReviewPhoto.visibility = View.GONE

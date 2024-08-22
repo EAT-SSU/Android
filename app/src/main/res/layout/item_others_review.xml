@@ -103,32 +103,37 @@
             android:includeFontPadding="false"
             android:text="2023-09-23"
             android:textColor="@color/gray600" />
-
-
     </LinearLayout>
 
 
     <TextView
         android:id="@+id/tv_review_item_comment"
+        style="@style/Body3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/review"
-        style="@style/Body3"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_review_item_rate" />
 
 
-    <ImageView
-        android:id="@+id/iv_review_photo"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
-        app:layout_constraintStart_toStartOf="@+id/tv_review_item_comment"
-        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+    <!--  테두리 때문에 카드뷰 씀  -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_profile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment">
 
+        <ImageView
+            android:id="@+id/iv_review_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintStart_toStartOf="@+id/iv_profile"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
