@@ -84,6 +84,8 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
+flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "flexbox" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
