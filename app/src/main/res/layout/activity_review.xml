@@ -415,7 +415,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="36dp"
+            android:paddingBottom="30dp"
             android:background="@color/white"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/sv_review"
@@ -428,7 +428,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="6dp"
                 android:background="@drawable/shape_btn"
                 android:text="@string/write_review" />
         </LinearLayout>
