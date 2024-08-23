@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:layout_margin="16dp"
         tools:context=".ui.review.list.ReviewActivity">
 
         <ScrollView
@@ -33,7 +33,7 @@
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout"
+                    android:id="@+id/cl_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_shadow"
@@ -347,17 +347,19 @@
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <!--   리뷰 없을 때   -->
                 <LinearLayout
                     android:id="@+id/ll_non_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="128dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="700dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/view">
 
                     <ImageView
                         android:layout_width="48dp"
@@ -388,15 +390,24 @@
                         android:textColor="@color/gray700" />
                 </LinearLayout>
 
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="40dp"
+                    android:background="@color/gray100"
+                    app:layout_constraintTop_toBottomOf="@id/cl_review" />
+
                 <TextView
                     android:id="@+id/textView2"
                     style="@style/H1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/review"
+                    android:layout_marginTop="20dp"
                     android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
