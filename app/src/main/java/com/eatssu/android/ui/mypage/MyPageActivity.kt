@@ -82,6 +82,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //            showSignoutDialog()
         }
 
+        binding.llDeveloper.setOnClickListener {
+            startActivity<DeveloperActivity>()
+        }
+
         binding.llStoreAppVersion.setOnClickListener {
             moveToPlayStore()
         }
