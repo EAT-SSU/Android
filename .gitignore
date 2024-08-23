@@ -42,6 +42,7 @@ captures/
 # IntelliJ
 *.iml
 .idea/
+.idea/*
 .idea/compiler.xml
 .idea/misc.xml
 .idea/workspace.xml
@@ -92,3 +93,6 @@ lint/tmp/
 # lint/reports/
 
 .DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store

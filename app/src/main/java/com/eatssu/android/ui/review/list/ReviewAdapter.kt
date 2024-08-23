@@ -28,12 +28,8 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvReviewItemDate.text = writeDate
                 binding.tvMenuName.text = menu
 
-                binding.tvTotalRating.text = mainGrade.toString()
-                binding.tvTasteRating.text = tasteGrade.toString()
-                binding.tvAmountRating.text = amountGrade.toString()
+                binding.rbRate.rating = mainGrade.toFloat()
             }
-
-
 
             if (data.imgUrl?.size != 0) {
                 Log.d("ReviewAdapter", data.content + data.imgUrl?.size.toString())
@@ -41,16 +37,20 @@ class ReviewAdapter(private val dataList: List<Review>) :
                     .load(data.imgUrl?.get(0))
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
+                binding.ivReviewPhoto.visibility = View.VISIBLE
 
                 if (data.imgUrl?.get(0) == "") {
                     binding.ivReviewPhoto.visibility = View.GONE
+//                    binding.cvPhotoReview.visibility = View.GONE
 
                 }
                 if (data.imgUrl?.get(0) == null) {
                     binding.ivReviewPhoto.visibility = View.GONE
+//                    binding.cvPhotoReview.visibility = View.GONE
                 }
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE
+//                binding.cvPhotoReview.visibility = View.GONE
             }
 
 
@@ -84,11 +84,8 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 binding.tvWriterNickname.text = writerNickname
                 binding.tvReviewItemComment.text = content
                 binding.tvReviewItemDate.text = writeDate
-                binding.tvMenuName.text = menu
 
-                binding.tvTotalRating.text = mainGrade.toString()
-                binding.tvTasteRating.text = tasteGrade.toString()
-                binding.tvAmountRating.text = amountGrade.toString()
+                binding.rbRate.rating = mainGrade.toFloat()
             }
 
 
@@ -97,16 +94,19 @@ class ReviewAdapter(private val dataList: List<Review>) :
                     .load(data.imgUrl?.get(0))
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
+                binding.cvPhotoReview.visibility = View.VISIBLE
 
                 if (data.imgUrl?.get(0) == "") {
                     binding.ivReviewPhoto.visibility = View.GONE
-
+                    binding.cvPhotoReview.visibility = View.GONE
                 }
                 if (data.imgUrl?.get(0) == null) {
                     binding.ivReviewPhoto.visibility = View.GONE
+                    binding.cvPhotoReview.visibility = View.GONE
                 }
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE
+                binding.cvPhotoReview.visibility = View.GONE
             }
 
 
