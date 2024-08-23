@@ -350,7 +350,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
                         android:layout_marginBottom="20dp"
-                        android:background="@drawable/shape_btn_mini"
+                        android:background="@drawable/shape_button"
                         android:includeFontPadding="false"
                         android:text="@string/write_review"
                         app:layout_constraintBottom_toBottomOf="parent"

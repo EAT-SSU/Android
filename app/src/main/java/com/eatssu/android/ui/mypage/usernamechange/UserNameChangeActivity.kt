@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityUserNameChangeBinding
 import com.eatssu.android.util.extension.showToast
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(ActivityUserNameChangeBinding::inflate) {
+class UserNameChangeActivity :
+    BaseActivity<ActivityUserNameChangeBinding>(ActivityUserNameChangeBinding::inflate) {
 
     private val userNameChangeViewModel: UserNameChangeViewModel by viewModels()
 
@@ -21,6 +23,7 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
 
     private var force: Boolean = false
 
+    private var nicknameDuplicate: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,6 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
 
         force = intent.getBooleanExtra("force", false)
         //Todo null 일때 한정으로 화면에서 못 벗어나게 기능 추가
-
 
         binding.btnCheckNickname.isEnabled = false
         binding.btnComplete.isEnabled = false
@@ -45,7 +47,24 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
                 if (binding.etChNickname.text != null) {
                     val nicknameLength = inputNickname.length
                     binding.btnCheckNickname.isEnabled = nicknameLength in 2..8
+
+                    if (nicknameLength !in 2..8) {
+                        binding.btnComplete.isEnabled = false
+                        binding.btnCheckNickname.isEnabled = false
+                        binding.tvNickname28.setTextColor(getColor(R.color.error))
+                        binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
+                        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+                    } else {
+                        binding.tvNickname28.setTextColor(getColor(R.color.gray600))
+
+                    }
                 }
+                /*
+                2~8 안되면 중복확인, 완료 둘다 X -> 빨간 보더
+                2~8 되면 중복확인 O, 완료 X
+                2~8 되고 중복 통과 안되면 -> 발간 보더, 완료 X
+                 */
+
             }
 
             override fun afterTextChanged(p0: Editable?) {}
@@ -73,11 +92,20 @@ class UserNameChangeActivity : BaseActivity<ActivityUserNameChangeBinding>(Activ
                 userNameChangeViewModel.uiState.collectLatest {
                     if (it.isEnableName) {
                         binding.btnComplete.isEnabled = true
-                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
+                        binding.tvNickname28.text = getString(R.string.set_nickname_able)
+                        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
+                        binding.tvNickname28.setTextColor(getColor(R.color.gray600))
+
+
+                    } else {
+                        binding.btnComplete.isEnabled = false
+                        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+                        binding.tvNickname28.text = getString(R.string.set_nickname_unable)
+                        binding.tvNickname28.setTextColor(getColor(R.color.error))
+//                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
                     }
                 }
             }
-
         }
 
         binding.btnComplete.setOnClickListener {
