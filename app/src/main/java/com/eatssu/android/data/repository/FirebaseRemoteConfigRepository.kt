@@ -66,7 +66,7 @@ class FirebaseRemoteConfigRepository {
     }
 
     fun getCafeteriaInfo(): ArrayList<RestaurantInfo> {
-        return parsingJson(instance.getString("restraunt_info"))
+        return parsingJson(instance.getString("cafeteria_information"))
     }
 
     private fun parsingJson(json: String): ArrayList<RestaurantInfo> {
@@ -80,10 +80,11 @@ class FirebaseRemoteConfigRepository {
             val enumValue = enumValues<Restaurant>().find { it.name == enumString } ?: Restaurant.HAKSIK
             val name = jsonObject.optString("name", "")
             val location = jsonObject.optString("location", "")
+            val photoUrl = jsonObject.optString("image", "")
             val time = jsonObject.optString("time", "")
             val etc = jsonObject.optString("etc", "")
 
-            val restaurantInfo = RestaurantInfo(enumValue, name, location, time, etc)
+            val restaurantInfo = RestaurantInfo(enumValue, name, location, photoUrl, time, etc)
             Timber.d(restaurantInfo.toString())
             list.add(restaurantInfo)
         }

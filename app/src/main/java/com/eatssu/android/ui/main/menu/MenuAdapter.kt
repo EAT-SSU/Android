@@ -1,5 +1,6 @@
 package com.eatssu.android.ui.main.menu
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
@@ -26,18 +27,17 @@ class MenuAdapter(
             sectionModel: Section
         ) {
 
-            val modalBottomSheet = InfoBottomSheetFragment()
 
             binding.btnInfo.setOnClickListener {
-//                val intent = Intent(itemView.context, InfoActivity::class.java)
-//                intent.putExtra("restaurantType",  sectionModel.cafeteria)
-//                ContextCompat.startActivity(itemView.context, intent, null)
 
+                val modalBottomSheet =
+                    InfoBottomSheetFragment.newInstance(sectionModel.cafeteria.name)
                 modalBottomSheet.setStyle(
                     DialogFragment.STYLE_NORMAL,
                     R.style.RoundCornerBottomSheetDialogTheme
                 )
                 modalBottomSheet.show(fragmentManager, "Open Bottom Sheet")
+                Log.d("MenuAdapter", "bind: ${sectionModel.cafeteria}")
             }
 
             binding.tvCafeteria.text = sectionModel.cafeteria.displayName
