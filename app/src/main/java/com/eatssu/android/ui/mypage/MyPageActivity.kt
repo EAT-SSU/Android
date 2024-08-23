@@ -76,7 +76,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
 
         binding.tvSignout.setOnClickListener {
-            showSignoutDialog()
+            val intent = Intent(this, SignOutActivity::class.java)
+            intent.putExtra("nickname", myPageViewModel.uiState.value.nickname)
+            startActivity(intent)
+//            showSignoutDialog()
         }
 
         binding.llStoreAppVersion.setOnClickListener {

@@ -12,30 +12,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signout_question"
+        android:layout_marginStart="24dp"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/et_ch_nickname"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_nickname_2_8"
+        android:id="@+id/tv_sign_out_description"
         style="@style/Caption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/signout_description"
         android:textColor="@color/gray600"
-        app:layout_constraintStart_toStartOf="@+id/et_ch_nickname"
+        app:layout_constraintStart_toStartOf="@+id/tv_sign_out"
         app:layout_constraintTop_toBottomOf="@+id/tv_sign_out" />
 
 
     <EditText
-        android:id="@+id/et_ch_nickname"
+        android:id="@+id/et_enter_nickname"
         style="@style/Body2"
+        android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_weight="1"
         android:background="@drawable/shape_text_field_small"
         android:hint="@string/signout_nickname"
         android:inputType="text"
@@ -44,11 +45,11 @@
         android:textColorHint="@color/gray400"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_nickname_2_8" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_sign_out_description" />
 
 
     <Button
-        android:id="@+id/btn_complete"
+        android:id="@+id/btn_sign_out"
         style="@style/Button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
