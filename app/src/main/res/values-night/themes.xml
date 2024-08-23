@@ -23,6 +23,15 @@
         <item name="colorControlNormal">@color/primary</item> <!--홈/뒤로가기 버튼의 색상-->
     </style>
 
+    <!-- bottom sheet   -->
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    </style>
+
+    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/shape_corner_top</item>
+    </style>
+
     <!--Toolbar 스타일-->
     <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:gravity">center</item>

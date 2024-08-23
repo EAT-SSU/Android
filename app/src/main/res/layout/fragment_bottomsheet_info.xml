@@ -2,18 +2,17 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginStart="30dp"
-    android:layout_marginEnd="30dp"
     android:gravity="center"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    tools:context=".ui.info.InfoActivity">
+    android:padding="16dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="70dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,18 +29,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text=""
+                android:text="학생식당"
                 android:textColor="@color/black" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@color/primary" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -49,8 +44,6 @@
                 android:id="@+id/tv_location_info"
                 style="@style/H2"
                 android:layout_width="0dp"
-
-                android:lineSpacingExtra="-4dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/location"
@@ -64,16 +57,42 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:gravity="end"
-                android:text=""
-
-                android:lineSpacingExtra="-4dp"
+                android:text="학생회관 3층"
                 android:textColor="@color/black" />
 
         </LinearLayout>
 
+        <TextView
+            style="@style/H2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="24dp"
+            android:text="식당사진"
+            android:textColor="@color/black" />
+
+        <!--  테두리 때문에 카드뷰 씀  -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_photo_review"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="6dp"
+            app:cardCornerRadius="5dp">
+
+            <ImageView
+                android:id="@+id/iv_cafeteria_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_dodam"
+                app:layout_constraintStart_toStartOf="@+id/iv_profile"
+                app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+        </androidx.cardview.widget.CardView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -84,8 +103,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/time"
-
-                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
 
 
@@ -96,9 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:gravity="end"
-                android:text=""
-
-                android:lineSpacingExtra="-4dp"
+                android:text="10~1시 \n 11~1시"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -106,6 +121,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -116,10 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/etc"
-
-                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/black" />
-
 
             <TextView
                 android:id="@+id/tv_etc"
@@ -128,9 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:gravity="end"
-                android:text=""
-
-                android:lineSpacingExtra="-4dp"
+                android:text="맛도리"
                 android:textColor="@color/black" />
 
         </LinearLayout>

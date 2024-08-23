@@ -248,7 +248,7 @@ class MenuFragment : Fragment() {
         binding.rv.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = MenuAdapter(totalMenuList)
+            adapter = fragmentManager?.let { MenuAdapter(it, totalMenuList) }
 
         }
     }
