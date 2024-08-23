@@ -369,25 +369,26 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/gray700" />
+                        app:tint="@color/gray600" />
 
                     <TextView
-                        style="@style/Body1"
+                        style="@style/Subtitle2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
                         android:text="@string/none_review"
-                        android:textColor="@color/gray700" />
+                        android:textColor="@color/gray600" />
 
                     <TextView
                         style="@style/Caption2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
                         android:includeFontPadding="false"
                         android:text="@string/none_review_list"
-                        android:textColor="@color/gray700" />
+                        android:textColor="@color/gray600" />
                 </LinearLayout>
 
                 <View
