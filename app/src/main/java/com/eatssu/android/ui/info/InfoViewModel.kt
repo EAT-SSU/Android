@@ -12,22 +12,27 @@ class InfoViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigReposito
     val infoList: MutableLiveData<ArrayList<RestaurantInfo>> = MutableLiveData()
 
     val dodamLocation = MutableLiveData<String>()
+    val dodamPhotoUrl = MutableLiveData<String>()
     val dodamTime = MutableLiveData<String>()
     val dodamEtc = MutableLiveData<String>()
 
     val foodLocation = MutableLiveData<String>()
+    val foodPhotoUrl = MutableLiveData<String>()
     val foodTime = MutableLiveData<String>()
     val foodEtc = MutableLiveData<String>()
 
     val dormitoryLocation = MutableLiveData<String>()
+    val dormitoryPhotoUrl = MutableLiveData<String>()
     val dormitoryTime = MutableLiveData<String>()
     val dormitoryEtc = MutableLiveData<String>()
 
     val snackLocation = MutableLiveData<String>()
+    val snackPhotoUrl = MutableLiveData<String>()
     val snackTime = MutableLiveData<String>()
     val snackEtc = MutableLiveData<String>()
 
     val haksikLocation = MutableLiveData<String>()
+    val haksikPhotoUrl = MutableLiveData<String>()
     val haksikTime = MutableLiveData<String>()
     val haksikEtc = MutableLiveData<String>()
 
@@ -36,26 +41,31 @@ class InfoViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigReposito
         Log.d("InfoViewModel",infoList.value.toString())
 
         val dodam = infoList.value!!.find { it.enum == Restaurant.DODAM }
+        dodamPhotoUrl.value = dodam?.photoUrl ?: ""
         dodamTime.value = dodam?.time ?: ""
         dodamLocation.value = dodam?.location ?: ""
         dodamEtc.value = dodam?.etc ?: ""
 
         val food = infoList.value!!.find { it.enum == Restaurant.FOOD_COURT }
+        foodPhotoUrl.value = dodam?.photoUrl ?: ""
         foodTime.value = food?.time ?: ""
         foodLocation.value = food?.location ?: ""
         foodEtc.value = food?.etc ?: ""
 
         val dormitory = infoList.value!!.find { it.enum == Restaurant.DORMITORY }
+        dormitoryPhotoUrl.value = dodam?.photoUrl ?: ""
         dormitoryTime.value = dormitory?.time ?: ""
         dormitoryLocation.value = dormitory?.location ?: ""
         dormitoryEtc.value = dormitory?.etc ?: ""
 
         val snack = infoList.value!!.find { it.enum == Restaurant.SNACK_CORNER }
+        snackPhotoUrl.value = dodam?.photoUrl ?: ""
         snackTime.value = snack?.time ?: ""
         snackLocation.value = snack?.location ?: ""
         snackEtc.value = snack?.etc ?: ""
 
         val haksik = infoList.value!!.find { it.enum == Restaurant.HAKSIK }
+        haksikPhotoUrl.value = dodam?.photoUrl ?: ""
         haksikTime.value = haksik?.time ?: ""
         haksikLocation.value = haksik?.location ?: ""
         haksikEtc.value = haksik?.etc ?: ""

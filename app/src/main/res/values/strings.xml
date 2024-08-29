@@ -95,7 +95,7 @@
     <string name="report_btn">EAT SSU에게 보내기</string>
     <string name="location">식당 위치</string>
     <string name="etc">비고</string>
-    <string name="time">운영 시간</string>
+    <string name="time">영업 시간</string>
     <string name="fix_review">리뷰 수정하기</string>
     <string name="next_step">다음 단계로</string>
     <string name="rate_5">5점</string>
