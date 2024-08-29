@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -202,11 +203,19 @@ class ReviewActivity :
             }
         }.create().show()
 
+        observeViewModel()
+        //TODO 삭제하고 리뷰리스트 다시 불러오기
+
+    }
+
+    private fun observeViewModel() {
+        deleteViewModel.toastMessage.observe(this) { result ->
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onRestart() {
         super.onRestart()
-        Log.d("post", "onRestart")
 
         lodeData()
         bindData()
@@ -214,10 +223,8 @@ class ReviewActivity :
 
     override fun onResume() {
         super.onResume()
-        Log.d("post", "onResume")
 
         lodeData()
         bindData()
     }
-
 }
