@@ -1,18 +1,29 @@
 package com.eatssu.android.ui.review.report
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import android.text.Editable
+import android.text.TextWatcher
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.databinding.ActivityReportBinding
+import com.eatssu.android.util.extension.showToast
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
+    private val reportViewModel: ReportViewModel by viewModels()
+
     private var reviewId = -1L
-    private lateinit var viewModel: ReportViewModel
     private var reportType = ""
     private var content = ""
+
+    private var inputText: String = ""
+
 
     //Todo 코드 수정 해야함
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,11 +32,19 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
 
         reviewId = intent.getLongExtra("reviewId", -1L)
 
-        viewModel = ViewModelProvider(this).get(ReportViewModel::class.java)
+        binding.etReportComment.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            //값 변경 시 실행되는 함수
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //입력값 담기
+                inputText = binding.etReportComment.text.trim().toString()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
 
         reportInfo()
-
-        observeViewModel()
     }
 
     private fun reportInfo() {
@@ -34,13 +53,23 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             val selectedReportType = getSelectedReportType(binding.radioGp.checkedRadioButtonId)
 
             reportType = selectedReportType.toString()
-            content =
-                getString(selectedReportType.description) ?: binding.etReportComment.text.toString()
 
-            Log.d("ReportActivity", reportType)
-            Log.d("ReportActivity", reviewId.toString())
+            content = if (selectedReportType == ReportType.EXTRA) {
+                inputText
+            } else {
+                getString(selectedReportType.description)
+            }
 
-            viewModel.postData(reviewId, reportType, content)
+            reportViewModel.postData(reviewId, reportType, content)
+
+            lifecycleScope.launch {
+                reportViewModel.uiState.collectLatest {
+                    showToast(it.toastMessage)
+                    if (it.isDone) {
+                        finish()
+                    }
+                }
+            }
         }
     }
 
@@ -53,18 +82,6 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             binding.radioBt5.id -> ReportType.COPYRIGHT
             binding.radioBt6.id -> ReportType.EXTRA
             else -> ReportType.EXTRA // Default to ETC if none selected
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.toastMessage.observe(this) { result ->
-            Toast.makeText(this@ReportActivity, result, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.isDone.observe(this) { isDone ->
-            if(isDone) {
-                finish()
-            }
         }
     }
 }
