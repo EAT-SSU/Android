@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="10dp">
+    android:layout_margin="24dp">
 
     <ImageView
         android:id="@+id/iv_profile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_profile"
         app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,9 +19,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_profile"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -42,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="8dp"
             android:isIndicator="true"
             android:max="5"
             android:numStars="5"
@@ -50,19 +51,6 @@
             android:rating="2"
             android:secondaryProgressTint="@color/star"
             android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_menu_name"
-            style="@style/Caption1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:includeFontPadding="false"
-            android:text="@string/menu"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@+id/tv_writer_nickname"
-            app:layout_constraintTop_toTopOf="parent" />
 
 
         <View
@@ -80,14 +68,14 @@
             android:src="@drawable/ic_three_dot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_review_item_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
@@ -112,18 +100,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="2023-09-23"
             android:includeFontPadding="false"
-            android:textColor="@color/gray700" />
-
-
+            android:text="2023-09-23"
+            android:textColor="@color/gray600" />
     </LinearLayout>
 
 
     <TextView
         android:id="@+id/tv_review_item_comment"
+        style="@style/Body3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="@string/review"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,15 +119,25 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_review_item_rate" />
 
 
-    <ImageView
-        android:id="@+id/iv_review_photo"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
+    <!--  테두리 때문에 카드뷰 씀  -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_photo_review"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="6dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
-        app:layout_constraintStart_toStartOf="@+id/tv_review_item_comment"
-        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+        app:cardCornerRadius="5dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_profile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment">
 
+        <ImageView
+            android:id="@+id/iv_review_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintStart_toStartOf="@+id/iv_profile"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
