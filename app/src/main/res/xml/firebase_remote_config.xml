@@ -16,14 +16,16 @@
     </entry>
 
     <entry>
-        <key>restraunt_info</key>
+        <key>cafeteria_information</key>
         <value>
             {
             "enum": "DODAM",
             "name": "도담 식당",
             "location": "신양관 2층",
             "time": "11:20~14:00(점심)\n17:00~18:30(저녁)",
-            "etc": "2개 코너 운영\n대면 배식,웰빙코너\n토요일 11:30~13:30"
+            "etc": "2개 코너 운영\n대면 배식,웰빙코너\n토요일 11:30~13:30",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/04f266a1-0649-430c-af8f-29e83e87472120240823074119%E1%84%83%E1%85%A9%E1%84%83%E1%85%A1%E1%86%B7%E1%84%89%E1%85%B5%E1%86%A8%E1%84%83%E1%85%A1%E1%86%BC.jpeg"
             },
             {
             "enum": "HAKSIK",
@@ -31,28 +33,36 @@
             "location": "학생회관 3층",
             "time": "08:10~09:20(천원의 아침밥, 100개 한정,
             24.03.11~06.14)\n11:20~14:00\n(점심)\n14:00~17:00(공간 개방)",
-            "etc": "3개 코너 운영\n뚝배기찌개, 덮밥, 양식"
+            "etc": "3개 코너 운영\n뚝배기찌개, 덮밥, 양식",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/f0fbf458-5f7e-49bb-97e7-c663c4ec8cc820240823074519%E1%84%92%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A2%E1%86%BC%E1%84%89%E1%85%B5%E1%86%A8%E1%84%83%E1%85%A1%E1%86%BC.jpeg"
             },
             {
             "enum": "SNACK_CORNER",
             "name": "스낵 코너",
             "location": "학생회관 3층",
             "time": "11:00~16:00",
-            "etc": "분식류, 옛날도시락, 컵밥 등. 주말 휴무"
+            "etc": "분식류, 옛날도시락, 컵밥 등. 주말 휴무",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/66f13f3e-62ac-4747-a461-aabd26b3999e20240823074330%E1%84%89%E1%85%B3%E1%84%82%E1%85%A2%E1%86%A8%E1%84%8F%E1%85%A9%E1%84%82%E1%85%A5.jpeg"
             },
             {
             "enum": "FOOD_COURT",
             "name": "푸드 코트",
             "location": "학생회관 2층",
             "time": "휴무",
-            "etc": "준비 중"
+            "etc": "준비 중",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/2f8a9ae2-c2f9-4f20-bafe-28e0a9e414e320240823074451%E1%84%91%E1%85%AE%E1%84%83%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%90%E1%85%B3.jpeg"
             },
             {
             "enum": "DORMITORY",
             "name": "기숙사 식당",
             "location": "레지던스홀 지하 1층",
             "time": "08:00~09:30\n11:00~14:00\n17:00~18:30",
-            "etc": "주말 조식은 운영되지 않습니다."
+            "etc": "주말 조식은 운영되지 않습니다.",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/2f8a9ae2-c2f9-4f20-bafe-28e0a9e414e320240823074451%E1%84%91%E1%85%AE%E1%84%83%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%90%E1%85%B3.jpeg"
             }
         </value>
     </entry>
