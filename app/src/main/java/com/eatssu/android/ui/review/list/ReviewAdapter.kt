@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MenuRes
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -16,16 +15,15 @@ import com.bumptech.glide.Glide
 import com.eatssu.android.R
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.databinding.ItemReviewBinding
-import com.eatssu.android.ui.review.delete.DeleteViewModel
 import com.eatssu.android.ui.review.modify.ModifyReviewActivity
 import com.eatssu.android.ui.review.report.ReportActivity
 
 
-class ReviewAdapter(private val dataList: List<Review>) :
+class ReviewAdapter(
+    private val dataList: List<Review>,
+    private val callBackReviewId: (Long) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private lateinit var viewModel: DeleteViewModel
-
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -73,7 +71,6 @@ class ReviewAdapter(private val dataList: List<Review>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val binding =
             ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -124,17 +121,7 @@ class ReviewAdapter(private val dataList: List<Review>) :
                 }
 
                 R.id.delete -> {
-                    AlertDialog.Builder(holdercontext).apply {
-                        setTitle("리뷰 삭제")
-                        setMessage("작성한 리뷰를 삭제하시겠습니까?")
-                        setNegativeButton("취소") { _, _ ->
-                            viewModel.handleErrorResponse("삭제를 취소하였습니다.")
-                        }
-                        setPositiveButton("삭제") { _, _ ->
-                            viewModel.postData(data.reviewId)
-                        }
-                    }.create().show()
-
+                    callBackReviewId(data.reviewId)
                     true
                 }
 

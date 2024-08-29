@@ -1,5 +1,6 @@
 package com.eatssu.android.ui.review.list
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewBinding
+import com.eatssu.android.ui.review.delete.DeleteViewModel
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.ui.review.write.menu.ReviewWriteMenuActivity
 import com.eatssu.android.util.RetrofitImpl.retrofit
@@ -27,6 +29,7 @@ class ReviewActivity :
 //    private val viewModel: ReviewViewModel by viewModels()
 
     private lateinit var reviewViewModel: ReviewViewModel
+    private lateinit var deleteViewModel: DeleteViewModel
 
     private lateinit var reviewService: ReviewService
     private lateinit var reviewRepository: ReviewRepository
@@ -65,6 +68,9 @@ class ReviewActivity :
             )[ReviewViewModel::class.java]
 
         binding.viewModel = reviewViewModel
+
+        deleteViewModel = ViewModelProvider(this).get(DeleteViewModel::class.java)
+
     }
 
     private fun lodeData() {
@@ -143,7 +149,9 @@ class ReviewActivity :
                         Log.d("ReviewActivity", "리뷰가 있음")
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
-                        reviewAdapter = it.reviewList?.let { review -> ReviewAdapter(review) }
+                        reviewAdapter = it.reviewList?.let { review ->
+                            ReviewAdapter(review) { reviewId -> delete(reviewId) }
+                        }
 
                         binding.rvReview.apply {
                             adapter = reviewAdapter
@@ -179,6 +187,21 @@ class ReviewActivity :
                 }
             }
         }
+    }
+
+    fun delete(reviewId: Long) {
+
+        AlertDialog.Builder(this).apply {
+            setTitle("리뷰 삭제")
+            setMessage("작성한 리뷰를 삭제하시겠습니까?")
+            setNegativeButton("취소") { _, _ ->
+                deleteViewModel.handleErrorResponse("삭제를 취소하였습니다.")
+            }
+            setPositiveButton("삭제") { _, _ ->
+                deleteViewModel.postData(reviewId)
+            }
+        }.create().show()
+
     }
 
     override fun onRestart() {
