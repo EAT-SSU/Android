@@ -111,9 +111,11 @@
     <string name="review_patch_done">리뷰 수정하기</string>
     <string name="eat_good">식사는 맛있게 하셨나요?</string>
     <string name="eat_what">어떤 음식에 대한 리뷰인가요?</string>
-    <string name="report_sub">하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.</string>
+
     <string name="report_title">리뷰를 신고하는 이유를 선택해주세요.</string>
-    <string name="write_text">내용을 작성해주세요</string>
+    <string name="report_sub">하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.</string>
+    <string name="report_write_hint">리뷰 신고 사유를 작성해 주세요</string>
+
     <string name="menu">메뉴</string>
 
     <string name="eat_ssu">EAT SSU</string>
@@ -137,6 +139,7 @@
     <string name="logout_description">로그아웃 되었습니다.</string>
     <string name="policy">개인정보 처리방침</string>
     <string name="terms">서비스 이용약관</string>
+    <string name="contact">문의하기</string>
 
     <string name="signout_question">정말 탈퇴하시겠습니까?</string>
     <string name="signout_description">작성한 리뷰는 삭제되지 않으며, (알수없음)으로 표시됩니다.\n자세한 내용은 서비스 이용약관 및 개인정보처리방침을 확인해 주세요.</string>
@@ -147,4 +150,5 @@
 
     <string name="policy_url">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8</string>
     <string name="terms_url">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80</string>
+    <string name="kakao_talk_channel_url">http://pf.kakao.com/_ZlVAn</string>
 </resources>
