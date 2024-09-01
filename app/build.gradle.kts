@@ -48,6 +48,7 @@ android {
         }
 
         debug {
+//            applicationIdSuffix = ".debug"
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
 
