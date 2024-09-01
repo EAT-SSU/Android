@@ -45,7 +45,8 @@ class ReviewAdapter(
                     .load(data.imgUrl?.get(0))
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
-                binding.ivReviewPhoto.visibility = View.VISIBLE
+                binding.cvPhotoReview.visibility = View.VISIBLE
+
 
                 if (data.imgUrl?.get(0) == "") {
                     binding.ivReviewPhoto.visibility = View.GONE
