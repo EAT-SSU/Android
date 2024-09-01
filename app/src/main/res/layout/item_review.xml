@@ -86,6 +86,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_menu_name"
             android:text="닭갈비"
+            style="@style/Caption3"
             android:textColor="@color/primary" />
 
         <!--        <androidx.recyclerview.widget.RecyclerView-->
