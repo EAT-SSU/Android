@@ -33,7 +33,8 @@ class ReviewAdapter(
                 binding.tvWriterNickname.text = writerNickname
                 binding.tvReviewItemComment.text = content
                 binding.tvReviewItemDate.text = writeDate
-//                binding.tvMenuName.text = menu
+                binding.tvMenuName.text = menu
+                //TODO 리사이클러뷰로 변경
 
                 binding.rbRate.rating = mainGrade.toFloat()
             }
