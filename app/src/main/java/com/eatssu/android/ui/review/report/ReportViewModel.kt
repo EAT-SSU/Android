@@ -1,65 +1,54 @@
 package com.eatssu.android.ui.review.report
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ReportRequest
-import com.eatssu.android.data.service.ReportService
-import com.eatssu.android.util.RetrofitImpl
-import kotlinx.coroutines.Dispatchers
+import com.eatssu.android.data.usecase.PostReportUseCase
+import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeViewModel.Companion.TAG
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import javax.inject.Inject
 
-class ReportViewModel : ViewModel() {
+@HiltViewModel
+class ReportViewModel
+@Inject constructor(
+    private val postReportUseCase: PostReportUseCase,
+) : ViewModel() {
 
-    private val _isDone = MutableLiveData<Boolean>()
-    val isDone: LiveData<Boolean> get() = _isDone
+    private val _uiState: MutableStateFlow<ReportUiState> =
+        MutableStateFlow(ReportUiState())
+    val uiState: StateFlow<ReportUiState> = _uiState.asStateFlow()
 
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
 
     fun postData(reviewId: Long, reportType: String, content: String) {
-        val service = RetrofitImpl.retrofit.create(ReportService::class.java)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            service.reportReview(ReportRequest(reviewId, reportType, content))
-                .enqueue(object : Callback<BaseResponse<Void>> {
-                    override fun onResponse(
-                        call: Call<BaseResponse<Void>>,
-                        response: Response<BaseResponse<Void>>,
-                    ) {
-                        if (response.isSuccessful) {
-                            if (response.code() == 200) {
-                                handleSuccessResponse("신고가 완료되었습니다.")
-                            } else {
-                                handleErrorResponse("신고가 실패하였습니다.")
-                            }
-                        }
-                    }
-
-                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
-                    handleErrorResponse("신고가 실패하였습니다.")
-                }
-            })
-        }
-    }
-
-    fun handleSuccessResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-            _isDone.value = true
-
-        }
-    }
-
-    fun handleErrorResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-            _isDone.value = false
+        viewModelScope.launch {
+            postReportUseCase(ReportRequest(reviewId, reportType, content)).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update { it.copy(error = true, toastMessage = "신고가 실패하였습니다.") }
+                Log.e(TAG, e.toString())
+            }.collectLatest { result ->
+                _uiState.update { it.copy(isDone = true, toastMessage = "신고가 완료되었습니다.") }
+            }
         }
     }
 }
+
+data class ReportUiState(
+    var loading: Boolean = true,
+    var error: Boolean = false,
+
+    var toastMessage: String = "",
+    var isDone: Boolean = false,
+)

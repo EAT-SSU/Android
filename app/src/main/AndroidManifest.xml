@@ -56,9 +56,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.mypage.inquire.InquiryActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.review.write.ReviewWriteRateActivity"
             android:exported="true">
             <meta-data

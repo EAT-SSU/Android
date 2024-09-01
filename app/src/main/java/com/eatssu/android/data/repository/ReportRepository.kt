@@ -1,12 +1,12 @@
 package com.eatssu.android.data.repository
 
 import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.dto.request.InquiryRequest
+import com.eatssu.android.data.dto.request.ReportRequest
 import kotlinx.coroutines.flow.Flow
 
-interface InquiryRepository {
-    suspend fun postInquiry(
-        body: InquiryRequest,
+interface ReportRepository {
+    suspend fun reportReview(
+        body: ReportRequest,
     ): Flow<BaseResponse<Void>>
 
 }
