@@ -15,7 +15,6 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
-import com.eatssu.android.ui.mypage.inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
@@ -64,7 +63,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
 
         binding.llInquire.setOnClickListener {
-            startActivity<InquireActivity>()
+            val intent = Intent(this, WebViewActivity::class.java)
+            intent.putExtra("URL", getString(R.string.kakao_talk_channel_url))
+            intent.putExtra("TITLE", getString(R.string.contact))
+            startActivity(intent)
         }
 
         binding.llMyReview.setOnClickListener {
@@ -76,7 +78,14 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
 
         binding.tvSignout.setOnClickListener {
-            showSignoutDialog()
+            val intent = Intent(this, SignOutActivity::class.java)
+            intent.putExtra("nickname", myPageViewModel.uiState.value.nickname)
+            startActivity(intent)
+//            showSignoutDialog()
+        }
+
+        binding.llDeveloper.setOnClickListener {
+            startActivity<DeveloperActivity>()
         }
 
         binding.llStoreAppVersion.setOnClickListener {

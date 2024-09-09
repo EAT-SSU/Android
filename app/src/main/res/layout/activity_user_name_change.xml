@@ -4,73 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".ui.mypage.usernamechange.UserNameChangeActivity">
-
-
-    <TextView
-        android:id="@+id/tv_ch_nickname"
-        style="@style/AndroidSubtitle2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/set_nickname"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/ll_change_nickname"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
+        android:layout_margin="24dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/et_ch_nickname"
-            style="@style/AndroidBody3"
+            style="@style/Body3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/shape_edittext_small"
+            android:background="@drawable/shape_text_field_small"
             android:inputType="text"
-            android:maxLines="1"
             android:maxLength="8"
+            android:maxLines="1"
+            android:hint="@string/set_nickname"
+            android:textColorHint="@color/gray400"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname" />
 
         <Button
             android:id="@+id/btn_check_nickname"
-            style="@style/AndroidButton2"
+            style="@style/Button2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_marginStart="5dp"
-            android:background="@drawable/shape_btn"
-            android:includeFontPadding="false"
+            android:background="@drawable/shape_button_duplicate"
+            android:stateListAnimator="@null"
             android:text="중복확인"
             app:layout_constraintStart_toEndOf="@+id/et_ch_nickname" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_nickname_2_8"
-        style="@style/AndroidCaption2"
+        style="@style/Caption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/set_nickname_2_8"
-        android:textColor="@color/gray700"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/gray600"
+        app:layout_constraintStart_toStartOf="@+id/ll_change_nickname"
         app:layout_constraintTop_toBottomOf="@+id/ll_change_nickname" />
-
 
     <Button
         android:id="@+id/btn_complete"
-        style="@style/AndroidButton1"
+        style="@style/Button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="24dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/shape_btn"
-        android:includeFontPadding="false"
+        android:background="@drawable/shape_button_duplicate"
+        android:stateListAnimator="@null"
         android:text="@string/complete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

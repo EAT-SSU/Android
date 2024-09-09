@@ -4,133 +4,170 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="24dp"
     tools:context=".ui.review.report.ReportActivity">
 
-    <TextView
-        android:id="@+id/tv_report"
-        style="@style/AndroidSubtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:text="@string/report_title"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/textView"
-        style="@style/AndroidCaption2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/report_sub"
-        android:textColor="@color/gray700"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_report" />
-
-    <RadioGroup
-        android:id="@+id/radio_gp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:ignore="MissingConstraints">
-
-        <RadioButton
-            android:id="@+id/radio_bt1"
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report1"
-            android:textColor="@color/gray700" />
-
-        <RadioButton
-            android:id="@+id/radio_bt2"
-
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report2"
-            android:textColor="@color/gray700" />
-
-        <RadioButton
-            android:id="@+id/radio_bt3"
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report3"
-            android:textColor="@color/gray700" />
-
-        <RadioButton
-            android:id="@+id/radio_bt4"
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report4"
-            android:textColor="@color/gray700" />
-
-        <RadioButton
-            android:id="@+id/radio_bt5"
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report5"
-            android:textColor="@color/gray700" />
-
-        <RadioButton
-            android:id="@+id/radio_bt6"
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report6"
-            android:textColor="@color/gray700" />
-
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/et_report_comment"
-        style="@style/AndroidBody3"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shape_edittext_big"
-        android:gravity="top"
-        android:hint="@string/write_text"
-        android:includeFontPadding="false"
-        android:inputType="textMultiLine"
-        android:lineSpacingExtra="-4dp"
-        android:lines="10"
-        android:maxLength="150"
-        android:padding="10dp"
-        android:privateImeOptions="defaultInputmode=korea"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radio_gp"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/tv_maxtext"
-        style="@style/AndroidCaption2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/max_150"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/et_report_comment"
-        app:layout_constraintTop_toBottomOf="@+id/et_report_comment" />
-
-    <Button
-        android:id="@+id/btn_send_report"
-        style="@style/AndroidButton1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/shape_btn"
-        android:includeFontPadding="false"
-        android:text="@string/report_btn"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_report"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="@string/report_title"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/Caption2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/report_sub"
+                android:textColor="@color/gray600"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_report" />
+
+            <RadioGroup
+                android:id="@+id/radio_gp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:ignore="MissingConstraints">
+
+                <RadioButton
+                    android:id="@+id/radio_bt1"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_report"
+                    android:button="@null"
+                    android:text="@string/report1"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radio_bt2"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/selector_report"
+                    android:button="@null"
+                    android:text="@string/report2"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radio_bt3"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/selector_report"
+                    android:button="@null"
+                    android:text="@string/report3"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radio_bt4"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/selector_report"
+                    android:button="@null"
+                    android:text="@string/report4"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radio_bt5"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/selector_report"
+                    android:button="@null"
+                    android:text="@string/report5"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radio_bt6"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/selector_report"
+                    android:button="@null"
+                    android:text="@string/report6"
+                    android:textColor="@color/black" />
+
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/et_report_comment"
+                style="@style/Body3"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_text_field_small"
+                android:gravity="top"
+                android:hint="@string/report_write_hint"
+                android:includeFontPadding="false"
+                android:inputType="textMultiLine"
+                android:lines="10"
+                android:maxLength="150"
+                android:padding="10dp"
+                android:privateImeOptions="defaultInputmode=korea"
+                android:textColorHint="@color/gray400"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radio_gp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/tv_maxtext"
+                style="@style/Caption2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/max_150"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/et_report_comment"
+                app:layout_constraintTop_toBottomOf="@+id/et_report_comment" />
+
+            <Button
+                android:id="@+id/btn_send_report"
+                style="@style/Button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/shape_button_duplicate"
+                android:includeFontPadding="false"
+                android:stateListAnimator="@null"
+                android:text="@string/report_btn"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_report_comment" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,7 +47,12 @@ class UserNameChangeViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    _uiState.update { it.copy(toastMessage = "이미 사용 중인 닉네임 입니다.") }
+                    _uiState.update {
+                        it.copy(
+                            isEnableName = false,
+                            toastMessage = "이미 사용 중인 닉네임 입니다."
+                        )
+                    }
                 }
             }
         }

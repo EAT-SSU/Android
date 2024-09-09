@@ -1,12 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.EatSSUAndroid" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/Primary_Dark</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/gray600</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/Primary_Light</item>
+        <item name="colorSecondary">@color/primary</item>
         <item name="colorSecondaryVariant">@color/gray200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -17,129 +17,131 @@
         <item name="android:statusBarColor" >@color/white</item> <!--Status Bar의 배경색-->
         <item name="android:windowLightStatusBar" >true</item> <!--Status Bar 아이콘의 색상 true:검은 아이콘, false:흰 아이콘-->
 
-        <item name="toolbarStyle">@style/ToolbarStyle.Dark</item> <!--Toolbar 스타일-->
-        <item name="actionMenuTextColor">@color/Primary_Light</item> <!--액션 메뉴의 텍스트 색상-->
-        <item name="colorControlNormal">@color/Primary_Light</item> <!--홈/뒤로가기 버튼의 색상-->
+        <item name="colorControlHighlight">@color/gray200</item>
 
+        <item name="actionMenuTextColor">@color/primary</item> <!--액션 메뉴의 텍스트 색상-->
+        <item name="colorControlNormal">@color/primary</item> <!--홈/뒤로가기 버튼의 색상-->
     </style>
+
+    <!-- bottom sheet   -->
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    </style>
+
+    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/shape_corner_top</item>
+    </style>
+
     <!--Toolbar 스타일-->
-    <style name="ToolbarStyle.Dark" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/white</item> <!-- Toolbar의 배경색-->
-        <item name="titleTextAppearance">@style/ToolbarTitleStyle.Dark</item> <!-- Toolbar의 타이틀 텍스트-->
-        <item name="subtitleTextAppearance">@style/ToolbarSubtitleStyle.Dark</item> <!-- Toolbar의 서브타이틀 텍스트-->
+    <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <!-- Toolbar의 타이틀 텍스트-->
-    <style name="ToolbarTitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/Primary_Light</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/primary</item> <!-- Toolbar의 타이틀 텍스트 색상-->
         <item name="android:textSize">15sp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Toolbar의 서브타이틀 텍스트-->
-    <style name="ToolbarSubtitleStyle.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/Primary_Light</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
+    <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/primary</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
         <item name="android:textSize">12sp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
     </style>
 
     <!-- Eat-SSU 기본 폰트 설정-->
-
-    <style name="AndroidH1">
-        <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:lineSpacingExtra">26sp</item>
+    <style name="H1">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">20px</item>
+        <item name="android:lineHeight">26px</item>
     </style>
 
-    <style name="AndroidH2">
-        <item name="android:fontFamily">@font/noto_medium</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingExtra">24sp</item>
+    <style name="H2">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">18px</item>
+        <item name="android:lineHeight">24px</item>
     </style>
 
-    <style name="AndroidSubtitle1">
-        <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingExtra">24sp</item>
+    <style name="Subtitle1">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">16px</item>
+        <item name="android:lineHeight">24px</item>
     </style>
 
-    <style name="AndroidSubtitle2">
-        <item name="android:fontFamily">@font/noto_medium</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingExtra">24sp</item>
+    <style name="Subtitle2">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">16px</item>
+        <item name="android:lineHeight">24px</item>
     </style>
 
-    <style name="AndroidBody1">
-        <item name="android:fontFamily">@font/noto_regular</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingExtra">24sp</item>
+    <style name="Body1">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">16px</item>
+        <item name="android:lineHeight">24px</item>
     </style>
 
-    <style name="AndroidBody2">
-        <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingExtra">20sp</item>
+    <style name="Body2">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">14px</item>
+        <item name="android:lineHeight">20px</item>
     </style>
 
-    <style name="AndroidBody3">
-        <item name="android:fontFamily">@font/noto_regular</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingExtra">20sp</item>
+    <style name="Body3">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">14px</item>
+        <item name="android:lineHeight">20px</item>
     </style>
 
-    <style name="AndroidCaption1">
-        <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingExtra">18sp</item>
+    <style name="Caption1">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">12px</item>
+        <item name="android:lineHeight">18px</item>
     </style>
 
-    <style name="AndroidCaption2">
-        <item name="android:fontFamily">@font/noto_medium</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingExtra">18sp</item>
+    <style name="Caption2">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">12px</item>
+        <item name="android:lineHeight">18px</item>
     </style>
 
-    <style name="AndroidCaption3">
-        <item name="android:fontFamily">@font/noto_regular</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:lineSpacingExtra">12sp</item>
+    <style name="Caption3">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">10px</item>
+        <item name="android:lineHeight">12px</item>
+
     </style>
 
-    <style name="AndroidButton1">
-        <item name="android:fontFamily">@font/noto_bold</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingExtra">24sp</item>
+    <style name="Button1">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">18px</item>
+        <item name="android:lineHeight">24px</item>
     </style>
 
-    <style name="AndroidButton2">
-        <item name="android:fontFamily">@font/noto_medium</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingExtra">20sp</item>
+    <style name="Button2">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">14px</item>
+        <item name="android:lineHeight">20px</item>
     </style>
 
-    <style name="AndroidRate">
-        <item name="android:fontFamily">@font/noto_medium</item>
-        <item name="android:textSize">36sp</item>
+    <style name="Rate">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">40px</item>
     </style>
 
-    <!-- 각 컴포넌트 기본 폰트 설정-->
-    <style name="TextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">
-        <item name="android:fontFamily">@font/noto_regular</item>
+    <style name="Widget1">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">8px</item>
+        <item name="android:lineHeight">12px</item>
     </style>
 
-    <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
-        <item name="android:fontFamily">@font/noto_medium</item>
+    <style name="Widget2">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">10px</item>
+        <item name="android:lineHeight">18px</item>
     </style>
 
-    <style name="EditTextStyle" parent="@android:style/Widget.DeviceDefault.EditText">
-        <item name="android:fontFamily">@font/noto_light</item>
-    </style>
 
-    <style name="RadioButtonStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.RadioButton">
-        <item name="android:fontFamily">@font/noto_regular</item>
-    </style>
-
-    <style name="CheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox">
-        <item name="android:fontFamily">@font/noto_regular</item>
-    </style>
 
     <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
         <item name="android:focusedMonthDateColor">@android:color/holo_blue_light</item>
@@ -183,15 +185,16 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/darker_gray</item>
     </style>
+
     <style name="CustomDateTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
-        <item name="android:textColor">@color/Primary_Light
+        <item name="android:textColor">@color/primary
         </item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
     </style>
 
     <style name="CustomWeekDayAppearance" parent="TextAppearance.MaterialCalendarWidget.WeekDay">
-        <item name="android:textColor">@color/gray600</item>
+        <item name="android:textColor">@color/gray200</item>
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
     </style>
@@ -201,8 +204,8 @@
         <item name="android:textSize">16sp</item>
         <!--<item name="android:fontFamily">@font/applesdgothicneoregular</item>-->
     </style>
-    <style name="TextStyleSemiBold15">
-    </style>
+    <!--    <style name="TextStyleSemiBold15">-->
+    <!--    </style>-->
 
     <style name="Theme.MyDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="windowActionBar">false</item>

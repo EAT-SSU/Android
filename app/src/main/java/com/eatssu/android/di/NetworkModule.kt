@@ -2,7 +2,9 @@ package com.eatssu.android.di
 
 
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenInterceptor
 import dagger.Module
@@ -33,8 +35,6 @@ class NullOnEmptyConverterFactory : Converter.Factory() {
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    private const val BASE_URL = BuildConfig.BASE_URL
 
     @Singleton
     @Provides
@@ -74,5 +74,11 @@ object NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReportService(retrofit: Retrofit): ReportService {
+        return retrofit.create(ReportService::class.java)
     }
 }

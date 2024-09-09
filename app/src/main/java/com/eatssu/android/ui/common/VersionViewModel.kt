@@ -2,7 +2,6 @@ package com.eatssu.android.ui.common
 
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.BuildConfig.VERSION_CODE
-import com.eatssu.android.data.model.AndroidMessage
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import timber.log.Timber
 
@@ -35,7 +34,7 @@ class VersionViewModel(private val repository: FirebaseRemoteConfigRepository) :
         return repository.getVersionCode()
     }
 
-    fun checkAndroidMessage(): AndroidMessage {
-        return repository.getAndroidMessage()
-    }
+//    fun checkAndroidMessage(): AndroidMessage {
+//        return repository.getAndroidMessage()
+//    }
 }

@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/textView9"
-        style="@style/AndroidSubtitle1"
+        style="@style/Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/eat_what"
@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/textView10"
-        style="@style/AndroidBody1"
+        style="@style/Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/eat_good"
@@ -39,11 +39,11 @@
 
     <Button
         android:id="@+id/btn_next_review"
-        style="@style/AndroidButton1"
+        style="@style/Button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/shape_btn"
+        android:background="@drawable/shape_button_duplicate"
         android:includeFontPadding="false"
         android:text="@string/next_step"
         app:layout_constraintBottom_toBottomOf="parent"

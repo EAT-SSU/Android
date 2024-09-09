@@ -3,6 +3,8 @@ package com.eatssu.android.di
 
 import com.eatssu.android.data.repository.OauthRepository
 import com.eatssu.android.data.repository.OauthRepositoryImpl
+import com.eatssu.android.data.repository.ReportRepository
+import com.eatssu.android.data.repository.ReportRepositoryImpl
 import com.eatssu.android.data.repository.UserRepository
 import com.eatssu.android.data.repository.UserRepositoryImpl
 import dagger.Binds
@@ -23,5 +25,10 @@ abstract class DataModule {
     internal abstract fun bindsUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
+
+    @Binds
+    internal abstract fun bindsReportRepository(
+        reportRepositoryImpl: ReportRepositoryImpl,
+    ): ReportRepository
 
 }

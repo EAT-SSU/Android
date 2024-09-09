@@ -25,9 +25,7 @@ class MyReviewAdapter(private val dataList: List<Review>) :
             binding.tvReviewItemComment.text = dataList[position].content
             binding.tvReviewItemDate.text = dataList[position].writeDate
             binding.tvMenuName.text = dataList[position].menu
-            binding.tvTotalRating.text = dataList[position].mainGrade.toString()
-            binding.tvTasteRating.text = dataList[position].tasteGrade.toString()
-            binding.tvAmountRating.text = dataList[position].amountGrade.toString()
+            binding.rbRate.rating = dataList[position].mainGrade.toFloat()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
 
             val imageView: ImageView = binding.ivReviewPhoto
@@ -50,10 +48,17 @@ class MyReviewAdapter(private val dataList: List<Review>) :
                 val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
                 intent.putExtra("reviewId", dataList[position].reviewId)
                 intent.putExtra("menu", dataList[position].menu)
-                intent.putExtra("comment", dataList[position].content)
-                intent.putExtra("amountRating", dataList[position].amountGrade)
-                intent.putExtra("tasteRating", dataList[position].tasteGrade)
-                intent.putExtra("mainRating", dataList[position].mainGrade)
+
+                intent.putExtra("content", dataList[position].content)
+
+                intent.putExtra("mainGrade", dataList[position].mainGrade)
+                intent.putExtra("amountGrade", dataList[position].amountGrade)
+                intent.putExtra("tasteGrade", dataList[position].tasteGrade)
+
+                Log.d("ReviewFixedActivity", "전전:" + dataList[position].reviewId)
+                Log.d("ReviewFixedActivity", "전전:" + dataList[position].menu)
+                Log.d("ReviewFixedActivity", "전전:" + dataList[position].content)
+////
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }

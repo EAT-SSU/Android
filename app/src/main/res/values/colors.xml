@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="kakao_login">#FEE500</color>
-    <color name="Primary_Light">#DF5757</color>
-    <color name="Primary_Dark">#E14343</color>
-    <color name="gray100">#F9F9F9</color>
-    <color name="gray200">#DEDEDE</color>
-    <color name="gray300">#F0F0F0</color>
+    <color name="primary">#66D4C2</color>"
+    <color name="secondary">#EEFBF8</color>"
+    <color name="star">#FFC700</color>
+    <color name="error">#FF3F3F</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="gray100">#FAFAFB</color>
+    <color name="gray200">#F0F0F0</color>
+    <color name="gray300">#DEDEDE</color>
     <color name="gray400">#A8A8A8</color>
     <color name="gray500">#9D9D9D</color>
-    <color name="gray600">#555555</color>
-    <color name="gray700">#565656</color>
-    <color name="gray800">#1F1F1F</color>
+    <color name="gray600">#565656</color>
+    <color name="gray700">#1F1F1F</color>
+    <color name="black">#ff000000</color>
+
+    <color name="kakao_login">#FEE500</color>
 </resources>

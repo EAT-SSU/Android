@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:layout_margin="24dp">
 
     <ImageView
         android:id="@+id/iv_profile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_profile"
         app:layout_constraintBottom_toBottomOf="@+id/ll_review_item_rate"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,14 +18,14 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_profile"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_writer_nickname"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -35,21 +35,24 @@
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_menu_name"
-            style="@style/AndroidCaption1"
+        <RatingBar
+            android:id="@+id/rb_rate"
+            style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:includeFontPadding="false"
-            android:text="@string/menu"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@+id/tv_writer_nickname"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="8dp"
+            android:isIndicator="true"
+            android:max="5"
+            android:numStars="5"
+            android:progressBackgroundTint="@color/gray300"
+            android:progressTint="@color/star"
+            android:rating="2"
+            android:secondaryProgressTint="@color/star"
+            android:stepSize="1" />
 
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -64,153 +67,86 @@
             android:src="@drawable/ic_three_dot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_review_item_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-
-        <RatingBar
-            android:id="@+id/rb_review_item_rate"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:rating="1"
-            android:stepSize="1" />
-
         <TextView
-            android:id="@+id/tv_total_rating"
-            style="@style/AndroidBody2"
+            android:id="@+id/tv_menu_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="5"
-            android:includeFontPadding="false"
-            android:textColor="@color/Primary_Light" />
+            android:background="@drawable/shape_menu_name"
+            android:text="닭갈비"
+            style="@style/Caption3"
+            android:textColor="@color/primary" />
 
-        <TextView
-            style="@style/AndroidBody3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:text="@string/taste"
-            android:includeFontPadding="false"
-            android:textColor="@color/black" />
+        <!--        <androidx.recyclerview.widget.RecyclerView-->
+        <!--            android:id="@+id/rv_menu_name"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginEnd="10dp"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            tools:listitem="@layout/item_menu_name" />-->
 
-        <RatingBar
-            android:id="@+id/rb_taste"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:progressBackgroundTint="@color/Primary_Light"
-            android:progressTint="@color/Primary_Light"
-            android:rating="2"
-            android:secondaryProgressTint="@color/Primary_Light"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_taste_rating"
-            style="@style/AndroidBody2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="3"
-            android:textColor="@color/Primary_Light" />
-
-        <TextView
-            style="@style/AndroidBody3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:includeFontPadding="false"
-            android:text="@string/amount"
-            android:textColor="@color/black" />
-
-        <RatingBar
-            android:id="@+id/rb_amount"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:isIndicator="true"
-            android:max="1"
-            android:numStars="1"
-            android:progressBackgroundTint="@color/Primary_Light"
-            android:progressTint="@color/Primary_Light"
-            android:rating="2"
-            android:secondaryProgressTint="@color/Primary_Light"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/tv_amount_rating"
-            style="@style/AndroidBody2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:layout_gravity="center"
-            android:text="2"
-            android:textColor="@color/Primary_Light" />
-
-
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_review_item_date"
-            style="@style/AndroidCaption3"
+            style="@style/Caption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="2023-09-23"
             android:includeFontPadding="false"
-            android:textColor="@color/gray700" />
-
-
+            android:text="2023-09-23"
+            android:textColor="@color/gray600" />
     </LinearLayout>
 
 
     <TextView
         android:id="@+id/tv_review_item_comment"
+        style="@style/Body3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="@string/review"
-        android:fontFamily="@font/noto_regular"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_review_item_rate" />
 
 
-    <ImageView
-        android:id="@+id/iv_review_photo"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
+    <!--  테두리 때문에 카드뷰 씀  -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_photo_review"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="6dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/tv_review_item_comment"
-        app:layout_constraintStart_toStartOf="@+id/tv_review_item_comment"
-        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+        app:cardCornerRadius="5dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_profile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment">
 
+        <ImageView
+            android:id="@+id/iv_review_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintStart_toStartOf="@+id/iv_profile"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

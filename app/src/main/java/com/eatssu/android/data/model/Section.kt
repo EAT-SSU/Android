@@ -7,5 +7,6 @@ data class Section(
     val menuType: MenuType,
     val cafeteria: Restaurant,
     val menuList: List<Menu>?,
+    val cafeteriaLocation: String
 //    val sortOrder: Int
 )

@@ -6,328 +6,380 @@
     android:layout_height="match_parent"
     tools:context=".ui.mypage.MyPageActivity">
 
-
-    <ImageView
-        android:id="@+id/ib_profile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/ll_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_profile">
-
-        <TextView
-            android:id="@+id/tv_nickname"
-            style="@style/AndroidSubtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/nickname"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/tv_nickname_change_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_arrow_right"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_nickname"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_account_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_nickname">
-
-        <TextView
-            android:id="@+id/tv_account"
-            style="@style/AndroidBody3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/connect_account"
-            android:textColor="@color/black"
-            tools:ignore="NotSibling" />
-
-        <TextView
-            android:id="@+id/tv_account_type"
-            style="@style/AndroidBody2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:text="@string/kakao"
-            android:textColor="@color/black"
-            tools:ignore="NotSibling" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_kakao_login"
-            tools:ignore="NotSibling">
-
-        </ImageView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_my_page"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_account_layout">
-
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/ll_my_review"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
-
-
-            <TextView
-                style="@style/AndroidBody1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/my_review"
-                android:textColor="@color/black" />
-
-            <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_right" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_inquire"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
-
-
-            <TextView
-                style="@style/AndroidBody1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/inquire"
-                android:textColor="@color/black" />
-
-            <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/btn_inquire"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_right" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_service_rule"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
-
-
-            <TextView
-                style="@style/AndroidBody1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/service_rule"
-                android:textColor="@color/black" />
-
-            <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/btn_service_rule"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_right" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_private_information"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
-
-
-            <TextView
-                style="@style/AndroidBody1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/private_information"
-                android:textColor="@color/black" />
-
-            <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/btn_private_information"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_right" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_logout"
-            style="@style/AndroidBody1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingStart="16dp"
-            android:text="@string/logout"
-            android:textColor="@color/black" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_signout"
-            style="@style/AndroidBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingStart="16dp"
-            android:text="@string/signout"
-            android:textColor="@color/black" />
+            <ImageView
+                android:id="@+id/ib_profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_app_version_title"
+            <!-- 닉네임 -->
+            <LinearLayout
+                android:id="@+id/ll_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
                 android:background="?android:attr/selectableItemBackground"
-                android:fontFamily="@font/noto_regular"
-                android:text="@string/app_version"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@+id/ll_my_page"
-                app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
+                android:padding="8dp">
 
-            <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/tv_nickname"
+                    style="@style/Body1"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nickname"
+                    android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/tv_app_version"
+                <ImageButton
+                    android:id="@+id/tv_nickname_change_btn"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
+            <!-- 계정 레이아웃 -->
+            <LinearLayout
+                android:id="@+id/ll_account_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:textColor="@color/gray700"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/tv_account"
+                    style="@style/Body3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_account"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_account_type"
+                    style="@style/Body2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/kakao"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_kakao_login" />
+            </LinearLayout>
+
+            <!-- 나머지 레이아웃들 -->
+            <LinearLayout
+                android:id="@+id/ll_my_page"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <!-- 내가 쓴 리뷰 -->
+                <LinearLayout
+                    android:id="@+id/ll_my_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_review"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        android:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!-- 문의하기 -->
+                <LinearLayout
+                    android:id="@+id/ll_inquire"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inquire"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_inquire"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        android:tint="@color/gray300" />
+
+                </LinearLayout>
+
+                <!--   서비스 이용약관   -->
+                <LinearLayout
+                    android:id="@+id/ll_service_rule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/service_rule"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_service_rule"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        android:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--  개인정보 처리방침   -->
+                <LinearLayout
+                    android:id="@+id/ll_private_information"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/private_information"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_private_information"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        android:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--  로그아웃    -->
+                <TextView
+                    android:id="@+id/tv_logout"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/logout"
+                    android:textColor="@color/black" />
+
+                <!--  탈퇴하기   -->
+                <TextView
+                    android:id="@+id/tv_signout"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/signout"
+                    android:textColor="@color/black" />
+
+                <!--  만든 사람들    -->
+                <LinearLayout
+                    android:id="@+id/ll_developer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/developer"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_developer"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        android:tint="@color/gray300" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        android:id="@+id/tv_app_version_title"
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:text="@string/app_version"
+                        android:textColor="@color/black"
+                        app:layout_constraintStart_toStartOf="@+id/ll_my_page"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv_app_version"
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_store_app_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        android:id="@+id/tv_store_app_version_title"
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/store_app_version"
+                        android:textColor="@color/black"
+                        app:layout_constraintStart_toStartOf="@+id/ll_my_page"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv_store_app_version"
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_store_app_version"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground">
-
-            <TextView
-                android:id="@+id/tv_store_app_version_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:fontFamily="@font/noto_regular"
-                android:text="@string/store_app_version"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@+id/ll_my_page"
-                app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
-
-            <android.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tv_store_app_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:textColor="@color/gray700"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

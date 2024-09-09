@@ -1,11 +1,13 @@
 package com.eatssu.android.ui.main
 
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.ui.main.menu.MenuFragment
+import java.time.LocalTime
 
 class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
@@ -33,9 +35,19 @@ class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
     }
 
     // 4. 디폴트로 노출할 Fragment의 위치를 설정
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getDefaultFragmentPosition(): Int {
         // 여기에서 디폴트로 노출할 Fragment의 위치를 반환해줍니다.
         // 예를 들어, 첫 번째 Fragment를 디폴트로 설정하려면 0을 반환합니다.
-        return 1
+
+        val time = LocalTime.now()
+
+        val selectedIndex: Int = when (time.hour) {
+            in 0..9 -> 0 //아침
+            in 10..15 -> 1 //점심
+            in 16..24 -> 2 //저녁
+            else -> 1
+        }
+        return selectedIndex
     }
 }
