@@ -33,33 +33,30 @@ class ReviewAdapter(
                 binding.tvWriterNickname.text = writerNickname
                 binding.tvReviewItemComment.text = content
                 binding.tvReviewItemDate.text = writeDate
-                binding.tvMenuName.text = menu
-                //TODO 리사이클러뷰로 변경
+                binding.tvMenuName.text = menu //TODO 리사이클러뷰로 변경
 
                 binding.rbRate.rating = mainGrade.toFloat()
             }
 
-            if (data.imgUrl?.size != 0) {
+            if (!data.imgUrl.isNullOrEmpty()) {
                 Log.d("ReviewAdapter", data.content + data.imgUrl?.size.toString())
+                data.imgUrl?.toString()?.let { Log.d("ReviewAdapter", it) }
+
                 Glide.with(itemView)
-                    .load(data.imgUrl?.get(0))
+                    .load(data.imgUrl[0])
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
                 binding.cvPhotoReview.visibility = View.VISIBLE
 
 
-                if (data.imgUrl?.get(0) == "") {
+                if (data.imgUrl[0] == "") {
                     binding.ivReviewPhoto.visibility = View.GONE
-//                    binding.cvPhotoReview.visibility = View.GONE
+                    binding.cvPhotoReview.visibility = View.GONE
 
-                }
-                if (data.imgUrl?.get(0) == null) {
-                    binding.ivReviewPhoto.visibility = View.GONE
-//                    binding.cvPhotoReview.visibility = View.GONE
                 }
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE
-//                binding.cvPhotoReview.visibility = View.GONE
+                binding.cvPhotoReview.visibility = View.GONE
             }
 
             binding.btnDetail.setOnClickListener { v: View ->

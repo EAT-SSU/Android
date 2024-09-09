@@ -73,7 +73,7 @@
 
         <!--  테두리 때문에 카드뷰 씀  -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cv_photo_review"
+            android:id="@+id/cv_photo"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_marginTop="6dp"
