@@ -34,7 +34,6 @@ class ReviewAdapter(
                 binding.tvReviewItemComment.text = content
                 binding.tvReviewItemDate.text = writeDate
                 binding.tvMenuName.text = menu //TODO 리사이클러뷰로 변경
-
                 binding.rbRate.rating = mainGrade.toFloat()
             }
 
@@ -48,11 +47,9 @@ class ReviewAdapter(
                 binding.ivReviewPhoto.visibility = View.VISIBLE
                 binding.cvPhotoReview.visibility = View.VISIBLE
 
-
                 if (data.imgUrl[0] == "") {
                     binding.ivReviewPhoto.visibility = View.GONE
                     binding.cvPhotoReview.visibility = View.GONE
-
                 }
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE

@@ -44,12 +44,14 @@ android {
 
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
             var shrinkResources = false
             var minifyEnabled = false
         }
 
         debug {
 //            applicationIdSuffix = ".debug"
+
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
 
