@@ -1,9 +1,12 @@
 name: Release Tag
 
-on:
-  push:
-    branches: [ "production" ]
-
+#트리거 요소
+on: 
+  pull_request:
+    branches:
+      - production
+    types:
+      - closed
   
 jobs:
   build:
