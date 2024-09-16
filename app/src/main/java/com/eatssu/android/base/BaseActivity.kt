@@ -69,9 +69,9 @@ abstract class BaseActivity<B : ViewBinding>(
             showForceUpdateDialog()
         }
 
-        if(versionViewModel.checkAndroidMessage().dialog) {
-            showAndroidMessageDialog(versionViewModel.checkAndroidMessage().message)
-        }
+//        if(versionViewModel.checkAndroidMessage().dialog) {
+//            showAndroidMessageDialog(versionViewModel.checkAndroidMessage().message)
+//        }
 
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
     }

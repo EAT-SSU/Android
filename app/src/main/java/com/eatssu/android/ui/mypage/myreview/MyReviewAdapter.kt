@@ -24,7 +24,8 @@ class MyReviewAdapter(private val dataList: List<Review>) :
         fun bind(position: Int) {
             binding.tvReviewItemComment.text = dataList[position].content
             binding.tvReviewItemDate.text = dataList[position].writeDate
-//            binding.tvMenuName.text = dataList[position].menu
+            binding.tvMenuName.text = dataList[position].menu
+
             binding.rbRate.rating = dataList[position].mainGrade.toFloat()
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
 

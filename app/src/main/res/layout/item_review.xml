@@ -81,13 +81,22 @@
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-
-        <androidx.recyclerview.widget.RecyclerView
+        <TextView
+            android:id="@+id/tv_menu_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:orientation="horizontal"
-            tools:listitem="@layout/item_menu_name" />
+            android:background="@drawable/shape_menu_name"
+            android:text="닭갈비"
+            style="@style/Caption3"
+            android:textColor="@color/primary" />
+
+        <!--        <androidx.recyclerview.widget.RecyclerView-->
+        <!--            android:id="@+id/rv_menu_name"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginEnd="10dp"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            tools:listitem="@layout/item_menu_name" />-->
 
         <View
             android:layout_width="0dp"
@@ -135,6 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
+            android:visibility="gone"
             android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintStart_toStartOf="@+id/iv_profile"
             app:layout_constraintTop_toBottomOf="@+id/tv_review_item_comment" />

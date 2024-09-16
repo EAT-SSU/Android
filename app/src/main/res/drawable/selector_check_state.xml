@@ -4,7 +4,7 @@
     <item android:state_checked="false">
         <layer-list>
 
-            <item android:drawable="@drawable/ic_unselected_24" />
+            <item android:drawable="@drawable/ic_uncheck_24" />
 
 
         </layer-list>

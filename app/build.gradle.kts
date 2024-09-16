@@ -19,8 +19,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 23
         targetSdk = 34
-        versionCode = 17
-        versionName = "1.1.14"
+        versionCode = 19
+        versionName = "2.0.0"
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -45,9 +45,13 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
+            var shrinkResources = false
+            var minifyEnabled = false
         }
 
         debug {
+//            applicationIdSuffix = ".debug"
+
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
 

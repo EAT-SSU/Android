@@ -47,25 +47,25 @@ class InfoViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigReposito
         dodamEtc.value = dodam?.etc ?: ""
 
         val food = infoList.value!!.find { it.enum == Restaurant.FOOD_COURT }
-        foodPhotoUrl.value = dodam?.photoUrl ?: ""
+        foodPhotoUrl.value = food?.photoUrl ?: ""
         foodTime.value = food?.time ?: ""
         foodLocation.value = food?.location ?: ""
         foodEtc.value = food?.etc ?: ""
 
         val dormitory = infoList.value!!.find { it.enum == Restaurant.DORMITORY }
-        dormitoryPhotoUrl.value = dodam?.photoUrl ?: ""
+        dormitoryPhotoUrl.value = dormitory?.photoUrl ?: ""
         dormitoryTime.value = dormitory?.time ?: ""
         dormitoryLocation.value = dormitory?.location ?: ""
         dormitoryEtc.value = dormitory?.etc ?: ""
 
         val snack = infoList.value!!.find { it.enum == Restaurant.SNACK_CORNER }
-        snackPhotoUrl.value = dodam?.photoUrl ?: ""
+        snackPhotoUrl.value = snack?.photoUrl ?: ""
         snackTime.value = snack?.time ?: ""
         snackLocation.value = snack?.location ?: ""
         snackEtc.value = snack?.etc ?: ""
 
         val haksik = infoList.value!!.find { it.enum == Restaurant.HAKSIK }
-        haksikPhotoUrl.value = dodam?.photoUrl ?: ""
+        haksikPhotoUrl.value = haksik?.photoUrl ?: ""
         haksikTime.value = haksik?.time ?: ""
         haksikLocation.value = haksik?.location ?: ""
         haksikEtc.value = haksik?.etc ?: ""
