@@ -1,10 +1,15 @@
 package com.eatssu.android.ui.mypage
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.BuildConfig
@@ -15,6 +20,7 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
+import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
@@ -34,10 +40,20 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
+//    private lateinit var alarmSwitch: SwitchCompat
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
+//        alarmSwitch.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
+//            if (isChecked) {//true
+//                myPageViewModel.setNotification()
+//            } else {//false
+//                myPageViewModel.cancelNotification()
+//            }
+//        }
 
         initViewModel()
         setOnClickListener()
@@ -106,10 +122,48 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             startActivity(intent)
         }
 
+        binding.btnNotify.setOnClickListener {
+//            myPageViewModel.startNotify()
+
+            val notificationManager =
+                this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channelId = "test_notification_channel"
+
+            // NotificationChannel 설정 (API 26 이상)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    channelId,
+                    "Test Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            // MainActivity로 이동하는 인텐트 설정
+            val mainIntent = Intent(this, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                mainIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            // 알림 생성
+            val notification = NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.img_logo2)
+                .setContentTitle(getString(R.string.notification_context_title))
+                .setContentText(getString(R.string.notification_context_text))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+
+            // 알림 발송
+            notificationManager.notify(1, notification)
+        }
     }
 
     private fun setData() {
-        binding.tvAppVersion.text = BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"
+        binding.tvAppVersion.text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         binding.tvStoreAppVersion.text = versionViewModel.checkVersionCode().toString()
 
         myPageViewModel.getMyInfo()

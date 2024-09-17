@@ -3,9 +3,11 @@ package com.eatssu.android.ui.mypage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.data.usecase.GetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
 import com.eatssu.android.data.usecase.LogoutUseCase
 import com.eatssu.android.data.usecase.SetAccessTokenUseCase
+import com.eatssu.android.data.usecase.SetNotificationStatusUseCase
 import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.data.usecase.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +29,9 @@ class MyPageViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
+    private val setNotificationStatusUseCase: SetNotificationStatusUseCase,
+    private val getDailyNotificationStatusUseCase: GetDailyNotificationStatusUseCase
+
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MyPageState> = MutableStateFlow(MyPageState())
@@ -35,6 +40,13 @@ class MyPageViewModel @Inject constructor(
     init {
         getMyInfo()
     }
+
+
+    fun startNotify() {
+
+
+    }
+
 
     fun getMyInfo() {
         viewModelScope.launch {
@@ -110,6 +122,18 @@ class MyPageViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun setNotification() {
+        viewModelScope.launch {
+            setNotificationStatusUseCase(true)
+        }
+    }
+
+    fun cancelNotification() {
+        viewModelScope.launch {
+            setNotificationStatusUseCase(false)
         }
     }
 
