@@ -1,7 +1,9 @@
 package com.eatssu.android.ui.main.calendar
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
@@ -32,18 +34,36 @@ internal class CalendarAdapter(
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val date = days[position]
         holder.dayOfMonth.text = date.dayOfMonth.toString()
         holder.dayText.text =
             date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN).toString()
 
-        if (date == CalendarUtils.selectedDate) {
-            //날짜
+        /**
+         * iOS의 FSCalendar를 Custom으로 만들었습니다.
+         * 1. 선택한 날짜는 primary color로 select합니다.
+         * 2. 오늘 날짜 != 선택한 날짜 일 경우에는, 오늘 날짜의 text 색상을 primary color 표기하여, 오늘 날짜를 강조합니다.
+         */
+
+        if (date == CalendarUtils.selectedDate) { //셀렉트 된 날짜
             holder.dayOfMonth.setBackgroundResource(R.drawable.selector_background_blue)
-            holder.dayOfMonth.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.selector_calendar_colortext))
-        }
-        else {
+            holder.dayOfMonth.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.selector_calendar_colortext
+                )
+            )
+        } else if (date == LocalDate.now() && date != CalendarUtils.selectedDate) {
+            //오늘 날짜가 선택 되지 않았을 때, 오늘 날 text 색 지정
+            holder.dayOfMonth.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.primary
+                )
+            )
+        } else { //다른 날짜들
             holder.parentView.setBackgroundResource(R.drawable.ic_selector_background_white)
         }
     }
