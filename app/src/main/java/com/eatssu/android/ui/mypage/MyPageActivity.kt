@@ -1,15 +1,18 @@
 package com.eatssu.android.ui.mypage
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import NotificationReceiver
+import NotificationReceiver.Companion.ALARM_TIMER
+import NotificationReceiver.Companion.NOTIFICATION_ID
+import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.BuildConfig
@@ -20,7 +23,6 @@ import com.eatssu.android.databinding.ActivityMyPageBinding
 import com.eatssu.android.ui.common.VersionViewModel
 import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
-import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
@@ -30,6 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
+import java.util.Calendar
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
@@ -40,20 +44,12 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
-//    private lateinit var alarmSwitch: SwitchCompat
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
-//        alarmSwitch.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
-//            if (isChecked) {//true
-//                myPageViewModel.setNotification()
-//            } else {//false
-//                myPageViewModel.cancelNotification()
-//            }
-//        }
 
         initViewModel()
         setOnClickListener()
@@ -72,6 +68,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         setData()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setOnClickListener() {
 
         binding.llNickname.setOnClickListener {
@@ -122,45 +119,45 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             startActivity(intent)
         }
 
-        binding.btnNotify.setOnClickListener {
-//            myPageViewModel.startNotify()
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
-            val notificationManager =
-                this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channelId = "test_notification_channel"
+        val intent = Intent(this, NotificationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, NOTIFICATION_ID, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-            // NotificationChannel 설정 (API 26 이상)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    channelId,
-                    "Test Notifications",
-                    NotificationManager.IMPORTANCE_HIGH
+        binding.alarmSwitch.setOnCheckedChangeListener { _, check ->
+            val toastMessage = if (check) {
+                val repeatInterval: Long = ALARM_TIMER * 1000L
+                val calendar = Calendar.getInstance().apply {
+                    timeInMillis = System.currentTimeMillis()
+                    set(Calendar.HOUR_OF_DAY, 17)
+                    set(Calendar.MINUTE, 0)
+                }
+                Timber.i("현재시간은 ${LocalDateTime.now()},${calendar.time} 에 알림을 울림")
+
+//                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, repeatInterval, pendingIntent)
+
+//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
                 )
-                notificationManager.createNotificationChannel(channel)
+
+                "알림이 발생합니다."
+            } else {
+                alarmManager.cancel(pendingIntent)
+                "알림 예약을 취소하였습니다."
             }
 
-            // MainActivity로 이동하는 인텐트 설정
-            val mainIntent = Intent(this, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                mainIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            // 알림 생성
-            val notification = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.img_logo2)
-                .setContentTitle(getString(R.string.notification_context_title))
-                .setContentText(getString(R.string.notification_context_text))
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
-
-            // 알림 발송
-            notificationManager.notify(1, notification)
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
         }
+
     }
+
 
     private fun setData() {
         binding.tvAppVersion.text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
@@ -187,7 +184,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             VersionViewModelFactory(firebaseRemoteConfigRepository)
         )[VersionViewModel::class.java]
     }
-
 
 
     private fun showLogoutDialog() {

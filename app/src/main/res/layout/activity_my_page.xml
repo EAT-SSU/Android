@@ -91,6 +91,13 @@
                     android:src="@drawable/ic_kakao_login" />
             </LinearLayout>
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/alarm_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="오전 11시에 메뉴 알람 받기" />
+
             <!-- 나머지 레이아웃들 -->
             <LinearLayout
                 android:id="@+id/ll_my_page"
