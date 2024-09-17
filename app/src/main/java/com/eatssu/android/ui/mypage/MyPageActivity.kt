@@ -187,8 +187,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         val currentTimeMillis = System.currentTimeMillis()
         val calendar = Calendar.getInstance().apply {
             timeInMillis = currentTimeMillis
-            set(Calendar.HOUR_OF_DAY, 17)
-            set(Calendar.MINUTE, 35)
+            set(Calendar.HOUR_OF_DAY, 18)
+            set(Calendar.MINUTE, 20)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
