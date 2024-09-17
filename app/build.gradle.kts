@@ -15,6 +15,8 @@ android {
     namespace = "com.eatssu.android"
     compileSdk = 34
 
+    // S8: API 28
+    // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23

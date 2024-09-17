@@ -1,22 +1,25 @@
 package com.eatssu.android.ui.mypage
 
 
+import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.eatssu.android.BuildConfig
-import com.eatssu.android.NotificationWorker
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
@@ -27,6 +30,7 @@ import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.util.NotificationReceiver
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +38,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
@@ -51,10 +54,25 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
-
         initViewModel()
         setOnClickListener()
         setData()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_NOTIFICATION_PERMISSION
+                )
+            } else {
+                requestNotificationPermission(this)
+            }
+        }
     }
 
     override fun onResume() {
@@ -119,86 +137,84 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             intent.putExtra("TITLE", getString(R.string.policy))
             startActivity(intent)
         }
-//
-//        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-//
-//        val intent = Intent(this, NotificationReceiver::class.java)
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            this, NOTIFICATION_ID, intent,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
 
-        binding.alarmSwitch.setOnCheckedChangeListener { _, check ->
-            if (check) {
-//            val toastMessage = if (check) {
-//                val calendar = Calendar.getInstance().apply {
-//                    timeInMillis = System.currentTimeMillis()
-//                    set(Calendar.HOUR_OF_DAY, 17)
-//                    set(Calendar.MINUTE, 0)
-//                }
-//                Timber.i("현재시간은 ${LocalDateTime.now()},${calendar.time} 에 알림을 울림")
-//
-//                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, repeatInterval, pendingIntent)
-//
-////                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
-//
-//                alarmManager.setExactAndAllowWhileIdle(
-//                    AlarmManager.RTC_WAKEUP,
-//                    calendar.timeInMillis,
-//                    pendingIntent
-//                )
-//
-//                "알림이 발생합니다."
-//            } else {
-//                alarmManager.cancel(pendingIntent)
-//                "알림 예약을 취소하였습니다."
-//            }
-//
-//            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
-//        }
-
-
-                scheduleNotification()
+        binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (checkNotificationPermission(this)) {
+                    scheduleAlarm()
+                } else {
+                    // 알림 권한이 없을 때 사용자에게 설정 화면으로 이동하라고 알림
+                    showNotificationPermissionDialog()
+                }
+            } else {
+                cancelAlarm()
             }
         }
-
     }
 
-    private fun scheduleNotification() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-            .setRequiresBatteryNotLow(false)
-            .build()
+    private fun showNotificationPermissionDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("알림 권한 필요")
+            .setMessage("알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?")
+            .setPositiveButton("설정으로 이동") { _, _ ->
+                openAppNotificationSettings(this)
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
 
-        val notificationWorkRequest =
-            PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
-                .setConstraints(constraints)
-                .setInitialDelay(calculateInitialDelay(), TimeUnit.MILLISECONDS)
-                .build()
+    private fun checkNotificationPermission(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Android 13 이전 버전에서는 알림 권한이 필요하지 않음
+        }
+    }
 
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
-            "DailyNotification",
-            ExistingPeriodicWorkPolicy.REPLACE,
-            notificationWorkRequest
+    private fun scheduleAlarm() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, NotificationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-    }
 
-    private fun calculateInitialDelay(): Long {
-        val currentTimeMillis = System.currentTimeMillis()
         val calendar = Calendar.getInstance().apply {
-            timeInMillis = currentTimeMillis
-            set(Calendar.HOUR_OF_DAY, 18)
-            set(Calendar.MINUTE, 20)
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 11)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
 
-        if (calendar.timeInMillis <= currentTimeMillis) {
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
-        return calendar.timeInMillis - currentTimeMillis
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
     }
+
+    private fun cancelAlarm() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, NotificationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.cancel(pendingIntent)
+    }
+
 
     private fun setData() {
         binding.tvAppVersion.text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
@@ -303,5 +319,48 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 )
             )
         }
+    }
+
+    // 알림 권한 요청 함수
+    private fun requestNotificationPermission(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_NOTIFICATION_PERMISSION
+            )
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // 권한이 허용되었을 때 알림 설정
+                scheduleAlarm()
+            } else {
+                // 권한이 거부되었을 때 처리
+                Toast.makeText(this, "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+                openAppNotificationSettings(this)
+            }
+        }
+    }
+
+
+    private fun openAppNotificationSettings(context: Context) {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        }
+        context.startActivity(intent)
+    }
+
+
+    companion object {
+        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
     }
 }
