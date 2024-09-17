@@ -145,9 +145,11 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
 
-
     // Timber for logging
     implementation(libs.timber)
+
+    //work manager
+    implementation(libs.work)
 }
 
 kapt {

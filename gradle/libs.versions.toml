@@ -35,7 +35,7 @@ timber = "5.0.1"
 google-services = "4.4.2"
 kotlin-android  = "1.8.10"
 activity-version = "1.9.1"
-
+work = "2.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -76,7 +76,6 @@ kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 
-
 play_services_base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx", version.ref = "firebase-config" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
@@ -85,6 +84,8 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity-version" }
+work = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
+
 
 
 [plugins]

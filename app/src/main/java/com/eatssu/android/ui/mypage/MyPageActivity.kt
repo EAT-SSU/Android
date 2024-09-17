@@ -1,21 +1,22 @@
 package com.eatssu.android.ui.mypage
 
-import NotificationReceiver
-import NotificationReceiver.Companion.ALARM_TIMER
-import NotificationReceiver.Companion.NOTIFICATION_ID
-import android.app.AlarmManager
-import android.app.PendingIntent
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.NotificationWorker
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
@@ -32,8 +33,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDateTime
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
@@ -118,46 +119,86 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             intent.putExtra("TITLE", getString(R.string.policy))
             startActivity(intent)
         }
-
-        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
-        val intent = Intent(this, NotificationReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            this, NOTIFICATION_ID, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+//
+//        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+//
+//        val intent = Intent(this, NotificationReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(
+//            this, NOTIFICATION_ID, intent,
+//            PendingIntent.FLAG_UPDATE_CURRENT
+//        )
 
         binding.alarmSwitch.setOnCheckedChangeListener { _, check ->
-            val toastMessage = if (check) {
-                val repeatInterval: Long = ALARM_TIMER * 1000L
-                val calendar = Calendar.getInstance().apply {
-                    timeInMillis = System.currentTimeMillis()
-                    set(Calendar.HOUR_OF_DAY, 17)
-                    set(Calendar.MINUTE, 0)
-                }
-                Timber.i("현재시간은 ${LocalDateTime.now()},${calendar.time} 에 알림을 울림")
-
+            if (check) {
+//            val toastMessage = if (check) {
+//                val calendar = Calendar.getInstance().apply {
+//                    timeInMillis = System.currentTimeMillis()
+//                    set(Calendar.HOUR_OF_DAY, 17)
+//                    set(Calendar.MINUTE, 0)
+//                }
+//                Timber.i("현재시간은 ${LocalDateTime.now()},${calendar.time} 에 알림을 울림")
+//
 //                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, repeatInterval, pendingIntent)
+//
+////                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+//
+//                alarmManager.setExactAndAllowWhileIdle(
+//                    AlarmManager.RTC_WAKEUP,
+//                    calendar.timeInMillis,
+//                    pendingIntent
+//                )
+//
+//                "알림이 발생합니다."
+//            } else {
+//                alarmManager.cancel(pendingIntent)
+//                "알림 예약을 취소하였습니다."
+//            }
+//
+//            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+//        }
 
-//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
 
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    pendingIntent
-                )
-
-                "알림이 발생합니다."
-            } else {
-                alarmManager.cancel(pendingIntent)
-                "알림 예약을 취소하였습니다."
+                scheduleNotification()
             }
-
-            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
         }
 
     }
 
+    private fun scheduleNotification() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .setRequiresBatteryNotLow(false)
+            .build()
+
+        val notificationWorkRequest =
+            PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .setInitialDelay(calculateInitialDelay(), TimeUnit.MILLISECONDS)
+                .build()
+
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "DailyNotification",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            notificationWorkRequest
+        )
+    }
+
+    private fun calculateInitialDelay(): Long {
+        val currentTimeMillis = System.currentTimeMillis()
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = currentTimeMillis
+            set(Calendar.HOUR_OF_DAY, 17)
+            set(Calendar.MINUTE, 35)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        if (calendar.timeInMillis <= currentTimeMillis) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        return calendar.timeInMillis - currentTimeMillis
+    }
 
     private fun setData() {
         binding.tvAppVersion.text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
