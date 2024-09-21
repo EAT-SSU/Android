@@ -96,7 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="오전 11시에 메뉴 알람 받기" />
+                style="@style/category_toggle"
+                android:text="푸시 알림 설정\n매일 오전 11시에 알림을 보내드려요" />
 
             <!-- 나머지 레이아웃들 -->
             <LinearLayout
@@ -247,33 +248,7 @@
                         android:tint="@color/gray300" />
                 </LinearLayout>
 
-                <!--  로그아웃    -->
-                <TextView
-                    android:id="@+id/tv_logout"
-                    style="@style/Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:paddingStart="24dp"
-                    android:paddingTop="18dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="18dp"
-                    android:text="@string/logout"
-                    android:textColor="@color/black" />
 
-                <!--  탈퇴하기   -->
-                <TextView
-                    android:id="@+id/tv_signout"
-                    style="@style/Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:paddingStart="24dp"
-                    android:paddingTop="18dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="18dp"
-                    android:text="@string/signout"
-                    android:textColor="@color/black" />
 
                 <!--  만든 사람들    -->
                 <LinearLayout
@@ -311,6 +286,19 @@
                         android:tint="@color/gray300" />
                 </LinearLayout>
 
+                <!--  로그아웃    -->
+                <TextView
+                    android:id="@+id/tv_logout"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/logout"
+                    android:textColor="@color/black" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -384,6 +372,19 @@
                         app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
                 </LinearLayout>
 
+                <!--  탈퇴하기   -->
+                <TextView
+                    android:id="@+id/tv_signout"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/signout"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
         </LinearLayout>

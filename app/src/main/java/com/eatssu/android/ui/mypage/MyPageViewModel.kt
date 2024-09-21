@@ -3,11 +3,12 @@ package com.eatssu.android.ui.mypage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.data.usecase.GetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
 import com.eatssu.android.data.usecase.LogoutUseCase
 import com.eatssu.android.data.usecase.SetAccessTokenUseCase
-import com.eatssu.android.data.usecase.SetNotificationStatusUseCase
+import com.eatssu.android.data.usecase.SetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.data.usecase.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,9 +30,9 @@ class MyPageViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
-    private val setNotificationStatusUseCase: SetNotificationStatusUseCase,
-    private val getDailyNotificationStatusUseCase: GetDailyNotificationStatusUseCase
-
+    private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
+    private val getDailyNotificationStatusUseCase: GetDailyNotificationStatusUseCase,
+    private val preferencesRepository: PreferencesRepository // Assuming you're using DataStore here
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MyPageState> = MutableStateFlow(MyPageState())
@@ -39,16 +40,19 @@ class MyPageViewModel @Inject constructor(
 
     init {
         getMyInfo()
+        getNotificationStatus()
+    }
+
+    private fun getNotificationStatus() {
+        viewModelScope.launch {
+            preferencesRepository.dailyNotificationStatus.collect { isAlarmOn ->
+                _uiState.value = _uiState.value.copy(isAlarmOn = isAlarmOn)
+            }
+        }
     }
 
 
-    fun startNotify() {
-
-
-    }
-
-
-    fun getMyInfo() {
+    private fun getMyInfo() {
         viewModelScope.launch {
             getUserInfoUseCase().onStart {
                 _uiState.update { it.copy(loading = true) }
@@ -99,7 +103,6 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-
     fun signOut() {
         viewModelScope.launch {
             signOutUseCase().onStart {
@@ -125,15 +128,9 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun setNotification() {
+    fun setNotification(isAlarmOn: Boolean) {
         viewModelScope.launch {
-            setNotificationStatusUseCase(true)
-        }
-    }
-
-    fun cancelNotification() {
-        viewModelScope.launch {
-            setNotificationStatusUseCase(false)
+            setNotificationStatusUseCase(isAlarmOn)
         }
     }
 
@@ -151,6 +148,7 @@ data class MyPageState(
 
     var nickname: String = "",
     var platform: String = "",
+    var isAlarmOn: Boolean = false,
 
     var isNicknameNull: Boolean = false,
     var isLoginOuted: Boolean = false,

@@ -17,8 +17,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
@@ -36,7 +38,6 @@ import com.eatssu.android.util.extension.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -56,7 +57,24 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         initViewModel()
         setOnClickListener()
-        setData()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myPageViewModel.uiState.collect {
+                    // Update UI elements
+                    binding.tvAppVersion.text =
+                        "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                    binding.tvStoreAppVersion.text = versionViewModel.checkVersionCode().toString()
+
+
+                    if (it.nickname.isNotEmpty()) {
+                        binding.tvNickname.text = it.nickname
+                    }
+
+                    binding.alarmSwitch.isChecked = myPageViewModel.uiState.value.isAlarmOn
+                }
+            }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
@@ -73,18 +91,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 requestNotificationPermission(this)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        setData() //Todo 최선일까?
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-
-        setData()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -142,16 +148,21 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             if (isChecked) {
                 if (checkNotificationPermission(this)) {
                     scheduleAlarm()
+                    myPageViewModel.setNotification(isChecked)
+//                    showToast("알림이 설정되었습니다.")
                 } else {
                     // 알림 권한이 없을 때 사용자에게 설정 화면으로 이동하라고 알림
                     showNotificationPermissionDialog()
                 }
             } else {
                 cancelAlarm()
+                myPageViewModel.setNotification(isChecked)
+                showToast("알림이 해제되었습니다.")
             }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotificationPermissionDialog() {
         AlertDialog.Builder(this)
             .setTitle("알림 권한 필요")
@@ -215,22 +226,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         alarmManager.cancel(pendingIntent)
     }
 
-
-    private fun setData() {
-        binding.tvAppVersion.text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-        binding.tvStoreAppVersion.text = versionViewModel.checkVersionCode().toString()
-
-        myPageViewModel.getMyInfo()
-
-        lifecycleScope.launch {
-            Timber.d("관찰시작")
-            myPageViewModel.uiState.collectLatest {
-                if (it.nickname.isNotEmpty()) {
-                    binding.tvNickname.text = it.nickname
-                }
-            }
-        }
-    }
 
     private fun initViewModel() { //Todo 리팩토링하기
 
@@ -333,6 +328,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -352,6 +348,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun openAppNotificationSettings(context: Context) {
         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
             putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)

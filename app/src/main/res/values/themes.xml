@@ -210,4 +210,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- 토글   -->
+    <style name="category_toggle">
+        <item name="thumbTint">@color/white</item>
+        <item name="track">@drawable/selector_toggle</item>
+        <item name="android:thumb">@drawable/shape_toggle</item>
+        <item name="android:enabled">true</item>
+    </style>
+
 </resources>
