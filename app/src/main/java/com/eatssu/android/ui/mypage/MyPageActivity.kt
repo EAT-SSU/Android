@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -57,6 +58,9 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         initViewModel()
         setOnClickListener()
+
+        binding.tvSignout.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -115,7 +119,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             showLogoutDialog()
         }
 
-        binding.tvSignout.setOnClickListener {
+        binding.llSignout.setOnClickListener {
             val intent = Intent(this, SignOutActivity::class.java)
             intent.putExtra("nickname", myPageViewModel.uiState.value.nickname)
             startActivity(intent)
