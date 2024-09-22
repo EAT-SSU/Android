@@ -19,16 +19,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.databinding.ActivityMyPageBinding
-import com.eatssu.android.ui.common.VersionViewModel
-import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
@@ -46,21 +42,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     private val myPageViewModel: MyPageViewModel by viewModels()
 
-    private lateinit var versionViewModel: VersionViewModel
-
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
-        initViewModel()
         setOnClickListener()
-
         binding.tvSignout.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -68,7 +56,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     // Update UI elements
                     binding.tvAppVersion.text =
                         "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                    binding.tvStoreAppVersion.text = versionViewModel.checkVersionCode().toString()
 
 
                     if (it.nickname.isNotEmpty()) {
@@ -123,14 +110,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             val intent = Intent(this, SignOutActivity::class.java)
             intent.putExtra("nickname", myPageViewModel.uiState.value.nickname)
             startActivity(intent)
-//            showSignoutDialog()
         }
 
         binding.llDeveloper.setOnClickListener {
             startActivity<DeveloperActivity>()
         }
 
-        binding.llStoreAppVersion.setOnClickListener {
+        binding.llAppVersion.setOnClickListener {
             moveToPlayStore()
         }
 
@@ -229,18 +215,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         )
         alarmManager.cancel(pendingIntent)
     }
-
-
-    private fun initViewModel() { //Todo 리팩토링하기
-
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-
-        versionViewModel = ViewModelProvider(
-            this,
-            VersionViewModelFactory(firebaseRemoteConfigRepository)
-        )[VersionViewModel::class.java]
-    }
-
 
     private fun showLogoutDialog() {
 
