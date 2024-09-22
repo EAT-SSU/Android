@@ -20,7 +20,6 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_profile" />
@@ -128,10 +127,7 @@
                     android:id="@+id/alarm_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:thumb="@drawable/shape_toggle"
-                    app:switchMinWidth="0dp"
-                    app:thumbTextPadding="24dp"
                     app:track="@drawable/selector_toggle" />
             </LinearLayout>
 
@@ -360,7 +356,6 @@
                         style="@style/Caption2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
                         android:textColor="@color/gray400"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
                         app:layout_constraintEnd_toEndOf="parent"
