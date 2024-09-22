@@ -209,7 +209,6 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray300" />
-
                 </LinearLayout>
 
                 <!--   서비스 이용약관   -->
@@ -259,7 +258,6 @@
                     android:paddingEnd="24dp"
                     android:paddingBottom="18dp">
 
-
                     <TextView
                         style="@style/Body1"
                         android:layout_width="wrap_content"
@@ -283,7 +281,6 @@
                         app:tint="@color/gray300" />
                 </LinearLayout>
 
-
                 <!--  만든 사람들    -->
                 <LinearLayout
                     android:id="@+id/ll_developer"
@@ -295,7 +292,6 @@
                     android:paddingTop="18dp"
                     android:paddingEnd="24dp"
                     android:paddingBottom="18dp">
-
 
                     <TextView
                         style="@style/Body1"
@@ -319,6 +315,7 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray300" />
                 </LinearLayout>
+
                 <!--  탈퇴하기   -->
                 <TextView
                     android:id="@+id/tv_logout"
@@ -337,9 +334,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="24dp"
-                    android:paddingTop="18dp"
+                    android:paddingTop="6dp"
                     android:paddingEnd="24dp"
-                    android:paddingBottom="18dp">
+                    android:paddingBottom="6dp">
 
                     <TextView
                         android:id="@+id/tv_app_version_title"
@@ -369,43 +366,6 @@
                         app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_store_app_version"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:paddingStart="24dp"
-                    android:paddingTop="18dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="18dp">
-
-                    <TextView
-                        android:id="@+id/tv_store_app_version_title"
-                        style="@style/Caption2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/store_app_version"
-                        android:textColor="@color/gray400"
-                        app:layout_constraintStart_toStartOf="@+id/ll_my_page"
-                        app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
-
-                    <android.widget.Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/tv_store_app_version"
-                        style="@style/Caption2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:textColor="@color/gray400"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
-                </LinearLayout>
-
                 <!--  탈퇴하기   -->
                 <LinearLayout
                     android:id="@+id/ll_signout"
@@ -415,28 +375,26 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingStart="24dp"
-                    android:paddingTop="18dp"
+                    android:paddingTop="10dp"
                     android:paddingEnd="24dp"
-                    android:paddingBottom="18dp">
-
+                    android:paddingBottom="10dp">
 
                     <TextView
-                    android:id="@+id/tv_signout"
+                        android:id="@+id/tv_signout"
                         style="@style/Caption2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
                         android:gravity="end"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:text="@string/signout"
+                        android:text="@string/signout"
                         android:textColor="@color/gray400" />
 
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:src="@drawable/ic_unsubscribe_16" />
+                </LinearLayout>
             </LinearLayout>
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
