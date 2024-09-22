@@ -149,9 +149,6 @@ dependencies {
 
     // Timber for logging
     implementation(libs.timber)
-
-    //work manager
-    implementation(libs.work)
 }
 
 kapt {
