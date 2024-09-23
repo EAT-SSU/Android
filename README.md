@@ -8,17 +8,22 @@
 - PlayStore : [EAT-SSU](https://play.google.com/store/apps/details?id=com.eassu.android)
 
 ## 🛠 Tech Stack
-- `Kotlin`
-- `MVVM` + `Clean Architecture`
-- `Coroutine`
-- `Flow`
-- `UiState`
-- `Hilt`
+- Kotlin
+- MVVM
+- Clean Architecture
+- Coroutine + Flow
+- UiState
+- Hilt
+- xml + viewBinding (+dataBinding)
+- Retrofit2 + Okhttp3
+- Gilde
+- KaKao OAuth SDK
+- Firebase RemoteConfig, Crashlytics 
 
 ## 🤔 Not Yet..
-- `Modularization`
-- `Jetpack Compose`
-- `DataSource` + `Repository Pattern`
+- Modularization
+- Jetpack Compose
+- DataSource + Repository Pattern
 
 ## 📄 Package
 ```
@@ -44,7 +49,7 @@ com.eatssu.android
 
 
 ## 🤖 Android
-- Android Studio : Android Studio Hedgehog | 2023.1.1 Patch 2
+- Android Studio : Android Studio Koala | 2024.1.1
 - JDK : 17
 - minSDK : 23
 - targetSDK : 34
