@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.usecase.AlarmUseCase
 import com.eatssu.android.data.usecase.GetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
 import com.eatssu.android.data.usecase.LogoutUseCase
@@ -33,6 +34,7 @@ class MyPageViewModel @Inject constructor(
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val getDailyNotificationStatusUseCase: GetDailyNotificationStatusUseCase,
+    private val alarmUseCase: AlarmUseCase,
     private val preferencesRepository: PreferencesRepository // Assuming you're using DataStore here
 ) : ViewModel() {
 
@@ -136,11 +138,21 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun setNotification(isAlarmOn: Boolean) {
+    fun setNotificationOn() {
         viewModelScope.launch {
-            setNotificationStatusUseCase(isAlarmOn)
+            setNotificationStatusUseCase(true)
+            alarmUseCase.scheduleAlarm()
         }
     }
+
+    fun setNotificationOff() {
+        viewModelScope.launch {
+            setNotificationStatusUseCase(false)
+            alarmUseCase.cancelAlarm()
+        }
+    }
+
+
 
     companion object {
         val TAG = "MyPageViewModel"

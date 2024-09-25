@@ -1,5 +1,6 @@
 package com.eatssu.android.di
 
+import android.app.Application
 import android.content.Context
 import com.eatssu.android.data.repository.PreferencesRepository
 import dagger.Module
@@ -12,6 +13,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
 
     @Provides
     @Singleton
