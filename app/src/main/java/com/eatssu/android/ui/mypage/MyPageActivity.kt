@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.eatssu.android.BuildConfig
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityMyPageBinding
@@ -47,24 +46,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
-        setOnClickListener()
         binding.tvSignout.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        setupObservers()
+        setOnClickListener()
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myPageViewModel.uiState.collect {
-                    // Update UI elements
-                    binding.tvAppVersion.text =
-                        "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-
-                    if (it.nickname.isNotEmpty()) {
-                        binding.tvNickname.text = it.nickname
-                    }
-
-                    binding.alarmSwitch.isChecked = myPageViewModel.uiState.value.isAlarmOn
-                }
-            }
-        }
 
         //퍼미션 있는지 자가 진단
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -80,6 +65,22 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 )
             } else { //권한이 이미 있어
                 myPageViewModel.setNotification(true)
+            }
+        }
+    }
+
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myPageViewModel.uiState.collect {
+                    binding.tvAppVersion.text = it.appVersion
+
+                    if (it.nickname.isNotEmpty()) {
+                        binding.tvNickname.text = it.nickname
+                    }
+
+                    binding.alarmSwitch.isChecked = it.isAlarmOn
+                }
             }
         }
     }
@@ -186,8 +187,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         )
 
         val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 11)
-            set(Calendar.MINUTE, 0)
+            set(Calendar.HOUR_OF_DAY, 16)
+            set(Calendar.MINUTE, 43)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }

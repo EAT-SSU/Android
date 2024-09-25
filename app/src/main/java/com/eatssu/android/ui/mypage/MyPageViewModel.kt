@@ -3,6 +3,7 @@ package com.eatssu.android.ui.mypage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.data.usecase.GetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
@@ -39,8 +40,16 @@ class MyPageViewModel @Inject constructor(
     val uiState: StateFlow<MyPageState> = _uiState.asStateFlow()
 
     init {
+        setAppVersion()
         getMyInfo()
         getNotificationStatus()
+    }
+
+    private fun setAppVersion() {
+        viewModelScope.launch {
+            _uiState.value =
+                _uiState.value.copy(appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+        }
     }
 
     private fun getNotificationStatus() {
@@ -50,7 +59,6 @@ class MyPageViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun getMyInfo() {
         viewModelScope.launch {
@@ -149,6 +157,7 @@ data class MyPageState(
     var nickname: String = "",
     var platform: String = "",
     var isAlarmOn: Boolean = false,
+    var appVersion: String = "0.0.0",
 
     var isNicknameNull: Boolean = false,
     var isLoginOuted: Boolean = false,
