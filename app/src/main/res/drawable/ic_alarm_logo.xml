@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="74dp"
+    android:height="78.5dp"
+    android:viewportWidth="74"
+    android:viewportHeight="78.5">
+
+    <!-- 첫 번째 줄에 패딩 적용 -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M15,20 L54,20 L54,27.09615 L15,27.09615 Z" />
+
+    <!-- 두 번째 줄에 패딩 적용 -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M15,35.91895 L43.53845,35.91895 L43.53845,42.7651 L15,42.7651 Z" />
+
+    <!-- 세 번째 줄에 패딩 적용 -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M15,51.0884 L54,51.0884 L54,57.43455 L15,57.43455 Z" />
+</vector>

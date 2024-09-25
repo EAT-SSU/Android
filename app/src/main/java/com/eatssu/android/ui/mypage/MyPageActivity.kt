@@ -57,7 +57,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     binding.tvAppVersion.text =
                         "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
-
                     if (it.nickname.isNotEmpty()) {
                         binding.tvNickname.text = it.nickname
                     }
@@ -67,25 +66,42 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             }
         }
 
+        //퍼미션 있는지 자가 진단
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this,
                     android.Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            ) { //권한이 없다면 요청
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
                     REQUEST_NOTIFICATION_PERMISSION
                 )
-            } else {
-                requestNotificationPermission(this)
+            } else { //권한이 이미 있어
+                myPageViewModel.setNotification(true)
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setOnClickListener() {
+
+        binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (checkNotificationPermission(this)) { //허용되어 있는 상태
+                    scheduleAlarm()
+                    myPageViewModel.setNotification(isChecked)
+//                    showToast("알림이 설정되었습니다.")
+                } else { // 알림 권한이 없을 때 사용자에게 설정 화면으로 이동하라고 알림
+                    showNotificationPermissionDialog()
+                }
+            } else {
+                cancelAlarm()
+                myPageViewModel.setNotification(isChecked)
+                showToast("알림이 해제되었습니다.")
+            }
+        }
 
         binding.llNickname.setOnClickListener {
             startActivity<UserNameChangeActivity>()
@@ -134,22 +150,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             startActivity(intent)
         }
 
-        binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                if (checkNotificationPermission(this)) {
-                    scheduleAlarm()
-                    myPageViewModel.setNotification(isChecked)
-//                    showToast("알림이 설정되었습니다.")
-                } else {
-                    // 알림 권한이 없을 때 사용자에게 설정 화면으로 이동하라고 알림
-                    showNotificationPermissionDialog()
-                }
-            } else {
-                cancelAlarm()
-                myPageViewModel.setNotification(isChecked)
-                showToast("알림이 해제되었습니다.")
-            }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
