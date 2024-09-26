@@ -146,7 +146,8 @@ class MenuFragment : Fragment() {
                                 MenuType.FIXED,
                                 Restaurant.FOOD_COURT,
                                 result.mapFixedMenuResponseToMenu(),
-                                "infoViewModel.foodLocation.value.toString()"
+                                infoViewModel.getRestaurantInfo(Restaurant.FOOD_COURT)?.location
+                                    ?: ""
                             )
                         )
                     }
@@ -164,7 +165,8 @@ class MenuFragment : Fragment() {
                                 MenuType.FIXED,
                                 Restaurant.SNACK_CORNER,
                                 result.mapFixedMenuResponseToMenu(),
-                                "infoViewModel.snackLocation.value.toString()"
+                                infoViewModel.getRestaurantInfo(Restaurant.SNACK_CORNER)?.location
+                                    ?: ""
                             )
                         )
                     }
@@ -199,7 +201,7 @@ class MenuFragment : Fragment() {
                             MenuType.VARIABLE,
                             Restaurant.HAKSIK,
                             result.mapTodayMenuResponseToMenu(),
-                            "infoViewModel.haksikLocation.value.toString()"
+                            infoViewModel.getRestaurantInfo(Restaurant.HAKSIK)?.location ?: ""
                         )
                     )
 
@@ -218,7 +220,7 @@ class MenuFragment : Fragment() {
                             MenuType.VARIABLE,
                             Restaurant.DODAM,
                             result.mapTodayMenuResponseToMenu(),
-                            "infoViewModel.dodamLocation.value.toString()"
+                            infoViewModel.getRestaurantInfo(Restaurant.DODAM)?.location ?: ""
                         )
                     )
                 }
@@ -235,7 +237,7 @@ class MenuFragment : Fragment() {
                             MenuType.VARIABLE,
                             Restaurant.DORMITORY,
                             result.mapTodayMenuResponseToMenu(),
-                            "infoViewModel.dormitoryLocation.value.toString()"
+                            infoViewModel.getRestaurantInfo(Restaurant.DORMITORY)?.location ?: ""
                         )
                     )
                 }
