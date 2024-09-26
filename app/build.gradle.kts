@@ -140,10 +140,11 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Firebase
     implementation(libs.play.services.base)
-    implementation(libs.firebase.config)
+
+    // Firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
 
