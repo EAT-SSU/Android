@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,11 +50,9 @@ class MenuFragment : Fragment() {
 
     private val totalMenuList = ArrayList<Section>()
 
-    //    private lateinit var infoViewModel: InfoViewModel
     private lateinit var restaurantType: Restaurant
-//    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
-    private val infoViewModel: InfoViewModel by viewModels()
+    private val infoViewModel: InfoViewModel by activityViewModels()
 
 
     companion object {
@@ -76,13 +74,6 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
-
-//        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-//        infoViewModel = ViewModelProvider(
-//            this,
-//            InfoViewModelFactory(firebaseRemoteConfigRepository)
-//        )[InfoViewModel::class.java]
-
         return binding.root
     }
 
@@ -91,11 +82,6 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeViewModel()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
