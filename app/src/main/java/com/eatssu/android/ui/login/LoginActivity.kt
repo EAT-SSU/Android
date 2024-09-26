@@ -5,7 +5,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.databinding.ActivitySocialLoginBinding
+import com.eatssu.android.databinding.ActivityLoginBinding
 import com.eatssu.android.ui.main.MainActivity
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
@@ -20,7 +20,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginActivity :
-    BaseActivity<ActivitySocialLoginBinding>(ActivitySocialLoginBinding::inflate) {
+    BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
 
     private val loginViewModel: LoginViewModel by viewModels()
 

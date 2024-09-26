@@ -21,6 +21,7 @@
 
         <item name="actionMenuTextColor">@color/secondary</item> <!--액션 메뉴의 텍스트 색상-->
         <item name="colorControlNormal">@color/secondary</item> <!--홈/뒤로가기 버튼의 색상-->
+        <item name="android:windowIsTranslucent">true</item>  <!--기본 스플래쉬 제거-->
     </style>
 
     <!-- bottom sheet   -->
@@ -208,14 +209,6 @@
     <style name="Theme.MyDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <!-- 토글   -->
-    <style name="category_toggle">
-        <item name="thumbTint">@color/white</item>
-        <item name="track">@drawable/selector_toggle</item>
-        <item name="android:thumb">@drawable/shape_toggle</item>
-        <item name="android:enabled">true</item>
     </style>
 
 </resources>
