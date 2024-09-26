@@ -21,6 +21,7 @@
 
         <item name="actionMenuTextColor">@color/secondary</item> <!--액션 메뉴의 텍스트 색상-->
         <item name="colorControlNormal">@color/secondary</item> <!--홈/뒤로가기 버튼의 색상-->
+        <item name="android:windowIsTranslucent">true</item>  <!--기본 스플래쉬 제거-->
     </style>
 
     <!-- bottom sheet   -->

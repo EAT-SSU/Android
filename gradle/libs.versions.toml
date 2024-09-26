@@ -28,14 +28,12 @@ lifecycle-livedata = "2.7.0"
 kakao-login = "2.8.6"
 hilt = "2.50"
 play-services-base = "18.0.1"
-firebase-config = "21.4.1"
-firebase-bom = "32.2.2"
+firebase-bom = "32.6.0"
 firebase-crashlytics = "2.9.9"
 timber = "5.0.1"
 google-services = "4.4.2"
 kotlin-android  = "1.8.10"
 activity-version = "1.9.1"
-
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -76,15 +74,16 @@ kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 
-
 play_services_base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
-firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx", version.ref = "firebase-config" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-config = { module = "com.google.firebase:firebase-config" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity-version" }
+
 
 
 [plugins]

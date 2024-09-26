@@ -3,9 +3,14 @@ package com.eatssu.android.ui.mypage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.BuildConfig
+import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.usecase.AlarmUseCase
+import com.eatssu.android.data.usecase.GetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
 import com.eatssu.android.data.usecase.LogoutUseCase
 import com.eatssu.android.data.usecase.SetAccessTokenUseCase
+import com.eatssu.android.data.usecase.SetDailyNotificationStatusUseCase
 import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.data.usecase.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,16 +32,37 @@ class MyPageViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
+    private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
+    private val getDailyNotificationStatusUseCase: GetDailyNotificationStatusUseCase,
+    private val alarmUseCase: AlarmUseCase,
+    private val preferencesRepository: PreferencesRepository // Assuming you're using DataStore here
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MyPageState> = MutableStateFlow(MyPageState())
     val uiState: StateFlow<MyPageState> = _uiState.asStateFlow()
 
     init {
+        setAppVersion()
         getMyInfo()
+        getNotificationStatus()
     }
 
-    fun getMyInfo() {
+    private fun setAppVersion() {
+        viewModelScope.launch {
+            _uiState.value =
+                _uiState.value.copy(appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+        }
+    }
+
+    private fun getNotificationStatus() {
+        viewModelScope.launch {
+            preferencesRepository.dailyNotificationStatus.collect { isAlarmOn ->
+                _uiState.value = _uiState.value.copy(isAlarmOn = isAlarmOn)
+            }
+        }
+    }
+
+    private fun getMyInfo() {
         viewModelScope.launch {
             getUserInfoUseCase().onStart {
                 _uiState.update { it.copy(loading = true) }
@@ -87,7 +113,6 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-
     fun signOut() {
         viewModelScope.launch {
             signOutUseCase().onStart {
@@ -113,6 +138,22 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
+    fun setNotificationOn() {
+        viewModelScope.launch {
+            setNotificationStatusUseCase(true) //로컬 디비 저장
+            alarmUseCase.scheduleAlarm() //알람 매니저
+        }
+    }
+
+    fun setNotificationOff() {
+        viewModelScope.launch {
+            setNotificationStatusUseCase(false)
+            alarmUseCase.cancelAlarm()
+        }
+    }
+
+
+
     companion object {
         val TAG = "MyPageViewModel"
     }
@@ -127,6 +168,8 @@ data class MyPageState(
 
     var nickname: String = "",
     var platform: String = "",
+    var isAlarmOn: Boolean = false,
+    var appVersion: String = "0.0.0",
 
     var isNicknameNull: Boolean = false,
     var isLoginOuted: Boolean = false,

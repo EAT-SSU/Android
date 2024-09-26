@@ -15,12 +15,15 @@ android {
     namespace = "com.eatssu.android"
     compileSdk = 34
 
+    // S8: API 28
+    // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23
         targetSdk = 34
-        versionCode = 19
-        versionName = "2.0.0"
+        versionCode = 1
+        versionName = "2.1.0"
+
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -138,13 +141,13 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Firebase
     implementation(libs.play.services.base)
-    implementation(libs.firebase.config)
+
+    // Firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
-
 
     // Timber for logging
     implementation(libs.timber)

@@ -69,7 +69,7 @@ object MySharedPreferences {
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = prefs.edit()
         editor.putString("REFRESH_TOKEN", input)
-        editor.commit()
+        editor.apply()
     }
 
     fun getRefreshToken(context: Context): String {
@@ -83,6 +83,21 @@ object MySharedPreferences {
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = prefs.edit()
         editor.clear()
-        editor.commit()
+        editor.apply()
+    }
+
+    fun setDailyNotification(context: Context, input: Boolean) {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = prefs.edit()
+
+        editor.putBoolean("ALARM_ON", input)
+        editor.apply()
+    }
+
+    fun getDailyNotification(context: Context): Boolean {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getBoolean("ALARM_ON", false)
     }
 }
