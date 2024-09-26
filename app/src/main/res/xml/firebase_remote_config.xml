@@ -18,6 +18,7 @@
     <entry>
         <key>cafeteria_information</key>
         <value>
+            [
             {
             "enum": "DODAM",
             "name": "도담 식당",
@@ -25,17 +26,16 @@
             "time": "11:20~14:00(점심)\n17:00~18:30(저녁)",
             "etc": "2개 코너 운영\n대면 배식,웰빙코너\n토요일 11:30~13:30",
             "image":
-            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/04f266a1-0649-430c-af8f-29e83e87472120240823074119%E1%84%83%E1%85%A9%E1%84%83%E1%85%A1%E1%86%B7%E1%84%89%E1%85%B5%E1%86%A8%E1%84%83%E1%85%A1%E1%86%BC.jpeg"
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/298437cb-45b1-48cf-bace-ea84e8f23e1820240926041857%E1%84%83%E1%85%A9%E1%84%83%E1%85%A1%E1%86%B7IMG_8268%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
             },
             {
             "enum": "HAKSIK",
             "name": "학생 식당",
             "location": "학생회관 3층",
-            "time": "08:10~09:20(천원의 아침밥, 100개 한정,
-            24.03.11~06.14)\n11:20~14:00\n(점심)\n14:00~17:00(공간 개방)",
+            "time": "08:10~09:20(천원의 아침밥, 100개 한정)\n11:20~14:00\n(점심)\n14:00~17:00(공간 개방)",
             "etc": "3개 코너 운영\n뚝배기찌개, 덮밥, 양식",
             "image":
-            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/f0fbf458-5f7e-49bb-97e7-c663c4ec8cc820240823074519%E1%84%92%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A2%E1%86%BC%E1%84%89%E1%85%B5%E1%86%A8%E1%84%83%E1%85%A1%E1%86%BC.jpeg"
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/fa802164-621d-4b6d-b44e-e9de4bab225520240926041948%E1%84%92%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A2%E1%86%BC%20IMG_0394%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
             },
             {
             "enum": "SNACK_CORNER",
@@ -53,7 +53,7 @@
             "time": "휴무",
             "etc": "준비 중",
             "image":
-            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/2f8a9ae2-c2f9-4f20-bafe-28e0a9e414e320240823074451%E1%84%91%E1%85%AE%E1%84%83%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%90%E1%85%B3.jpeg"
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/09b487f5-e431-4ab2-a339-76e472ea8d8320240926041925%E1%84%91%E1%85%AE%E1%84%8F%E1%85%A9IMG_0396%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
             },
             {
             "enum": "DORMITORY",
@@ -62,8 +62,9 @@
             "time": "08:00~09:30\n11:00~14:00\n17:00~18:30",
             "etc": "주말 조식은 운영되지 않습니다.",
             "image":
-            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/2f8a9ae2-c2f9-4f20-bafe-28e0a9e414e320240823074451%E1%84%91%E1%85%AE%E1%84%83%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%90%E1%85%B3.jpeg"
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/364077d5-f09b-4e9c-b5e4-e1e08d098f1820240926041231%E1%84%80%E1%85%B5%E1%84%89%E1%85%AE%E1%86%A8%E1%84%89%E1%85%A1IMG_2480%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
             }
+            ]
         </value>
     </entry>
 

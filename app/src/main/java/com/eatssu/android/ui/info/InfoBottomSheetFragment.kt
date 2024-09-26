@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.info
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class InfoBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentBottomsheetInfoBinding? = null
@@ -24,7 +24,7 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBottomsheetInfoBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,7 +35,7 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         // Retrieve passed data
         val name = arguments?.getString("name")
         val restaurantType = enumValues<Restaurant>().find { it.name == name } ?: Restaurant.HAKSIK
-        Log.d("InfoBottomSheetFragment", "onViewCreated: $name $restaurantType")
+        Timber.d("onViewCreated: $name $restaurantType")
 
         binding.tvName.text = restaurantType.displayName
 
