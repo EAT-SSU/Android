@@ -140,8 +140,8 @@ class MyPageViewModel @Inject constructor(
 
     fun setNotificationOn() {
         viewModelScope.launch {
-            setNotificationStatusUseCase(true)
-            alarmUseCase.scheduleAlarm()
+            setNotificationStatusUseCase(true) //로컬 디비 저장
+            alarmUseCase.scheduleAlarm() //알람 매니저
         }
     }
 
