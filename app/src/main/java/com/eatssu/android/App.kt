@@ -10,7 +10,7 @@ import timber.log.Timber
 @HiltAndroidApp
 class App: Application() {
     companion object{
-        lateinit var appContext : Context
+        lateinit var appContext: Context //todo 이거 빼기
     }
 
     override fun onCreate() {

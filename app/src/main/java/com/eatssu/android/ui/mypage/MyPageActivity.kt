@@ -1,19 +1,26 @@
 package com.eatssu.android.ui.mypage
 
+
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.BuildConfig
+import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.databinding.ActivityMyPageBinding
-import com.eatssu.android.ui.common.VersionViewModel
-import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
@@ -23,40 +30,55 @@ import com.eatssu.android.util.extension.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
 
     private val myPageViewModel: MyPageViewModel by viewModels()
 
-    private lateinit var versionViewModel: VersionViewModel
-
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "마이페이지" // 툴바 제목 설정
 
-
-        initViewModel()
+        binding.tvSignout.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        setupObservers()
         setOnClickListener()
-        setData()
+
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myPageViewModel.uiState.collect {
+                    binding.tvAppVersion.text = it.appVersion
 
-        setData() //Todo 최선일까?
+                    if (it.nickname.isNotEmpty()) {
+                        binding.tvNickname.text = it.nickname
+                    }
+
+                    binding.alarmSwitch.isChecked = it.isAlarmOn
+                }
+            }
+        }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-
-        setData()
-    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setOnClickListener() {
+
+        binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (checkNotificationPermission(this)) { //허용되어 있는 상태
+                    myPageViewModel.setNotificationOn()
+                    showToast("EAT-SSU 알림 수신을 동의하였습니다.")
+                } else { // 알림 권한이 없을 때 사용자에게 설정 화면으로 이동하라고 알림
+                    showNotificationPermissionDialog()
+                }
+            } else {
+                myPageViewModel.setNotificationOff()
+                showToast("EAT-SSU 알림 수신을 거부하였습니다.")
+            }
+        }
 
         binding.llNickname.setOnClickListener {
             startActivity<UserNameChangeActivity>()
@@ -77,18 +99,17 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             showLogoutDialog()
         }
 
-        binding.tvSignout.setOnClickListener {
+        binding.llSignout.setOnClickListener {
             val intent = Intent(this, SignOutActivity::class.java)
             intent.putExtra("nickname", myPageViewModel.uiState.value.nickname)
             startActivity(intent)
-//            showSignoutDialog()
         }
 
         binding.llDeveloper.setOnClickListener {
             startActivity<DeveloperActivity>()
         }
 
-        binding.llStoreAppVersion.setOnClickListener {
+        binding.llAppVersion.setOnClickListener {
             moveToPlayStore()
         }
 
@@ -108,33 +129,28 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     }
 
-    private fun setData() {
-        binding.tvAppVersion.text = BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"
-        binding.tvStoreAppVersion.text = versionViewModel.checkVersionCode().toString()
-
-        myPageViewModel.getMyInfo()
-
-        lifecycleScope.launch {
-            Timber.d("관찰시작")
-            myPageViewModel.uiState.collectLatest {
-                if (it.nickname.isNotEmpty()) {
-                    binding.tvNickname.text = it.nickname
-                }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showNotificationPermissionDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("알림 권한 필요")
+            .setMessage("알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?")
+            .setPositiveButton("설정으로 이동") { _, _ ->
+                openAppNotificationSettings(this)
             }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
+    private fun checkNotificationPermission(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Android 13 이전 버전에서는 알림 권한이 필요하지 않음
         }
     }
-
-    private fun initViewModel() { //Todo 리팩토링하기
-
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-
-        versionViewModel = ViewModelProvider(
-            this,
-            VersionViewModelFactory(firebaseRemoteConfigRepository)
-        )[VersionViewModel::class.java]
-    }
-
-
 
     private fun showLogoutDialog() {
 
@@ -212,5 +228,51 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 )
             )
         }
+    }
+
+    // 알림 권한 요청 함수
+    private fun requestNotificationPermission(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_NOTIFICATION_PERMISSION
+            )
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // 권한이 허용되었을 때 알림 설정
+                myPageViewModel.setNotificationOn()
+            } else {
+                // 권한이 거부되었을 때 처리
+                showToast("EAT-SSU 알림 수신을 거부하였습니다.")
+                openAppNotificationSettings(this)
+                myPageViewModel.setNotificationOff()
+            }
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun openAppNotificationSettings(context: Context) {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        }
+        context.startActivity(intent)
+    }
+
+
+    companion object {
+        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
     }
 }

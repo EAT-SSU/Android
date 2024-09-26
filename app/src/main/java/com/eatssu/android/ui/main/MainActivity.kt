@@ -2,6 +2,7 @@ package com.eatssu.android.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +11,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +25,7 @@ import com.eatssu.android.ui.main.calendar.CalendarAdapter
 import com.eatssu.android.ui.main.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.ui.mypage.MyPageActivity
+import com.eatssu.android.ui.mypage.MyPageViewModel
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.CalendarUtils
 import com.eatssu.android.util.CalendarUtils.daysInWeekArray
@@ -30,18 +34,20 @@ import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.prolificinteractive.materialcalendarview.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
 
     private val mainViewModel: MainViewModel by viewModels()
+    private val myPageViewModel: MyPageViewModel by viewModels()
+
 
     private lateinit var calendarViewModel: CalendarViewModel
 
@@ -56,6 +62,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
 
         setupNoToolbar()
+
+        // 알림 퍼미션 있는지 자가 진단
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // 권한이 없다면 요청
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1000
+                )
+            } else {
+                // 권한이 이미 있어
+            }
+        }
 
         checkNicknameIsNull()
 
@@ -192,4 +216,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
+    // 권한 요청 결과 처리
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+
+        if (requestCode == 1000) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 승인됨
+                showToast("EAT-SSU 알림 수신을 동의하였습니다.")
+                myPageViewModel.setNotificationOn() //바로 알림 받도록 설정
+            } else {
+                // 권한이 거부됨
+                showToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
+                myPageViewModel.setNotificationOff() //바로 알림 받도록 설정
+            }
+        }
+    }
 }

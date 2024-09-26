@@ -42,11 +42,11 @@
     </string-array>
 
 
-    <string name="my_review">내가 쓴 리뷰</string>
+    <string name="my_review">내 리뷰</string>
     <string name="change_pw">비밀번호 변경</string>
     <string name="announce">공지사항</string>
     <string name="logout">로그아웃</string>
-    <string name="signout">탈퇴하기</string>
+    <string name="signout">회원탈퇴</string>
     <string name="app_version">앱 버전</string>
     <string name="pw_rules">영문자과 숫자를 포함하여 8자 이상을 입력해주세요.</string>
     <string name="complete">완료하기</string>
@@ -147,6 +147,10 @@
 
     <string name="developer">만든 사람들</string>
     <string name="team_eatssu">\@TEAM EAT\-SSU</string>
+
+    <string name="notification_context_title">🤔 오늘 밥 뭐 먹지</string>
+    <string name="notification_context_text">오늘의 학식을 확인해보세요!</string>
+
 
     <string name="policy_url">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8</string>
     <string name="terms_url">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80</string>
