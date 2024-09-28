@@ -39,7 +39,15 @@ class ReviewActivity :
         lodeData()
         bindData()
         setClickListener()
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+
+        //todo 이거 안하면 바로바로 갱신이 안되는디
+        lodeData()
+        bindData()
     }
 
 
@@ -56,6 +64,68 @@ class ReviewActivity :
         //Todo 여기서는 메뉴 타입이 뭔지 몰라도 됨. 추상화 해도 됨
 
         reviewViewModel.loadReview(menuType, itemId)
+    }
+
+
+
+    private fun bindData() {
+        lifecycleScope.launch {
+            reviewViewModel.uiState.collectLatest {
+                if (!it.error && !it.loading) {
+                    if (it.isEmpty) {
+                        //리뷰 없어도 메뉴명은 있음
+                        Timber.d("리뷰가 없음")
+                        binding.llNonReview.visibility = View.VISIBLE
+                        binding.rvReview.visibility = View.INVISIBLE
+
+                        it.reviewInfo?.apply {
+                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+                        }
+
+                    } else { //리뷰 있다.
+                        Timber.d("리뷰가 있음")
+                        binding.llNonReview.visibility = View.INVISIBLE
+                        binding.rvReview.visibility = View.VISIBLE
+
+                        reviewAdapter = it.reviewList?.let { review ->
+                            ReviewAdapter(review) { reviewId ->
+                                deleteViewModel.deleteReview(
+                                    reviewId
+                                )
+                            }
+                        }
+
+                        binding.rvReview.apply {
+                            adapter = reviewAdapter
+                            layoutManager = LinearLayoutManager(applicationContext)
+                            setHasFixedSize(true)
+                        }
+
+                        it.reviewInfo?.apply {
+
+                            Timber.d(it.reviewInfo.toString())
+
+                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+                            binding.tvReviewNumCount.text = reviewCnt.toString()
+                            binding.tvRate.text = String.format("%.1f", mainRating)
+
+                            val totalReviewCount = reviewCnt
+                            binding.progressBar1.max = totalReviewCount
+                            binding.progressBar2.max = totalReviewCount
+                            binding.progressBar3.max = totalReviewCount
+                            binding.progressBar4.max = totalReviewCount
+                            binding.progressBar5.max = totalReviewCount
+
+                            binding.progressBar1.progress = one
+                            binding.progressBar2.progress = two
+                            binding.progressBar3.progress = three
+                            binding.progressBar4.progress = four
+                            binding.progressBar5.progress = five
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setClickListener() {
@@ -81,69 +151,6 @@ class ReviewActivity :
 
             else -> {
                 Timber.d("잘못된 식당 정보입니다.")
-            }
-        }
-    }
-
-    private fun bindData() {
-        lifecycleScope.launch {
-            reviewViewModel.uiState.collectLatest {
-                if (!it.error && !it.loading) {
-                    if (it.isEmpty) {
-
-                        //리뷰 없어도 메뉴명은 있음
-                        it.reviewInfo?.apply {
-                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
-                        }
-
-                        Timber.d("리뷰가 없음")
-                        binding.llNonReview.visibility = View.VISIBLE
-                        binding.rvReview.visibility = View.INVISIBLE
-
-                    } else { //리뷰 있다.
-
-                        Timber.d("리뷰가 있음")
-                        binding.llNonReview.visibility = View.INVISIBLE
-                        binding.rvReview.visibility = View.VISIBLE
-                        reviewAdapter = it.reviewList?.let { review ->
-                            ReviewAdapter(review) { reviewId ->
-                                deleteViewModel.deleteReview(
-                                    reviewId
-                                )
-                            }
-                        }
-
-                        binding.rvReview.apply {
-                            adapter = reviewAdapter
-                            layoutManager = LinearLayoutManager(applicationContext)
-                            setHasFixedSize(true)
-                        }
-
-                        it.reviewInfo?.apply {
-                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
-
-                            Timber.d(it.reviewInfo.toString())
-
-                            binding.tvReviewNumCount.text = reviewCnt.toString()
-
-                            binding.tvRate.text = String.format("%.1f", mainRating)
-
-
-                            val totalReviewCount = reviewCnt
-                            binding.progressBar1.max = totalReviewCount
-                            binding.progressBar2.max = totalReviewCount
-                            binding.progressBar3.max = totalReviewCount
-                            binding.progressBar4.max = totalReviewCount
-                            binding.progressBar5.max = totalReviewCount
-
-                            binding.progressBar1.progress = one
-                            binding.progressBar2.progress = two
-                            binding.progressBar3.progress = three
-                            binding.progressBar4.progress = four
-                            binding.progressBar5.progress = five
-                        }
-                    }
-                }
             }
         }
     }
