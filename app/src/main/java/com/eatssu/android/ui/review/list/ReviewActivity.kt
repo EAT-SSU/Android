@@ -42,23 +42,6 @@ class ReviewActivity :
 
     }
 
-    //Todo 이게 최선일까?
-    override fun onRestart() {
-        super.onRestart()
-        Timber.d("onRestart")
-
-        lodeData()
-        bindData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("onResume")
-
-        lodeData()
-        bindData()
-    }
-
 
     private fun getIndex() {
         //get menuId
@@ -79,7 +62,7 @@ class ReviewActivity :
         when (menuType) {
             "FIXED" -> {
                 binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteRateActivity::class.java)  // 인텐트를 생성해줌,
+                    val intent = Intent(this, ReviewWriteRateActivity::class.java)
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("menuType", menuType)
@@ -89,7 +72,7 @@ class ReviewActivity :
 
             "VARIABLE" -> {
                 binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)  // 인텐트를 생성해줌,
+                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
                     startActivity(intent)
@@ -135,7 +118,6 @@ class ReviewActivity :
                             layoutManager = LinearLayoutManager(applicationContext)
                             setHasFixedSize(true)
                         }
-
 
                         it.reviewInfo?.apply {
                             binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
