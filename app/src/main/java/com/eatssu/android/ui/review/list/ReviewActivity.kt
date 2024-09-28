@@ -2,25 +2,26 @@ package com.eatssu.android.ui.review.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityReviewBinding
+import com.eatssu.android.ui.review.delete.DeleteViewModel
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
 import com.eatssu.android.ui.review.write.menu.ReviewWriteMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ReviewActivity :
     BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
-    private lateinit var deleteViewModel: DeleteViewModel
+    private val deleteViewModel: DeleteViewModel by viewModels()
     private val reviewViewModel: ReviewViewModel by viewModels()
 
     private lateinit var menuType: String
@@ -122,7 +123,11 @@ class ReviewActivity :
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
                         reviewAdapter = it.reviewList?.let { review ->
-                            ReviewAdapter(review) { reviewId -> delete(reviewId) }
+                            ReviewAdapter(review) { reviewId ->
+                                deleteViewModel.deleteReview(
+                                    reviewId
+                                )
+                            }
                         }
 
                         binding.rvReview.apply {
