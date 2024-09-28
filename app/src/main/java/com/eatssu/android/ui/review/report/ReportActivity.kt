@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.databinding.ActivityReportBinding
-import com.eatssu.android.util.extension.showToast
+import com.eatssu.android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

@@ -20,12 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.databinding.ActivityMyPageBinding
-import com.eatssu.android.ui.common.VersionViewModel
-import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.ui.login.LoginActivity
-import com.eatssu.android.ui.mypage.inquire.InquireActivity
 import com.eatssu.android.ui.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
@@ -35,7 +31,6 @@ import com.eatssu.android.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
@@ -184,34 +179,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 }
             }
         }
-    }
-
-
-    private fun showSignoutDialog() {
-        DialogUtil.createDialogWithCancelButton(
-            "탈퇴하기",
-            this@MyPageActivity,
-            "탈퇴 하시겠습니까?",
-            "취소",
-            "탈퇴하기"
-        ) { _, _ ->
-//            ActivityCompat.finishAffinity(this)
-//            exitProcess(0)
-            myPageViewModel.signOut()
-
-            lifecycleScope.launch {
-                myPageViewModel.uiState.collectLatest {
-                    if (it.isSignOuted) {
-                        showToast(it.toastMessage)
-                        startActivity<LoginActivity>()
-                        finishAffinity()
-                    }
-
-                    }
-                }
-            }
-            }
-
 
     private fun moveToPlayStore() {
         val appPackageName = packageName
