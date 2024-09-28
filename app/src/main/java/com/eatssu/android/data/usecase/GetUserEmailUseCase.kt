@@ -1,14 +1,15 @@
 package com.eatssu.android.data.usecase
 
-import com.eatssu.android.App
+import android.content.Context
 import com.eatssu.android.util.MySharedPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class GetUserEmailUseCase @Inject constructor(
-//    private val preferencesRepository: PreferencesRepository,
+    @ApplicationContext private val context: Context
 ) {
     suspend operator fun invoke(): String {
 
-        return MySharedPreferences.getUserEmail(App.appContext)
+        return MySharedPreferences.getUserEmail(context)
     }
 }
