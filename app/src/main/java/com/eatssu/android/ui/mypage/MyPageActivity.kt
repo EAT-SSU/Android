@@ -162,8 +162,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             "취소",
             "로그아웃"
         ) { _, _ ->
-//            ActivityCompat.finishAffinity(this)
-//            exitProcess(0)
             //로그아웃
             myPageViewModel.loginOut()
 
