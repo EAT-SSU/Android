@@ -7,6 +7,7 @@ import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.data.model.ReviewInfo
 import com.eatssu.android.data.usecase.GetMealReviewInfoUseCase
+import com.eatssu.android.data.usecase.GetMealReviewListUseCase
 import com.eatssu.android.data.usecase.GetMenuReviewInfoUseCase
 import com.eatssu.android.data.usecase.GetMenuReviewListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,10 +26,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReviewViewModel @Inject constructor(
-    private val getMenuReviewListUseCase: GetMenuReviewListUseCase,
-    private val getMealReviewListUseCase: GetMenuReviewListUseCase,
-    private val getMealReviewInfoUseCase: GetMealReviewInfoUseCase,
     private val getMenuReviewInfoUseCase: GetMenuReviewInfoUseCase,
+    private val getMenuReviewListUseCase: GetMenuReviewListUseCase,
+    private val getMealReviewInfoUseCase: GetMealReviewInfoUseCase,
+    private val getMealReviewListUseCase: GetMealReviewListUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())

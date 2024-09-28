@@ -26,8 +26,8 @@ data class GetReviewListResponse(
         )
 }
 
-fun GetReviewListResponse.toReviewList(): List<Review>? {
-    return dataList?.map { data ->
+fun GetReviewListResponse.toReviewList(): List<Review> {
+    return dataList!!.map { data ->
         Review(
             reviewId = data.reviewId,
             isWriter = data.isWriter,
