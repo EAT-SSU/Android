@@ -27,8 +27,7 @@ class MenuAdapter(
             sectionModel: Section
         ) {
 
-
-            binding.btnInfo.setOnClickListener {
+            binding.llCafeteriaInfo.setOnClickListener {
 
                 val modalBottomSheet =
                     InfoBottomSheetFragment.newInstance(sectionModel.cafeteria.name)

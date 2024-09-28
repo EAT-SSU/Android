@@ -2,11 +2,9 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.data.model.AndroidMessage
 import com.eatssu.android.data.model.RestaurantInfo
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.google.gson.Gson
 import org.json.JSONArray
 import timber.log.Timber
 
@@ -41,25 +39,25 @@ class FirebaseRemoteConfigRepository {
         }
     }
 
-    fun getAndroidMessage(): AndroidMessage {
+//    fun getAndroidMessage(): AndroidMessage {
+//
+//        // Gson을 사용하여 JSON 문자열을 DTO로 파싱
+//        val serverStatus: AndroidMessage = Gson().fromJson(instance.getString("android_message"), AndroidMessage::class.java)
+//
+//        // 파싱된 결과 확인
+//        println("Dialog: ${serverStatus.dialog}")
+//        println("Message: ${serverStatus.message}")
+//
+//        return serverStatus
+//    }
 
-        // Gson을 사용하여 JSON 문자열을 DTO로 파싱
-        val serverStatus: AndroidMessage = Gson().fromJson(instance.getString("android_message"), AndroidMessage::class.java)
-
-        // 파싱된 결과 확인
-        println("Dialog: ${serverStatus.dialog}")
-        println("Message: ${serverStatus.message}")
-
-        return serverStatus
-    }
-
-    fun getForceUpdate(): Boolean {
-        return instance.getBoolean("force_update")
-    }
-
-    fun getAppVersion(): String {
-        return instance.getString("app_version")
-    }
+//    fun getForceUpdate(): Boolean {
+//        return instance.getBoolean("force_update")
+//    }
+//
+//    fun getAppVersion(): String {
+//        return instance.getString("app_version")
+//    }
 
     fun getVersionCode(): Long {
         return instance.getLong("android_version_code")
