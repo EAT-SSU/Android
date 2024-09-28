@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.base.BaseResponse
@@ -70,7 +69,7 @@ class TokenInterceptor @Inject constructor(
         val response = chain.proceed(request)
 
         if (response.code == 401) {
-            Log.d(TAG, "토큰 퉤퉤")
+            Timber.d("토큰 퉤퉤")
             response.close()
 
             try {
@@ -80,13 +79,13 @@ class TokenInterceptor @Inject constructor(
                     .addHeader(HEADER_AUTHORIZATION, "Bearer $refreshToken")
                     .build()
 
-                Log.d(TAG, "재발급 중")
+                Timber.d("재발급 중")
 
                 val refreshTokenResponse = chain.proceed(refreshTokenRequest)
-                Log.d(TAG, "refreshTokenResponse : $refreshTokenResponse")
+                Timber.d("refreshTokenResponse : $refreshTokenResponse")
 
                 if (refreshTokenResponse.isSuccessful) {
-                    Log.d(TAG, "재발급 성공")
+                    Timber.d("재발급 성공")
 
                     val responseToken = parseRefreshTokenResponse(refreshTokenResponse)
 
@@ -112,7 +111,6 @@ class TokenInterceptor @Inject constructor(
                     Timber.e("재발급에서의 401")
 
                     Handler(Looper.getMainLooper()).post {
-                        val context = context
                         Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                         val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -125,7 +123,6 @@ class TokenInterceptor @Inject constructor(
                 Timber.e("재발급 실패 $e")
 
                 Handler(Looper.getMainLooper()).post {
-                    val context = context
                     Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -139,7 +136,6 @@ class TokenInterceptor @Inject constructor(
             Timber.e("404 + 다른 유저!")
 
             Handler(Looper.getMainLooper()).post {
-                val context = context
                 Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -152,7 +148,6 @@ class TokenInterceptor @Inject constructor(
             Timber.e("500 + 다른 유저")
 
             Handler(Looper.getMainLooper()).post {
-                val context = context
                 Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
