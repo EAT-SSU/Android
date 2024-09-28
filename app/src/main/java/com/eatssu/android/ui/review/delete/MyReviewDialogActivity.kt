@@ -42,9 +42,9 @@ class MyReviewDialogActivity : AppCompatActivity() {
         amountGrade = intent.getIntExtra("amountGrade", -1)
         tasteGrade = intent.getIntExtra("tasteGrade", -1)
 
-        Log.d("ReviewFixedActivity", "전:" + reviewId.toString())
-        Log.d("ReviewFixedActivity", "전:" + menu.toString())
-        Log.d("ReviewFixedActivity", "전:" + content.toString())
+        Timber.d("전:" + reviewId.toString())
+        Timber.d("전:" + menu.toString())
+        Timber.d("전:" + content.toString())
         Timber.d(reviewId.toString())
 
         binding.btnReviewFix.setOnClickListener {

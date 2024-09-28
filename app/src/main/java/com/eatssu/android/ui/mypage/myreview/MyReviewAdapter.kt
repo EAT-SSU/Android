@@ -56,9 +56,9 @@ class MyReviewAdapter(private val dataList: List<Review>) :
                 intent.putExtra("amountGrade", dataList[position].amountGrade)
                 intent.putExtra("tasteGrade", dataList[position].tasteGrade)
 
-                Log.d("ReviewFixedActivity", "전전:" + dataList[position].reviewId)
-                Log.d("ReviewFixedActivity", "전전:" + dataList[position].menu)
-                Log.d("ReviewFixedActivity", "전전:" + dataList[position].content)
+                Timber.d("전전:" + dataList[position].reviewId)
+                Timber.d("전전:" + dataList[position].menu)
+                Timber.d("전전:" + dataList[position].content)
 ////
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
