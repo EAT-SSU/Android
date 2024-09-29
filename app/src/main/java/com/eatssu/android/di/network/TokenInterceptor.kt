@@ -1,12 +1,11 @@
 package com.eatssu.android.di.network
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
-import com.eatssu.android.App
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
@@ -18,6 +17,7 @@ import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.ui.login.LoginActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -33,6 +33,7 @@ class TokenInterceptor @Inject constructor(
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
+    @ApplicationContext private val context: Context
 ) : Interceptor {
 
     companion object {
@@ -68,7 +69,7 @@ class TokenInterceptor @Inject constructor(
         val response = chain.proceed(request)
 
         if (response.code == 401) {
-            Log.d(TAG, "토큰 퉤퉤")
+            Timber.d("토큰 퉤퉤")
             response.close()
 
             try {
@@ -78,13 +79,13 @@ class TokenInterceptor @Inject constructor(
                     .addHeader(HEADER_AUTHORIZATION, "Bearer $refreshToken")
                     .build()
 
-                Log.d(TAG, "재발급 중")
+                Timber.d("재발급 중")
 
                 val refreshTokenResponse = chain.proceed(refreshTokenRequest)
-                Log.d(TAG, "refreshTokenResponse : $refreshTokenResponse")
+                Timber.d("refreshTokenResponse : $refreshTokenResponse")
 
                 if (refreshTokenResponse.isSuccessful) {
-                    Log.d(TAG, "재발급 성공")
+                    Timber.d("재발급 성공")
 
                     val responseToken = parseRefreshTokenResponse(refreshTokenResponse)
 
@@ -110,7 +111,6 @@ class TokenInterceptor @Inject constructor(
                     Timber.e("재발급에서의 401")
 
                     Handler(Looper.getMainLooper()).post {
-                        val context = App.appContext
                         Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                         val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -123,7 +123,6 @@ class TokenInterceptor @Inject constructor(
                 Timber.e("재발급 실패 $e")
 
                 Handler(Looper.getMainLooper()).post {
-                    val context = App.appContext
                     Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -137,7 +136,6 @@ class TokenInterceptor @Inject constructor(
             Timber.e("404 + 다른 유저!")
 
             Handler(Looper.getMainLooper()).post {
-                val context = App.appContext
                 Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -150,7 +148,6 @@ class TokenInterceptor @Inject constructor(
             Timber.e("500 + 다른 유저")
 
             Handler(Looper.getMainLooper()).post {
-                val context = App.appContext
                 Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

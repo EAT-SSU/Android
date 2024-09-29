@@ -1,11 +1,12 @@
 package com.eatssu.android.ui.main
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.data.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
@@ -40,7 +42,7 @@ class MainViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         error = true,
-                        toastMessage = App.appContext.getString(R.string.not_found)
+                        toastMessage = context.getString(R.string.not_found)
                     )
                 }
                 Timber.e(e.toString())
@@ -51,7 +53,7 @@ class MainViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isNicknameNull = true,
-                                toastMessage = App.appContext.getString(R.string.set_nickname)
+                                toastMessage = context.getString(R.string.set_nickname)
                             )
                         }
                     } else {
@@ -59,7 +61,7 @@ class MainViewModel @Inject constructor(
                             it.copy(
                                 isNicknameNull = false,
                                 toastMessage = String.format(
-                                    App.appContext.getString(R.string.hello_user),
+                                    context.getString(R.string.hello_user),
                                     this.nickname
                                 )
                             )
