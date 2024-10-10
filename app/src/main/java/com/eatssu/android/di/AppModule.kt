@@ -27,7 +27,6 @@ object AppModule {
         return PreferencesRepository(context)
     }
 
-
     @Provides
     @Singleton
     fun provideFirebaseRemoteConfigRepository(): FirebaseRemoteConfigRepository {

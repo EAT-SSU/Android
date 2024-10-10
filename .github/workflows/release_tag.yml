@@ -1,15 +1,16 @@
 name: Release Tag
 
 #트리거 요소
-on:
+
+on: 
   pull_request:
     branches:
       - production
     types:
-      - merged
+      - closed
     paths:
       - 'release/**'
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
