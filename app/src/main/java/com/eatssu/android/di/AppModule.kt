@@ -32,5 +32,4 @@ object AppModule {
     fun provideFirebaseRemoteConfigRepository(): FirebaseRemoteConfigRepository {
         return FirebaseRemoteConfigRepository()
     }
-
 }

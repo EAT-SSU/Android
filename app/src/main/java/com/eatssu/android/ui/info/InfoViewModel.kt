@@ -24,7 +24,6 @@ class InfoViewModel @Inject constructor(
     private val restaurantInfoMap: MutableMap<Restaurant, RestaurantInfo> = mutableMapOf()
 
     init {
-
         // Load cafeteria info from repository and update the StateFlow
         _infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
         Log.d("InfoViewModel", _infoList.value.toString())
