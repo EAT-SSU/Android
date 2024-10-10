@@ -1,73 +1,40 @@
 package com.eatssu.android.ui.info
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.model.RestaurantInfo
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class InfoViewModel(firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository): ViewModel() {
+@HiltViewModel
+class InfoViewModel @Inject constructor(
+    private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
+) : ViewModel() {
 
-    val infoList: MutableLiveData<ArrayList<RestaurantInfo>> = MutableLiveData()
+    // StateFlow to hold restaurant info list
+    private val _infoList = MutableStateFlow<List<RestaurantInfo>>(emptyList())
+    val infoList: StateFlow<List<RestaurantInfo>> = _infoList.asStateFlow()
 
-    val dodamLocation = MutableLiveData<String>()
-    val dodamPhotoUrl = MutableLiveData<String>()
-    val dodamTime = MutableLiveData<String>()
-    val dodamEtc = MutableLiveData<String>()
-
-    val foodLocation = MutableLiveData<String>()
-    val foodPhotoUrl = MutableLiveData<String>()
-    val foodTime = MutableLiveData<String>()
-    val foodEtc = MutableLiveData<String>()
-
-    val dormitoryLocation = MutableLiveData<String>()
-    val dormitoryPhotoUrl = MutableLiveData<String>()
-    val dormitoryTime = MutableLiveData<String>()
-    val dormitoryEtc = MutableLiveData<String>()
-
-    val snackLocation = MutableLiveData<String>()
-    val snackPhotoUrl = MutableLiveData<String>()
-    val snackTime = MutableLiveData<String>()
-    val snackEtc = MutableLiveData<String>()
-
-    val haksikLocation = MutableLiveData<String>()
-    val haksikPhotoUrl = MutableLiveData<String>()
-    val haksikTime = MutableLiveData<String>()
-    val haksikEtc = MutableLiveData<String>()
+    // Map to hold restaurant info
+    private val restaurantInfoMap: MutableMap<Restaurant, RestaurantInfo> = mutableMapOf()
 
     init {
-        infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
-        Log.d("InfoViewModel",infoList.value.toString())
 
-        val dodam = infoList.value!!.find { it.enum == Restaurant.DODAM }
-        dodamPhotoUrl.value = dodam?.photoUrl ?: ""
-        dodamTime.value = dodam?.time ?: ""
-        dodamLocation.value = dodam?.location ?: ""
-        dodamEtc.value = dodam?.etc ?: ""
+        // Load cafeteria info from repository and update the StateFlow
+        _infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
+        Log.d("InfoViewModel", _infoList.value.toString())
+        _infoList.value.forEach { restaurantInfo ->
+            restaurantInfoMap[restaurantInfo.enum] = restaurantInfo
+        }
+    }
 
-        val food = infoList.value!!.find { it.enum == Restaurant.FOOD_COURT }
-        foodPhotoUrl.value = food?.photoUrl ?: ""
-        foodTime.value = food?.time ?: ""
-        foodLocation.value = food?.location ?: ""
-        foodEtc.value = food?.etc ?: ""
-
-        val dormitory = infoList.value!!.find { it.enum == Restaurant.DORMITORY }
-        dormitoryPhotoUrl.value = dormitory?.photoUrl ?: ""
-        dormitoryTime.value = dormitory?.time ?: ""
-        dormitoryLocation.value = dormitory?.location ?: ""
-        dormitoryEtc.value = dormitory?.etc ?: ""
-
-        val snack = infoList.value!!.find { it.enum == Restaurant.SNACK_CORNER }
-        snackPhotoUrl.value = snack?.photoUrl ?: ""
-        snackTime.value = snack?.time ?: ""
-        snackLocation.value = snack?.location ?: ""
-        snackEtc.value = snack?.etc ?: ""
-
-        val haksik = infoList.value!!.find { it.enum == Restaurant.HAKSIK }
-        haksikPhotoUrl.value = haksik?.photoUrl ?: ""
-        haksikTime.value = haksik?.time ?: ""
-        haksikLocation.value = haksik?.location ?: ""
-        haksikEtc.value = haksik?.etc ?: ""
+    // Helper function to get restaurant details
+    fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
+        return restaurantInfoMap[restaurant]
     }
 }

@@ -2,6 +2,7 @@ package com.eatssu.android.di
 
 import android.app.Application
 import android.content.Context
+import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.repository.PreferencesRepository
 import dagger.Module
 import dagger.Provides
@@ -25,4 +26,11 @@ object AppModule {
     fun providePreferencesRepository(@ApplicationContext context: Context): PreferencesRepository {
         return PreferencesRepository(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseRemoteConfigRepository(): FirebaseRemoteConfigRepository {
+        return FirebaseRemoteConfigRepository()
+    }
+
 }

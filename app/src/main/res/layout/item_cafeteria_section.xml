@@ -31,6 +31,13 @@
             android:text="@string/student_cafeteria"
             android:textColor="@color/black" />
 
+        <LinearLayout
+            android:id="@+id/ll_cafeteria_info"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+
         <TextView
             android:id="@+id/tv_cafeteria_location"
             style="@style/Caption3"
@@ -49,6 +56,8 @@
             android:gravity="start"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_info_12" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

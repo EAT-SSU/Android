@@ -32,11 +32,11 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/img_logo1_44"
+        android:icon="@drawable/img_logo_512"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/img_logo1_44"
+        android:roundIcon="@drawable/img_logo_512"
         android:supportsRtl="true"
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
@@ -151,14 +151,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".ui.info.InfoActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,12 +18,10 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.model.Section
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.ui.info.InfoViewModel
-import com.eatssu.android.ui.info.InfoViewModelFactory
 import com.eatssu.android.ui.main.calendar.CalendarViewModel
 import com.eatssu.android.util.RetrofitImpl
 import java.time.DayOfWeek
@@ -51,9 +50,9 @@ class MenuFragment : Fragment() {
 
     private val totalMenuList = ArrayList<Section>()
 
-    private lateinit var infoViewModel: InfoViewModel
     private lateinit var restaurantType: Restaurant
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
+
+    private val infoViewModel: InfoViewModel by activityViewModels()
 
 
     companion object {
@@ -75,13 +74,6 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
-
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        infoViewModel = ViewModelProvider(
-            this,
-            InfoViewModelFactory(firebaseRemoteConfigRepository)
-        )[InfoViewModel::class.java]
-
         return binding.root
     }
 
@@ -90,11 +82,6 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeViewModel()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -145,7 +132,8 @@ class MenuFragment : Fragment() {
                                 MenuType.FIXED,
                                 Restaurant.FOOD_COURT,
                                 result.mapFixedMenuResponseToMenu(),
-                                infoViewModel.foodLocation.value.toString()
+                                infoViewModel.getRestaurantInfo(Restaurant.FOOD_COURT)?.location
+                                    ?: ""
                             )
                         )
                     }
@@ -163,7 +151,8 @@ class MenuFragment : Fragment() {
                                 MenuType.FIXED,
                                 Restaurant.SNACK_CORNER,
                                 result.mapFixedMenuResponseToMenu(),
-                                infoViewModel.snackLocation.value.toString()
+                                infoViewModel.getRestaurantInfo(Restaurant.SNACK_CORNER)?.location
+                                    ?: ""
                             )
                         )
                     }
@@ -198,7 +187,7 @@ class MenuFragment : Fragment() {
                             MenuType.VARIABLE,
                             Restaurant.HAKSIK,
                             result.mapTodayMenuResponseToMenu(),
-                            infoViewModel.haksikLocation.value.toString()
+                            infoViewModel.getRestaurantInfo(Restaurant.HAKSIK)?.location ?: ""
                         )
                     )
 
@@ -217,7 +206,7 @@ class MenuFragment : Fragment() {
                             MenuType.VARIABLE,
                             Restaurant.DODAM,
                             result.mapTodayMenuResponseToMenu(),
-                            infoViewModel.dodamLocation.value.toString()
+                            infoViewModel.getRestaurantInfo(Restaurant.DODAM)?.location ?: ""
                         )
                     )
                 }
@@ -234,7 +223,7 @@ class MenuFragment : Fragment() {
                             MenuType.VARIABLE,
                             Restaurant.DORMITORY,
                             result.mapTodayMenuResponseToMenu(),
-                            infoViewModel.dormitoryLocation.value.toString()
+                            infoViewModel.getRestaurantInfo(Restaurant.DORMITORY)?.location ?: ""
                         )
                     )
                 }
