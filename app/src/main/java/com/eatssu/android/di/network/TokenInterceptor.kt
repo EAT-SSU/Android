@@ -1,12 +1,11 @@
 package com.eatssu.android.di.network
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
-import com.eatssu.android.App
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
@@ -18,6 +17,7 @@ import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
 import com.eatssu.android.ui.login.LoginActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -33,6 +33,7 @@ class TokenInterceptor @Inject constructor(
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
+    @ApplicationContext private val context: Context
 ) : Interceptor {
 
     companion object {
