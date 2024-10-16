@@ -11,9 +11,10 @@ import com.eatssu.android.App
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.db.MySharedPreferences
 import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.di.network.TokenInterceptor
-import com.eatssu.android.ui.login.LoginActivity
+import com.eatssu.android.presentation.login.LoginActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
