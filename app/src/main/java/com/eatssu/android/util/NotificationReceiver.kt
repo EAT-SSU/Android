@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
-import com.eatssu.android.ui.main.MainActivity
+import com.eatssu.android.presentation.main.MainActivity
 
 class NotificationReceiver : BroadcastReceiver() {
 

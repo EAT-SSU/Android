@@ -1,6 +1,6 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.domain.service.ReviewService
 
 class ReviewRepository(private val reviewService: ReviewService) {
 
