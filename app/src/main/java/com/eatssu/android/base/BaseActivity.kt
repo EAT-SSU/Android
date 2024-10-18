@@ -16,10 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.presentation.common.AndroidMessageDialogActivity
-import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
-import com.eatssu.android.presentation.common.VersionViewModel
-import com.eatssu.android.presentation.common.VersionViewModelFactory
+import com.eatssu.android.ui.common.AndroidMessageDialogActivity
+import com.eatssu.android.ui.common.ForceUpdateDialogActivity
+import com.eatssu.android.ui.common.VersionViewModel
+import com.eatssu.android.ui.common.VersionViewModelFactory
 import com.eatssu.android.util.NetworkConnection
 import com.google.android.material.card.MaterialCardView
 

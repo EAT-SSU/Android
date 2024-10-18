@@ -1,6 +1,6 @@
 package com.eatssu.android.data.dto.response
 
-import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.data.model.ReviewInfo
 import com.google.gson.annotations.SerializedName
 
 data class GetMenuReviewInfoResponse(
