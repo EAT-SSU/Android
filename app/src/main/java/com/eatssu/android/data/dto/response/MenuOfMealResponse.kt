@@ -1,6 +1,6 @@
 package com.eatssu.android.data.dto.response
 
-import com.eatssu.android.domain.model.MenuMini
+import com.eatssu.android.data.model.MenuMini
 import com.google.gson.annotations.SerializedName
 
 data class MenuOfMealResponse(

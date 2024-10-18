@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.eatssu.android.presentation.review.list.ReviewViewModel" />
+            type="com.eatssu.android.ui.review.list.ReviewViewModel" />
     </data>
 
     <LinearLayout
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_margin="16dp"
-        tools:context=".presentation.review.list.ReviewActivity">
+        tools:context=".ui.review.list.ReviewActivity">
 
         <ScrollView
             android:id="@+id/sv_review"

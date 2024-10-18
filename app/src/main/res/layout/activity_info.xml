@@ -9,7 +9,7 @@
     android:layout_marginEnd="30dp"
     android:gravity="center"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    tools:context=".presentation.info.InfoActivity">
+    tools:context=".ui.info.InfoActivity">
 
     <LinearLayout
         android:layout_width="300dp"
