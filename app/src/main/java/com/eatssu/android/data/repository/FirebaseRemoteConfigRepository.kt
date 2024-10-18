@@ -2,7 +2,7 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.domain.model.RestaurantInfo
+import com.eatssu.android.data.model.RestaurantInfo
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.json.JSONArray
