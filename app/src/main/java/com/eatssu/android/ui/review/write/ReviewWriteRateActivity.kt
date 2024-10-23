@@ -19,9 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.service.ImageService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
@@ -39,10 +37,6 @@ class ReviewWriteRateActivity :
 
     private val uploadReviewViewModel: UploadReviewViewModel by viewModels()
     private val imageviewModel: ImageViewModel by viewModels()
-
-//    private lateinit var imageviewModel: ImageViewModel
-
-    private lateinit var imageService: ImageService
 
     private val PERMISSION_REQUEST_CODE = 1
 
@@ -74,13 +68,9 @@ class ReviewWriteRateActivity :
         setupTextReviewInput()
 
         setOnClickListener()
-        imageService = retrofit.create(ImageService::class.java)
 
 
         binding.viewModel = uploadReviewViewModel
-//        imageviewModel =
-//            ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
-
     }
 
     fun setOnClickListener() {
@@ -137,12 +127,12 @@ class ReviewWriteRateActivity :
     }
 
     private fun setCompressedImage() {
-        compressedImage?.let {
+        compressedImage?.let { it ->
             imageviewModel.setImageFile(it)
             imageviewModel.saveS3() //이미지 url 반환 api 호출
             lifecycleScope.launch {
                 imageviewModel.uiState.collectLatest {
-                    if (it.isDone) {
+                    if (it.isImageUploadDone) {
                         postReview()
                     }
                 }
@@ -354,12 +344,9 @@ class ReviewWriteRateActivity :
                 }
             }
         }
-
-
     }
 
     companion object {
-        const val TAG = "ReviewWriteRateActivity"
 
         const val REVIEW_MIN_LENGTH = 10
 

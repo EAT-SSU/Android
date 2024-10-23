@@ -1,11 +1,12 @@
 package com.eatssu.android.ui.review.delete
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.data.usecase.DeleteReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DeleteViewModel @Inject constructor(
     private val deleteReviewUseCase: DeleteReviewUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<DeleteState> = MutableStateFlow(DeleteState())
@@ -37,7 +39,7 @@ class DeleteViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         error = true,
-                        toastMessage = App.appContext.getString(R.string.delete_not)
+                        toastMessage = context.getString(R.string.delete_not)
                     )
                 }
                 Timber.e(e.toString())
@@ -47,7 +49,7 @@ class DeleteViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isDeleted = true,
-                        toastMessage = App.appContext.getString(R.string.delete_done) //Todo Appcontext
+                        toastMessage = context.getString(R.string.delete_done)
                     )
                 }
             }

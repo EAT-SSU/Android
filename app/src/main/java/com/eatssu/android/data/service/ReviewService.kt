@@ -9,7 +9,15 @@ import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
 import okhttp3.MultipartBody
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface ReviewService {
@@ -54,7 +62,7 @@ interface ReviewService {
 
     @Multipart
     @POST("/reviews/upload/image") //리뷰 이미지 업로드
-    suspend fun getImageUrl(
+    suspend fun uploadImage(
         @Part image: MultipartBody.Part,
     ): BaseResponse<ImageResponse>
 

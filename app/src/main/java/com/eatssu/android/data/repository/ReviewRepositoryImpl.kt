@@ -59,7 +59,7 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
         image: MultipartBody.Part,
     ): Flow<BaseResponse<ImageResponse>> =
         flow {
-            emit(reviewService.getImageUrl(image))
+            emit(reviewService.uploadImage(image))
         }
 
 }

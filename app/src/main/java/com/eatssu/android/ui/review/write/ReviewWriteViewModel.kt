@@ -1,6 +1,5 @@
 package com.eatssu.android.ui.review.write
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.request.WriteReviewRequest
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -65,9 +65,9 @@ class UploadReviewViewModel @Inject constructor(
                         isUpload = false,
                     )
                 }
-                Log.d(TAG, e.toString())
+                Timber.d(e.toString())
             }.collectLatest { result ->
-                Log.d(TAG, result.toString())
+                Timber.d(result.toString())
                 _uiState.update {
                     it.copy(
                         loading = false,
@@ -78,10 +78,6 @@ class UploadReviewViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    companion object {
-        private val TAG = "ReviewWriteViewModel"
     }
 }
 
