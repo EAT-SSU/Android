@@ -38,8 +38,6 @@ class ReviewWriteRateActivity :
     private val uploadReviewViewModel: UploadReviewViewModel by viewModels()
     private val imageviewModel: ImageViewModel by viewModels()
 
-    private val PERMISSION_REQUEST_CODE = 1
-
     private var itemId: Long = 0
     private lateinit var itemName: String
     private var comment: String? = ""
@@ -83,15 +81,12 @@ class ReviewWriteRateActivity :
 
         binding.btnNextReview2.setOnClickListener {
             if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
-                Toast.makeText(this, "별점을 등록해주세요", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                showToast("별점을 등록해주세요")
             }
 
             if ((comment?.trim()?.length ?: 0) < 3) {
-                Toast.makeText(this, "3자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                showToast("3자 이상 입력해주세요")
             }
-
 
             //파일 업로드가 끝났거나, 파일을 첨부하지 않거나
             if (imageFile?.exists() == true) {
@@ -214,7 +209,7 @@ class ReviewWriteRateActivity :
                 ActivityCompat.requestPermissions(
                     this, arrayOf(
                         Manifest.permission.READ_MEDIA_IMAGES,
-                    ), REQ_GALLERY
+                    ), PERMISSION_REQUEST_CODE
                 )
                 Timber.e("권한 없음")
 
@@ -240,7 +235,7 @@ class ReviewWriteRateActivity :
                     this, arrayOf(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE
-                    ), REQ_GALLERY
+                    ), PERMISSION_REQUEST_CODE
                 )
                 Timber.e("권한 없음")
 
@@ -351,12 +346,6 @@ class ReviewWriteRateActivity :
         const val REVIEW_MIN_LENGTH = 10
 
         // 갤러리 권한 요청
-        const val REQ_GALLERY = 1
-
-        // API 호출시 Parameter key값
-        const val PARAM_KEY_IMAGE = "image"
-        const val PARAM_KEY_PRODUCT_ID = "product_id"
-        const val PARAM_KEY_REVIEW = "review_content"
-        const val PARAM_KEY_RATING = "rating"
+        const val PERMISSION_REQUEST_CODE = 1
     }
 }
