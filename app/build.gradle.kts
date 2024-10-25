@@ -45,11 +45,9 @@ android {
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
-            var shrinkResources = false
-            var minifyEnabled = false
         }
 
         debug {
