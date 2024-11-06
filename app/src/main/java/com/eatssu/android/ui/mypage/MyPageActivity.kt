@@ -82,7 +82,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         if (isChecked) {
             if (checkNotificationPermission(this)) { // 권한이 있는 상태
                 myPageViewModel.setNotificationOn()
-//                showToast("EAT-SSU 알림 수신을 동의하였습니다.")
                 showSnackbar("EAT-SSU 알림 수신을 동의하였습니다.\n$formattedDate")
             } else { // 권한이 없으면 설정 화면으로 이동 알림
                 showNotificationPermissionDialog()
@@ -90,7 +89,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         } else {
             myPageViewModel.setNotificationOff()
             showSnackbar("EAT-SSU 알림 수신을 거부하였습니다.\n$formattedDate")
-//            showToast("EAT-SSU 알림 수신을 거부하였습니다.")
         }
     }
 
