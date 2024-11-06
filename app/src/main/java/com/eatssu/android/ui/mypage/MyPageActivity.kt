@@ -27,9 +27,12 @@ import com.eatssu.android.ui.mypage.terms.WebViewActivity
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.util.extension.showToast
 import com.eatssu.android.util.extension.startActivity
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate) {
@@ -47,6 +50,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -57,29 +61,42 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         binding.tvNickname.text = it.nickname
                     }
 
+                    // Switch 상태를 설정할 때 리스너를 임시로 null로 설정
+                    binding.alarmSwitch.setOnCheckedChangeListener(null)
                     binding.alarmSwitch.isChecked = it.isAlarmOn
+                    // 상태 설정 후에 리스너 추가
+                    binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        handleAlarmSwitchChange(isChecked)
+                    }
                 }
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setOnClickListener() {
+    private fun handleAlarmSwitchChange(isChecked: Boolean) {
+        val nowDatetime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val formattedDate = nowDatetime.format(formatter)
 
-        binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                if (checkNotificationPermission(this)) { //허용되어 있는 상태
-                    myPageViewModel.setNotificationOn()
-                    showToast("EAT-SSU 알림 수신을 동의하였습니다.")
-                } else { // 알림 권한이 없을 때 사용자에게 설정 화면으로 이동하라고 알림
-                    showNotificationPermissionDialog()
-                }
-            } else {
-                myPageViewModel.setNotificationOff()
-                showToast("EAT-SSU 알림 수신을 거부하였습니다.")
+        if (isChecked) {
+            if (checkNotificationPermission(this)) { // 권한이 있는 상태
+                myPageViewModel.setNotificationOn()
+//                showToast("EAT-SSU 알림 수신을 동의하였습니다.")
+                showSnackbar("EAT-SSU 알림 수신을 동의하였습니다.\n$formattedDate")
+            } else { // 권한이 없으면 설정 화면으로 이동 알림
+                showNotificationPermissionDialog()
             }
+        } else {
+            myPageViewModel.setNotificationOff()
+            showSnackbar("EAT-SSU 알림 수신을 거부하였습니다.\n$formattedDate")
+//            showToast("EAT-SSU 알림 수신을 거부하였습니다.")
         }
+    }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setOnClickListener() {
         binding.llNickname.setOnClickListener {
             startActivity<UserNameChangeActivity>()
         }
@@ -271,6 +288,9 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         context.startActivity(intent)
     }
 
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
 
     companion object {
         private const val REQUEST_NOTIFICATION_PERMISSION = 1001
