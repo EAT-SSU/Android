@@ -7,14 +7,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
 import com.eatssu.android.ui.main.MainActivity
+import java.time.DayOfWeek
+import java.time.LocalDateTime
 
 class NotificationReceiver : BroadcastReceiver() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
-        showNotification(context)
+        // 현재 요일이 평일인 경우에만 알림을 발송
+        val currentDay = LocalDateTime.now().dayOfWeek
+        if (currentDay != DayOfWeek.SATURDAY && currentDay != DayOfWeek.SUNDAY) {
+            showNotification(context)
+        }
     }
 
     private fun showNotification(context: Context) {
