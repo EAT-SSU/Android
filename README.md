@@ -1,11 +1,7 @@
 # 숭실대에서 먹자, 잇슈!
-
-
-## 📌 Project Init
-
 - 숭실대 학식 리뷰 앱
 - 기간: 2023.03 ~  
-- [PlayStore 바로가기](https://play.google.com/store/apps/details?id=com.eassu.android)  
+- [PlayStore](https://play.google.com/store/apps/details?id=com.eassu.android) 출시일 2023.11.28 ~
 
 ![그래픽이미지](https://github.com/user-attachments/assets/e89f46bb-dece-45a9-a453-a00bf9d463cd)
 
@@ -31,24 +27,28 @@
 
 ## 📄 Package
 ```
-com.eatssu.android
-├── base
-├── data
-│   ├── dto
-│   │   ├── request
-│   │   └── response
-│   ├── enums
-│   ├── model
-│   ├── repository
-│   ├── service
-│   └── usecase
-├── di
-├── ui
-│   ├── common
-│   └── feature
-│       ├── ViewModel
-│       └── View
-└── util
+📦com.eatssu.android
+├── 📂base
+├── 📂data
+│   ├── 📂db
+│   ├── 📂dto
+│   │   ├── 📂request
+│   │   └── 📂response
+│   ├── 📂enums
+│   └── 📂repository(impl)
+├── 📂di
+├── 📂domain
+│   ├── 📂model
+│   ├── 📂repository
+│   ├── 📂service
+│   └── 📂usecase
+├── 📂presentation
+│   ├── 📂common
+│   └── 📂feature
+│       ├── 📂viewModel
+│       └── 📂view
+├── 📂util
+└── 📄App
 ```
 
 
