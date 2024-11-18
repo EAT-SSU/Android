@@ -20,6 +20,8 @@ class App: Application() {
         appContext = this
         KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)
 
-        Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }

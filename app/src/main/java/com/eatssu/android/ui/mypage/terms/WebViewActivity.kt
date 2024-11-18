@@ -1,17 +1,14 @@
 package com.eatssu.android.ui.mypage.terms
 
 import android.os.Bundle
-import android.util.Log
 import android.webkit.WebViewClient
 import com.eatssu.android.base.BaseActivity
 import com.eatssu.android.databinding.ActivityWebviewBinding
+import timber.log.Timber
 
 
 class WebViewActivity : BaseActivity<ActivityWebviewBinding>(ActivityWebviewBinding::inflate) {
 
-    companion object {
-        val TAG = "WebViewActivity"
-    }
 
     private var URL = ""
     private var TITLE = ""
@@ -32,7 +29,7 @@ class WebViewActivity : BaseActivity<ActivityWebviewBinding>(ActivityWebviewBind
             TITLE = intent.getStringExtra("TITLE") ?: ""
 
             toolbarTitle.text = TITLE
-            Log.d(TAG, URL + TITLE)
+            Timber.d(URL + TITLE)
 
             if (savedInstanceState != null) restoreState(savedInstanceState)
             else loadUrl(URL)

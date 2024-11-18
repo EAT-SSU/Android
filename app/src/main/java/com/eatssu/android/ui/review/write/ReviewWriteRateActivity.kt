@@ -9,57 +9,49 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.service.ImageService
-import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
-import com.eatssu.android.util.RetrofitImpl.mRetrofit
-import com.eatssu.android.util.RetrofitImpl.retrofit
 import com.eatssu.android.util.extension.showToast
+import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import java.text.DecimalFormat
 import kotlin.math.log10
 import kotlin.math.pow
 
+@AndroidEntryPoint
 class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
-    private lateinit var uploadReviewViewModel: UploadReviewViewModel
-    private lateinit var imageviewModel: ImageViewModel
-
-    private lateinit var reviewService: ReviewService
-    private lateinit var imageService: ImageService
-
-    private val PERMISSION_REQUEST_CODE = 1
+    private val viewModel: UploadReviewViewModel by viewModels()
+    private val imageviewModel: ImageViewModel by viewModels()
 
     private var itemId: Long = 0
     private lateinit var itemName: String
     private var comment: String? = ""
 
-
     private var imageFile: File? = null
     private var compressedImage: File? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
+        binding.viewModel = viewModel
 
         itemName = intent.getStringExtra("itemName").toString()
-        Log.d("post", "고정메뉴${itemName}")
+        Timber.d("고정메뉴 $itemName")
 
         itemId = intent.getLongExtra("itemId", -1)
 
@@ -73,49 +65,31 @@ class ReviewWriteRateActivity :
         setupTextReviewInput()
 
         setOnClickListener()
-
-
-        imageService = mRetrofit.create(ImageService::class.java)
-        reviewService = retrofit.create(ReviewService::class.java)
-
-
-        uploadReviewViewModel = ViewModelProvider(
-            this,
-            ReviewWriteViewModelFactory(reviewService)
-        )[UploadReviewViewModel::class.java]
-        imageviewModel =
-            ViewModelProvider(this, ImageViewModelFactory(imageService))[ImageViewModel::class.java]
-
-        binding.viewModel = uploadReviewViewModel
-
     }
 
     fun setOnClickListener() {
         // 이미지 추가 버튼 클릭 리스너 설정
         binding.ibAddPic.setOnClickListener {
-            Log.d("ReviewWriteRateActivity", "클릭")
+            Timber.d("클릭")
 
             checkPermission()
         }
 
         binding.btnNextReview2.setOnClickListener {
             if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
-                Toast.makeText(this, "별점을 등록해주세요", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                showToast("별점을 등록해주세요")
             }
 
             if ((comment?.trim()?.length ?: 0) < 3) {
-                Toast.makeText(this, "3자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                showToast("3자 이상 입력해주세요")
             }
-
 
             //파일 업로드가 끝났거나, 파일을 첨부하지 않거나
             if (imageFile?.exists() == true) {
                 showToast("리뷰 업로드 중")
                 compressImage()
 
-                Log.d("ImageViewMdoel", "s3 시작")
+                Timber.d("s3 시작")
 
             } else {
                 postReview()
@@ -133,7 +107,7 @@ class ReviewWriteRateActivity :
             lifecycleScope.launch {
                 // Default compression
                 compressedImage = Compressor.compress(this@ReviewWriteRateActivity, imageFile)
-                Log.d("ImageViewModel", "압축 됨+" + (compressedImage?.length()?.div(1024)).toString())
+                Timber.d("압축 된 사이즈+" + (compressedImage?.length()?.div(1024)).toString())
                 setCompressedImage()
             }
         } ?: showError("Please choose an image!")
@@ -144,17 +118,17 @@ class ReviewWriteRateActivity :
     }
 
     private fun setCompressedImage() {
-        compressedImage?.let {
+        compressedImage?.let { it ->
             imageviewModel.setImageFile(it)
             imageviewModel.saveS3() //이미지 url 반환 api 호출
             lifecycleScope.launch {
                 imageviewModel.uiState.collectLatest {
-                    if (it.isDone) {
+                    if (it.isImageUploadDone) {
                         postReview()
                     }
                 }
             }
-            Log.d("Compressor", "Compressed image save in " + getReadableFileSize(it.length()))
+            Timber.d("Compressed image save in " + getReadableFileSize(it.length()))
         }
     }
 
@@ -212,7 +186,7 @@ class ReviewWriteRateActivity :
         val result = cursor.getString(columnIndex)
         cursor.close()
 
-        Log.d("ReviewWriteRateActivity", result)
+        Timber.d("realPath: $result")
         return result
     }
 
@@ -231,9 +205,9 @@ class ReviewWriteRateActivity :
                 ActivityCompat.requestPermissions(
                     this, arrayOf(
                         Manifest.permission.READ_MEDIA_IMAGES,
-                    ), REQ_GALLERY
+                    ), PERMISSION_REQUEST_CODE
                 )
-                Log.d("ReviewWriteRateActivity", "권한 없음")
+                Timber.e("권한 없음")
 
             } else {
                 openGallery()
@@ -257,9 +231,9 @@ class ReviewWriteRateActivity :
                     this, arrayOf(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE
-                    ), REQ_GALLERY
+                    ), PERMISSION_REQUEST_CODE
                 )
-                Log.d("ReviewWriteRateActivity", "권한 없음")
+                Timber.e("권한 없음")
 
             } else {
                 openGallery()
@@ -280,11 +254,11 @@ class ReviewWriteRateActivity :
     }
 
     private fun requestStoragePermission() {
-        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
             PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 PERMISSION_REQUEST_CODE
             )
         }
@@ -303,6 +277,7 @@ class ReviewWriteRateActivity :
         })
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
         super.onBackPressed()
         if (imageFile?.exists() == true) {
@@ -316,9 +291,9 @@ class ReviewWriteRateActivity :
 
 
     private fun deleteImage() {
-        Log.d("ReviewWriteRateActivity", imageFile.toString())
+        Timber.d("imageFile: " + imageFile.toString())
         if (imageFile?.exists() == true) {
-            Toast.makeText(this, "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            showToast("이미지가 삭제되었습니다.")
             binding.ivImage.setImageDrawable(null)
             imageFile!!.delete() //file을 날린다.
             compressedImage?.delete() //file을 날린다.
@@ -329,14 +304,14 @@ class ReviewWriteRateActivity :
             imageviewModel.deleteFile()
 
         } else {
-            Toast.makeText(this, "이미지를 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            showToast("이미지를 삭제할 수 없습니다.")
         }
     }
 
     private fun postReview() {
 
         //Todo imageurl을 체크해야하는 이유?
-        uploadReviewViewModel.setReviewData(
+        viewModel.setReviewData(
             itemId,
             binding.rbMain.rating.toInt(),
             binding.rbAmount.rating.toInt(),
@@ -345,36 +320,29 @@ class ReviewWriteRateActivity :
             imageviewModel.imageUrl.value ?: ""
         )
 
-        uploadReviewViewModel.postReview()
-        Log.d("ReviewWriteRateActivity", "리뷰 전송")
+        viewModel.postReview()
+        Timber.d("리뷰 전송")
 
 
         lifecycleScope.launch {
-            uploadReviewViewModel.uiState.collectLatest {
+            viewModel.uiState.collectLatest {
                 if (it.error) {
-                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
+                    showToast(viewModel.uiState.value.toastMessage)
                 }
                 if (!it.error && !it.loading && it.isUpload) {
-                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
-                    Log.d("ReviewWriteRateActivity", "리뷰 작성 성공")
+                    showToast(viewModel.uiState.value.toastMessage)
+                    Timber.d("리뷰 작성 성공")
                     finish()
                 }
             }
         }
-
-
     }
 
     companion object {
+
         const val REVIEW_MIN_LENGTH = 10
 
         // 갤러리 권한 요청
-        const val REQ_GALLERY = 1
-
-        // API 호출시 Parameter key값
-        const val PARAM_KEY_IMAGE = "image"
-        const val PARAM_KEY_PRODUCT_ID = "product_id"
-        const val PARAM_KEY_REVIEW = "review_content"
-        const val PARAM_KEY_RATING = "rating"
+        const val PERMISSION_REQUEST_CODE = 1
     }
 }

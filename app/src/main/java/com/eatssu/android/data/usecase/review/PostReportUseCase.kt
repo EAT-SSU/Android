@@ -1,4 +1,4 @@
-package com.eatssu.android.data.usecase
+package com.eatssu.android.data.usecase.review
 
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ReportRequest

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.request.ReportRequest
-import com.eatssu.android.data.usecase.PostReportUseCase
+import com.eatssu.android.data.usecase.review.PostReportUseCase
 import com.eatssu.android.ui.mypage.usernamechange.UserNameChangeViewModel.Companion.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

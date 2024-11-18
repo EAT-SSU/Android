@@ -1,4 +1,4 @@
-package com.eatssu.android.data.usecase
+package com.eatssu.android.data.usecase.alarm
 
 import com.eatssu.android.data.repository.PreferencesRepository
 import javax.inject.Inject
