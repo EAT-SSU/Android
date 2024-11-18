@@ -1,4 +1,4 @@
-package com.eatssu.android.data.usecase
+package com.eatssu.android.data.usecase.auth
 
 import android.content.Context
 import com.eatssu.android.util.MySharedPreferences

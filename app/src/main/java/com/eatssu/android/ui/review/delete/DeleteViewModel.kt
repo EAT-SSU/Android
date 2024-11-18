@@ -1,62 +1,68 @@
 package com.eatssu.android.ui.review.delete
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.base.BaseResponse
-import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.util.RetrofitImpl
-import kotlinx.coroutines.Dispatchers
+import com.eatssu.android.R
+import com.eatssu.android.data.usecase.review.DeleteReviewUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import timber.log.Timber
+import javax.inject.Inject
 
-class DeleteViewModel : ViewModel() {
-    private val _isDone = MutableLiveData<Boolean>()
-    val isDone: LiveData<Boolean> get() = _isDone
+@HiltViewModel
+class DeleteViewModel @Inject constructor(
+    private val deleteReviewUseCase: DeleteReviewUseCase,
+    @ApplicationContext private val context: Context
+) : ViewModel() {
 
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
+    private val _uiState: MutableStateFlow<DeleteState> = MutableStateFlow(DeleteState())
+    val uiState: StateFlow<DeleteState> = _uiState.asStateFlow()
 
-    fun postData(reviewId: Long) {
-        val service = RetrofitImpl.retrofit.create(ReviewService::class.java)
 
-        viewModelScope.launch(Dispatchers.IO) {
-            service.deleteReview(reviewId).enqueue(object : Callback<BaseResponse<Void>> {
-                override fun onResponse(
-                    call: Call<BaseResponse<Void>>,
-                    response: Response<BaseResponse<Void>>,
-                ) {
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            handleSuccessResponse("삭제가 완료되었습니다.")
-                        } else {
-                            handleErrorResponse("삭제가 실패하였습니다.")
-                        }
-                    }
+    fun deleteReview(reviewId: Long) {
+        viewModelScope.launch {
+            deleteReviewUseCase(reviewId).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update {
+                    it.copy(
+                        error = true,
+                        toastMessage = context.getString(R.string.delete_not)
+                    )
                 }
+                Timber.e(e.toString())
+            }.collectLatest { result ->
+                Timber.d(result.toString())
 
-                override fun onFailure(call: Call<BaseResponse<Void>>, t: Throwable) {
-                    handleErrorResponse("삭제가 실패하였습니다.")
+                _uiState.update {
+                    it.copy(
+                        isDeleted = true,
+                        toastMessage = context.getString(R.string.delete_done)
+                    )
                 }
-            })
-        }
-    }
-
-    fun handleSuccessResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-            _isDone.value = true
-
-        }
-    }
-
-    fun handleErrorResponse(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            _toastMessage.value = message
-            _isDone.value = false
+            }
         }
     }
 }
+
+data class DeleteState(
+    var loading: Boolean = true,
+    var error: Boolean = false,
+
+    var toastMessage: String = "",
+
+    var isDeleted: Boolean = false,
+
+    )

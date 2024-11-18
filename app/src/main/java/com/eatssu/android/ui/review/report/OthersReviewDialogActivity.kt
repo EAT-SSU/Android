@@ -2,9 +2,9 @@ package com.eatssu.android.ui.review.report
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.eatssu.android.databinding.ActivityOthersReviewDialogBinding
+import timber.log.Timber
 
 class OthersReviewDialogActivity : AppCompatActivity() {
 
@@ -29,7 +29,7 @@ class OthersReviewDialogActivity : AppCompatActivity() {
             intent.putExtra(
                 "reviewId", reviewId
             )
-            Log.d("dialogid", reviewId.toString())
+            Timber.d("reviewId $reviewId")
             startActivity(intent)
             finish()
         }

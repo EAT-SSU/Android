@@ -3,9 +3,9 @@ package com.eatssu.android.ui.mypage.usernamechange
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.usecase.GetUserNameUseCase
-import com.eatssu.android.data.usecase.SetUserNameUseCase
-import com.eatssu.android.data.usecase.ValidateUserNameUseCase
+import com.eatssu.android.data.usecase.auth.GetUserNameUseCase
+import com.eatssu.android.data.usecase.auth.SetUserNameUseCase
+import com.eatssu.android.data.usecase.auth.ValidateUserNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,7 +38,7 @@ class UserNameChangeViewModel @Inject constructor(
                 _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "닉네임 중복 확인에 실패했습니다.") }
-                Log.e(TAG, e.toString())
+                Timber.e(e.toString())
             }.collectLatest { result ->
                 if (result.result == true) {
                     _uiState.update {

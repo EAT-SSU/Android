@@ -3,54 +3,51 @@ package com.eatssu.android.ui.review.write.menu
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
-import com.eatssu.android.data.service.MealService
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
-import com.eatssu.android.util.RetrofitImpl.retrofit
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
+@AndroidEntryPoint
 class ReviewWriteMenuActivity :
     BaseActivity<ActivityReviewWriteMenuBinding>(ActivityReviewWriteMenuBinding::inflate) {
 
+    private val viewModel: VariableMenuViewModel by viewModels()
+    private var mealId: Long = -1
+
     private lateinit var variableMenuPickAdapter: VariableMenuPickAdapter
-    private lateinit var viewModel: VariableMenuViewModel
-    private lateinit var mealService: MealService
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
-        val mealId = intent.getLongExtra("itemId", -1)
-
-        initViewModel()
-        bindData(mealId)
+        getIndex()
+        lodeData()
+        bindData()
         setClickListener()
     }
 
-
-    private fun initViewModel() {
-        mealService = retrofit.create(MealService::class.java)
-        viewModel = ViewModelProvider(
-            this,
-            VariableMenuModelFactory(mealService)
-        )[VariableMenuViewModel::class.java]
+    fun getIndex() {
+        mealId = intent.getLongExtra("itemId", -1)
     }
 
-    private fun bindData(mealId: Long) {
+    fun lodeData() {
         viewModel.findMenuItemByMealId(mealId)
+    }
 
+    private fun bindData() {
         lifecycleScope.launch {
             viewModel.uiState.collectLatest {
                 if (!it.error && !it.loading) {
-                    Log.d("ReviewWriteMenuActivity", "!!!받은" + it.menuOfMeal.toString())
+                    Timber.d("받은" + it.menuOfMeal.toString())
 
                     variableMenuPickAdapter = VariableMenuPickAdapter(it.menuOfMeal!!)
                     binding.rvMenuPicker.apply {
@@ -58,6 +55,8 @@ class ReviewWriteMenuActivity :
                         layoutManager = LinearLayoutManager(this@ReviewWriteMenuActivity)
                         setHasFixedSize(true)
                     }
+                    // 데이터 바인딩이 완료된 후 클릭 리스너 설정
+//                    setClickListener()
                 }
             }
         }
@@ -71,7 +70,7 @@ class ReviewWriteMenuActivity :
 
     private fun sendNextItem(items: ArrayList<Pair<String, Long>>) {
         for (i in 0 until items.size) {
-            Log.d("sendNextItem", items.size.toString())
+            Timber.d("sendNextItem: " + items.size.toString())
             // 현재 아이템을 가져옴
 
             val currentItem = items[i]

@@ -17,8 +17,8 @@ interface MealService {
     ): Call<BaseResponse<ArrayList<GetMealResponse>>>
 
     @GET("meals/{mealId}/menus-info") //메뉴 정보 리스트 조회
-    fun getMenuInfoByMealId(
+    suspend fun getMenuInfoByMealId(
         @Path("mealId") mealId: Long,
-    ): Call<BaseResponse<MenuOfMealResponse>>
+    ): BaseResponse<MenuOfMealResponse>
 
 }

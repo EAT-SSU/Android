@@ -2,18 +2,25 @@ package com.eatssu.android.ui.review.delete
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.App
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMyReviewDialogBinding
 import com.eatssu.android.ui.review.modify.ModifyReviewActivity
+import com.eatssu.android.util.extension.showToast
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
+@AndroidEntryPoint
 class MyReviewDialogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyReviewDialogBinding
-    private lateinit var viewModel: DeleteViewModel
+
+    private val deleteViewModel: DeleteViewModel by viewModels()
 
     var reviewId = -1L
     var menu = ""
@@ -28,8 +35,6 @@ class MyReviewDialogActivity : AppCompatActivity() {
         binding = ActivityMyReviewDialogBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this).get(DeleteViewModel::class.java)
-
         reviewId = intent.getLongExtra("reviewId", -1L)
         menu = intent.getStringExtra("menu").toString()
         content = intent.getStringExtra("content").toString()
@@ -37,9 +42,10 @@ class MyReviewDialogActivity : AppCompatActivity() {
         amountGrade = intent.getIntExtra("amountGrade", -1)
         tasteGrade = intent.getIntExtra("tasteGrade", -1)
 
-        Log.d("ReviewFixedActivity", "전:" + reviewId.toString())
-        Log.d("ReviewFixedActivity", "전:" + menu.toString())
-        Log.d("ReviewFixedActivity", "전:" + content.toString())
+        Timber.d("전:" + reviewId.toString())
+        Timber.d("전:" + menu.toString())
+        Timber.d("전:" + content.toString())
+        Timber.d(reviewId.toString())
 
         binding.btnReviewFix.setOnClickListener {
             val intent = Intent(this, ModifyReviewActivity::class.java)
@@ -56,29 +62,23 @@ class MyReviewDialogActivity : AppCompatActivity() {
 
         binding.btnReviewDelete.setOnClickListener {
             AlertDialog.Builder(this).apply {
-                setTitle("리뷰 삭제")
-                setMessage("작성한 리뷰를 삭제하시겠습니까?")
+                setTitle(R.string.delete)
+                setMessage(R.string.delete_description)
                 setNegativeButton("취소") { _, _ ->
-                    viewModel.handleErrorResponse("삭제를 취소하였습니다.")
+                    showToast(App.appContext.getString(R.string.delete_undo))
                 }
                 setPositiveButton("삭제") { _, _ ->
-                    viewModel.postData(reviewId)
+                    deleteViewModel.deleteReview(reviewId)
+                    lifecycleScope.launch {
+                        deleteViewModel.uiState.collectLatest {
+                            if (it.isDeleted) {
+                                finish()
+                            }
+                        }
+                    }
                 }
             }.create().show()
 
-            observeViewModel()
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.toastMessage.observe(this, Observer { result ->
-            Toast.makeText(this@MyReviewDialogActivity, result, Toast.LENGTH_SHORT).show()
-        })
-
-        viewModel.isDone.observe(this) { isDone ->
-            if(isDone) {
-                finish()
-            }
         }
     }
 }

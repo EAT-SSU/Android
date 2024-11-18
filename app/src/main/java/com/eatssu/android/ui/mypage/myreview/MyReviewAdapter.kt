@@ -1,7 +1,6 @@
 package com.eatssu.android.ui.mypage.myreview
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import com.eatssu.android.data.model.Review
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
 import com.eatssu.android.util.MySharedPreferences
+import timber.log.Timber
 
 
 class MyReviewAdapter(private val dataList: List<Review>) :
@@ -34,7 +34,7 @@ class MyReviewAdapter(private val dataList: List<Review>) :
             if (dataList[position].imgUrl?.isEmpty() == true) {
                 imageView.visibility = View.GONE
             } else {
-                Log.d("qwer", "사진 있다")
+                Timber.d("사진 있다")
                 Glide.with(itemView)
                     .load(dataList[position].imgUrl?.get(0))
                     .into(imageView)
@@ -56,10 +56,13 @@ class MyReviewAdapter(private val dataList: List<Review>) :
                 intent.putExtra("amountGrade", dataList[position].amountGrade)
                 intent.putExtra("tasteGrade", dataList[position].tasteGrade)
 
-                Log.d("ReviewFixedActivity", "전전:" + dataList[position].reviewId)
-                Log.d("ReviewFixedActivity", "전전:" + dataList[position].menu)
-                Log.d("ReviewFixedActivity", "전전:" + dataList[position].content)
-////
+                Timber.d(
+                    "리뷰 상세 정보 - ID: %d, 메뉴: %s, 내용: %s",
+                    dataList[position].reviewId,
+                    dataList[position].menu,
+                    dataList[position].content
+                )
+
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }

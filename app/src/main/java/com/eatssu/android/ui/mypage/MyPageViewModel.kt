@@ -1,18 +1,17 @@
 package com.eatssu.android.ui.mypage
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.repository.PreferencesRepository
-import com.eatssu.android.data.usecase.AlarmUseCase
-import com.eatssu.android.data.usecase.GetDailyNotificationStatusUseCase
-import com.eatssu.android.data.usecase.GetUserInfoUseCase
-import com.eatssu.android.data.usecase.LogoutUseCase
-import com.eatssu.android.data.usecase.SetAccessTokenUseCase
-import com.eatssu.android.data.usecase.SetDailyNotificationStatusUseCase
-import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
-import com.eatssu.android.data.usecase.SignOutUseCase
+import com.eatssu.android.data.usecase.alarm.AlarmUseCase
+import com.eatssu.android.data.usecase.alarm.GetDailyNotificationStatusUseCase
+import com.eatssu.android.data.usecase.alarm.SetDailyNotificationStatusUseCase
+import com.eatssu.android.data.usecase.auth.GetUserInfoUseCase
+import com.eatssu.android.data.usecase.auth.LogoutUseCase
+import com.eatssu.android.data.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.data.usecase.auth.SetRefreshTokenUseCase
+import com.eatssu.android.data.usecase.auth.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +22,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,9 +70,9 @@ class MyPageViewModel @Inject constructor(
                 _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Log.e(TAG, e.toString())
+                Timber.e(e.toString())
             }.collectLatest { result ->
-                Log.d(TAG, result.toString())
+                Timber.d(result.toString())
                 result.result?.apply {
                     if (this.nickname.isNullOrBlank()) {
                         _uiState.update {
@@ -121,10 +121,9 @@ class MyPageViewModel @Inject constructor(
                 _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Log.d(TAG, e.toString())
-
+                Timber.e(e.toString())
             }.collectLatest { result ->
-                Log.d(TAG, result.toString())
+                Timber.d(result.toString())
                 if (result.result == true) {
                     logoutUseCase()
                     _uiState.update {

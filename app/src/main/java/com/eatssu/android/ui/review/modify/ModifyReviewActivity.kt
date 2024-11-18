@@ -1,18 +1,21 @@
 package com.eatssu.android.ui.review.modify
 
 import android.os.Bundle
-import android.util.Log
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.util.extension.showToast
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
+@AndroidEntryPoint
 class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
 
-    private lateinit var viewModel: ModifyViewModel
+    private val modifyViewModel: ModifyViewModel by viewModels()
 
     private var reviewId = -1L
     private var menu = ""
@@ -22,11 +25,11 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
     private var main = 0
     private var amount = 0
     private var taste = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 수정하기" // 툴바 제목 설정
 
-        initViewModel()
         getIndex()
         setData()
         setOnClickListener()
@@ -39,10 +42,6 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         }
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[ModifyViewModel::class.java]
-
-    }
 
     private fun getIndex() {
 
@@ -54,8 +53,8 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         amount = intent.getIntExtra("amountGrade", 0)
         taste = intent.getIntExtra("tasteGrade", 0)
 
-        Log.d("ReviewFixedActivity", reviewId.toString() + menu)
-        Log.d("ReviewFixedActivity", content)
+        Timber.tag("ReviewFixedActivity")
+            .d("reviewID: %s, menu: %s, content: %s", reviewId.toString(), menu, content)
     }
 
     private fun setData() {
@@ -72,23 +71,27 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMen
         val amountGrade = binding.rbAmount.rating.toInt()
         val tasteGrade = binding.rbTaste.rating.toInt()
 
-        viewModel.modifyMyReview(reviewId, comment, mainGrade, amountGrade, tasteGrade)
+        modifyViewModel.modifyMyReview(
+            reviewId,
+            ModifyReviewRequest(mainGrade, amountGrade, tasteGrade, comment)
+        )
     }
 
     private fun observeViewModel() {
 
         lifecycleScope.launch {
-            viewModel.uiState.collectLatest {
-                if (!it.error && !it.loading) {
-                    if (it.isDone) {
-                        showToast(it.toastMessage)
-                        finish()
-                    }
+            modifyViewModel.uiState.collectLatest {
+                if (it.isDone) {
+                    showToast(it.toastMessage)
+                    finish()
                 }
+
                 if (it.error) {
                     showToast(it.toastMessage)
                 }
             }
         }
     }
+
+    //Todo 쓰다 뒤로 갔을 때 undo
 }
