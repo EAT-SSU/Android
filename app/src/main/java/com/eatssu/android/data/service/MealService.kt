@@ -1,6 +1,6 @@
 package com.eatssu.android.data.service
 
-import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import retrofit2.Call

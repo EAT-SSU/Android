@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.mypage.SignOutActivity">
+    tools:context=".presentation.mypage.SignOutActivity">
 
     <TextView
         android:id="@+id/tv_sign_out"
