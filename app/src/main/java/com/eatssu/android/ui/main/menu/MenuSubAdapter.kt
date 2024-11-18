@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.model.Menu
+import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.ui.review.list.ReviewActivity
 

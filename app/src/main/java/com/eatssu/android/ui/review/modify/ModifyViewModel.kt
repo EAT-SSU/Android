@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.usecase.review.ModifyReviewUseCase
+import com.eatssu.android.domain.usecase.review.ModifyReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

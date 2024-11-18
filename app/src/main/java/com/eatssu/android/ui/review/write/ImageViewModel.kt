@@ -2,7 +2,7 @@ package com.eatssu.android.ui.review.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.usecase.review.GetImageUrlUseCase
+import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

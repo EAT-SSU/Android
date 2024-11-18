@@ -3,11 +3,11 @@ package com.eatssu.android.ui.mypage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.usecase.auth.GetUserInfoUseCase
-import com.eatssu.android.data.usecase.auth.LogoutUseCase
-import com.eatssu.android.data.usecase.auth.SetAccessTokenUseCase
-import com.eatssu.android.data.usecase.auth.SetRefreshTokenUseCase
-import com.eatssu.android.data.usecase.auth.SignOutUseCase
+import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
+import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

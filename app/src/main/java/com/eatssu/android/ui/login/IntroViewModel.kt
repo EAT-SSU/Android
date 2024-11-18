@@ -2,7 +2,7 @@ package com.eatssu.android.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.usecase.auth.GetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

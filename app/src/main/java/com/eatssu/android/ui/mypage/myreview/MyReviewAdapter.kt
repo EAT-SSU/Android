@@ -8,10 +8,10 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.eatssu.android.data.model.Review
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.delete.MyReviewDialogActivity
-import com.eatssu.android.util.MySharedPreferences
+import com.eatssu.android.data.MySharedPreferences
 import timber.log.Timber
 
 

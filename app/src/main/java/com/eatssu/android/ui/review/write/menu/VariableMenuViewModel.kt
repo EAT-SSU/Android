@@ -4,8 +4,8 @@ package com.eatssu.android.ui.review.write.menu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.toMenuMiniList
-import com.eatssu.android.data.model.MenuMini
-import com.eatssu.android.data.usecase.menu.GetMenuNameListOfMealUseCase
+import com.eatssu.android.domain.model.MenuMini
+import com.eatssu.android.domain.usecase.menu.GetMenuNameListOfMealUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

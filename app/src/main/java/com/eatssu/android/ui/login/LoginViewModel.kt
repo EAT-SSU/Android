@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.data.usecase.auth.LoginUseCase
-import com.eatssu.android.data.usecase.auth.SetAccessTokenUseCase
-import com.eatssu.android.data.usecase.auth.SetRefreshTokenUseCase
-import com.eatssu.android.data.usecase.auth.SetUserEmailUseCase
+import com.eatssu.android.domain.usecase.auth.LoginUseCase
+import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetUserEmailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,6 +2,7 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ReportRequest
+import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.data.service.ReportService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

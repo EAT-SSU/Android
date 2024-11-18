@@ -32,16 +32,14 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Retrieve passed data
         val name = arguments?.getString("name")
         val restaurantType = enumValues<Restaurant>().find { it.name == name } ?: Restaurant.HAKSIK
         Timber.d("onViewCreated: $name $restaurantType")
 
         binding.tvName.text = restaurantType.displayName
 
-        // Collect the infoList Flow
         CoroutineScope(Dispatchers.Main).launch {
-            infoViewModel.infoList.collect { restaurantInfoList ->
+            infoViewModel.infoList.collect {
                 val restaurantInfo = infoViewModel.getRestaurantInfo(restaurantType)
 
                 restaurantInfo?.let {

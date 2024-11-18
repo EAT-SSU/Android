@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
-import com.eatssu.android.data.model.Section
+import com.eatssu.android.domain.model.Section
 import com.eatssu.android.databinding.ItemCafeteriaSectionBinding
 import com.eatssu.android.ui.info.InfoBottomSheetFragment
 

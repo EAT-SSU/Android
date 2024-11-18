@@ -10,7 +10,7 @@ import com.eatssu.android.data.dto.response.GetFixedMenuResponse
 import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.model.MenuMini
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import kotlinx.coroutines.flow.MutableStateFlow

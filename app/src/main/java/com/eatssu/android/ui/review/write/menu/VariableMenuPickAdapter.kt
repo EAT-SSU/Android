@@ -3,7 +3,7 @@ package com.eatssu.android.ui.review.write.menu
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.model.MenuMini
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.databinding.ItemMenuPickBinding
 
 class VariableMenuPickAdapter(private val menuList: List<MenuMini>?) :

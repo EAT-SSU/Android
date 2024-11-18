@@ -7,6 +7,7 @@ import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.android.data.service.ReviewService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

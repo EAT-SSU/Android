@@ -3,6 +3,7 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.dto.response.TokenResponse
+import com.eatssu.android.domain.repository.OauthRepository
 import com.eatssu.android.data.service.OauthService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

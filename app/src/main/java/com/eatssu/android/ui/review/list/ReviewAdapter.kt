@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eatssu.android.R
-import com.eatssu.android.data.model.Review
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.ui.review.modify.ModifyReviewActivity
 import com.eatssu.android.ui.review.report.ReportActivity
