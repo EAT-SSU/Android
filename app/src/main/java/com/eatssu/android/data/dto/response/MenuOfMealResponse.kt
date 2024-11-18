@@ -14,14 +14,13 @@ data class MenusInformation(
 
     )
 
-fun MenuOfMealResponse.asMenuOfMeal(): List<MenuMini> {
-    val menuList = mutableListOf<MenuMini>()
+fun MenuOfMealResponse.toMenuMiniList(): List<MenuMini> {
+    return menusInformation.map { it.toMenuMini() }
+}
 
-    this.menusInformation.forEach {
-
-        val menu = MenuMini(it.menuId, it.name)
-        menuList.add(menu)
-    }
-
-    return menuList
+fun MenusInformation.toMenuMini(): MenuMini {
+    return MenuMini(
+        id = this.menuId,
+        name = this.name
+    )
 }

@@ -1,6 +1,8 @@
 package com.eatssu.android.di
 
 
+import com.eatssu.android.data.repository.MealRepository
+import com.eatssu.android.data.repository.MealRepositoryImpl
 import com.eatssu.android.data.repository.OauthRepository
 import com.eatssu.android.data.repository.OauthRepositoryImpl
 import com.eatssu.android.data.repository.ReportRepository
@@ -38,4 +40,8 @@ abstract class DataModule {
         reviewRepositoryImpl: ReviewRepositoryImpl1,
     ): ReviewRepository
 
+    @Binds
+    internal abstract fun bindsMealRepository(
+        mealRepositoryImpl: MealRepositoryImpl,
+    ): MealRepository
 }

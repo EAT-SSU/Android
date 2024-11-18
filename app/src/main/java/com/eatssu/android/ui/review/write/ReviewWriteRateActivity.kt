@@ -35,7 +35,7 @@ import kotlin.math.pow
 class ReviewWriteRateActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
-    private val uploadReviewViewModel: UploadReviewViewModel by viewModels()
+    private val viewModel: UploadReviewViewModel by viewModels()
     private val imageviewModel: ImageViewModel by viewModels()
 
     private var itemId: Long = 0
@@ -48,7 +48,7 @@ class ReviewWriteRateActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
-        binding.viewModel = uploadReviewViewModel
+        binding.viewModel = viewModel
 
         itemName = intent.getStringExtra("itemName").toString()
         Timber.d("고정메뉴 $itemName")
@@ -311,7 +311,7 @@ class ReviewWriteRateActivity :
     private fun postReview() {
 
         //Todo imageurl을 체크해야하는 이유?
-        uploadReviewViewModel.setReviewData(
+        viewModel.setReviewData(
             itemId,
             binding.rbMain.rating.toInt(),
             binding.rbAmount.rating.toInt(),
@@ -320,17 +320,17 @@ class ReviewWriteRateActivity :
             imageviewModel.imageUrl.value ?: ""
         )
 
-        uploadReviewViewModel.postReview()
+        viewModel.postReview()
         Timber.d("리뷰 전송")
 
 
         lifecycleScope.launch {
-            uploadReviewViewModel.uiState.collectLatest {
+            viewModel.uiState.collectLatest {
                 if (it.error) {
-                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
+                    showToast(viewModel.uiState.value.toastMessage)
                 }
                 if (!it.error && !it.loading && it.isUpload) {
-                    showToast(uploadReviewViewModel.uiState.value.toastMessage)
+                    showToast(viewModel.uiState.value.toastMessage)
                     Timber.d("리뷰 작성 성공")
                     finish()
                 }

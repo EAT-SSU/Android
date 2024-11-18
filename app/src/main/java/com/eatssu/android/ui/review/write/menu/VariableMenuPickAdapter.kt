@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.model.MenuMini
 import com.eatssu.android.databinding.ItemMenuPickBinding
 
-class VariableMenuPickAdapter(private val menuList: List<MenuMini>) :
+class VariableMenuPickAdapter(private val menuList: List<MenuMini>?) :
     RecyclerView.Adapter<VariableMenuPickAdapter.ViewHolder>() {
 
     private val checkedItems: ArrayList<Pair<String, Long>> = ArrayList()
@@ -15,9 +15,9 @@ class VariableMenuPickAdapter(private val menuList: List<MenuMini>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
-            val menuItem = menuList[position]
+            val menuItem = menuList?.get(position)
             with(binding) {
-                tvMenuName.text = menuItem.name
+                tvMenuName.text = menuItem?.name
                 checkBox.isChecked = checkedItems.contains(getItem(position))
                 checkBox.setOnClickListener { onCheckBoxClick(position) }
             }
@@ -34,11 +34,11 @@ class VariableMenuPickAdapter(private val menuList: List<MenuMini>) :
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = menuList.size
+    override fun getItemCount(): Int = menuList?.size ?: 0
 
-    private fun getItem(position: Int): Pair<String, Long> {
-        val menuItem = menuList[position]
-        return Pair(menuItem.name, menuItem.id)
+    private fun getItem(position: Int): Pair<String?, Long?> {
+        val menuItem = menuList?.get(position)
+        return Pair(menuItem?.name, menuItem?.id)
     }
 
     private fun onCheckBoxClick(position: Int) {
@@ -46,7 +46,7 @@ class VariableMenuPickAdapter(private val menuList: List<MenuMini>) :
         if (checkedItems.contains(item)) {
             checkedItems.remove(item)
         } else {
-            checkedItems.add(item)
+            checkedItems.add(item as Pair<String, Long>)
         }
     }
 
