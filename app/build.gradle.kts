@@ -10,7 +10,8 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     // plugin 추가
-    id 'com.google.android.gms.oss-licenses-plugin'
+//    id("com.google.android.gms.oss-licenses-plugin")
+    alias(libs.plugins.oss.licenses)
 }
 
 android {
@@ -152,6 +153,8 @@ dependencies {
 
     // Timber for logging
     implementation(libs.timber)
+//    implementation(libs.oss)
+//    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
 }
 
 kapt {
