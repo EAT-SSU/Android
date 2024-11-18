@@ -29,8 +29,8 @@ class ImageViewModel
     private val _imageUrl: MutableStateFlow<String> = MutableStateFlow("")
     val imageUrl: StateFlow<String> get() = _imageUrl
 
-    private var _imageFile: MutableStateFlow<File> = MutableStateFlow(File(""))
-    val imageFile: StateFlow<File> get() = _imageFile
+    private var _imageFile: MutableStateFlow<File?> = MutableStateFlow(null)
+    val imageFile: StateFlow<File?> get() = _imageFile
 
     private val _uiState: MutableStateFlow<ImageState> = MutableStateFlow(ImageState())
     val uiState: StateFlow<ImageState> = _uiState.asStateFlow()
@@ -41,37 +41,41 @@ class ImageViewModel
     }
 
     fun deleteFile() {
-        _imageFile.value.delete()
+        _imageFile.value?.delete()
         _imageUrl.value = ""
     }
 
 
     fun saveS3() {
-        if (imageFile.value.exists()) {
-            val requestFile = imageFile.value.asRequestBody("image/*".toMediaTypeOrNull())
-            val multipart = MultipartBody.Part.createFormData(
-                "image",
-                imageFile.value.name,
-                requestFile
-            )
+        if (imageFile.value?.exists() == true) {
+            val requestFile = imageFile.value?.asRequestBody("image/*".toMediaTypeOrNull())
+            val multipart = requestFile?.let {
+                MultipartBody.Part.createFormData(
+                    "image",
+                    imageFile.value?.name,
+                    it
+                )
+            }
             viewModelScope.launch {
-                getImageUrlUseCase(multipart).onStart {
-                    _uiState.update { it.copy(loading = true) }
-                }.onCompletion {
-                    _uiState.update { it.copy(loading = false, error = true) }
-                }.catch { e ->
-                    _uiState.update { it.copy(error = true, toastMessage = "이미지 변환에 실패하였습니다.") }
-                    Timber.e(e.toString())
-                }.collectLatest { result ->
-                    Timber.d(result.toString())
-                    result.result?.apply {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                isImageUploadDone = true,
-                                imgUrl = url.toString()
-                            )
+                if (multipart != null) {
+                    getImageUrlUseCase(multipart).onStart {
+                        _uiState.update { it.copy(loading = true) }
+                    }.onCompletion {
+                        _uiState.update { it.copy(loading = false, error = true) }
+                    }.catch { e ->
+                        _uiState.update { it.copy(error = true, toastMessage = "이미지 변환에 실패하였습니다.") }
+                        Timber.e(e.toString())
+                    }.collectLatest { result ->
+                        Timber.d(result.toString())
+                        result.result?.apply {
+                            _uiState.update {
+                                it.copy(
+                                    loading = false,
+                                    error = false,
+                                    isImageUploadDone = true,
+                                    imgUrl = url.toString()
+                                )
+                            }
                         }
                     }
                 }
