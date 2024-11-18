@@ -1,8 +1,8 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse

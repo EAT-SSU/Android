@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.usecase.menu
 
-import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import com.eatssu.android.domain.repository.MealRepository
 import kotlinx.coroutines.flow.Flow

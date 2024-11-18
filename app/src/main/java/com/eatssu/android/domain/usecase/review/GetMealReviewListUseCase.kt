@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.usecase.review
 
-import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.repository.ReviewRepository

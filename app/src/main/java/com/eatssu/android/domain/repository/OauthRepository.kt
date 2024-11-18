@@ -1,7 +1,7 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
 import kotlinx.coroutines.flow.Flow
 

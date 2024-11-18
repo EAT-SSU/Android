@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import kotlinx.coroutines.flow.Flow
 

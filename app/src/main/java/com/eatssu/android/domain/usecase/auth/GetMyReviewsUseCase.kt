@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.usecase.auth
 
-import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow

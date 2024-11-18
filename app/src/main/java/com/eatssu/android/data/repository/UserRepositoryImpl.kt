@@ -1,11 +1,11 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
-import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.data.service.UserService
+import com.eatssu.android.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

@@ -1,9 +1,9 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.base.BaseResponse
+import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MenuOfMealResponse
-import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.data.service.MealService
+import com.eatssu.android.domain.repository.MealRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
