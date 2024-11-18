@@ -3,9 +3,9 @@ package com.eatssu.android.ui.mypage.usernamechange
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.usecase.GetUserNameUseCase
-import com.eatssu.android.data.usecase.SetUserNameUseCase
-import com.eatssu.android.data.usecase.ValidateUserNameUseCase
+import com.eatssu.android.data.usecase.auth.GetUserNameUseCase
+import com.eatssu.android.data.usecase.auth.SetUserNameUseCase
+import com.eatssu.android.data.usecase.auth.ValidateUserNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

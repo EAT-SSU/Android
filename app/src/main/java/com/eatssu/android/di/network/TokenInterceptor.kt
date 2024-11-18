@@ -9,11 +9,11 @@ import android.widget.Toast
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.base.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
-import com.eatssu.android.data.usecase.GetAccessTokenUseCase
-import com.eatssu.android.data.usecase.GetRefreshTokenUseCase
-import com.eatssu.android.data.usecase.LogoutUseCase
-import com.eatssu.android.data.usecase.SetAccessTokenUseCase
-import com.eatssu.android.data.usecase.SetRefreshTokenUseCase
+import com.eatssu.android.data.usecase.auth.GetAccessTokenUseCase
+import com.eatssu.android.data.usecase.auth.GetRefreshTokenUseCase
+import com.eatssu.android.data.usecase.auth.LogoutUseCase
+import com.eatssu.android.data.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.data.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.ui.login.LoginActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -113,10 +113,12 @@ class TokenInterceptor @Inject constructor(
                     val newRequest = originalRequest.newAuthBuilder().build()
                     return chain.proceed(newRequest)
                 } else {
-                    /*
-                    refreshTokenResponse : Response{protocol=http/1.1, code=401, message=, url=https://prod.eat-ssu.shop/oauths/reissue/token}
-                    위 상황에서도 로그아웃
-                    **리프레쉬도 상한 상태
+                    /**
+                     *
+                     *
+                     * refreshTokenResponse : Response{protocol=http/1.1, code=401, message=, url=https://prod.eat-ssu.shop/oauths/reissue/token}
+                     * 위 상황에서도 로그아웃
+                     * 리프레쉬도 상한 상태
                      */
                     runBlocking { logoutUseCase() }
                     Timber.e("재발급에서의 401")

@@ -42,14 +42,13 @@ class ReviewWriteRateActivity :
     private lateinit var itemName: String
     private var comment: String? = ""
 
-
     private var imageFile: File? = null
     private var compressedImage: File? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
+        binding.viewModel = uploadReviewViewModel
 
         itemName = intent.getStringExtra("itemName").toString()
         Timber.d("고정메뉴 $itemName")
@@ -66,9 +65,6 @@ class ReviewWriteRateActivity :
         setupTextReviewInput()
 
         setOnClickListener()
-
-
-        binding.viewModel = uploadReviewViewModel
     }
 
     fun setOnClickListener() {
@@ -281,6 +277,7 @@ class ReviewWriteRateActivity :
         })
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
         super.onBackPressed()
         if (imageFile?.exists() == true) {

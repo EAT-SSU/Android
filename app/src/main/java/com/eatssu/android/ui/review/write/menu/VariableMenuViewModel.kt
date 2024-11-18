@@ -30,7 +30,8 @@ class VariableMenuViewModel(
 
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
-            mealService.getMenuInfoByMealId(mealId)
+
+        mealService.getMenuInfoByMealId(mealId)
                 .enqueue(object : Callback<BaseResponse<MenuOfMealResponse>> {
                     override fun onResponse(
                         call: Call<BaseResponse<MenuOfMealResponse>>,

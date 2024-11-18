@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.base.BaseActivity
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.ui.review.delete.DeleteViewModel
 import com.eatssu.android.ui.review.write.ReviewWriteRateActivity
@@ -130,7 +131,7 @@ class ReviewActivity :
 
     private fun setClickListener() {
         when (menuType) {
-            "FIXED" -> {
+            MenuType.FIXED.name -> {
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteRateActivity::class.java)
                     intent.putExtra("itemId", itemId)
@@ -140,7 +141,7 @@ class ReviewActivity :
                 }
             }
 
-            "VARIABLE" -> {
+            MenuType.VARIABLE.name -> {
                 binding.btnNextReview.setOnClickListener {
                     val intent = Intent(this, ReviewWriteMenuActivity::class.java)
                     intent.putExtra("itemId", itemId)

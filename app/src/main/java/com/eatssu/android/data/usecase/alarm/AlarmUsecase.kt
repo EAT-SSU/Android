@@ -1,4 +1,4 @@
-package com.eatssu.android.data.usecase
+package com.eatssu.android.data.usecase.alarm
 
 import android.app.AlarmManager
 import android.app.PendingIntent

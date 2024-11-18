@@ -6,10 +6,10 @@ import com.eatssu.android.data.dto.response.asReviewInfo
 import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.data.model.ReviewInfo
-import com.eatssu.android.data.usecase.GetMealReviewInfoUseCase
-import com.eatssu.android.data.usecase.GetMealReviewListUseCase
-import com.eatssu.android.data.usecase.GetMenuReviewInfoUseCase
-import com.eatssu.android.data.usecase.GetMenuReviewListUseCase
+import com.eatssu.android.data.usecase.review.GetMealReviewInfoUseCase
+import com.eatssu.android.data.usecase.review.GetMealReviewListUseCase
+import com.eatssu.android.data.usecase.review.GetMenuReviewInfoUseCase
+import com.eatssu.android.data.usecase.review.GetMenuReviewListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
