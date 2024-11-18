@@ -1,6 +1,6 @@
 package com.eatssu.android.data.dto.response
 
-import com.eatssu.android.data.model.Review
+import com.eatssu.android.domain.model.Review
 import com.google.gson.annotations.SerializedName
 
 data class GetReviewListResponse(
