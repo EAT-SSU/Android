@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.asReviewInfo
 import com.eatssu.android.data.dto.response.toReviewList
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.model.Review
 import com.eatssu.android.data.model.ReviewInfo
 import com.eatssu.android.data.usecase.review.GetMealReviewInfoUseCase
@@ -40,12 +41,12 @@ class ReviewViewModel @Inject constructor(
         itemId: Long,
     ) {
         when (menuType) {
-            "FIXED" -> {
+            MenuType.FIXED.name -> {
                 callMenuReviewInfo(itemId)
                 callMenuReviewList(itemId)
             }
 
-            "VARIABLE" -> {
+            MenuType.VARIABLE.name -> {
                 callMealReviewInfo(itemId)
                 callMealReviewList(itemId)
             }
@@ -154,7 +155,7 @@ class ReviewViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         loading = false,
-                        error = false,
+                        error = true,
                     )
                 }
                 Timber.e(e.toString())

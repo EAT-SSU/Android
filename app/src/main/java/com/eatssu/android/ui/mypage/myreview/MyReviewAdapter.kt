@@ -56,10 +56,13 @@ class MyReviewAdapter(private val dataList: List<Review>) :
                 intent.putExtra("amountGrade", dataList[position].amountGrade)
                 intent.putExtra("tasteGrade", dataList[position].tasteGrade)
 
-                Timber.d("전전:" + dataList[position].reviewId)
-                Timber.d("전전:" + dataList[position].menu)
-                Timber.d("전전:" + dataList[position].content)
-////
+                Timber.d(
+                    "리뷰 상세 정보 - ID: %d, 메뉴: %s, 내용: %s",
+                    dataList[position].reviewId,
+                    dataList[position].menu,
+                    dataList[position].content
+                )
+
                 ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }
