@@ -328,7 +328,7 @@
                         style="@style/Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="오픈소스 라이브러리"
+                        android:text="@string/oss_licenses"
                         android:textColor="@color/black" />
 
                     <android.widget.Space
