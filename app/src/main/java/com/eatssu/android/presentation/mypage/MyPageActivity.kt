@@ -26,6 +26,7 @@ import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.presentation.util.showToast
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.eatssu.android.presentation.util.startActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -122,6 +123,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         binding.llDeveloper.setOnClickListener {
             startActivity<DeveloperActivity>()
+        }
+
+        binding.llOss.setOnClickListener {
+            startActivity<OssLicensesMenuActivity>()
         }
 
         binding.llAppVersion.setOnClickListener {

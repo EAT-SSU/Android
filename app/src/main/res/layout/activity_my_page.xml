@@ -312,6 +312,41 @@
                         app:tint="@color/gray300" />
                 </LinearLayout>
 
+                <!--  오픈소스 라이브러리   -->
+                <LinearLayout
+                    android:id="@+id/ll_oss"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="오픈소스 라이브러리"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_oss"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
                 <!--  탈퇴하기   -->
                 <TextView
                     android:id="@+id/tv_logout"

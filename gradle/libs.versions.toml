@@ -34,7 +34,7 @@ timber = "5.0.1"
 google-services = "4.4.2"
 kotlin-android  = "1.8.10"
 ossLicenses = "17.1.0"
-google-oss-licenses = "0.10.6"
+ossLicensesPlugin = "0.10.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -83,7 +83,8 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-oss = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
+oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
+oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 
 
 
@@ -95,4 +96,3 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-an
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-oss-licenses = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "google-oss-licenses" }

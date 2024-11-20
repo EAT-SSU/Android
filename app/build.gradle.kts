@@ -9,9 +9,7 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-android")
     id("kotlin-kapt")
-    // plugin 추가
-//    id("com.google.android.gms.oss-licenses-plugin")
-    alias(libs.plugins.oss.licenses)
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -57,6 +55,7 @@ android {
 
         debug {
 //            applicationIdSuffix = ".debug"
+//            isDebuggable = false
 
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
@@ -153,8 +152,9 @@ dependencies {
 
     // Timber for logging
     implementation(libs.timber)
-//    implementation(libs.oss)
-//    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
+
+    // OSS
+    implementation(libs.oss.licenses)
 }
 
 kapt {
