@@ -41,7 +41,9 @@
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <meta-data
+            android:name="com.google.android.gms.oss.licenses.enabled"
+            android:value="true" />
         <receiver
             android:name=".alarm.NotificationReceiver"
             android:enabled="true"

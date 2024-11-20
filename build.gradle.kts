@@ -7,3 +7,9 @@ plugins {
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.hilt.android) apply false
 }
+
+buildscript {
+    dependencies {
+        classpath(libs.oss.licenses.plugin)
+    }
+}
