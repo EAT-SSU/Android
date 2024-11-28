@@ -4,7 +4,7 @@ import com.eatssu.android.domain.model.MenuMini
 import com.google.gson.annotations.SerializedName
 
 data class MenuOfMealResponse(
-    @SerializedName("menusInformation") var menusInformation: ArrayList<MenusInformation> = arrayListOf(),
+    @SerializedName("briefMenus") var briefMenus: ArrayList<MenusInformation> = arrayListOf(),
 )
 
 data class MenusInformation(
@@ -15,7 +15,7 @@ data class MenusInformation(
     )
 
 fun MenuOfMealResponse.toMenuMiniList(): List<MenuMini> {
-    return menusInformation.map { it.toMenuMini() }
+    return briefMenus.map { it.toMenuMini() }
 }
 
 fun MenusInformation.toMenuMini(): MenuMini {
