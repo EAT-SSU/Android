@@ -1,8 +1,8 @@
 package com.eatssu.android.data.dto.response
 
-import android.util.Log
 import com.eatssu.android.domain.model.Menu
 import com.google.gson.annotations.SerializedName
+import timber.log.Timber
 
 
 data class GetFixedMenuResponse(
@@ -14,7 +14,7 @@ data class GetFixedMenuResponse(
 data class CategoryMenuListCollection(
 
     @SerializedName("category") var category: String? = null,
-    @SerializedName("menuInformationList") var menuInformationList: ArrayList<MenuInformationList> = arrayListOf(),
+    @SerializedName("menus") var menus: ArrayList<MenuInformationList> = arrayListOf(),
 
     )
 
@@ -23,20 +23,9 @@ data class MenuInformationList(
     @SerializedName("menuId") var menuId: Long? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("price") var price: Int? = null,
-    @SerializedName("mainRating") var mainRating: Double? = null,
+    @SerializedName("rating") var mainRating: Double? = null,
 
     )
-
-//fun GetFixedMenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
-//    return this.map { fixMenuInfo ->
-//        Menu(
-//            id = fixMenuInfo.menuId ?: 0,
-//            name = fixMenuInfo.name ?: "",
-//            price = fixMenuInfo.price ?: 0,
-//            rate = fixMenuInfo.mainRating ?: 0.0
-//        )
-//    }
-//}
 
 
 fun GetFixedMenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
@@ -44,7 +33,7 @@ fun GetFixedMenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
 
     categoryMenuListCollection.forEach { categoryMenuList ->
         val categoryName = categoryMenuList.category ?: ""
-        categoryMenuList.menuInformationList.forEach { menuInfo ->
+        categoryMenuList.menus.forEach { menuInfo ->
             val menu = Menu(
                 id = menuInfo.menuId ?: 0,
                 name = menuInfo.name ?: "",
@@ -54,7 +43,7 @@ fun GetFixedMenuResponse.mapFixedMenuResponseToMenu(): List<Menu> {
             menus.add(menu)
         }
     }
-    Log.d("mapFixedMenuResponseToMenu", menus.toString())
+    Timber.d(menus.toString())
 
     return menus
 }
