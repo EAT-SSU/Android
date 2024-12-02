@@ -1,17 +1,15 @@
 package com.eatssu.android.presentation.mypage.myreview
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.presentation.review.delete.MyReviewDialogActivity
 import timber.log.Timber
 
 
@@ -75,8 +73,17 @@ class MyReviewAdapter(private val dataList: List<Review>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(position)
+        val item = getItem(position)
+        holder.bind(item)
+    }
+}
+
+class ReviewDiffCallback : DiffUtil.ItemCallback<Review>() {
+    override fun areItemsTheSame(oldItem: Review, newItem: Review): Boolean {
+        return oldItem.reviewId == newItem.reviewId
     }
 
-    override fun getItemCount(): Int = dataList.size
+    override fun areContentsTheSame(oldItem: Review, newItem: Review): Boolean {
+        return oldItem == newItem
+    }
 }

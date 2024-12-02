@@ -1,22 +1,14 @@
 package com.eatssu.android.presentation.review.list
 
-import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.MenuRes
-import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.presentation.review.modify.ModifyReviewActivity
-import com.eatssu.android.presentation.review.report.ReportActivity
 
 
 class ReviewAdapter(
@@ -74,10 +66,9 @@ class ReviewAdapter(
 
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ViewHolder -> holder.bind(position)
-        }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val review = getItem(position) // `ListAdapter`에서 제공
+        holder.bind(review)
     }
 
 
@@ -98,41 +89,14 @@ class ReviewAdapter(
                     true
                 }
 
-                R.id.fix -> {
-                    val intent =
-                        Intent(holdercontext, ModifyReviewActivity::class.java)
-                    intent.putExtra("reviewId", data.reviewId)
-                    intent.putExtra("menu", data.menu)
-                    intent.putExtra("content", data.content)
-                    intent.putExtra("mainGrade", data.mainGrade)
-                    intent.putExtra("amountGrade", data.amountGrade)
-                    intent.putExtra("tasteGrade", data.tasteGrade)
-
-                    Log.d("ReviewFixedActivity", "전전:" + data.reviewId)
-                    Log.d("ReviewFixedActivity", "전전:" + data.menu)
-                    Log.d("ReviewFixedActivity", "전전:" + data.content)
-////                    Timber.d("내용: "+data.content)
-                    ContextCompat.startActivity(holdercontext, intent, null)
-                    true
-                }
-
-                R.id.delete -> {
-                    callBackReviewId(data.reviewId)
-                    true
-                }
-
-                else -> {
-                    true
-                }
-            }
-        }
-        popup.setOnDismissListener {
-            // Respond to popup being dismissed.
-        }
-//             Show the popup menu.
-        popup.show()
+class ReviewDiffCallback : DiffUtil.ItemCallback<Review>() {
+    override fun areItemsTheSame(oldItem: Review, newItem: Review): Boolean {
+        // 고유 식별자를 비교 (예: id)
+        return oldItem.reviewId == newItem.reviewId
     }
 
-    override fun getItemCount(): Int = dataList.size
-
+    override fun areContentsTheSame(oldItem: Review, newItem: Review): Boolean {
+        // 객체의 내용 전체를 비교
+        return oldItem == newItem
+    }
 }
