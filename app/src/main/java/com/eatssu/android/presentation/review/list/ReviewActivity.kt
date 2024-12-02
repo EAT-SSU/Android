@@ -33,8 +33,6 @@ class ReviewActivity :
     private var itemId by Delegates.notNull<Long>()
 
     private lateinit var itemName: String
-    private var reviewAdapter: ReviewAdapter? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
