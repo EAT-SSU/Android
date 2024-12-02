@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.mypage.myreview
+package com.eatssu.android.presentation.common
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentBottomsheetMyReviewBinding
+import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.review.modify.ModifyReviewActivity
 import com.eatssu.android.presentation.util.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -23,6 +24,12 @@ import timber.log.Timber
 class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentBottomsheetMyReviewBinding? = null
     private val binding get() = _binding!!
+
+    interface OnReviewDeletedListener {
+        fun onReviewDeleted()
+    }
+
+    var onReviewDeletedListener: OnReviewDeletedListener? = null
 
     private val viewModel: MyReviewViewModel by activityViewModels()
 
@@ -45,39 +52,31 @@ class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val intent = Intent(requireContext(), ModifyReviewActivity::class.java)
+        arguments?.let {
+            reviewId = it.getLong("reviewId")
+            menu = it.getString("menu").toString()
+            content = it.getString("content").toString()
+            mainGrade = it.getInt("mainGrade")
+            amountGrade = it.getInt("amountGrade")
+            tasteGrade = it.getInt("tasteGrade")
+        }
 
-//        reviewId = intent.getLongExtra("reviewId", -1L)
-//        menu = intent.getStringExtra("menu").toString()
-//        content = intent.getStringExtra("content").toString()
-//        mainGrade = intent.getIntExtra("mainGrade", -1)
-//        amountGrade = intent.getIntExtra("amountGrade", -1)
-//        tasteGrade = intent.getIntExtra("tasteGrade", -1)
-
-        reviewId = arguments?.getLong("reviewId")!!
-        menu = arguments?.getString("menu").toString()
-        content = arguments?.getString("content").toString()
-
-        mainGrade = arguments?.getInt("mainGrade")!!
-        amountGrade = arguments?.getInt("amountGrade")!!
-        tasteGrade = arguments?.getInt("tasteGrade")!!
-
-
-
-        Timber.d("전:" + reviewId.toString())
-        Timber.d("전:" + menu)
-        Timber.d("전:" + content)
-        Timber.d(reviewId.toString())
+        Timber.d("넘겨받은 리뷰 정보: $reviewId $menu $content $reviewId")
 
         binding.llModify.setOnClickListener {
-            intent.putExtra("reviewId", reviewId)
-            intent.putExtra("menu", menu)
-            intent.putExtra("content", content)
-            intent.putExtra("mainGrade", mainGrade)
-            intent.putExtra("amountGrade", amountGrade)
-            intent.putExtra("tasteGrade", tasteGrade)
+            val intent = Intent(requireContext(), ModifyReviewActivity::class.java)
+
+            intent.let {
+                it.putExtra("reviewId", reviewId)
+                it.putExtra("menu", menu)
+                it.putExtra("content", content)
+                it.putExtra("mainGrade", mainGrade)
+                it.putExtra("amountGrade", amountGrade)
+                it.putExtra("tasteGrade", tasteGrade)
+            }
 
             startActivity(intent)
+            dismiss()
         }
 
         binding.llDelete.setOnClickListener {
@@ -92,13 +91,14 @@ class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
                     lifecycleScope.launch {
                         viewModel.uiState.collectLatest {
                             if (it.isDeleted) {
-//                                finish()
+                                onReviewDeletedListener?.onReviewDeleted() // 콜백 호출
+                                dismiss()
                             }
                         }
                     }
                 }
             }.create().show()
-
         }
+
     }
 }

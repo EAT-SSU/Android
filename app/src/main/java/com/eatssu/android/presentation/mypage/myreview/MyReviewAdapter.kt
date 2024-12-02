@@ -12,56 +12,50 @@ import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.domain.model.Review
 import timber.log.Timber
 
+class MyReviewAdapter :
+    ListAdapter<Review, MyReviewAdapter.ViewHolder>(ReviewDiffCallback()) {
 
-class MyReviewAdapter(private val dataList: List<Review>) :
-    RecyclerView.Adapter<MyReviewAdapter.ViewHolder>() {
+    interface OnItemClickListener {
+        fun onMyReviewClicked(view: View, reviewData: Review)
+    }
+
+    // 객체 저장 변수
+    private lateinit var mOnItemClickListener: OnItemClickListener
+
+    // 객체 전달 메서드
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        mOnItemClickListener = onItemClickListener
+    }
 
     inner class ViewHolder(private val binding: ItemReviewBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(position: Int) {
-            binding.tvReviewItemComment.text = dataList[position].content
-            binding.tvReviewItemDate.text = dataList[position].writeDate
-            binding.tvMenuName.text = dataList[position].menu
-
-            binding.rbRate.rating = dataList[position].mainGrade.toFloat()
+        fun bind(data: Review) {
             binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
+            binding.tvReviewItemComment.text = data.content
+            binding.tvReviewItemDate.text = data.writeDate
+            binding.tvMenuName.text = data.menu
+            binding.rbRate.rating = data.mainGrade.toFloat()
 
             val imageView: ImageView = binding.ivReviewPhoto
-
-            if (dataList[position].imgUrl?.isEmpty() == true) {
+            if (data.imgUrl?.isEmpty() == true || data.imgUrl?.get(0).isNullOrEmpty()) {
                 imageView.visibility = View.GONE
             } else {
-                Timber.d("사진 있다")
                 Glide.with(itemView)
-                    .load(dataList[position].imgUrl?.get(0))
+                    .load(data.imgUrl?.get(0))
                     .into(imageView)
                 imageView.visibility = View.VISIBLE
-
-                if (dataList[position].imgUrl?.get(0) == "" || dataList[position].imgUrl?.get(0) == null) {
-                    binding.ivReviewPhoto.visibility = View.GONE
-                }
             }
 
-            binding.btnDetail.setOnClickListener {
-                val intent = Intent(binding.btnDetail.context, MyReviewDialogActivity::class.java)
-                intent.putExtra("reviewId", dataList[position].reviewId)
-                intent.putExtra("menu", dataList[position].menu)
-
-                intent.putExtra("content", dataList[position].content)
-
-                intent.putExtra("mainGrade", dataList[position].mainGrade)
-                intent.putExtra("amountGrade", dataList[position].amountGrade)
-                intent.putExtra("tasteGrade", dataList[position].tasteGrade)
+            binding.btnDetail.setOnClickListener { v: View ->
+                mOnItemClickListener.onMyReviewClicked(v, data)
 
                 Timber.d(
                     "리뷰 상세 정보 - ID: %d, 메뉴: %s, 내용: %s",
-                    dataList[position].reviewId,
-                    dataList[position].menu,
-                    dataList[position].content
+                    data.reviewId,
+                    data.menu,
+                    data.content
                 )
-
-                ContextCompat.startActivity(binding.btnDetail.context, intent, null)
             }
         }
     }

@@ -170,7 +170,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.review.delete.MyReviewDialogActivity"
+            android:name=".presentation.common.MyReviewBottomSheetFragment"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
