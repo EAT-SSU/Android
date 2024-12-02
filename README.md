@@ -34,7 +34,7 @@
 │   │   ├── 📂request
 │   │   └── 📂response
 │   ├── 📂enums
-│   ├── 📂servicerepository(impl)
+│   ├── 📂repository(impl)
 │   └── 📂service
 ├── 📂di
 ├── 📂domain
