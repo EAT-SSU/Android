@@ -132,7 +132,7 @@ class ReviewActivity :
             ReviewAdapter.OnItemClickListener {
 
             override fun onMyReviewClicked(view: View, reviewData: Review) {
-                onMyReviewClicked(reviewData = reviewData)
+                onMyReviewClicked(review = reviewData)
             }
 
             override fun onOthersReviewClicked(view: View, reviewData: Review) {
@@ -174,24 +174,22 @@ class ReviewActivity :
     }
 
 
-    fun onMyReviewClicked(reviewData: Review) {
-        val modalBottomSheet = MyReviewBottomSheetFragment()
+    fun onMyReviewClicked(review: Review) {
+        val modalBottomSheet = MyReviewBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putLong("reviewId", review.reviewId)
+                putString("menu", review.menu)
+                putString("content", review.content)
+                putInt("mainGrade", review.mainGrade)
+                putInt("amountGrade", review.amountGrade)
+                putInt("tasteGrade", review.tasteGrade)
+            }
+            onReviewDeletedListener = this@ReviewActivity
+        }
         modalBottomSheet.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.RoundCornerBottomSheetDialogTheme
         )
-
-        val bundle = Bundle()
-        bundle.let {
-            it.putLong("reviewId", reviewData.reviewId)
-            it.putString("menu", reviewData.menu)
-            it.putString("content", reviewData.content)
-            it.putInt("mainGrade", reviewData.mainGrade)
-            it.putInt("amountGrade", reviewData.amountGrade)
-            it.putInt("tasteGrade", reviewData.tasteGrade)
-        }
-
-        modalBottomSheet.arguments = bundle
         modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
     }
 
@@ -217,5 +215,4 @@ class ReviewActivity :
         lodeData()
         bindData()
     }
-
 }
