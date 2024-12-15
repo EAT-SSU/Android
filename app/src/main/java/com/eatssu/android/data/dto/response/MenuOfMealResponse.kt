@@ -1,10 +1,10 @@
 package com.eatssu.android.data.dto.response
 
-import com.eatssu.android.data.model.MenuMini
+import com.eatssu.android.domain.model.MenuMini
 import com.google.gson.annotations.SerializedName
 
 data class MenuOfMealResponse(
-    @SerializedName("menusInformation") var menusInformation: ArrayList<MenusInformation> = arrayListOf(),
+    @SerializedName("briefMenus") var briefMenus: ArrayList<MenusInformation> = arrayListOf(),
 )
 
 data class MenusInformation(
@@ -14,14 +14,13 @@ data class MenusInformation(
 
     )
 
-fun MenuOfMealResponse.asMenuOfMeal(): List<MenuMini> {
-    val menuList = mutableListOf<MenuMini>()
+fun MenuOfMealResponse.toMenuMiniList(): List<MenuMini> {
+    return briefMenus.map { it.toMenuMini() }
+}
 
-    this.menusInformation.forEach {
-
-        val menu = MenuMini(it.menuId, it.name)
-        menuList.add(menu)
-    }
-
-    return menuList
+fun MenusInformation.toMenuMini(): MenuMini {
+    return MenuMini(
+        id = this.menuId,
+        name = this.name
+    )
 }

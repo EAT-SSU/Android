@@ -41,9 +41,11 @@
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <meta-data
+            android:name="com.google.android.gms.oss.licenses.enabled"
+            android:value="true" />
         <receiver
-            android:name=".util.NotificationReceiver"
+            android:name=".alarm.NotificationReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -52,17 +54,17 @@
         </receiver>
 
         <activity
-            android:name=".ui.mypage.DeveloperActivity"
+            android:name=".presentation.mypage.DeveloperActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.mypage.SignOutActivity"
+            android:name=".presentation.mypage.SignOutActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.mypage.terms.WebViewActivity"
+            android:name=".presentation.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.IntroActivity"
+            android:name=".presentation.login.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,31 +73,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.review.write.ReviewWriteRateActivity"
+            android:name=".presentation.review.write.ReviewWriteRateActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.write.menu.ReviewWriteMenuActivity"
+            android:name=".presentation.review.write.menu.ReviewWriteMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".presentation.login.LoginActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.common.AndroidMessageDialogActivity"
+            android:name=".presentation.common.AndroidMessageDialogActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.common.ForceUpdateDialogActivity"
+            android:name=".presentation.common.ForceUpdateDialogActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -116,14 +118,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".base.BaseActivity"
+            android:name=".presentation.base.BaseActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.usernamechange.UserNameChangeActivity"
+            android:name=".presentation.mypage.usernamechange.UserNameChangeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data
@@ -131,21 +133,21 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.myreview.MyReviewListActivity"
+            android:name=".presentation.mypage.myreview.MyReviewListActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.list.ReviewActivity"
+            android:name=".presentation.review.list.ReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.mypage.MyPageActivity"
+            android:name=".presentation.mypage.MyPageActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -153,14 +155,14 @@
         </activity>
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.report.OthersReviewDialogActivity"
+            android:name=".presentation.review.report.OthersReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -168,7 +170,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.delete.MyReviewDialogActivity"
+            android:name=".presentation.review.delete.MyReviewDialogActivity"
             android:exported="true"
             android:theme="@style/Theme.MyDialog">
             <meta-data
@@ -176,14 +178,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.report.ReportActivity"
+            android:name=".presentation.review.report.ReportActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.review.modify.ModifyReviewActivity"
+            android:name=".presentation.review.modify.ModifyReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

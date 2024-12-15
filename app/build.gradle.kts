@@ -1,14 +1,15 @@
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.hilt.android)
     id("kotlin-parcelize")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -21,8 +22,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 23
         targetSdk = 34
-        versionCode = 23
-        versionName = "2.1.3"
+        versionCode = 24
+        versionName = "2.1.4"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,6 +55,7 @@ android {
 
         debug {
 //            applicationIdSuffix = ".debug"
+//            isDebuggable = false
 
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
@@ -100,7 +102,6 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
-    implementation(libs.androidx.activity)
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -151,6 +152,9 @@ dependencies {
 
     // Timber for logging
     implementation(libs.timber)
+
+    // OSS
+    implementation(libs.oss.licenses)
 }
 
 kapt {

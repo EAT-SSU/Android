@@ -1,5 +1,5 @@
 [versions]
-android = "8.2.2"
+android = "8.6.1"
 androidx-core = "1.7.0"
 androidx-appcompat = "1.6.1"
 material = "1.8.0"
@@ -33,7 +33,8 @@ firebase-crashlytics = "2.9.9"
 timber = "5.0.1"
 google-services = "4.4.2"
 kotlin-android  = "1.8.10"
-activity-version = "1.9.1"
+ossLicenses = "17.1.0"
+ossLicensesPlugin = "0.10.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -82,7 +83,9 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity-version" }
+oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
+oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
+
 
 
 
