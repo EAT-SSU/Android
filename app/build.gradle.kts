@@ -113,9 +113,14 @@ dependencies {
     implementation(libs.androidx.activity)
 
     //glance
+
+    // glance for widget
+//    implementation("androidx.glance:glance:1.0.0")
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.preview)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
-    implementation(libs.androidx.glance.material2)
+//    implementation(libs.androidx.glance.material2)
 
 
     // Testing libraries
