@@ -36,7 +36,8 @@ kotlin-android  = "1.8.10"
 ossLicenses = "17.1.0"
 ossLicensesPlugin = "0.10.4"
 workRuntimeKtx = "2.10.0"
-glanceAppwidget = "1.1.1"
+glanceAppwidget = "1.1.0-rc01"
+glancePreview = "1.0-rc01"
 
 [libraries]
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
@@ -94,8 +95,8 @@ androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "g
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glanceAppwidget" }
 androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
-androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glanceAppwidget" }
-
+androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 
 
 [plugins]
