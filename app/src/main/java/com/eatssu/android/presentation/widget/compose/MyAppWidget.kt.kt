@@ -5,8 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
 import androidx.glance.text.Text
-import com.google.firebase.annotations.PreviewApi
 
 class MyAppWidget : GlanceAppWidget() {
 
@@ -25,8 +26,9 @@ class MyAppWidget : GlanceAppWidget() {
 }
 
 
+@OptIn(ExperimentalGlancePreviewApi::class)
 @Composable
-@PreviewApi
+@Preview
 fun PreviewWidget() {
     Text("Hello World")
 

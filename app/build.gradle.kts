@@ -101,6 +101,16 @@ android {
 }
 
 dependencies {
+
+//    // compose
+//    val composePlatform = platform("androidx.compose:compose-bom:2023.10.01")
+//    implementation(composePlatform)
+//    implementation("androidx.activity:activity-compose:1.8.2")
+//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+//    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+//    implementation("androidx.navigation:navigation-compose:2.7.6")
+//    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -111,6 +121,11 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
+
+    // glance for widget
+    implementation("androidx.glance:glance:1.0.0")
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.preview)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation(libs.androidx.glance.material2)

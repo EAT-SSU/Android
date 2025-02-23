@@ -88,9 +88,13 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
+
+# glance for compose widget
+androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "glanceAppwidget" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glanceAppwidget" }
 androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
+androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glanceAppwidget" }
 
 
 
