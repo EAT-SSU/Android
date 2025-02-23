@@ -123,6 +123,9 @@ androidx-glance-material3 = { group = "androidx.glance", name = "glance-material
 #androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
 androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glanceAppwidget" }
 
+#androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
+#androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 
 
 [plugins]
