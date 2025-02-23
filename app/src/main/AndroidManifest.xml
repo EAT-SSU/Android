@@ -53,6 +53,27 @@
             </intent-filter>
         </receiver>
 
+        <!--        <receiver android:name=".presentation.widget.TimeWidgetProvider"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+        <!--            </intent-filter>-->
+        <!--            <meta-data-->
+        <!--                android:name="android.appwidget.provider"-->
+        <!--                android:resource="@xml/widget_info" />-->
+        <!--        </receiver>-->
+        <receiver
+            android:name=".presentation.widget.compose.MyAppWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+
+
         <activity
             android:name=".presentation.mypage.DeveloperActivity"
             android:exported="false" />

@@ -14,14 +14,14 @@ plugins {
 
 android {
     namespace = "com.eatssu.android"
-    compileSdk = 34
+    compileSdk = 35
 
     // S8: API 28
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 24
         versionName = "2.1.4"
 
@@ -32,6 +32,7 @@ android {
         buildConfig = true
         viewBinding = true
         dataBinding = true
+        compose = true
     }
 
     buildTypes {
@@ -74,8 +75,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.2"
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     splits {
@@ -102,6 +111,10 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.glance.material2)
+
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -155,6 +168,9 @@ dependencies {
 
     // OSS
     implementation(libs.oss.licenses)
+
+    // worker (Kotlin + coroutines)
+    implementation(libs.androidx.work.runtime.ktx)
 }
 
 kapt {
