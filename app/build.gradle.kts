@@ -112,6 +112,12 @@ dependencies {
     implementation(libs.fragment)
     implementation(libs.androidx.activity)
 
+    //glance
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.glance.material2)
+
+
     // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
@@ -185,6 +191,9 @@ dependencies {
     // navigation
     implementation ("androidx.navigation:navigation-fragment:2.8.9")
     implementation ("androidx.navigation:navigation-ui:2.8.9")
+
+    // worker (Kotlin + coroutines)
+    implementation(libs.androidx.work.runtime.ktx)
 }
 
 kapt {
