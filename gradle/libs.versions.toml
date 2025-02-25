@@ -38,6 +38,8 @@ ossLicensesPlugin = "0.10.4"
 workRuntimeKtx = "2.10.0"
 glanceAppwidget = "1.1.0-rc01"
 glancePreview = "1.0-rc01"
+hiltCommon = "1.2.0"
+datastore = "1.0.0"
 
 [libraries]
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
@@ -97,6 +99,9 @@ androidx-glance-material3 = { group = "androidx.glance", name = "glance-material
 androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
 androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
 androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
+
+# dataStore
+datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 
 [plugins]

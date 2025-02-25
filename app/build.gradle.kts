@@ -188,6 +188,9 @@ dependencies {
 
     // worker (Kotlin + coroutines)
     implementation(libs.androidx.work.runtime.ktx)
+
+    //data store (with flow)
+    implementation(libs.datastore)
 }
 
 kapt {
