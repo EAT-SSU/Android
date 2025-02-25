@@ -57,18 +57,27 @@ class MyAppWidget : GlanceAppWidget(
     var currentIndex = 0 // 식당을 순차적으로 보여줄 인덱스
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val weatherDataStore = MealDataStore(context)
+        val mealFlow = weatherDataStore.getMealFlow()
 
-        // 기본 스레드에서 실행되기 떄문에 withContext를 사용해서 다른 스레드로 전환할 수 있음
+        scheduleWeatherUpdate(context)
+
+        // 기본 스레드에서 실행
+        // withContext를 사용해서 다른 스레드로 전환할 수 있음
         // In this method, load data needed to render the AppWidget.
         // Use `withContext` to switch to another thread for long running
         // operations.
 
+
         provideContent {
+            val meal by mealFlow.collectAsState(initial = "")
             // create your AppWidget here
 
+            Timber.d(meal.toString())
             var isError = false;
             var data = null
             try {
+//                getTodayMealUseCase
 //                val repository = (context.applicationContext as MyApplication).myRepository
 //                data = repository.loadData()
             } catch (e: Exception) {
