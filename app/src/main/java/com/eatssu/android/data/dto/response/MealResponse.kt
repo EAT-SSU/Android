@@ -1,6 +1,7 @@
 package com.eatssu.android.data.dto.response
 
 import com.eatssu.android.domain.model.Menu
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
 data class GetMealResponse(
@@ -34,4 +35,8 @@ fun ArrayList<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
     }
 
     return menuList
+}
+
+fun GetMealResponse.fromJson(json: String): GetMealResponse {
+    return Gson().fromJson(json, GetMealResponse::class.java)
 }

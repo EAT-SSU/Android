@@ -1,2 +1,11 @@
+<!--<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:initialLayout="@layout/glance_default_loading_layout"-->
+<!--    android:minHeight="1"/>-->
+
+
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/glance_default_loading_layout"></appwidget-provider>
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minWidth="320dp"
+    android:minHeight="240dp"
+    android:updatePeriodMillis="60000"
+    android:widgetCategory="home_screen" />
