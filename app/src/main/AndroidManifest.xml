@@ -20,6 +20,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
+    <!--  이걸 추가하면 기기 재부팅 후에도 WorkManager가 다시 실행됨  -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -45,9 +48,13 @@
             <meta-data android:name="photopicker_activity:0:required" android:value="" />
         </service>
 
+
+        <!--   오픈소스     -->
         <meta-data
             android:name="com.google.android.gms.oss.licenses.enabled"
             android:value="true" />
+
+        <!--   푸시알림 리시버     -->
         <receiver
             android:name=".alarm.NotificationReceiver"
             android:enabled="true"
@@ -57,21 +64,14 @@
             </intent-filter>
         </receiver>
 
-        <!--        <receiver android:name=".presentation.widget.TimeWidgetProvider"-->
-        <!--            android:exported="true">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-        <!--            </intent-filter>-->
-        <!--            <meta-data-->
-        <!--                android:name="android.appwidget.provider"-->
-        <!--                android:resource="@xml/widget_info" />-->
-        <!--        </receiver>-->
+        <!--   위젯 리시버     -->
         <receiver
             android:name=".presentation.widget.compose.MyAppWidgetReceiver"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
