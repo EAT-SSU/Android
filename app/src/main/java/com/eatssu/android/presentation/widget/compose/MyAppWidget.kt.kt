@@ -50,39 +50,35 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
-class MyAppWidget : GlanceAppWidget(
+class MyAppWidget : GlanceAppWidget() {
 
-) {
-
-    var currentIndex = 0 // 식당을 순차적으로 보여줄 인덱스
+//    var currentIndex = 0 // 식당을 순차적으로 보여줄 인덱스
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val weatherDataStore = MealDataStore(context)
         val mealFlow = weatherDataStore.getMealFlow()
 
-        scheduleWeatherUpdate(context)
+//        scheduleWeatherUpdate(context)
 
         // 기본 스레드에서 실행
         // withContext를 사용해서 다른 스레드로 전환할 수 있음
-        // In this method, load data needed to render the AppWidget.
-        // Use `withContext` to switch to another thread for long running
-        // operations.
 
 
-        provideContent {
-            val meal by mealFlow.collectAsState(initial = "")
-            // create your AppWidget here
+        provideContent { //이 함수가 렌더링 하는 함수임
+            scheduleWeatherUpdate(context)
+
+            val meal by mealFlow.collectAsState(initial = "Loading...")
 
             Timber.d(meal.toString())
             var isError = false;
-            var data = null
+//            var data = null
             try {
+
 //                getTodayMealUseCase
 //                val repository = (context.applicationContext as MyApplication).myRepository
 //                data = repository.loadData()
             } catch (e: Exception) {
                 isError = true;
-                //handleError
             }
 
             if (isError) {
@@ -97,23 +93,20 @@ class MyAppWidget : GlanceAppWidget(
 
     @Composable
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 240)
+    @Preview(widthDp = 320, heightDp = 160)
     private fun MyContent() {
         val restaurants = getVariableRestaurants()
-        val currentRestaurant = restaurants[currentIndex]
+//        val currentRestaurant = restaurants[currentIndex]
 
         Column(
             modifier = GlanceModifier.fillMaxSize()
                 .background(GlanceTheme.colors.background)
-//            .background(color = Color(0xFFD3D3D3)) //0xFFFAFAFB
                 .padding(16.dp)
                 .cornerRadius(20.dp),
         ) {
 
             Row(
                 modifier = GlanceModifier.fillMaxWidth(),
-//            verticalAlignment = Alignment.Top,
-//            horizontalAlignment = Alignment.Start
             ) {
                 // 조식/중식/석식
                 Column(
@@ -135,7 +128,7 @@ class MyAppWidget : GlanceAppWidget(
                 Spacer(modifier = GlanceModifier.defaultWeight())
 
                 //식당 이름
-                var restaurantName = currentRestaurant.displayName
+//                var restaurantName = currentRestaurant.displayName
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -147,7 +140,7 @@ class MyAppWidget : GlanceAppWidget(
                         contentDescription = "left",
                     )
                     Text(
-                        restaurantName,
+                        "학생 식당",
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
                     )
@@ -183,54 +176,49 @@ class MyAppWidget : GlanceAppWidget(
                     MenusInformationList(menuId = 3, name = "된장찌개"),
                     MenusInformationList(menuId = 4, name = "제육볶음")
                 )
-            )
+            ),
         )
-
         Box(
             modifier = GlanceModifier.fillMaxSize()
-                .background(color = Color(0xFFFAFAFB)) //0xFFFAFAFB
-                .padding(top = 5.dp, start = 14.dp, end = 5.dp)
+                .background(color = Color(0xFFFAFAFB))
+                .padding(top = 7.dp, start = 10.dp, end = 7.dp)
                 .cornerRadius(10.dp)
         )
         {
-            LazyColumn(modifier = GlanceModifier.fillMaxWidth()) {
-                mealResponses.forEachIndexed { index, mealResponse ->
-                    item {
-                        val menuNames =
-                            mealResponse.briefMenus.joinToString(separator = "+") { it.name ?: "" }
-//                        MenuItem(menuNames)
-                        Text(
-                            text = menuNames,
-                            style = TextStyle(fontSize = 12.sp)
-                        )
-
-                        // 다른 리스트와 구분을 위한 Spacer (마지막 항목이 아니면 한 줄 띄움)
-//                        if (index < mealResponses.size - 1) {
-                        Spacer(modifier = GlanceModifier.size(20.dp))
-//                        }
+            Column(
+                modifier = GlanceModifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically // 세로 가운데 정렬
+            ) {
+                LazyColumn(
+                    modifier = GlanceModifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    mealResponses.forEachIndexed { index, mealResponse ->
+                        item {
+                            val menuNames = mealResponse.briefMenus.joinToString(separator = "+") {
+                                it.name ?: ""
+                            }
+                            Text(
+                                modifier = GlanceModifier,
+                                text = menuNames,
+                                style = TextStyle(fontSize = 12.sp),
+                            )
+                        }
+                        // 마지막 아이템이 아니면 Spacer 추가
+                        if (index < mealResponses.size - 1) {
+                            item {
+                                Spacer(modifier = GlanceModifier.size(12.dp))
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-
-    @Composable
-    fun MenuItem(menuNames: String) {
-        Column(
-            modifier = GlanceModifier.fillMaxWidth().padding(8.dp)
-        ) {
-            Text(
-                text = menuNames,
-                style = TextStyle(fontSize = 12.sp)
-            )
-        }
-    }
-
-
     @Composable
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 240)
+    @Preview(widthDp = 320, heightDp = 160)
     fun ErrorView() {
         Column(
             modifier = GlanceModifier.fillMaxSize()
@@ -316,12 +304,12 @@ class MyAppWidget : GlanceAppWidget(
         return Restaurant.values().filter { it.menuType == MenuType.VARIABLE }
     }
 
-    suspend fun changeRestaurant() {
-        currentIndex =
-            (currentIndex - 1 + getVariableRestaurants().size) % getVariableRestaurants().size // 이전 식당으로 변경
-        provideContent { MyContent() } // 텍스트를 갱신하는 방식으로 다시 렌더링
-
-    }
+//    suspend fun changeRestaurant() {
+//        currentIndex =
+//            (currentIndex - 1 + getVariableRestaurants().size) % getVariableRestaurants().size // 이전 식당으로 변경
+//        provideContent { MyContent() } // 텍스트를 갱신하는 방식으로 다시 렌더링
+//
+//    }
 
     fun scheduleWeatherUpdate(context: Context) {
         val workRequest = PeriodicWorkRequestBuilder<WeatherWorker>(15, TimeUnit.MINUTES)
