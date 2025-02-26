@@ -16,7 +16,7 @@ class GetTodayMealUseCase @Inject constructor(
     ): Result<BaseResponse<ArrayList<GetMealResponse>>> =
         mealRepository.fetchTodayMeal(date, restaurant, time)
 
-    fun observeWeather(): Flow<ArrayList<GetMealResponse>> = mealRepository.getTodayMealFlow()
+    fun observeMeal(): Flow<ArrayList<GetMealResponse>> = mealRepository.getTodayMealFlow()
 
 
 }
