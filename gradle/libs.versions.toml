@@ -131,6 +131,7 @@ androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-
 
 # dataStore
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 
 
 [plugins]
