@@ -40,8 +40,10 @@ glanceAppwidget = "1.1.0-rc01"
 glancePreview = "1.0-rc01"
 hiltCommon = "1.2.0"
 datastore = "1.0.0"
+hiltWork = "1.2.0"
 
 [libraries]
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
@@ -102,6 +104,7 @@ androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-
 
 # dataStore
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 
 
 [plugins]

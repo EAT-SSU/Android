@@ -101,7 +101,10 @@ android {
 }
 
 dependencies {
-
+    kapt("com.google.dagger:hilt-android-compiler:2.42")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
     // compose
     val composePlatform = platform("androidx.compose:compose-bom:2023.10.01")
     implementation(composePlatform)
@@ -110,7 +113,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-//    implementation("androidx.compose.ui:ui-tooling:$compose_version")
     debugImplementation("androidx.compose.ui:ui-tooling:1.0.0-rc01")
     implementation("androidx.compose.ui:ui-tooling-preview:1.0.0-rc01")
 
