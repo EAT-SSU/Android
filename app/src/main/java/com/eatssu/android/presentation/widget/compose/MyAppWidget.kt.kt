@@ -67,14 +67,8 @@ class MyAppWidget : GlanceAppWidget() {
 
 
         provideContent { //이 함수가 렌더링 하는 함수임
-            scheduleWeatherUpdate(context)
 
-            val meal by mealFlow.collectAsState(initial = "Loading...")
-
-            Timber.d(meal.toString())
-            var isError = false;
-//            var data = null
-            try {
+            val mealList by mealFlow.collectAsState(initial = ArrayList()) // 초기값을 빈 ArrayList로 설정
 
             if (mealList.isEmpty()) { //todo 네트워크 오류 분기처리
                 WidgetBaseLayout(
@@ -165,27 +159,7 @@ class MyAppWidget : GlanceAppWidget() {
     }
 
     @Composable
-    fun MenuList() {
-        val mealResponses = listOf(
-            GetMealResponse(
-                mealId = 1,
-                price = 5000,
-                rating = 4.5,
-                briefMenus = arrayListOf(
-                    MenusInformationList(menuId = 1, name = "김치찌개"),
-                    MenusInformationList(menuId = 2, name = "불고기")
-                )
-            ),
-            GetMealResponse(
-                mealId = 2,
-                price = 6000,
-                rating = 4.0,
-                briefMenus = arrayListOf(
-                    MenusInformationList(menuId = 3, name = "된장찌개"),
-                    MenusInformationList(menuId = 4, name = "제육볶음")
-                )
-            ),
-        )
+    fun MenuList(mealResponses: List<GetMealResponse>) {
         Box(
             modifier = GlanceModifier.fillMaxSize()
                 .background(color = Color(0xFFFAFAFB))
