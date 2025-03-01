@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.compose
+package com.eatssu.android.presentation.widget
 
 import android.content.Context
 import android.util.Log

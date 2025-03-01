@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.compose
+package com.eatssu.android.presentation.widget
 
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
