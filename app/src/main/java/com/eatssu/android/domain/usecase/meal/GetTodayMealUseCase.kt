@@ -15,17 +15,20 @@ class GetTodayMealUseCase @Inject constructor(
         date: String,
         restaurant: String,
         time: String
-    ):
-            Flow<ArrayList<GetMealResponse>> {
+    ): Flow<ArrayList<GetMealResponse>> {
         val data = mealRepository.fetchTodayMeal2(date, restaurant, time)
 
-// Flow를 List로 변환 후 저장
+        // Flow를 List로 변환 후 저장
         val mealList: List<GetMealResponse> = data.first()
-        saveTodayMealUseCase(mealList)
+
+        // 각각의 메뉴를 합쳐서 식단 string으로 만듦
+        val menuStrings = mealList.map { meal ->
+            meal.briefMenus.joinToString("+") { it.name.toString() }
+        }
+
+        saveTodayMealUseCase(date, restaurant, time, menuStrings)
         return data
 
     }
-
-
 }
 

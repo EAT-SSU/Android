@@ -7,14 +7,22 @@ import kotlinx.coroutines.flow.Flow
 
 interface MealRepository {
 
+    // 오늘의 식단을 가져오는 api
     suspend fun fetchTodayMeal2(
         date: String,
         restaurant: String,
         time: String,
     ): Flow<ArrayList<GetMealResponse>>
 
-    suspend fun saveTodayMeal(meal: List<GetMealResponse>)
+    // datastore에 오늘의 식단을 저장
+    suspend fun saveTodayMeal(
+        date: String,
+        restaurant: String,
+        time: String,
+        meal: List<String>
+    )
 
+    // MealId를 이용해서 Menu를 찾기
     suspend fun getMenuInfoByMealId(
         mealId: Long,
     ): Flow<BaseResponse<MenuOfMealResponse>>
