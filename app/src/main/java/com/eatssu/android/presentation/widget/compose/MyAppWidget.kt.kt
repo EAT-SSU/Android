@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.widget.compose
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,6 +14,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.ActionCallback
@@ -46,7 +48,7 @@ import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.dto.response.MenusInformationList
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
-import timber.log.Timber
+import com.eatssu.android.presentation.main.MainActivity
 import java.util.concurrent.TimeUnit
 
 
@@ -58,7 +60,7 @@ class MyAppWidget : GlanceAppWidget() {
         val weatherDataStore = MealDataStore(context)
         val mealFlow = weatherDataStore.getMealFlow()
 
-//        scheduleWeatherUpdate(context)
+        scheduleWeatherUpdate(context)
 
         // 기본 스레드에서 실행
         // withContext를 사용해서 다른 스레드로 전환할 수 있음
@@ -74,27 +76,28 @@ class MyAppWidget : GlanceAppWidget() {
 //            var data = null
             try {
 
-//                getTodayMealUseCase
-//                val repository = (context.applicationContext as MyApplication).myRepository
-//                data = repository.loadData()
-            } catch (e: Exception) {
-                isError = true;
-            }
-
-            if (isError) {
-                ErrorView()
+            if (mealList.isEmpty()) { //todo 네트워크 오류 분기처리
+                WidgetBaseLayout(
+                    restaurantName = "기숙사 식당",
+                    content = { EmptyMenuContent(isNetworkError = false) }
+                )
             } else {
-                MyContent()
-
+                WidgetBaseLayout(
+                    restaurantName = "학생 식당",
+                    content = { MenuList(mealList) }
+                )
             }
         }
     }
 
 
     @Composable
-    @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 160)
-    private fun MyContent() {
+    private fun WidgetBaseLayout(
+        restaurantName: String,
+        onLeftArrowClick: () -> Unit = {},
+        onRightArrowClick: () -> Unit = { actionRunCallback<ChangeAction>() },
+        content: @Composable () -> Unit
+    ) {
         val restaurants = getVariableRestaurants()
 //        val currentRestaurant = restaurants[currentIndex]
 
@@ -102,7 +105,10 @@ class MyAppWidget : GlanceAppWidget() {
             modifier = GlanceModifier.fillMaxSize()
                 .background(GlanceTheme.colors.background)
                 .padding(16.dp)
-                .cornerRadius(20.dp),
+                .cornerRadius(20.dp)
+                .clickable {
+                    actionStartActivity<MainActivity>()
+                },
         ) {
 
             Row(
@@ -140,7 +146,7 @@ class MyAppWidget : GlanceAppWidget() {
                         contentDescription = "left",
                     )
                     Text(
-                        "학생 식당",
+                        restaurantName,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
                     )
@@ -152,7 +158,9 @@ class MyAppWidget : GlanceAppWidget() {
                     )
                 }
             }
-            MenuList()
+
+            // 콘텐츠 영역
+            content()
         }
     }
 
@@ -216,93 +224,96 @@ class MyAppWidget : GlanceAppWidget() {
         }
     }
 
+
     @Composable
-    @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 160)
-    fun ErrorView() {
-        Column(
+    fun EmptyMenuContent(isNetworkError: Boolean = false) {
+        Box(
             modifier = GlanceModifier.fillMaxSize()
-                .background(GlanceTheme.colors.background)
-                .padding(16.dp)
-                .cornerRadius(20.dp),
-        ) {
-
-            Row(
-                modifier = GlanceModifier.fillMaxWidth(),
+                .background(color = Color(0xFFFAFAFB))
+                .cornerRadius(10.dp)
+        )
+        {
+            Column(
+                modifier = GlanceModifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // 조식/중식/석식
-                Column(
-                    verticalAlignment = Alignment.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(height = 14.dp, width = 43.dp),
-                        provider = ImageProvider(R.drawable.img_new_logo_primary),
-                        contentDescription = "Logo"
-                    )
-
-                    Text(
-                        "중식", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
-                        modifier = GlanceModifier.padding(top = 2.dp, bottom = 12.dp)
-                    )
-                }
-
-                Spacer(modifier = GlanceModifier.defaultWeight())
-
-                //식당 이름
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(18.dp),
-                        provider = ImageProvider(R.drawable.ic_arrow_left),
-                        contentDescription = "left"
-                    )
-                    Text(
-                        "기숙사 식당",
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
-                        modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
-                    )
-                    Image(
-                        modifier = GlanceModifier.size(18.dp),
-                        provider = ImageProvider(R.drawable.ic_arrow_right),
-                        contentDescription = "right"
-                    )
-                }
-
-            }
-
-            Box(
-                modifier = GlanceModifier.fillMaxSize()
-                    .background(color = Color(0xFFFAFAFB))
-                    .cornerRadius(10.dp)
-            )
-            {
-                Column(
-                    modifier = GlanceModifier
-                        .fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(30.dp)
-                            .padding(bottom = 6.dp),
-                        provider = ImageProvider(R.drawable.ic_alert_circle),
-                        contentDescription = "alert"
-                    )
-                    Text(
-                        "네트워크 연결 상태를 확인해주세요.",
-                        style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
-                    )
-                }
+                Image(
+                    modifier = GlanceModifier.size(30.dp)
+                        .padding(bottom = 6.dp),
+                    provider = ImageProvider(R.drawable.ic_alert_circle),
+                    contentDescription = "alert"
+                )
+                Text(
+                    text = if (isNetworkError) {
+                        "네트워크 연결 상태를 확인해주세요."
+                    } else {
+                        "오늘의 메뉴가 없습니다."
+                    },
+                    style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                )
             }
         }
     }
 
-    fun getVariableRestaurants(): List<Restaurant> {
-        return Restaurant.values().filter { it.menuType == MenuType.VARIABLE }
+    @Composable
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 320, heightDp = 160)
+    fun PreviewWidget1() {
+        val mealResponses = listOf(
+            GetMealResponse(
+                mealId = 1,
+                price = 5000,
+                rating = 4.5,
+                briefMenus = arrayListOf(
+                    MenusInformationList(menuId = 1, name = "김치찌개"),
+                    MenusInformationList(menuId = 2, name = "불고기")
+                )
+            ),
+            GetMealResponse(
+                mealId = 2,
+                price = 6000,
+                rating = 4.0,
+                briefMenus = arrayListOf(
+                    MenusInformationList(menuId = 3, name = "된장찌개"),
+                    MenusInformationList(menuId = 4, name = "제육볶음")
+                )
+            ),
+        )
+
+        WidgetBaseLayout(
+            restaurantName = "학생 식당",
+            content = { MenuList(mealResponses) }
+        )
     }
+
+    @Composable
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 320, heightDp = 160)
+    fun PreviewWidget2() {
+
+        WidgetBaseLayout(
+            restaurantName = "기숙사 식당",
+            content = { EmptyMenuContent(isNetworkError = false) }
+        )
+    }
+
+    @Composable
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 320, heightDp = 160)
+    fun PreviewWidget3() {
+
+        WidgetBaseLayout(
+            restaurantName = "도담 식당",
+            content = { EmptyMenuContent(isNetworkError = true) }
+        )
+    }
+}
+
+fun getVariableRestaurants(): List<Restaurant> {
+    return Restaurant.values().filter { it.menuType == MenuType.VARIABLE }
+}
 
 //    suspend fun changeRestaurant() {
 //        currentIndex =
@@ -311,21 +322,21 @@ class MyAppWidget : GlanceAppWidget() {
 //
 //    }
 
-    fun scheduleWeatherUpdate(context: Context) {
-        val workRequest = PeriodicWorkRequestBuilder<WeatherWorker>(15, TimeUnit.MINUTES)
-            .setConstraints(
-                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-            )
-            .build()
-
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "WeatherWorker",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
+fun scheduleWeatherUpdate(context: Context) {
+    Log.d("워커", "워커가 등록됩니다")
+    val workRequest = PeriodicWorkRequestBuilder<SimpleWorker>(15, TimeUnit.MINUTES)
+        .setConstraints(
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         )
-    }
+        .build()
 
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        "WeatherWorker",
+        ExistingPeriodicWorkPolicy.UPDATE,
+        workRequest
+    )
 }
+
 
 class ChangeAction : ActionCallback {
     override suspend fun onAction(
