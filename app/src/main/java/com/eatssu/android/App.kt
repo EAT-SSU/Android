@@ -7,6 +7,8 @@ import androidx.work.Configuration
 import com.eatssu.android.domain.model.TokenState
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.presentation.base.TokenEventBus
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -38,6 +40,10 @@ class App : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+
+//        // WorkManager 초기화
+//        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory).build())
+
 
         appContext = this
         KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)
