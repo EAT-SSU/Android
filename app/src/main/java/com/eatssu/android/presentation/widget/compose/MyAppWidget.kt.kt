@@ -283,11 +283,11 @@ class MyAppWidget : GlanceAppWidget() {
             content = { EmptyMenuContent(isNetworkError = true) }
         )
     }
-}
 
-fun getVariableRestaurants(): List<Restaurant> {
-    return Restaurant.values().filter { it.menuType == MenuType.VARIABLE }
-}
+
+    fun getVariableRestaurants(): List<Restaurant> {
+        return Restaurant.values().filter { it.menuType == MenuType.VARIABLE }
+    }
 
 //    suspend fun changeRestaurant() {
 //        currentIndex =
@@ -296,20 +296,23 @@ fun getVariableRestaurants(): List<Restaurant> {
 //
 //    }
 
-fun scheduleWeatherUpdate(context: Context) {
-    Log.d("워커", "워커가 등록됩니다")
-    val workRequest = PeriodicWorkRequestBuilder<SimpleWorker>(15, TimeUnit.MINUTES)
-        .setConstraints(
-            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        )
-        .build()
+    fun scheduleWeatherUpdate(context: Context) {
+        Log.d("워커", "워커가 등록됩니다")
+        val workRequest = PeriodicWorkRequestBuilder<SimpleWorker>(60, TimeUnit.MINUTES)
+            .setConstraints(
+                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            )
+            .build()
 
-    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-        "WeatherWorker",
-        ExistingPeriodicWorkPolicy.UPDATE,
-        workRequest
-    )
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "TodayMealWorker",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
 }
+
+
 
 
 class ChangeAction : ActionCallback {
@@ -318,6 +321,7 @@ class ChangeAction : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters
     ) {
+        //todo 식당 변경
         MyAppWidget().update(context, glanceId)
     }
 }
