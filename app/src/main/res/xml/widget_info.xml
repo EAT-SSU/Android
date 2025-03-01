@@ -1,6 +1,9 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/glance_default_loading_layout"
-    android:minWidth="320dp"
-    android:minHeight="160dp"
+    android:maxResizeWidth="102dp"
+    android:minWidth="276dp"
+    android:minHeight="102dp"
+    android:minResizeWidth="102dp"
+    android:resizeMode="horizontal"
     android:updatePeriodMillis="60000"
     android:widgetCategory="home_screen" />
