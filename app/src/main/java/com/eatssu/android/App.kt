@@ -5,6 +5,8 @@ import android.content.Context
 import com.eatssu.android.domain.model.TokenState
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.presentation.base.TokenEventBus
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -16,10 +18,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 /** App: 앱이 살아있는 동안 공통 리소스 관리를 위한 클래스 */
 @HiltAndroidApp
-class App: Application() {
+class App : Application(), Configuration.Provider {
     companion object{
         lateinit var appContext: Context //todo 이거 빼기
     }
@@ -29,9 +32,16 @@ class App: Application() {
      * */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+
+//        // WorkManager 초기화
+//        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory).build())
+
 
         appContext = this
         KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)
@@ -60,4 +70,9 @@ class App: Application() {
             }
         }
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

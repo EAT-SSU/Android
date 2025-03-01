@@ -19,9 +19,9 @@ interface MealService {
         @Query("time") time: String,
     ): Call<BaseResponse<ArrayList<GetMealResponse>>>
 
-    // todo 하나로 합치길 바람 ㅜㅜ 위젯 때문에 급하게 복사본을 만듦
+    // todo 위에 함수를 call 없애서 하나로 합치길 바람 ㅜㅜ 위젯 때문에 급하게 복사본을 만듦
     @GET("meals")
-    fun getTodayMeal2(
+    suspend fun getTodayMeal2(
         @Query("date") date: String,
         @Query("restaurant") restaurant: String,
         @Query("time") time: String,
