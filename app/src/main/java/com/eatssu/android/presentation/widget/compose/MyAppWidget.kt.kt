@@ -44,10 +44,9 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.eatssu.android.R
 import com.eatssu.android.data.datastore.MealDataStore
-import com.eatssu.android.data.dto.response.GetMealResponse
-import com.eatssu.android.data.dto.response.MenusInformationList
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.domain.model.WidgetMeal
 import com.eatssu.android.presentation.main.MainActivity
 import java.util.concurrent.TimeUnit
 
@@ -58,7 +57,7 @@ class MyAppWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val weatherDataStore = MealDataStore(context)
-        val mealFlow = weatherDataStore.getMealFlow()
+        val mealFlow = weatherDataStore.mealFlow
 
         scheduleWeatherUpdate(context)
 
@@ -68,17 +67,27 @@ class MyAppWidget : GlanceAppWidget() {
 
         provideContent { //이 함수가 렌더링 하는 함수임
 
-            val mealList by mealFlow.collectAsState(initial = ArrayList()) // 초기값을 빈 ArrayList로 설정
+            val meal by mealFlow.collectAsState(
+                initial = WidgetMeal(
+                    "",
+                    "",
+                    "",
+                    ArrayList()
+                )
+            ) // 초기값을 빈 ArrayList로 설정
 
-            if (mealList.isEmpty()) { //todo 네트워크 오류 분기처리
+
+            if (meal.menuList.isEmpty()) { //todo 네트워크 오류 분기처리
                 WidgetBaseLayout(
-                    restaurantName = "기숙사 식당",
+                    restaurantName = meal.restaurantName,
+                    time = meal.time,
                     content = { EmptyMenuContent(isNetworkError = false) }
                 )
             } else {
                 WidgetBaseLayout(
-                    restaurantName = "학생 식당",
-                    content = { MenuList(mealList) }
+                    restaurantName = meal.restaurantName,
+                    time = meal.time,
+                    content = { MenuList(meal.menuList) }
                 )
             }
         }
@@ -88,6 +97,7 @@ class MyAppWidget : GlanceAppWidget() {
     @Composable
     private fun WidgetBaseLayout(
         restaurantName: String,
+        time: String,
         onLeftArrowClick: () -> Unit = {},
         onRightArrowClick: () -> Unit = { actionRunCallback<ChangeAction>() },
         content: @Composable () -> Unit
@@ -120,15 +130,12 @@ class MyAppWidget : GlanceAppWidget() {
                     )
 
                     Text(
-                        "중식", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                        time, style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(top = 2.dp, bottom = 12.dp)
                     )
                 }
 
                 Spacer(modifier = GlanceModifier.defaultWeight())
-
-                //식당 이름
-//                var restaurantName = currentRestaurant.displayName
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -159,7 +166,7 @@ class MyAppWidget : GlanceAppWidget() {
     }
 
     @Composable
-    fun MenuList(mealResponses: List<GetMealResponse>) {
+    fun MenuList(mealList: List<String>) {
         Box(
             modifier = GlanceModifier.fillMaxSize()
                 .background(color = Color(0xFFFAFAFB))
@@ -175,23 +182,22 @@ class MyAppWidget : GlanceAppWidget() {
                     modifier = GlanceModifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    mealResponses.forEachIndexed { index, mealResponse ->
+
+                    mealList.forEachIndexed { index, menuString ->
                         item {
-                            val menuNames = mealResponse.briefMenus.joinToString(separator = "+") {
-                                it.name ?: ""
-                            }
                             Text(
                                 modifier = GlanceModifier,
-                                text = menuNames,
+                                text = menuString,
                                 style = TextStyle(fontSize = 12.sp),
                             )
                         }
                         // 마지막 아이템이 아니면 Spacer 추가
-                        if (index < mealResponses.size - 1) {
+                        if (index < mealList.size - 1) {
                             item {
                                 Spacer(modifier = GlanceModifier.size(12.dp))
                             }
                         }
+
                     }
                 }
             }
@@ -236,28 +242,13 @@ class MyAppWidget : GlanceAppWidget() {
     @Preview(widthDp = 320, heightDp = 160)
     fun PreviewWidget1() {
         val mealResponses = listOf(
-            GetMealResponse(
-                mealId = 1,
-                price = 5000,
-                rating = 4.5,
-                briefMenus = arrayListOf(
-                    MenusInformationList(menuId = 1, name = "김치찌개"),
-                    MenusInformationList(menuId = 2, name = "불고기")
-                )
-            ),
-            GetMealResponse(
-                mealId = 2,
-                price = 6000,
-                rating = 4.0,
-                briefMenus = arrayListOf(
-                    MenusInformationList(menuId = 3, name = "된장찌개"),
-                    MenusInformationList(menuId = 4, name = "제육볶음")
-                )
-            ),
+            "김치찌개+불고기",
+            "된장찌개+제육볶음"
         )
 
         WidgetBaseLayout(
             restaurantName = "학생 식당",
+            time = "석식",
             content = { MenuList(mealResponses) }
         )
     }
@@ -269,6 +260,7 @@ class MyAppWidget : GlanceAppWidget() {
 
         WidgetBaseLayout(
             restaurantName = "기숙사 식당",
+            time = "조식",
             content = { EmptyMenuContent(isNetworkError = false) }
         )
     }
@@ -280,6 +272,7 @@ class MyAppWidget : GlanceAppWidget() {
 
         WidgetBaseLayout(
             restaurantName = "도담 식당",
+            time = "중식",
             content = { EmptyMenuContent(isNetworkError = true) }
         )
     }
@@ -311,8 +304,6 @@ class MyAppWidget : GlanceAppWidget() {
         )
     }
 }
-
-
 
 
 class ChangeAction : ActionCallback {

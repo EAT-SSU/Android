@@ -1,6 +1,5 @@
 package com.eatssu.android.data.repository
 
-import android.util.Log
 import com.eatssu.android.data.datastore.MealDataStore
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealResponse
@@ -62,9 +61,13 @@ class MealRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveTodayMeal(meal: List<GetMealResponse>) {
-        mealDataStore.saveMeal(meal)
-        Log.d("MealRepository", "Meal data saved to DataStore: $meal")
+    override suspend fun saveTodayMeal(
+        date: String,
+        restaurant: String,
+        time: String,
+        meal: List<String>
+    ) {
+        mealDataStore.saveMeal(date, restaurant, time, meal)
     }
 
 
