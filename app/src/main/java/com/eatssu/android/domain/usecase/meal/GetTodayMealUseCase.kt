@@ -16,7 +16,7 @@ class GetTodayMealUseCase @Inject constructor(
         restaurant: String,
         time: String
     ): Flow<ArrayList<GetMealResponse>> {
-        val data = mealRepository.fetchTodayMeal2(date, restaurant, time)
+        val data = mealRepository.fetchTodayMeal(date, restaurant, time)
 
         // Flow를 List로 변환 후 저장
         val mealList: List<GetMealResponse> = data.first()
