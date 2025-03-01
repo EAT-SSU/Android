@@ -7,19 +7,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface MealRepository {
 
-    suspend fun fetchTodayMeal(
+    suspend fun fetchTodayMeal2(
         date: String,
         restaurant: String,
         time: String,
-    ): Result<BaseResponse<ArrayList<GetMealResponse>>>
+    ): Flow<ArrayList<GetMealResponse>>
 
-    fun getTodayMealFlow(): Flow<ArrayList<GetMealResponse>>
-
-//    suspend fun getTodayMeal2(
-//        date: String,
-//        restaurant: String,
-//        time: String,
-//    ): Flow<BaseResponse<ArrayList<GetMealResponse>>>
+    suspend fun saveTodayMeal(meal: List<GetMealResponse>)
 
     suspend fun getMenuInfoByMealId(
         mealId: Long,
