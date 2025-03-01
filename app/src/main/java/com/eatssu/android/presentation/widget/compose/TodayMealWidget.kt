@@ -51,7 +51,7 @@ import com.eatssu.android.presentation.main.MainActivity
 import java.util.concurrent.TimeUnit
 
 
-class MyAppWidget : GlanceAppWidget() {
+class TodayMealWidget : GlanceAppWidget() {
 
 //    var currentIndex = 0 // 식당을 순차적으로 보여줄 인덱스
 
@@ -291,7 +291,7 @@ class MyAppWidget : GlanceAppWidget() {
 
     fun scheduleWeatherUpdate(context: Context) {
         Log.d("워커", "워커가 등록됩니다")
-        val workRequest = PeriodicWorkRequestBuilder<SimpleWorker>(60, TimeUnit.MINUTES)
+        val workRequest = PeriodicWorkRequestBuilder<TodayMealWorker>(60, TimeUnit.MINUTES)
             .setConstraints(
                 Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
             )
@@ -313,6 +313,6 @@ class ChangeAction : ActionCallback {
         parameters: ActionParameters
     ) {
         //todo 식당 변경
-        MyAppWidget().update(context, glanceId)
+        TodayMealWidget().update(context, glanceId)
     }
 }

@@ -62,7 +62,7 @@
 
         <!--   위젯 리시버     -->
         <receiver
-            android:name=".presentation.widget.compose.MyAppWidgetReceiver"
+            android:name=".presentation.widget.compose.TodayMealReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
