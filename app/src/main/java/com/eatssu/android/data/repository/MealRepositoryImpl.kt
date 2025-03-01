@@ -37,7 +37,7 @@ class MealRepositoryImpl @Inject constructor(
 //        }
 //    }
 
-    override suspend fun fetchTodayMeal2(
+    override suspend fun fetchTodayMeal( //todo 분기처리 어떻게 할지?
         date: String,
         restaurant: String,
         time: String
@@ -69,7 +69,6 @@ class MealRepositoryImpl @Inject constructor(
     ) {
         mealDataStore.saveMeal(date, restaurant, time, meal)
     }
-
 
     override suspend fun getMenuInfoByMealId(mealId: Long): Flow<BaseResponse<MenuOfMealResponse>> =
         flow {

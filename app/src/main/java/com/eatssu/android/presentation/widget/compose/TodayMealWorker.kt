@@ -18,7 +18,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @HiltWorker
-class SimpleWorker @AssistedInject constructor(
+class TodayMealWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val getTodayMealUseCase: GetTodayMealUseCase
@@ -51,9 +51,9 @@ class SimpleWorker @AssistedInject constructor(
                 .collect { apiResult ->
                     Timber.d("Meal data: $apiResult")
 
-                    GlanceAppWidgetManager(applicationContext).getGlanceIds(MyAppWidget::class.java)
+                    GlanceAppWidgetManager(applicationContext).getGlanceIds(TodayMealWidget::class.java)
                         .forEach { glanceId ->
-                            MyAppWidget().update(applicationContext, glanceId)
+                            TodayMealWidget().update(applicationContext, glanceId)
                         }
                 }
 
