@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,8 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.eatssu.android.R
 import com.eatssu.android.presentation.widget.medium.TodayMealReceiver
 import com.eatssu.android.presentation.widget.small.TodayMealSmallReceiver
+import com.eatssu.android.presentation.widget.ui.component.AddWidgetItem
 import com.eatssu.android.presentation.widget.ui.theme.EatSSUAndroidTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -148,21 +151,21 @@ enum class WidgetType(val value: String) {
 }
 
 enum class Widget(
-//    @DrawableRes val previewImage: Int,
+    @DrawableRes val previewImage: Int,
     val widgetName: String,
     val widgetSize: String,
     val widgetType: WidgetType,
     val widgetReceiverClass: Class<out GlanceAppWidgetReceiver>,
 ) {
     SMALL_MEAL(
-//        previewImage = R.drawable.img_widget_small,
+        previewImage = R.drawable.img_widget_small,
         widgetName = "급식",
         widgetSize = "2 x 2",
         widgetType = WidgetType.MEAL_SMALL,
         widgetReceiverClass = TodayMealSmallReceiver::class.java
     ),
     MEDIUM_MEAL(
-//        previewImage = R.drawable.img_widget_big,
+        previewImage = R.drawable.img_widget_big,
         widgetName = "시간표",
         widgetSize = "4 X 2",
         widgetType = WidgetType.MEAL_MEDIUM,
@@ -177,9 +180,6 @@ fun WidgetSettingScreen(
     context: Context = LocalContext.current,  // 기본값 설정
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-
-//    val context = LocalContext.current
-
     EatSSUAndroidTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -195,7 +195,7 @@ fun WidgetSettingScreen(
             ) {
                 itemsIndexed(Widget.values()) { _, item ->
                     AddWidgetItem(
-//                        previewImage = item.previewImage,
+                        previewImage = item.previewImage,
                         widgetName = item.widgetName,
                         widgetSize = item.widgetSize,
                     ) {
