@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget
+package com.eatssu.android.presentation.widget.small
 
 import android.content.Context
 import android.util.Log
@@ -13,12 +13,9 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.action.ActionCallback
-import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.provideContent
@@ -48,10 +45,11 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMeal
 import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.widget.TodayMealWorker
 import java.util.concurrent.TimeUnit
 
 
-class TodayMealWidget : GlanceAppWidget() {
+class TodayMealWidgetSmall : GlanceAppWidget() {
 
 //    var currentIndex = 0 // 식당을 순차적으로 보여줄 인덱스
 
@@ -99,7 +97,7 @@ class TodayMealWidget : GlanceAppWidget() {
         restaurantName: String,
         time: String,
         onLeftArrowClick: () -> Unit = {},
-        onRightArrowClick: () -> Unit = { actionRunCallback<ChangeAction>() },
+//        onRightArrowClick: () -> Unit = { actionRunCallback<ChangeAction>() },
         content: @Composable () -> Unit
     ) {
         val restaurants = getVariableRestaurants()
@@ -117,48 +115,41 @@ class TodayMealWidget : GlanceAppWidget() {
 
             Row(
                 modifier = GlanceModifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
             ) {
-                // 조식/중식/석식
-                Column(
-                    verticalAlignment = Alignment.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(height = 14.dp, width = 43.dp),
-                        provider = ImageProvider(R.drawable.img_new_logo_primary),
-                        contentDescription = "Logo",
-                    )
+                Image(
+                    modifier = GlanceModifier.size(18.dp),
+                    provider = ImageProvider(R.drawable.ic_arrow_left),
+                    contentDescription = "left",
+                )
+                Text(
+                    restaurantName,
+                    style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
+                    modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
+                )
+                Image(
+                    modifier = GlanceModifier.size(18.dp),
+//                        .clickable { actionRunCallback<ChangeAction>() },
+                    provider = ImageProvider(R.drawable.ic_arrow_right),
+                    contentDescription = "right"
+                )
 
-                    Text(
-                        time, style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
-                        modifier = GlanceModifier.padding(top = 2.dp, bottom = 12.dp)
-                    )
-                }
+                Text(
+                    time,
+                    modifier = GlanceModifier.padding(start = 4.dp),
+                    style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                )
 
                 Spacer(modifier = GlanceModifier.defaultWeight())
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(18.dp),
-                        provider = ImageProvider(R.drawable.ic_arrow_left),
-                        contentDescription = "left",
-                    )
-                    Text(
-                        restaurantName,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
-                        modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
-                    )
-                    Image(
-                        modifier = GlanceModifier.size(18.dp)
-                            .clickable { actionRunCallback<ChangeAction>() },
-                        provider = ImageProvider(R.drawable.ic_arrow_right),
-                        contentDescription = "right"
-                    )
-                }
+                Image(
+                    modifier = GlanceModifier.size(10.dp),
+                    provider = ImageProvider(R.drawable.ic_mini_logo_mint),
+                    contentDescription = "Logo",
+                )
             }
+
 
             // 콘텐츠 영역
             content()
@@ -188,7 +179,7 @@ class TodayMealWidget : GlanceAppWidget() {
                             Text(
                                 modifier = GlanceModifier,
                                 text = menuString,
-                                style = TextStyle(fontSize = 12.sp),
+                                style = TextStyle(fontSize = 10.sp),
                             )
                         }
                         // 마지막 아이템이 아니면 Spacer 추가
@@ -239,7 +230,7 @@ class TodayMealWidget : GlanceAppWidget() {
 
     @Composable
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 160)
+    @Preview(widthDp = 200, heightDp = 200)
     fun PreviewWidget1() {
         val mealResponses = listOf(
             "김치찌개+불고기",
@@ -255,7 +246,7 @@ class TodayMealWidget : GlanceAppWidget() {
 
     @Composable
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 160)
+    @Preview(widthDp = 200, heightDp = 200)
     fun PreviewWidget2() {
 
         WidgetBaseLayout(
@@ -267,7 +258,7 @@ class TodayMealWidget : GlanceAppWidget() {
 
     @Composable
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 320, heightDp = 160)
+    @Preview(widthDp = 200, heightDp = 200)
     fun PreviewWidget3() {
 
         WidgetBaseLayout(
@@ -302,17 +293,5 @@ class TodayMealWidget : GlanceAppWidget() {
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
-    }
-}
-
-
-class ChangeAction : ActionCallback {
-    override suspend fun onAction(
-        context: Context,
-        glanceId: GlanceId,
-        parameters: ActionParameters
-    ) {
-        //todo 식당 변경
-        TodayMealWidget().update(context, glanceId)
     }
 }

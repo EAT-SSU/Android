@@ -4,6 +4,7 @@ activityCompose = "1.9.2"
 android = "8.6.1"
 androidx-core = "1.7.0"
 androidx-appcompat = "1.6.1"
+lifecycleRuntimeCompose = "2.8.7"
 animation = "1.7.8"
 composeBomVersion = "2025.03.00"
 composeThemeAdapter = "1.2.1"
@@ -35,6 +36,7 @@ lifecycle-viewmodel = "2.7.0"
 lifecycle-livedata = "2.7.0"
 kakao-login = "2.8.6"
 hilt = "2.50"
+androidxHilt = "1.2.0"
 play-services-base = "18.0.1"
 firebase-bom = "32.6.0"
 firebase-crashlytics = "2.9.9"
@@ -48,13 +50,19 @@ uiTooling = "1.7.8"
 compose-material3 = "1.3.1"
 activityVersion = "1.9.3"
 workRuntimeKtx = "2.10.0"
+glanceAppwidget = "1.1.0-rc01"
+glancePreview = "1.0-rc01"
 #glanceAppwidget = "1.1.0"
 #glancePreview = "1.0-rc01"
 hiltCommon = "1.2.0"
 datastore = "1.0.0"
+activityCompose = "1.10.1"
+composeBom = "2024.04.01"
 glanceAppwidget = "1.1.1"
 
 [libraries]
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 accompanist-appcompat-theme = { module = "com.google.accompanist:accompanist-appcompat-theme", version.ref = "accompanistAppcompatTheme" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -73,6 +81,7 @@ compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeB
 compose-theme-adapter = { module = "com.google.android.material:compose-theme-adapter", version.ref = "composeThemeAdapter" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+material3 = { module = "androidx.compose.material3:material3" }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
 material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "material-calendarview" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
@@ -104,23 +113,32 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-
 
 kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-login" }
 
+# hilt
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHilt" }
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "androidxHilt" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHilt" }
 
 play_services_base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
 
+# firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-config = { module = "com.google.firebase:firebase-config" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
+# timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+# open source
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 
 # glance for compose widget
 androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "glanceAppwidget" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glanceAppwidget" }
 #androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
 androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glanceAppwidget" }
@@ -131,7 +149,6 @@ androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-
 
 # dataStore
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
-androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 
 
 [plugins]

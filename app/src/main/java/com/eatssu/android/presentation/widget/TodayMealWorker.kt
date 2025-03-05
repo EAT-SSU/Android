@@ -7,11 +7,13 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.data.datastore.MealDataStore
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
+import com.eatssu.android.presentation.widget.medium.TodayMealWidget
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalTime
@@ -21,7 +23,8 @@ import java.time.format.DateTimeFormatter
 class TodayMealWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val getTodayMealUseCase: GetTodayMealUseCase
+    private val getTodayMealUseCase: GetTodayMealUseCase,
+    private val mealDataStore: MealDataStore
 ) : CoroutineWorker(context, workerParams) {
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -33,7 +36,7 @@ class TodayMealWorker @AssistedInject constructor(
             val currentDate = LocalDate.now()
             val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
-            val restaurant = Restaurant.DODAM.name //todo 교체
+            val restaurant = mealDataStore.getSelectedRestaurant().first().name
 
             //todo 유틸 함수로 바꿀 것
             val time = LocalTime.now()
