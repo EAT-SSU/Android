@@ -1,0 +1,11 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.eatssu.android.presentation.widget.WidgetSettingActivity"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:maxResizeWidth="102dp"
+    android:minWidth="276dp"
+    android:minHeight="102dp"
+    android:minResizeWidth="102dp"
+    android:previewImage="@drawable/img_widget_small"
+    android:resizeMode="horizontal"
+    android:updatePeriodMillis="3600000"
+    android:widgetCategory="home_screen" />
