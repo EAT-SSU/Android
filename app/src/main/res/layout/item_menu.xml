@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
@@ -9,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +29,8 @@
                 android:layout_weight="7"
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="-4dp"
-                android:text="내용"
+                tools:text="메뉴더하기+메뉴더하기+메뉴더하기+메뉴더하기+메뉴더하기+메뉴더하기"
+                android:lineHeight = "20.dp"
                 android:textColor="@color/black" />
 
             <TextView
@@ -40,7 +41,7 @@
                 android:layout_weight="1.5"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="5,000"
+                tools:text="5,000"
                 android:textColor="@color/black" />
 
             <TextView
@@ -51,7 +52,7 @@
                 android:layout_weight="1.5"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="3.6"
+                tools:text="3.6"
                 android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
