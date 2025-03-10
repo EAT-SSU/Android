@@ -27,6 +27,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
+    <!--  이걸 추가하면 기기 재부팅 후에도 WorkManager가 다시 실행됨  -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -41,9 +44,13 @@
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <!--   오픈소스     -->
         <meta-data
             android:name="com.google.android.gms.oss.licenses.enabled"
             android:value="true" />
+
+        <!--   푸시알림 리시버     -->
         <receiver
             android:name=".alarm.NotificationReceiver"
             android:enabled="true"
@@ -52,6 +59,25 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!--   위젯 리시버     -->
+        <receiver
+            android:name=".presentation.widget.compose.TodayMealReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+
+        <!--    워커 매니저를 위한 프로바이더    -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.eatssu.android.androidx-startup"
+            tools:node="remove" />
 
         <activity
             android:name=".presentation.mypage.DeveloperActivity"

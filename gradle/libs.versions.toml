@@ -35,8 +35,16 @@ google-services = "4.4.2"
 kotlin-android  = "1.8.10"
 ossLicenses = "17.1.0"
 ossLicensesPlugin = "0.10.4"
+workRuntimeKtx = "2.10.0"
+glanceAppwidget = "1.1.0-rc01"
+glancePreview = "1.0-rc01"
+hiltCommon = "1.2.0"
+datastore = "1.0.0"
+hiltWork = "1.2.0"
 
 [libraries]
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -86,7 +94,17 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 
+# glance for compose widget
+androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "glanceAppwidget" }
+androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glanceAppwidget" }
+androidx-glance-material2 = { group = "androidx.glance", name = "glance-material", version.ref = "glanceAppwidget" }
+androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glancePreview" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 
+# dataStore
+datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 
 
 [plugins]

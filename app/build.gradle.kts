@@ -14,14 +14,14 @@ plugins {
 
 android {
     namespace = "com.eatssu.android"
-    compileSdk = 34
+    compileSdk = 35
 
     // S8: API 28
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 24
         versionName = "2.1.4"
 
@@ -32,6 +32,7 @@ android {
         buildConfig = true
         viewBinding = true
         dataBinding = true
+        compose = true
     }
 
     buildTypes {
@@ -74,8 +75,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.2"
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     splits {
@@ -92,6 +101,21 @@ android {
 }
 
 dependencies {
+    kapt("com.google.dagger:hilt-android-compiler:2.42")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+    // compose
+    val composePlatform = platform("androidx.compose:compose-bom:2023.10.01")
+    implementation(composePlatform)
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.0.0-rc01")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.0.0-rc01")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -102,6 +126,14 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
+
+    // glance for widget
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.preview)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.appwidget.preview)
+//    implementation(libs.androidx.glance.material3)
+//    implementation(libs.androidx.glance.material2)
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -155,6 +187,12 @@ dependencies {
 
     // OSS
     implementation(libs.oss.licenses)
+
+    // worker (Kotlin + coroutines)
+    implementation(libs.androidx.work.runtime.ktx)
+
+    //data store (with flow)
+    implementation(libs.datastore)
 }
 
 kapt {
