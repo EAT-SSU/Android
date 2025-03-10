@@ -184,6 +184,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".presentation.review.modify.ModifyReviewActivity"
             android:exported="true">
