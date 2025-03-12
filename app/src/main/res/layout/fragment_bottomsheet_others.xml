@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="start"
         android:orientation="vertical"
         android:paddingBottom="24dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
-            android:text="리뷰 관리"
+            android:text="리뷰 설정"
             android:textColor="@color/black" />
 
         <LinearLayout
