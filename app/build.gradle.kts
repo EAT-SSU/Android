@@ -32,6 +32,7 @@ android {
         buildConfig = true
         viewBinding = true
         dataBinding = true
+        compose = true
     }
 
     buildTypes {
@@ -155,6 +156,24 @@ dependencies {
 
     // OSS
     implementation(libs.oss.licenses)
+
+    // Compose
+    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("androidx.compose.material:material:1.1.1")
+    implementation("androidx.compose.animation:animation:1.1.1")
+    implementation("androidx.compose.ui:ui-tooling:1.1.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.2")
+    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.1.1")
+    implementation("com.google.android.material:compose-theme-adapter:1.1.1")
+    implementation("com.google.accompanist:accompanist-appcompat-theme:0.16.0")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
 
 kapt {
