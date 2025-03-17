@@ -18,3 +18,7 @@ val Primary = Color(0xFF66D4C2)
 val Secondary = Color(0xFFEEFBF8)
 val Star = Color(0xFFFFC700)
 val Error = Color(0xFFFF3F3F)
+
+// Special
+val KakaoLogin = Color(0xFFFEE500)
+
