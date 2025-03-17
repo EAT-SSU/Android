@@ -79,6 +79,10 @@ android {
         jvmTarget = "17"
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.4"
+    }
+
     splits {
         abi {
             isEnable = true
