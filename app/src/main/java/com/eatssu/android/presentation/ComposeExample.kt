@@ -1,12 +1,16 @@
 package com.eatssu.android.presentation
 
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.aurora.carevision.app.ui.theme.EatssuTheme
+import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 
 @Composable
 fun ComposeExample() {
-    //todo
+    Text(
+        text = "Hello, Eatssu!",
+        style = EatssuTheme.typography.body1
+    )
 }
 
 @Preview

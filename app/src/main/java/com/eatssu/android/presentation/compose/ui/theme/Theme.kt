@@ -1,4 +1,4 @@
-package com.aurora.carevision.app.ui.theme
+package com.eatssu.android.presentation.compose.ui.theme
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme
