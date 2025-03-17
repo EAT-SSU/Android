@@ -159,7 +159,6 @@ dependencies {
 
     // Compose
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.material)
     implementation(libs.androidx.animation)
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -174,6 +173,7 @@ dependencies {
     implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.compose.bom)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
 
 kapt {
