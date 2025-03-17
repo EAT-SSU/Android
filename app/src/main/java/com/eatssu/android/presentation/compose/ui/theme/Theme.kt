@@ -49,7 +49,7 @@ fun EatssuTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = LightColorScheme
-    val typography = careVisionTypography()
+    val typography = eatssuTypography()
 
     // set status bar & navigation bar color
     val view = LocalView.current

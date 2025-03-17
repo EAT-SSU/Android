@@ -53,7 +53,7 @@ fun EatssuTextStyle(
 )
 
 @Composable
-fun careVisionTypography(): EatssuTypography {
+fun eatssuTypography(): EatssuTypography {
     return EatssuTypography(
         button1 = EatssuTextStyle(
             fontFamily = pretendardBold,
