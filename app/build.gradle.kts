@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.compose.compiler)
+
     id("kotlin-parcelize")
     id("kotlin-android")
     id("kotlin-kapt")
@@ -114,6 +116,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.compose.compiler:compiler:1.5.4")
 
     // Testing libraries
     testImplementation(libs.junit)

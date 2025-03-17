@@ -36,7 +36,7 @@ kotlin-android  = "1.8.10"
 ossLicenses = "17.1.0"
 ossLicensesPlugin = "0.10.4"
 activityCompose = "1.9.1"
-composeBom = "2024.04.01"
+composeBom = "2024.03.02"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -107,3 +107,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-an
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
