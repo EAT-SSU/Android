@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 선택된 상태 (Primary 색 적용) -->
+    <item android:color="@color/primary" android:state_checked="true"/>
+    <!-- 기본 상태 (gray500 적용) -->
+    <item android:color="@color/gray500"/>
+</selector>

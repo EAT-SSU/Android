@@ -154,4 +154,29 @@
             tools:ignore="MissingConstraints" />
     </LinearLayout>
 
+    <!-- 바텀 네비게이션 바 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/gray100">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id = "@+id/bottomNavigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            style="@style/Caption2"
+            android:background="@drawable/shape_corner_top"
+            app:itemRippleColor="@color/white"
+            android:textAlignment="center"
+            app:itemTextColor="@color/selector_bottom_navi_item"
+            app:menu="@menu/menu_bottom_navigation" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

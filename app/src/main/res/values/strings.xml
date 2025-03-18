@@ -169,4 +169,7 @@
     <string name="kakao_talk_channel_url">http://pf.kakao.com/_ZlVAn</string>
 
     <string name="oss_licenses">오픈소스 라이브러리</string>
+    <string name="cafeteria_menu">학식</string>
+    <string name="affiliated_cafeteria">제휴식당</string>
+    <string name="mypage">마이</string>
 </resources>

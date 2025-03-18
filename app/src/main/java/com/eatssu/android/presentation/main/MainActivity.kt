@@ -62,6 +62,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
 
         setupNoToolbar()
+        setUpBottomBar()
 
         // 알림 퍼미션 있는지 자가 진단
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -196,6 +197,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 }
             }
         }
+    }
+
+    private fun setUpBottomBar(){
+
     }
 
 
