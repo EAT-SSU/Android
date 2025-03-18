@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.mypage.MyPageActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ib_profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile" />
+
+            <!-- 닉네임 -->
+            <LinearLayout
+                android:id="@+id/ll_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tv_nickname"
+                    style="@style/Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/nickname"
+                    android:textColor="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/tv_nickname_change_btn"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
+            <!-- 계정 레이아웃 -->
+            <LinearLayout
+                android:id="@+id/ll_account_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/tv_account"
+                    style="@style/Body3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_account"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_account_type"
+                    style="@style/Body2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/kakao"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_kakao_login" />
+            </LinearLayout>
+
+            <!--푸시알림-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="푸시 알림 설정"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="매일 오전 11시에 알림을 보내드려요"
+                        android:textColor="@color/gray400" />
+                </LinearLayout>
+
+                <android.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/alarm_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/shape_toggle"
+                    app:track="@drawable/selector_toggle" />
+            </LinearLayout>
+
+            <!-- 나머지 레이아웃들 -->
+            <LinearLayout
+                android:id="@+id/ll_my_page"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 내가 쓴 리뷰 -->
+                <LinearLayout
+                    android:id="@+id/ll_my_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_review"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!-- 문의하기 -->
+                <LinearLayout
+                    android:id="@+id/ll_inquire"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inquire"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_inquire"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--   서비스 이용약관   -->
+                <LinearLayout
+                    android:id="@+id/ll_service_rule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/service_rule"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_service_rule"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--  개인정보 처리방침   -->
+                <LinearLayout
+                    android:id="@+id/ll_private_information"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/private_information"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_private_information"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--  만든 사람들    -->
+                <LinearLayout
+                    android:id="@+id/ll_developer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/developer"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_developer"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--  오픈소스 라이브러리   -->
+                <LinearLayout
+                    android:id="@+id/ll_oss"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/oss_licenses"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/btn_oss"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+
+                <!--  탈퇴하기   -->
+                <TextView
+                    android:id="@+id/tv_logout"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/logout"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/ll_app_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="6dp">
+
+                    <TextView
+                        android:id="@+id/tv_app_version_title"
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:text="@string/app_version"
+                        android:textColor="@color/gray400"
+                        app:layout_constraintStart_toStartOf="@+id/ll_my_page"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_my_page" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv_app_version"
+                        style="@style/Caption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray400"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_app_version_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_app_version_title" />
+                </LinearLayout>
+
+                <!--  탈퇴하기   -->
+                <LinearLayout
+                    android:id="@+id/ll_signout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_signout"
+                        style="@style/Caption2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="end"
+                        android:text="@string/signout"
+                        android:textColor="@color/gray400" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_unsubscribe_16" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

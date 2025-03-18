@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weekCardview"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:layout_marginStart="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/day"
+        style="@style/Caption3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="월"
+        android:textColor="@color/selector_calendar_colortext" />
+
+    <TextView
+        android:id="@+id/date"
+        style="@style/Body2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:text="19"
+        android:textColor="@color/selector_calendar_colortext" />
+</LinearLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>force_update_required</key>
+        <value>false</value>
+    </entry>
+
+    <entry>
+        <key>android_version_code</key>
+        <value>1</value>
+    </entry>
+
+    <entry>
+        <key>latest_app_version</key>
+        <value>1.0.0</value>
+    </entry>
+
+    <entry>
+        <key>cafeteria_information</key>
+        <value>
+            [
+            {
+            "enum": "DODAM",
+            "name": "도담 식당",
+            "location": "신양관 2층",
+            "time": "11:20~14:00(점심)\n17:00~18:30(저녁)",
+            "etc": "2개 코너 운영\n대면 배식,웰빙코너\n토요일 11:30~13:30",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/298437cb-45b1-48cf-bace-ea84e8f23e1820240926041857%E1%84%83%E1%85%A9%E1%84%83%E1%85%A1%E1%86%B7IMG_8268%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
+            },
+            {
+            "enum": "HAKSIK",
+            "name": "학생 식당",
+            "location": "학생회관 3층",
+            "time": "08:10~09:20(천원의 아침밥, 100개 한정)\n11:20~14:00\n(점심)\n14:00~17:00(공간 개방)",
+            "etc": "3개 코너 운영\n뚝배기찌개, 덮밥, 양식",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/fa802164-621d-4b6d-b44e-e9de4bab225520240926041948%E1%84%92%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A2%E1%86%BC%20IMG_0394%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
+            },
+            {
+            "enum": "SNACK_CORNER",
+            "name": "스낵 코너",
+            "location": "학생회관 3층",
+            "time": "11:00~16:00",
+            "etc": "분식류, 옛날도시락, 컵밥 등. 주말 휴무",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/66f13f3e-62ac-4747-a461-aabd26b3999e20240823074330%E1%84%89%E1%85%B3%E1%84%82%E1%85%A2%E1%86%A8%E1%84%8F%E1%85%A9%E1%84%82%E1%85%A5.jpeg"
+            },
+            {
+            "enum": "FOOD_COURT",
+            "name": "푸드 코트",
+            "location": "학생회관 2층",
+            "time": "휴무",
+            "etc": "준비 중",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/09b487f5-e431-4ab2-a339-76e472ea8d8320240926041925%E1%84%91%E1%85%AE%E1%84%8F%E1%85%A9IMG_0396%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
+            },
+            {
+            "enum": "DORMITORY",
+            "name": "기숙사 식당",
+            "location": "레지던스홀 지하 1층",
+            "time": "08:00~09:30\n11:00~14:00\n17:00~18:30",
+            "etc": "주말 조식은 운영되지 않습니다.",
+            "image":
+            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/364077d5-f09b-4e9c-b5e4-e1e08d098f1820240926041231%E1%84%80%E1%85%B5%E1%84%89%E1%85%AE%E1%86%A8%E1%84%89%E1%85%A1IMG_2480%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
+            }
+            ]
+        </value>
+    </entry>
+
+    <entry>
+        <key>android_message</key>
+        <value>{
+            "dialog":false,
+            "message":"지금은 서버 점검 중입니다. "
+            }
+        </value>
+    </entry>
+</defaultsMap>

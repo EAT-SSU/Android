@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="5dp"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/tv_menu"
+                style="@style/Body3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="7"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="-4dp"
+                tools:text="메뉴더하기+메뉴더하기+메뉴더하기+메뉴더하기+메뉴더하기+메뉴더하기"
+                android:lineHeight = "20.dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                style="@style/Body3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                tools:text="5,000"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_rate"
+                style="@style/Body3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                tools:text="3.6"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

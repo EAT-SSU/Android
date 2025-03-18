@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Unchecked -->
+    <item android:state_checked="false">
+        <layer-list>
+
+            <item android:drawable="@drawable/ic_uncheck_24" />
+
+
+        </layer-list>
+
+    </item>
+    <!-- Checked -->
+    <item android:state_checked="true">
+        <layer-list>
+
+            <!-- 이미지 영역 -->
+            <item android:drawable="@drawable/ic_check_24" />
+        </layer-list>
+    </item>
+</selector>

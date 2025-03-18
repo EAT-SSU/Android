@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.eatssu.android.presentation.review.write.UploadReviewViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:context=".presentation.review.write.ReviewWriteRateActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/tv_review2_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        style="@style/Subtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" '"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/menu"
+                        style="@style/Subtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        style="@style/Subtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recomented"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <RatingBar
+                    android:id="@+id/rb_main"
+                    style="@style/Widget.AppCompat.RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:progressBackgroundTint="@color/gray300"
+                    android:progressTint="@color/star"
+                    android:rating="0"
+                    android:secondaryProgressTint="@color/star"
+                    android:stepSize="1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_review2_menu" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    style="@style/Body3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="해당 메뉴에 대한 상세한 평가를 남겨주세요"
+                    android:textColor="@color/gray700"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rb_main" />
+
+                <LinearLayout
+                    android:id="@+id/cl_rating_etc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginEnd="70dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/Subtitle1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/taste"
+                            android:textColor="@color/black" />
+
+                        <android.widget.Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <RatingBar
+                            android:id="@+id/rb_taste"
+                            style="@style/Widget.AppCompat.RatingBar.Indicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:isIndicator="false"
+                            android:numStars="5"
+                            android:progressBackgroundTint="@color/gray300"
+                            android:progressTint="@color/star"
+                            android:rating="0"
+                            android:secondaryProgressTint="@color/star"
+                            android:stepSize="1" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/Subtitle1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/amount"
+                            android:textColor="@color/black" />
+
+
+                        <android.widget.Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <RatingBar
+                            android:id="@+id/rb_amount"
+                            style="@style/Widget.AppCompat.RatingBar.Indicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="false"
+                            android:numStars="5"
+                            android:progressBackgroundTint="@color/gray300"
+                            android:progressTint="@color/star"
+                            android:rating="0"
+                            android:secondaryProgressTint="@color/star"
+                            android:stepSize="1" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <EditText
+                    android:id="@+id/et_review2_comment"
+                    style="@style/Body3"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_text_field_small"
+                    android:gravity="top"
+                    android:hint="@string/write_text_review"
+                    android:includeFontPadding="false"
+                    android:inputType="textMultiLine"
+                    android:lineSpacingExtra="-4dp"
+                    android:lines="10"
+                    android:maxLength="300"
+                    android:padding="10dp"
+                    android:privateImeOptions="defaultInputmode=korea"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_rating_etc"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/tv_maxtext"
+                    style="@style/Caption2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/max_300"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="@+id/et_review2_comment"
+                    app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
+
+
+                <ImageButton
+                    android:id="@+id/ib_add_pic"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_add_pic"
+                    app:layout_constraintStart_toStartOf="@+id/et_review2_comment"
+                    app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
+
+
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@+id/ib_add_pic"
+                    app:layout_constraintTop_toTopOf="@+id/ib_add_pic" />
+
+                <ImageView
+                    android:id="@+id/btn_delete"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="-5dp"
+                    android:layout_marginTop="-5dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@+id/iv_image"
+                    app:layout_constraintTop_toTopOf="@+id/iv_image" />
+
+
+                <TextView
+                    style="@style/Caption3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/pic_not_patch"
+                    android:textColor="@color/gray500"
+                    app:layout_constraintStart_toStartOf="@+id/ib_add_pic"
+                    app:layout_constraintTop_toBottomOf="@+id/ib_add_pic" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_next_review2"
+            style="@style/Button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/shape_button_duplicate"
+            android:includeFontPadding="false"
+            android:text="@string/review_done"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
