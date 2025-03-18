@@ -1,9 +1,17 @@
 [versions]
+accompanistAppcompatTheme = "0.16.0"
+activityCompose = "1.9.2"
 android = "8.6.1"
 androidx-core = "1.7.0"
 androidx-appcompat = "1.6.1"
+animation = "1.7.8"
+composeBomVersion = "2025.03.00"
+composeThemeAdapter = "1.2.1"
+lifecycleRuntimeKtx = "2.5.2"
+lifecycleViewmodelCompose = "2.8.7"
 material = "1.8.0"
 constraintlayout = "2.1.4"
+materialVersion = "1.7.8"
 threetenabp = "1.4.4"
 material-calendarview = "1.4.3"
 recyclerview = "1.3.2"
@@ -35,10 +43,27 @@ google-services = "4.4.2"
 kotlin-android  = "1.8.10"
 ossLicenses = "17.1.0"
 ossLicensesPlugin = "0.10.4"
+uiTestJunit4 = "1.7.8"
+uiTooling = "1.7.8"
+compose-material3 = "1.3.1"
 
 [libraries]
+accompanist-appcompat-theme = { module = "com.google.accompanist:accompanist-appcompat-theme", version.ref = "accompanistAppcompatTheme" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-lifecycle-runtime-ktx-v252 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+androidx-ui = { module = "androidx.compose.ui:ui" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
+compose-theme-adapter = { module = "com.google.android.material:compose-theme-adapter", version.ref = "composeThemeAdapter" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }

@@ -32,6 +32,7 @@ android {
         buildConfig = true
         viewBinding = true
         dataBinding = true
+        compose = true
     }
 
     buildTypes {
@@ -76,6 +77,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.4"
     }
 
     splits {
@@ -155,6 +160,24 @@ dependencies {
 
     // OSS
     implementation(libs.oss.licenses)
+
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.animation)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v252)
+    implementation(libs.compose.bom)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation(libs.compose.theme.adapter)
+    implementation(libs.accompanist.appcompat.theme)
+    androidTestImplementation(libs.compose.bom)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
 }
 
 kapt {
