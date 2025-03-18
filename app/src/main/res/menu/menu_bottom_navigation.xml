@@ -3,19 +3,19 @@
     <item
         android:id="@+id/cafeteria_menu"
         android:enabled="true"
-        android:icon="@drawable/selector_bottom_navi_cafeteria"
+        android:icon="@drawable/ic_cafeteria_menu"
         android:title="@string/cafeteria_menu"/>
 
     <item
         android:id="@+id/affiliated_cafeteria"
         android:enabled="true"
-        android:icon="@drawable/selector_bottom_navi_affiliated_cafeteria"
-        android:title="@string/affiliated_cafeteria"/>
+        android:icon="@drawable/ic_affiliated_cafeteria"
+        android:title="@string/map"/>
 
     <item
         android:id="@+id/mypage"
         android:enabled="true"
-        android:icon="@drawable/selector_bottom_navi_mypage"
+        android:icon="@drawable/ic_mypage"
         android:title="@string/mypage"/>
 
 </menu>

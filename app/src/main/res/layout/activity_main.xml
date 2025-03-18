@@ -165,17 +165,19 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id = "@+id/bottomNavigationBar"
+            style="@style/Caption2"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:paddingVertical="23dp"
             android:layout_marginTop="10dp"
-            style="@style/Caption2"
             android:background="@drawable/shape_corner_top"
             app:itemRippleColor="@color/white"
             android:textAlignment="center"
             app:itemTextColor="@color/selector_bottom_navi_item"
+            app:itemIconTint="@color/selector_bottom_navi_item"
             app:menu="@menu/menu_bottom_navigation" />
     </LinearLayout>
 
