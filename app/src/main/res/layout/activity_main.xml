@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navi_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fl_action_bar">
@@ -151,34 +151,27 @@
             android:layout_gravity="top"
             android:background="@color/gray100"
             android:nestedScrollingEnabled="false"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintBottom_toTopOf="@+id/layout_bottom_navi"
+            />
     </LinearLayout>
 
     <!-- 바텀 네비게이션 바 -->
-    <LinearLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id = "@+id/bottom_navi_bar"
+        style="@style/Caption2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/gray100">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id = "@+id/bottomNavigationBar"
-            style="@style/Caption2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:paddingVertical="23dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_corner_top"
-            app:itemRippleColor="@color/white"
-            android:textAlignment="center"
-            app:itemTextColor="@color/selector_bottom_navi_item"
-            app:itemIconTint="@color/selector_bottom_navi_item"
-            app:menu="@menu/menu_bottom_navigation" />
-    </LinearLayout>
+        android:paddingVertical="23dp"
+        android:layout_marginTop="10dp"
+        android:elevation="3dp"
+        android:background="@drawable/shape_corner_top"
+        app:itemRippleColor="@color/white"
+        android:textAlignment="center"
+        app:itemTextColor="@color/selector_bottom_navi_item"
+        app:itemIconTint="@color/selector_bottom_navi_item"
+        app:menu="@menu/menu_bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
