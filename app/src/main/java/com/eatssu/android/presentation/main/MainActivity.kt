@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -32,6 +33,7 @@ import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -199,10 +201,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    private fun setUpBottomBar(){
-
+    private fun setUpBottomBar() {
+        binding.bottomNaviBar.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.cafeteria_menu -> {
+                    Log.d("NaviTest", "Cafeteria Menu Clicked")
+                    true
+                }
+                R.id.mypage -> {
+                    Log.d("NaviTest", "My Page Clicked")
+                    // startActivity<MyPageActivity>()
+                    true
+                }
+                else -> false
+            }
+        }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)

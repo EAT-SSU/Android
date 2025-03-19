@@ -6,11 +6,11 @@
         android:icon="@drawable/ic_cafeteria_menu"
         android:title="@string/cafeteria_menu"/>
 
-    <item
+<!--    <item
         android:id="@+id/affiliated_cafeteria"
         android:enabled="true"
         android:icon="@drawable/ic_affiliated_cafeteria"
-        android:title="@string/map"/>
+        android:title="@string/map"/>-->
 
     <item
         android:id="@+id/mypage"
