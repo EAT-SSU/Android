@@ -4,12 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ActivityReviewBinding
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.review.delete.DeleteViewModel
+import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
+import com.eatssu.android.presentation.common.OthersBottomSheetFragment
 import com.eatssu.android.presentation.review.write.ReviewWriteRateActivity
 import com.eatssu.android.presentation.review.write.menu.ReviewWriteMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,17 +24,15 @@ import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ReviewActivity :
-    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
+    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate),
+    MyReviewBottomSheetFragment.OnReviewDeletedListener {
 
-    private val deleteViewModel: DeleteViewModel by viewModels()
     private val reviewViewModel: ReviewViewModel by viewModels()
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
 
     private lateinit var itemName: String
-    private var reviewAdapter: ReviewAdapter? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,6 @@ class ReviewActivity :
     }
 
 
-
     private fun bindData() {
         lifecycleScope.launch {
             reviewViewModel.uiState.collectLatest {
@@ -88,19 +89,7 @@ class ReviewActivity :
                         binding.llNonReview.visibility = View.INVISIBLE
                         binding.rvReview.visibility = View.VISIBLE
 
-                        reviewAdapter = it.reviewList?.let { review ->
-                            ReviewAdapter(review) { reviewId ->
-                                deleteViewModel.deleteReview(
-                                    reviewId
-                                )
-                            }
-                        }
-
-                        binding.rvReview.apply {
-                            adapter = reviewAdapter
-                            layoutManager = LinearLayoutManager(applicationContext)
-                            setHasFixedSize(true)
-                        }
+                        it.reviewList?.let { reviewList -> setAdapter(reviewList = reviewList) }
 
                         it.reviewInfo?.apply {
 
@@ -129,6 +118,32 @@ class ReviewActivity :
         }
     }
 
+
+    private fun setAdapter(reviewList: List<Review>) {
+
+        val adapter = ReviewAdapter()
+        adapter.submitList(reviewList)
+
+        val linearLayoutManager = LinearLayoutManager(this)
+
+        adapter.setOnItemClickListener(object :
+            ReviewAdapter.OnItemClickListener {
+
+            override fun onMyReviewClicked(view: View, reviewData: Review) {
+                onMyReviewClicked(review = reviewData)
+            }
+
+            override fun onOthersReviewClicked(view: View, reviewData: Review) {
+                onOthersReviewClicked(reviewData = reviewData)
+            }
+        })
+
+        binding.rvReview.adapter = adapter
+        binding.rvReview.layoutManager = linearLayoutManager
+        binding.rvReview.setHasFixedSize(true)
+    }
+
+
     private fun setClickListener() {
         when (menuType) {
             MenuType.FIXED.name -> {
@@ -154,5 +169,48 @@ class ReviewActivity :
                 Timber.d("잘못된 식당 정보입니다.")
             }
         }
+    }
+
+
+    fun onMyReviewClicked(review: Review) {
+        val modalBottomSheet = MyReviewBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putLong("reviewId", review.reviewId)
+                putString("menu", review.menu)
+                putString("content", review.content)
+                putInt("mainGrade", review.mainGrade)
+                putInt("amountGrade", review.amountGrade)
+                putInt("tasteGrade", review.tasteGrade)
+            }
+            onReviewDeletedListener = this@ReviewActivity
+        }
+        modalBottomSheet.setStyle(
+            DialogFragment.STYLE_NORMAL,
+            R.style.RoundCornerBottomSheetDialogTheme
+        )
+        modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
+    }
+
+    fun onOthersReviewClicked(reviewData: Review) {
+        val modalBottomSheet = OthersBottomSheetFragment()
+        modalBottomSheet.setStyle(
+            DialogFragment.STYLE_NORMAL,
+            R.style.RoundCornerBottomSheetDialogTheme
+        )
+
+        val bundle = Bundle()
+        bundle.let {
+            it.putLong("reviewId", reviewData.reviewId)
+            it.putString("menu", reviewData.menu)
+        }
+
+        modalBottomSheet.arguments = bundle
+        modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
+    }
+
+
+    override fun onReviewDeleted() {
+        lodeData()
+        bindData()
     }
 }
