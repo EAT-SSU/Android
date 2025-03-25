@@ -54,6 +54,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         CalendarUtil.selectedDate = LocalDate.now()
         mainViewModel.setData(CalendarUtil.selectedDate)
         setWeekView()
+        setCalendarWeekClickListener()
     }
 
     private fun initWidgets() {
@@ -73,17 +74,18 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun previousWeekAction(view: View?) {
-        CalendarUtil.selectedDate = CalendarUtil.selectedDate.minusWeeks(1)
-        onItemClick(mainPosition, CalendarUtil.selectedDate)
-        setWeekView()
-    }
+    fun setCalendarWeekClickListener() {
+        binding.btnPreviousWeek.setOnClickListener {
+            CalendarUtil.selectedDate = CalendarUtil.selectedDate.minusWeeks(1)
+            onItemClick(mainPosition, CalendarUtil.selectedDate)
+            setWeekView()
+        }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun nextWeekAction(view: View?) {
-        CalendarUtil.selectedDate = CalendarUtil.selectedDate.plusWeeks(1)
-        onItemClick(mainPosition, CalendarUtil.selectedDate)
-        setWeekView()
+        binding.btnNextWeek.setOnClickListener {
+            CalendarUtil.selectedDate = CalendarUtil.selectedDate.plusWeeks(1)
+            onItemClick(mainPosition, CalendarUtil.selectedDate)
+            setWeekView()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

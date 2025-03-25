@@ -81,11 +81,11 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/btn_previous_week"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
-                android:onClick="previousWeekAction"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_left" />
 
@@ -100,10 +100,10 @@
                 android:textColor="@color/gray600" />
 
             <ImageButton
+                android:id="@+id/btn_next_week"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:background="@android:color/transparent"
-                android:onClick="nextWeekAction"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_right" />
 
