@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -16,7 +15,6 @@ import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.main.MainViewModel
 import com.eatssu.android.presentation.main.calendar.CalendarAdapter
 import com.eatssu.android.presentation.main.calendar.CalendarAdapter.OnItemListener
-import com.eatssu.android.presentation.main.calendar.CalendarViewModel
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
@@ -27,8 +25,6 @@ import java.time.LocalDate
 
 @AndroidEntryPoint
 class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListener {
-
-//    private lateinit var calendarViewModel: CalendarViewModel
 
     private val mainViewModel by activityViewModels<MainViewModel>()
 
