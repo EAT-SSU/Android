@@ -172,4 +172,5 @@
     <string name="cafeteria_menu">학식</string>
     <string name="map">지도</string>
     <string name="mypage">마이</string>
+    <string name="mypage_full">마이페이지</string>
 </resources>
