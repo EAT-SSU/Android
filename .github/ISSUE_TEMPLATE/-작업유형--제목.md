@@ -1,18 +1,19 @@
 ---
-name: "[작업유형] 제목"
-about: issue
+name: "Feature"
+about: Develop new feature
 title: ''
 labels: ''
+type: Feature
 assignees: ''
 
 ---
 
 ## 목적
 
-> 00 구현하기
+> 
 
 ## 작업 상세 내용
 
-- [ ] 00 
+- [ ] 
 
 ## 참고사항
