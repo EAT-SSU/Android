@@ -74,6 +74,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         binding.bottomNaviBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.cafeteria_menu -> binding.vpMain.setCurrentItem(0, false)
+                // R.id.map_menu -> binding.vpMain.setCurrentItem(1, false)
                 R.id.mypage_menu -> binding.vpMain.setCurrentItem(1, false)
             }
             true
@@ -84,6 +85,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             override fun onPageSelected(position: Int) {
                 val itemId = when (position) {
                     0 -> R.id.cafeteria_menu
+                    //1 -> R.id.map_menu
                     1 -> R.id.mypage_menu
                     else -> R.id.cafeteria_menu
                 }

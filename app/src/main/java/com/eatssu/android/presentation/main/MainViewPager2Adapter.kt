@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.presentation.main.cafeteria.CafeteriaFragment
+import com.eatssu.android.presentation.main.map.MapFragment
 import com.eatssu.android.presentation.main.menu.MenuFragment
 import com.eatssu.android.presentation.mypage.MyPageFragment
 
@@ -12,7 +13,8 @@ class MainViewPager2Adapter(activity: FragmentActivity) : FragmentStateAdapter(a
 
     private val mainFragmentList = listOf(
         CafeteriaFragment(),
-        MyPageFragment()
+        //MapFragment(),
+        MyPageFragment(),
     )
 
     override fun getItemCount(): Int = mainFragmentList.count()
