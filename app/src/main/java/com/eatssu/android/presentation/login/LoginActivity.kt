@@ -6,7 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivityLoginBinding
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.main.CafeteriaActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.kakao.sdk.common.model.ClientError
@@ -81,7 +81,7 @@ class LoginActivity :
                         if (!it.error && !it.loading) {
                             Timber.d(it.toString())
                             showToast(it.toastMessage)
-                            startActivity<MainActivity>()
+                            startActivity<CafeteriaActivity>()
                             finishAffinity()
                         }
                     }

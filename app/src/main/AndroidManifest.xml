@@ -155,7 +155,7 @@
         </activity>
 
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name=".presentation.main.CafeteriaActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

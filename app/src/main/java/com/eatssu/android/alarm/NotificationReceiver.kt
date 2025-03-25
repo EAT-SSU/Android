@@ -10,7 +10,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
-import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.main.CafeteriaActivity
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
@@ -44,7 +44,7 @@ class NotificationReceiver : BroadcastReceiver() {
         }
 
 
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent(context, CafeteriaActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 

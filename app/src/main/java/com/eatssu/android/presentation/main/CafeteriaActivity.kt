@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
-import com.eatssu.android.databinding.ActivityMainBinding
+import com.eatssu.android.databinding.ActivityCafeteriaBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.main.calendar.CalendarAdapter
 import com.eatssu.android.presentation.main.calendar.CalendarAdapter.OnItemListener
@@ -33,7 +33,6 @@ import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
-import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +44,7 @@ import java.time.LocalDate
 import java.util.Locale
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), OnItemListener {
+class CafeteriaActivity : BaseActivity<ActivityCafeteriaBinding>(ActivityCafeteriaBinding::inflate), OnItemListener {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
