@@ -27,13 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
-    private val logoutUseCase: LogoutUseCase,
-    private val signOutUseCase: SignOutUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val setAccessTokenUseCase: SetAccessTokenUseCase,
-    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
-    private val getDailyNotificationStatusUseCase: GetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
     private val preferencesRepository: PreferencesRepository // Assuming you're using DataStore here
 ) : ViewModel() {
@@ -100,30 +95,6 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun signOut() {
-        viewModelScope.launch {
-            signOutUseCase().onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
-                if (result.result == true) {
-                    logoutUseCase()
-                    _uiState.update {
-                        it.copy(
-                            isSignOuted = true,
-                            toastMessage = "탈퇴가 완료되었습니다."
-                        )
-                    }
-                }
-            }
-        }
-    }
-
     fun setNotificationOn() {
         viewModelScope.launch {
             setNotificationStatusUseCase(true) //로컬 디비 저장
@@ -136,12 +107,6 @@ class MyPageViewModel @Inject constructor(
             setNotificationStatusUseCase(false)
             alarmUseCase.cancelAlarm()
         }
-    }
-
-
-
-    companion object {
-        val TAG = "MyPageViewModel"
     }
 }
 
@@ -158,5 +123,4 @@ data class MyPageState(
     var appVersion: String = "0.0.0",
 
     var isNicknameNull: Boolean = false,
-    var isSignOuted: Boolean = false,
 )
