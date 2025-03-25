@@ -20,13 +20,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class CafeteriaViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
-    val uiState: StateFlow<MainState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<CafeteriaState> = MutableStateFlow(CafeteriaState())
+    val uiState: StateFlow<CafeteriaState> = _uiState.asStateFlow()
 
 //    init {
 //        checkNameNull()
@@ -75,7 +75,7 @@ class MainViewModel @Inject constructor(
 }
 
 
-data class MainState(
+data class CafeteriaState(
     var loading: Boolean = true,
     var error: Boolean = false,
 

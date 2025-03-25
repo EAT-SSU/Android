@@ -46,7 +46,7 @@ import java.util.Locale
 @AndroidEntryPoint
 class CafeteriaActivity : BaseActivity<ActivityCafeteriaBinding>(ActivityCafeteriaBinding::inflate), OnItemListener {
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val cafeteriaViewModel: CafeteriaViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
 
 
@@ -184,10 +184,10 @@ class CafeteriaActivity : BaseActivity<ActivityCafeteriaBinding>(ActivityCafeter
 
     private fun checkNicknameIsNull() {
         Timber.d("관찰 시작")
-        mainViewModel.checkNameNull()
+        cafeteriaViewModel.checkNameNull()
 
         lifecycleScope.launch {
-            mainViewModel.uiState.collectLatest {
+            cafeteriaViewModel.uiState.collectLatest {
                 if (it.isNicknameNull) {
                     //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
                     intent.putExtra("force", true)
