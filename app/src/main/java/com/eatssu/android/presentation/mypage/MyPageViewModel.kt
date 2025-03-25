@@ -158,6 +158,5 @@ data class MyPageState(
     var appVersion: String = "0.0.0",
 
     var isNicknameNull: Boolean = false,
-    var isLoginOuted: Boolean = false,
     var isSignOuted: Boolean = false,
 )

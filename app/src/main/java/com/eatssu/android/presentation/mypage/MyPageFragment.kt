@@ -162,7 +162,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
             .setTitle("로그아웃")
             .setMessage("로그아웃 하시겠습니까?")
             .setPositiveButton("로그아웃") { _, _ ->
-                mainViewModel.logOut()
+                mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
             }
             .setNegativeButton("취소", null)
             .show()
