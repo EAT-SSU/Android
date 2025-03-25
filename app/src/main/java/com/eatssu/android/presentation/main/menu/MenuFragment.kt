@@ -23,7 +23,7 @@ import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.info.InfoViewModel
-import com.eatssu.android.presentation.main.calendar.CalendarViewModel
+import com.eatssu.android.presentation.main.MainViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -33,7 +33,9 @@ class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var calendarViewModel: CalendarViewModel
+    // private lateinit var calendarViewModel: CalendarViewModel
+    private val mainViewModel by activityViewModels<MainViewModel>()
+
     private lateinit var menuViewModel: MenuViewModel
 
     private lateinit var menuService: MenuService
@@ -101,14 +103,14 @@ class MenuFragment : Fragment() {
             )[MenuViewModel::class.java]
 
         // ViewModel에서 데이터 가져오기
-        calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
+        // calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
         retainInstance = true
 
         val dayFormat = DateTimeFormatter.ofPattern("dd")
         val todayDate = LocalDateTime.now().format(dayFormat)
 
         // ViewModel에서 데이터 가져오기
-        calendarViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
+        mainViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
 
             val parsedDate =
                 LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))

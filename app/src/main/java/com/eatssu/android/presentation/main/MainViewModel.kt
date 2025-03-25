@@ -1,6 +1,9 @@
 package com.eatssu.android.presentation.main
 
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
@@ -18,6 +21,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -85,6 +89,18 @@ class MainViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private val data = MutableLiveData<LocalDate>()
+
+    fun setData(dataToSend: LocalDate) {
+        data.value = dataToSend
+
+        Log.d("setdata", dataToSend.toString())
+    }
+
+    fun getData(): LiveData<LocalDate> {
+        return data
     }
 
 }

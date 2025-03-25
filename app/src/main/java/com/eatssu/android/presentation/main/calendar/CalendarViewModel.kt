@@ -7,15 +7,15 @@ import androidx.lifecycle.ViewModel
 import java.time.LocalDate
 
 class CalendarViewModel : ViewModel() {
-    private val data = MutableLiveData<LocalDate>()
-
-    fun setData(dataToSend: LocalDate) {
-        data.value = dataToSend
-
-        Log.d("setdata", dataToSend.toString())
-    }
-
-    fun getData(): LiveData<LocalDate> {
-        return data
-    }
+//    private val data = MutableLiveData<LocalDate>()
+//
+//    fun setData(dataToSend: LocalDate) {
+//        data.value = dataToSend
+//
+//        Log.d("setdata", dataToSend.toString())
+//    }
+//
+//    fun getData(): LiveData<LocalDate> {
+//        return data
+//    }
 }
