@@ -28,7 +28,7 @@ class MyReviewListActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "내가 쓴 리뷰" // 툴바 제목 설정
 
-        lodeReview()
+        loadReview()
     }
 
     private fun setAdapter(reviewList: List<Review>) {
@@ -51,7 +51,7 @@ class MyReviewListActivity :
         binding.rvReview.setHasFixedSize(true)
     }
 
-    private fun lodeReview() {
+    private fun loadReview() {
         myReviewViewModel.getMyReviews()
 
         lifecycleScope.launch {
@@ -70,12 +70,12 @@ class MyReviewListActivity :
 
     override fun onRestart() {
         super.onRestart()
-        lodeReview()
+        loadReview()
     }
 
     override fun onResume() {
         super.onResume()
-        lodeReview()
+        loadReview()
     }
 
     fun onMyReviewClicked(review: Review) {
@@ -99,7 +99,7 @@ class MyReviewListActivity :
     }
 
     override fun onReviewDeleted() {
-        lodeReview()
+        loadReview()
     }
 
 }
