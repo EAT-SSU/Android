@@ -13,7 +13,7 @@
         android:title="@string/map"/>-->
 
     <item
-        android:id="@+id/mypage"
+        android:id="@+id/mypage_menu"
         android:enabled="true"
         android:icon="@drawable/ic_mypage"
         android:title="@string/mypage"/>

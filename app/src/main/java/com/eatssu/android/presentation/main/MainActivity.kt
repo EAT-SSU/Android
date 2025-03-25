@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.main
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
@@ -43,29 +45,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         setupNoToolbar()
         setUpBottomBar()
 
-        // 알림 퍼미션 있는지 자가 진단
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // 권한이 없다면 요청
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                    1000
-                )
-            } else {
-                // 권한이 이미 있어
-            }
-        }
+        checkAlarmPermission()
 
         checkNicknameIsNull()
         collectLogoutState()
 
     }
 
+    // set UI --
     private fun setupNoToolbar() {
         // 툴바 사용하지 않도록 설정
         toolbar.let {
@@ -77,45 +64,53 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    private fun checkNicknameIsNull() {
-        Timber.d("관찰 시작")
-        mainViewModel.checkNameNull()
-
-        lifecycleScope.launch {
-            mainViewModel.uiState.collectLatest {
-                if (it.isNicknameNull) {
-                    //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
-                    intent.putExtra("force", true)
-                    startActivity<UserNameChangeActivity>()
-                    showToast(it.toastMessage)
-                } else {
-                    showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸
-                }
-            }
-        }
-    }
-
     private fun setUpBottomBar() {
-        binding.bottomNaviBar.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.cafeteria_menu -> {
-                    Log.d("NaviTest", "Cafeteria Menu Clicked")
-                    true
-                }
-                R.id.mypage -> {
-                    Log.d("NaviTest", "My Page Clicked")
-                    // startActivity<MyPageActivity>()
-                    true
-                }
-                else -> false
+        // ViewPager2 + Adapter 연결
+        val viewPagerAdapter = MainViewPager2Adapter(this)
+        binding.vpMain.adapter = viewPagerAdapter
+        binding.vpMain.isUserInputEnabled = false // 스와이프 막기
+
+        // BottomNavigation 클릭 시 ViewPager 이동
+        binding.bottomNaviBar.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.cafeteria_menu -> binding.vpMain.setCurrentItem(0, false)
+                R.id.mypage_menu -> binding.vpMain.setCurrentItem(1, false)
             }
+            true
         }
+
+        // ViewPager 이동 시 BottomNavigation 체크 변경
+        binding.vpMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val itemId = when (position) {
+                    0 -> R.id.cafeteria_menu
+                    1 -> R.id.mypage_menu
+                    else -> R.id.cafeteria_menu
+                }
+                binding.bottomNaviBar.selectedItemId = itemId
+            }
+        })
+
+//        binding.bottomNaviBar.setOnItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.cafeteria_menu -> {
+//                    Log.d("NaviTest", "Cafeteria Menu Clicked")
+//                    true
+//                }
+//                R.id.mypage -> {
+//                    Log.d("NaviTest", "My Page Clicked")
+//                    // startActivity<MyPageActivity>()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_main, menu)
+//        return true
+//    }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        return when (item.itemId) {
@@ -129,6 +124,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 //        }
 //    }
 
+    // Permission --
     // 권한 요청 결과 처리
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -148,6 +144,46 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 // 권한이 거부됨
                 showToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
                 myPageViewModel.setNotificationOff() //바로 알림 받도록 설정
+            }
+        }
+    }
+
+    // 알림 퍼미션 있는지 자가 진단
+    private fun checkAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // 권한이 없다면 요청
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    1000
+                )
+            } else {
+                // 권한이 이미 있어
+            }
+        }
+    }
+
+    // CollectState --
+
+    private fun checkNicknameIsNull() {
+        Timber.d("관찰 시작")
+        mainViewModel.checkNameNull()
+
+        lifecycleScope.launch {
+            mainViewModel.uiState.collectLatest {
+                if (it.isNicknameNull) {
+                    //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
+                    intent.putExtra("force", true)
+                    startActivity<UserNameChangeActivity>()
+                    showToast(it.toastMessage)
+                } else {
+                    showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸
+                }
             }
         }
     }
