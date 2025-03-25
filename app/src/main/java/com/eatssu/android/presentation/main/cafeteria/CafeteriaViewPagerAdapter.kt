@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.main
+package com.eatssu.android.presentation.main.cafeteria
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -9,7 +9,7 @@ import com.eatssu.android.data.enums.Time
 import com.eatssu.android.presentation.main.menu.MenuFragment
 import java.time.LocalTime
 
-class ViewPager2Adapter(fragmentActivity: FragmentActivity) :
+class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
     // 1. ViewPager2에 연결할 Fragment 들을 생성

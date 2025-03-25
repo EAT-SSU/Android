@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
+import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +21,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class CafeteriaViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
+    private val logoutUseCase: LogoutUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<CafeteriaState> = MutableStateFlow(CafeteriaState())
-    val uiState: StateFlow<CafeteriaState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
+    val uiState: StateFlow<MainState> = _uiState.asStateFlow()
 
 //    init {
 //        checkNameNull()
@@ -70,16 +72,28 @@ class CafeteriaViewModel @Inject constructor(
                 }
             }
         }
-
     }
+
+    fun logOut() {
+        viewModelScope.launch {
+            logoutUseCase() //Todo 반환값이 쓰이는게 아니면 이렇게 해도 되나?
+
+            _uiState.update {
+                it.copy(
+                    toastMessage = "로그아웃 되었습니다.",
+                    isLoggedOut = true
+                )
+            }
+        }
+    }
+
 }
 
 
-data class CafeteriaState(
+data class MainState(
     var loading: Boolean = true,
     var error: Boolean = false,
-
     var toastMessage: String = "",
-
     var isNicknameNull: Boolean = false,
+    var isLoggedOut: Boolean = false,
 )

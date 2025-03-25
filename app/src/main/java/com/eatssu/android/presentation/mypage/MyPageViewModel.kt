@@ -100,19 +100,6 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun loginOut() {
-        viewModelScope.launch {
-            logoutUseCase() //Todo 반환값이 쓰이는게 아니면 이렇게 해도 되나?
-
-            _uiState.update {
-                it.copy(
-                    toastMessage = "로그아웃 되었습니다.",
-                    isLoginOuted = true
-                )
-            }
-        }
-    }
-
     fun signOut() {
         viewModelScope.launch {
             signOutUseCase().onStart {

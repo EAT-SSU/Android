@@ -107,6 +107,7 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
+    implementation(libs.androidx.activity)
 
     // Testing libraries
     testImplementation(libs.junit)

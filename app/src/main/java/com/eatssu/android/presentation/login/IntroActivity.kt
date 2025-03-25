@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
-import com.eatssu.android.presentation.main.CafeteriaActivity
+import com.eatssu.android.presentation.main.MainActivity
 import com.eatssu.android.presentation.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +30,7 @@ class IntroActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 introViewModel.uiState.collectLatest {
                     if (it.isAutoLogined) {
-                        startActivity<CafeteriaActivity>()
+                        startActivity<MainActivity>()
 
                         // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
                         // 이동한 다음 사용안함으로 finish 처리
