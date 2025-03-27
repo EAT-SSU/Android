@@ -22,8 +22,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 23
         targetSdk = 34
-        versionCode = 26
-        versionName = "2.1.6"
+        versionCode = 27
+        versionName = "2.1.7"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
