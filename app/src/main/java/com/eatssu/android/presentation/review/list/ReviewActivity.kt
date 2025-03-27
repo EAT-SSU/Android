@@ -198,13 +198,11 @@ class ReviewActivity :
             R.style.RoundCornerBottomSheetDialogTheme
         )
 
-        val bundle = Bundle()
-        bundle.let {
-            it.putLong("reviewId", reviewData.reviewId)
-            it.putString("menu", reviewData.menu)
+        modalBottomSheet.arguments = Bundle().apply {
+            putLong("reviewId", reviewData.reviewId)
+            putString("menu", reviewData.menu)
         }
 
-        modalBottomSheet.arguments = bundle
         modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
     }
 
