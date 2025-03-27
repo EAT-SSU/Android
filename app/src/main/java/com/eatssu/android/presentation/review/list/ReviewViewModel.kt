@@ -7,6 +7,7 @@ import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetMealReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetMealReviewListUseCase
 import com.eatssu.android.domain.usecase.review.GetMenuReviewInfoUseCase
@@ -31,6 +32,7 @@ class ReviewViewModel @Inject constructor(
     private val getMenuReviewListUseCase: GetMenuReviewListUseCase,
     private val getMealReviewInfoUseCase: GetMealReviewInfoUseCase,
     private val getMealReviewListUseCase: GetMealReviewListUseCase,
+    private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
@@ -220,6 +222,33 @@ class ReviewViewModel @Inject constructor(
                             )
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun deleteReview(reviewId: Long) {
+        viewModelScope.launch {
+            deleteReviewUseCase(reviewId).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update {
+                    it.copy(
+                        error = true,
+//                        toastMessage = context.getString(R.string.delete_not)
+                    )
+                }
+                Timber.e(e.toString())
+            }.collectLatest { result ->
+                Timber.d(result.toString())
+
+                _uiState.update {
+                    it.copy(
+//                        isDeleted = true,
+//                        toastMessage = context.getString(R.string.delete_done)
+                    )
                 }
             }
         }
