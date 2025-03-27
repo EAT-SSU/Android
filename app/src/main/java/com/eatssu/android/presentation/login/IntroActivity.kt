@@ -46,7 +46,7 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
 
-        }, 2000) // 시간 2초 이후 실행
+        }, 3500) // 시간 2초 이후 실행 TODO 긴급 공지는 3.5초로 늘림
 
     }
 }
