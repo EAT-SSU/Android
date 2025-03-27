@@ -1,11 +1,15 @@
 package com.eatssu.android.presentation.mypage.myreview
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.auth.GetMyReviewsUseCase
+import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyReviewViewModel @Inject constructor(
     private val getMyReviewsUseCase: GetMyReviewsUseCase,
+    private val deleteReviewUseCase: DeleteReviewUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MyReviewState> = MutableStateFlow(MyReviewState())
@@ -55,6 +61,33 @@ class MyReviewViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteReview(reviewId: Long) {
+        viewModelScope.launch {
+            deleteReviewUseCase(reviewId).onStart {
+                _uiState.update { it.copy(loading = true) }
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = true) }
+            }.catch { e ->
+                _uiState.update {
+                    it.copy(
+                        error = true,
+                        toastMessage = context.getString(R.string.delete_not)
+                    )
+                }
+                Timber.e(e.toString())
+            }.collectLatest { result ->
+                Timber.d(result.toString())
+
+                _uiState.update {
+                    it.copy(
+                        isDeleted = true,
+                        toastMessage = context.getString(R.string.delete_done)
+                    )
+                }
+            }
+        }
+    }
 }
 
 
@@ -67,5 +100,6 @@ data class MyReviewState(
     var isEmpty: Boolean = false,
 
     var myReviews: List<Review>? = null,
+    var isDeleted: Boolean = false,
 
     )
