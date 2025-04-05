@@ -7,17 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".presentation.main.MainActivity">
 
-    <!-- ViewPager2 - fragment 3개 -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_main"
-        android:layout_width="match_parent"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:nestedScrollingEnabled="false"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navi_bar"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navi_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:navGraph="@navigation/eatssu_navigation"/>
 
     <!-- 바텀 네비게이션 바 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

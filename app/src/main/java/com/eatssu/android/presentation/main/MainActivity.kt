@@ -15,15 +15,20 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.main.cafeteria.CafeteriaFragment
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,13 +48,43 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
 
         setupNoToolbar()
-        setUpBottomBar()
 
         checkAlarmPermission()
 
         checkNicknameIsNull()
         collectLogoutState()
 
+        setNavigation()
+
+    }
+
+    private fun setNavigation() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        binding.bottomNaviBar.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.cafeteria_menu -> {
+                    navController.navigate(R.id.homeFragment)
+                    true
+                }
+
+                R.id.map_menu -> {
+                    navController.navigate(R.id.mapFragment)
+                    true
+                }
+
+                R.id.mypage_menu -> {
+                    navController.navigate(R.id.myPageFragment)
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+        }
     }
 
     // set UI --
@@ -62,51 +97,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
-    }
-
-    private fun setUpBottomBar() {
-        // ViewPager2 + Adapter 연결
-        val viewPagerAdapter = MainViewPager2Adapter(this)
-        binding.vpMain.adapter = viewPagerAdapter
-        binding.vpMain.isUserInputEnabled = false // 스와이프 막기
-
-        // BottomNavigation 클릭 시 ViewPager 이동
-        binding.bottomNaviBar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.cafeteria_menu -> binding.vpMain.setCurrentItem(0, false)
-                // R.id.map_menu -> binding.vpMain.setCurrentItem(1, false)
-                R.id.mypage_menu -> binding.vpMain.setCurrentItem(1, false)
-            }
-            true
-        }
-
-        // ViewPager 이동 시 BottomNavigation 체크 변경
-        binding.vpMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                val itemId = when (position) {
-                    0 -> R.id.cafeteria_menu
-                    //1 -> R.id.map_menu
-                    1 -> R.id.mypage_menu
-                    else -> R.id.cafeteria_menu
-                }
-                binding.bottomNaviBar.selectedItemId = itemId
-            }
-        })
-
-//        binding.bottomNaviBar.setOnItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.cafeteria_menu -> {
-//                    Log.d("NaviTest", "Cafeteria Menu Clicked")
-//                    true
-//                }
-//                R.id.mypage -> {
-//                    Log.d("NaviTest", "My Page Clicked")
-//                    // startActivity<MyPageActivity>()
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {

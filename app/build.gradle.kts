@@ -179,6 +179,9 @@ dependencies {
     androidTestImplementation(libs.compose.bom)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // navigation
+    implementation ("androidx.navigation:navigation-fragment:2.8.9")
+    implementation ("androidx.navigation:navigation-ui:2.8.9")
 }
 
 kapt {
