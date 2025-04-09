@@ -44,9 +44,9 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
 
-            introViewModel.eventState.collectLatest { event ->
+            introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
-                    is IntroEventState.Error -> {
+                    is IntroUiEvent.ShowToast -> {
                         // 에러 메시지 표시
                         showToast(event.error)
                     }

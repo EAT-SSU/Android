@@ -22,8 +22,8 @@ class IntroViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<IntroUiState> = MutableStateFlow(IntroUiState.Loading)
     val uiState: StateFlow<IntroUiState> = _uiState.asStateFlow()
 
-    private val _eventState = MutableSharedFlow<IntroEventState>()
-    val eventState: SharedFlow<IntroEventState> = _eventState
+    private val _uiEvent = MutableSharedFlow<IntroUiEvent>()
+    val uiEvent: SharedFlow<IntroUiEvent> = _uiEvent
 
     init {
         autoLogin()
@@ -37,7 +37,7 @@ class IntroViewModel @Inject constructor(
                 // 토큰 존재 여부 확인
                 if (getAccessTokenUseCase().isEmpty()) {
                     _uiState.value = IntroUiState.NoValidToken
-                    _eventState.emit(IntroEventState.Error("로그인이 필요합니다"))
+                    _uiEvent.emit(IntroUiEvent.ShowToast("로그인이 필요합니다"))
                     return@launch
                 }
 
@@ -45,7 +45,7 @@ class IntroViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 _uiState.value = IntroUiState.NoValidToken
-                _eventState.emit(IntroEventState.Error("오류가 발생했습니다: ${e.message}"))
+                _uiEvent.emit(IntroUiEvent.ShowToast("오류가 발생했습니다: ${e.message}"))
             }
         }
     }
@@ -58,7 +58,7 @@ class IntroViewModel @Inject constructor(
                         _uiState.value = IntroUiState.Success
                     } else { //토큰이 있어도 유효하지 않음
                         _uiState.value = IntroUiState.NoValidToken
-                        _eventState.emit(IntroEventState.Error("로그인이 필요합니다"))
+                        _uiEvent.emit(IntroUiEvent.ShowToast("로그인이 필요합니다"))
                     }
                 }
         }
@@ -71,6 +71,6 @@ sealed class IntroUiState {
     object NoValidToken : IntroUiState()
 }
 
-sealed class IntroEventState {
-    data class Error(val error: String) : IntroEventState()
+sealed class IntroUiEvent {
+    data class ShowToast(val error: String) : IntroUiEvent()
 }
