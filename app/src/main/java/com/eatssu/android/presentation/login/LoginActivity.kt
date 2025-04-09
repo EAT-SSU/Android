@@ -44,7 +44,7 @@ class LoginActivity :
             }
         }
 
-        binding.mcvKakaoLogin.setOnClickListener {
+        binding.ibKakaoLogin.setOnClickListener {
             handleKakaoLogin()
         }
     }
@@ -117,7 +117,7 @@ class LoginActivity :
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.mcvKakaoLogin.visibility = if (isLoading) View.GONE else View.VISIBLE
+        binding.ibKakaoLogin.visibility = if (isLoading) View.GONE else View.VISIBLE
     }
 
     override fun onBackPressed() {
