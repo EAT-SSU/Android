@@ -1,13 +1,12 @@
 package com.eatssu.android.presentation.login
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.R
+import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -17,6 +16,7 @@ import kotlinx.coroutines.launch
 class IntroActivity : AppCompatActivity() {
 
     private val introViewModel: IntroViewModel by viewModels()
+    private lateinit var binding: ActivityIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,22 +33,25 @@ class IntroActivity : AppCompatActivity() {
                     is IntroUiState.Success -> {
                         // 메인 액티비티로 이동
                         startActivity<MainActivity>()
-
-                        // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
-                        // 이동한 다음 사용안함으로 finish 처리
-                        finish()
-                    } else {
-                        startActivity<LoginActivity>()
-
-                        // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
-                        // 이동한 다음 사용안함으로 finish 처리
                         finish()
                     }
 
+                    is IntroUiState.NoValidToken -> {
+                        // 로그인 액티비티로 이동
+                        startActivity<LoginActivity>()
+                        finish()
+                    }
                 }
             }
 
-        }, 2000) // 시간 2초 이후 실행
-
+            introViewModel.eventState.collectLatest { event ->
+                when (event) {
+                    is IntroEventState.Error -> {
+                        // 에러 메시지 표시
+                        showToast(event.error)
+                    }
+                }
+            }
+        }
     }
 }
