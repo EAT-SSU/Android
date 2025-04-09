@@ -20,16 +20,18 @@ class IntroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+        binding = ActivityIntroBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // 일정 시간 지연 이후 실행하기 위한 코드
-        Handler(Looper.getMainLooper()).postDelayed({
+        lifecycleScope.launch {
+            introViewModel.uiState.collectLatest { state ->
+                when (state) {
+                    is IntroUiState.Loading -> {
+                        // 할게 없는뎅? 그냥 뷰 보여주기
+                    }
 
-            introViewModel.autoLogin()
-
-            lifecycleScope.launch {
-                introViewModel.uiState.collectLatest {
-                    if (it.isAutoLogined) {
+                    is IntroUiState.Success -> {
+                        // 메인 액티비티로 이동
                         startActivity<MainActivity>()
 
                         // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
