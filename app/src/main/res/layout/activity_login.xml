@@ -7,6 +7,16 @@
     android:padding="16dp"
     tools:context=".presentation.login.LoginActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_kakao_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/iv_logo"
@@ -14,7 +24,7 @@
         android:layout_height="75dp"
         android:layout_margin="65dp"
         android:src="@drawable/img_new_logo_primary"
-        app:layout_constraintBottom_toTopOf="@+id/mcv_kakao_login"
+        app:layout_constraintBottom_toTopOf="@+id/ib_kakao_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +55,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/mcv_kakao_login"
+        android:id="@+id/ib_kakao_login"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_margin="30dp"
@@ -53,7 +63,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/img_kakao_login_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

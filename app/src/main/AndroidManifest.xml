@@ -64,7 +64,7 @@
             android:name=".presentation.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.login.IntroActivity"
+            android:name=".presentation.splash.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
