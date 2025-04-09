@@ -64,7 +64,7 @@
             android:name=".presentation.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.splash.IntroActivity"
+            android:name=".presentation.login.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -118,13 +118,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.base.BaseActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".presentation.mypage.usernamechange.UserNameChangeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
@@ -157,22 +150,6 @@
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.review.report.OthersReviewDialogActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.common.MyReviewBottomSheetFragment"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
