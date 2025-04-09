@@ -117,11 +117,11 @@ class LoginActivity :
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.ibKakaoLogin.visibility = if (isLoading) View.GONE else View.VISIBLE
+        binding.ibKakaoLogin.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finishAffinity()
+        finishAffinity() //로그인 화면에서 뒤로 가기 눌렀을 때에는 백스택 없어야 함 (앱 종료)
     }
 }
