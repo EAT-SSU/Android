@@ -9,11 +9,12 @@ import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetUserEmailUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-// ViewModel 구현
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
@@ -33,20 +33,20 @@ class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<LoginState>(LoginState.Init)
-    val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<LoginState>>(UiState.Init)
+    val uiState: StateFlow<UiState<LoginState>> = _uiState.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<LoginEvent>()
-    val uiEvent: SharedFlow<LoginEvent> = _uiEvent.asSharedFlow()
+    private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     fun getKakaoLogin(email: String, providerID: String) {
         viewModelScope.launch {
             loginUseCase(LoginWithKakaoRequest(email, providerID))
                 .onStart {
-                    _uiState.value = LoginState.Loading
+                    _uiState.value = UiState.Loading
                 }
                 .catch { e ->
-                    _uiEvent.emit(LoginEvent.ShowToast(context.getString(R.string.login_failed)))
+                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
                 }
                 .collect { result ->
                     result.result?.let {
@@ -54,9 +54,8 @@ class LoginViewModel @Inject constructor(
                         setRefreshTokenUseCase(it.refreshToken)
                         setUserEmailUseCase(email)
 
-                        _uiState.value = LoginState.Success
-                        _uiEvent.emit(LoginEvent.NavigateToMain)
-                        _uiEvent.emit(LoginEvent.ShowToast(context.getString(R.string.login_done)))
+                        _uiState.value = UiState.Success(LoginState.LoginSuccess)
+                        _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_done)))
                     }
                 }
         }
@@ -65,12 +64,5 @@ class LoginViewModel @Inject constructor(
 
 // 상태 및 이벤트 정의
 sealed class LoginState {
-    object Init : LoginState()
-    object Loading : LoginState()
-    object Success : LoginState()
-}
-
-sealed class LoginEvent {
-    data class ShowToast(val message: String) : LoginEvent()
-    object NavigateToMain : LoginEvent()
+    object LoginSuccess : LoginState()
 }
