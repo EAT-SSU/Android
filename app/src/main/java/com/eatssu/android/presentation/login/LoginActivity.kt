@@ -8,6 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityLoginBinding
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.main.MainActivity
 import com.eatssu.android.presentation.util.showToast
@@ -90,9 +92,16 @@ class LoginActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.uiState.collect { state ->
                     when (state) {
-                        is LoginState.Loading -> showLoading(true)
-                        is LoginState.Success -> {}
-                        else -> showLoading(false)
+                        is UiState.Loading -> showLoading(true)
+                        is UiState.Success -> {
+                            showLoading(false)
+                            startActivity<MainActivity>()
+                            finishAffinity()
+                        }
+
+                        else -> {
+                            showLoading(false)
+                        }
                     }
                 }
             }
@@ -104,11 +113,7 @@ class LoginActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.uiEvent.collect { event ->
                     when (event) {
-                        is LoginEvent.ShowToast -> showToast(event.message)
-                        LoginEvent.NavigateToMain -> {
-                            startActivity<MainActivity>()
-                            finishAffinity()
-                        }
+                        is UiEvent.ShowToast -> showToast(event.message)
                     }
                 }
             }
