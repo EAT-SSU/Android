@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,11 +21,11 @@ class IntroViewModel @Inject constructor(
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<IntroUiState> = MutableStateFlow(IntroUiState.Loading)
-    val uiState: StateFlow<IntroUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
+    val uiState: StateFlow<UiState<IntroState>> = _uiState.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<IntroUiEvent>()
-    val uiEvent: SharedFlow<IntroUiEvent> = _uiEvent
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
         autoLogin()
@@ -31,21 +33,21 @@ class IntroViewModel @Inject constructor(
 
     private fun autoLogin() {
         viewModelScope.launch {
-            _uiState.value = IntroUiState.Loading
+            _uiState.value = UiState.Loading
 
             try {
                 // 토큰 존재 여부 확인
                 if (getAccessTokenUseCase().isEmpty()) {
-                    _uiState.value = IntroUiState.NoValidToken
-                    _uiEvent.emit(IntroUiEvent.ShowToast("로그인이 필요합니다"))
+                    _uiState.value = UiState.Error
+                    _uiEvent.emit(UiEvent.ShowToast("로그인이 필요합니다"))
                     return@launch
                 }
 
                 checkValid()
 
             } catch (e: Exception) {
-                _uiState.value = IntroUiState.NoValidToken
-                _uiEvent.emit(IntroUiEvent.ShowToast("오류가 발생했습니다: ${e.message}"))
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다: ${e.message}"))
             }
         }
     }
@@ -55,22 +57,16 @@ class IntroViewModel @Inject constructor(
             getIsAccessTokenValidUseCase()
                 .collect {
                     if (it.result == true) { //토큰이 있고 유효함
-                        _uiState.value = IntroUiState.Success
+                        _uiState.value = UiState.Success(IntroState.ValidToken)
                     } else { //토큰이 있어도 유효하지 않음
-                        _uiState.value = IntroUiState.NoValidToken
-                        _uiEvent.emit(IntroUiEvent.ShowToast("로그인이 필요합니다"))
+                        _uiState.value = UiState.Error
+                        _uiEvent.emit(UiEvent.ShowToast("로그인이 필요합니다"))
                     }
                 }
         }
     }
 }
 
-sealed class IntroUiState {
-    object Loading : IntroUiState()
-    object Success : IntroUiState()
-    object NoValidToken : IntroUiState()
-}
-
-sealed class IntroUiEvent {
-    data class ShowToast(val error: String) : IntroUiEvent()
+sealed class IntroState {
+    object ValidToken : IntroState()
 }

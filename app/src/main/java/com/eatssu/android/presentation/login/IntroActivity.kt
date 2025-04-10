@@ -5,6 +5,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivityIntroBinding
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.main.MainActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -26,29 +28,26 @@ class IntroActivity : AppCompatActivity() {
         lifecycleScope.launch {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
-                    is IntroUiState.Loading -> {
-                        // 할게 없는뎅? 그냥 뷰 보여주기
-                    }
-
-                    is IntroUiState.Success -> {
-                        // 메인 액티비티로 이동
+                    is UiState.Success -> {
                         startActivity<MainActivity>()
                         finish()
                     }
 
-                    is IntroUiState.NoValidToken -> {
+                    is UiState.Error -> {
                         // 로그인 액티비티로 이동
                         startActivity<LoginActivity>()
                         finish()
                     }
+
+                    else -> Unit
                 }
             }
 
             introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
-                    is IntroUiEvent.ShowToast -> {
+                    is UiEvent.ShowToast -> {
                         // 에러 메시지 표시
-                        showToast(event.error)
+                        showToast(event.message)
                     }
                 }
             }
