@@ -1,5 +1,6 @@
 package com.eatssu.android.data.service
 
+import com.eatssu.android.data.dto.request.CheckValidTokenRequest
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
@@ -18,4 +19,9 @@ interface OauthService { //여기는 토큰이 없는 레트로핏을 끼웁니�
     suspend fun loginWithKakao(
         @Body request: LoginWithKakaoRequest,
     ): BaseResponse<TokenResponse>
+
+    @POST("oauths/valid/token")
+    suspend fun checkValidToken(
+        @Body request: CheckValidTokenRequest,
+    ): BaseResponse<Boolean>
 }
