@@ -46,6 +46,7 @@ class LoginViewModel @Inject constructor(
                     _uiState.value = UiState.Loading
                 }
                 .catch { e ->
+                    _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
                 }
                 .collect { result ->
@@ -59,6 +60,14 @@ class LoginViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun setInitState() {
+        _uiState.value = UiState.Init
+    }
+
+    fun setLoadingState() {
+        _uiState.value = UiState.Loading
     }
 }
 

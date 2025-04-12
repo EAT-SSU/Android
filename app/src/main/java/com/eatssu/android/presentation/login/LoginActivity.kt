@@ -55,7 +55,7 @@ class LoginActivity :
     private fun handleKakaoLogin() {
         lifecycleScope.launch {
             try {
-                showLoading(true) // ProgressBar 표시
+                loginViewModel.setLoadingState()
                 val oAuthToken = UserApiClient.loginWithKakao(this@LoginActivity)
                 Timber.d("Kakao login success: $oAuthToken")
                 UserApiClient.instance.me { user, error ->
@@ -67,8 +67,6 @@ class LoginActivity :
                 }
             } catch (error: Throwable) {
                 handleKakaoLoginError(error)
-            } finally {
-                showLoading(false) // ProgressBar 숨김
             }
         }
     }
@@ -78,6 +76,7 @@ class LoginActivity :
         when {
             error is ClientError && error.reason == ClientErrorCause.Cancelled -> {
                 Timber.d("User cancelled login")
+                loginViewModel.setInitState()
             }
 
             else -> {
@@ -94,11 +93,9 @@ class LoginActivity :
                     when (state) {
                         is UiState.Loading -> showLoading(true)
                         is UiState.Success -> {
-                            showLoading(false)
                             startActivity<MainActivity>()
                             finishAffinity()
                         }
-
                         else -> {
                             showLoading(false)
                         }
