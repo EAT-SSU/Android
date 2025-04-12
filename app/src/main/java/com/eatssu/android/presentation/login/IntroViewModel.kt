@@ -33,17 +33,18 @@ class IntroViewModel @Inject constructor(
 
     private fun autoLogin() {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            val userAccessToken = getAccessTokenUseCase()
 
+            _uiState.value = UiState.Loading
             try {
                 // 토큰 존재 여부 확인
-                if (getAccessTokenUseCase().isEmpty()) {
+                if (userAccessToken.isEmpty()) {
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("로그인이 필요합니다"))
                     return@launch
+                } else {
+                    checkValid(userAccessToken)
                 }
-
-                checkValid()
 
             } catch (e: Exception) {
                 _uiState.value = UiState.Error
@@ -52,9 +53,9 @@ class IntroViewModel @Inject constructor(
         }
     }
 
-    private fun checkValid() {
+    private fun checkValid(userAccessToken: String) {
         viewModelScope.launch {
-            getIsAccessTokenValidUseCase()
+            getIsAccessTokenValidUseCase(userAccessToken)
                 .collect {
                     if (it.result == true) { //토큰이 있고 유효함
                         _uiState.value = UiState.Success(IntroState.ValidToken)

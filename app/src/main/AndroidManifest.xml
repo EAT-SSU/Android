@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- 이미지 관련 -->
     <queries>
         <intent>
@@ -17,10 +18,11 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true" /> <!-- 알림 관련 -->
+        android:required="true" />
+
+    <!-- 알림 관련 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -39,14 +41,9 @@
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.main.MainActivity"
-            android:exported="false" />
-
         <meta-data
             android:name="com.google.android.gms.oss.licenses.enabled"
             android:value="true" />
-
         <receiver
             android:name=".alarm.NotificationReceiver"
             android:enabled="true"
@@ -121,13 +118,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.base.BaseActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".presentation.mypage.usernamechange.UserNameChangeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
@@ -149,19 +139,17 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
-            android:name=".presentation.review.report.OthersReviewDialogActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
+            android:name=".presentation.mypage.MyPageActivity"
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
-            android:name=".presentation.common.MyReviewBottomSheetFragment"
-            android:exported="true"
-            android:theme="@style/Theme.MyDialog">
+            android:name=".presentation.main.MainActivity"
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

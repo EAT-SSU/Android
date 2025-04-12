@@ -9,19 +9,20 @@ import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetUserEmailUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
+
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -32,45 +33,45 @@ class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
-    val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<LoginState>>(UiState.Init)
+    val uiState: StateFlow<UiState<LoginState>> = _uiState.asStateFlow()
 
-    fun getLogin(email: String, providerID: String) {
+    private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    fun getKakaoLogin(email: String, providerID: String) {
         viewModelScope.launch {
-            loginUseCase(LoginWithKakaoRequest(email, providerID)).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true) }
-                Timber.e(e, "kakaoLogin: ")
-            }.collectLatest { result ->
-                _uiState.update {
-                    it.copy(
-                        loading = false, error = false,
-                        toastMessage = context.getString(R.string.login_done)
-                    )
-                    //Todo 로그인과 회원가입에 따른 토스트 메시지 구분하기
+            loginUseCase(LoginWithKakaoRequest(email, providerID))
+                .onStart {
+                    _uiState.value = UiState.Loading
                 }
-
-                /*토큰 저장*/
-                result.result?.let {
-
-                    Timber.d(it.accessToken)
-
-                    //헤더에 토큰 붙이기
-                    setAccessTokenUseCase(it.accessToken)
-                    setRefreshTokenUseCase(it.refreshToken)
-                    setUserEmailUseCase(email)
+                .catch { e ->
+                    _uiState.value = UiState.Error
+                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
                 }
-            }
+                .collect { result ->
+                    result.result?.let {
+                        setAccessTokenUseCase(it.accessToken)
+                        setRefreshTokenUseCase(it.refreshToken)
+                        setUserEmailUseCase(email)
+
+                        _uiState.value = UiState.Success(LoginState.LoginSuccess)
+                        _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_done)))
+                    }
+                }
         }
     }
 
+    fun setInitState() {
+        _uiState.value = UiState.Init
+    }
+
+    fun setLoadingState() {
+        _uiState.value = UiState.Loading
+    }
 }
 
-data class LoginState(
-    var toastMessage: String = "",
-    var loading: Boolean = true,
-    var error: Boolean = false,
-)
+// 상태 및 이벤트 정의
+sealed class LoginState {
+    object LoginSuccess : LoginState()
+}

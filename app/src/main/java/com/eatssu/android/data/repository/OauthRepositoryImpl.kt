@@ -1,5 +1,6 @@
 package com.eatssu.android.data.repository
 
+import com.eatssu.android.data.dto.request.CheckValidTokenRequest
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
@@ -20,5 +21,10 @@ class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthSer
     override suspend fun login(body: LoginWithKakaoRequest): Flow<BaseResponse<TokenResponse>> =
         flow {
             emit(oauthService.loginWithKakao(body))
+        }
+
+    override suspend fun checkValidToken(body: CheckValidTokenRequest): Flow<BaseResponse<Boolean>> =
+        flow {
+            emit(oauthService.checkValidToken(body))
         }
 }

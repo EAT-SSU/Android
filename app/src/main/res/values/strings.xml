@@ -173,6 +173,6 @@
     <string name="map">지도</string>
     <string name="mypage">마이</string>
     <string name="mypage_full">마이페이지</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="login_failed">로그인이 실패했습니다.\n</string>
 </resources>
