@@ -114,10 +114,6 @@ class TokenInterceptor @Inject constructor(
                     return chain.proceed(newRequest)
                 } else {
                     /**
-                     *
-                     *
-                     * refreshTokenResponse : Response{protocol=http/1.1, code=401, message=, url=https://prod.eat-ssu.shop/oauths/reissue/token}
-                     * 위 상황에서도 로그아웃
                      * 리프레쉬도 상한 상태
                      */
                     runBlocking { logoutUseCase() }
@@ -145,27 +141,27 @@ class TokenInterceptor @Inject constructor(
         }
 
         if (response.code == 404) {
-            runBlocking { logoutUseCase() }
+//            runBlocking { logoutUseCase() }
             Timber.e("404 + 다른 유저!")
 
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
-            }
+//            Handler(Looper.getMainLooper()).post {
+//                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                context.startActivity(intent)
+//            }
         }
 
         if (response.code == 500) {
-            runBlocking { logoutUseCase() }
+//            runBlocking { logoutUseCase() }
             Timber.e("500 + 다른 유저")
 
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
-            }
+//            Handler(Looper.getMainLooper()).post {
+//                Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                context.startActivity(intent)
+//            }
         }
 
         return response

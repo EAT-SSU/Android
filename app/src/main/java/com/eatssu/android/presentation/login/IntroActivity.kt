@@ -1,13 +1,14 @@
 package com.eatssu.android.presentation.login
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.R
+import com.eatssu.android.databinding.ActivityIntroBinding
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -17,36 +18,39 @@ import kotlinx.coroutines.launch
 class IntroActivity : AppCompatActivity() {
 
     private val introViewModel: IntroViewModel by viewModels()
+    private lateinit var binding: ActivityIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+        binding = ActivityIntroBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // 일정 시간 지연 이후 실행하기 위한 코드
-        Handler(Looper.getMainLooper()).postDelayed({
-
-            introViewModel.autoLogin()
-
-            lifecycleScope.launch {
-                introViewModel.uiState.collectLatest {
-                    if (it.isAutoLogined) {
+        lifecycleScope.launch {
+            introViewModel.uiState.collectLatest { state ->
+                when (state) {
+                    is UiState.Success -> {
                         startActivity<MainActivity>()
-
-                        // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
-                        // 이동한 다음 사용안함으로 finish 처리
-                        finish()
-                    } else {
-                        startActivity<LoginActivity>()
-
-                        // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
-                        // 이동한 다음 사용안함으로 finish 처리
                         finish()
                     }
 
+                    is UiState.Error -> {
+                        // 로그인 액티비티로 이동
+                        startActivity<LoginActivity>()
+                        finish()
+                    }
+
+                    else -> Unit
                 }
             }
 
-        }, 2000) // 시간 2초 이후 실행
-
+            introViewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    is UiEvent.ShowToast -> {
+                        // 에러 메시지 표시
+                        showToast(event.message)
+                    }
+                }
+            }
+        }
     }
 }
