@@ -46,13 +46,14 @@ object NetworkModule {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-        OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(tokenInterceptor)
+        OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(tokenInterceptor)
             .build()
     } else {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(tokenInterceptor)
+        // 프로덕션 환경에서는 로깅 인터셉터를 추가하지 않음
+        OkHttpClient.Builder()
+            .addInterceptor(tokenInterceptor)
             .build()
     }
 

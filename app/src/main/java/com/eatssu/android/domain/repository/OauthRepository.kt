@@ -1,5 +1,6 @@
 package com.eatssu.android.domain.repository
 
+import com.eatssu.android.data.dto.request.CheckValidTokenRequest
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
@@ -12,5 +13,6 @@ interface OauthRepository {
 
     suspend fun login(body: LoginWithKakaoRequest): Flow<BaseResponse<TokenResponse>>
 
+    suspend fun checkValidToken(body: CheckValidTokenRequest): Flow<BaseResponse<Boolean>>
 }
 
