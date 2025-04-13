@@ -25,6 +25,7 @@ import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.info.InfoViewModel
 import com.eatssu.android.presentation.main.MainViewModel
 import kotlinx.coroutines.launch
@@ -89,6 +90,7 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeViewModel()
+        collectUiState()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -291,6 +293,29 @@ class MenuFragment : Fragment() {
         ) {
             totalMenuList.sortBy { it.cafeteria.ordinal }
             setupTodayRecyclerView()
+        }
+    }
+
+    private fun collectUiState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                menuViewModel.uiState.collect { state ->
+                    when (state) {
+                        is UiState.Init -> {
+                            // init
+                        }
+                        is UiState.Loading -> {
+                            // Loading
+                        }
+                        is UiState.Success -> {
+                            // Success
+                        }
+                        is UiState.Error -> {
+                            // Error
+                        }
+                    }
+                }
+            }
         }
     }
 

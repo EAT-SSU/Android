@@ -38,16 +38,20 @@ class MenuViewModel(
     private val _todayMealDataHaksik = MutableStateFlow<ArrayList<GetMealResponse>>(arrayListOf())
     val todayMealDataHaksik: StateFlow<ArrayList<GetMealResponse>> = _todayMealDataHaksik
 
-    private val _todayMealDataDormitory = MutableStateFlow<ArrayList<GetMealResponse>>(arrayListOf())
+    private val _todayMealDataDormitory =
+        MutableStateFlow<ArrayList<GetMealResponse>>(arrayListOf())
     val todayMealDataDormitory: StateFlow<ArrayList<GetMealResponse>> = _todayMealDataDormitory
 
-    private val _fixedMenuDataSnack = MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
+    private val _fixedMenuDataSnack =
+        MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
     val fixedMenuDataSnack: StateFlow<GetFixedMenuResponse> = _fixedMenuDataSnack
 
-    private val _fixedMenuDataKitchen = MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
+    private val _fixedMenuDataKitchen =
+        MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
     val fixedMenuDataKitchen: StateFlow<GetFixedMenuResponse> = _fixedMenuDataKitchen
 
-    private val _fixedMenuDataFood = MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
+    private val _fixedMenuDataFood =
+        MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
     val fixedMenuDataFood: StateFlow<GetFixedMenuResponse> = _fixedMenuDataFood
 
     private val _uiState: MutableStateFlow<UiState<MenuState>> = MutableStateFlow(UiState.Init)
@@ -59,6 +63,8 @@ class MenuViewModel(
         restaurantType: Restaurant,
         time: Time,
     ) {
+        _uiState.value = UiState.Loading
+
         viewModelScope.launch {
             mealService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
                 .enqueue(object : Callback<BaseResponse<ArrayList<GetMealResponse>>> {
@@ -77,8 +83,12 @@ class MenuViewModel(
                                 Restaurant.DORMITORY -> _todayMealDataDormitory.value = data
                                 else -> Timber.tag("post").d("onResponse 실패. 잘못된 식당입니다.")
                             }
+                            _uiState.value = UiState.Success(MenuState())
+
                         } else {
-                            Timber.tag("post").d("onResponse 실패 투데이밀" + response.code() + response.message())
+                            Timber.tag("post")
+                                .d("onResponse 실패 투데이밀" + response.code() + response.message())
+                            _uiState.value = UiState.Error
                         }
                     }
 
@@ -87,6 +97,7 @@ class MenuViewModel(
                         t: Throwable,
                     ) {
                         Timber.tag("post").d("onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
+                        _uiState.value = UiState.Error
                     }
                 })
         }
@@ -94,6 +105,8 @@ class MenuViewModel(
 
     // Fixed Menu 데이터 로드도 유사한 방식으로 구현
     fun loadFixedMenu(restaurantType: Restaurant) {
+        _uiState.value = UiState.Loading
+
         viewModelScope.launch {
             menuService.getFixMenu(restaurantType.toString())
                 .enqueue(object : Callback<BaseResponse<GetFixedMenuResponse>> {
@@ -103,7 +116,8 @@ class MenuViewModel(
                     ) {
                         if (response.isSuccessful) {
                             Timber.tag("post").d("onResponse 성공" + response.body())
-                            val data = response.body()?.result ?: GetFixedMenuResponse(arrayListOf())
+                            val data =
+                                response.body()?.result ?: GetFixedMenuResponse(arrayListOf())
                             when (restaurantType) {
                                 Restaurant.THE_KITCHEN -> _fixedMenuDataKitchen.value = data
                                 Restaurant.FOOD_COURT -> _fixedMenuDataFood.value = data
@@ -113,8 +127,10 @@ class MenuViewModel(
                                     Timber.tag("post").d("onResponse 실패. 잘못된 식당 입니다.")
                                 }
                             }
+                            _uiState.value = UiState.Success(MenuState())
                         } else {
                             Timber.tag("post").d("onResponse 실패")
+                            _uiState.value = UiState.Error
                         }
                     }
 
@@ -123,6 +139,7 @@ class MenuViewModel(
                         t: Throwable,
                     ) {
                         Timber.tag("post").d("onFailure 에러: ${t.message}")
+                        _uiState.value = UiState.Error
                     }
                 })
         }
@@ -158,16 +175,7 @@ class MenuViewModel(
 //                })
 //        }
 //    }
-
-    fun setInitState() {
-        _uiState.value = UiState.Init
-    }
-
-    fun setLoadingState() {
-        _uiState.value = UiState.Loading
-    }
 }
-
 
 data class MenuState(
 //    var toastMessage: String = "",
