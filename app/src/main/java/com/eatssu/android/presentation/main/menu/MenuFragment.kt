@@ -9,8 +9,11 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
@@ -24,6 +27,8 @@ import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.info.InfoViewModel
 import com.eatssu.android.presentation.main.MainViewModel
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -91,7 +96,6 @@ class MenuFragment : Fragment() {
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         mealService = RetrofitImpl.retrofit.create(MealService::class.java)
 
-//        Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
 
@@ -126,40 +130,51 @@ class MenuFragment : Fragment() {
                 // The date is not on a weekend
                 //푸드코트
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
-                menuViewModel.fixedMenuDataFood.observe(viewLifecycleOwner) { result ->
-                    if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
-                        Log.d("menu", result.categoryMenuListCollection.toString())
-                        totalMenuList.add(
-                            Section(
-                                MenuType.FIXED,
-                                Restaurant.FOOD_COURT,
-                                result.mapFixedMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.FOOD_COURT)?.location
-                                    ?: ""
-                            )
-                        )
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        menuViewModel.fixedMenuDataFood.collect { result ->
+
+                            if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
+                                Log.d("menu", result.categoryMenuListCollection.toString())
+                                totalMenuList.add(
+                                    Section(
+                                        MenuType.FIXED,
+                                        Restaurant.FOOD_COURT,
+                                        result.mapFixedMenuResponseToMenu(),
+                                        infoViewModel.getRestaurantInfo(Restaurant.FOOD_COURT)?.location
+                                            ?: ""
+                                    )
+                                )
+                            }
+                            foodCourtDataLoaded.value = true
+                            checkDataLoaded()
+                        }
                     }
-                    foodCourtDataLoaded.value = true
-                    checkDataLoaded()
-//
                 }
 
                 //스낵코너
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
-                menuViewModel.fixedMenuDataSnack.observe(viewLifecycleOwner) { result ->
-                    if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.FIXED,
-                                Restaurant.SNACK_CORNER,
-                                result.mapFixedMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.SNACK_CORNER)?.location
-                                    ?: ""
-                            )
-                        )
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        menuViewModel.fixedMenuDataSnack.collect { result ->
+
+                            Log.d("MenuFragment", "menuViewModel.fixedMenuDataSnack.observe")
+
+                            if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
+                                totalMenuList.add(
+                                    Section(
+                                        MenuType.FIXED,
+                                        Restaurant.SNACK_CORNER,
+                                        result.mapFixedMenuResponseToMenu(),
+                                        infoViewModel.getRestaurantInfo(Restaurant.SNACK_CORNER)?.location
+                                            ?: ""
+                                    )
+                                )
+                            }
+                            snackCornerDataLoaded.value = true
+                            checkDataLoaded()
+                        }
                     }
-                    snackCornerDataLoaded.value = true
-                    checkDataLoaded()
                 }
 
                 Log.d("MenuFragment", "The date $menuDate is not on a weekend.")
@@ -182,55 +197,79 @@ class MenuFragment : Fragment() {
 
             //학생식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
-            menuViewModel.todayMealDataHaksik.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
-                    totalMenuList.add(
-                        Section(
-                            MenuType.VARIABLE,
-                            Restaurant.HAKSIK,
-                            result.mapTodayMenuResponseToMenu(),
-                            infoViewModel.getRestaurantInfo(Restaurant.HAKSIK)?.location ?: ""
-                        )
-                    )
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    menuViewModel.todayMealDataHaksik.collect { result ->
+                        Log.d("MenuFragment", " menuViewModel.todayMealDataHaksik.observe")
+
+                        if (result.isNotEmpty()) {
+                            totalMenuList.add(
+                                Section(
+                                    MenuType.VARIABLE,
+                                    Restaurant.HAKSIK,
+                                    result.mapTodayMenuResponseToMenu(),
+                                    infoViewModel.getRestaurantInfo(Restaurant.HAKSIK)?.location
+                                        ?: ""
+                                )
+                            )
 
 //                    setupTodayRecyclerView()
+                        }
+                        haksikDataLoaded.value = true
+                        checkDataLoaded()
+                    }
                 }
-                haksikDataLoaded.value = true
-                checkDataLoaded()
             }
 
             //숭실도담
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
-            menuViewModel.todayMealDataDodam.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
-                    totalMenuList.add(
-                        Section(
-                            MenuType.VARIABLE,
-                            Restaurant.DODAM,
-                            result.mapTodayMenuResponseToMenu(),
-                            infoViewModel.getRestaurantInfo(Restaurant.DODAM)?.location ?: ""
-                        )
-                    )
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    menuViewModel.todayMealDataDodam.collect { result ->
+                        Log.d("MenuFragment", "menuViewModel.todayMealDataDodam.observe")
+
+                        if (result.isNotEmpty()) {
+                            totalMenuList.add(
+                                Section(
+                                    MenuType.VARIABLE,
+                                    Restaurant.DODAM,
+                                    result.mapTodayMenuResponseToMenu(),
+                                    infoViewModel.getRestaurantInfo(Restaurant.DODAM)?.location
+                                        ?: ""
+                                )
+                            )
+                        }
+                        dodamDataLoaded.value = true
+                        checkDataLoaded()
+                    }
                 }
-                dodamDataLoaded.value = true
-                checkDataLoaded()
             }
 
             //기숙사식당
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
-            menuViewModel.todayMealDataDormitory.observe(viewLifecycleOwner) { result ->
-                if (result.isNotEmpty()) {
-                    totalMenuList.add(
-                        Section(
-                            MenuType.VARIABLE,
-                            Restaurant.DORMITORY,
-                            result.mapTodayMenuResponseToMenu(),
-                            infoViewModel.getRestaurantInfo(Restaurant.DORMITORY)?.location ?: ""
-                        )
-                    )
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    menuViewModel.todayMealDataDormitory.collect { result ->
+                        Log.d("MenuFragment", "menuViewModel.todayMealDataDormitory.observe")
+
+                        if (result.isNotEmpty()) {
+                            totalMenuList.add(
+                                Section(
+                                    MenuType.VARIABLE,
+                                    Restaurant.DORMITORY,
+                                    result.mapTodayMenuResponseToMenu(),
+                                    infoViewModel.getRestaurantInfo(Restaurant.DORMITORY)?.location
+                                        ?: ""
+                                )
+                            )
+                        }
+                        dormitoryDataLoaded.value = true
+                        checkDataLoaded()
+                    }
                 }
-                dormitoryDataLoaded.value = true
-                checkDataLoaded()
             }
         }
     }
@@ -240,7 +279,6 @@ class MenuFragment : Fragment() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = fragmentManager?.let { MenuAdapter(it, totalMenuList) }
-
         }
     }
 
