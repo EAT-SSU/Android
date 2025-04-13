@@ -64,6 +64,7 @@ class MenuViewModel(
         time: Time,
     ) {
         _uiState.value = UiState.Loading
+        Log.d("Debug", "loadTodayMeal called with type: $restaurantType")
 
         viewModelScope.launch {
             mealService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
@@ -105,6 +106,8 @@ class MenuViewModel(
 
     // Fixed Menu 데이터 로드도 유사한 방식으로 구현
     fun loadFixedMenu(restaurantType: Restaurant) {
+        Log.d("Debug", "loadFixedMenu called with type: $restaurantType")
+
         _uiState.value = UiState.Loading
 
         viewModelScope.launch {

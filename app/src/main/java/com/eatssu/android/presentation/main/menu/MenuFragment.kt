@@ -62,6 +62,7 @@ class MenuFragment : Fragment() {
 
     private val infoViewModel: InfoViewModel by activityViewModels()
 
+    private var isViewInitialized = false
 
     companion object {
         fun newInstance(time: Time): MenuFragment {
@@ -89,12 +90,18 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeViewModel()
-        collectUiState()
+        if (!isViewInitialized) {
+            observeViewModel()
+            collectUiState()
+            isViewInitialized = true
+        }
+        Log.d("Debug", "onViewCreated called")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun observeViewModel() {
+        Log.d("Debug", "observeViewModel called")
+
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         mealService = RetrofitImpl.retrofit.create(MealService::class.java)
 
@@ -117,6 +124,9 @@ class MenuFragment : Fragment() {
 
         // ViewModel에서 데이터 가져오기
         mainViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
+            Log.d("Debug", "Data received: getData()")
+
+            totalMenuList.clear()
 
             val parsedDate =
                 LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -127,6 +137,7 @@ class MenuFragment : Fragment() {
 
             val dayOfWeek = formattedDate.dayOfWeek
             Log.d("menudate", menuDate)
+            Log.d("Debug", menuDate)
 
             if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
                 // The date is not on a weekend
@@ -134,6 +145,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        Log.d("Debug", "loadFixedMenu FOOD_COURT called")
                         menuViewModel.fixedMenuDataFood.collect { result ->
 
                             if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
@@ -158,6 +170,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        Log.d("Debug", "loadFixedMenu SNACK_CORNER called")
                         menuViewModel.fixedMenuDataSnack.collect { result ->
 
                             if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
@@ -199,6 +212,8 @@ class MenuFragment : Fragment() {
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
 
             lifecycleScope.launch {
+                Log.d("Debug", "loadTodayMeal HAKSIK called")
+
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     menuViewModel.todayMealDataHaksik.collect { result ->
 
@@ -225,6 +240,8 @@ class MenuFragment : Fragment() {
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
 
             lifecycleScope.launch {
+                Log.d("Debug", "loadTodayMeal DODAM called")
+
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     menuViewModel.todayMealDataDodam.collect { result ->
 
@@ -249,6 +266,8 @@ class MenuFragment : Fragment() {
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
 
             lifecycleScope.launch {
+                Log.d("Debug", "loadTodayMeal DORMITORY called")
+
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     menuViewModel.todayMealDataDormitory.collect { result ->
 
@@ -297,15 +316,19 @@ class MenuFragment : Fragment() {
                 menuViewModel.uiState.collect { state ->
                     when (state) {
                         is UiState.Init -> {
+                            Log.d("Debug", "UI State: Init")
                             // init
                         }
                         is UiState.Loading -> {
+                            Log.d("Debug", "UI State: Loading")
                             // Loading
                         }
                         is UiState.Success -> {
+                            Log.d("Debug", "UI State: Success")
                             // Success
                         }
                         is UiState.Error -> {
+                            Log.d("Debug", "UI State: Error")
                             // Error
                         }
                     }
