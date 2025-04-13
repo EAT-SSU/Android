@@ -160,8 +160,6 @@ class MenuFragment : Fragment() {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         menuViewModel.fixedMenuDataSnack.collect { result ->
 
-                            Log.d("MenuFragment", "menuViewModel.fixedMenuDataSnack.observe")
-
                             if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
                                 totalMenuList.add(
                                     Section(
@@ -203,7 +201,6 @@ class MenuFragment : Fragment() {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     menuViewModel.todayMealDataHaksik.collect { result ->
-                        Log.d("MenuFragment", " menuViewModel.todayMealDataHaksik.observe")
 
                         if (result.isNotEmpty()) {
                             totalMenuList.add(
@@ -230,7 +227,6 @@ class MenuFragment : Fragment() {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     menuViewModel.todayMealDataDodam.collect { result ->
-                        Log.d("MenuFragment", "menuViewModel.todayMealDataDodam.observe")
 
                         if (result.isNotEmpty()) {
                             totalMenuList.add(
@@ -255,7 +251,6 @@ class MenuFragment : Fragment() {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     menuViewModel.todayMealDataDormitory.collect { result ->
-                        Log.d("MenuFragment", "menuViewModel.todayMealDataDormitory.observe")
 
                         if (result.isNotEmpty()) {
                             totalMenuList.add(
