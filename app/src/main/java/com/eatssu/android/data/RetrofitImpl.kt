@@ -65,21 +65,6 @@ object RetrofitImpl {
             .build()
     }
 
-    // 토큰 없는 Retrofit
-    val nonRetrofit: Retrofit by lazy {
-        createRetrofit(commonOkHttpClient)
-    }
-
-    // 토큰이 있는 Retrofit
-    val retrofit: Retrofit by lazy {
-        createRetrofit(createTokenOkHttpClient())
-    }
-
-    // 멀티파트 레트로핏
-    val mRetrofit: Retrofit by lazy {
-        createRetrofit(createMultiPartOkHttpClient())
-    }
-
     private fun createRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
@@ -88,124 +73,139 @@ object RetrofitImpl {
             .build()
     }
 
-    private fun createTokenOkHttpClient(): OkHttpClient {
-        return commonOkHttpClient.newBuilder()
-            .addInterceptor(AppInterceptor(App.appContext))
-            .build()
+    // 토큰 없는 Retrofit
+    val nonRetrofit: Retrofit by lazy {
+        createRetrofit(commonOkHttpClient)
     }
 
-    private fun createMultiPartOkHttpClient(): OkHttpClient {
-        return commonOkHttpClient.newBuilder()
-            .addInterceptor(mAppInterceptor())
-            .build()
-    }
+//    // 토큰이 있는 Retrofit
+//    val retrofit: Retrofit by lazy {
+//        createRetrofit(createTokenOkHttpClient())
+//    }
 
-    private class AppInterceptor(val context: Context) : Interceptor {
-        @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
-            var response: Response
-            val originalRequest = request()
-            val requestBuilder = originalRequest.newBuilder()
-                .addHeader("accept", "application/hal+json")
-                .addHeader("Content-Type", "application/json")
-                .addHeader(
-                    "Authorization",
-                    "Bearer ${MySharedPreferences.getAccessToken(App.appContext)}"
-                )
+//    // 멀티파트 레트로핏
+//    val mRetrofit: Retrofit by lazy {
+//        createRetrofit(createMultiPartOkHttpClient())
+//    }
 
-            val request = requestBuilder.build()
-            response = proceed(request)
+//    private fun createTokenOkHttpClient(): OkHttpClient {
+//        return commonOkHttpClient.newBuilder()
+//            .addInterceptor(AppInterceptor(App.appContext))
+//            .build()
+//    }
 
-            // Unauthorized (401) 상태 코드를 받았을 경우 토큰 재발급 시도
-            if (response.code == 401) {
-                response.close()
+//    private fun createMultiPartOkHttpClient(): OkHttpClient {
+//        return commonOkHttpClient.newBuilder()
+//            .addInterceptor(mAppInterceptor())
+//            .build()
+//    }
 
-                Log.d("AppInterceptor", "토큰 재발급 시도")
+//    private class AppInterceptor(val context: Context) : Interceptor {
+//        @Throws(IOException::class)
+//        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
+//            var response: Response
+//            val originalRequest = request()
+//            val requestBuilder = originalRequest.newBuilder()
+//                .addHeader("accept", "application/hal+json")
+//                .addHeader("Content-Type", "application/json")
+//                .addHeader(
+//                    "Authorization",
+//                    "Bearer ${MySharedPreferences.getAccessToken(App.appContext)}"
+//                )
+//
+//            val request = requestBuilder.build()
+//            response = proceed(request)
+//
+//            // Unauthorized (401) 상태 코드를 받았을 경우 토큰 재발급 시도
+//            if (response.code == 401) {
+//                response.close()
+//
+//                Log.d("AppInterceptor", "토큰 재발급 시도")
+//
+//                try {
+//                    val refreshTokenRequest = originalRequest.newBuilder()
+//                        .post("".toRequestBody())
+//                        .url("${BuildConfig.BASE_URL}/oauths/reissue/token")
+//                        .addHeader(
+//                            "Authorization",
+//                            "Bearer ${MySharedPreferences.getRefreshToken(App.appContext)}"
+//                        )
+//                        .build()
+//
+//                    Log.d(TokenInterceptor.TAG, "재발급 중")
+//
+//                    val refreshTokenResponse = chain.proceed(refreshTokenRequest)
+//                    Log.d(TokenInterceptor.TAG, " : $refreshTokenResponse")
+//
+//                    if (refreshTokenResponse.isSuccessful) {
+//                        Log.d(TokenInterceptor.TAG, "재발급 성공")
+//
+//                        val responseToken = parseRefreshTokenResponse(refreshTokenResponse)
+//
+//                        responseToken?.result?.let {
+//                            runBlocking {
+//                                MySharedPreferences.setAccessToken(
+//                                    App.appContext,
+//                                    it.accessToken
+//                                )
+//                                MySharedPreferences.setRefreshToken(
+//                                    App.appContext,
+//                                    it.refreshToken
+//                                )
+//
+//                                newAccessToken = it.accessToken
+//                            }
+//                        }
+//
+//                        refreshTokenResponse.close()
+//                        val newRequest = originalRequest.newAuthBuilder().build()
+//                        return chain.proceed(newRequest)
+//                    }
+//
+//                } catch (e: Exception) {
+//                    runBlocking { MySharedPreferences.clearUser(App.appContext) }
+//                    Log.d(TokenInterceptor.TAG, "재발급 실패 $e")
+//
+//                    Handler(Looper.getMainLooper()).post {
+//                        val context = App.appContext
+//                        Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
+//                        val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                        context.startActivity(intent)
+//                    }
+//                }
+//            }
+//            response
+//        }
+//    }
 
-                try {
-                    val refreshTokenRequest = originalRequest.newBuilder()
-                        .post("".toRequestBody())
-                        .url("${BuildConfig.BASE_URL}/oauths/reissue/token")
-                        .addHeader(
-                            "Authorization",
-                            "Bearer ${MySharedPreferences.getRefreshToken(App.appContext)}"
-                        )
-                        .build()
-
-                    Log.d(TokenInterceptor.TAG, "재발급 중")
-
-                    val refreshTokenResponse = chain.proceed(refreshTokenRequest)
-                    Log.d(TokenInterceptor.TAG, " : $refreshTokenResponse")
-
-                    if (refreshTokenResponse.isSuccessful) {
-                        Log.d(TokenInterceptor.TAG, "재발급 성공")
-
-                        val responseToken = parseRefreshTokenResponse(refreshTokenResponse)
-
-                        responseToken?.result?.let {
-                            runBlocking {
-                                MySharedPreferences.setAccessToken(
-                                    App.appContext,
-                                    it.accessToken
-                                )
-                                MySharedPreferences.setRefreshToken(
-                                    App.appContext,
-                                    it.refreshToken
-                                )
-
-                                newAccessToken = it.accessToken
-                            }
-                        }
-
-                        refreshTokenResponse.close()
-                        val newRequest = originalRequest.newAuthBuilder().build()
-                        return chain.proceed(newRequest)
-                    }
-
-                } catch (e: Exception) {
-                    runBlocking { MySharedPreferences.clearUser(App.appContext) }
-                    Log.d(TokenInterceptor.TAG, "재발급 실패 $e")
-
-                    Handler(Looper.getMainLooper()).post {
-                        val context = App.appContext
-                        Toast.makeText(context, "토큰이 만료되어 로그아웃 됩니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(context, LoginActivity::class.java) // 로그인 화면으로 이동
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        context.startActivity(intent)
-                    }
-                }
-            }
-            response
-        }
-    }
-
-    private fun Request.newAuthBuilder() =
-        this.newBuilder().addHeader("Authorization", "Bearer $newAccessToken")
+//    private fun Request.newAuthBuilder() =
+//        this.newBuilder().addHeader("Authorization", "Bearer $newAccessToken")
 
 
-    private class mAppInterceptor : Interceptor {
-        @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
-            val requestBuilder = request().newBuilder()
-                .addHeader("Content-Type", "multipart/form-data")
-                .addHeader(
-                    "Authorization",
-                    "Bearer ${MySharedPreferences.getAccessToken(App.appContext)}"
-                )
-
-            val newRequest = requestBuilder.build()
-            proceed(newRequest)
-        }
-    }
-
-
-    private fun parseRefreshTokenResponse(response: Response): BaseResponse<TokenResponse>? {
-        return try {
-            val gson = Gson()
-            val responseType: Type = object : TypeToken<BaseResponse<TokenResponse>>() {}.type
-            gson.fromJson(response.body?.string(), responseType)
-        } catch (e: Exception) {
-            null
-        }
-    }
+//    private class mAppInterceptor : Interceptor {
+//        @Throws(IOException::class)
+//        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
+//            val requestBuilder = request().newBuilder()
+//                .addHeader("Content-Type", "multipart/form-data")
+//                .addHeader(
+//                    "Authorization",
+//                    "Bearer ${MySharedPreferences.getAccessToken(App.appContext)}"
+//                )
+//
+//            val newRequest = requestBuilder.build()
+//            proceed(newRequest)
+//        }
+//    }
+//
+//
+//    private fun parseRefreshTokenResponse(response: Response): BaseResponse<TokenResponse>? {
+//        return try {
+//            val gson = Gson()
+//            val responseType: Type = object : TypeToken<BaseResponse<TokenResponse>>() {}.type
+//            gson.fromJson(response.body?.string(), responseType)
+//        } catch (e: Exception) {
+//            null
+//        }
+//    }
 }

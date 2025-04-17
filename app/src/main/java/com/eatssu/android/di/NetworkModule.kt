@@ -4,11 +4,16 @@ package com.eatssu.android.di
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.data.service.MealService
+import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.data.service.UserService
+import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
+import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +25,9 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
+import javax.inject.Provider
 import javax.inject.Singleton
+import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase as GetRefreshTokenUseCase1
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(
@@ -42,6 +49,7 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(
         tokenInterceptor: TokenInterceptor,
+        tokenAuthenticator: TokenAuthenticator
     ) = if (BuildConfig.DEBUG) {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -54,8 +62,26 @@ object NetworkModule {
         // 프로덕션 환경에서는 로깅 인터셉터를 추가하지 않음
         OkHttpClient.Builder()
             .addInterceptor(tokenInterceptor)
-            .authenticator()
+            .authenticator(tokenAuthenticator)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(
+        getRefreshTokenUseCase: GetRefreshTokenUseCase1,
+        setAccessTokenUseCase: SetAccessTokenUseCase,
+        setRefreshTokenUseCase: SetRefreshTokenUseCase,
+        logoutUseCase: LogoutUseCase,
+        oauthServiceProvider: Provider<OauthService>  // ✅ 핵심!
+    ): TokenAuthenticator {
+        return TokenAuthenticator(
+            getRefreshTokenUseCase,
+            setAccessTokenUseCase,
+            setRefreshTokenUseCase,
+            logoutUseCase,
+            oauthServiceProvider
+        )
     }
 
     @Singleton
@@ -98,4 +124,9 @@ object NetworkModule {
         return retrofit.create(MealService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideMenuService(retrofit: Retrofit): MenuService {
+        return retrofit.create(MenuService::class.java)
+    }
 }
