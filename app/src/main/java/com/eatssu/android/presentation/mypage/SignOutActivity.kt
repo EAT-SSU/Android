@@ -51,15 +51,15 @@ class SignOutActivity :
         binding.btnSignOut.setOnClickListener {
             signOutViewModel.signOut()
 
-            lifecycleScope.launch {
-                signOutViewModel.uiState.collectLatest {
-                    if (it.isSignOuted) {
-                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
-                    } else {
-                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
-                    }
-                }
-            }
+//            lifecycleScope.launch {
+//                signOutViewModel.uiState.collectLatest {
+//                    if (it.isSignOuted) {
+//                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
+//                    } else {
+//                        showToast(it.toastMessage) //Todo 사용가능 토스트가 무슨 3번이나 나옴
+//                    }
+//                }
+//            }
         }
     }
 
