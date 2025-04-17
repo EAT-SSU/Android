@@ -23,7 +23,7 @@ class TokenAuthenticator @Inject constructor(
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val oauthServiceProvider: Provider<OauthService> // 🔥 핵심
+    private val oauthService: OauthService
 ) : Authenticator {
 
     /**
@@ -45,7 +45,7 @@ class TokenAuthenticator @Inject constructor(
             try {
                 Timber.d("TokenAuthenticator → refreshToken으로 재발급 시도")
                 val newTokenResponse: BaseResponse<TokenResponse> =
-                    oauthServiceProvider.get().getNewToken(
+                    oauthService.getNewToken(
                         refreshToken = refreshToken
                     )
 
