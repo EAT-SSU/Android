@@ -25,9 +25,9 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
-import javax.inject.Provider
 import javax.inject.Singleton
-import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase as GetRefreshTokenUseCase1
+import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
+import javax.inject.Named
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(
@@ -45,9 +45,10 @@ class NullOnEmptyConverterFactory : Converter.Factory() {
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    // 토큰이 필요한 okhttpClient
     @Singleton
     @Provides
-    fun provideOkHttpClient(
+    fun provideAuthOkHttpClient(
         tokenInterceptor: TokenInterceptor,
         tokenAuthenticator: TokenAuthenticator
     ) = if (BuildConfig.DEBUG) {
@@ -66,38 +67,64 @@ object NetworkModule {
             .build()
     }
 
-    @Provides
+    // 토큰 없는 OkHttpClient (로그인/회원가입/토큰 재발급용)
     @Singleton
-    fun provideTokenAuthenticator(
-        getRefreshTokenUseCase: GetRefreshTokenUseCase1,
-        setAccessTokenUseCase: SetAccessTokenUseCase,
-        setRefreshTokenUseCase: SetRefreshTokenUseCase,
-        logoutUseCase: LogoutUseCase,
-        oauthServiceProvider: Provider<OauthService>  // ✅ 핵심!
-    ): TokenAuthenticator {
-        return TokenAuthenticator(
-            getRefreshTokenUseCase,
-            setAccessTokenUseCase,
-            setRefreshTokenUseCase,
-            logoutUseCase,
-            oauthServiceProvider
-        )
+    @Provides
+    @Named("NoToken")
+    fun provideNoAuthOkHttpClient(): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+        }
+        return builder.build()
     }
 
+    // 토큰이 필요한 retrofit
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideAuthRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
     }
 
+    // 토큰 없는 retrofit
+    @Singleton
+    @Provides
+    @Named("NoToken")
+    fun provideNoAuthRetrofit(@Named("NoToken") okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(NullOnEmptyConverterFactory())
+            .build()
+    }
 
     @Provides
     @Singleton
-    fun provideOauthService(retrofit: Retrofit): OauthService {
-        return retrofit.create(OauthService::class.java)
+    fun provideTokenAuthenticator(
+        getRefreshTokenUseCase: GetRefreshTokenUseCase,
+        setAccessTokenUseCase: SetAccessTokenUseCase,
+        setRefreshTokenUseCase: SetRefreshTokenUseCase,
+        logoutUseCase: LogoutUseCase,
+        @Named("NoToken") noTokenRetrofit: Retrofit
+    ): TokenAuthenticator {
+        return TokenAuthenticator(
+            getRefreshTokenUseCase,
+            setAccessTokenUseCase,
+            setRefreshTokenUseCase,
+            logoutUseCase,
+            noTokenRetrofit.create(OauthService::class.java)
+        )
+    }
+
+    // provide service
+    @Provides
+    @Singleton
+    fun provideOauthService(@Named("NoToken") noTokenRetrofit: Retrofit): OauthService {
+        return noTokenRetrofit.create(OauthService::class.java)
     }
 
     @Provides

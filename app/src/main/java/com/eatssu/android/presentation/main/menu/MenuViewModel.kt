@@ -27,9 +27,7 @@ import javax.inject.Inject
 class MenuViewModel @Inject constructor(
     private val menuService: MenuService,
     private val mealService: MealService,
-) :
-    ViewModel() {
-
+) :ViewModel() {
 
     private val _todayMealDataDodam = MutableLiveData<ArrayList<GetMealResponse>>()
     val todayMealDataDodam: LiveData<ArrayList<GetMealResponse>> = _todayMealDataDodam
