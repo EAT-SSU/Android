@@ -27,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import javax.inject.Singleton
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.ShowToastSafely
 import javax.inject.Named
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
@@ -58,6 +59,7 @@ object NetworkModule {
         OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(tokenInterceptor)
+            .authenticator(tokenAuthenticator)
             .build()
     } else {
         // 프로덕션 환경에서는 로깅 인터셉터를 추가하지 않음
@@ -109,6 +111,7 @@ object NetworkModule {
         setAccessTokenUseCase: SetAccessTokenUseCase,
         setRefreshTokenUseCase: SetRefreshTokenUseCase,
         logoutUseCase: LogoutUseCase,
+        showToastSafely: ShowToastSafely,
         @Named("NoToken") noTokenRetrofit: Retrofit
     ): TokenAuthenticator {
         return TokenAuthenticator(
@@ -116,6 +119,7 @@ object NetworkModule {
             setAccessTokenUseCase,
             setRefreshTokenUseCase,
             logoutUseCase,
+            showToastSafely,
             noTokenRetrofit.create(OauthService::class.java)
         )
     }
