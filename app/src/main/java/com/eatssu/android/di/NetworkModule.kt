@@ -27,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import javax.inject.Singleton
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
 import com.eatssu.android.domain.usecase.auth.ShowToastSafely
 import javax.inject.Named
 import javax.inject.Qualifier
@@ -121,6 +122,7 @@ object NetworkModule {
         getRefreshTokenUseCase: GetRefreshTokenUseCase,
         setAccessTokenUseCase: SetAccessTokenUseCase,
         setRefreshTokenUseCase: SetRefreshTokenUseCase,
+        reissueTokenUseCase: ReissueTokenUseCase,
         logoutUseCase: LogoutUseCase,
         showToastSafely: ShowToastSafely,
         @NoToken noTokenRetrofit: Retrofit
@@ -129,6 +131,7 @@ object NetworkModule {
             getRefreshTokenUseCase,
             setAccessTokenUseCase,
             setRefreshTokenUseCase,
+            reissueTokenUseCase,
             logoutUseCase,
             showToastSafely,
             noTokenRetrofit.create(OauthService::class.java)
