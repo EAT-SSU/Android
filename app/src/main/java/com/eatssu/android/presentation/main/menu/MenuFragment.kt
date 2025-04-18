@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
 import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.enums.MenuType
@@ -37,11 +36,7 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var calendarViewModel: CalendarViewModel
-//    private lateinit var menuViewModel: MenuViewModel
     private val menuViewModel: MenuViewModel by viewModels()
-
-//    private lateinit var menuService: MenuService
-//    private lateinit var mealService: MealService
 
     private lateinit var menuDate: String
     private lateinit var cafeteriaLocation: String
@@ -90,19 +85,9 @@ class MenuFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun observeViewModel() {
-//        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
-//        mealService = RetrofitImpl.retrofit.create(MealService::class.java)
 
-//        Log.d("MenuFragment", App.token_prefs.accessToken + "여기부터" + App.token_prefs.refreshToken)
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
-
-//        menuRepository = MenuRepository(menuService)
-//        menuViewModel =
-//            ViewModelProvider(
-//                this,
-//                MenuViewModelFactory(menuService, mealService)
-//            )[MenuViewModel::class.java]
 
         // ViewModel에서 데이터 가져오기
         calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
