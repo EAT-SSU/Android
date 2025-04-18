@@ -184,16 +184,16 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 //로그아웃
                 myPageViewModel.loginOut()
 
-//                lifecycleScope.launch {
-//                    myPageViewModel.uiState.collectLatest {
-//                        if (it.isLoginOuted) {
-//                            showToast(it.toastMessage)
-//                            startActivity<LoginActivity>()
-//                            finishAffinity()
-//                        }
-//
-//                    }
-//                }
+                lifecycleScope.launch {
+                    myPageViewModel.uiState.collectLatest {
+                        if (it.isLoginOuted) {
+                            showToast(it.toastMessage)
+                            startActivity<LoginActivity>()
+                            finishAffinity()
+                        }
+
+                    }
+                }
             }
             .setNegativeButton("취소") { _, _ ->
             }
