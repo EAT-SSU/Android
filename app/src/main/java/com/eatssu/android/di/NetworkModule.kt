@@ -29,7 +29,6 @@ import javax.inject.Singleton
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
 import com.eatssu.android.domain.usecase.auth.ShowToastSafely
-import javax.inject.Named
 import javax.inject.Qualifier
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
