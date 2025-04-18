@@ -29,6 +29,7 @@ import javax.inject.Singleton
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.ShowToastSafely
 import javax.inject.Named
+import javax.inject.Qualifier
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(
@@ -42,6 +43,16 @@ class NullOnEmptyConverterFactory : Converter.Factory() {
     }
 }
 
+/** retrofit, okhttpClient에 토큰이 필요하지 않음을 명시하기 위한 Qualifier */
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class NoToken
+
+/**
+ * NetworkModule : Retrofit과 OkHttpClient를 제공하는 모듈
+ * - OkHttpClient : API 요청 시 AccessToken을 헤더에 추가하는 인터셉터와 로깅 인터셉터를 사용
+ * - Retrofit : OkHttpClient를 사용하여 API 요청을 처리
+ * */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -72,7 +83,7 @@ object NetworkModule {
     // 토큰 없는 OkHttpClient (로그인/회원가입/토큰 재발급용)
     @Singleton
     @Provides
-    @Named("NoToken")
+    @NoToken
     fun provideNoAuthOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) {
@@ -96,8 +107,8 @@ object NetworkModule {
     // 토큰 없는 retrofit
     @Singleton
     @Provides
-    @Named("NoToken")
-    fun provideNoAuthRetrofit(@Named("NoToken") okHttpClient: OkHttpClient): Retrofit {
+    @NoToken
+    fun provideNoAuthRetrofit(@NoToken okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
@@ -112,7 +123,7 @@ object NetworkModule {
         setRefreshTokenUseCase: SetRefreshTokenUseCase,
         logoutUseCase: LogoutUseCase,
         showToastSafely: ShowToastSafely,
-        @Named("NoToken") noTokenRetrofit: Retrofit
+        @NoToken noTokenRetrofit: Retrofit
     ): TokenAuthenticator {
         return TokenAuthenticator(
             getRefreshTokenUseCase,
@@ -127,7 +138,7 @@ object NetworkModule {
     // provide service
     @Provides
     @Singleton
-    fun provideOauthService(@Named("NoToken") noTokenRetrofit: Retrofit): OauthService {
+    fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
         return noTokenRetrofit.create(OauthService::class.java)
     }
 
