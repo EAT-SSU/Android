@@ -10,9 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
@@ -21,7 +25,9 @@ import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
+import com.eatssu.android.presentation.login.LoginActivity
 import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.launch
 
 
 abstract class BaseActivity<B : ViewBinding>(
@@ -74,6 +80,31 @@ abstract class BaseActivity<B : ViewBinding>(
 //        }
 
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
+
+        collectTokenExpiredState()
+    }
+
+    private fun collectTokenExpiredState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                TokenExpiredNotifier.tokenExpired.collect { expired ->
+                    if (expired) {
+                        Toast.makeText(
+                            this@BaseActivity,
+                            "로그인 시간이 만료되어 다시 로그인해 주세요.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        TokenExpiredNotifier.resetTokenState()
+                        startActivity(
+                            Intent(this@BaseActivity, LoginActivity::class.java).apply {
+                                flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

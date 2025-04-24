@@ -4,6 +4,7 @@ import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.domain.usecase.auth.*
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.presentation.base.TokenViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -24,12 +25,11 @@ class TokenAuthenticator @Inject constructor(
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val reissueTokenUseCase: ReissueTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val showToastSafely: ShowToastSafely,
-    private val oauthService: OauthService
+    private val tokenViewModel: TokenViewModel
 ) : Authenticator {
 
     /**
-     * 401 Unauthorized 응답을 받았을 때 호출되는 메서드
+     * 401 Unauthorized 응답을h 받았을 때 호출되는 메서드
      * @param route : 요청한 경로
      * @param response : 응답 객체
      * @return : 새로운 요청 객체
@@ -58,8 +58,12 @@ class TokenAuthenticator @Inject constructor(
                 } else {
                     // 잘못된 토큰을 받은 경우
                     Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
-                    showToastSafely.showToast("토큰이 만료되어 로그아웃 됩니다.")
-                    logoutUseCase()
+                    logoutUseCase() // 로그아웃 처리
+                    tokenViewModel.notifyTokenExpired()
+                    // TODO : 로그아웃 처리 후 로그인 화면으로 이동 및 토스트
+                    // 시스템 오류로 다시 로그인해주세요.
+
+
                 }
 
                 Timber.d("TokenAuthenticator → 새 토큰 저장 및 기존 API 재요청")
@@ -71,8 +75,10 @@ class TokenAuthenticator @Inject constructor(
             } catch (e: Exception) {
                 // refreshToken이 만료된 경우
                 Timber.e(e, "토큰 재발급 중 예외 발생")
-                showToastSafely.showToast("토큰이 만료되어 로그아웃 됩니다.")
                 logoutUseCase()
+                tokenViewModel.notifyTokenExpired()
+                // TODO : 로그아웃 처리 후 로그인 화면으로 이동 및 토스트
+                // 로그인 시간이 만료되어 다시 로그인해 주세요.
 
                 null
             }
