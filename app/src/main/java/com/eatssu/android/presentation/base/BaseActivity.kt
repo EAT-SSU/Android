@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
@@ -47,6 +49,8 @@ abstract class BaseActivity<B : ViewBinding>(
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
     }
+
+    private val tokenViewModel: TokenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,14 +91,15 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun collectTokenExpiredState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                TokenExpiredNotifier.tokenExpired.collect { expired ->
-                    if (expired) {
+                tokenViewModel.tokenExpiredEvent.collect {
+                    if (it) {
+                        Log.d("BaseActivity", "Token expired event received")
                         Toast.makeText(
                             this@BaseActivity,
                             "로그인 시간이 만료되어 다시 로그인해 주세요.",
                             Toast.LENGTH_SHORT
                         ).show()
-                        TokenExpiredNotifier.resetTokenState()
+                        tokenViewModel.resetTokenExpired()
                         startActivity(
                             Intent(this@BaseActivity, LoginActivity::class.java).apply {
                                 flags =
