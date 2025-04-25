@@ -4,6 +4,7 @@ import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.domain.usecase.auth.*
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.presentation.base.TokenViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
@@ -59,8 +60,7 @@ class TokenAuthenticator @Inject constructor(
                     // 잘못된 토큰을 받은 경우
                     Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
                     logoutUseCase() // 로그아웃 처리
-                    tokenViewModel.notifyTokenExpired()
-                    // TODO : 로그아웃 처리 후 로그인 화면으로 이동 및 토스트
+                    TokenStateManager.setExpired()
                     // 시스템 오류로 다시 로그인해주세요.
 
 
@@ -76,9 +76,7 @@ class TokenAuthenticator @Inject constructor(
                 // refreshToken이 만료된 경우
                 Timber.e(e, "토큰 재발급 중 예외 발생")
                 logoutUseCase()
-                tokenViewModel.notifyTokenExpired()
-                // TODO : 로그아웃 처리 후 로그인 화면으로 이동 및 토스트
-                // 로그인 시간이 만료되어 다시 로그인해 주세요.
+                TokenStateManager.setExpired()
 
                 null
             }

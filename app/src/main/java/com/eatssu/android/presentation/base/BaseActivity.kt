@@ -18,7 +18,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
@@ -85,6 +84,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
 
+        // refreshtoken 관리
         collectTokenExpiredState()
     }
 
@@ -92,21 +92,20 @@ abstract class BaseActivity<B : ViewBinding>(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 tokenViewModel.tokenExpiredEvent.collect {
-                    if (it) {
-                        Log.d("BaseActivity", "Token expired event received")
-                        Toast.makeText(
-                            this@BaseActivity,
-                            "로그인 시간이 만료되어 다시 로그인해 주세요.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        tokenViewModel.resetTokenExpired()
-                        startActivity(
-                            Intent(this@BaseActivity, LoginActivity::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            }
-                        )
-                    }
+                    Log.d("BaseActivity", "Token expired event received")
+                    Toast.makeText(
+                        this@BaseActivity,
+                        "로그인 시간이 만료되어 다시 로그인해 주세요.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    // LoginActivity로 이동 후 현재 액티비티 스택 제거
+                    startActivity(
+                        Intent(this@BaseActivity, LoginActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                    )
+                    finishAffinity()
                 }
             }
         }
