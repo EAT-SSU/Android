@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.repository.PreferencesRepository
-import com.eatssu.android.presentation.base.TokenViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,11 +31,5 @@ object AppModule {
     @Singleton
     fun provideFirebaseRemoteConfigRepository(): FirebaseRemoteConfigRepository {
         return FirebaseRemoteConfigRepository()
-    }
-
-    @Provides
-    @Singleton
-    fun provideTokenViewModel(): TokenViewModel {
-        return TokenViewModel()
     }
 }

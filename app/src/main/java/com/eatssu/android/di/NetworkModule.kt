@@ -28,7 +28,6 @@ import java.lang.reflect.Type
 import javax.inject.Singleton
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
-import com.eatssu.android.presentation.base.TokenViewModel
 import javax.inject.Qualifier
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
@@ -123,7 +122,6 @@ object NetworkModule {
         setRefreshTokenUseCase: SetRefreshTokenUseCase,
         reissueTokenUseCase: ReissueTokenUseCase,
         logoutUseCase: LogoutUseCase,
-        tokenViewModel: TokenViewModel
     ): TokenAuthenticator {
         return TokenAuthenticator(
             getRefreshTokenUseCase,
@@ -131,7 +129,6 @@ object NetworkModule {
             setRefreshTokenUseCase,
             reissueTokenUseCase,
             logoutUseCase,
-            tokenViewModel
         )
     }
 

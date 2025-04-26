@@ -49,8 +49,6 @@ abstract class BaseActivity<B : ViewBinding>(
         NetworkConnection(this)
     }
 
-    private val tokenViewModel: TokenViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
@@ -85,30 +83,28 @@ abstract class BaseActivity<B : ViewBinding>(
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
 
         // refreshtoken 관리
-        collectTokenExpiredState()
+        observeTokenExpiration()
     }
 
-    private fun collectTokenExpiredState() {
+    private fun observeTokenExpiration() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                tokenViewModel.tokenExpiredEvent.collect {
-                    Log.d("BaseActivity", "Token expired event received")
-                    Toast.makeText(
-                        this@BaseActivity,
-                        "로그인 시간이 만료되어 다시 로그인해 주세요.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            TokenEventBus.tokenExpired.collect {
+                Toast.makeText(this@BaseActivity, "세션이 만료되었습니다. 다시 로그인 해주세요.", Toast.LENGTH_SHORT).show()
+                navigateToLogin()
+            }
 
-                    // LoginActivity로 이동 후 현재 액티비티 스택 제거
-                    startActivity(
-                        Intent(this@BaseActivity, LoginActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                    )
-                    finishAffinity()
-                }
+            TokenEventBus.tokenServerError.collect {
+                Toast.makeText(this@BaseActivity, "시스템 오류로 다시 로그인해주세요.", Toast.LENGTH_SHORT).show()
+                navigateToLogin()
             }
         }
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+        finishAffinity()
     }
 
     override fun onDestroy() {

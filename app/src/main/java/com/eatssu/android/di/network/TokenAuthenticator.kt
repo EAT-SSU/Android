@@ -3,9 +3,7 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.domain.usecase.auth.*
-import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.domain.model.TokenStateManager
-import com.eatssu.android.presentation.base.TokenViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -26,7 +24,6 @@ class TokenAuthenticator @Inject constructor(
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val reissueTokenUseCase: ReissueTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val tokenViewModel: TokenViewModel
 ) : Authenticator {
 
     /**
@@ -60,10 +57,7 @@ class TokenAuthenticator @Inject constructor(
                     // 잘못된 토큰을 받은 경우
                     Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
                     logoutUseCase() // 로그아웃 처리
-                    TokenStateManager.setExpired()
-                    // 시스템 오류로 다시 로그인해주세요.
-
-
+                    TokenStateManager.setTokenError()
                 }
 
                 Timber.d("TokenAuthenticator → 새 토큰 저장 및 기존 API 재요청")
@@ -74,9 +68,9 @@ class TokenAuthenticator @Inject constructor(
 
             } catch (e: Exception) {
                 // refreshToken이 만료된 경우
-                Timber.e(e, "토큰 재발급 중 예외 발생")
+                Timber.e(e, "refreshToken이 만료")
                 logoutUseCase()
-                TokenStateManager.setExpired()
+                TokenStateManager.setTokenExpired()
 
                 null
             }
