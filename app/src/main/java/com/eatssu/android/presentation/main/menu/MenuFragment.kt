@@ -48,7 +48,6 @@ class MenuFragment : Fragment() {
     private lateinit var mealService: MealService
 
     private lateinit var menuDate: String
-    private lateinit var cafeteriaLocation: String
 
     val foodCourtDataLoaded = MutableLiveData<Boolean>()
     val snackCornerDataLoaded = MutableLiveData<Boolean>()
@@ -58,11 +57,7 @@ class MenuFragment : Fragment() {
 
     private val totalMenuList = ArrayList<Section>()
 
-    private lateinit var restaurantType: Restaurant
-
     private val infoViewModel: InfoViewModel by activityViewModels()
-
-    private var isViewInitialized = false
 
     companion object {
         fun newInstance(time: Time): MenuFragment {
@@ -90,17 +85,12 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!isViewInitialized) {
-            observeViewModel()
-            collectUiState()
-            isViewInitialized = true
-        }
-        Log.d("Debug", "onViewCreated called")
+        observeViewModel()
+        collectUiState()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun observeViewModel() {
-        Log.d("Debug", "observeViewModel called")
 
         menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
         mealService = RetrofitImpl.retrofit.create(MealService::class.java)
@@ -124,10 +114,7 @@ class MenuFragment : Fragment() {
 
         // ViewModel에서 데이터 가져오기
         mainViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-            Log.d("Debug", "Data received: getData()")
-
             totalMenuList.clear()
-
             val parsedDate =
                 LocalDate.parse(dataReceived.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             menuDate = parsedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
@@ -137,7 +124,6 @@ class MenuFragment : Fragment() {
 
             val dayOfWeek = formattedDate.dayOfWeek
             Log.d("menudate", menuDate)
-            Log.d("Debug", menuDate)
 
             if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
                 // The date is not on a weekend

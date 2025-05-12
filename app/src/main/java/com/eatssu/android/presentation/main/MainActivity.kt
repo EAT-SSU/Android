@@ -48,14 +48,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
 
         setupNoToolbar()
-
-        checkAlarmPermission()
-
-        checkNicknameIsNull()
-        collectLogoutState()
-
         setNavigation()
 
+        checkAlarmPermission()
+        checkNicknameIsNull()
+
+        collectLogoutState()
     }
 
     private fun setNavigation() {
@@ -161,7 +159,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     // CollectState --
-
     private fun checkNicknameIsNull() {
         Timber.d("관찰 시작")
         mainViewModel.checkNameNull()
