@@ -144,43 +144,9 @@ class MenuViewModel @Inject constructor(
                 })
         }
     }
-
-//    fun findMenuItemByMealId(mealId: Long) {
-//        viewModelScope.launch {
-//            mealService.getMenuInfoByMealId(mealId)
-//                .enqueue(object : Callback<BaseResponse<MenuOfMealResponse>> {
-//                    override fun onResponse(
-//                        call: Call<BaseResponse<MenuOfMealResponse>>,
-//                        response: Response<BaseResponse<MenuOfMealResponse>>,
-//                    ) {
-//                        if (response.isSuccessful) {
-//                            val data = response.body()?.result
-//                            Log.d("post", "onResponse 성공" + response.body())
-//                            _uiState.update {
-//                                it.copy(
-//                                    menuOfMeal = response.body()?.result?.asMenuOfMeal()
-//                                )
-//                            }
-//                        } else {
-//                            Log.d("post", "onResponse 실패")
-//                        }
-//                    }
-//
-//                    override fun onFailure(
-//                        call: Call<BaseResponse<MenuOfMealResponse>>,
-//                        t: Throwable,
-//                    ) {
-//                        Log.d("post", "onFailure 에러: ${t.message}")
-//                    }
-//                })
-//        }
-//    }
 }
 
 data class MenuState(
-//    var toastMessage: String = "",
-//    var loading: Boolean = true,
-//    var error: Boolean = false,
     var haksikMeal: ArrayList<GetMealResponse>? = null,
     var dodamMeal: ArrayList<GetMealResponse>? = null,
     var dormitoryMeal: ArrayList<GetMealResponse>? = null,
