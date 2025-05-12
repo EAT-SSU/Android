@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.main.menu
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.BaseResponse
@@ -18,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,15 +70,15 @@ class MenuViewModel @Inject constructor(
                         call: Call<BaseResponse<ArrayList<GetMealResponse>>>,
                         response: Response<BaseResponse<ArrayList<GetMealResponse>>>,
                     ) {
-                        val data = response.body()?.result ?: arrayListOf()
+                        val restaurantMenuData = response.body()?.result ?: arrayListOf()
 
                         if (response.isSuccessful) {
                             Timber.tag("post").d("onResponse 성공" + response.body())
 
                             when (restaurantType) {
-                                Restaurant.HAKSIK -> _todayMealDataHaksik.value = data
-                                Restaurant.DODAM -> _todayMealDataDodam.value = data
-                                Restaurant.DORMITORY -> _todayMealDataDormitory.value = data
+                                Restaurant.HAKSIK -> _todayMealDataHaksik.value = restaurantMenuData
+                                Restaurant.DODAM -> _todayMealDataDodam.value = restaurantMenuData
+                                Restaurant.DORMITORY -> _todayMealDataDormitory.value = restaurantMenuData
                                 else -> Timber.tag("post").d("onResponse 실패. 잘못된 식당입니다.")
                             }
                             _uiState.value = UiState.Success(MenuState())
