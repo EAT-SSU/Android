@@ -36,9 +36,8 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val mainViewModel by activityViewModels<MainViewModel>()
+    private val infoViewModel: InfoViewModel by activityViewModels()
     private val menuViewModel by viewModels<MenuViewModel>()
-
-    private lateinit var menuDate: String
 
     val foodCourtDataLoaded = MutableLiveData<Boolean>()
     val snackCornerDataLoaded = MutableLiveData<Boolean>()
@@ -47,8 +46,6 @@ class MenuFragment : Fragment() {
     val dormitoryDataLoaded = MutableLiveData<Boolean>()
 
     private val totalMenuList = ArrayList<Section>()
-
-    private val infoViewModel: InfoViewModel by activityViewModels()
 
     companion object {
         fun newInstance(time: Time): MenuFragment {
@@ -89,7 +86,7 @@ class MenuFragment : Fragment() {
     fun observeViewModel() {
         mainViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
 
-            menuDate = dataReceived.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+            val menuDate = dataReceived.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
             val dayOfWeek = dataReceived.dayOfWeek
 
             if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
