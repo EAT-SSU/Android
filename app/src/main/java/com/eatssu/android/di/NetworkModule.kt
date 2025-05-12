@@ -4,6 +4,7 @@ package com.eatssu.android.di
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.data.service.MealService
+import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.OauthService
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.ReviewService
@@ -97,4 +98,9 @@ object NetworkModule {
         return retrofit.create(MealService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideMenuService(retrofit: Retrofit): MenuService {
+        return retrofit.create(MenuService::class.java)
+    }
 }

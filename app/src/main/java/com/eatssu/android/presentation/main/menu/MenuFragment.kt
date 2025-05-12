@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,7 @@ import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.info.InfoViewModel
 import com.eatssu.android.presentation.main.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.DayOfWeek
@@ -35,17 +37,13 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@AndroidEntryPoint
 class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
-    // private lateinit var calendarViewModel: CalendarViewModel
     private val mainViewModel by activityViewModels<MainViewModel>()
-
-    private lateinit var menuViewModel: MenuViewModel
-
-    private lateinit var menuService: MenuService
-    private lateinit var mealService: MealService
+    private val menuViewModel by viewModels<MenuViewModel>()
 
     private lateinit var menuDate: String
 
@@ -91,19 +89,8 @@ class MenuFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun observeViewModel() {
-
-        menuService = RetrofitImpl.retrofit.create(MenuService::class.java)
-        mealService = RetrofitImpl.retrofit.create(MealService::class.java)
-
         val calendardate = this.arguments?.getString("calendardata")
         Log.d("lunchdate", "$calendardate")
-
-//        menuRepository = MenuRepository(menuService)
-        menuViewModel =
-            ViewModelProvider(
-                this,
-                MenuViewModelFactory(menuService, mealService)
-            )[MenuViewModel::class.java]
 
         // ViewModel에서 데이터 가져오기
         // calendarViewModel = ViewModelProvider(requireActivity())[CalendarViewModel::class.java]
