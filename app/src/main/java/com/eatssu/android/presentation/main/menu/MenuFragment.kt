@@ -12,18 +12,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.data.RetrofitImpl
 import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
 import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
-import com.eatssu.android.data.service.MealService
-import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.UiState
@@ -31,10 +27,7 @@ import com.eatssu.android.presentation.info.InfoViewModel
 import com.eatssu.android.presentation.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
