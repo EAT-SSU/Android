@@ -68,10 +68,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     true
                 }
 
-                R.id.map_menu -> {
-                    navController.navigate(R.id.mapFragment)
-                    true
-                }
+//                R.id.map_menu -> {
+//                    navController.navigate(R.id.mapFragment)
+//                    true
+//                }
 
                 R.id.mypage_menu -> {
                     navController.navigate(R.id.myPageFragment)
