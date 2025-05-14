@@ -9,8 +9,6 @@ class LogoutUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     suspend operator fun invoke() {
-
         MySharedPreferences.clearUser(context)
-
     }
 }

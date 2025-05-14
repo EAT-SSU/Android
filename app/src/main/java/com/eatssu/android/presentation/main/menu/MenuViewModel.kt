@@ -13,6 +13,7 @@ import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.domain.model.MenuMini
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,14 +21,13 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-
-class MenuViewModel(
+@HiltViewModel
+class MenuViewModel @Inject constructor(
     private val menuService: MenuService,
     private val mealService: MealService,
-) :
-    ViewModel() {
-
+) :ViewModel() {
 
     private val _todayMealDataDodam = MutableLiveData<ArrayList<GetMealResponse>>()
     val todayMealDataDodam: LiveData<ArrayList<GetMealResponse>> = _todayMealDataDodam

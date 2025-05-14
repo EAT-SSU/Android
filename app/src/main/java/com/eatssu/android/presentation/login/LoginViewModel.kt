@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
+import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
@@ -57,6 +58,8 @@ class LoginViewModel @Inject constructor(
 
                         _uiState.value = UiState.Success(LoginState.LoginSuccess)
                         _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_done)))
+
+                        TokenStateManager.setTokenValid()
                     }
                 }
         }
