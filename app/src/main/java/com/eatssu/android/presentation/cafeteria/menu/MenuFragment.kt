@@ -36,7 +36,7 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val mainViewModel by activityViewModels<MainViewModel>()
-    private val infoViewModel: InfoViewModel by activityViewModels()
+    private val infoViewModel by activityViewModels<InfoViewModel>()
     private val menuViewModel by viewModels<MenuViewModel>()
 
     val foodCourtDataLoaded = MutableLiveData<Boolean>()
