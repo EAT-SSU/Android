@@ -84,7 +84,7 @@ class MainViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    toastMessage = "로그아웃 되었습니다.",
+                    toastMessage = context.getString(R.string.logout_description),
                     isLoggedOut = true
                 )
             }
