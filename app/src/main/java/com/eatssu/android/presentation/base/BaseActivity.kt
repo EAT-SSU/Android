@@ -10,9 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
@@ -21,7 +26,9 @@ import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
+import com.eatssu.android.presentation.login.LoginActivity
 import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.launch
 
 
 abstract class BaseActivity<B : ViewBinding>(
@@ -74,6 +81,30 @@ abstract class BaseActivity<B : ViewBinding>(
 //        }
 
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
+
+        // refreshtoken 관리
+        observeTokenExpiration()
+    }
+
+    private fun observeTokenExpiration() {
+        lifecycleScope.launch {
+            TokenEventBus.tokenExpired.collect {
+                Toast.makeText(this@BaseActivity, "세션이 만료되었습니다. 다시 로그인 해주세요.", Toast.LENGTH_SHORT).show()
+                navigateToLogin()
+            }
+
+            TokenEventBus.tokenServerError.collect {
+                Toast.makeText(this@BaseActivity, "시스템 오류로 다시 로그인해주세요.", Toast.LENGTH_SHORT).show()
+                navigateToLogin()
+            }
+        }
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+        finishAffinity()
     }
 
     override fun onDestroy() {
