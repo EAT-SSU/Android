@@ -73,14 +73,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.review.write.ReviewWriteRateActivity"
+            android:name=".presentation.cafeteria.review.write.ReviewWriteRateActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.review.write.menu.ReviewWriteMenuActivity"
+            android:name=".presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.login.LoginActivity"
@@ -133,7 +133,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.review.list.ReviewActivity"
+            android:name=".presentation.cafeteria.review.list.ReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -148,21 +148,21 @@
         </activity>
 
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.review.report.ReportActivity"
+            android:name=".presentation.cafeteria.review.report.ReportActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.review.modify.ModifyReviewActivity"
+            android:name=".presentation.cafeteria.review.modify.ModifyReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

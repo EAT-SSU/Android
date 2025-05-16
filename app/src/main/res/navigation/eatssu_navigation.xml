@@ -8,13 +8,13 @@
     <!-- 첫 번째 화면 (Cafeteria Menu) -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.eatssu.android.presentation.main.cafeteria.CafeteriaFragment"
+        android:name="com.eatssu.android.presentation.cafeteria.CafeteriaFragment"
         android:label="Cafeteria Menu"/>
 
     <!-- 두 번째 화면 (Map) -->
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.eatssu.android.presentation.main.map.MapFragment"
+        android:name="com.eatssu.android.presentation.map.MapFragment"
         android:label="Map"/>
 
     <!-- 세 번째 화면 (MyPage) -->

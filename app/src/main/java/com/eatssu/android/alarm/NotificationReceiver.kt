@@ -10,7 +10,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
-import com.eatssu.android.presentation.main.cafeteria.CafeteriaFragment
+import com.eatssu.android.presentation.cafeteria.CafeteriaFragment
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 

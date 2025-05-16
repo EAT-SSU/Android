@@ -21,7 +21,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
 import com.eatssu.android.presentation.base.BaseFragment
-import com.eatssu.android.presentation.main.MainViewModel
+import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity

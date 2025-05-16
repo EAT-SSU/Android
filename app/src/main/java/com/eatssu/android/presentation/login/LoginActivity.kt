@@ -11,7 +11,7 @@ import com.eatssu.android.databinding.ActivityLoginBinding
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.kakao.sdk.common.model.ClientError

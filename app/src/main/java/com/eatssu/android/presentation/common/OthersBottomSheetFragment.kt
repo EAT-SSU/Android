@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.eatssu.android.databinding.FragmentBottomsheetOthersBinding
-import com.eatssu.android.presentation.review.report.ReportActivity
+import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
