@@ -88,23 +88,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_main, menu)
-//        return true
-//    }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.action_setting -> {
-//                val intent = Intent(this, MyPageActivity::class.java)  // 인텐트를 생성해줌,
-//                startActivity(intent)  // 화면 전환을 시켜줌
-//                true
-//            }
-//
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
-
     // Permission --
     // 권한 요청 결과 처리
     override fun onRequestPermissionsResult(
