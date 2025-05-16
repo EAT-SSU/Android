@@ -22,6 +22,7 @@ import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
 import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
@@ -163,6 +164,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
             .setMessage("로그아웃 하시겠습니까?")
             .setPositiveButton("로그아웃") { _, _ ->
                 mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
             }
             .setNegativeButton("취소", null)
             .show()

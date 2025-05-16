@@ -96,7 +96,7 @@ class MainViewModel @Inject constructor(
     fun setData(dataToSend: LocalDate) {
         data.value = dataToSend
 
-        Log.d("setdata", dataToSend.toString())
+        Timber.d("setdata", dataToSend.toString())
     }
 
     fun getData(): LiveData<LocalDate> {

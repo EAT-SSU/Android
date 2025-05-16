@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.mypage
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,10 +40,9 @@ class SignOutViewModel @Inject constructor(
                 _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Log.d(TAG, e.toString())
-
+                Timber.d(TAG, e.toString())
             }.collectLatest { result ->
-                Log.d(TAG, result.toString())
+                Timber.d(TAG, result.toString())
                 if (result.result == true) {
                     logoutUseCase()
                     _uiState.update {
@@ -62,16 +61,12 @@ class SignOutViewModel @Inject constructor(
     }
 }
 
-
 data class SignOutState(
     var loading: Boolean = true,
     var error: Boolean = false,
-
     var toastMessage: String = "",
-
     var nickname: String = "",
     var platform: String = "",
-
     var isNicknameNull: Boolean = false,
     var isLoginOuted: Boolean = false,
     var isSignOuted: Boolean = false,

@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.cafeteria.menu
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.BaseResponse
@@ -61,7 +60,7 @@ class MenuViewModel @Inject constructor(
         time: Time,
     ) {
         _uiState.value = UiState.Loading
-        Log.d("Debug", "loadTodayMeal called with type: $restaurantType")
+        Timber.d("Debug", "loadTodayMeal called with type: $restaurantType")
 
         viewModelScope.launch {
             mealService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())
@@ -73,19 +72,18 @@ class MenuViewModel @Inject constructor(
                         val restaurantMenuData = response.body()?.result ?: arrayListOf()
 
                         if (response.isSuccessful) {
-                            Timber.tag("post").d("onResponse 성공" + response.body())
+                            Timber.d("onResponse 성공" + response.body())
 
                             when (restaurantType) {
                                 Restaurant.HAKSIK -> _todayMealDataHaksik.value = restaurantMenuData
                                 Restaurant.DODAM -> _todayMealDataDodam.value = restaurantMenuData
                                 Restaurant.DORMITORY -> _todayMealDataDormitory.value = restaurantMenuData
-                                else -> Timber.tag("post").d("onResponse 실패. 잘못된 식당입니다.")
+                                else -> Timber.d("onResponse 실패. 잘못된 식당입니다.")
                             }
                             _uiState.value = UiState.Success(MenuState())
 
                         } else {
-                            Timber.tag("post")
-                                .d("onResponse 실패 투데이밀" + response.code() + response.message())
+                            Timber.d("onResponse 실패 투데이밀" + response.code() + response.message())
                             _uiState.value = UiState.Error
                         }
                     }
@@ -94,7 +92,7 @@ class MenuViewModel @Inject constructor(
                         call: Call<BaseResponse<ArrayList<GetMealResponse>>>,
                         t: Throwable,
                     ) {
-                        Timber.tag("post").d("onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
+                        Timber.d("onFailure 에러: 나다${t.message}+ ${call}" + "ddd")
                         _uiState.value = UiState.Error
                     }
                 })
@@ -103,7 +101,7 @@ class MenuViewModel @Inject constructor(
 
     // Fixed Menu 데이터 로드도 유사한 방식으로 구현
     fun loadFixedMenu(restaurantType: Restaurant) {
-        Log.d("Debug", "loadFixedMenu called with type: $restaurantType")
+        Timber.d("Debug", "loadFixedMenu called with type: $restaurantType")
 
         _uiState.value = UiState.Loading
 
@@ -115,7 +113,7 @@ class MenuViewModel @Inject constructor(
                         response: Response<BaseResponse<GetFixedMenuResponse>>,
                     ) {
                         if (response.isSuccessful) {
-                            Timber.tag("post").d("onResponse 성공" + response.body())
+                            Timber.d("onResponse 성공" + response.body())
                             val data =
                                 response.body()?.result ?: GetFixedMenuResponse(arrayListOf())
                             when (restaurantType) {
@@ -124,12 +122,12 @@ class MenuViewModel @Inject constructor(
                                 Restaurant.SNACK_CORNER -> _fixedMenuDataSnack.value = data
 
                                 else -> {
-                                    Timber.tag("post").d("onResponse 실패. 잘못된 식당 입니다.")
+                                    Timber.d("onResponse 실패. 잘못된 식당 입니다.")
                                 }
                             }
                             _uiState.value = UiState.Success(MenuState())
                         } else {
-                            Timber.tag("post").d("onResponse 실패")
+                            Timber.d("onResponse 실패")
                             _uiState.value = UiState.Error
                         }
                     }
@@ -138,7 +136,7 @@ class MenuViewModel @Inject constructor(
                         call: Call<BaseResponse<GetFixedMenuResponse>>,
                         t: Throwable,
                     ) {
-                        Timber.tag("post").d("onFailure 에러: ${t.message}")
+                        Timber.d("onFailure 에러: ${t.message}")
                         _uiState.value = UiState.Error
                     }
                 })

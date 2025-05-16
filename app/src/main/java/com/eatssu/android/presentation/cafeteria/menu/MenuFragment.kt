@@ -2,7 +2,6 @@ package com.eatssu.android.presentation.cafeteria.menu
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -230,19 +229,15 @@ class MenuFragment : Fragment() {
                 menuViewModel.uiState.collect { state ->
                     when (state) {
                         is UiState.Init -> {
-                            Log.d("Debug", "UI State: Init")
                             // init
                         }
                         is UiState.Loading -> {
-                            Log.d("Debug", "UI State: Loading")
                             // Loading
                         }
                         is UiState.Success -> {
-                            Log.d("Debug", "UI State: Success")
                             // Success
                         }
                         is UiState.Error -> {
-                            Log.d("Debug", "UI State: Error")
                             // Error
                         }
                     }
