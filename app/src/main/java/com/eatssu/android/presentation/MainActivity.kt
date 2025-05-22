@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -20,6 +22,7 @@ import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,7 +55,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        binding.bottomNaviBar.setOnItemSelectedListener { item ->
+        binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.cafeteria_menu -> {
                     navController.navigate(R.id.homeFragment)
@@ -163,4 +166,23 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         }
     }
+
+    // 아래 함수를 View 에서는 사용이 어려워 util 로 빼지 않음
+    private fun BottomNavigationView.setOnSingleItemSelectedListener(
+        minInterval: Long = 2000L,
+        onSingleItemSelected: (item: MenuItem) -> Boolean
+    ) {
+        var lastClickTime = 0L
+
+        setOnItemSelectedListener { item ->
+            val currentClickTime = SystemClock.uptimeMillis()
+            if (currentClickTime - lastClickTime > minInterval) {
+                lastClickTime = currentClickTime
+                onSingleItemSelected(item)
+            } else {
+                false // 너무 빠른 클릭 무시
+            }
+        }
+    }
+
 }
