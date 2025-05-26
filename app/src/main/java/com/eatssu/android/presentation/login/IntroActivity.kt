@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.main.MainActivity
+import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/cafeteria_menu"
+        android:enabled="true"
+        android:icon="@drawable/ic_cafeteria_menu"
+        android:title="@string/cafeteria_menu"/>
+
+<!--    <item-->
+<!--        android:id="@+id/map_menu"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/ic_map"-->
+<!--        android:title="@string/map"/>-->
+
+    <item
+        android:id="@+id/mypage_menu"
+        android:enabled="true"
+        android:icon="@drawable/ic_mypage"
+        android:title="@string/mypage"/>
+
+</menu>

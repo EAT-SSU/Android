@@ -138,34 +138,4 @@ object NetworkModule {
     fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
         return noTokenRetrofit.create(OauthService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideUserService(retrofit: Retrofit): UserService {
-        return retrofit.create(UserService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideReportService(retrofit: Retrofit): ReportService {
-        return retrofit.create(ReportService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideReviewService(retrofit: Retrofit): ReviewService {
-        return retrofit.create(ReviewService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideMealService(retrofit: Retrofit): MealService {
-        return retrofit.create(MealService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideMenuService(retrofit: Retrofit): MenuService {
-        return retrofit.create(MenuService::class.java)
-    }
 }

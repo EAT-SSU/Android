@@ -46,6 +46,7 @@ ossLicensesPlugin = "0.10.4"
 uiTestJunit4 = "1.7.8"
 uiTooling = "1.7.8"
 compose-material3 = "1.3.1"
+activityVersion = "1.9.3"
 
 [libraries]
 accompanist-appcompat-theme = { module = "com.google.accompanist:accompanist-appcompat-theme", version.ref = "accompanistAppcompatTheme" }
@@ -110,6 +111,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activityVersion" }
 
 
 

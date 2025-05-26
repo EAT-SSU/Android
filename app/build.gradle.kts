@@ -107,6 +107,7 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
+    implementation(libs.androidx.activity)
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -178,6 +179,9 @@ dependencies {
     androidTestImplementation(libs.compose.bom)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // navigation
+    implementation ("androidx.navigation:navigation-fragment:2.8.9")
+    implementation ("androidx.navigation:navigation-ui:2.8.9")
 }
 
 kapt {
