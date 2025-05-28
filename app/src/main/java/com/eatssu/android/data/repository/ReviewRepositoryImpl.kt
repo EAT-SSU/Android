@@ -11,7 +11,10 @@ import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.domain.repository.ReviewRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import javax.inject.Inject
 
 class ReviewRepositoryImpl @Inject constructor(private val reviewService: ReviewService) :
@@ -55,12 +58,11 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
         flow {
             emit(reviewService.getMealReviewInfo(mealId))
         }
-
-    override suspend fun getImageString(
-        image: MultipartBody.Part,
-    ): Flow<BaseResponse<ImageResponse>> =
-        flow {
-            emit(reviewService.uploadImage(image))
-        }
+    override suspend fun getImageString(file: File): Flow<BaseResponse<ImageResponse>> = flow {
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+        val multipart = MultipartBody.Part.createFormData("image", file.name, requestFile)
+        val response = reviewService.uploadImage(multipart)
+        emit(response)
+    }
 
 }
