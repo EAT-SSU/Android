@@ -84,18 +84,16 @@ class ReviewWriteRateActivity :
                 lifecycleScope.launch {
                     val compressed = compressImage()
                     if (compressed != null) {
-                        // 압축 성공 -> ViewModel로 전달하거나 업로드
                         val imageUrl = viewModel.saveS3(compressed)
-                        Timber.d("s3 시작")
-
-                        postPhotoReview(imageUrl)
-
+                        if (imageUrl != null) {
+                            postPhotoReview(imageUrl)
+                        } else {
+                            showToast("이미지 업로드에 실패했습니다.")
+                        }
                     } else {
                         showToast("이미지 압축에 실패했습니다.")
-                        return@launch
                     }
                 }
-
             } else {
                 postReview()
             }
@@ -346,7 +344,7 @@ class ReviewWriteRateActivity :
             Toast.makeText(this, "리뷰 작성을 중지합니다.", Toast.LENGTH_SHORT).show()
             binding.ivImage.setImageDrawable(null)
             imageFile!!.delete() //file을 날린다.
-//            compressedImage?.delete() //file을 날린다.
+            viewModel.uiState.value.imageUrl = "" //file을 날린다.
 
         }
     }
@@ -358,12 +356,10 @@ class ReviewWriteRateActivity :
             showToast("이미지가 삭제되었습니다.")
             binding.ivImage.setImageDrawable(null)
             imageFile!!.delete() //file을 날린다.
-//            compressedImage?.delete() //file을 날린다.
+            viewModel.uiState.value.imageUrl = "" //file을 날린다.
 
             binding.ivImage.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
-
-//            viewModel.deleteFile()
 
         } else {
             showToast("이미지를 삭제할 수 없습니다.")
