@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.eatssu.android.presentation.cafeteria.review.list.ReviewViewModel" />
+            type="com.eatssu.android.presentation.cafeteria.review.list.ReviewListActivity" />
     </data>
 
     <LinearLayout
@@ -49,7 +49,7 @@
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:lineSpacingExtra="-4dp"
-                        android:text="@{viewModel.uiState.reviewInfo.name}"
+                        android:text="메뉴명"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +102,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:includeFontPadding="false"
-                                    android:text="@{String.valueOf(viewModel.uiState.reviewInfo.mainRating)}"
+                                    android:text="4.5"
                                     android:textAlignment="center"
                                     android:textColor="@color/black" />
                             </LinearLayout>
@@ -180,7 +180,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="10dp"
-                                    android:text="@{String.valueOf(viewModel.uiState.reviewInfo.reviewCnt)}"
+                                    android:text="3.5"
                                     android:gravity="center"
                                     android:textColor="@color/primary"
                                     app:layout_constraintBottom_toBottomOf="@id/tv_review_num"
