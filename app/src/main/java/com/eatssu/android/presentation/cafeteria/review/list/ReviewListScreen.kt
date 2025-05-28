@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.cafeteria.review.list.component.EatssuButton
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.Tag
@@ -58,97 +60,106 @@ internal fun InternalReviewListScreen(
         modifier = modifier.fillMaxSize(),
 //        color = EatssuTheme.colors.background
     ) {
-        Column(
-            modifier = Modifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 72.dp), // 버튼 영역만큼 아래 패딩,
+                horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Center,
-        ) {
-            Text("리뷰")
+            ) {
+                Text("리뷰")
 
-            when (uiState) {
-                is UiState.Success -> {
-                    val info = uiState.data?.reviewInfo
-                    val reviewList = uiState.data?.reviewList ?: emptyList()
+                when (uiState) {
+                    is UiState.Success -> {
+                        val info = uiState.data?.reviewInfo
+                        val reviewList = uiState.data?.reviewList ?: emptyList()
 
-                    Column {
-                        Text(info?.name.toString())
+                        Column {
+                            Text(info?.name.toString())
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    RatingBar(rating = 1, onRatingChanged = {}, maxRating = 1)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(info?.mainRating.toString())
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RatingBar(rating = 1, onRatingChanged = {}, maxRating = 1)
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(info?.mainRating.toString())
+                                    }
+
+                                    Spacer(modifier = Modifier.height(4.dp))
+
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.ic_thumb_up),
+                                            contentDescription = "thumb up icon",
+                                            modifier = Modifier.size(28.dp),
+                                            tint = Color.Unspecified
+                                        )
+                                        Text(info?.reviewCnt.toString()) // TODO 좋아요
+
+                                        Spacer(modifier = Modifier.width(12.dp))
+
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.ic_thumb_down),
+                                            contentDescription = "thumb down icon",
+                                            modifier = Modifier.size(28.dp),
+                                            tint = Color.Unspecified
+                                        )
+                                        Text(info?.reviewCnt.toString()) // TODO 싫어요
+                                    }
                                 }
 
-                                Spacer(modifier = Modifier.height(4.dp))
-
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_thumb_up),
-                                        contentDescription = "thumb up icon",
-                                        modifier = Modifier.size(28.dp),
-                                        tint = Color.Unspecified
-                                    )
-                                    Text(info?.reviewCnt.toString()) // TODO 좋아요
-
-                                    Spacer(modifier = Modifier.width(12.dp))
-
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_thumb_down),
-                                        contentDescription = "thumb down icon",
-                                        modifier = Modifier.size(28.dp),
-                                        tint = Color.Unspecified
-                                    )
-                                    Text(info?.reviewCnt.toString()) // TODO 싫어요
-                                }
+                                ReviewProgressBar(
+                                    reviewCount = info?.reviewCnt ?: 0,
+                                    fiveRatingCount = info?.five ?: 0,
+                                    fourRatingCount = info?.four ?: 0,
+                                    threeRatingCount = info?.three ?: 0,
+                                    twoRatingCount = info?.two ?: 0,
+                                    oneRatingCount = info?.one ?: 0
+                                )
                             }
 
-                            ReviewProgressBar(
-                                reviewCount = info?.reviewCnt ?: 0,
-                                fiveRatingCount = info?.five ?: 0,
-                                fourRatingCount = info?.four ?: 0,
-                                threeRatingCount = info?.three ?: 0,
-                                twoRatingCount = info?.two ?: 0,
-                                oneRatingCount = info?.one ?: 0
-                            )
-                        }
+                            Spacer(modifier = Modifier.height(12.dp))
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                            Text("리뷰")
 
-                        Text("리뷰")
-
-                        LazyColumn {
-                            items(reviewList) { item ->
-                                ReviewItem(
-                                    modifier = Modifier,
-                                    writeName = item.writerNickname,
-                                    writeDate = item.writeDate,
-                                    content = item.content
-                                )
+                            LazyColumn {
+                                items(reviewList) { item ->
+                                    ReviewItem(
+                                        modifier = Modifier,
+                                        writeName = item.writerNickname,
+                                        writeDate = item.writeDate,
+                                        content = item.content
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                UiState.Loading -> {
-                    // TODO: 로딩 UI
-                }
+                    UiState.Loading -> {
+                        // TODO: 로딩 UI
+                    }
 
-                UiState.Error -> {
-                    // TODO: 에러 UI
-                }
+                    UiState.Error -> {
+                        // TODO: 에러 UI
+                    }
 
-                UiState.Init -> {
-                    // TODO: 초기 상태 UI
+                    UiState.Init -> {
+                        // TODO: 초기 상태 UI
+                    }
                 }
             }
 
 
-
+            // 하단 고정 버튼
+            EatssuButton(
+                "리뷰 작성하기",
+                {},
+                modifier.align(Alignment.BottomCenter),
+            )
         }
     }
 }
