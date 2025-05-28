@@ -68,12 +68,4 @@ class UploadReviewViewModel @Inject constructor(
     }
 }
 
-data class UploadReviewState(
-    var toastMessage: String = "",
-    var loading: Boolean = true,
-    var error: Boolean = false,
-    var imageUrl: String = "",
-    var isUpload: Boolean = false,
-    var isImageExist: Boolean = false,
-    var isImageUploadDone: Boolean = false,
-)
+sealed class UploadReviewState
