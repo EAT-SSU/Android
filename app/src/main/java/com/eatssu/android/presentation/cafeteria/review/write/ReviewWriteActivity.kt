@@ -27,10 +27,10 @@ import timber.log.Timber
 import java.io.File
 
 @AndroidEntryPoint
-class ReviewWriteRateActivity :
+class ReviewWriteActivity :
     BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
-    private val viewModel: UploadReviewViewModel by viewModels()
+    private val viewModel: ReviewWriteViewModel by viewModels()
 
     private var itemId: Long = 0
     private lateinit var itemName: String
@@ -150,7 +150,7 @@ class ReviewWriteRateActivity :
 
     private suspend fun compressImage(): File? {
         return imageFile?.let { originalFile ->
-            Compressor.compress(this@ReviewWriteRateActivity, originalFile)
+            Compressor.compress(this@ReviewWriteActivity, originalFile)
         }
     }
 

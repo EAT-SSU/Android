@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
+import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -76,7 +76,7 @@ class ReviewWriteMenuActivity :
             val currentItem = items[i]
 
             // 다음 아이템을 전달하기 위해 Intent 생성
-            val intent = Intent(this, ReviewWriteRateActivity::class.java)
+            val intent = Intent(this, ReviewWriteActivity::class.java)
             intent.putExtra("itemName", currentItem.first)
             intent.putExtra("itemId", currentItem.second)
 

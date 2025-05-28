@@ -12,10 +12,10 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteActivity
+import com.eatssu.android.presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity
 import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
 import com.eatssu.android.presentation.common.OthersBottomSheetFragment
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
-import com.eatssu.android.presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -148,7 +148,7 @@ class ReviewActivity :
         when (menuType) {
             MenuType.FIXED.name -> {
                 binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteRateActivity::class.java)
+                    val intent = Intent(this, ReviewWriteActivity::class.java)
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("menuType", menuType)
