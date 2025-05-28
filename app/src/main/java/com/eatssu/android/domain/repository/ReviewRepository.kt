@@ -8,7 +8,7 @@ import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
 import kotlinx.coroutines.flow.Flow
-import okhttp3.MultipartBody
+import java.io.File
 
 interface ReviewRepository {
 
@@ -42,6 +42,6 @@ interface ReviewRepository {
     ): Flow<BaseResponse<GetMealReviewInfoResponse>>
 
     suspend fun getImageString(
-        image: MultipartBody.Part,
+        file: File
     ): Flow<BaseResponse<ImageResponse>>
 }
