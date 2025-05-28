@@ -31,7 +31,6 @@ class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :
     fun getDefaultFragmentPosition(context: Context): Int {
         val savedPosition = MySharedPreferences.getPreTimePosition(context)
         return if (savedPosition in 0..2) savedPosition else {
-            // fallback: 시간 기준
             val time = LocalTime.now()
             when (time.hour) {
                 in 0..9 -> 0
