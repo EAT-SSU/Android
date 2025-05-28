@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,8 +33,6 @@ import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.Tag
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteViewModel
-import com.eatssu.android.presentation.cafeteria.review.write.WriteReviewState
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 
 @Composable
@@ -54,7 +54,6 @@ internal fun InternalReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
 ) {
-    uiState
     Surface(
         modifier = modifier.fillMaxSize(),
 //        color = EatssuTheme.colors.background
@@ -66,82 +65,88 @@ internal fun InternalReviewListScreen(
         ) {
             Text("리뷰")
 
-
-
-
             when (uiState) {
                 is UiState.Success -> {
-                    Text(uiState.data?.reviewInfo!!.name)
-                    Row {
-                        Column {
-                            Row {
-                                RatingBar(rating = 1, onRatingChanged = {}, maxRating = 1)
-                                Text(uiState.data?.reviewInfo?.mainRating.toString())
+                    val info = uiState.data?.reviewInfo
+                    val reviewList = uiState.data?.reviewList ?: emptyList()
+
+                    Column {
+                        Text(info?.name.toString())
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    RatingBar(rating = 1, onRatingChanged = {}, maxRating = 1)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(info?.mainRating.toString())
+                                }
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_thumb_up),
+                                        contentDescription = "thumb up icon",
+                                        modifier = Modifier.size(28.dp),
+                                        tint = Color.Unspecified
+                                    )
+                                    Text(info?.reviewCnt.toString()) // TODO 좋아요
+
+                                    Spacer(modifier = Modifier.width(12.dp))
+
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_thumb_down),
+                                        contentDescription = "thumb down icon",
+                                        modifier = Modifier.size(28.dp),
+                                        tint = Color.Unspecified
+                                    )
+                                    Text(info?.reviewCnt.toString()) // TODO 싫어요
+                                }
                             }
-                            Row {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_thumb_up),
-                                    contentDescription = "thumb up icon",
-                                    modifier = Modifier.size(28.dp),
-                                    tint = Color.Unspecified,
-                                )
-                                Text(uiState.data?.reviewInfo?.reviewCnt.toString()) // todo 좋아요
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_thumb_down),
-                                    contentDescription = "thumb down icon",
-                                    modifier = Modifier.size(28.dp),
-                                    tint = Color.Unspecified,
-                                )
-                                Text(uiState.data?.reviewInfo?.reviewCnt.toString()) // todo 싫어요
-                            }
+
+                            ReviewProgressBar(
+                                reviewCount = info?.reviewCnt ?: 0,
+                                fiveRatingCount = info?.five ?: 0,
+                                fourRatingCount = info?.four ?: 0,
+                                threeRatingCount = info?.three ?: 0,
+                                twoRatingCount = info?.two ?: 0,
+                                oneRatingCount = info?.one ?: 0
+                            )
                         }
 
-                        Row {
-                            val info = uiState.data?.reviewInfo
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                            if (info != null) {
-                                ReviewProgressBar(
-                                    reviewCount = info.reviewCnt,
-                                    fiveRatingCount = info.five,
-                                    fourRatingCount = info.four,
-                                    threeRatingCount = info.three,
-                                    twoRatingCount = info.two,
-                                    oneRatingCount = info.one
+                        Text("리뷰")
+
+                        LazyColumn {
+                            items(reviewList) { item ->
+                                ReviewItem(
+                                    modifier = Modifier,
+                                    writeName = item.writerNickname,
+                                    writeDate = item.writeDate,
+                                    content = item.content
                                 )
                             }
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        "리뷰",
-//                textAlign = TextAlign.Start
-                    )
-
-                    //todo 리뷰 없을 때 처리
-
-                    val list = uiState?.data?.reviewList ?: emptyList()
-
-                    LazyColumn {
-                        items(count = list.size) { index ->
-                            val item = list[index]
-                            ReviewItem(
-                                modifier = Modifier,
-                                writeName = item.writerNickname,
-                                writeDate = item.writeDate,
-                                content = item.content,
-
-                                )
-                        }
-                    }
-
                 }
 
-                UiState.Error -> TODO()
-                UiState.Init -> TODO()
-                UiState.Loading -> TODO()
+                UiState.Loading -> {
+                    // TODO: 로딩 UI
+                }
+
+                UiState.Error -> {
+                    // TODO: 에러 UI
+                }
+
+                UiState.Init -> {
+                    // TODO: 초기 상태 UI
+                }
             }
+
 
 
         }
