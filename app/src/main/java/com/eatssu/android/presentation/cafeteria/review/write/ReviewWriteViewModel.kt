@@ -29,7 +29,7 @@ class ReviewWriteViewModel @Inject constructor(
     private val getImageUrlUseCase: GetImageUrlUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<UploadReviewState>>(UiState.Init)
+    private val _uiState = MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -68,4 +68,4 @@ class ReviewWriteViewModel @Inject constructor(
     }
 }
 
-sealed class UploadReviewState
+sealed class WriteReviewState
