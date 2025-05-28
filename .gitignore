@@ -19,7 +19,10 @@ out/
 
 # Gradle files
 .gradle/
-build/
+build
+
+# release
+/app/release/
 
 # Local configuration file (sdk path, etc)  -> APP_KEY 포함
 /build
