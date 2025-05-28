@@ -15,18 +15,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
+import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 
 @Composable
 fun ReviewProgressBar(
-    reviewCount: Int,
-    fiveRatingCount: Int,
-    fourRatingCount: Int,
-    threeRatingCount: Int,
-    twoRatingCount: Int,
-    oneRatingCount: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    reviewCount: Int = 0,
+    fiveRatingCount: Int = 0,
+    fourRatingCount: Int = 0,
+    threeRatingCount: Int = 0,
+    twoRatingCount: Int = 0,
+    oneRatingCount: Int = 0,
 ) {
     val ratingList = listOf(
         5 to fiveRatingCount,
@@ -86,5 +88,20 @@ fun ReviewProgressBar(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ReviewProgressBarPreview() {
+    EatssuTheme {
+        ReviewProgressBar(
+            reviewCount = 100,
+            fiveRatingCount = 60,
+            fourRatingCount = 20,
+            threeRatingCount = 10,
+            twoRatingCount = 7,
+            oneRatingCount = 3
+        )
     }
 }

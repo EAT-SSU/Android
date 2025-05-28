@@ -1,24 +1,14 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.R
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteActivity
-import com.eatssu.android.presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity
 import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
-import com.eatssu.android.presentation.common.OthersBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.properties.Delegates
 
@@ -27,7 +17,7 @@ class ReviewActivity :
     BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate),
     MyReviewBottomSheetFragment.OnReviewDeletedListener {
 
-    private val reviewViewModel: ReviewViewModel by viewModels()
+    private val reviewViewModel: ReviewListViewModel by viewModels()
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
@@ -71,51 +61,51 @@ class ReviewActivity :
 
 
     private fun bindData() {
-        lifecycleScope.launch {
-            reviewViewModel.uiState.collectLatest {
-                if (!it.error && !it.loading) {
-                    if (it.isEmpty) {
-                        //리뷰 없어도 메뉴명은 있음
-                        Timber.d("리뷰가 없음")
-                        binding.llNonReview.visibility = View.VISIBLE
-                        binding.rvReview.visibility = View.INVISIBLE
-
-                        it.reviewInfo?.apply {
-                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
-                        }
-
-                    } else { //리뷰 있다.
-                        Timber.d("리뷰가 있음")
-                        binding.llNonReview.visibility = View.INVISIBLE
-                        binding.rvReview.visibility = View.VISIBLE
-
-                        it.reviewList?.let { reviewList -> setAdapter(reviewList = reviewList) }
-
-                        it.reviewInfo?.apply {
-
-                            Timber.d(it.reviewInfo.toString())
-
-                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
-                            binding.tvReviewNumCount.text = reviewCnt.toString()
-                            binding.tvRate.text = String.format("%.1f", mainRating)
-
-                            val totalReviewCount = reviewCnt
-                            binding.progressBar1.max = totalReviewCount
-                            binding.progressBar2.max = totalReviewCount
-                            binding.progressBar3.max = totalReviewCount
-                            binding.progressBar4.max = totalReviewCount
-                            binding.progressBar5.max = totalReviewCount
-
-                            binding.progressBar1.progress = one
-                            binding.progressBar2.progress = two
-                            binding.progressBar3.progress = three
-                            binding.progressBar4.progress = four
-                            binding.progressBar5.progress = five
-                        }
-                    }
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            reviewViewModel.uiState.collectLatest {
+//                if (!it.error && !it.loading) {
+//                    if (it.isEmpty) {
+//                        //리뷰 없어도 메뉴명은 있음
+//                        Timber.d("리뷰가 없음")
+//                        binding.llNonReview.visibility = View.VISIBLE
+//                        binding.rvReview.visibility = View.INVISIBLE
+//
+//                        it.reviewInfo?.apply {
+//                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+//                        }
+//
+//                    } else { //리뷰 있다.
+//                        Timber.d("리뷰가 있음")
+//                        binding.llNonReview.visibility = View.INVISIBLE
+//                        binding.rvReview.visibility = View.VISIBLE
+//
+//                        it.reviewList?.let { reviewList -> setAdapter(reviewList = reviewList) }
+//
+//                        it.reviewInfo?.apply {
+//
+//                            Timber.d(it.reviewInfo.toString())
+//
+//                            binding.tvMenu.text = name.replace(Regex("[\\[\\]]"), "")
+//                            binding.tvReviewNumCount.text = reviewCnt.toString()
+//                            binding.tvRate.text = String.format("%.1f", mainRating)
+//
+//                            val totalReviewCount = reviewCnt
+//                            binding.progressBar1.max = totalReviewCount
+//                            binding.progressBar2.max = totalReviewCount
+//                            binding.progressBar3.max = totalReviewCount
+//                            binding.progressBar4.max = totalReviewCount
+//                            binding.progressBar5.max = totalReviewCount
+//
+//                            binding.progressBar1.progress = one
+//                            binding.progressBar2.progress = two
+//                            binding.progressBar3.progress = three
+//                            binding.progressBar4.progress = four
+//                            binding.progressBar5.progress = five
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
 
@@ -138,77 +128,81 @@ class ReviewActivity :
             }
         })
 
-        binding.rvReview.adapter = adapter
-        binding.rvReview.layoutManager = linearLayoutManager
-        binding.rvReview.setHasFixedSize(true)
+//        binding.rvReview.adapter = adapter
+//        binding.rvReview.layoutManager = linearLayoutManager
+//        binding.rvReview.setHasFixedSize(true)
     }
 
 
     private fun setClickListener() {
-        when (menuType) {
-            MenuType.FIXED.name -> {
-                binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteActivity::class.java)
-                    intent.putExtra("itemId", itemId)
-                    intent.putExtra("itemName", itemName)
-                    intent.putExtra("menuType", menuType)
-                    startActivity(intent)
-                }
-            }
-
-            MenuType.VARIABLE.name -> {
-                binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)
-                    intent.putExtra("itemId", itemId)
-                    intent.putExtra("menuType", menuType)
-                    startActivity(intent)
-                }
-            }
-
-            else -> {
-                Timber.d("잘못된 식당 정보입니다.")
-            }
-        }
+//        when (menuType) {
+//            MenuType.FIXED.name -> {
+//                binding.btnNextReview.setOnClickListener {
+//                    val intent = Intent(this, ReviewWriteActivity::class.java)
+//                    intent.putExtra("itemId", itemId)
+//                    intent.putExtra("itemName", itemName)
+//                    intent.putExtra("menuType", menuType)
+//                    startActivity(intent)
+//                }
+//            }
+//
+//            MenuType.VARIABLE.name -> {
+//                binding.btnNextReview.setOnClickListener {
+//                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)
+//                    intent.putExtra("itemId", itemId)
+//                    intent.putExtra("menuType", menuType)
+//                    startActivity(intent)
+//                }
+//            }
+//
+//            else -> {
+//                Timber.d("잘못된 식당 정보입니다.")
+//            }
+//        }
     }
 
 
     fun onMyReviewClicked(review: Review) {
-        val modalBottomSheet = MyReviewBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putLong("reviewId", review.reviewId)
-                putString("menu", review.menu)
-                putString("content", review.content)
-                putInt("mainGrade", review.mainGrade)
-                putInt("amountGrade", review.amountGrade)
-                putInt("tasteGrade", review.tasteGrade)
-            }
-            onReviewDeletedListener = this@ReviewActivity
-        }
-        modalBottomSheet.setStyle(
-            DialogFragment.STYLE_NORMAL,
-            R.style.RoundCornerBottomSheetDialogTheme
-        )
-        modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
+//        val modalBottomSheet = MyReviewBottomSheetFragment().apply {
+//            arguments = Bundle().apply {
+//                putLong("reviewId", review.reviewId)
+//                putString("menu", review.menu)
+//                putString("content", review.content)
+//                putInt("mainGrade", review.mainGrade)
+//                putInt("amountGrade", review.amountGrade)
+//                putInt("tasteGrade", review.tasteGrade)
+//            }
+//            onReviewDeletedListener = this@ReviewActivity
+//        }
+//        modalBottomSheet.setStyle(
+//            DialogFragment.STYLE_NORMAL,
+//            R.style.RoundCornerBottomSheetDialogTheme
+//        )
+//        modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
     }
 
     fun onOthersReviewClicked(reviewData: Review) {
-        val modalBottomSheet = OthersBottomSheetFragment()
-        modalBottomSheet.setStyle(
-            DialogFragment.STYLE_NORMAL,
-            R.style.RoundCornerBottomSheetDialogTheme
-        )
-
-        modalBottomSheet.arguments = Bundle().apply {
-            putLong("reviewId", reviewData.reviewId)
-            putString("menu", reviewData.menu)
-        }
-
-        modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
+//        val modalBottomSheet = OthersBottomSheetFragment()
+//        modalBottomSheet.setStyle(
+//            DialogFragment.STYLE_NORMAL,
+//            R.style.RoundCornerBottomSheetDialogTheme
+//        )
+//
+//        modalBottomSheet.arguments = Bundle().apply {
+//            putLong("reviewId", reviewData.reviewId)
+//            putString("menu", reviewData.menu)
+//        }
+//
+//        modalBottomSheet.show(supportFragmentManager, "Open Bottom Sheet")
     }
-
 
     override fun onReviewDeleted() {
-        lodeData()
-        bindData()
+        TODO("Not yet implemented")
     }
+
+
+//    override fun onReviewDeleted() {
+////        lodeData()
+////        bindData()
+//    }
 }
