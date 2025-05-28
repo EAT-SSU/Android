@@ -8,16 +8,14 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.R
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
+import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteActivity
 import com.eatssu.android.presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity
 import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
 import com.eatssu.android.presentation.common.OthersBottomSheetFragment
-import com.eatssu.common.EventLogger
-import com.eatssu.common.enums.MenuType
-import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -26,7 +24,7 @@ import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ReviewActivity :
-    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate, ScreenId.REVIEW_V1_VIEW),
+    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate),
     MyReviewBottomSheetFragment.OnReviewDeletedListener {
 
     private val reviewViewModel: ReviewViewModel by viewModels()
@@ -150,12 +148,11 @@ class ReviewActivity :
         when (menuType) {
             MenuType.FIXED.name -> {
                 binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteRateActivity::class.java)
+                    val intent = Intent(this, ReviewWriteActivity::class.java)
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("menuType", menuType)
                     startActivity(intent)
-                    EventLogger.writeReview()
                 }
             }
 
@@ -165,7 +162,6 @@ class ReviewActivity :
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
                     startActivity(intent)
-                    EventLogger.writeReview()
                 }
             }
 

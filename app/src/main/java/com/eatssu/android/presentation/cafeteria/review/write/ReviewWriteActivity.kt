@@ -20,8 +20,6 @@ import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.common.EventLogger
-import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -29,17 +27,13 @@ import timber.log.Timber
 import java.io.File
 
 @AndroidEntryPoint
-class ReviewWriteRateActivity :
-    BaseActivity<ActivityReviewWriteRateBinding>(
-        ActivityReviewWriteRateBinding::inflate,
-        ScreenId.REVIEW_V1_WRITE_RATE
-    ) {
+class ReviewWriteActivity :
+    BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
 
-    private val viewModel: UploadReviewViewModel by viewModels()
+    private val viewModel: ReviewWriteViewModel by viewModels()
 
     private var itemId: Long = 0
     private lateinit var itemName: String
-    private var itemCount = 1L
     private var comment: String? = ""
 
     private var imageFile: File? = null
@@ -53,7 +47,6 @@ class ReviewWriteRateActivity :
         Timber.d("고정메뉴 $itemName")
 
         itemId = intent.getLongExtra("itemId", -1)
-        itemCount = intent.getLongExtra("itemCount", 1)
 
         // 현재 메뉴명을 표시합니다.
         binding.menu.text = itemName
@@ -140,11 +133,6 @@ class ReviewWriteRateActivity :
         )
 
         viewModel.postReview(itemId, photoReview)
-        EventLogger.completeReviewV1(
-            rating = binding.rbMain.rating.toLong(),
-            selection = itemCount,
-            photoAttached = true
-        )
         Timber.d("사진있는 리뷰 전송")
     }
 
@@ -157,17 +145,12 @@ class ReviewWriteRateActivity :
         )
 
         viewModel.postReview(itemId, review)
-        EventLogger.completeReviewV1(
-            rating = binding.rbMain.rating.toLong(),
-            selection = itemCount,
-            photoAttached = false
-        )
         Timber.d("사진없는 리뷰 전송")
     }
 
     private suspend fun compressImage(): File? {
         return imageFile?.let { originalFile ->
-            Compressor.compress(this@ReviewWriteRateActivity, originalFile)
+            Compressor.compress(this@ReviewWriteActivity, originalFile)
         }
     }
 

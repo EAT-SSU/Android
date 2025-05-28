@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class UploadReviewViewModel @Inject constructor(
+class ReviewWriteViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
 ) : ViewModel() {

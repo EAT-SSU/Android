@@ -1,14 +1,15 @@
 package com.eatssu.android.presentation.cafeteria.review.write.menu
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
-import com.eatssu.common.enums.ScreenId
+import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -16,16 +17,14 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class ReviewWriteMenuActivity :
-    BaseActivity<ActivityReviewWriteMenuBinding>(
-        ActivityReviewWriteMenuBinding::inflate,
-        ScreenId.REVIEW_V1_WRITE
-    ) {
+    BaseActivity<ActivityReviewWriteMenuBinding>(ActivityReviewWriteMenuBinding::inflate) {
 
     private val viewModel: VariableMenuViewModel by viewModels()
     private var mealId: Long = -1
 
     private lateinit var variableMenuPickAdapter: VariableMenuPickAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
@@ -77,10 +76,9 @@ class ReviewWriteMenuActivity :
             val currentItem = items[i]
 
             // 다음 아이템을 전달하기 위해 Intent 생성
-            val intent = Intent(this, ReviewWriteRateActivity::class.java)
+            val intent = Intent(this, ReviewWriteActivity::class.java)
             intent.putExtra("itemName", currentItem.first)
             intent.putExtra("itemId", currentItem.second)
-            intent.putExtra("itemCount", items.size.toLong())
 
             // BActivity 실행
             startActivity(intent)
