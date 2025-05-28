@@ -35,17 +35,14 @@ class ReviewAdapter :
             binding.tvMenuName.text = data.menu
             binding.rbRate.rating = data.mainGrade.toFloat()
 
-            if (!data.imgUrl.isNullOrEmpty()) {
+            val firstImageUrl = data.imgUrl?.firstOrNull()
+
+            if (!firstImageUrl.isNullOrEmpty()) {
                 Glide.with(itemView)
-                    .load(data.imgUrl[0])
+                    .load(firstImageUrl)
                     .into(binding.ivReviewPhoto)
                 binding.ivReviewPhoto.visibility = View.VISIBLE
                 binding.cvPhotoReview.visibility = View.VISIBLE
-
-                if (data.imgUrl[0].isEmpty()) {
-                    binding.ivReviewPhoto.visibility = View.GONE
-                    binding.cvPhotoReview.visibility = View.GONE
-                }
             } else {
                 binding.ivReviewPhoto.visibility = View.GONE
                 binding.cvPhotoReview.visibility = View.GONE
