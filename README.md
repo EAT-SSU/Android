@@ -3,6 +3,7 @@
 - 기간: 2023.03 ~  
 - [PlayStore](https://play.google.com/store/apps/details?id=com.eatssu.android) 출시일 2023.11.28 ~
 - [EAT-SSU 소개 Notion](https://eat-ssu.notion.site/EAT-SSU-1d2eeef75a1681198583e5282eaae6ba)
+- [리쿠르팅](https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d)
 
 ## 기여자 
 |[유진](https://github.com/HI-JIN2)|[이현지](https://github.com/Amepistheo)|[강유리](https://github.com/kangyuri1114)|
