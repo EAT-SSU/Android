@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,22 +13,22 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
-import java.text.DecimalFormat
-import kotlin.math.log10
-import kotlin.math.pow
 
 @AndroidEntryPoint
 class ReviewWriteRateActivity :
@@ -59,10 +58,11 @@ class ReviewWriteRateActivity :
         // 외부 저장소에 대한 런타임 퍼미션 요청
         requestStoragePermission()
 
-        // 텍스트 리뷰 입력 관련 설정
         setupTextReviewInput()
-
         setOnClickListener()
+
+        observeState()
+        observeEvents()
     }
 
     fun setOnClickListener() {
@@ -75,10 +75,9 @@ class ReviewWriteRateActivity :
 
         binding.btnNextReview2.setOnClickListener {
             if (binding.rbMain.rating.toInt() == 0 || binding.rbAmount.rating.toInt() == 0 || binding.rbTaste.rating.toInt() == 0) {
-                showToast("별점을 등록해주세요")
+                showToast("별점을 모두 등록해주세요")
             }
 
-            //파일 업로드가 끝났거나, 파일을 첨부하지 않거나
             if (imageFile?.exists() == true) {
 
                 lifecycleScope.launch {
@@ -103,6 +102,34 @@ class ReviewWriteRateActivity :
 
     }
 
+    private fun observeState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is UiState.Loading -> showLoading(true)
+                        is UiState.Success -> finish()
+                        else -> {
+                            showLoading(false)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiEvent.collect { event ->
+                    when (event) {
+                        is UiEvent.ShowToast -> showToast(event.message)
+                    }
+                }
+            }
+        }
+    }
+
     private fun postPhotoReview(imageUrl: String) {
 
         val photoReview = WriteReviewRequest(
@@ -114,20 +141,7 @@ class ReviewWriteRateActivity :
         )
 
         viewModel.postReview(itemId, photoReview)
-        Timber.d("사진리뷰 전송")
-
-        lifecycleScope.launch {
-            viewModel.uiState.collectLatest {
-                if (it.error) {
-                    showToast(viewModel.uiState.value.toastMessage)
-                }
-                if (!it.error && !it.loading && it.isUpload) {
-                    showToast(viewModel.uiState.value.toastMessage)
-                    Timber.d("리뷰 작성 성공")
-                    finish()
-                }
-            }
-        }
+        Timber.d("사진있는 리뷰 전송")
     }
 
     private fun postReview() {
@@ -139,39 +153,13 @@ class ReviewWriteRateActivity :
         )
 
         viewModel.postReview(itemId, review)
-        Timber.d("사진리뷰 전송")
-
-        lifecycleScope.launch {
-            viewModel.uiState.collectLatest {
-                if (it.error) {
-                    showToast(viewModel.uiState.value.toastMessage)
-                }
-                if (!it.error && !it.loading && it.isUpload) {
-                    showToast(viewModel.uiState.value.toastMessage)
-                    Timber.d("리뷰 작성 성공")
-                    finish()
-                }
-            }
-        }
+        Timber.d("사진없는 리뷰 전송")
     }
 
     private suspend fun compressImage(): File? {
         return imageFile?.let { originalFile ->
             Compressor.compress(this@ReviewWriteRateActivity, originalFile)
         }
-    }
-
-    private fun showError(errorMessage: String) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun getReadableFileSize(size: Long): String {
-        if (size <= 0) {
-            return "0"
-        }
-        val units = arrayOf("B", "KB", "MB", "GB", "TB")
-        val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
-        return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
     }
 
 
@@ -210,26 +198,6 @@ class ReviewWriteRateActivity :
         } ?: run {
             Timber.d("No image selected")
         }
-    }
-
-    // 이미지 실제 경로 반환
-    private fun getRealPathFromURI(uri: Uri): String {
-
-        val buildName = Build.MANUFACTURER
-        if (buildName.equals("Xiaomi")) {
-            return uri.path!!
-        }
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, proj, null, null, null)
-        if (cursor!!.moveToFirst()) {
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-
-        Timber.d("realPath: $result")
-        return result
     }
 
     // 갤러리를 부르는 메서드
@@ -344,7 +312,7 @@ class ReviewWriteRateActivity :
             Toast.makeText(this, "리뷰 작성을 중지합니다.", Toast.LENGTH_SHORT).show()
             binding.ivImage.setImageDrawable(null)
             imageFile!!.delete() //file을 날린다.
-            viewModel.uiState.value.imageUrl = "" //file을 날린다.
+//            viewModel.uiState.value.imageUrl = "" //file을 날린다.
 
         }
     }
@@ -356,7 +324,7 @@ class ReviewWriteRateActivity :
             showToast("이미지가 삭제되었습니다.")
             binding.ivImage.setImageDrawable(null)
             imageFile!!.delete() //file을 날린다.
-            viewModel.uiState.value.imageUrl = "" //file을 날린다.
+//            viewModel.uiState.value.imageUrl = "" //file을 날린다.
 
             binding.ivImage.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
@@ -382,6 +350,11 @@ class ReviewWriteRateActivity :
                 }
             }
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.btnNextReview2.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
     }
 
     companion object {

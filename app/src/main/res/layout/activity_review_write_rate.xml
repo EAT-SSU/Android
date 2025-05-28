@@ -245,6 +245,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/primary"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_next_review2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_next_review2" />
+
         <Button
             android:id="@+id/btn_next_review2"
             style="@style/Button1"
