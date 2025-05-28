@@ -53,7 +53,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("Boolean", "ENABLE_CRASHLYTICS", "true")
         }
 
         debug {
@@ -71,7 +70,6 @@ android {
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
             isMinifyEnabled = false
-            buildConfigField("Boolean", "ENABLE_CRASHLYTICS", "false")
         }
     }
 
