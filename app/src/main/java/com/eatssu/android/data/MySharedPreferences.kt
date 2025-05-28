@@ -4,7 +4,6 @@ package com.eatssu.android.data
 import android.content.Context
 import android.content.SharedPreferences
 
-//자동 로그인을 위한 SharedPreferences
 object MySharedPreferences {
     private val MY_ACCOUNT: String = "account"
 
@@ -99,5 +98,15 @@ object MySharedPreferences {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getBoolean("ALARM_ON", false)
+    }
+
+    fun savePreTimePosition(context: Context, position: Int) {
+        val prefs = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        prefs.edit().putInt("PRE_TIME_POSITION", position).apply()
+    }
+
+    fun getPreTimePosition(context: Context): Int {
+        val prefs = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getInt("PRE_TIME_POSITION", -1)
     }
 }

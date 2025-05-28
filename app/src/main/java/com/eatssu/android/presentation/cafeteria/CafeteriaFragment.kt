@@ -10,9 +10,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.eatssu.android.App
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.FragmentCafeteriaBinding
-import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.presentation.util.CalendarUtil
@@ -45,10 +47,19 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
 
         val viewpagerFragmentAdapter = CafeteriaViewPagerAdapter(requireActivity())
         viewPager.adapter = viewpagerFragmentAdapter
-        viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
+        viewPager.setCurrentItem(
+            viewpagerFragmentAdapter.getDefaultFragmentPosition(App.appContext),
+            false
+        )
 
         val tabTitles = listOf("아침", "점심", "저녁")
         TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                MySharedPreferences.savePreTimePosition(requireContext(), position)
+            }
+        })
 
         initWidgets()
         CalendarUtil.selectedDate = LocalDate.now()

@@ -1,10 +1,10 @@
 package com.eatssu.android.presentation.cafeteria
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.presentation.cafeteria.menu.MenuFragment
 import java.time.LocalTime
@@ -12,7 +12,6 @@ import java.time.LocalTime
 class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
-    // 1. ViewPager2에 연결할 Fragment 들을 생성
     private val fragmentList = listOf(
         MenuFragment.newInstance(Time.MORNING),
         MenuFragment.newInstance(Time.LUNCH),
@@ -21,33 +20,25 @@ class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :
 
     lateinit var menuDate : String
 
-    // 2. ViesPager2에서 노출시킬 Fragment 의 갯수 설정
     override fun getItemCount(): Int {
         return fragmentList.size
     }
 
-    // 3. ViewPager2의 각 페이지에서 노출할 Fragment 설정
     override fun createFragment(position: Int): Fragment {
-        /*if(fragmentList[position] is LunchFragment) {
-            (fragmentList[position] as LunchFragment).setDate(menuDate)
-        }*/
         return fragmentList[position]
     }
 
-    // 4. 디폴트로 노출할 Fragment의 위치를 설정
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getDefaultFragmentPosition(): Int {
-        // 여기에서 디폴트로 노출할 Fragment의 위치를 반환해줍니다.
-        // 예를 들어, 첫 번째 Fragment를 디폴트로 설정하려면 0을 반환합니다.
-
-        val time = LocalTime.now()
-
-        val selectedIndex: Int = when (time.hour) {
-            in 0..9 -> 0 //아침
-            in 10..15 -> 1 //점심
-            in 16..24 -> 2 //저녁
-            else -> 1
+    fun getDefaultFragmentPosition(context: Context): Int {
+        val savedPosition = MySharedPreferences.getPreTimePosition(context)
+        return if (savedPosition in 0..2) savedPosition else {
+            // fallback: 시간 기준
+            val time = LocalTime.now()
+            when (time.hour) {
+                in 0..9 -> 0
+                in 10..15 -> 1
+                in 16..23 -> 2
+                else -> 1
+            }
         }
-        return selectedIndex
     }
 }
