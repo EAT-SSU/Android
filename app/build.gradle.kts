@@ -47,11 +47,13 @@ android {
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
             var shrinkResources = false
-            var minifyEnabled = false
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            buildConfigField("Boolean", "ENABLE_CRASHLYTICS", "true")
         }
 
         debug {
@@ -67,6 +69,9 @@ android {
             val kakaoKey: String = p.getProperty("KAKAO_NATIVE_APP_KEY")
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+
+            isMinifyEnabled = false
+            buildConfigField("Boolean", "ENABLE_CRASHLYTICS", "false")
         }
     }
 
