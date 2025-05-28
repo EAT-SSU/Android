@@ -311,8 +311,7 @@ class ReviewWriteRateActivity :
         if (imageFile?.exists() == true) {
             Toast.makeText(this, "리뷰 작성을 중지합니다.", Toast.LENGTH_SHORT).show()
             binding.ivImage.setImageDrawable(null)
-            imageFile!!.delete() //file을 날린다.
-//            viewModel.uiState.value.imageUrl = "" //file을 날린다.
+            imageFile!!.delete()
 
         }
     }
@@ -323,8 +322,7 @@ class ReviewWriteRateActivity :
         if (imageFile?.exists() == true) {
             showToast("이미지가 삭제되었습니다.")
             binding.ivImage.setImageDrawable(null)
-            imageFile!!.delete() //file을 날린다.
-//            viewModel.uiState.value.imageUrl = "" //file을 날린다.
+            imageFile!!.delete()
 
             binding.ivImage.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
