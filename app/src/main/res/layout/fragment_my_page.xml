@@ -431,7 +431,7 @@
                     android:paddingStart="24dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="24dp"
-                    android:paddingBottom="10dp">
+                    android:paddingBottom="40dp">
 
                     <TextView
                         android:id="@+id/tv_signout"
