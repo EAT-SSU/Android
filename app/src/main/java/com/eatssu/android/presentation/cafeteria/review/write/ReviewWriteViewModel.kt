@@ -35,7 +35,7 @@ class ReviewWriteViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun postReview(menuId: Long, reviewData: WriteReviewRequest) {
+    fun postReview(menuId: Long, reviewData: WriteReviewRequest) {//todo dto 그대로 쓰기 말기
         viewModelScope.launch {
             writeReviewUseCase(menuId, reviewData)
                 .onStart {
