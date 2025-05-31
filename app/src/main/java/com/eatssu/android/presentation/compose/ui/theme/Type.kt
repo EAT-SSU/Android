@@ -21,18 +21,32 @@ val pretendardRegular = FontFamily(Font(R.font.pretendard_regular, FontWeight.No
 class EatssuTypography internal constructor(
     val button1: TextStyle,
     val button2: TextStyle,
-    val headingPrimary: TextStyle,
-    val headingSecondary: TextStyle,
+    val h1: TextStyle,
+    val h2: TextStyle,
     val subtitle1: TextStyle,
     val subtitle2: TextStyle,
     val body1: TextStyle,
     val body2: TextStyle,
     val body3: TextStyle,
+    val rate: TextStyle,
     val caption1: TextStyle,
     val caption2: TextStyle,
+    val caption3: TextStyle,
 ) {
     fun copy(): EatssuTypography = EatssuTypography(
-        button1, button2, headingPrimary, headingSecondary, subtitle1, subtitle2, body1, body2, body3, caption1, caption2
+        button1,
+        button2,
+        h1,
+        h2,
+        subtitle1,
+        subtitle2,
+        body1,
+        body2,
+        body3,
+        rate,
+        caption1,
+        caption2,
+        caption3
     )
 }
 
@@ -65,12 +79,12 @@ fun eatssuTypography(): EatssuTypography {
             fontSize = 14.sp,
             lineHeight = 20.sp
         ),
-        headingPrimary = EatssuTextStyle(
+        h1 = EatssuTextStyle(
             fontFamily = pretendardBold,
             fontSize = 20.sp,
             lineHeight = 30.sp
         ),
-        headingSecondary = EatssuTextStyle(
+        h2 = EatssuTextStyle(
             fontFamily = pretendardBold,
             fontSize = 18.sp,
             lineHeight = 28.sp
@@ -91,24 +105,34 @@ fun eatssuTypography(): EatssuTypography {
             lineHeight = 24.sp
         ),
         body2 = EatssuTextStyle(
-            fontFamily = pretendardRegular,
+            fontFamily = pretendardMedium,
             fontSize = 14.sp,
             lineHeight = 20.sp
         ),
         body3 = EatssuTextStyle(
             fontFamily = pretendardRegular,
             fontSize = 14.sp,
-            lineHeight = 18.sp
+            lineHeight = 20.sp
         ),
         caption1 = EatssuTextStyle(
             fontFamily = pretendardBold,
             fontSize = 12.sp,
-            lineHeight = 16.sp
+            lineHeight = 18.sp
         ),
         caption2 = EatssuTextStyle(
-            fontFamily = pretendardMedium,
+            fontFamily = pretendardRegular,
             fontSize = 12.sp,
-            lineHeight = 16.sp
+            lineHeight = 18.sp
+        ),
+        caption3 = EatssuTextStyle(
+            fontFamily = pretendardMedium,
+            fontSize = 10.sp,
+            lineHeight = 12.sp
+        ),
+        rate = EatssuTextStyle(
+            fontFamily = pretendardRegular,
+            fontSize = 40.sp,
+            lineHeight = 40.sp
         )
     )
 }
