@@ -42,14 +42,14 @@ fun ReviewProgressBar(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = stringResource(R.string.total_review_num),
-                style = MaterialTheme.typography.labelMedium,
+                style = EatssuTheme.typography.caption2,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "$reviewCount",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
+                style = EatssuTheme.typography.caption1,
+//                color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -74,8 +74,8 @@ fun ReviewProgressBar(
                             else -> R.string.rate_1
                         }
                     ),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Black
+                    style = EatssuTheme.typography.caption2,
+//                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 LinearProgressIndicator(
