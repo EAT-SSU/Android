@@ -19,7 +19,9 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
+
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -31,18 +33,25 @@
                 android:gravity="center"
                 android:text="학생식당"
                 android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@color/gray200" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginBottom="12dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
             <TextView
                 android:id="@+id/tv_location_info"
-                style="@style/H2"
+                style="@style/Subtitle2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -52,7 +61,7 @@
 
             <TextView
                 android:id="@+id/tv_location"
-                style="@style/Body1"
+                style="@style/Body3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
@@ -62,14 +71,6 @@
 
         </LinearLayout>
 
-        <TextView
-            style="@style/H2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="24dp"
-            android:text="식당사진"
-            android:textColor="@color/black" />
 
         <!--  테두리 때문에 카드뷰 씀  -->
         <androidx.cardview.widget.CardView
@@ -92,13 +93,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
             <TextView
                 android:id="@+id/tv_time_info"
-                style="@style/H2"
+                style="@style/Subtitle2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -108,12 +109,17 @@
 
             <TextView
                 android:id="@+id/tv_time"
-                style="@style/Body1"
+                style="@style/Body3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:gravity="end"
-                android:text="10~1시 \n 11~1시"
+                android:text="08:10~09:20\n
+천원의 아침밥, 100개 한정\n\n
+11:20~14:00\n
+점심\n\n
+14:00~17:20\n
+공간 개방"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -121,13 +127,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
             <TextView
                 android:id="@+id/tv_etc_info"
-                style="@style/H2"
+                style="@style/Subtitle2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -136,12 +142,13 @@
 
             <TextView
                 android:id="@+id/tv_etc"
-                style="@style/Body1"
+                style="@style/Body3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:gravity="end"
-                android:text="맛도리"
+                android:text="3개 코너 운영\n
+뚝배기, 덮밥, 양식"
                 android:textColor="@color/black" />
 
         </LinearLayout>
