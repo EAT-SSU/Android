@@ -32,11 +32,11 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/img_logo_512"
+        android:icon="@drawable/img_big_logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/img_logo_512"
+        android:roundIcon="@drawable/img_big_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.EatSSUAndroid"
         android:usesCleartextTraffic="true"
@@ -134,13 +134,6 @@
         </activity>
         <activity
             android:name=".presentation.cafeteria.review.list.ReviewActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.mypage.MyPageActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
