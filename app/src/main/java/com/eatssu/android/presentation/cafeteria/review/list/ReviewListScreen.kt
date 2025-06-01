@@ -213,8 +213,8 @@ fun ReviewListPreview() {
                         two = 5,
                         one = 8,
                         mainRating = 4.5,
-                        amountRating = 2.3,
-                        tasteRating = 4.5
+                        likeCount = 100,
+                        unlikeCount = 50,
                     ),
                     reviewList = listOf(
                         Review(
