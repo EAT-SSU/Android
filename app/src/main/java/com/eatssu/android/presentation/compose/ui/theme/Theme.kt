@@ -70,8 +70,8 @@ fun EatssuTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography(
-                displayLarge = typography.headingPrimary,
-                displayMedium = typography.headingSecondary,
+                displayLarge = typography.h1,
+                displayMedium = typography.h2,
                 headlineLarge = typography.subtitle1,
                 headlineMedium = typography.subtitle2,
                 bodyLarge = typography.body1,
