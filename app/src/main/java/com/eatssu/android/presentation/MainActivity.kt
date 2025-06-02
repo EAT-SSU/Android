@@ -169,7 +169,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     // 아래 함수를 View 에서는 사용이 어려워 util 로 빼지 않음
     private fun BottomNavigationView.setOnSingleItemSelectedListener(
-        minInterval: Long = 2000L,
+        minInterval: Long = 500L,
         onSingleItemSelected: (item: MenuItem) -> Boolean
     ) {
         var lastClickTime = 0L
