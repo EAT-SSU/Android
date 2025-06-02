@@ -6,6 +6,9 @@ import com.eatssu.android.domain.model.TokenState
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.presentation.base.TokenEventBus
 import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +38,11 @@ class App: Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            Firebase.analytics.setAnalyticsCollectionEnabled(false)
+        } else {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            Firebase.analytics.setAnalyticsCollectionEnabled(true)
         }
 
         collectTokenState()
