@@ -1,7 +1,5 @@
 package com.eatssu.android.presentation.mypage
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityDeveloperBinding
@@ -9,7 +7,6 @@ import com.eatssu.android.presentation.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.WindowCompat
 
 @AndroidEntryPoint
 class DeveloperActivity :
