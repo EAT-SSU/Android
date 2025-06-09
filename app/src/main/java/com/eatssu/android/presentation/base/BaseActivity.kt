@@ -11,8 +11,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
@@ -49,11 +52,8 @@ abstract class BaseActivity<B : ViewBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContentView(R.layout.activity_base)
-
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
 
         setSupportActionBar(findViewById(R.id.toolbar))
 
@@ -82,6 +82,27 @@ abstract class BaseActivity<B : ViewBinding>(
         // refreshtoken 관리
         observeTokenExpiration()
 
+        setInset()
+
+    }
+
+    private fun setInset() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar)) { view, insets ->
+            val topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+            view.setPadding(0, topInset, 0, 0)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fl_content)) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemInsets.left,
+                view.paddingTop,
+                systemInsets.right,
+                systemInsets.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun observeTokenExpiration() {
