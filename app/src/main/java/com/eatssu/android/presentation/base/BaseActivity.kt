@@ -89,7 +89,7 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun setInset() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar)) { view, insets ->
             val topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            view.setPadding(0, topInset, 0, 0)
+            view.setPadding(0, topInset, 0, 24)
             WindowInsetsCompat.CONSUMED
         }
 
