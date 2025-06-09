@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -58,7 +59,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.cafeteria_menu -> {
-                    navController.navigate(R.id.homeFragment)
+                    navController.navigate(R.id.cafeteria_menu)
                     true
                 }
 
@@ -83,8 +84,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private fun setupNoToolbar() {
         // 툴바 사용하지 않도록 설정
         toolbar.let {
-            toolbar.visibility = View.GONE
-            toolbarTitle.visibility = View.GONE
+            toolbar.visibility = GONE
+            toolbarTitle.visibility = GONE
             setSupportActionBar(it)
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             supportActionBar?.setDisplayShowTitleEnabled(false)
