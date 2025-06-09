@@ -23,16 +23,16 @@
         android:id = "@+id/bottom_navi_bar"
         style="@style/Caption2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingVertical="15dp"
         android:elevation="3dp"
         android:background="@drawable/shape_corner_top"
         app:itemRippleColor="@color/white"
         android:textAlignment="center"
         app:itemTextColor="@color/selector_bottom_navi_item"
         app:itemIconTint="@color/selector_bottom_navi_item"
+        app:itemPaddingTop="10dp"
         app:menu="@menu/menu_bottom_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>
