@@ -1,18 +1,14 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -55,9 +51,6 @@ class ReviewWriteRateActivity :
         // 현재 메뉴명을 표시합니다.
         binding.menu.text = itemName
 
-        // 외부 저장소에 대한 런타임 퍼미션 요청
-        requestStoragePermission()
-
         setupTextReviewInput()
         setOnClickListener()
 
@@ -69,8 +62,7 @@ class ReviewWriteRateActivity :
         // 이미지 추가 버튼 클릭 리스너 설정
         binding.ibAddPic.setOnClickListener {
             Timber.d("클릭")
-
-            checkPermission()
+            imagePickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         binding.btnNextReview2.setOnClickListener {
@@ -162,136 +154,42 @@ class ReviewWriteRateActivity :
         }
     }
 
-
-    // 이미지를 결과값으로 받는 변수
-    private val imageResult = registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        Timber.d("Selected image URI: $uri")
-        uri?.let {
-            try {
-                // 이미지를 불러온다
-                Glide.with(this)
-                    .load(uri)
-                    .fitCenter()
-                    .apply(RequestOptions().override(500, 500))
-                    .into(binding.ivImage)
-
-                binding.ivImage.visibility = View.VISIBLE
-                binding.btnDelete.visibility = View.VISIBLE
-
-                // 임시 파일 생성
-                val inputStream = contentResolver.openInputStream(uri)
-                val tempFile = File(cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
-                inputStream?.use { input ->
-                    tempFile.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
-                }
-
-                imageFile = tempFile
-                Timber.d("Image loaded successfully to: ${tempFile.absolutePath}")
-            } catch (e: Exception) {
-                Timber.e(e, "Error processing selected image")
-                showToast("이미지 처리 중 오류가 발생했습니다.")
-            }
-        } ?: run {
-            Timber.d("No image selected")
-        }
-    }
-
-    // 갤러리를 부르는 메서드
-    private fun checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val readMediaImagePermission = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_MEDIA_IMAGES
-            )
-
-            if (readMediaImagePermission == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                    PERMISSION_REQUEST_CODE
-                )
-                Timber.e("권한 없음")
-            } else {
-                openGallery()
-            }
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia() // 사진 단일 선택
+    ) { uri ->
+        if (uri != null) {
+            Timber.d("선택된 이미지: $uri")
+            handleImageUri(uri)
         } else {
-            val writePermission = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            val readPermission = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-
-            if (writePermission == PackageManager.PERMISSION_DENIED ||
-                readPermission == PackageManager.PERMISSION_DENIED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ),
-                    PERMISSION_REQUEST_CODE
-                )
-                Timber.e("권한 없음")
-            } else {
-                openGallery()
-            }
+            Timber.d("이미지 선택 안함")
         }
     }
 
-
-    private fun openGallery() {
+    private fun handleImageUri(uri: Uri) {
         try {
-            Timber.d("Opening gallery picker")
-            imageResult.launch("image/*")
+            Glide.with(this)
+                .load(uri)
+                .fitCenter()
+                .apply(RequestOptions().override(500, 500))
+                .into(binding.ivImage)
+
+            binding.ivImage.visibility = View.VISIBLE
+            binding.btnDelete.visibility = View.VISIBLE
+
+            val inputStream = contentResolver.openInputStream(uri)
+            val tempFile = File(cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+            inputStream?.use { input ->
+                tempFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            imageFile = tempFile
+            Timber.d("임시 파일 저장 완료: ${tempFile.absolutePath}")
         } catch (e: Exception) {
-            Timber.e(e, "Error opening gallery")
-            showToast("갤러리를 열 수 없습니다.")
+            Timber.e(e, "이미지 처리 중 오류 발생")
+            showToast("이미지 처리 중 오류가 발생했습니다.")
         }
     }
-
-    private fun requestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_MEDIA_IMAGES
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                    PERMISSION_REQUEST_CODE
-                )
-            }
-        } else {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ),
-                    PERMISSION_REQUEST_CODE
-                )
-            }
-        }
-    }
-
 
     private fun setupTextReviewInput() {
         binding.etReview2Comment.addTextChangedListener(object : TextWatcher {
@@ -316,7 +214,6 @@ class ReviewWriteRateActivity :
         }
     }
 
-
     private fun deleteImage() {
         Timber.d("imageFile: " + imageFile.toString())
         if (imageFile?.exists() == true) {
@@ -332,31 +229,8 @@ class ReviewWriteRateActivity :
         }
     }
 
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openGallery()
-                } else {
-                    showToast("권한이 거부되어 이미지를 선택할 수 없습니다.")
-                }
-            }
-        }
-    }
-
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.btnNextReview2.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-    }
-
-    companion object {
-        // 갤러리 권한 요청
-        const val PERMISSION_REQUEST_CODE = 1
     }
 }
