@@ -22,8 +22,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 23
         targetSdk = 34
-        versionCode = 32
-        versionName = "2.1.12"
+        versionCode = 33
+        versionName = "2.1.14"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,7 +48,7 @@ android {
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
             isShrinkResources = false
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
