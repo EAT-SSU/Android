@@ -48,6 +48,11 @@
         <meta-data
             android:name="com.google.android.gms.oss.licenses.enabled"
             android:value="true" />
+
+        <meta-data
+            android:name="com.naver.maps.map.NCP_KEY_ID"
+            android:value="${NAVER_MAPS_CLIENT_ID}" />
+
         <receiver
             android:name=".alarm.NotificationReceiver"
             android:enabled="true"

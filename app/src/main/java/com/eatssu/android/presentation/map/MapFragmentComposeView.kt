@@ -1,17 +1,18 @@
 package com.eatssu.android.presentation.map
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.NaverMap
 
+@OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun MapFragmentComposeView() {
-    Text(
-        text = "Hello, Eatssu!",
-        style = EatssuTheme.typography.body1,
-        color = Primary
+    NaverMap(
+        modifier = Modifier.fillMaxSize()
     )
 }
 

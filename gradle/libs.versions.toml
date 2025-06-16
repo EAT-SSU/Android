@@ -13,6 +13,8 @@ mapSdk = "3.21.0"
 material = "1.8.0"
 constraintlayout = "2.1.4"
 materialVersion = "1.7.8"
+naverMapCompose = "1.8.2"
+naverMapLocation = "21.0.2"
 navigationUi = "2.8.9"
 threetenabp = "1.4.4"
 material-calendarview = "1.4.3"
@@ -72,6 +74,8 @@ compose-theme-adapter = { module = "com.google.android.material:compose-theme-ad
 map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "mapSdk" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+naver-map-compose = { module = "io.github.fornewid:naver-map-compose", version.ref = "naverMapCompose" }
+naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "naverMapLocation" }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
 material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "material-calendarview" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }

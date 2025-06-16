@@ -14,14 +14,14 @@ plugins {
 
 android {
     namespace = "com.eatssu.android"
-    compileSdk = 34
+    compileSdk = 35
 
     // S8: API 28
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 32
         versionName = "2.1.12"
 
@@ -47,6 +47,10 @@ android {
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
+            val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
+            buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
+            manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
+
             isShrinkResources = false
             isMinifyEnabled = true
             proguardFiles(
@@ -68,6 +72,10 @@ android {
             val kakaoKey: String = p.getProperty("KAKAO_NATIVE_APP_KEY")
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+
+            val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
+            buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
+            manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
 
             isMinifyEnabled = false
         }
@@ -188,6 +196,11 @@ dependencies {
 
     // naver maps
     implementation (libs.map.sdk)
+
+    // naver maps to compose
+    implementation(libs.naver.map.compose)
+    implementation(libs.naver.map.location)
+
 }
 
 kapt {
