@@ -183,8 +183,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // navigation
-    implementation ("androidx.navigation:navigation-fragment:2.8.9")
-    implementation ("androidx.navigation:navigation-ui:2.8.9")
+    implementation (libs.androidx.navigation.fragment)
+    implementation (libs.androidx.navigation.ui)
+
+    // naver maps
+    implementation (libs.map.sdk)
 }
 
 kapt {
