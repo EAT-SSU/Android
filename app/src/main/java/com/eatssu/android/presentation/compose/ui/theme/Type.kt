@@ -90,7 +90,7 @@ fun eatssuTypography(): EatssuTypography {
             lineHeight = 28.sp
         ),
         subtitle1 = EatssuTextStyle(
-            fontFamily = pretendardSemiBold,
+            fontFamily = pretendardBold,
             fontSize = 16.sp,
             lineHeight = 24.sp
         ),
