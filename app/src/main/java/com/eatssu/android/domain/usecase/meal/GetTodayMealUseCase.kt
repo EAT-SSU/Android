@@ -1,34 +1,112 @@
 package com.eatssu.android.domain.usecase.meal
 
 import com.eatssu.android.data.dto.response.GetMealResponse
+import com.eatssu.android.data.enums.Time
 import com.eatssu.android.domain.repository.MealRepository
-import kotlinx.coroutines.flow.Flow
+import com.eatssu.android.presentation.widget.we.GetMealsResponseModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
 import javax.inject.Inject
+
+sealed interface MealException {
+    /** 급식 정보가 없음 */
+    data object DataEmpty : MealException
+
+    /** 인터넷 연결 X */
+    data object InternetDisconnected : MealException
+
+    /**
+     *  알 수 없는 에러 with errorCode
+     *  - 사용자가 알 필요가 없는 remote error
+     *  - 코드상 문제로 인한 exception
+     *  */
+    data class Unknown(val errorCode: String) : MealException
+}
+
+sealed interface MealState {
+    data object Loading : MealState
+
+    data class Success(val response: GetMealsResponseModel) : MealState
+
+    data object Failure : MealState
+}
+
 
 class GetTodayMealUseCase @Inject constructor(
     private val mealRepository: MealRepository,
     private val saveTodayMealUseCase: SaveTodayMealUseCase
 ) {
 
-    suspend fun fetchMealData(
+//    suspend operator fun invoke(
+//        date: String,
+//        restaurant: String,
+//        time: String
+//    ): Flow<ArrayList<GetMealResponse>> {
+//        val data = mealRepository.fetchTodayMeal(date, restaurant, time)
+//
+//        // Flow를 List로 변환 후 저장
+//        val mealList: List<GetMealResponse> = data.first()
+//
+//        // 각각의 메뉴를 합쳐서 식단 string으로 만듦
+//        val menuStrings = mealList.map { meal ->
+//            meal.briefMenus.joinToString("+") { it.name.toString() }
+//        }
+//
+//        saveTodayMealUseCase(date, restaurant, time, menuStrings)
+//        return data
+//
+//    }
+
+    suspend operator fun invoke(
         date: String,
-        restaurant: String,
-        time: String
-    ): Flow<ArrayList<GetMealResponse>> {
-        val data = mealRepository.fetchTodayMeal(date, restaurant, time)
+        restaurant: String
+    ): MealState = runCatching {
+        val breakfastFlow = mealRepository.fetchTodayMeal(date, restaurant, Time.MORNING.name)
+        val lunchFlow = mealRepository.fetchTodayMeal(date, restaurant, Time.LUNCH.name)
+        val dinnerFlow = mealRepository.fetchTodayMeal(date, restaurant, Time.DINNER.name)
 
-        // Flow를 List로 변환 후 저장
-        val mealList: List<GetMealResponse> = data.first()
+        combine(breakfastFlow, lunchFlow, dinnerFlow) { breakfastList, lunchList, dinnerList ->
+            fun mapToMealPair(
+                meals: List<GetMealResponse>,
+                mealType: String
+            ): Pair<List<String>, String> {
+                val menuNames = meals
+                    .flatMap { it.briefMenus }
+                    .mapNotNull { it.name }
+                return menuNames to mealType
+            }
 
-        // 각각의 메뉴를 합쳐서 식단 string으로 만듦
-        val menuStrings = mealList.map { meal ->
-            meal.briefMenus.joinToString("+") { it.name.toString() }
+            GetMealsResponseModel(
+                breakfast = mapToMealPair(breakfastList, "breakfast"),
+                lunch = mapToMealPair(lunchList, "lunch"),
+                dinner = mapToMealPair(dinnerList, "dinner")
+            )
+        }.first() // ⬅️ 여기서 Flow 실행
+    }.fold(
+        onSuccess = { result ->
+            Timber.d("급식 정보 가져오기 성공 $result")
+            MealState.Success(result)
+        },
+        onFailure = { exception ->
+//            val error = when (exception) {
+//                is NeisException -> {
+//                    when {
+//                        exception.result == NeisResult.DATA_NOT_FOUND -> MealException.DataEmpty
+//
+//                        else -> MealException.Unknown(exception.result.code)
+//                    }
+//                }
+//
+//                is UnresolvedAddressException, is UnknownHostException -> MealException.InternetDisconnected
+//
+//                else -> MealException.Unknown(NeisResult.UNKNOWN_ERROR.code)
+//            }
+
+            MealState.Failure
         }
+    )
 
-        saveTodayMealUseCase(date, restaurant, time, menuStrings)
-        return data
 
-    }
 }
 
