@@ -14,16 +14,16 @@ plugins {
 
 android {
     namespace = "com.eatssu.android"
-    compileSdk = 34
+    compileSdk = 35
 
     // S8: API 28
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23
-        targetSdk = 34
-        versionCode = 34
-        versionName = "2.1.14"
+        targetSdk = 35
+        versionCode = 24
+        versionName = "2.1.4"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,12 +47,11 @@ android {
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
-            isShrinkResources = false
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            var shrinkResources = false
+            var minifyEnabled = false
         }
 
         debug {
@@ -68,8 +67,6 @@ android {
             val kakaoKey: String = p.getProperty("KAKAO_NATIVE_APP_KEY")
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
-
-            isMinifyEnabled = false
         }
     }
 
@@ -78,12 +75,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.2"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     splits {
@@ -100,6 +101,18 @@ android {
 }
 
 dependencies {
+
+    // compose
+    val composePlatform = platform("androidx.compose:compose-bom:2023.10.01")
+    implementation(composePlatform)
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.0.0-rc01")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.0.0-rc01")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -156,7 +169,10 @@ dependencies {
 
     // Hilt for Dependency Injection
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
 
     // ViewModel and LiveData
     implementation(libs.lifecycle.viewmodel)
