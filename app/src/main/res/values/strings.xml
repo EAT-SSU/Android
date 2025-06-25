@@ -175,4 +175,6 @@
     <string name="mypage_full">마이페이지</string>
 
     <string name="login_failed">로그인이 실패했습니다.\n</string>
+    <string name="token_expired">세션이 만료되었습니다. 다시 로그인 해주세요.</string>
+    <string name="token_server_error">시스템 오류로 다시 로그인해주세요.</string>
 </resources>

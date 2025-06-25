@@ -16,7 +16,6 @@ object TokenEventBus {
     }
 
     suspend fun notifyServerError() {
-        Timber.d("TokenEventBus → Suver error")
         _tokenServerError.emit(Unit)
     }
 }

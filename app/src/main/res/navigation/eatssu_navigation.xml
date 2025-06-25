@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/eatssu_navigation"
-    app:startDestination="@id/homeFragment"
+    app:startDestination="@id/cafeteria_menu"
     >
 
     <!-- 첫 번째 화면 (Cafeteria Menu) -->
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/cafeteria_menu"
         android:name="com.eatssu.android.presentation.cafeteria.CafeteriaFragment"
         android:label="Cafeteria Menu"/>
 
