@@ -5,6 +5,7 @@
     <color name="star">#FFC700</color>
     <color name="error">#FF3F3F</color>
 
+    <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
     <color name="gray100">#FAFAFB</color>
     <color name="gray200">#F0F0F0</color>

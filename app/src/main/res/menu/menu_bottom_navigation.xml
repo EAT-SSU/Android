@@ -3,19 +3,19 @@
     <item
         android:id="@+id/cafeteria_menu"
         android:enabled="true"
-        android:icon="@drawable/ic_cafeteria_menu"
+        android:icon="@drawable/selector_ic_cafeteria_menu"
         android:title="@string/cafeteria_menu"/>
 
     <item
         android:id="@+id/map_menu"
         android:enabled="true"
-        android:icon="@drawable/ic_map"
+        android:icon="@drawable/selector_ic_map"
         android:title="@string/map"/>
 
     <item
         android:id="@+id/mypage_menu"
         android:enabled="true"
-        android:icon="@drawable/ic_mypage"
+        android:icon="@drawable/selector_ic_mypage"
         android:title="@string/mypage"/>
 
 </menu>

@@ -55,6 +55,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        binding.bottomNaviBar.itemIconTintList = null
 
         binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
             when (item.itemId) {
