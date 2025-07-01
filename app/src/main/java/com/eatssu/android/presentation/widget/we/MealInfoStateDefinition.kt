@@ -19,7 +19,7 @@ object MealInfoStateDefinition : GlanceStateDefinition<MealInfo> {
 
     private const val DATA_STORE_FILENAME = "MealInfo"
 
-    private val Context.datastore by dataStore(DATA_STORE_FILENAME, MealInfoSerializer)
+    val Context.datastore by dataStore(DATA_STORE_FILENAME, MealInfoSerializer)
     override suspend fun getDataStore(context: Context, fileKey: String): DataStore<MealInfo> {
         return context.datastore
     }
@@ -32,20 +32,18 @@ object MealInfoStateDefinition : GlanceStateDefinition<MealInfo> {
         override val defaultValue = MealInfo.Loading
 
         override suspend fun readFrom(input: InputStream): MealInfo = try {
-            Json.decodeFromString(
-                MealInfo.serializer(),
-                input.readBytes().decodeToString()
-            )
+            val jsonRaw = input.readBytes().decodeToString()
+            Timber.d("🔍 readFrom: raw = '$jsonRaw'")
+            Json.decodeFromString(MealInfo.serializer(), jsonRaw)
         } catch (exception: SerializationException) {
+            Timber.e("❌ Serialization error: ${exception.message}")
             throw CorruptionException("Could not read data: ${exception.message}")
         }
-
         override suspend fun writeTo(t: MealInfo, output: OutputStream) {
-            Timber.d("writeTo: ${t.toString()}")
+            val json = Json.encodeToString(MealInfo.serializer(), t)
+            Timber.d("💾 [writeTo] json = $json") // 이게 반드시 출력되어야 함
             output.use {
-                it.write(
-                    Json.encodeToString(MealInfo.serializer(), t).encodeToByteArray()
-                )
+                it.write(json.encodeToByteArray())
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
 import com.eatssu.android.domain.usecase.meal.MealState
+import timber.log.Timber
 import java.time.LocalTime
 
 sealed class MealTime {
@@ -35,8 +36,10 @@ object WidgetDataDisplayManager {
         getMealsUseCase: GetTodayMealUseCase,
         requestedMealTime: MealTime,
     ): MealInfoState {
+        Timber.d("Widget - fetchMealInfo")
         val targetDate = DateUtils.convertMillisToDateString(System.currentTimeMillis())
         val response = getMealsUseCase(targetDate, Restaurant.DODAM.name)
+        Timber.d("Widget - fetchMealInfo $response")
 
         if (response is MealState.Success) {
             val mealTimes = listOf(MealTime.Morning, MealTime.Lunch, MealTime.Dinner)
