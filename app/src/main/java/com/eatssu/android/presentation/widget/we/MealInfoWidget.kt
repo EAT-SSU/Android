@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.widget.we
 
+//import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -25,7 +26,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
-import com.eatssu.android.presentation.widget.ui.theme.EATSSUWidgetColorScheme
+import com.eatssu.android.presentation.widget.we.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.we.util.launchApp
 
 

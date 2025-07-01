@@ -17,6 +17,7 @@ import com.eatssu.android.presentation.widget.we.util.MealInfoState
 import com.eatssu.android.presentation.widget.we.util.WidgetDataDisplayManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import timber.log.Timber
 import java.time.Duration
 
 @HiltWorker
@@ -35,6 +36,7 @@ class MealWorker @AssistedInject constructor(
                 Duration.ofMinutes(30)
             )
 
+            Timber.d("Widget - enqueue")
             manager.enqueueUniquePeriodicWork(
                 uniqueWorkName,
                 ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
@@ -51,6 +53,7 @@ class MealWorker @AssistedInject constructor(
                 requestedMealTime = WidgetDataDisplayManager.getCurrentMealTime()
             ).toMealInfo()
         )
+        Timber.d("Widget - 워커는 doWork")
 
         return Result.success()
     }
