@@ -100,8 +100,8 @@ object WidgetDataDisplayManager {
     @RequiresApi(Build.VERSION_CODES.O)
     internal fun getCurrentMealTime(): MealTime {
         val currentTime = LocalTime.now()
-        val morningEnd = LocalTime.of(7, 35)
-        val lunchEnd = LocalTime.of(12, 35)
+        val morningEnd = LocalTime.of(9, 0)
+        val lunchEnd = LocalTime.of(15, 0)
 
         return when {
             currentTime.isBefore(morningEnd) -> MealTime.Morning
