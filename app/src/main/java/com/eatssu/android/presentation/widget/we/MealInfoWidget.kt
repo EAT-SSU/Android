@@ -41,6 +41,7 @@ import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.presentation.widget.we.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.we.util.launchApp
+import timber.log.Timber
 
 
 class MealWidget : GlanceAppWidget() {
@@ -57,10 +58,10 @@ class MealWidget : GlanceAppWidget() {
                 when (val state = currentState<MealInfo>()) {
                     is MealInfo.Available -> {
                         if (state.mealList.isNotEmpty()) {
-                        MealWidgetContent(
-                            mealTime = state.mealTime,
-                            mealList = state.mealList
-                        )
+                            MealWidgetContent(
+                                mealTime = state.mealTime,
+                                mealList = state.mealList
+                            )
                         } else {
                             Text(text = "오늘의 메뉴가 없습니다.")
                         }
@@ -90,9 +91,6 @@ class MealWidget : GlanceAppWidget() {
                 .background(GlanceTheme.colors.background)
                 .padding(16.dp)
                 .cornerRadius(20.dp)
-//                .cornerRadiuslickable {
-//                    actionStartActivity<MainActivity>()
-//                },
         ) {
 
             Row(
@@ -168,14 +166,16 @@ class MealWidget : GlanceAppWidget() {
                     }
                 }
             }
-
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .clickable { context.launchApp() },
-                content = {}
-            )
         }
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .clickable {
+                    context.launchApp()
+                    Timber.d("위젯 클릭")
+                },
+            content = {}
+        )
     }
 
     @OptIn(ExperimentalGlancePreviewApi::class)
