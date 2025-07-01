@@ -104,17 +104,6 @@ android {
 
 dependencies {
 
-    // compose
-//    val composePlatform = platform("androidx.compose:compose-bom:2024.04.01")
-//    implementation(composePlatform)
-//    implementation("androidx.activity:activity-compose:1.8.2")
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-//    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-//    implementation("androidx.navigation:navigation-compose:2.7.6")
-//    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-//    debugImplementation("androidx.compose.ui:ui-tooling:1.0.0-rc01")
-//    implementation("androidx.compose.ui:ui-tooling-preview:1.0.0-rc01")
-    implementation(libs.androidx.material3)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -126,18 +115,13 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.activity)
     implementation(libs.fragment)
-//    implementation(libs.androidx.activity)
 
     //glance
-
-    // glance for widget
-//    implementation("androidx.glance:glance:1.0.0")
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.preview)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
-//    implementation(libs.androidx.glance.material2)
-
+    debugImplementation(libs.androidx.glance.appwidget.preview) // 프리뷰 지원
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -201,7 +185,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx.v252)
-    implementation(libs.compose.bom)
+    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)

@@ -4,6 +4,7 @@ accompanistAppcompatTheme = "0.16.0"
 android = "8.6.1"
 androidx-core = "1.7.0"
 androidx-appcompat = "1.6.1"
+glanceAppwidgetPreview = "1.1.1"
 hiltAndroidCompiler = "2.42"
 lifecycleRuntimeCompose = "2.8.7"
 animation = "1.7.8"
@@ -68,6 +69,7 @@ glanceAppwidget = "1.1.1"
 [libraries]
 
 # kotlinx, kotlin
+androidx-glance-appwidget-preview = { module = "androidx.glance:glance-appwidget-preview", version.ref = "glanceAppwidgetPreview" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
