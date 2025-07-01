@@ -14,13 +14,6 @@ interface MealRepository {
         time: String,
     ): Flow<ArrayList<GetMealResponse>>
 
-    // datastore에 오늘의 식단을 저장
-    suspend fun saveTodayMeal(
-        date: String,
-        restaurant: String,
-        time: String,
-        meal: List<String>
-    )
 
     // MealId를 이용해서 Menu를 찾기 api
     suspend fun getMenuInfoByMealId(
