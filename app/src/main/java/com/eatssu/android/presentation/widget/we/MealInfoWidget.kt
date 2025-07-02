@@ -63,16 +63,20 @@ class MealWidget : GlanceAppWidget() {
                                 mealList = state.mealList
                             )
                         } else {
-                            Text(text = "오늘의 메뉴가 없습니다.")
+                            MealWidgetError(
+                                mealTime = state.mealTime,
+                                text = "오늘의 메뉴가 없습니다."
+                            )
+
                         }
                     }
 
                     is MealInfo.Loading -> {
-                        Text(text = "로딩 중")
+                        MealWidgetError(text = "로딩 중")
                     }
 
                     is MealInfo.Unavailable -> {
-                        Text(text = "네트워크 연결 상태를 확인해주세요.")
+                        MealWidgetError(text = "네트워크 연결 상태를 확인해주세요.")
                     }
                 }
             }
@@ -88,7 +92,7 @@ class MealWidget : GlanceAppWidget() {
 
         Column(
             modifier = GlanceModifier.fillMaxSize()
-                .background(GlanceTheme.colors.background)
+                .background(GlanceTheme.colors.onPrimary)
                 .padding(16.dp)
                 .cornerRadius(20.dp)
         ) {
@@ -145,11 +149,15 @@ class MealWidget : GlanceAppWidget() {
 //                    )
                 }
             }
+
+            Spacer(modifier = GlanceModifier.height(12.dp))
+
             LazyColumn(
                 modifier = GlanceModifier
                     .fillMaxSize()
                     .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
-                    .background(GlanceTheme.colors.onPrimary),
+                    .cornerRadius(10.dp)
+                    .background(GlanceTheme.colors.onBackground),
             ) {
                 itemsIndexed(mealList) { index, item ->
                     val text = if (item.length >= 14) item.substring(0, 13) + "..." else item
@@ -178,12 +186,109 @@ class MealWidget : GlanceAppWidget() {
         )
     }
 
+    @Composable
+    fun MealWidgetError(mealTime: String? = "", text: String) {
+        Column(
+            modifier = GlanceModifier.fillMaxSize()
+                .background(GlanceTheme.colors.background)
+                .padding(16.dp)
+                .cornerRadius(20.dp)
+        ) {
+
+            Row(
+                modifier = GlanceModifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // 조식/중식/석식
+                Column(
+                    verticalAlignment = Alignment.Top,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Image(
+                        modifier = GlanceModifier.size(height = 14.dp, width = 43.dp),
+                        provider = ImageProvider(R.drawable.img_new_logo_primary),
+                        contentDescription = "Logo"
+                    )
+
+                    if (mealTime != null) {
+                        Text(
+                            mealTime,
+                            style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                            modifier = GlanceModifier.padding(top = 2.dp, bottom = 12.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = GlanceModifier.defaultWeight())
+
+                //식당 이름
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
+                ) {
+                    Image(
+                        modifier = GlanceModifier.size(18.dp),
+                        provider = ImageProvider(R.drawable.ic_arrow_left),
+                        contentDescription = "left"
+                    )
+                    Text(
+                        "기숙사 식당",
+                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
+                        modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
+                    )
+                    Image(
+                        modifier = GlanceModifier.size(18.dp),
+                        provider = ImageProvider(R.drawable.ic_arrow_right),
+                        contentDescription = "right"
+                    )
+                }
+
+            }
+
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
+                    .cornerRadius(10.dp)
+                    .background(GlanceTheme.colors.onBackground)
+            )
+            {
+                Column(
+                    modifier = GlanceModifier
+                        .fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Image(
+                        modifier = GlanceModifier.size(20.dp)
+                            .padding(bottom = 6.dp),
+                        provider = ImageProvider(R.drawable.ic_alert_circle),
+                        contentDescription = "alert"
+                    )
+                    Text(
+                        text,
+                        style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                    )
+                }
+            }
+        }
+    }
+
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview
     @Composable
     fun MealWidgetPreview() {
         MealWidgetContent("저녁", listOf("밥", "국", "반찬", "음료"))
     }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview
+    @Composable
+    fun MealWidgetPreviewError() {
+        MealWidgetError("저녁", "에러임")
+    }
+
 }
 
 class MealWidgetReceiver : GlanceAppWidgetReceiver() {
