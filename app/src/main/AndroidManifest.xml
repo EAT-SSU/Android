@@ -127,7 +127,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.mypage.usernamechange.UserInfoActivity"
+            android:name=".presentation.mypage.userinfo.UserInfoActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data

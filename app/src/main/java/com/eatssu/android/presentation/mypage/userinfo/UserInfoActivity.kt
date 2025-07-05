@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.mypage.usernamechange
+package com.eatssu.android.presentation.mypage.userinfo
 
 import android.os.Bundle
 import android.text.Editable
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class UserInfoActivity :
     BaseActivity<ActivityUserInfoBinding>(ActivityUserInfoBinding::inflate) {
 
-    private val userNameChangeViewModel: UserNameChangeViewModel by viewModels()
+    private val userInfoViewModel: UserInfoViewModel by viewModels()
 
     private var inputNickname: String = ""
 
@@ -109,10 +109,10 @@ class UserInfoActivity :
 
     private fun setOnClickListener() {
         binding.btnCheckNickname.setOnClickListener {
-            userNameChangeViewModel.checkNickname(inputNickname)
+            userInfoViewModel.checkNickname(inputNickname)
 
             lifecycleScope.launch {
-                userNameChangeViewModel.uiState.collectLatest {
+                userInfoViewModel.uiState.collectLatest {
                     if (it.isEnableName) {
                         binding.btnComplete.isEnabled = true
                         binding.tvNickname28.text = getString(R.string.set_nickname_able)
@@ -132,10 +132,10 @@ class UserInfoActivity :
         }
 
         binding.btnComplete.setOnClickListener {
-            userNameChangeViewModel.changeNickname(inputNickname)
+            userInfoViewModel.changeNickname(inputNickname)
 
             lifecycleScope.launch {
-                userNameChangeViewModel.uiState.collectLatest {
+                userInfoViewModel.uiState.collectLatest {
                     if (it.isDone) {
                         showToast(it.toastMessage)
                         finish()

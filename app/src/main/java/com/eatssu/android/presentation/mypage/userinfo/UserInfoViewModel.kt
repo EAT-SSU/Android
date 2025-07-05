@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.mypage.usernamechange
+package com.eatssu.android.presentation.mypage.userinfo
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -20,7 +20,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class UserNameChangeViewModel @Inject constructor(
+class UserInfoViewModel @Inject constructor(
     private val setUserNameUseCase: SetUserNameUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val validateUserNameUseCase: ValidateUserNameUseCase,

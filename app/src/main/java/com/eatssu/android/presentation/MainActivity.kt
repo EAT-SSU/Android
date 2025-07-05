@@ -19,7 +19,7 @@ import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
-import com.eatssu.android.presentation.mypage.usernamechange.UserInfoActivity
+import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
