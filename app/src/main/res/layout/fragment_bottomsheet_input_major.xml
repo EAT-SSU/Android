@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="16dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="70dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/H1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="학과를 입력하고\n나만의 제휴를 확인해보세요!"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="81dp"
+            android:layout_marginEnd="65dp"
+            android:src="@drawable/img_new_logo_primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_slogan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_logo">
+
+            <TextView
+                android:id="@+id/tv_title_for_ssu"
+                style="@style/Caption1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="숭실대에서 "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_title_for_eat"
+                style="@style/Caption1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="먹자"
+                android:textColor="@color/primary" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_complete"
+            style="@style/Button1"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/shape_button_duplicate"
+            android:stateListAnimator="@null"
+            android:text="학과 입력하기"/>
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
