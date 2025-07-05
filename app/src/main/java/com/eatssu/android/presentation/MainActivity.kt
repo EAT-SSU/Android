@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.MenuItem
-import android.view.View
 import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -20,7 +19,7 @@ import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
-import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.presentation.mypage.usernamechange.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -147,7 +146,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 if (it.isNicknameNull) {
                     //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
                     intent.putExtra("force", true)
-                    startActivity<UserNameChangeActivity>()
+                    startActivity<UserInfoActivity>()
                     showToast(it.toastMessage)
                 } else {
                     showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸

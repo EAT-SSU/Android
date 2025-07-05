@@ -3,10 +3,16 @@ package com.eatssu.android.presentation.mypage.usernamechange
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
-import com.eatssu.android.databinding.ActivityUserNameChangeBinding
+import com.eatssu.android.databinding.ActivityUserInfoBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,8 +20,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class UserNameChangeActivity :
-    BaseActivity<ActivityUserNameChangeBinding>(ActivityUserNameChangeBinding::inflate) {
+class UserInfoActivity :
+    BaseActivity<ActivityUserInfoBinding>(ActivityUserInfoBinding::inflate) {
 
     private val userNameChangeViewModel: UserNameChangeViewModel by viewModels()
 
@@ -25,9 +31,23 @@ class UserNameChangeActivity :
 
     private var nicknameDuplicate: Boolean = false
 
+    private val college = listOf("단과대", "인문대", "자연대", "법과대", "사회대", "경통대", "경영대", "공과대", "IT대", "자유전공")
+
+    private val majors = mapOf(
+        "인문대" to listOf("기독교학과", "국어국문학과", "영어영문학과"),
+        "자연대" to listOf("수학과", "물리학과"),
+        "법과대" to listOf("법학과"),
+        "사회대" to listOf("사회학과"),
+        "경통대" to listOf("경제학과", "통계학과"),
+        "경영대" to listOf("경영학과"),
+        "공과대" to listOf("기계공학과", "전기전자공학과"),
+        "IT대" to listOf("컴퓨터학과", "소프트웨어학과"),
+        "자유전공" to listOf("자유전공학부")
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = "닉네임 설정" // 툴바 제목 설정
+        toolbarTitle.text = "내 정보" // 툴바 제목 설정
 
 
         force = intent.getBooleanExtra("force", false)
@@ -69,6 +89,9 @@ class UserNameChangeActivity :
 
             override fun afterTextChanged(p0: Editable?) {}
         })
+
+        setupCollegeSpinners(binding.spinnerCollege, college)
+        setupCollegeSpinners(binding.spinnerMajor, majors.values.toList().flatten())
 
         setOnClickListener()
     }
@@ -120,5 +143,44 @@ class UserNameChangeActivity :
                 }
             }
         }
+    }
+
+    private fun setupCollegeSpinners(spinner: Spinner, items: List<String>) {
+        val adapter = object : ArrayAdapter<String>(
+            this,
+            R.layout.item_spinner_selected,
+            items
+        ) {
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val inflater = layoutInflater
+                val view = inflater.inflate(R.layout.item_spinner, parent, false)
+                val textView = view.findViewById<TextView>(R.id.tv_spinner_item)
+                textView.text = getItem(position)
+
+                // 선택된 아이템 강조 배경
+                if (spinner.selectedItemPosition == position && position != 0) {
+                    view.setBackgroundResource(R.drawable.bg_spinner_selected_item)
+                } else {
+                    view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                }
+
+                return view
+            }
+
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                val tv = view.findViewById<TextView>(R.id.tv_spinner_item)
+                tv.setTextColor(
+                    if (position == 0)
+                        ContextCompat.getColor(context, R.color.gray400)
+                    else
+                        ContextCompat.getColor(context, R.color.black)
+                )
+                return view
+            }
+        }
+
+        adapter.setDropDownViewResource(R.layout.item_spinner)
+        spinner.adapter = adapter
     }
 }
