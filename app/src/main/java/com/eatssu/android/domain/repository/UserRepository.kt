@@ -20,8 +20,19 @@ interface UserRepository {
     suspend fun getUserInfo(): Flow<BaseResponse<MyInfoResponse>>
     suspend fun signOut(): Flow<BaseResponse<Boolean>>
 
+    // Local에 있는 단과대, 학과 정보 조회
     fun getTotalColleges(): List<String>
     fun getTotalMajors(college: String): List<String>
 
+    // 유저의 학과 기입 여부 체크
+    suspend fun checkUserDepartment(): Boolean
+
+    // 유저의 학과 정보 조회
+    suspend fun getUserDepartment(): Flow<BaseResponse<String>>
+
+    // 유저의 학과 설정
+    suspend fun setUserDepartment(
+        departmentName: String,
+    ): Flow<BaseResponse<Void>>
 }
 

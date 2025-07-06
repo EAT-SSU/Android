@@ -58,4 +58,17 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
     override fun getTotalMajors(college: String): List<String> =
         collegeMajors[college] ?: emptyList()
 
+    override suspend fun checkUserDepartment(): Boolean =
+        userService.checkUserDepartment().result ?: false
+
+    override suspend fun getUserDepartment(): Flow<BaseResponse<String>> =
+        flow {
+            emit(userService.getUserDepartment())
+        }
+
+    override suspend fun setUserDepartment(departmentName: String): Flow<BaseResponse<Void>> =
+        flow {
+            emit(userService.setUserDepartment(departmentName))
+        }
+
 }
