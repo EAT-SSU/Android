@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface UserService {
@@ -31,5 +32,15 @@ interface UserService {
     @DELETE("users") //유저 탈퇴
     suspend fun signOut(): BaseResponse<Boolean>
 
+    @GET("users/validate/department") // 유저의 학과 기입 여부 체크
+    suspend fun checkUserDepartment(): BaseResponse<Boolean>
+
+    @GET("users/department") // 유저의 학과 조회
+    suspend fun getUserDepartment(): BaseResponse<String>
+
+    @POST("users/department") // 유저의 학과 설정
+    suspend fun setUserDepartment(
+        @Body departmentName: String,
+    ): BaseResponse<Void>
 
 }
