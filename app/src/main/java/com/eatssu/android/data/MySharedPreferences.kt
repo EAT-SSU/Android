@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 
 //자동 로그인을 위한 SharedPreferences
+
+// TODO MySharedPreferences 자체에서 context를 주입받 받아야 하는데, 현재는 각 UseCase에서 context를 주입받아 사용하고 있음
 object MySharedPreferences {
     private val MY_ACCOUNT: String = "account"
 

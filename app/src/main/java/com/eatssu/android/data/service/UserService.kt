@@ -4,6 +4,7 @@ import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
+import com.eatssu.android.data.dto.response.UserDepartmentResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -36,7 +37,7 @@ interface UserService {
     suspend fun checkUserDepartment(): BaseResponse<Boolean>
 
     @GET("users/department") // 유저의 학과 조회
-    suspend fun getUserDepartment(): BaseResponse<String>
+    suspend fun getUserDepartment(): BaseResponse<UserDepartmentResponse>
 
     @POST("users/department") // 유저의 학과 설정
     suspend fun setUserDepartment(

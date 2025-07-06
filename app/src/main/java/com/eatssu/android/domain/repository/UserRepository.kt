@@ -28,7 +28,7 @@ interface UserRepository {
     suspend fun checkUserDepartment(): Boolean
 
     // 유저의 학과 정보 조회
-    suspend fun getUserDepartment(): Flow<BaseResponse<String>>
+    suspend fun getUserDepartment(): String
 
     // 유저의 학과 설정
     suspend fun setUserDepartment(
