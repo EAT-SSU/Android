@@ -3,14 +3,16 @@ package com.eatssu.android.presentation.mypage.userinfo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.view.WindowManager
+import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
 import com.eatssu.android.presentation.base.BaseActivity
@@ -29,8 +31,6 @@ class UserInfoActivity :
 
     private var force: Boolean = false
 
-    private var nicknameDuplicate: Boolean = false
-
     private val college = listOf("단과대", "인문대", "자연대", "법과대", "사회대", "경통대", "경영대", "공과대", "IT대", "자유전공")
 
     private val majors = mapOf(
@@ -44,6 +44,10 @@ class UserInfoActivity :
         "IT대" to listOf("컴퓨터학과", "소프트웨어학과"),
         "자유전공" to listOf("자유전공학부")
     )
+
+    // 선택된 단과대와 전공의 인덱스
+    private var selectedCollegeIndex = 0
+    private var selectedMajorIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,24 +94,12 @@ class UserInfoActivity :
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-        setupCollegeSpinners(binding.spinnerCollege, college)
-        setupCollegeSpinners(binding.spinnerMajor, majors.values.toList().flatten())
+        setOnCheckNicknameClickListener()
 
-        setOnClickListener()
+        setCollegeMajorClickListener()
     }
 
-//    override fun onBackPressed() {
-//        if (force) {
-//            // force가 true일 때는 뒤로가기 버튼을 무시하고 현재 화면에 머물게 함
-//            // 여기에 다른 동작을 추가할 수도 있음
-//            showToast("닉네임 설정 후, 서비스를 이용하실 수 있습니다.")
-//        } else {
-//            // force가 false일 때는 기본 뒤로가기 동작을 수행
-//            super.onBackPressed()
-//        }
-//    }
-
-    private fun setOnClickListener() {
+    private fun setOnCheckNicknameClickListener() {
         binding.btnCheckNickname.setOnClickListener {
             userInfoViewModel.checkNickname(inputNickname)
 
@@ -118,7 +110,6 @@ class UserInfoActivity :
                         binding.tvNickname28.text = getString(R.string.set_nickname_able)
                         binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
                         binding.tvNickname28.setTextColor(getColor(R.color.gray600))
-
 
                     } else {
                         binding.btnComplete.isEnabled = false
@@ -145,42 +136,106 @@ class UserInfoActivity :
         }
     }
 
-    private fun setupCollegeSpinners(spinner: Spinner, items: List<String>) {
-        val adapter = object : ArrayAdapter<String>(
-            this,
-            R.layout.item_spinner_selected,
-            items
-        ) {
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val inflater = layoutInflater
-                val view = inflater.inflate(R.layout.item_spinner, parent, false)
-                val textView = view.findViewById<TextView>(R.id.tv_spinner_item)
-                textView.text = getItem(position)
+    /**
+     * 단과대와 전공 선택을 위한 드롭다운 팝업 설정
+     */
+    private fun setCollegeMajorClickListener() {
+        binding.tvCollege.setOnClickListener {
+            showDropdownPopup(binding.tvCollege, college, selectedCollegeIndex) { selected, index ->
+                selectedCollegeIndex = index
+                binding.tvCollege.text = selected
 
-                // 선택된 아이템 강조 배경
-                if (spinner.selectedItemPosition == position && position != 0) {
-                    view.setBackgroundResource(R.drawable.bg_spinner_selected_item)
-                } else {
-                    view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                // 학과 초기화
+                selectedMajorIndex = 0
+                binding.tvMajor.text = "학과"
+
+                showDropdownPopup(
+                    binding.tvMajor,
+                    majors[selected] ?: emptyList(),
+                    selectedMajorIndex
+                ) { major, majorIndex ->
+                    selectedMajorIndex = majorIndex
+                    binding.tvMajor.text = major
                 }
-
-                return view
-            }
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = super.getView(position, convertView, parent)
-                val tv = view.findViewById<TextView>(R.id.tv_spinner_item)
-                tv.setTextColor(
-                    if (position == 0)
-                        ContextCompat.getColor(context, R.color.gray400)
-                    else
-                        ContextCompat.getColor(context, R.color.black)
-                )
-                return view
             }
         }
 
-        adapter.setDropDownViewResource(R.layout.item_spinner)
-        spinner.adapter = adapter
+        binding.tvMajor.setOnClickListener {
+            val selectedCollege = binding.tvCollege.text.toString()
+
+            val majorList = if (selectedCollege == "단과대") {
+                // 단과대가 선택되지 않았으면 모든 학과를 하나의 리스트로 보여줌
+                majors.values.flatten()
+            } else {
+                majors[selectedCollege] ?: emptyList()
+            }
+
+            showDropdownPopup(
+                binding.tvMajor,
+                majorList,
+                selectedMajorIndex
+            ) { major, majorIndex ->
+                selectedMajorIndex = majorIndex
+                binding.tvMajor.text = major
+            }
+        }
     }
+
+    private fun showDropdownPopup(
+        anchor: View,
+        items: List<String>,
+        selectedIndex: Int,
+        onItemClick: (selected: String, selectedIndex: Int) -> Unit
+    ) {
+        val inflater = LayoutInflater.from(this)
+        val popupView = inflater.inflate(R.layout.popup_dropdown_list, null)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            anchor.width + 52,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        val recyclerView = popupView.findViewById<RecyclerView>(R.id.recycler_dropdown)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        var selectedItemPosition = items.indexOf(
+            when (anchor.id) {
+                R.id.fl_college -> binding.tvCollege.text.toString()
+                R.id.fl_major -> binding.tvMajor.text.toString()
+                else -> ""
+            }
+        )
+
+        recyclerView.adapter = object : RecyclerView.Adapter<DropdownViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DropdownViewHolder {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_dropdown, parent, false)
+                return DropdownViewHolder(view)
+            }
+
+            override fun getItemCount() = items.size
+
+            override fun onBindViewHolder(holder: DropdownViewHolder, position: Int) {
+                holder.bind(items[position]) {
+                    onItemClick(it, position)
+                    popupWindow.dismiss()
+                }
+
+                if (position == selectedIndex) {
+                    holder.itemView.setBackgroundResource(R.drawable.bg_menu_selected_item)
+                } else {
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(this@UserInfoActivity, android.R.color.transparent))
+                }
+            }
+        }
+
+        popupWindow.elevation = 8f
+        popupWindow.isOutsideTouchable = true
+        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.shape_text_field_small))
+
+        popupWindow.showAsDropDown(anchor, -24, binding.tvMajor.height + 8) // 펼쳐지는 위치 조정
+    }
+
 }
