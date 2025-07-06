@@ -23,7 +23,7 @@ sealed class MealInfoState {
 
     data class Available(
         val mealTime: String,
-        val mealList: List<String>,
+        val mealList: List<List<String>>,
     ) : MealInfoState()
 
     data object Unavailable : MealInfoState()
@@ -54,10 +54,11 @@ object WidgetDataDisplayManager {
                         MealTime.Dinner -> dinner
                     }
 
-                    if (currentMeal.first.isNotEmpty()) {
+                    val menuGroups = currentMeal.first
+                    if (menuGroups.flatten().isNotEmpty()) {
                         return MealInfoState.Available(
                             convertTimeToString(currentMealTime),
-                            currentMeal.first
+                            menuGroups
                         )
                     }
                 }
@@ -80,10 +81,11 @@ object WidgetDataDisplayManager {
                         MealTime.Dinner -> dinner
                     }
 
-                    if (currentMeal.first.isNotEmpty()) {
+                    val menuGroups = currentMeal.first
+                    if (menuGroups.flatten().isNotEmpty()) {
                         return MealInfoState.Available(
                             convertTimeToString(currentMealTime),
-                            currentMeal.first
+                            menuGroups
                         )
                     }
                 }

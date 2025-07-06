@@ -86,7 +86,7 @@ class MealWidget : GlanceAppWidget() {
     @Composable
     private fun MealWidgetContent(
         mealTime: String,
-        mealList: List<String>,
+        mealList: List<List<String>>,
     ) {
         val context = LocalContext.current
 
@@ -123,30 +123,11 @@ class MealWidget : GlanceAppWidget() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
                 ) {
-//                    Image(
-//                        modifier = GlanceModifier.size(18.dp)
-//                            .clickable {
-//                                onLeftArrowClick()
-//                                Timber.d("onLeftArrowClick")
-//                            },
-//                        provider = ImageProvider(R.drawable.ic_arrow_left),
-//                        contentDescription = "left",
-//                    )
                     Text(
                         "도담식당",
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
                     )
-//                    Image(
-//                        modifier = GlanceModifier.size(18.dp)
-//                            .clickable {
-//                                Timber.d("onRightArrowClick")
-////                                actionRunCallback<NextRestaurantAction>()
-////                                Timber.d("onRightArrowClick2")
-//                            },
-//                        provider = ImageProvider(R.drawable.ic_arrow_right),
-//                        contentDescription = "right"
-//                    )
                 }
             }
 
@@ -159,17 +140,14 @@ class MealWidget : GlanceAppWidget() {
                     .cornerRadius(10.dp)
                     .background(GlanceTheme.colors.onBackground),
             ) {
-                itemsIndexed(mealList) { index, item ->
-                    val text = if (item.length >= 14) item.substring(0, 13) + "..." else item
-
+                itemsIndexed(mealList) { index, group ->
+                    val groupText = group.joinToString(" + ")
                     Column {
                         Text(
-                            text = text,
-//                        color = GlanceTheme.colors.tertiary.getColor(context),
-//                        fontSize = 14.sp
+                            text = groupText,
                         )
                         if (mealList.lastIndex != index) {
-                            Spacer(modifier = GlanceModifier.height(1.37.dp))
+                            Spacer(modifier = GlanceModifier.height(8.dp)) // 그룹 간 간격
                         }
                     }
                 }
@@ -290,7 +268,7 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreview() {
-        MealWidgetContent("저녁", listOf("밥", "국", "반찬", "음료"))
+        MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")))
     }
 
     @OptIn(ExperimentalGlancePreviewApi::class)

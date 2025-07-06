@@ -49,11 +49,12 @@ class GetTodayMealUseCase @Inject constructor(
             fun mapToMealPair(
                 meals: List<GetMealResponse>,
                 mealType: String
-            ): Pair<List<String>, String> {
-                val menuNames = meals
-                    .flatMap { it.briefMenus }
-                    .mapNotNull { it.name }
-                return menuNames to mealType
+            ): Pair<List<List<String>>, String> {
+                // 각 meal(예: 점심)에 대해 여러 그룹(메뉴묶음)으로 변환
+                val menuGroups = meals.map { meal ->
+                    meal.briefMenus.mapNotNull { it.name }
+                }
+                return menuGroups to mealType
             }
 
             GetMealsResponseModel(
