@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.map
 
+import android.bluetooth.BluetoothClass.Device.Major
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +23,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,12 +41,16 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray300
 import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
+import com.eatssu.android.presentation.map.component.MajorBottomSheet
+import com.eatssu.android.presentation.map.component.MajorBottomSheetPreview
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.NaverMap
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapFragmentComposeView() {
+    var showBottomSheet by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -58,6 +67,17 @@ fun MapFragmentComposeView() {
             )
         },
     ) { innerPadding ->
+
+        if (showBottomSheet) {
+            MajorBottomSheet(
+                onDismiss = { showBottomSheet = false },
+                onInputClick = {
+                    // TODO: 학과 입력 화면으로 이동
+                    showBottomSheet = false
+                }
+            )
+        }
+
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding),

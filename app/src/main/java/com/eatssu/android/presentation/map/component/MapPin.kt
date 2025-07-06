@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.map
+package com.eatssu.android.presentation.map.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
