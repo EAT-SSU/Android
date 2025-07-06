@@ -39,6 +39,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.eatssu.android.R
+import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.presentation.widget.we.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.we.util.launchApp
 import timber.log.Timber
@@ -60,7 +61,8 @@ class MealWidget : GlanceAppWidget() {
                         if (state.mealList.isNotEmpty()) {
                             MealWidgetContent(
                                 mealTime = state.mealTime,
-                                mealList = state.mealList
+                                mealList = state.mealList,
+                                restaurant = state.restaurant,
                             )
                         } else {
                             MealWidgetError(
@@ -87,6 +89,7 @@ class MealWidget : GlanceAppWidget() {
     private fun MealWidgetContent(
         mealTime: String,
         mealList: List<List<String>>,
+        restaurant: Restaurant,
     ) {
         val context = LocalContext.current
 
@@ -123,10 +126,28 @@ class MealWidget : GlanceAppWidget() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
                 ) {
+                    Image(
+                        modifier = GlanceModifier.size(18.dp)
+                            .clickable {
+//                                onLeftArrowClick()
+                                Timber.d("onLeftArrowClick")
+                            },
+                        provider = ImageProvider(R.drawable.ic_arrow_left),
+                        contentDescription = "left",
+                    )
                     Text(
-                        "도담식당",
+                        restaurant.displayName,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
+                    )
+                    Image(
+                        modifier = GlanceModifier.size(18.dp)
+                            .clickable {
+//                                onLeftArrowClick()
+                                Timber.d("onrightArrowClick")
+                            },
+                        provider = ImageProvider(R.drawable.ic_arrow_right),
+                        contentDescription = "right",
                     )
                 }
             }
@@ -268,7 +289,7 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreview() {
-        MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")))
+        MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")), Restaurant.DODAM)
     }
 
     @OptIn(ExperimentalGlancePreviewApi::class)
