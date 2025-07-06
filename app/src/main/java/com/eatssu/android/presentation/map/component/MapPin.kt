@@ -24,10 +24,10 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray300
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
 
-enum class PlaceType(val iconRes: Int) {
-    CAFE(R.drawable.ic_map_cafe),
-    RESTAURANT(R.drawable.ic_map_restaurant),
-    ALCOHOL(R.drawable.ic_map_alcohol),
+enum class PlaceType(val placeCategory: String, val iconRes: Int) {
+    CAFE("카페", R.drawable.ic_map_cafe),
+    RESTAURANT("음식점", R.drawable.ic_map_restaurant),
+    ALCOHOL("술집", R.drawable.ic_map_alcohol),
 }
 
 @Composable
