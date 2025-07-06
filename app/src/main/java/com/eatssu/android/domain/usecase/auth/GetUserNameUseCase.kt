@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetUserNameUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    suspend operator fun invoke(): UserInfo {
+    operator fun invoke(): UserInfo {
         val nickname = MySharedPreferences.getUserName(context)
         val college = MySharedPreferences.getUserCollege(context)
         val major = MySharedPreferences.getUserMajor(context)

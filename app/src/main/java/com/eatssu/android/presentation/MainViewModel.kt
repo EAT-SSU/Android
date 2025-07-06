@@ -114,12 +114,20 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 userRepository.getUserDepartment()
-            }.onSuccess {
-                Timber.d("getUserDepartment: ${it}")
-                MySharedPreferences.setUserMajor(context, it)
+            }.onSuccess { department ->
+                Timber.d("userDepartment: $department")
+
+                MySharedPreferences.setUserMajor(context,department)
+                // 단과대 추론
+                val college = findCollegeByDepartment(department)
+                MySharedPreferences.setUserCollege(context,college)
+
                 // 뷰모델이랑 도메인에서 context를 알고 있는 것도 아니고..
                 // MySharedPreferences을 직접적으로 사용하는 것도 아닌데 지금 다 이렇게 되어있음
                 // 지금은 어쩔수없는데 MySharedPreferences 가서 TODO 봐주세요
+
+                // 학과 정보 불러온 뒤 학과가 포함된 단과대 정보 가져오기
+
             }.onFailure { it ->
                 Timber.e("getUserDepartment failed: ${it.message}")
                 _uiState.update {
@@ -130,7 +138,17 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
 
+    private fun findCollegeByDepartment(
+        department: String,
+    ): String {
+        val allColleges = userRepository.getTotalColleges()
+        return allColleges
+            .drop(1)
+            .firstOrNull { college ->
+                userRepository.getTotalDepartments(college).contains(department)
+            } ?: "단과대"
     }
 
 }
