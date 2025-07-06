@@ -102,31 +102,25 @@ class UserInfoViewModel @Inject constructor(
 
     fun updateNickname(nickname: String) {
         _uiState.update {
-            val changed = nickname != it.originalNickname ||
-                    it.selectedCollege != it.originalCollege ||
-                    it.selectedMajor != it.originalMajor
+            val changed = nickname != it.originalNickname
 
-            it.copy(nickname = nickname, isChanged = changed)
+            it.copy(nickname = nickname, isNicknameChanged = changed)
         }
     }
 
     fun updateCollege(college: String) {
         _uiState.update {
-            val changed = it.nickname != it.originalNickname ||
-                    college != it.originalCollege ||
-                    it.selectedMajor != it.originalMajor
+            val changed = college != it.originalCollege
 
-            it.copy(selectedCollege = college, isChanged = changed)
+            it.copy(selectedCollege = college, isMajorChanged = changed)
         }
     }
 
     fun updateMajor(major: String) {
         _uiState.update {
-            val changed = it.nickname != it.originalNickname ||
-                    it.selectedCollege != it.originalCollege ||
-                    major != it.originalMajor
+            val changed = major != it.originalMajor
 
-            it.copy(selectedMajor = major, isChanged = changed)
+            it.copy(selectedMajor = major, isMajorChanged = changed)
         }
     }
 
@@ -156,5 +150,6 @@ data class UserNameChangeState(
     var originalCollege: String = "",
     var originalMajor: String = "",
 
-    var isChanged: Boolean = false,
+    var isNicknameChanged: Boolean = false,
+    var isMajorChanged: Boolean = false,
 )

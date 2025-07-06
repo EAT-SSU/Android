@@ -38,6 +38,7 @@ class UserInfoActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "내 정보"
 
+        // 현재 설정된 유저 정보 가져오기
         userInfoViewModel.loadUserInfo()
 
         force = intent.getBooleanExtra("force", false)
@@ -54,16 +55,15 @@ class UserInfoActivity :
         }
 
         binding.etChNickname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 inputNickname = binding.etChNickname.text.trim().toString()
                 val nicknameLength = inputNickname.length
-                binding.btnCheckNickname.isEnabled = nicknameLength in 2..8
+                val isValidLength = nicknameLength in 2..8
+                val isNicknameChanged = inputNickname != userInfoViewModel.uiState.value.originalNickname
 
-                if (nicknameLength !in 2..8) {
-                    binding.btnComplete.isEnabled = false
-                    binding.btnCheckNickname.isEnabled = false
+                binding.btnCheckNickname.isEnabled = isValidLength && isNicknameChanged
+
+                if (!isValidLength) {
                     binding.tvNickname28.setTextColor(getColor(R.color.error))
                     binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
                     binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
@@ -72,6 +72,7 @@ class UserInfoActivity :
                 }
             }
 
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
         })
 
@@ -83,8 +84,7 @@ class UserInfoActivity :
     private fun collectButtonEnableState() {
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest {
-                binding.btnComplete.isEnabled =
-                    it.isChanged && (it.nickname == it.originalNickname || it.isEnableName)
+                binding.btnComplete.isEnabled = it.isNicknameChanged || it.isMajorChanged
             }
         }
     }
@@ -112,15 +112,25 @@ class UserInfoActivity :
         }
 
         binding.btnComplete.setOnClickListener {
-            userInfoViewModel.changeUserInfo()
+            val currentState = userInfoViewModel.uiState.value
 
-            lifecycleScope.launch {
-                userInfoViewModel.uiState.collectLatest {
-                    if (it.isDone) {
-                        showToast(it.toastMessage)
-                        finish()
+            if (currentState.isNicknameChanged) {
+                // 닉네임 변경이 있는 경우 서버에 전체 정보 저장
+                userInfoViewModel.changeUserInfo()
+
+                lifecycleScope.launch {
+                    userInfoViewModel.uiState.collectLatest {
+                        if (it.isDone) {
+                            showToast(it.toastMessage)
+                            finish()
+                        }
                     }
                 }
+            } else {
+                // 닉네임은 그대로이고 학과/단과대만 변경된 경우
+                // TODO: 서버에 학과/단과대 정보만 저장하는 로직 추가
+                showToast("정보가 성공적으로 저장되었습니다.")
+                finish()
             }
         }
     }
