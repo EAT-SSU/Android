@@ -11,6 +11,7 @@ import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
@@ -79,6 +80,7 @@ class UserInfoActivity :
         setOnCheckNicknameClickListener()
         setCollegeDepartmentClickListener()
         collectButtonEnableState()
+        collectUIState()
     }
 
     private fun collectButtonEnableState() {
@@ -128,9 +130,19 @@ class UserInfoActivity :
                 }
             } else {
                 // 닉네임은 그대로이고 학과/단과대만 변경된 경우
-                // TODO: 서버에 학과/단과대 정보만 저장하는 로직 추가
-                showToast("정보가 성공적으로 저장되었습니다.")
-                finish()
+                userInfoViewModel.updateUserDepartment()
+
+            }
+        }
+    }
+
+    private fun collectUIState(){
+        lifecycleScope.launch {
+            userInfoViewModel.uiState.collectLatest { state ->
+                if (state.success) {
+                    showToast("학과 정보가 업데이트 되었습니다.")
+                    finish()
+                }
             }
         }
     }
@@ -153,9 +165,9 @@ class UserInfoActivity :
                 ) { department, departmentIndex ->
                     selectedDepartmentIndex = departmentIndex
                     binding.tvDepartment.text = department
-                    userInfoViewModel.updateDepartment(department)
+                    userInfoViewModel.updateInputDepartment(department)
                 }
-                userInfoViewModel.updateCollege(selected)
+                userInfoViewModel.updateInputCollege(selected)
             }
         }
 
@@ -170,7 +182,7 @@ class UserInfoActivity :
             ) { department, departmentIndex ->
                 selectedDepartmentIndex = departmentIndex
                 binding.tvDepartment.text = department
-                userInfoViewModel.updateDepartment(department)
+                userInfoViewModel.updateInputDepartment(department)
             }
         }
     }

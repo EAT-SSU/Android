@@ -33,6 +33,6 @@ interface UserRepository {
     // 유저의 학과 설정
     suspend fun setUserDepartment(
         departmentName: String,
-    ): Flow<BaseResponse<Void>>
+    ): BaseResponse<Void>
 }
 

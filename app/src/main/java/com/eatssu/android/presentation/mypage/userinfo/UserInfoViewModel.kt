@@ -1,7 +1,9 @@
 package com.eatssu.android.presentation.mypage.userinfo
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.UserInfo
 import com.eatssu.android.domain.usecase.auth.GetUserNameUseCase
 import com.eatssu.android.domain.usecase.auth.SetUserInfoUseCase
@@ -25,12 +27,17 @@ class UserInfoViewModel @Inject constructor(
     private val setUserInfoUseCase: SetUserInfoUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val validateUserNameUseCase: ValidateUserNameUseCase,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val context: Context,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UserNameChangeState> =
         MutableStateFlow(UserNameChangeState())
     val uiState: StateFlow<UserNameChangeState> = _uiState.asStateFlow()
+
+    init{
+        loadUserInfo()
+    }
 
     fun loadUserInfo() {
         viewModelScope.launch {
@@ -108,7 +115,7 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun updateCollege(college: String) {
+    fun updateInputCollege(college: String) {
         _uiState.update {
             val changed = college != it.originalCollege
 
@@ -116,12 +123,37 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun updateDepartment(department: String) {
+    fun updateInputDepartment(department: String) {
         _uiState.update {
             val changed = department != it.originalDepartment
 
             it.copy(selectedDepartment = department, isDepartmentChanged = changed)
         }
+    }
+
+    fun updateUserDepartment(){
+        viewModelScope.launch {
+            runCatching {
+                userRepository.setUserDepartment(_uiState.value.selectedDepartment)
+            }.onSuccess {
+                Timber.d("학과 정보 업데이트 성공")
+                _uiState.update{ it.copy(success = true) }
+                MySharedPreferences.setUserMajor(context, _uiState.value.selectedDepartment)
+                val college = findCollegeByDepartment(_uiState.value.selectedDepartment)
+                MySharedPreferences.setUserCollege(context, college ?: "단과대")
+            }.onFailure { e ->
+                Timber.e(e, "학과 정보 업데이트 실패")
+                _uiState.update { it.copy(error = true, toastMessage = "학과 정보 업데이트에 실패했습니다.") }
+            }
+        }
+    }
+
+    private fun findCollegeByDepartment(department: String): String? {
+        return userRepository.getTotalColleges()
+            .drop(1) // "단과대" 제외
+            .firstOrNull { college ->
+                userRepository.getTotalDepartments(college).contains(department)
+            }
     }
 
     fun getTotalColleges(): List<String> = userRepository.getTotalColleges()
@@ -134,6 +166,7 @@ class UserInfoViewModel @Inject constructor(
 }
 
 data class UserNameChangeState(
+    var success: Boolean = false,
     var loading: Boolean = true,
     var error: Boolean = false,
 
