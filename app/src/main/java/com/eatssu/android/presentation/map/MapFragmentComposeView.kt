@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,6 +73,14 @@ fun MapFragmentComposeView(
             LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
             DEFAULT_ZOOM
         )
+    }
+    var selectedFilter by remember { mutableStateOf(FilterType.All) }
+
+    LaunchedEffect(selectedFilter) {
+        when (selectedFilter) {
+            FilterType.All -> viewModel.loadPartnerships()
+            FilterType.Mine -> viewModel.loadUserCollegePartnerships()
+        }
     }
 
     Scaffold(
@@ -128,8 +137,8 @@ fun MapFragmentComposeView(
             }
 
             MapFilterToggle(
-                selected = FilterType.All,
-                onSelectedChange = { /* TODO: 필터 변경 처리 */ },
+                selected = selectedFilter,
+                onSelectedChange = { selectedFilter = it },
                 modifier = Modifier.padding(top = 12.dp)
             )
 

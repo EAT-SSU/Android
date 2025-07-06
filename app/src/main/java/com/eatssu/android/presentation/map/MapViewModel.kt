@@ -31,7 +31,6 @@ class MapViewModel @Inject constructor(
     init {
         checkUserDepartment()
         loadPartnerships()
-
     }
 
     private fun checkUserDepartment() {
@@ -48,7 +47,7 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun loadPartnerships() {
+    fun loadPartnerships() {
         viewModelScope.launch {
             runCatching {
                 partnershipRepository.getAllPartnerships()
@@ -56,6 +55,18 @@ class MapViewModel @Inject constructor(
                 _uiState.update { it.copy(partnerships = data) }
             }.onFailure {
                 Timber.e("제휴 정보 로딩 실패: ${it.message}")
+            }
+        }
+    }
+
+    fun loadUserCollegePartnerships() {
+        viewModelScope.launch {
+            runCatching {
+                partnershipRepository.getUserCollegePartnerships()
+            }.onSuccess { data ->
+                _uiState.update { it.copy(partnerships = data) }
+            }.onFailure {
+                Timber.e("사용자 단과대 제휴 정보 로딩 실패: ${it.message}")
             }
         }
     }

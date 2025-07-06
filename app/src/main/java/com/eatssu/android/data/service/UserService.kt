@@ -4,6 +4,7 @@ import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
+import com.eatssu.android.data.dto.response.PartnershipResponse
 import com.eatssu.android.data.dto.response.UserDepartmentResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -43,5 +44,9 @@ interface UserService {
     suspend fun setUserDepartment(
         @Body departmentName: String,
     ): BaseResponse<Void>
+
+    // 유저 학과의 제휴 조회
+    @GET("users/department/partnerships")
+    suspend fun getUserDepartmentPartnerships(): BaseResponse<List<PartnershipResponse>>
 
 }
