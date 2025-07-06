@@ -41,8 +41,8 @@ class UserInfoViewModel @Inject constructor(
                     originalNickname = userInfo.nickname,
                     selectedCollege = userInfo.college,
                     originalCollege = userInfo.college,
-                    selectedMajor = userInfo.major,
-                    originalMajor = userInfo.major,
+                    selectedDepartment = userInfo.department,
+                    originalDepartment = userInfo.department,
                     isEnableName = true,
                     loading = false
                 )
@@ -84,10 +84,10 @@ class UserInfoViewModel @Inject constructor(
     fun changeUserInfo() {
         val nickname = _uiState.value.nickname
         val college = _uiState.value.selectedCollege
-        val major = _uiState.value.selectedMajor
+        val department = _uiState.value.selectedDepartment
 
         viewModelScope.launch {
-            setUserInfoUseCase(UserInfo(nickname, college, major))
+            setUserInfoUseCase(UserInfo(nickname, college, department))
                 .onStart { _uiState.update { it.copy(loading = true) } }
                 .onCompletion { _uiState.update { it.copy(loading = false) } }
                 .catch {
@@ -112,21 +112,21 @@ class UserInfoViewModel @Inject constructor(
         _uiState.update {
             val changed = college != it.originalCollege
 
-            it.copy(selectedCollege = college, isMajorChanged = changed)
+            it.copy(selectedCollege = college, isDepartmentChanged = changed)
         }
     }
 
-    fun updateMajor(major: String) {
+    fun updateDepartment(department: String) {
         _uiState.update {
-            val changed = major != it.originalMajor
+            val changed = department != it.originalDepartment
 
-            it.copy(selectedMajor = major, isMajorChanged = changed)
+            it.copy(selectedDepartment = department, isDepartmentChanged = changed)
         }
     }
 
     fun getTotalColleges(): List<String> = userRepository.getTotalColleges()
 
-    fun getTotalMajors(college: String): List<String> = userRepository.getTotalMajors(college)
+    fun getTotalDepartments(college: String): List<String> = userRepository.getTotalDepartments(college)
 
     companion object {
         val TAG = "UserNameChangeViewModel"
@@ -141,15 +141,15 @@ data class UserNameChangeState(
 
     var nickname: String = "",
     var selectedCollege: String = "",
-    var selectedMajor: String = "",
+    var selectedDepartment: String = "",
 
     var isEnableName: Boolean = false,
     var isDone: Boolean = false,
 
     var originalNickname: String = "",
     var originalCollege: String = "",
-    var originalMajor: String = "",
+    var originalDepartment: String = "",
 
     var isNicknameChanged: Boolean = false,
-    var isMajorChanged: Boolean = false,
+    var isDepartmentChanged: Boolean = false,
 )

@@ -32,7 +32,7 @@ class UserInfoActivity :
     private var force: Boolean = false
 
     private var selectedCollegeIndex = 0
-    private var selectedMajorIndex = 0
+    private var selectedDepartmentIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +50,7 @@ class UserInfoActivity :
             userInfoViewModel.uiState.collectLatest {
                 binding.etChNickname.setText(it.nickname)
                 binding.tvCollege.text = it.selectedCollege.ifEmpty { "단과대" }
-                binding.tvMajor.text = it.selectedMajor.ifEmpty { "학과" }
+                binding.tvDepartment.text = it.selectedDepartment.ifEmpty { "학과" }
             }
         }
 
@@ -77,14 +77,14 @@ class UserInfoActivity :
         })
 
         setOnCheckNicknameClickListener()
-        setCollegeMajorClickListener()
+        setCollegeDepartmentClickListener()
         collectButtonEnableState()
     }
 
     private fun collectButtonEnableState() {
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest {
-                binding.btnComplete.isEnabled = it.isNicknameChanged || it.isMajorChanged
+                binding.btnComplete.isEnabled = it.isNicknameChanged || it.isDepartmentChanged
             }
         }
     }
@@ -135,42 +135,42 @@ class UserInfoActivity :
         }
     }
 
-    private fun setCollegeMajorClickListener() {
+    private fun setCollegeDepartmentClickListener() {
         binding.tvCollege.setOnClickListener {
             val colleges = userInfoViewModel.getTotalColleges()
             showDropdownPopup(binding.tvCollege, colleges, selectedCollegeIndex) { selected, index ->
                 selectedCollegeIndex = index
                 binding.tvCollege.text = selected
 
-                selectedMajorIndex = 0
-                binding.tvMajor.text = "학과"
+                selectedDepartmentIndex = 0
+                binding.tvDepartment.text = "학과"
 
-                val majors = userInfoViewModel.getTotalMajors(selected)
+                val departments = userInfoViewModel.getTotalDepartments(selected)
                 showDropdownPopup(
-                    binding.tvMajor,
-                    majors,
-                    selectedMajorIndex
-                ) { major, majorIndex ->
-                    selectedMajorIndex = majorIndex
-                    binding.tvMajor.text = major
-                    userInfoViewModel.updateMajor(major)
+                    binding.tvDepartment,
+                    departments,
+                    selectedDepartmentIndex
+                ) { department, departmentIndex ->
+                    selectedDepartmentIndex = departmentIndex
+                    binding.tvDepartment.text = department
+                    userInfoViewModel.updateDepartment(department)
                 }
                 userInfoViewModel.updateCollege(selected)
             }
         }
 
-        binding.tvMajor.setOnClickListener {
+        binding.tvDepartment.setOnClickListener {
             val selectedCollege = binding.tvCollege.text.toString()
-            val majorList = userInfoViewModel.getTotalMajors(selectedCollege)
+            val departmentList = userInfoViewModel.getTotalDepartments(selectedCollege)
 
             showDropdownPopup(
-                binding.tvMajor,
-                majorList,
-                selectedMajorIndex
-            ) { major, majorIndex ->
-                selectedMajorIndex = majorIndex
-                binding.tvMajor.text = major
-                userInfoViewModel.updateMajor(major)
+                binding.tvDepartment,
+                departmentList,
+                selectedDepartmentIndex
+            ) { department, departmentIndex ->
+                selectedDepartmentIndex = departmentIndex
+                binding.tvDepartment.text = department
+                userInfoViewModel.updateDepartment(department)
             }
         }
     }
@@ -221,6 +221,6 @@ class UserInfoActivity :
         popupWindow.isOutsideTouchable = true
         popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.shape_text_field_small))
 
-        popupWindow.showAsDropDown(anchor, -24, binding.tvMajor.height + 8)
+        popupWindow.showAsDropDown(anchor, -24, binding.tvDepartment.height + 8)
     }
 }

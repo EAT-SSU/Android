@@ -22,7 +22,7 @@ interface UserRepository {
 
     // Local에 있는 단과대, 학과 정보 조회
     fun getTotalColleges(): List<String>
-    fun getTotalMajors(college: String): List<String>
+    fun getTotalDepartments(college: String): List<String>
 
     // 유저의 학과 기입 여부 체크
     suspend fun checkUserDepartment(): Boolean

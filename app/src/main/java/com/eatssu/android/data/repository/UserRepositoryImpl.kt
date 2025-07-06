@@ -55,7 +55,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
     override fun getTotalColleges(): List<String> =
         listOf("단과대") + collegeMajors.keys
 
-    override fun getTotalMajors(college: String): List<String> =
+    override fun getTotalDepartments(college: String): List<String> =
         collegeMajors[college] ?: emptyList()
 
     override suspend fun checkUserDepartment(): Boolean =

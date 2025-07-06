@@ -30,7 +30,7 @@ class SetUserInfoUseCase @Inject constructor(
         // 로컬 저장
         MySharedPreferences.setUserName(context, info.nickname)
         MySharedPreferences.setUserCollege(context, info.college)
-        MySharedPreferences.setUserMajor(context, info.major)
+        MySharedPreferences.setUserMajor(context, info.department)
 
         return userRepository.updateUserName(ChangeNicknameRequest(info.nickname))
     }
