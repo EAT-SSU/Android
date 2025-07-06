@@ -24,6 +24,7 @@ sealed class MealInfoState {
     data class Available(
         val mealTime: String,
         val mealList: List<List<String>>,
+        val restaurant: Restaurant,
     ) : MealInfoState()
 
     data object Unavailable : MealInfoState()
@@ -58,7 +59,8 @@ object WidgetDataDisplayManager {
                     if (menuGroups.flatten().isNotEmpty()) {
                         return MealInfoState.Available(
                             convertTimeToString(currentMealTime),
-                            menuGroups
+                            menuGroups,
+                            restaurant
                         )
                     }
                 }
@@ -85,7 +87,8 @@ object WidgetDataDisplayManager {
                     if (menuGroups.flatten().isNotEmpty()) {
                         return MealInfoState.Available(
                             convertTimeToString(currentMealTime),
-                            menuGroups
+                            menuGroups,
+                            restaurant
                         )
                     }
                 }
@@ -95,7 +98,8 @@ object WidgetDataDisplayManager {
         // 요청된 시간대부터 이후의 모든 시간대의 급식이 비어있는 경우
         return MealInfoState.Available(
             mealTime = convertTimeToString(requestedMealTime),
-            mealList = emptyList()
+            mealList = emptyList(),
+            restaurant = Restaurant.DODAM
         )
     }
 

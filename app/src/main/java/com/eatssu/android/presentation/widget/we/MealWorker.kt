@@ -73,7 +73,7 @@ class MealWorker @AssistedInject constructor(
     }
 
     private fun MealInfoState.toMealInfo(): MealInfo = when (this) {
-        is MealInfoState.Available -> MealInfo.Available(mealTime, mealList)
+        is MealInfoState.Available -> MealInfo.Available(mealTime, mealList, restaurant)
         is MealInfoState.Unavailable -> MealInfo.Unavailable
         is MealInfoState.Loading -> MealInfo.Loading
     }

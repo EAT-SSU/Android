@@ -1,6 +1,7 @@
 package com.eatssu.android.domain.usecase.meal
 
 import com.eatssu.android.data.dto.response.GetMealResponse
+import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.presentation.widget.we.GetMealsResponseModel
@@ -60,7 +61,8 @@ class GetTodayMealUseCase @Inject constructor(
             GetMealsResponseModel(
                 breakfast = mapToMealPair(breakfastList, "breakfast"),
                 lunch = mapToMealPair(lunchList, "lunch"),
-                dinner = mapToMealPair(dinnerList, "dinner")
+                dinner = mapToMealPair(dinnerList, "dinner"),
+                restaurant = Restaurant.valueOf(restaurant)
             )
         }.first() // ⬅️ 여기서 Flow 실행
     }.fold(
