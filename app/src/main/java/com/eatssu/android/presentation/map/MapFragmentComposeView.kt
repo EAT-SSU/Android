@@ -51,8 +51,10 @@ import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
+import com.naver.maps.map.compose.rememberMarkerState
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
 private const val DEFAULT_LONGITUDE = 126.95661313346206
@@ -110,7 +112,20 @@ fun MapFragmentComposeView(
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState
-                )
+            ) {
+                uiState.partnerships.forEach { partnership ->
+                    Marker(
+                        state = rememberMarkerState(
+                            position = LatLng(partnership.latitude, partnership.longitude)
+                        ),
+                        captionText = partnership.storeName,
+                        onClick = {
+                            // 클릭 시 다이얼로그/바텀시트 표시 등 추가 가능
+                            true
+                        }
+                    )
+                }
+            }
 
             MapFilterToggle(
                 selected = FilterType.All,
