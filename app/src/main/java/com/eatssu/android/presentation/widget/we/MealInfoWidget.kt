@@ -1,6 +1,8 @@
 package com.eatssu.android.presentation.widget.we
 
 //import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -21,6 +23,7 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
@@ -42,6 +45,10 @@ import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.presentation.widget.we.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.we.util.launchApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 
@@ -55,6 +62,16 @@ class MealWidget : GlanceAppWidget() {
                 MealWorker.enqueue(context)
             }
 
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val widgetComponent = ComponentName(context, MealWidgetReceiver::class.java)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
+            val appWidgetId = appWidgetIds.firstOrNull() ?: 0
+
+            // DataStore에서 식당 정보 로드
+            val restaurant = runBlocking {
+                MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+            }
+
             GlanceTheme(colors = EATSSUWidgetColorScheme.colors) {
                 when (val state = currentState<MealInfo>()) {
                     is MealInfo.Available -> {
@@ -62,7 +79,7 @@ class MealWidget : GlanceAppWidget() {
                             MealWidgetContent(
                                 mealTime = state.mealTime,
                                 mealList = state.mealList,
-                                restaurant = state.restaurant,
+                                restaurant = restaurant,
                             )
                         } else {
                             MealWidgetError(
@@ -85,6 +102,7 @@ class MealWidget : GlanceAppWidget() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     private fun MealWidgetContent(
         mealTime: String,
@@ -129,8 +147,30 @@ class MealWidget : GlanceAppWidget() {
                     Image(
                         modifier = GlanceModifier.size(18.dp)
                             .clickable {
-//                                onLeftArrowClick()
-                                Timber.d("onLeftArrowClick")
+                                // 식당 순환 변경
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val appWidgetManager = AppWidgetManager.getInstance(context)
+                                    val widgetComponent =
+                                        ComponentName(context, MealWidgetReceiver::class.java)
+                                    val appWidgetIds =
+                                        appWidgetManager.getAppWidgetIds(widgetComponent)
+                                    val appWidgetId = appWidgetIds.firstOrNull() ?: return@launch
+                                    val current = MealWidgetConfigureActivity.loadRestaurantPref(
+                                        context,
+                                        appWidgetId
+                                    )
+                                    val next = getNextRestaurant(current)
+                                    Timber.d(next.displayName)
+                                    MealWidgetConfigureActivity.saveRestaurantPref(
+                                        context,
+                                        appWidgetId,
+                                        next
+                                    )
+                                    MealWidget().updateAll(context)
+                                    MealWorker.enqueue(context) // 또는 MealWidget().updateAll(context)
+
+                                }
+                                Timber.d("onLeftArrowClick: 식당 변경")
                             },
                         provider = ImageProvider(R.drawable.ic_arrow_left),
                         contentDescription = "left",
@@ -159,7 +199,11 @@ class MealWidget : GlanceAppWidget() {
                     .fillMaxSize()
                     .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
                     .cornerRadius(10.dp)
-                    .background(GlanceTheme.colors.onBackground),
+                    .background(GlanceTheme.colors.onBackground)
+                    .clickable {
+                        Timber.d("위젯 클릭")
+                        context.launchApp()
+                    },
             ) {
                 itemsIndexed(mealList) { index, group ->
                     val groupText = group.joinToString(" + ")
@@ -174,15 +218,15 @@ class MealWidget : GlanceAppWidget() {
                 }
             }
         }
-        Box(
-            modifier = GlanceModifier
-                .fillMaxSize()
-                .clickable {
-                    context.launchApp()
-                    Timber.d("위젯 클릭")
-                },
-            content = {}
-        )
+//        Box(
+//            modifier = GlanceModifier
+//                .fillMaxSize()
+//                .clickable {
+////                    context.launchApp()
+////                    Timber.d("위젯 클릭")
+//                },
+//            content = {}
+//        )
     }
 
     @Composable
@@ -304,5 +348,15 @@ class MealWidget : GlanceAppWidget() {
 class MealWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
         get() = MealWidget()
+}
+
+// Helper function to cycle restaurants
+fun getNextRestaurant(current: Restaurant): Restaurant {
+    return when (current) {
+        Restaurant.HAKSIK -> Restaurant.DODAM
+        Restaurant.DODAM -> Restaurant.DORMITORY
+        Restaurant.DORMITORY -> Restaurant.HAKSIK
+        else -> Restaurant.DODAM
+    }
 }
 

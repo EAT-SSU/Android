@@ -1,5 +1,7 @@
 package com.eatssu.android.presentation.widget.we
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -47,14 +49,25 @@ class MealWorker @AssistedInject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result {
-        setWidgetState(
-            newState = WidgetDataDisplayManager.fetchMealInfo(
-                getMealsUseCase = getMealsUseCase,
-                requestedMealTime = WidgetDataDisplayManager.getCurrentMealTime()
-            ).toMealInfo()
-        )
+        val manager = GlanceAppWidgetManager(context)
+        val glanceIds = manager.getGlanceIds(MealWidget::class.java)
+        // 여러 위젯 지원: 각 위젯별로 식당 설정을 불러와서 fetchMealInfo에 전달
+        glanceIds.forEach { glanceId ->
+            // appWidgetId 추출
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val widgetComponent = ComponentName(context, MealWidgetReceiver::class.java)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
+            val appWidgetId = appWidgetIds.firstOrNull() ?: 0
+            val restaurant = MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+            setWidgetState(
+                newState = WidgetDataDisplayManager.fetchMealInfo(
+                    getMealsUseCase = getMealsUseCase,
+                    requestedMealTime = WidgetDataDisplayManager.getCurrentMealTime(),
+                    restaurant = restaurant
+                ).toMealInfo()
+            )
+        }
         Timber.d("Widget - 워커는 doWork")
-
         return Result.success()
     }
 

@@ -5,4 +5,5 @@
     android:resizeMode="horizontal"
     android:previewImage="@drawable/img_widget_big"
     android:updatePeriodMillis="3600000"
+    android:configure="com.eatssu.android.presentation.widget.we.MealWidgetConfigureActivity"
     android:widgetCategory="home_screen" />
