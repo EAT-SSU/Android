@@ -50,6 +50,34 @@ object MySharedPreferences {
         return prefs.getString("MY_NAME", "").toString()
     }
 
+    fun setUserCollege(context: Context, input: String) {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = prefs.edit()
+        editor.putString("MY_COLLEGE", input)
+        editor.commit()
+    }
+
+    fun getUserCollege(context: Context): String {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getString("MY_COLLEGE", "").toString()
+    }
+
+    fun setUserMajor(context: Context, input: String) {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = prefs.edit()
+        editor.putString("MY_MAJOR", input)
+        editor.commit()
+    }
+
+    fun getUserMajor(context: Context): String {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getString("MY_MAJOR", "").toString()
+    }
+
     fun setAccessToken(context: Context, input: String) {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)

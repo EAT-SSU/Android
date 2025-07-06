@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-
     suspend fun updateUserName(
         body: ChangeNicknameRequest,
     ): Flow<BaseResponse<Void>>
@@ -20,6 +19,9 @@ interface UserRepository {
     suspend fun getUserReviews(): Flow<BaseResponse<MyReviewResponse>>
     suspend fun getUserInfo(): Flow<BaseResponse<MyInfoResponse>>
     suspend fun signOut(): Flow<BaseResponse<Boolean>>
+
+    fun getTotalColleges(): List<String>
+    fun getTotalMajors(college: String): List<String>
 
 }
 
