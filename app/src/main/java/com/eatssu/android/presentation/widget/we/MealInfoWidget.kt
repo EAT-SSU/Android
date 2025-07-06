@@ -90,11 +90,19 @@ class MealWidget : GlanceAppWidget() {
                     }
 
                     is MealInfo.Loading -> {
-                        MealWidgetError(restaurant = Restaurant.DODAM, text = "로딩 중")
+                        MealWidgetError(
+                            restaurant = Restaurant.DODAM,
+                            mealTime = "점심",
+                            text = "로딩 중"
+                        )
                     }
 
                     is MealInfo.Unavailable -> {
-                        MealWidgetError(restaurant = Restaurant.DODAM, text = "네트워크 연결 상태를 확인해주세요.")
+                        MealWidgetError(
+                            restaurant = Restaurant.DODAM,
+                            mealTime = "점심",
+                            text = "네트워크 연결 상태를 확인해주세요."
+                        )
                     }
                 }
             }
@@ -110,67 +118,12 @@ class MealWidget : GlanceAppWidget() {
     ) {
         val context = LocalContext.current
 
-        Column(
-            modifier = GlanceModifier.fillMaxSize()
-                .background(GlanceTheme.colors.onPrimary)
-                .padding(16.dp)
-                .cornerRadius(20.dp)
+        MealWidgetScaffold(
+            mealTime = mealTime,
+            restaurant = restaurant,
+            onLeftArrowClick = { changeRestaurantAndUpdateWidget(context) },
+            onRightArrowClick = { /* TODO */ }
         ) {
-
-            Row(
-                modifier = GlanceModifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // 조식/중식/석식
-
-                Image(
-                    modifier = GlanceModifier.size(height = 14.dp, width = 43.dp),
-                    provider = ImageProvider(R.drawable.img_new_logo_primary),
-                    contentDescription = "Logo",
-                )
-                Spacer(modifier = GlanceModifier.size(8.dp))
-
-
-                Text(
-                    mealTime, style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
-                )
-
-
-                Spacer(modifier = GlanceModifier.defaultWeight())
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(18.dp)
-                            .clickable {
-                                changeRestaurantAndUpdateWidget(context)
-                                Timber.d("onLeftArrowClick: 식당 변경")
-                            },
-                        provider = ImageProvider(R.drawable.ic_arrow_left),
-                        contentDescription = "left",
-                    )
-                    Text(
-                        restaurant.displayName,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
-                        modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
-                    )
-                    Image(
-                        modifier = GlanceModifier.size(18.dp)
-                            .clickable {
-//                                onLeftArrowClick()
-                                Timber.d("onrightArrowClick")
-                            },
-                        provider = ImageProvider(R.drawable.ic_arrow_right),
-                        contentDescription = "right",
-                    )
-                }
-            }
-
-            Spacer(modifier = GlanceModifier.height(12.dp))
-
             LazyColumn(
                 modifier = GlanceModifier
                     .fillMaxSize()
@@ -195,96 +148,30 @@ class MealWidget : GlanceAppWidget() {
                 }
             }
         }
-//        Box(
-//            modifier = GlanceModifier
-//                .fillMaxSize()
-//                .clickable {
-////                    context.launchApp()
-////                    Timber.d("위젯 클릭")
-//                },
-//            content = {}
-//        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun MealWidgetError(
-        mealTime: String? = "",
+        mealTime: String,
         restaurant: Restaurant,
         text: String
     ) {
         val context = LocalContext.current
 
-        Column(
-            modifier = GlanceModifier.fillMaxSize()
-                .background(GlanceTheme.colors.background)
-                .padding(16.dp)
-                .cornerRadius(20.dp)
+        MealWidgetScaffold(
+            mealTime = mealTime,
+            restaurant = restaurant,
+            onLeftArrowClick = { changeRestaurantAndUpdateWidget(context) },
+            onRightArrowClick = { /* TODO */ }
         ) {
-
-            Row(
-                modifier = GlanceModifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // 조식/중식/석식
-                Column(
-                    verticalAlignment = Alignment.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(height = 14.dp, width = 43.dp),
-                        provider = ImageProvider(R.drawable.img_new_logo_primary),
-                        contentDescription = "Logo"
-                    )
-
-                    if (mealTime != null) {
-                        Text(
-                            mealTime,
-                            style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
-                            modifier = GlanceModifier.padding(top = 2.dp, bottom = 12.dp)
-                        )
-                    }
-                }
-
-                Spacer(modifier = GlanceModifier.defaultWeight())
-
-                //식당 이름
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally  // 수평 중앙 정렬
-                ) {
-                    Image(
-                        modifier = GlanceModifier.size(18.dp)
-                            .clickable {
-                                changeRestaurantAndUpdateWidget(context)
-                                Timber.d("onLeftArrowClick: 식당 변경")
-                            },
-                        provider = ImageProvider(R.drawable.ic_arrow_left),
-                        contentDescription = "left"
-                    )
-                    Text(
-                        restaurant.displayName,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
-                        modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
-                    )
-                    Image(
-                        modifier = GlanceModifier.size(18.dp),
-                        provider = ImageProvider(R.drawable.ic_arrow_right),
-                        contentDescription = "right"
-                    )
-                }
-
-            }
-
             Box(
                 modifier = GlanceModifier
                     .fillMaxSize()
                     .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
                     .cornerRadius(10.dp)
                     .background(GlanceTheme.colors.onBackground)
-            )
-            {
+            ) {
                 Column(
                     modifier = GlanceModifier
                         .fillMaxSize(),
@@ -304,16 +191,66 @@ class MealWidget : GlanceAppWidget() {
                 }
             }
         }
-//        Box(
-//            modifier = GlanceModifier
-//                .fillMaxSize()
-//                .clickable {
-////                    context.launchApp()
-//                    Timber.d("위젯 클릭")
-//                },
-//            content = {}
-//        )
     }
+
+    @Composable
+    fun MealWidgetScaffold(
+        mealTime: String?,
+        restaurant: Restaurant,
+        onLeftArrowClick: () -> Unit,
+        onRightArrowClick: () -> Unit,
+        content: @Composable () -> Unit
+    ) {
+        Column(
+            modifier = GlanceModifier.fillMaxSize()
+                .background(GlanceTheme.colors.onPrimary)
+                .padding(16.dp)
+                .cornerRadius(20.dp)
+        ) {
+            Row(
+                modifier = GlanceModifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = GlanceModifier.size(height = 14.dp, width = 43.dp),
+                    provider = ImageProvider(R.drawable.img_new_logo_primary),
+                    contentDescription = "Logo",
+                )
+                Spacer(modifier = GlanceModifier.size(8.dp))
+                if (mealTime != null) {
+                    Text(
+                        mealTime,
+                        style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                    )
+                }
+                Spacer(modifier = GlanceModifier.defaultWeight())
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = GlanceModifier.size(18.dp).clickable { onLeftArrowClick() },
+                        provider = ImageProvider(R.drawable.ic_arrow_left),
+                        contentDescription = "left"
+                    )
+                    Text(
+                        restaurant.displayName,
+                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
+                        modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
+                    )
+                    Image(
+                        modifier = GlanceModifier.size(18.dp).clickable { onRightArrowClick() },
+                        provider = ImageProvider(R.drawable.ic_arrow_right),
+                        contentDescription = "right"
+                    )
+                }
+            }
+            Spacer(modifier = GlanceModifier.height(12.dp))
+            content()
+        }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalGlancePreviewApi::class)
@@ -363,4 +300,3 @@ fun changeRestaurantAndUpdateWidget(context: Context) {
         MealWorker.enqueue(context)
     }
 }
-
