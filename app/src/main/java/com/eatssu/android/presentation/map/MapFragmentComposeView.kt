@@ -48,8 +48,15 @@ import com.eatssu.android.presentation.compose.ui.theme.White
 import com.eatssu.android.presentation.map.component.MajorBottomSheet
 import com.eatssu.android.presentation.map.component.MajorBottomSheetPreview
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.rememberCameraPositionState
+
+private const val DEFAULT_LATITUDE = 37.49517278813046
+private const val DEFAULT_LONGITUDE = 126.95661313346206
+private const val DEFAULT_ZOOM = 16.0
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +65,12 @@ fun MapFragmentComposeView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition(
+            LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
+            DEFAULT_ZOOM
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -94,7 +107,10 @@ fun MapFragmentComposeView(
             contentAlignment = Alignment.TopCenter,
         ) {
             // 지도
-            NaverMap(modifier = Modifier.fillMaxSize())
+            NaverMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState
+                )
 
             MapFilterToggle(
                 selected = FilterType.All,
