@@ -84,6 +84,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+
         <!--    워커 매니저를 위한 프로바이더    -->
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -105,6 +106,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".presentation.widget.we.MealWidgetConfigureActivity"
+            android:exported="true" />
 
         <activity
             android:name=".presentation.mypage.DeveloperActivity"

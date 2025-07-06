@@ -36,10 +36,11 @@ object WidgetDataDisplayManager {
     internal suspend fun fetchMealInfo(
         getMealsUseCase: GetTodayMealUseCase,
         requestedMealTime: MealTime,
+        restaurant: Restaurant,
     ): MealInfoState {
         Timber.d("Widget - fetchMealInfo")
         val targetDate = DateUtils.convertMillisToDateString(System.currentTimeMillis())
-        val response = getMealsUseCase(targetDate, Restaurant.DODAM.name)
+        val response = getMealsUseCase(targetDate, restaurant.name)
         Timber.d("Widget - fetchMealInfo $response")
 
         if (response is MealState.Success) {
@@ -67,9 +68,8 @@ object WidgetDataDisplayManager {
             }
         }
 
-
         val nextDay = DateUtils.getNextDayDate()
-        val getNextDayMealResponse = getMealsUseCase(nextDay, Restaurant.DODAM.name)
+        val getNextDayMealResponse = getMealsUseCase(nextDay, restaurant.name)
 
         if (getNextDayMealResponse is MealState.Success) {
             val mealTimes = listOf(MealTime.Morning, MealTime.Lunch, MealTime.Dinner)
@@ -99,7 +99,7 @@ object WidgetDataDisplayManager {
         return MealInfoState.Available(
             mealTime = convertTimeToString(requestedMealTime),
             mealList = emptyList(),
-            restaurant = Restaurant.DODAM
+            restaurant = restaurant
         )
     }
 
