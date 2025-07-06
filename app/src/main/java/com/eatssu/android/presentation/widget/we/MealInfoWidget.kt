@@ -188,6 +188,8 @@ class MealWidget : GlanceAppWidget() {
 
     @Composable
     fun MealWidgetError(mealTime: String? = "", text: String) {
+        val context = LocalContext.current
+
         Column(
             modifier = GlanceModifier.fillMaxSize()
                 .background(GlanceTheme.colors.background)
@@ -273,6 +275,15 @@ class MealWidget : GlanceAppWidget() {
                 }
             }
         }
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .clickable {
+                    context.launchApp()
+                    Timber.d("위젯 클릭")
+                },
+            content = {}
+        )
     }
 
     @OptIn(ExperimentalGlancePreviewApi::class)
