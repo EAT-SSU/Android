@@ -42,7 +42,7 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
 
-data class AffiliationInfo(
+data class MapRestaurantInfo(
     val department: String,
     val period: String,
     val benefit: String
@@ -50,10 +50,10 @@ data class AffiliationInfo(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AffiliationBottomSheet(
+fun MapRestaurantBottomSheet(
     storeName: String,
     placeType: PlaceType,
-    affiliationList: List<AffiliationInfo>,
+    mapRestaurantList: List<MapRestaurantInfo>,
     onDismiss: () -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -148,7 +148,7 @@ fun AffiliationBottomSheet(
 
             // 제휴 리스트
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(affiliationList) { item ->
+                items(mapRestaurantList) { item ->
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
                             text = buildAnnotatedString {
@@ -188,19 +188,19 @@ fun AffiliationBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun AffiliationBottomSheetPreview() {
+fun MapRestaurantBottomSheetPreview() {
     val dummyList = listOf(
-        AffiliationInfo("경영대", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
-        AffiliationInfo("IT대", "09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
-        AffiliationInfo("글로벌미디어학부", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
-        AffiliationInfo("공과대", "09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용")
+        MapRestaurantInfo("경영대", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
+        MapRestaurantInfo("IT대", "09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
+        MapRestaurantInfo("글로벌미디어학부", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
+        MapRestaurantInfo("공과대", "09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용")
     )
 
     EatssuTheme {
         Surface {
-            AffiliationBottomSheet(
+            MapRestaurantBottomSheet(
                 storeName = "현선이네",
-                affiliationList = dummyList,
+                mapRestaurantList = dummyList,
                 placeType = PlaceType.RESTAURANT
             )
         }
