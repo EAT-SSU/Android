@@ -77,11 +77,12 @@ class MealWidget : GlanceAppWidget() {
                             MealWidgetContent(
                                 mealTime = state.mealTime,
                                 mealList = state.mealList,
-                                restaurant = restaurant,
+                                restaurant = state.restaurant,
                             )
                         } else {
                             MealWidgetError(
                                 mealTime = state.mealTime,
+                                restaurant = state.restaurant,
                                 text = "오늘의 메뉴가 없습니다."
                             )
 
@@ -89,11 +90,11 @@ class MealWidget : GlanceAppWidget() {
                     }
 
                     is MealInfo.Loading -> {
-                        MealWidgetError(text = "로딩 중")
+                        MealWidgetError(restaurant = Restaurant.DODAM, text = "로딩 중")
                     }
 
                     is MealInfo.Unavailable -> {
-                        MealWidgetError(text = "네트워크 연결 상태를 확인해주세요.")
+                        MealWidgetError(restaurant = Restaurant.DODAM, text = "네트워크 연결 상태를 확인해주세요.")
                     }
                 }
             }
@@ -207,7 +208,11 @@ class MealWidget : GlanceAppWidget() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun MealWidgetError(mealTime: String? = "", text: String) {
+    fun MealWidgetError(
+        mealTime: String? = "",
+        restaurant: Restaurant,
+        text: String
+    ) {
         val context = LocalContext.current
 
         Column(
@@ -259,7 +264,7 @@ class MealWidget : GlanceAppWidget() {
                         contentDescription = "left"
                     )
                     Text(
-                        "기숙사 식당",
+                        restaurant.displayName,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
                     )
@@ -323,7 +328,7 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreviewError() {
-        MealWidgetError("저녁", "에러임")
+        MealWidgetError("저녁", Restaurant.DODAM, "에러임")
     }
 
 }
@@ -339,7 +344,7 @@ fun getNextRestaurant(current: Restaurant): Restaurant {
         Restaurant.HAKSIK -> Restaurant.DODAM
         Restaurant.DODAM -> Restaurant.DORMITORY
         Restaurant.DORMITORY -> Restaurant.HAKSIK
-        else -> Restaurant.DODAM
+        else -> Restaurant.HAKSIK
     }
 }
 

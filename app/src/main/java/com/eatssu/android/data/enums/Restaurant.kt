@@ -1,5 +1,8 @@
 package com.eatssu.android.data.enums
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class Restaurant(val displayName: String, val menuType: MenuType) {
     HAKSIK("학생 식당", MenuType.VARIABLE),
     DODAM("도담 식당", MenuType.VARIABLE),
