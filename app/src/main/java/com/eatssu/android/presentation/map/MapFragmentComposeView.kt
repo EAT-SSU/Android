@@ -57,7 +57,6 @@ fun MapFragmentComposeView(
     viewModel: MapViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showBottomSheet by remember { mutableStateOf(uiState.showBottomSheet) }
     val context = LocalContext.current
 
     Scaffold(
@@ -79,12 +78,11 @@ fun MapFragmentComposeView(
 
         if (uiState.showBottomSheet) {
             MajorBottomSheet(
-                onDismiss = { showBottomSheet = false },
+                onDismiss = { viewModel.dismissBottomSheet() },
                 onInputClick = {
                     // TODO: 학과 입력 화면으로 이동
-                    showBottomSheet = false
+                    viewModel.dismissBottomSheet()
                     val intent = Intent(context, UserInfoActivity::class.java)
-                    intent.putExtra("force", true )  // 강제 입력 모드로
                     context.startActivity(intent)
                 }
             )

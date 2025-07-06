@@ -41,4 +41,8 @@ class MapViewModel @Inject constructor(
             }
         }
     }
+
+    fun dismissBottomSheet() {
+        _uiState.update { it.copy(showBottomSheet = false) }
+    }
 }
