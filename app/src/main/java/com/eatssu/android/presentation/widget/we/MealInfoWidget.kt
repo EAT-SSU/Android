@@ -126,7 +126,11 @@ class MealWidget : GlanceAppWidget() {
                     changeRestaurantAndUpdateWidget(context, glanceId)
                 }
             },
-            onRightArrowClick = { /* TODO */ },
+            onRightArrowClick = {
+                if (glanceId != null) {
+                    changeRestaurantBackwardAndUpdateWidget(context, glanceId)
+                }
+            },
             content = {
                 LazyColumn(
                     modifier = GlanceModifier
@@ -296,6 +300,16 @@ fun getNextRestaurant(current: Restaurant): Restaurant {
     }
 }
 
+fun getPreviousRestaurant(current: Restaurant): Restaurant {
+    return when (current) {
+        Restaurant.HAKSIK -> Restaurant.DORMITORY
+        Restaurant.DODAM -> Restaurant.HAKSIK
+        Restaurant.DORMITORY -> Restaurant.DODAM
+        else -> Restaurant.HAKSIK
+    }
+}
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun changeRestaurantAndUpdateWidget(context: Context, glanceId: GlanceId) {
     CoroutineScope(Dispatchers.IO).launch {
@@ -305,6 +319,19 @@ fun changeRestaurantAndUpdateWidget(context: Context, glanceId: GlanceId) {
         val next = getNextRestaurant(current)
         MealWidgetConfigureActivity.saveRestaurantPref(context, appWidgetId, next)
         MealWidget().update(context, glanceId) // 해당 위젯만 업데이트
+        MealWorker.enqueue(context)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun changeRestaurantBackwardAndUpdateWidget(context: Context, glanceId: GlanceId) {
+    CoroutineScope(Dispatchers.IO).launch {
+        val manager = GlanceAppWidgetManager(context)
+        val appWidgetId = manager.getAppWidgetId(glanceId)
+        val current = MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+        val previous = getPreviousRestaurant(current)
+        MealWidgetConfigureActivity.saveRestaurantPref(context, appWidgetId, previous)
+        MealWidget().update(context, glanceId)
         MealWorker.enqueue(context)
     }
 }
