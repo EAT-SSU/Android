@@ -27,6 +27,7 @@ import com.eatssu.android.presentation.compose.ui.theme.White
 enum class PlaceType(val placeCategory: String, val iconRes: Int) {
     CAFE("카페", R.drawable.ic_map_cafe),
     RESTAURANT("음식점", R.drawable.ic_map_restaurant),
+    Alcohol("주점", R.drawable.ic_map_alcohol),
 }
 
 @Composable
@@ -78,6 +79,11 @@ fun PlaceTagPreview() {
             MapPin(
                 type = PlaceType.RESTAURANT,
                 placeName = "THE KONE",
+                modifier = Modifier.padding(top = 20.dp)
+            )
+            MapPin(
+                type = PlaceType.Alcohol,
+                placeName = "술집",
                 modifier = Modifier.padding(top = 20.dp)
             )
         }

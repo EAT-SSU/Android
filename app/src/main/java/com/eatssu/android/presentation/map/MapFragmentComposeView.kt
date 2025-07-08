@@ -140,7 +140,8 @@ fun MapFragmentComposeView(
                         when (it) {
                             "카페" -> PlaceType.CAFE
                             "음식점" -> PlaceType.RESTAURANT
-                            else -> PlaceType.RESTAURANT // 기본값 설정
+                            "주점" -> PlaceType.Alcohol
+                            else -> PlaceType.RESTAURANT
                         }
                     },
                     mapRestaurantList = uiState.mapRestaurantInfos,
