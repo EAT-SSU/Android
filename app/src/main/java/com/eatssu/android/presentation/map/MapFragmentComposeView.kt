@@ -1,65 +1,37 @@
 package com.eatssu.android.presentation.map
 
-import android.bluetooth.BluetoothClass.Device.Major
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray300
-import com.eatssu.android.presentation.compose.ui.theme.Gray600
-import com.eatssu.android.presentation.compose.ui.theme.Primary
-import com.eatssu.android.presentation.compose.ui.theme.White
+import com.eatssu.android.presentation.compose.ui.theme.*
 import com.eatssu.android.presentation.map.component.MajorBottomSheet
-import com.eatssu.android.presentation.map.component.MajorBottomSheetPreview
+import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
+import com.eatssu.android.presentation.map.component.MapRestaurantInfo
+import com.eatssu.android.presentation.map.component.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.compose.ExperimentalNaverMapApi
-import com.naver.maps.map.compose.Marker
-import com.naver.maps.map.compose.NaverMap
-import com.naver.maps.map.compose.rememberCameraPositionState
-import com.naver.maps.map.compose.rememberMarkerState
+import com.naver.maps.map.compose.*
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
 private const val DEFAULT_LONGITUDE = 126.95661313346206
-private const val DEFAULT_ZOOM = 16.0
+private const val DEFAULT_ZOOM = 15.5
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -68,13 +40,14 @@ fun MapFragmentComposeView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var selectedFilter by remember { mutableStateOf(FilterType.All) }
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition(
             LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
             DEFAULT_ZOOM
         )
     }
-    var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
     LaunchedEffect(selectedFilter) {
         when (selectedFilter) {
@@ -100,36 +73,35 @@ fun MapFragmentComposeView(
         },
     ) { innerPadding ->
 
-        if (uiState.showBottomSheet) {
+        if (uiState.showDepartmentBottomSheet) {
             MajorBottomSheet(
-                onDismiss = { viewModel.dismissBottomSheet() },
+                onDismiss = { viewModel.toggleDepartmentBottomSheet() },
                 onInputClick = {
-                    // TODO: 학과 입력 화면으로 이동
-                    viewModel.dismissBottomSheet()
+                    viewModel.toggleDepartmentBottomSheet()
                     val intent = Intent(context, UserInfoActivity::class.java)
                     context.startActivity(intent)
                 }
             )
         }
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             contentAlignment = Alignment.TopCenter,
         ) {
-            // 지도
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState
             ) {
                 uiState.partnerships.forEach { partnership ->
+                    val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
                     Marker(
-                        state = rememberMarkerState(
-                            position = LatLng(partnership.latitude, partnership.longitude)
-                        ),
+                        state = markerState,
                         captionText = partnership.storeName,
                         onClick = {
-                            // 클릭 시 다이얼로그/바텀시트 표시 등 추가 가능
+                            // 마커 클릭 시 제휴 정보 로딩
+                            viewModel.selectPartnershipByStoreName(partnership.storeName)
                             true
                         }
                     )
@@ -142,30 +114,44 @@ fun MapFragmentComposeView(
                 modifier = Modifier.padding(top = 12.dp)
             )
 
-            // 👇 FAB 위치 수동 지정 (우측 상단)
-            FloatingActionButton(
-                onClick = { /* TODO */ },
-                containerColor = White,
-                elevation = FloatingActionButtonDefaults.elevation(4.dp),
-                shape = CircleShape,
-                modifier = Modifier
-                    .padding(top = 12.dp, end = 16.dp)
-                    .border(width = 1.dp, color = Gray300, shape = CircleShape)
-                    .size(40.dp)
-                    .align(Alignment.TopEnd)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_like),
-                    contentDescription = "좋아요",
-                    modifier = Modifier.size(20.dp)
+            // 찜 기능
+//            FloatingActionButton(
+//                onClick = { /* TODO */ },
+//                containerColor = White,
+//                elevation = FloatingActionButtonDefaults.elevation(4.dp),
+//                shape = CircleShape,
+//                modifier = Modifier
+//                    .padding(top = 12.dp, end = 16.dp)
+//                    .border(width = 1.dp, color = Gray300, shape = CircleShape)
+//                    .size(40.dp)
+//                    .align(Alignment.TopEnd)
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.ic_like),
+//                    contentDescription = "좋아요",
+//                    modifier = Modifier.size(20.dp)
+//                )
+//            }
+
+            if (uiState.showPartnershipBottomSheet) {
+                MapRestaurantBottomSheet(
+                    storeName = uiState.restaurantPartnershipInfo!!.storeName,
+                    placeType = uiState.restaurantPartnershipInfo!!.restaurantType.let {
+                        when (it) {
+                            "카페" -> PlaceType.CAFE
+                            "음식점" -> PlaceType.RESTAURANT
+                            else -> PlaceType.RESTAURANT // 기본값 설정
+                        }
+                    },
+                    mapRestaurantList = uiState.mapRestaurantInfos,
+                    onDismiss = { viewModel.togglePartnershipBottomSheet() }
                 )
             }
+
         }
     }
 }
 
-
-/** 토글 */
 
 enum class FilterType {
     All, Mine
@@ -223,7 +209,6 @@ fun FilterItem(
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

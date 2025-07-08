@@ -126,22 +126,23 @@ fun MapRestaurantBottomSheet(
                     }
                 }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_like),
-                        contentDescription = "좋아요",
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "0",
-                        style = EatssuTheme.typography.caption2,
-                        color = Gray600
-                    )
-                }
+                // 찜 기능
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier.padding(bottom = 24.dp)
+//                ) {
+//                    Image(
+//                        painter = painterResource(id = R.drawable.ic_like),
+//                        contentDescription = "좋아요",
+//                        modifier = Modifier.size(18.dp)
+//                    )
+//                    Spacer(modifier = Modifier.width(4.dp))
+//                    Text(
+//                        text = "0",
+//                        style = EatssuTheme.typography.caption2,
+//                        color = Gray600
+//                    )
+//                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
