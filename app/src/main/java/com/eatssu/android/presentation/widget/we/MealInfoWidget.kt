@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.widget.we
 
 //import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -18,12 +16,12 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
@@ -78,30 +76,31 @@ class MealWidget : GlanceAppWidget() {
                                 mealTime = state.mealTime,
                                 mealList = state.mealList,
                                 restaurant = state.restaurant,
+                                glanceId = id,
                             )
                         } else {
                             MealWidgetError(
                                 mealTime = state.mealTime,
                                 restaurant = state.restaurant,
-                                text = "오늘의 메뉴가 없습니다."
+                                text = "오늘의 메뉴가 없습니다.",
+                                glanceId = id,
                             )
-
                         }
                     }
-
                     is MealInfo.Loading -> {
                         MealWidgetError(
                             restaurant = Restaurant.DODAM,
                             mealTime = "점심",
-                            text = "로딩 중"
+                            text = "로딩 중",
+                            glanceId = id,
                         )
                     }
-
                     is MealInfo.Unavailable -> {
                         MealWidgetError(
                             restaurant = Restaurant.DODAM,
                             mealTime = "점심",
-                            text = "네트워크 연결 상태를 확인해주세요."
+                            text = "네트워크 연결 상태를 확인해주세요.",
+                            glanceId = id,
                         )
                     }
                 }
@@ -115,39 +114,45 @@ class MealWidget : GlanceAppWidget() {
         mealTime: String,
         mealList: List<List<String>>,
         restaurant: Restaurant,
+        glanceId: GlanceId? = null,
     ) {
         val context = LocalContext.current
 
         MealWidgetScaffold(
             mealTime = mealTime,
             restaurant = restaurant,
-            onLeftArrowClick = { changeRestaurantAndUpdateWidget(context) },
-            onRightArrowClick = { /* TODO */ }
-        ) {
-            LazyColumn(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
-                    .cornerRadius(10.dp)
-                    .background(GlanceTheme.colors.onBackground)
-                    .clickable {
-                        Timber.d("위젯 클릭")
-                        context.launchApp()
-                    },
-            ) {
-                itemsIndexed(mealList) { index, group ->
-                    val groupText = group.joinToString(" + ")
-                    Column {
-                        Text(
-                            text = groupText,
-                        )
-                        if (mealList.lastIndex != index) {
-                            Spacer(modifier = GlanceModifier.height(8.dp)) // 그룹 간 간격
+            onLeftArrowClick = {
+                if (glanceId != null) {
+                    changeRestaurantAndUpdateWidget(context, glanceId)
+                }
+            },
+            onRightArrowClick = { /* TODO */ },
+            content = {
+                LazyColumn(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
+                        .cornerRadius(10.dp)
+                        .background(GlanceTheme.colors.onBackground)
+                        .clickable {
+                            Timber.d("위젯 클릭")
+                            context.launchApp()
+                        },
+                ) {
+                    itemsIndexed(mealList) { index, group ->
+                        val groupText = group.joinToString(" + ")
+                        Column {
+                            Text(
+                                text = groupText,
+                            )
+                            if (mealList.lastIndex != index) {
+                                Spacer(modifier = GlanceModifier.height(8.dp)) // 그룹 간 간격
+                            }
                         }
                     }
                 }
             }
-        }
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -155,42 +160,48 @@ class MealWidget : GlanceAppWidget() {
     fun MealWidgetError(
         mealTime: String,
         restaurant: Restaurant,
-        text: String
+        text: String,
+        glanceId: GlanceId? = null,
     ) {
         val context = LocalContext.current
 
         MealWidgetScaffold(
             mealTime = mealTime,
             restaurant = restaurant,
-            onLeftArrowClick = { changeRestaurantAndUpdateWidget(context) },
-            onRightArrowClick = { /* TODO */ }
-        ) {
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
-                    .cornerRadius(10.dp)
-                    .background(GlanceTheme.colors.onBackground)
-            ) {
-                Column(
+            onLeftArrowClick = {
+                if (glanceId != null) {
+                    changeRestaurantAndUpdateWidget(context, glanceId)
+                }
+            },
+            onRightArrowClick = { /* TODO */ },
+            content = {
+                Box(
                     modifier = GlanceModifier
-                        .fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                        .fillMaxSize()
+                        .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
+                        .cornerRadius(10.dp)
+                        .background(GlanceTheme.colors.onBackground)
                 ) {
-                    Image(
-                        modifier = GlanceModifier.size(20.dp)
-                            .padding(bottom = 6.dp),
-                        provider = ImageProvider(R.drawable.ic_alert_circle),
-                        contentDescription = "alert"
-                    )
-                    Text(
-                        text,
-                        style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
-                    )
+                    Column(
+                        modifier = GlanceModifier
+                            .fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Image(
+                            modifier = GlanceModifier.size(20.dp)
+                                .padding(bottom = 6.dp),
+                            provider = ImageProvider(R.drawable.ic_alert_circle),
+                            contentDescription = "alert"
+                        )
+                        Text(
+                            text,
+                            style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+                        )
+                    }
                 }
             }
-        }
+        )
     }
 
     @Composable
@@ -286,17 +297,14 @@ fun getNextRestaurant(current: Restaurant): Restaurant {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun changeRestaurantAndUpdateWidget(context: Context) {
+fun changeRestaurantAndUpdateWidget(context: Context, glanceId: GlanceId) {
     CoroutineScope(Dispatchers.IO).launch {
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        val widgetComponent = ComponentName(context, MealWidgetReceiver::class.java)
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
-        val appWidgetId = appWidgetIds.firstOrNull() ?: return@launch
+        val manager = GlanceAppWidgetManager(context)
+        val appWidgetId = manager.getAppWidgetId(glanceId)
         val current = MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
         val next = getNextRestaurant(current)
-        Timber.d(next.displayName)
         MealWidgetConfigureActivity.saveRestaurantPref(context, appWidgetId, next)
-        MealWidget().updateAll(context)
+        MealWidget().update(context, glanceId) // 해당 위젯만 업데이트
         MealWorker.enqueue(context)
     }
 }

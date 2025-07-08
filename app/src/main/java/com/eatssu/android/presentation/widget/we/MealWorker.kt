@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.appwidget.updateAll
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -73,7 +72,7 @@ class MealWorker @AssistedInject constructor(
             glanceId = glanceId,
             updateState = { newState }
         )
-        MealWidget().updateAll(context)
+        MealWidget().update(context, glanceId)
     }
 
     private fun MealInfoState.toMealInfo(): MealInfo = when (this) {
