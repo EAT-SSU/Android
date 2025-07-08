@@ -1,0 +1,81 @@
+package com.eatssu.android.presentation.map.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.eatssu.android.domain.model.Partnership
+import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import com.eatssu.android.presentation.compose.ui.theme.Gray300
+import com.eatssu.android.presentation.compose.ui.theme.Gray600
+import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.eatssu.android.presentation.compose.ui.theme.White
+
+enum class FilterType {
+    All, Mine
+}
+
+@Composable
+fun PartnershipFilterToggle(
+    selected: FilterType,
+    onSelectedChange: (FilterType) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .border(1.dp, Gray300, shape = CircleShape)
+            .clip(CircleShape)
+            .background(White)
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        PartnershipToggleItem(
+            text = "전체",
+            isSelected = selected == FilterType.All,
+            onClick = { onSelectedChange(FilterType.All) }
+        )
+        PartnershipToggleItem(
+            text = "내 제휴",
+            isSelected = selected == FilterType.Mine,
+            onClick = { onSelectedChange(FilterType.Mine) }
+        )
+    }
+}
+
+@Composable
+fun PartnershipToggleItem(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val backgroundColor = if (isSelected) Primary else Color.Transparent
+    val textColor = if (isSelected) Color.White else Gray600
+
+    Box(
+        modifier = Modifier
+            .width(65.dp)
+            .height(32.dp)
+            .clip(CircleShape)
+            .background(backgroundColor)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = textColor,
+            style = EatssuTheme.typography.body2
+        )
+    }
+}

@@ -1,10 +1,8 @@
 package com.eatssu.android.presentation.map
 
 import android.content.Intent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -12,17 +10,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eatssu.android.R
 import com.eatssu.android.presentation.compose.ui.theme.*
+import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MajorBottomSheet
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
-import com.eatssu.android.presentation.map.component.MapRestaurantInfo
+import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
+import com.eatssu.android.presentation.map.component.PartnershipToggleItem
 import com.eatssu.android.presentation.map.component.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.naver.maps.geometry.LatLng
@@ -73,6 +70,7 @@ fun MapFragmentComposeView(
         },
     ) { innerPadding ->
 
+        // 학과 정보가 없을 때 보여줄 BottomSheet
         if (uiState.showDepartmentBottomSheet) {
             MajorBottomSheet(
                 onDismiss = { viewModel.toggleDepartmentBottomSheet() },
@@ -81,6 +79,23 @@ fun MapFragmentComposeView(
                     val intent = Intent(context, UserInfoActivity::class.java)
                     context.startActivity(intent)
                 }
+            )
+        }
+
+        // 특정 식당에 대한 제휴 정보 BottomSheet
+        if (uiState.showPartnershipBottomSheet) {
+            MapRestaurantBottomSheet(
+                storeName = uiState.restaurantPartnershipInfo!!.storeName,
+                placeType = uiState.restaurantPartnershipInfo!!.restaurantType.let {
+                    when (it) {
+                        "카페" -> PlaceType.CAFE
+                        "음식점" -> PlaceType.RESTAURANT
+                        "주점" -> PlaceType.Alcohol
+                        else -> PlaceType.RESTAURANT
+                    }
+                },
+                mapRestaurantList = uiState.mapRestaurantInfos,
+                onDismiss = { viewModel.togglePartnershipBottomSheet() }
             )
         }
 
@@ -100,7 +115,7 @@ fun MapFragmentComposeView(
                         state = markerState,
                         captionText = partnership.storeName,
                         onClick = {
-                            // 마커 클릭 시 제휴 정보 로딩
+                            // 마커 클릭 시 제휴 정보 업데이트
                             viewModel.selectPartnershipByStoreName(partnership.storeName)
                             true
                         }
@@ -108,7 +123,7 @@ fun MapFragmentComposeView(
                 }
             }
 
-            MapFilterToggle(
+            PartnershipFilterToggle(
                 selected = selectedFilter,
                 onSelectedChange = { selectedFilter = it },
                 modifier = Modifier.padding(top = 12.dp)
@@ -132,82 +147,7 @@ fun MapFragmentComposeView(
 //                    modifier = Modifier.size(20.dp)
 //                )
 //            }
-
-            if (uiState.showPartnershipBottomSheet) {
-                MapRestaurantBottomSheet(
-                    storeName = uiState.restaurantPartnershipInfo!!.storeName,
-                    placeType = uiState.restaurantPartnershipInfo!!.restaurantType.let {
-                        when (it) {
-                            "카페" -> PlaceType.CAFE
-                            "음식점" -> PlaceType.RESTAURANT
-                            "주점" -> PlaceType.Alcohol
-                            else -> PlaceType.RESTAURANT
-                        }
-                    },
-                    mapRestaurantList = uiState.mapRestaurantInfos,
-                    onDismiss = { viewModel.togglePartnershipBottomSheet() }
-                )
-            }
-
         }
-    }
-}
-
-
-enum class FilterType {
-    All, Mine
-}
-
-@Composable
-fun MapFilterToggle(
-    selected: FilterType,
-    onSelectedChange: (FilterType) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .border(1.dp, Gray300, shape = CircleShape)
-            .clip(CircleShape)
-            .background(White)
-            .padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        FilterItem(
-            text = "전체",
-            isSelected = selected == FilterType.All,
-            onClick = { onSelectedChange(FilterType.All) }
-        )
-        FilterItem(
-            text = "내 제휴",
-            isSelected = selected == FilterType.Mine,
-            onClick = { onSelectedChange(FilterType.Mine) }
-        )
-    }
-}
-
-@Composable
-fun FilterItem(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val backgroundColor = if (isSelected) Primary else Color.Transparent
-    val textColor = if (isSelected) Color.White else Gray600
-
-    Box(
-        modifier = Modifier
-            .width(65.dp)
-            .height(32.dp)
-            .clip(CircleShape)
-            .background(backgroundColor)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = textColor,
-            style = EatssuTheme.typography.body2
-        )
     }
 }
 
