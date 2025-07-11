@@ -12,6 +12,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
 import com.eatssu.android.presentation.widget.we.util.MealInfoState
 import com.eatssu.android.presentation.widget.we.util.WidgetDataDisplayManager
@@ -65,7 +66,7 @@ class MealWorker @AssistedInject constructor(
         return Result.success()
     }
 
-    private suspend fun setWidgetState(glanceId: GlanceId, newState: MealInfo) {
+    private suspend fun setWidgetState(glanceId: GlanceId, newState: WidgetMealInfo) {
         updateAppWidgetState(
             context = context,
             definition = MealInfoStateDefinition,
@@ -75,9 +76,9 @@ class MealWorker @AssistedInject constructor(
         MealWidget().update(context, glanceId)
     }
 
-    private fun MealInfoState.toMealInfo(): MealInfo = when (this) {
-        is MealInfoState.Available -> MealInfo.Available(mealTime, mealList, restaurant)
-        is MealInfoState.Unavailable -> MealInfo.Unavailable
-        is MealInfoState.Loading -> MealInfo.Loading
+    private fun MealInfoState.toMealInfo(): WidgetMealInfo = when (this) {
+        is MealInfoState.Available -> WidgetMealInfo.Available(mealTime, mealList, restaurant)
+        is MealInfoState.Unavailable -> WidgetMealInfo.Unavailable
+        is MealInfoState.Loading -> WidgetMealInfo.Loading
     }
 }

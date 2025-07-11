@@ -7,15 +7,19 @@ import kotlinx.coroutines.flow.Flow
 
 interface MealRepository {
 
-    // 오늘의 식단을 가져오는 api
-    suspend fun fetchTodayMeal(
+    /**
+     * 오늘의 식단을 가져오는 api
+     */
+    suspend fun getTodayMeal(
         date: String,
         restaurant: String,
         time: String,
     ): Flow<ArrayList<GetMealResponse>>
 
 
-    // MealId를 이용해서 Menu를 찾기 api
+    /**
+     * MealId를 이용해서 Menu를 찾기 api
+     */
     suspend fun getMenuInfoByMealId(
         mealId: Long,
     ): Flow<BaseResponse<MenuOfMealResponse>>

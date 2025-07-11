@@ -8,6 +8,8 @@ import com.eatssu.android.presentation.widget.we.GetMealsResponseModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
+import java.net.UnknownHostException
+import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
 
 sealed interface MealException {
@@ -37,26 +39,15 @@ sealed interface MealState {
 class GetTodayMealUseCase @Inject constructor(
     private val mealRepository: MealRepository,
 ) {
-
     suspend operator fun invoke(
         date: String,
         restaurant: String
     ): MealState = runCatching {
-        val breakfastFlow = mealRepository.fetchTodayMeal(date, restaurant, Time.MORNING.name)
-        val lunchFlow = mealRepository.fetchTodayMeal(date, restaurant, Time.LUNCH.name)
-        val dinnerFlow = mealRepository.fetchTodayMeal(date, restaurant, Time.DINNER.name)
+        val breakfastFlow = mealRepository.getTodayMeal(date, restaurant, Time.MORNING.name)
+        val lunchFlow = mealRepository.getTodayMeal(date, restaurant, Time.LUNCH.name)
+        val dinnerFlow = mealRepository.getTodayMeal(date, restaurant, Time.DINNER.name)
 
         combine(breakfastFlow, lunchFlow, dinnerFlow) { breakfastList, lunchList, dinnerList ->
-            fun mapToMealPair(
-                meals: List<GetMealResponse>,
-                mealType: String
-            ): Pair<List<List<String>>, String> {
-                // 각 meal(예: 점심)에 대해 여러 그룹(메뉴묶음)으로 변환
-                val menuGroups = meals.map { meal ->
-                    meal.briefMenus.mapNotNull { it.name }
-                }
-                return menuGroups to mealType
-            }
 
             GetMealsResponseModel(
                 breakfast = mapToMealPair(breakfastList, "breakfast"),
@@ -64,31 +55,33 @@ class GetTodayMealUseCase @Inject constructor(
                 dinner = mapToMealPair(dinnerList, "dinner"),
                 restaurant = Restaurant.valueOf(restaurant)
             )
-        }.first() // ⬅️ 여기서 Flow 실행
+        }.first() // 여기서 Flow 실행
     }.fold(
         onSuccess = { result ->
-            Timber.d("급식 정보 가져오기 성공 $result")
+            Timber.d("메뉴 가져오기 성공 $result")
             MealState.Success(result)
         },
         onFailure = { exception ->
-//            val error = when (exception) {
-//                is NeisException -> {
-//                    when {
-//                        exception.result == NeisResult.DATA_NOT_FOUND -> MealException.DataEmpty
-//
-//                        else -> MealException.Unknown(exception.result.code)
-//                    }
-//                }
-//
-//                is UnresolvedAddressException, is UnknownHostException -> MealException.InternetDisconnected
-//
-//                else -> MealException.Unknown(NeisResult.UNKNOWN_ERROR.code)
-//            }
+            val error = when (exception) {
+
+                is UnresolvedAddressException, is UnknownHostException -> MealException.InternetDisconnected
+
+                else -> MealException.Unknown("알 수 없는 에러")
+            }
 
             MealState.Failure
         }
     )
 
-
+    private fun mapToMealPair(
+        meals: List<GetMealResponse>,
+        mealType: String
+    ): Pair<List<List<String>>, String> {
+        // 각 meal(예: 점심)에 대해 여러 그룹(메뉴묶음)으로 변환
+        val menuGroups = meals.map { meal ->
+            meal.briefMenus.mapNotNull { it.name }
+        }
+        return menuGroups to mealType
+    }
 }
 

@@ -11,17 +11,15 @@ import javax.inject.Inject
 
 class MealRepositoryImpl @Inject constructor(
     private val mealService: MealService,
-) :
-    MealRepository {
+) : MealRepository {
 
-    override suspend fun fetchTodayMeal( //todo 분기처리 어떻게 할지?
+    override suspend fun getTodayMeal( //todo 분기처리 어떻게 할지?
         date: String,
         restaurant: String,
         time: String
     ): Flow<ArrayList<GetMealResponse>> {
         return flow {
             try {
-                // API 호출 예시
                 val response = mealService.getTodayMeal2(date, restaurant, time)
 
                 // 응답이 성공적이라면 Result.success()로 감싸서 Flow로 반환
@@ -37,7 +35,6 @@ class MealRepositoryImpl @Inject constructor(
             }
         }
     }
-
 
 
     override suspend fun getMenuInfoByMealId(mealId: Long): Flow<BaseResponse<MenuOfMealResponse>> =

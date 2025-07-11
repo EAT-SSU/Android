@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
 import com.eatssu.android.domain.usecase.meal.MealState
+import com.eatssu.android.presentation.util.CalendarUtil
 import timber.log.Timber
 import java.time.LocalTime
 
@@ -39,7 +40,7 @@ object WidgetDataDisplayManager {
         restaurant: Restaurant,
     ): MealInfoState {
         Timber.d("Widget - fetchMealInfo")
-        val targetDate = DateUtils.convertMillisToDateString(System.currentTimeMillis())
+        val targetDate = CalendarUtil.convertMillisToDateString(System.currentTimeMillis())
         val response = getMealsUseCase(targetDate, restaurant.name)
         Timber.d("Widget - fetchMealInfo $response")
 
@@ -68,7 +69,7 @@ object WidgetDataDisplayManager {
             }
         }
 
-        val nextDay = DateUtils.getNextDayDate()
+        val nextDay = CalendarUtil.getNextDayDate()
         val getNextDayMealResponse = getMealsUseCase(nextDay, restaurant.name)
 
         if (getNextDayMealResponse is MealState.Success) {

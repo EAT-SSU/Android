@@ -1,20 +1,20 @@
-package com.eatssu.android.presentation.widget.we
+package com.eatssu.android.domain.model
 
 import com.eatssu.android.data.enums.Restaurant
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface MealInfo {
+sealed interface WidgetMealInfo {
     @Serializable
-    object Loading : MealInfo
+    object Loading : WidgetMealInfo
 
     @Serializable
     data class Available(
         val mealTime: String,
         val mealList: List<List<String>>,
         val restaurant: Restaurant,
-    ) : MealInfo
+    ) : WidgetMealInfo
 
     @Serializable
-    object Unavailable : MealInfo
+    object Unavailable : WidgetMealInfo
 }
