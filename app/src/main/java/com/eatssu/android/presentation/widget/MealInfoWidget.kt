@@ -41,6 +41,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.presentation.widget.we.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.we.util.launchApp
 import kotlinx.coroutines.CoroutineScope
@@ -69,8 +70,8 @@ class MealWidget : GlanceAppWidget() {
             }
 
             GlanceTheme(colors = EATSSUWidgetColorScheme.colors) {
-                when (val state = currentState<MealInfo>()) {
-                    is MealInfo.Available -> {
+                when (val state = currentState<WidgetMealInfo>()) {
+                    is WidgetMealInfo.Available -> {
                         if (state.mealList.isNotEmpty()) {
                             MealWidgetContent(
                                 mealTime = state.mealTime,
@@ -87,7 +88,8 @@ class MealWidget : GlanceAppWidget() {
                             )
                         }
                     }
-                    is MealInfo.Loading -> {
+
+                    is WidgetMealInfo.Loading -> {
                         MealWidgetError(
                             restaurant = Restaurant.DODAM,
                             mealTime = "점심",
@@ -95,7 +97,8 @@ class MealWidget : GlanceAppWidget() {
                             glanceId = id,
                         )
                     }
-                    is MealInfo.Unavailable -> {
+
+                    is WidgetMealInfo.Unavailable -> {
                         MealWidgetError(
                             restaurant = Restaurant.DODAM,
                             mealTime = "점심",
