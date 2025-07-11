@@ -107,7 +107,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- 딥링크 필터 (이거 중요!) -->
+            <!-- 딥링크 필터  -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

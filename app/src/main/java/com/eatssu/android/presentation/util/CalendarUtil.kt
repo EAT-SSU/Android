@@ -2,9 +2,13 @@ package com.eatssu.android.presentation.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 object CalendarUtil {
@@ -37,5 +41,24 @@ object CalendarUtil {
             current = current.minusDays(1)
         }
         return null
+    }
+
+    fun convertMillisToDateString(millis: Long): String {
+        val formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        val date = Date(millis)
+        return formatter.format(date)
+    }
+
+    fun getNextDayDate(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val nextDay = LocalDate.now().plusDays(1)
+            val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
+            nextDay.format(formatter)
+        } else {
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            val formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+            formatter.format(calendar.time)
+        }
     }
 }
