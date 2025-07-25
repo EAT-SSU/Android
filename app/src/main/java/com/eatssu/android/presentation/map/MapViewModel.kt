@@ -21,7 +21,8 @@ data class MapState(
     val showPartnershipBottomSheet: Boolean = false,
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
-    val mapRestaurantInfos: List<MapRestaurantInfo> = emptyList()
+    val mapRestaurantInfos: List<MapRestaurantInfo> = emptyList(),
+    var partnershipToggleText: String = "내 제휴"
 )
 
 @HiltViewModel

@@ -22,6 +22,7 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray300
 import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
+import timber.log.Timber
 
 enum class FilterType {
     All, Mine
@@ -31,8 +32,10 @@ enum class FilterType {
 fun PartnershipFilterToggle(
     selected: FilterType,
     onSelectedChange: (FilterType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    departmentName: String,
 ) {
+    Timber.d("departmentName = $departmentName")
     Row(
         modifier = modifier
             .border(1.dp, Gray300, shape = CircleShape)
@@ -47,7 +50,7 @@ fun PartnershipFilterToggle(
             onClick = { onSelectedChange(FilterType.All) }
         )
         PartnershipToggleItem(
-            text = "내 제휴",
+            text = departmentName.ifBlank { "내 제휴" },
             isSelected = selected == FilterType.Mine,
             onClick = { onSelectedChange(FilterType.Mine) }
         )

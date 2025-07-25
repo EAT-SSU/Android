@@ -131,7 +131,8 @@ fun MapFragmentComposeView(
             PartnershipFilterToggle(
                 selected = selectedFilter,
                 onSelectedChange = { selectedFilter = it },
-                modifier = Modifier.padding(top = 12.dp)
+                modifier = Modifier.padding(top = 12.dp),
+                departmentName = mainUiState.departmentName
             )
 
             // 찜 기능

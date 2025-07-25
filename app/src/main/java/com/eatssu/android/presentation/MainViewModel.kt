@@ -130,6 +130,12 @@ class MainViewModel @Inject constructor(
                     }
                 }
 
+                _uiState.update {
+                    it.copy(
+                        departmentName = department,
+                    )
+                }
+
                 // 뷰모델이랑 도메인에서 context를 알고 있는 것도 아니고..
                 // MySharedPreferences을 직접적으로 사용하는 것도 아닌데 지금 다 이렇게 되어있음
                 // 지금은 어쩔수없는데 MySharedPreferences 가서 TODO 봐주세요
@@ -169,4 +175,5 @@ data class MainState(
     var isNicknameNull: Boolean = false,
     var isLoggedOut: Boolean = false,
     var showUserDepartmentBottomSheet: Boolean = false,
+    var departmentName: String = "",
 )
