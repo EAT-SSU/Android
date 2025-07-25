@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +42,7 @@ fun PartnershipFilterToggle(
             .border(1.dp, Gray300, shape = CircleShape)
             .clip(CircleShape)
             .background(White)
-            .padding(4.dp),
+            .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         PartnershipToggleItem(
@@ -52,7 +53,7 @@ fun PartnershipFilterToggle(
         PartnershipToggleItem(
             text = departmentName.ifBlank { "내 제휴" },
             isSelected = selected == FilterType.Mine,
-            onClick = { onSelectedChange(FilterType.Mine) }
+            onClick = { onSelectedChange(FilterType.Mine) },
         )
     }
 }
@@ -68,10 +69,10 @@ fun PartnershipToggleItem(
 
     Box(
         modifier = Modifier
-            .width(65.dp)
-            .height(32.dp)
+            .wrapContentWidth()
             .clip(CircleShape)
             .background(backgroundColor)
+            .padding(horizontal = 20.dp, vertical = 6.dp)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
