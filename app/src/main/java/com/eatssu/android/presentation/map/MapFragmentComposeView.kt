@@ -128,8 +128,8 @@ fun MapFragmentComposeView(
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
                         ),
-                        width = 20.dp,
-                        height = 20.dp,
+                        width = 30.dp,
+                        height = 30.dp,
                         state = markerState,
                         captionText = partnership.storeName,
                         captionColor = Black,

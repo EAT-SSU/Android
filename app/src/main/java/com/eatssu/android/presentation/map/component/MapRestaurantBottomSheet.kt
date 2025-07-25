@@ -41,7 +41,8 @@ import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
 
 data class MapRestaurantInfo(
-    val collegeName: String,
+    val collegeName: String?,
+    val departmentName: String?,
     val period: String,
     val benefit: String
 )
@@ -155,7 +156,21 @@ fun MapRestaurantBottomSheet(
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
                             text = buildAnnotatedString {
-                                append(item.collegeName)
+                                when {
+                                    item.collegeName != null && item.departmentName == null -> {
+                                        append(item.collegeName)
+                                    }
+                                    item.collegeName == null && item.departmentName != null -> {
+                                        append(item.departmentName)
+                                    }
+                                    item.collegeName != null && item.departmentName != null -> {
+                                        append("${item.collegeName}${item.departmentName}")
+                                    }
+                                    else -> {
+                                        append("단과대/학과 정보를 알 수 없음")
+                                    }
+                                }
+
                                 append("   ")
                                 withStyle(style = SpanStyle(color = Gray500, fontSize = EatssuTheme.typography.caption3.fontSize)) {
                                     append(item.period)
@@ -193,10 +208,10 @@ fun MapRestaurantBottomSheet(
 @Composable
 fun MapRestaurantBottomSheetPreview() {
     val dummyList = listOf(
-        MapRestaurantInfo("경영대", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
-        MapRestaurantInfo("IT대", "09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
-        MapRestaurantInfo("글로벌미디어학부", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
-        MapRestaurantInfo("공과대", "09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용")
+        MapRestaurantInfo("경영대", null, "09.03~12.18","학생증 인증하면 음료수 1개 증정"),
+        MapRestaurantInfo("IT대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
+        MapRestaurantInfo(null, "글로벌미디어학부", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
+        MapRestaurantInfo("공과대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용")
     )
 
     EatssuTheme {

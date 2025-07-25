@@ -99,6 +99,7 @@ class MapViewModel @Inject constructor(
             val restaurantInfos = it.partnershipInfos.map { info ->
                 MapRestaurantInfo(
                     collegeName = info.collegeName,
+                    departmentName = info.departmentName,
                     period = "${info.startDate} ~ ${info.endDate}",
                     benefit = info.description
                 )
