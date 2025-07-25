@@ -64,7 +64,7 @@ class UserInfoActivity :
 
                 binding.btnCheckNickname.isEnabled = isValidLength && isNicknameChanged
 
-                if (!isValidLength) {
+                if (!isValidLength && inputNickname.isNotEmpty()) {
                     binding.tvNickname28.setTextColor(getColor(R.color.error))
                     binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
                     binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
