@@ -138,7 +138,7 @@ class UserInfoViewModel @Inject constructor(
             }.onSuccess {
                 Timber.d("학과 정보 업데이트 성공")
                 _uiState.update{ it.copy(success = true) }
-                MySharedPreferences.setUserMajor(context, _uiState.value.selectedDepartment)
+                MySharedPreferences.setUserDepartment(context, _uiState.value.selectedDepartment)
                 val college = findCollegeByDepartment(_uiState.value.selectedDepartment)
                 MySharedPreferences.setUserCollege(context, college ?: "단과대")
             }.onFailure { e ->

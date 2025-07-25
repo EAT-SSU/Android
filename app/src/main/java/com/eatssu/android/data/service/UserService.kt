@@ -34,9 +34,6 @@ interface UserService {
     @DELETE("users") //유저 탈퇴
     suspend fun signOut(): BaseResponse<Boolean>
 
-    @GET("users/validate/department") // 유저의 학과 기입 여부 체크
-    suspend fun checkUserDepartment(): BaseResponse<Boolean>
-
     @GET("users/department") // 유저의 학과 조회
     suspend fun getUserDepartment(): BaseResponse<UserDepartmentResponse>
 

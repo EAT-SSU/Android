@@ -66,7 +66,7 @@ object MySharedPreferences {
         return prefs.getString("MY_COLLEGE", "").toString()
     }
 
-    fun setUserMajor(context: Context, input: String) {
+    fun setUserDepartment(context: Context, input: String) {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = prefs.edit()
@@ -74,7 +74,7 @@ object MySharedPreferences {
         editor.commit()
     }
 
-    fun getUserMajor(context: Context): String {
+    fun getUserDepartment(context: Context): String {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getString("MY_MAJOR", "").toString()

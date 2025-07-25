@@ -1,7 +1,6 @@
 package com.eatssu.android.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -117,10 +116,19 @@ class MainViewModel @Inject constructor(
             }.onSuccess { department ->
                 Timber.d("userDepartment: $department")
 
-                MySharedPreferences.setUserMajor(context,department)
+                MySharedPreferences.setUserDepartment(context,department)
                 // 단과대 추론
                 val college = findCollegeByDepartment(department)
                 MySharedPreferences.setUserCollege(context,college)
+                MySharedPreferences.setUserDepartment(context, department)
+
+                if (college.isBlank() && department.isBlank()) {
+                    _uiState.update {
+                        it.copy(
+                            showUserDepartmentBottomSheet = true,
+                        )
+                    }
+                }
 
                 // 뷰모델이랑 도메인에서 context를 알고 있는 것도 아니고..
                 // MySharedPreferences을 직접적으로 사용하는 것도 아닌데 지금 다 이렇게 되어있음
@@ -160,4 +168,5 @@ data class MainState(
     var toastMessage: String = "",
     var isNicknameNull: Boolean = false,
     var isLoggedOut: Boolean = false,
+    var showUserDepartmentBottomSheet: Boolean = false,
 )

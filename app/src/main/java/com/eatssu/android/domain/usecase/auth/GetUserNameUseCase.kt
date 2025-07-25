@@ -12,7 +12,7 @@ class GetUserNameUseCase @Inject constructor(
     operator fun invoke(): UserInfo {
         val nickname = MySharedPreferences.getUserName(context)
         val college = MySharedPreferences.getUserCollege(context)
-        val major = MySharedPreferences.getUserMajor(context)
+        val major = MySharedPreferences.getUserDepartment(context)
         return UserInfo(nickname, college, major)
     }
 }

@@ -24,9 +24,6 @@ interface UserRepository {
     fun getTotalColleges(): List<String>
     fun getTotalDepartments(college: String): List<String>
 
-    // 유저의 학과 기입 여부 체크
-    suspend fun checkUserDepartment(): Boolean
-
     // 유저의 학과 정보 조회
     suspend fun getUserDepartment(): String
 

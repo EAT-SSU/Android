@@ -34,23 +34,23 @@ class MapViewModel @Inject constructor(
     val uiState: StateFlow<MapState> = _uiState.asStateFlow()
 
     init {
-        checkUserDepartment()
+        // checkUserDepartment()
         loadPartnerships()
     }
 
-    private fun checkUserDepartment() {
-        viewModelScope.launch {
-            runCatching {
-                userRepository.checkUserDepartment()
-            }.onSuccess { hasDepartment ->
-                Timber.d("checkUserDepartment: $hasDepartment")
-                _uiState.update { it.copy(showDepartmentBottomSheet = !hasDepartment)
-                }
-            }.onFailure {
-                Timber.e("Error checkUserDepartment: ${it.message}")
-            }
-        }
-    }
+//    private fun checkUserDepartment() {
+//        viewModelScope.launch {
+//            runCatching {
+//                userRepository.checkUserDepartment()
+//            }.onSuccess { hasDepartment ->
+//                Timber.d("checkUserDepartment: $hasDepartment")
+//                _uiState.update { it.copy(showDepartmentBottomSheet = !hasDepartment)
+//                }
+//            }.onFailure {
+//                Timber.e("Error checkUserDepartment: ${it.message}")
+//            }
+//        }
+//    }
 
     fun loadPartnerships() {
         viewModelScope.launch {

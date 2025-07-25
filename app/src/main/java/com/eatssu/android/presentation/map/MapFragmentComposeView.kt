@@ -1,30 +1,28 @@
 package com.eatssu.android.presentation.map
 
 import android.content.Intent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.compose.ui.theme.*
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MajorBottomSheet
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
-import com.eatssu.android.presentation.map.component.PartnershipToggleItem
 import com.eatssu.android.presentation.map.component.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.*
+import timber.log.Timber
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
 private const val DEFAULT_LONGITUDE = 126.95661313346206
@@ -33,9 +31,12 @@ private const val DEFAULT_ZOOM = 15.5
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapFragmentComposeView(
-    viewModel: MapViewModel = viewModel()
+    viewModel: MapViewModel = viewModel(),
+    mainViewModel: MainViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val mainUiState by mainViewModel.uiState.collectAsState()
+
     val context = LocalContext.current
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
@@ -69,9 +70,13 @@ fun MapFragmentComposeView(
             )
         },
     ) { innerPadding ->
+        // TODO
+        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartment(context)}")
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
-        if (uiState.showDepartmentBottomSheet) {
+        if (mainUiState.showUserDepartmentBottomSheet) {
+            Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
+
             MajorBottomSheet(
                 onDismiss = { viewModel.toggleDepartmentBottomSheet() },
                 onInputClick = {
