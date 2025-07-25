@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.compose.ui.theme.*
@@ -22,6 +23,7 @@ import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.*
+import com.naver.maps.map.overlay.OverlayImage
 import timber.log.Timber
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
@@ -116,15 +118,28 @@ fun MapFragmentComposeView(
             ) {
                 uiState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
+
                     Marker(
+                        icon = OverlayImage.fromResource(
+                            when (partnership.restaurantType) {
+                                "카페" -> R.drawable.ic_map_marker_cafe
+                                "음식점" -> R.drawable.ic_map_marker_restaurant
+                                "주점" -> R.drawable.ic_map_marker_alcohol
+                                else -> R.drawable.ic_map_marker_restaurant
+                            }
+                        ),
+                        width = 20.dp,
+                        height = 20.dp,
                         state = markerState,
                         captionText = partnership.storeName,
+                        captionColor = Black,
                         onClick = {
                             // 마커 클릭 시 제휴 정보 업데이트
                             viewModel.selectPartnershipByStoreName(partnership.storeName)
                             true
                         }
                     )
+
                 }
             }
 
