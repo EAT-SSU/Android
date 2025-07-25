@@ -1,14 +1,17 @@
 package com.eatssu.android.presentation.map
 
 import android.content.Intent
+import android.graphics.PointF
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
@@ -128,11 +131,14 @@ fun MapFragmentComposeView(
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
                         ),
-                        width = 30.dp,
-                        height = 30.dp,
+                        width = 20.dp,
+                        height = 20.dp,
+                        captionAligns = arrayOf(Align.Right),
                         state = markerState,
                         captionText = partnership.storeName,
                         captionColor = Black,
+                        captionTextSize = 10.sp,
+                        isHideCollidedCaptions = true,
                         onClick = {
                             // 마커 클릭 시 제휴 정보 업데이트
                             viewModel.selectPartnershipByStoreName(partnership.storeName)
