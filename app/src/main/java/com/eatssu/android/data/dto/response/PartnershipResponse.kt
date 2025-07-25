@@ -22,7 +22,7 @@ data class PartnershipResponse(
         @SerializedName("collegeName")
         val collegeName: String?,
         @SerializedName("departmentName")
-        val departmentName: String,
+        val departmentName: String?,
         @SerializedName("likeCount")
         val likeCount: Int,
         @SerializedName("isLiked")

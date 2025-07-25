@@ -46,7 +46,7 @@ fun PartnershipResponse.toDomain(): Partnership =
                 id = it.id,
                 partnershipType = it.partnershipType,
                 collegeName = it.collegeName ?: "",
-                departmentName = it.departmentName,
+                departmentName = it.departmentName ?: "",
                 likeCount = it.likeCount,
                 isLiked = it.isLiked,
                 description = it.description,
@@ -68,7 +68,7 @@ fun PartnershipRestaurantResponse.toDomain(): PartnershipRestaurant =
         longitude = longitude,
         latitude = latitude,
         collegeName = collegeName,
-        departmentName = departmentName,
+        departmentName = departmentName ?: "",
         partnershipLikeCount = partnershipLikeCount,
         likedByUser = likedByUser
     )

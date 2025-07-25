@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class UserDepartmentResponse(
     @SerializedName("departmentName")
-    val departmentName: String,
+    val departmentName: String?,
 )

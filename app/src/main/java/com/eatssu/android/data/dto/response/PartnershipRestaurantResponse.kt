@@ -24,7 +24,7 @@ data class PartnershipRestaurantResponse(
     @SerializedName("collegeName")
     val collegeName: String,
     @SerializedName("departmentName")
-    val departmentName: String,
+    val departmentName: String?,
     @SerializedName("partnershipLikeCount")
     val partnershipLikeCount: Int,
     @SerializedName("likedByUser")
