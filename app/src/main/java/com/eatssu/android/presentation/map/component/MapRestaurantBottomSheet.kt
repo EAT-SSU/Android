@@ -73,6 +73,7 @@ fun MapRestaurantBottomSheet(
         ) {
             // 상단 회색 바
             Spacer(modifier = Modifier.height(14.dp))
+
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -83,6 +84,7 @@ fun MapRestaurantBottomSheet(
                         shape = RoundedCornerShape(10.dp)
                     )
             )
+
             Spacer(modifier = Modifier.height(14.dp))
 
             // 상단 타이틀 라인 (store name + 하트)
@@ -98,7 +100,9 @@ fun MapRestaurantBottomSheet(
                         text = storeName,
                         style = EatssuTheme.typography.subtitle2
                     )
+
                     Spacer(modifier = Modifier.height(4.dp))
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
@@ -114,7 +118,7 @@ fun MapRestaurantBottomSheet(
                             )
                         }
 
-                        Spacer(modifier = Modifier.width(2.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
                             text = placeType.placeCategory,
