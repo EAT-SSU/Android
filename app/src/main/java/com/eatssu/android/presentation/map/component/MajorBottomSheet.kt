@@ -78,30 +78,7 @@ fun MajorBottomSheet(
                 modifier = Modifier.padding(start = 24.dp)
             )
 
-            Spacer(modifier = Modifier.height(81.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.img_new_logo_primary),
-                contentDescription = null,
-                modifier = Modifier.height(46.dp).align(Alignment.CenterHorizontally)
-            )
-
-            Row(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ){
-                Text(
-                    text = "숭실대에서 ",
-                    style = EatssuTheme.typography.caption1,
-                    color = Black
-                )
-                Text(
-                    text = "먹자",
-                    style = EatssuTheme.typography.caption1,
-                    color = Primary
-                )
-            }
-
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             Button(
                 onClick = onInputClick,
@@ -109,7 +86,7 @@ fun MajorBottomSheet(
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 6.dp)
+                    .padding(start = 24.dp, end = 24.dp, bottom = 40.dp)
                     .height(52.dp)
 
             ) {
