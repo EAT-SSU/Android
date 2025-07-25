@@ -56,26 +56,26 @@ fun MajorBottomSheet(
                 .fillMaxWidth()
                 .background(White)
         ) {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .width(30.dp)
-                    .height(4.dp)
+                    .height(2.dp)
                     .background(
                         color = Gray400,
                         shape = RoundedCornerShape(10.dp)
                     )
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
             Text(
                 text = "학과를 입력하고\n나만의 제휴를 확인해보세요!",
                 style = EatssuTheme.typography.h2,
                 textAlign = TextAlign.Start,
-                modifier = Modifier.padding(start = 24.dp)
+                modifier = Modifier.padding(start = 28.dp)
             )
 
             Spacer(modifier = Modifier.height(50.dp))
@@ -86,7 +86,7 @@ fun MajorBottomSheet(
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 40.dp)
+                    .padding(start = 30.dp, end = 30.dp, bottom = 40.dp)
                     .height(52.dp)
 
             ) {
