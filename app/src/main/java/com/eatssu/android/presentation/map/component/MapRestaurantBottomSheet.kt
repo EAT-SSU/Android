@@ -32,8 +32,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.Black
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray200
 import com.eatssu.android.presentation.compose.ui.theme.Gray400
@@ -43,7 +41,7 @@ import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
 
 data class MapRestaurantInfo(
-    val department: String,
+    val collegeName: String,
     val period: String,
     val benefit: String
 )
@@ -153,7 +151,7 @@ fun MapRestaurantBottomSheet(
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
                             text = buildAnnotatedString {
-                                append(item.department)
+                                append(item.collegeName)
                                 append("   ")
                                 withStyle(style = SpanStyle(color = Gray500, fontSize = EatssuTheme.typography.caption3.fontSize)) {
                                     append(item.period)
