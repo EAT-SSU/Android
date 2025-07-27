@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.data.enums.Restaurant.Companion.fromDisplayName
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.widget.ui.component.EatSsuRadioButtonGroup
 
@@ -22,7 +23,7 @@ fun WidgetSettingScreen(
     restaurantOptions: List<String>,
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
-    onConfirm: (Int) -> Unit = {}
+    onConfirm: (String) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -44,7 +45,9 @@ fun WidgetSettingScreen(
         EatSsuButton(
             text = "선택하기",
             onClick = {
-                onConfirm(restaurantOptions.indexOf(selectedRestaurant))
+                onConfirm(
+                    fromDisplayName(selectedRestaurant)
+                )
             }
         )
     }

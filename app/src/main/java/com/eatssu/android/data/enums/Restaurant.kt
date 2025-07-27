@@ -14,7 +14,10 @@ enum class Restaurant(val displayName: String, val menuType: MenuType) {
     companion object {
         // enum의 이름 (예: DODAM)을 사용하여 한글명 (displayName)을 찾는 메소드
         fun fromRestaurantEnumName(enumName: String): String {
-            return values().find { it.name == enumName }?.displayName ?: ""
+            return entries.find { it.name == enumName }?.displayName ?: ""
         }
+
+        fun fromDisplayName(name: String): String =
+            entries.find { it.displayName == name }?.name ?: error("Unknown display name: $name")
     }
 }

@@ -14,12 +14,15 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import com.eatssu.android.presentation.widget.MealWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 val Context.dataStore by preferencesDataStore(name = "widget_prefs")
 
@@ -36,7 +39,7 @@ class WidgetSettingActivity : ComponentActivity() {
                     restaurantOptions = restaurantOptions,
                     selectedRestaurant = selectedRestaurant,
                     onSelectRestaurant = { selectedRestaurant = it },
-                    onConfirm = { index ->
+                    onConfirm = { selectedRestaurantValue ->
                         val appWidgetId = intent?.getIntExtra(
                             AppWidgetManager.EXTRA_APPWIDGET_ID,
                             AppWidgetManager.INVALID_APPWIDGET_ID
@@ -46,27 +49,33 @@ class WidgetSettingActivity : ComponentActivity() {
                             return@WidgetSettingScreen
                         }
 
-                        // ✅ 위젯 설정 저장 (예: DataStore에 index나 Restaurant 저장)
-
                         lifecycleScope.launch {
-
                             if (appWidgetId != null) {
                                 saveRestaurantPref(
                                     this@WidgetSettingActivity,
                                     appWidgetId,
-                                    selectedRestaurant
+                                    selectedRestaurantValue
                                 )
-                            }
-                        }
-                        // ✅ 시스템에 설정 완료 알리기
-                        val resultIntent = Intent().apply {
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                        }
-                        setResult(RESULT_OK, resultIntent)
 
-                        // ✅ 종료
-                        finish()
+                                val glanceId = GlanceAppWidgetManager(this@WidgetSettingActivity)
+                                    .getGlanceIds(MealWidget::class.java)
+                                    .firstOrNull { it.hashCode() == appWidgetId }
+
+                                if (glanceId != null) {
+                                    MealWidget().update(this@WidgetSettingActivity, glanceId)
+                                }
+//                                MealWidget().update(context = this@WidgetSettingActivity, appWidgetId)
+
+                            }
+
+                            val resultIntent = Intent().apply {
+                                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                            }
+                            setResult(RESULT_OK, resultIntent)
+                            finish()
+                        }
                     }
+
 
                 )
             }
@@ -85,11 +94,16 @@ class WidgetSettingActivity : ComponentActivity() {
             context.dataStore.edit { prefs ->
                 prefs[key] = restaurant
             }
+
+            Timber.d("save $restaurant")
         }
         suspend fun loadRestaurantPref(context: Context, appWidgetId: Int): Restaurant {
             val key = stringPreferencesKey("widget_restaurant_$appWidgetId")
             val prefs: Preferences = context.dataStore.data.first()
             val value = prefs[key] ?: Restaurant.DODAM.name
+
+            Timber.d("load $value")
+
             return Restaurant.valueOf(value)
         }
 
