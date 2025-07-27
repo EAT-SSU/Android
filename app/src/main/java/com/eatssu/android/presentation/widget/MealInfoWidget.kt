@@ -64,7 +64,9 @@ class MealWidget : GlanceAppWidget() {
             // DataStore에서 식당 정보 로드
             val restaurant = runBlocking {
                 WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
+
             }
+            Timber.d("load2 ${restaurant.name}")
 
             GlanceTheme(colors = EATSSUWidgetColorScheme.colors) {
                 when (val state = currentState<WidgetMealInfo>()) {
@@ -73,13 +75,13 @@ class MealWidget : GlanceAppWidget() {
                             MealWidgetContent(
                                 mealTime = state.mealTime,
                                 mealList = state.mealList,
-                                restaurant = state.restaurant,
+                                restaurant = state.restaurant.displayName,
                                 glanceId = id,
                             )
                         } else {
                             MealWidgetError(
                                 mealTime = state.mealTime,
-                                restaurant = state.restaurant,
+                                restaurant = state.restaurant.displayName,
                                 text = "오늘의 메뉴가 없습니다.",
                                 glanceId = id,
                             )
@@ -88,7 +90,7 @@ class MealWidget : GlanceAppWidget() {
 
                     is WidgetMealInfo.Loading -> {
                         MealWidgetError(
-                            restaurant = Restaurant.DODAM,
+                            restaurant = restaurant.displayName,
                             mealTime = "점심",
                             text = "로딩 중",
                             glanceId = id,
@@ -97,7 +99,7 @@ class MealWidget : GlanceAppWidget() {
 
                     is WidgetMealInfo.Unavailable -> {
                         MealWidgetError(
-                            restaurant = Restaurant.DODAM,
+                            restaurant = restaurant.displayName,
                             mealTime = "점심",
                             text = "네트워크 연결 상태를 확인해주세요.",
                             glanceId = id,
@@ -113,24 +115,15 @@ class MealWidget : GlanceAppWidget() {
     private fun MealWidgetContent(
         mealTime: String,
         mealList: List<List<String>>,
-        restaurant: Restaurant,
+        restaurant: String,
         glanceId: GlanceId? = null,
     ) {
         val context = LocalContext.current
 
         MealWidgetScaffold(
+            context = context,
             mealTime = mealTime,
-            restaurant = restaurant,
-//            onLeftArrowClick = {
-//                if (glanceId != null) {
-//                    changeRestaurantAndUpdateWidget(context, glanceId)
-//                }
-//            },
-//            onRightArrowClick = {
-//                if (glanceId != null) {
-//                    changeRestaurantBackwardAndUpdateWidget(context, glanceId)
-//                }
-//            },
+            restaurantName = restaurant,
             content = {
                 LazyColumn(
                     modifier = GlanceModifier
@@ -138,10 +131,6 @@ class MealWidget : GlanceAppWidget() {
                         .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
                         .cornerRadius(10.dp)
                         .background(GlanceTheme.colors.onBackground)
-                        .clickable {
-                            Timber.d("위젯 클릭")
-                            context.launchApp()
-                        },
                 ) {
                     itemsIndexed(mealList) { index, group ->
                         val groupText = group.joinToString(" + ")
@@ -163,21 +152,16 @@ class MealWidget : GlanceAppWidget() {
     @Composable
     fun MealWidgetError(
         mealTime: String,
-        restaurant: Restaurant,
+        restaurant: String,
         text: String,
         glanceId: GlanceId? = null,
     ) {
         val context = LocalContext.current
 
         MealWidgetScaffold(
+            context = context,
             mealTime = mealTime,
-            restaurant = restaurant,
-//            onLeftArrowClick = {
-//                if (glanceId != null) {
-//                    changeRestaurantAndUpdateWidget(context, glanceId)
-//                }
-//            },
-//            onRightArrowClick = { /* TODO */ },
+            restaurantName = restaurant,
             content = {
                 Box(
                     modifier = GlanceModifier
@@ -210,8 +194,9 @@ class MealWidget : GlanceAppWidget() {
 
     @Composable
     fun MealWidgetScaffold(
+        context: Context,
         mealTime: String?,
-        restaurant: Restaurant,
+        restaurantName: String,
 //        onLeftArrowClick: () -> Unit,
 //        onRightArrowClick: () -> Unit,
         content: @Composable () -> Unit
@@ -221,6 +206,10 @@ class MealWidget : GlanceAppWidget() {
                 .background(GlanceTheme.colors.onPrimary)
                 .padding(16.dp)
                 .cornerRadius(20.dp)
+                .clickable {
+                    Timber.d("위젯 클릭")
+                    context.launchApp()
+                },
         ) {
             Row(
                 modifier = GlanceModifier.fillMaxWidth(),
@@ -244,25 +233,22 @@ class MealWidget : GlanceAppWidget() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-//                    Image(
-//                        modifier = GlanceModifier.size(18.dp).clickable { onLeftArrowClick() },
-//                        provider = ImageProvider(R.drawable.ic_arrow_left),
-//                        contentDescription = "left"
-//                    )
                     Text(
-                        restaurant.displayName,
+                        restaurantName,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                         modifier = GlanceModifier.padding(start = 8.dp, end = 8.dp),
                     )
-//                    Image(
-//                        modifier = GlanceModifier.size(18.dp).clickable { onRightArrowClick() },
-//                        provider = ImageProvider(R.drawable.ic_arrow_right),
-//                        contentDescription = "right"
-//                    )
                 }
             }
             Spacer(modifier = GlanceModifier.height(12.dp))
             content()
+            Box(
+                modifier = GlanceModifier
+                    .clickable {
+                        Timber.d("위젯 클릭")
+                        context.launchApp()
+                    },
+            ) {}
         }
     }
 
@@ -272,7 +258,7 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreview() {
-        MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")), Restaurant.DODAM)
+        MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")), Restaurant.DODAM.displayName)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -280,7 +266,7 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreviewError() {
-        MealWidgetError("저녁", Restaurant.DODAM, "에러임")
+        MealWidgetError("저녁", Restaurant.DODAM.displayName, "에러임")
     }
 
 }
@@ -290,48 +276,3 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
         get() = MealWidget()
 }
 
-// Helper function to cycle restaurants
-fun getNextRestaurant(current: Restaurant): Restaurant {
-    return when (current) {
-        Restaurant.HAKSIK -> Restaurant.DODAM
-        Restaurant.DODAM -> Restaurant.DORMITORY
-        Restaurant.DORMITORY -> Restaurant.HAKSIK
-        else -> Restaurant.HAKSIK
-    }
-}
-
-fun getPreviousRestaurant(current: Restaurant): Restaurant {
-    return when (current) {
-        Restaurant.HAKSIK -> Restaurant.DORMITORY
-        Restaurant.DODAM -> Restaurant.HAKSIK
-        Restaurant.DORMITORY -> Restaurant.DODAM
-        else -> Restaurant.HAKSIK
-    }
-}
-
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun changeRestaurantAndUpdateWidget(context: Context, glanceId: GlanceId) {
-//    CoroutineScope(Dispatchers.IO).launch {
-//        val manager = GlanceAppWidgetManager(context)
-//        val appWidgetId = manager.getAppWidgetId(glanceId)
-//        val current = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
-//        val next = getNextRestaurant(current)
-//        WidgetSettingActivity.saveRestaurantPref(context, appWidgetId, next)
-//        MealWidget().update(context, glanceId) // 해당 위젯만 업데이트
-//        MealWorker.enqueue(context)
-//    }
-//}
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun changeRestaurantBackwardAndUpdateWidget(context: Context, glanceId: GlanceId) {
-//    CoroutineScope(Dispatchers.IO).launch {
-//        val manager = GlanceAppWidgetManager(context)
-//        val appWidgetId = manager.getAppWidgetId(glanceId)
-//        val current = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
-//        val previous = getPreviousRestaurant(current)
-//        WidgetSettingActivity.saveRestaurantPref(context, appWidgetId, previous)
-//        MealWidget().update(context, glanceId)
-//        MealWorker.enqueue(context)
-//    }
-//}
