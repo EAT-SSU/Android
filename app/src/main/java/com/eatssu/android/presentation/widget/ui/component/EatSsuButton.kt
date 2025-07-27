@@ -21,8 +21,7 @@ fun EatSsuButton(
     Button(
         onClick = onClick,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 13.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -31,6 +30,8 @@ fun EatSsuButton(
     ) {
         Text(
             text = text,
+            modifier = Modifier
+                .padding(vertical = 13.dp),
             style = EatssuTheme.typography.button1,
         )
     }
