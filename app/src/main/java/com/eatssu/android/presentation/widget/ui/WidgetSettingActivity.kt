@@ -1,8 +1,9 @@
 package com.eatssu.android.presentation.widget.ui
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
@@ -13,10 +14,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 val Context.dataStore by preferencesDataStore(name = "widget_prefs")
 
@@ -34,28 +37,55 @@ class WidgetSettingActivity : ComponentActivity() {
                     selectedRestaurant = selectedRestaurant,
                     onSelectRestaurant = { selectedRestaurant = it },
                     onConfirm = { index ->
-                        Toast.makeText(this, "선택한 인덱스: $index", Toast.LENGTH_SHORT).show()
-                        finish() // 예: 완료 후 액티비티 종료
+                        val appWidgetId = intent?.getIntExtra(
+                            AppWidgetManager.EXTRA_APPWIDGET_ID,
+                            AppWidgetManager.INVALID_APPWIDGET_ID
+                        )
+                        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+                            finish()
+                            return@WidgetSettingScreen
+                        }
+
+                        // ✅ 위젯 설정 저장 (예: DataStore에 index나 Restaurant 저장)
+
+                        lifecycleScope.launch {
+
+                            if (appWidgetId != null) {
+                                saveRestaurantPref(
+                                    this@WidgetSettingActivity,
+                                    appWidgetId,
+                                    selectedRestaurant
+                                )
+                            }
+                        }
+                        // ✅ 시스템에 설정 완료 알리기
+                        val resultIntent = Intent().apply {
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                        }
+                        setResult(RESULT_OK, resultIntent)
+
+                        // ✅ 종료
+                        finish()
                     }
+
                 )
             }
         }
     }
 
 
-
-    private suspend fun saveRestaurantPref(
-        context: Context,
-        appWidgetId: Int,
-        restaurant: Restaurant
-    ) {
-        val key = stringPreferencesKey("widget_restaurant_$appWidgetId")
-        context.dataStore.edit { prefs ->
-            prefs[key] = restaurant.name
-        }
-    }
-
     companion object {
+
+        suspend fun saveRestaurantPref(
+            context: Context,
+            appWidgetId: Int,
+            restaurant: String
+        ) {
+            val key = stringPreferencesKey("widget_restaurant_$appWidgetId")
+            context.dataStore.edit { prefs ->
+                prefs[key] = restaurant
+            }
+        }
         suspend fun loadRestaurantPref(context: Context, appWidgetId: Int): Restaurant {
             val key = stringPreferencesKey("widget_restaurant_$appWidgetId")
             val prefs: Preferences = context.dataStore.data.first()
@@ -63,11 +93,7 @@ class WidgetSettingActivity : ComponentActivity() {
             return Restaurant.valueOf(value)
         }
 
-        suspend fun saveRestaurantPref(context: Context, appWidgetId: Int, restaurant: Restaurant) {
-            val key = stringPreferencesKey("widget_restaurant_$appWidgetId")
-            context.dataStore.edit { prefs ->
-                prefs[key] = restaurant.name
-            }
-        }
     }
+
+
 }
