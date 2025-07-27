@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.we
+package com.eatssu.android.presentation.widget
 
 import android.content.Context
 import androidx.datastore.core.CorruptionException

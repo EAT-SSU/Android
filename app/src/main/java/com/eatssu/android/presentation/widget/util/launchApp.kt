@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.we.util
+package com.eatssu.android.presentation.widget.util
 
 import android.content.Context
 import android.content.Intent

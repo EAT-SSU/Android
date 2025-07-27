@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.we
+package com.eatssu.android.presentation.widget
 
 import android.content.Context
 import android.os.Build
@@ -14,8 +14,9 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
-import com.eatssu.android.presentation.widget.we.util.MealInfoState
-import com.eatssu.android.presentation.widget.we.util.WidgetDataDisplayManager
+import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
+import com.eatssu.android.presentation.widget.util.MealInfoState
+import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import timber.log.Timber
@@ -52,7 +53,7 @@ class MealWorker @AssistedInject constructor(
         val glanceIds = manager.getGlanceIds(MealWidget::class.java)
         glanceIds.forEach { glanceId ->
             val appWidgetId = manager.getAppWidgetId(glanceId)
-            val restaurant = MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+            val restaurant = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
             setWidgetState(
                 glanceId = glanceId,
                 newState = WidgetDataDisplayManager.fetchMealInfo(

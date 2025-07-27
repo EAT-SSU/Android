@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.we
+package com.eatssu.android.presentation.widget
 
 //import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
 import android.content.Context
@@ -42,8 +42,9 @@ import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
-import com.eatssu.android.presentation.widget.we.theme.EATSSUWidgetColorScheme
-import com.eatssu.android.presentation.widget.we.util.launchApp
+import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
+import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
+import com.eatssu.android.presentation.widget.util.launchApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,7 +67,7 @@ class MealWidget : GlanceAppWidget() {
             val appWidgetId = manager.getAppWidgetId(id)
             // DataStore에서 식당 정보 로드
             val restaurant = runBlocking {
-                MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+                WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
             }
 
             GlanceTheme(colors = EATSSUWidgetColorScheme.colors) {
@@ -318,9 +319,9 @@ fun changeRestaurantAndUpdateWidget(context: Context, glanceId: GlanceId) {
     CoroutineScope(Dispatchers.IO).launch {
         val manager = GlanceAppWidgetManager(context)
         val appWidgetId = manager.getAppWidgetId(glanceId)
-        val current = MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+        val current = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
         val next = getNextRestaurant(current)
-        MealWidgetConfigureActivity.saveRestaurantPref(context, appWidgetId, next)
+        WidgetSettingActivity.saveRestaurantPref(context, appWidgetId, next)
         MealWidget().update(context, glanceId) // 해당 위젯만 업데이트
         MealWorker.enqueue(context)
     }
@@ -331,9 +332,9 @@ fun changeRestaurantBackwardAndUpdateWidget(context: Context, glanceId: GlanceId
     CoroutineScope(Dispatchers.IO).launch {
         val manager = GlanceAppWidgetManager(context)
         val appWidgetId = manager.getAppWidgetId(glanceId)
-        val current = MealWidgetConfigureActivity.loadRestaurantPref(context, appWidgetId)
+        val current = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
         val previous = getPreviousRestaurant(current)
-        MealWidgetConfigureActivity.saveRestaurantPref(context, appWidgetId, previous)
+        WidgetSettingActivity.saveRestaurantPref(context, appWidgetId, previous)
         MealWidget().update(context, glanceId)
         MealWorker.enqueue(context)
     }

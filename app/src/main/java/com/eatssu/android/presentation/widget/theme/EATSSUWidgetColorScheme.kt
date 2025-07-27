@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.we.theme
+package com.eatssu.android.presentation.widget.theme
 
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
