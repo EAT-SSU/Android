@@ -66,7 +66,7 @@
 
         <!--   위젯 리시버     -->
         <receiver
-            android:name=".presentation.widget.we.MealWidgetReceiver"
+            android:name=".presentation.widget.MealWidgetReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -85,8 +85,14 @@
             tools:node="remove" />
 
         <activity
-            android:name=".presentation.widget.we.MealWidgetConfigureActivity"
-            android:exported="true" />
+            android:name=".presentation.widget.ui.WidgetSettingActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".presentation.mypage.DeveloperActivity"
