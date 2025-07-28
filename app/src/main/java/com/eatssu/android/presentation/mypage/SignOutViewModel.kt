@@ -2,7 +2,7 @@ package com.eatssu.android.presentation.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
+import com.eatssu.android.domain.usecase.user.GetUserInfoUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase

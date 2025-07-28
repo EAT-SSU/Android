@@ -5,13 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
-import com.eatssu.android.domain.usecase.alarm.GetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
-import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
-import com.eatssu.android.domain.usecase.auth.LogoutUseCase
-import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SignOutUseCase
+import com.eatssu.android.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

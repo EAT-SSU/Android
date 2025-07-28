@@ -9,7 +9,7 @@ import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetUserEmailUseCase
+import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel

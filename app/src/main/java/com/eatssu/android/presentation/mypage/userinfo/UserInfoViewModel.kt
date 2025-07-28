@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.UserInfo
-import com.eatssu.android.domain.usecase.auth.GetUserNameUseCase
-import com.eatssu.android.domain.usecase.auth.SetUserInfoUseCase
-import com.eatssu.android.domain.usecase.auth.ValidateUserNameUseCase
+import com.eatssu.android.domain.usecase.user.GetUserNameUseCase
+import com.eatssu.android.domain.usecase.user.SetUserInfoUseCase
+import com.eatssu.android.domain.usecase.user.ValidateUserNameUseCase
 import com.eatssu.android.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

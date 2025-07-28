@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
+import com.eatssu.android.domain.usecase.user.GetUserInfoUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
