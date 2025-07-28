@@ -94,6 +94,12 @@ fun MapFragmentComposeView(
         }
     }
 
+    var hasLocationPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
     // 제휴 정보 토글 event
     LaunchedEffect(selectedFilter) {
         when (selectedFilter) {
@@ -165,6 +171,22 @@ fun MapFragmentComposeView(
                 properties = MapProperties(
                     locationTrackingMode = LocationTrackingMode.Follow,
                 ),
+                onLocationChange = { location ->
+                    // 위치가 업데이트되면 위치 권한 있다고 간주
+                    hasLocationPermission = true
+                },
+                onMapClick = { _, _ ->
+                    // 만약 지도 클릭이 발생했는데 권한이 없고 위치가 null이라면 권한 요청
+                    if (!hasLocationPermission) {
+                        Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                        permissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
+                    }
+                }
             ) {
                 uiState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
