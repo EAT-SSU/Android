@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
@@ -37,8 +38,8 @@ fun MapFragmentComposeView(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val mainUiState by mainViewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
