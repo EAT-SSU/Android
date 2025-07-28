@@ -97,9 +97,9 @@ fun MapFragmentComposeView(
                 MapRestaurantBottomSheet(
                     storeName = info.storeName,
                     placeType = when (info.restaurantType) {
-                        "카페" -> PlaceType.CAFE
-                        "음식점" -> PlaceType.RESTAURANT
-                        "주점" -> PlaceType.Alcohol
+                        stringResource(R.string.cafe) -> PlaceType.CAFE
+                        stringResource(R.string.restaurant) -> PlaceType.RESTAURANT
+                        stringResource(R.string.alcohol) -> PlaceType.Alcohol
                         else -> PlaceType.RESTAURANT
                     },
                     mapRestaurantList = uiState.mapRestaurantInfos,
