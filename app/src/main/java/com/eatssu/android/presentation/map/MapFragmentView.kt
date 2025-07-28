@@ -1,6 +1,14 @@
 package com.eatssu.android.presentation.map
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
@@ -27,6 +36,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.*
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.FusedLocationSource
 import timber.log.Timber
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
@@ -42,6 +52,9 @@ fun MapFragmentComposeView(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val activity = remember(context) { context.findActivityOrNull() }
+        ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
+
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
     val cameraPositionState = rememberCameraPositionState {
@@ -49,6 +62,36 @@ fun MapFragmentComposeView(
             LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
             DEFAULT_ZOOM
         )
+    }
+
+    // 위치 추적을 위한 locationSource 생성
+    val locationSource = remember {
+        FusedLocationSource(activity, 1000)
+    }
+
+    // 위치 권한 요청 런처
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions.values.all { it }
+        if (!granted) {
+            Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 최초 실행 시 위치 권한 요청
+    LaunchedEffect(Unit) {
+        val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+        val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        if (fine != PackageManager.PERMISSION_GRANTED || coarse != PackageManager.PERMISSION_GRANTED) {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     // 제휴 정보 토글 event
@@ -116,7 +159,12 @@ fun MapFragmentComposeView(
         ) {
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
+                cameraPositionState = cameraPositionState,
+                uiSettings = MapUiSettings(isZoomControlEnabled = false, isLocationButtonEnabled = true),
+                locationSource = locationSource,
+                properties = MapProperties(
+                    locationTrackingMode = LocationTrackingMode.Follow,
+                ),
             ) {
                 uiState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
@@ -176,6 +224,13 @@ fun MapFragmentComposeView(
 //            }
         }
     }
+}
+
+// FusedLocationSource는 Activity에서만 활용 가능하기 때문에 확장 함수 생성
+fun Context.findActivityOrNull(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivityOrNull()
+    else -> null
 }
 
 @Preview(showBackground = true)
