@@ -179,4 +179,7 @@
     <string name="token_server_error">시스템 오류로 다시 로그인해주세요.</string>
     <string name="my_info">내 정보</string>
     <string name="save">저장하기</string>
+    <string name="inpur_department">학과 입력하기</string>
+    <string name="Input_string_description">학과를 입력하고\n나만의 제휴를 확인해보세요!</string>
+    <string name="favorite_partnership">찜한 제휴</string>
 </resources>

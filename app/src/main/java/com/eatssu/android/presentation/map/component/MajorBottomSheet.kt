@@ -20,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.R
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray400
 import com.eatssu.android.presentation.compose.ui.theme.Primary
@@ -66,7 +68,7 @@ fun MajorBottomSheet(
             Spacer(modifier = Modifier.height(36.dp))
 
             Text(
-                text = "학과를 입력하고\n나만의 제휴를 확인해보세요!",
+                text = stringResource(R.string.Input_string_description),
                 style = EatssuTheme.typography.h2,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(start = 28.dp)
@@ -84,7 +86,7 @@ fun MajorBottomSheet(
                     .height(52.dp)
 
             ) {
-                Text("학과 입력하기", color = White, style = EatssuTheme.typography.button1)
+                Text(stringResource(R.string.inpur_department), color = White, style = EatssuTheme.typography.button1)
             }
         }
     }

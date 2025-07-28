@@ -22,8 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.R
 import com.eatssu.android.presentation.compose.ui.theme.Black
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray200
@@ -31,17 +33,12 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray400
 import com.eatssu.android.presentation.compose.ui.theme.Gray500
 import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.White
-
-data class FavoriteAffiliation(
-    val storeName: String,
-    val category: String,
-    val period: String
-)
+import com.eatssu.android.presentation.map.model.FavoritePartnership
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteAffiliationBottomSheet(
-    favoriteList: List<FavoriteAffiliation>,
+fun FavoritePartnershipBottomSheet(
+    favoriteList: List<FavoritePartnership>,
     onDismiss: () -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -73,7 +70,7 @@ fun FavoriteAffiliationBottomSheet(
 
             // 상단 타이틀
             Text(
-                text = "찜한 제휴",
+                text = stringResource(R.string.favorite_partnership),
                 style = EatssuTheme.typography.subtitle1,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -142,14 +139,14 @@ fun FavoriteAffiliationBottomSheet(
 @Composable
 fun FavoriteAffiliationBottomSheetPreview() {
     val dummyList = listOf(
-        FavoriteAffiliation("카페봄봄", "카페", "09.01 - 12.31"),
-        FavoriteAffiliation("현선이네", "음식점", "09.01 - 12.31"),
-        FavoriteAffiliation("청년다방", "카페", "09.01 - 12.31")
+        FavoritePartnership("카페봄봄", "카페", "09.01 - 12.31"),
+        FavoritePartnership("현선이네", "음식점", "09.01 - 12.31"),
+        FavoritePartnership("청년다방", "카페", "09.01 - 12.31")
     )
 
     EatssuTheme {
         Surface {
-            FavoriteAffiliationBottomSheet(
+            FavoritePartnershipBottomSheet(
                 favoriteList = dummyList
             )
         }

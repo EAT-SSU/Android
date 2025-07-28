@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
+import com.eatssu.android.presentation.map.model.MapRestaurantInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,13 +14,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
-data class MapRestaurantInfo(
-    val collegeName: String?,
-    val departmentName: String?,
-    val period: String,
-    val benefit: String
-)
 
 data class MapState(
     val showDepartmentBottomSheet: Boolean = false,
