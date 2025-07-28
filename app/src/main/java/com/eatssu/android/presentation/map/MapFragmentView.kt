@@ -102,7 +102,7 @@ fun MapFragmentComposeView(
                         stringResource(R.string.alcohol) -> PlaceType.Alcohol
                         else -> PlaceType.RESTAURANT
                     },
-                    mapRestaurantList = uiState.mapRestaurantInfos,
+                    mapRestaurantList = uiState.restaurantInfos,
                     onDismiss = { viewModel.togglePartnershipBottomSheet() }
                 )
             }

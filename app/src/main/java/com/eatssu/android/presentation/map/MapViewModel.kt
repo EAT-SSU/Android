@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
-import com.eatssu.android.presentation.map.model.MapRestaurantInfo
+import com.eatssu.android.presentation.map.model.RestaurantInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ data class MapState(
     val showPartnershipBottomSheet: Boolean = false,
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
-    val mapRestaurantInfos: List<MapRestaurantInfo> = emptyList(),
+    val restaurantInfos: List<RestaurantInfo> = emptyList(),
     var partnershipToggleText: String = "내 제휴"
 )
 
@@ -82,7 +82,7 @@ class MapViewModel @Inject constructor(
             )
 
             val restaurantInfos = it.partnershipInfos.map { info ->
-                MapRestaurantInfo(
+                RestaurantInfo(
                     collegeName = info.collegeName,
                     departmentName = info.departmentName,
                     period = "${info.startDate} ~ ${info.endDate}",
@@ -94,7 +94,7 @@ class MapViewModel @Inject constructor(
                 state.copy(
                     showPartnershipBottomSheet = true,
                     restaurantPartnershipInfo = restaurant,
-                    mapRestaurantInfos = restaurantInfos
+                    restaurantInfos = restaurantInfos
                 )
             }
         }
