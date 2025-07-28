@@ -201,6 +201,9 @@ dependencies {
     implementation(libs.naver.map.compose)
     implementation(libs.naver.map.location)
 
+    // 현재 위치 정보
+    implementation(libs.play.services.location)
+
 }
 
 kapt {
