@@ -39,14 +39,14 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray500
 import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
-import com.eatssu.android.presentation.map.MapRestaurantInfo
+import com.eatssu.android.presentation.map.model.RestaurantInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapRestaurantBottomSheet(
     storeName: String,
     placeType: PlaceType,
-    mapRestaurantList: List<MapRestaurantInfo>,
+    mapRestaurantList: List<RestaurantInfo>,
     onDismiss: () -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -202,10 +202,10 @@ fun MapRestaurantBottomSheet(
 @Composable
 fun MapRestaurantBottomSheetPreview() {
     val dummyList = listOf(
-        MapRestaurantInfo("경영대", null, "09.03~12.18","학생증 인증하면 음료수 1개 증정"),
-        MapRestaurantInfo("IT대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
-        MapRestaurantInfo(null, "글로벌미디어학부", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
-        MapRestaurantInfo("공과대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용")
+        RestaurantInfo("경영대", null, "09.03~12.18","학생증 인증하면 음료수 1개 증정"),
+        RestaurantInfo("IT대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
+        RestaurantInfo(null, "글로벌미디어학부", "09.03~12.18", "학생증 인증하면 음료수 1개 증정"),
+        RestaurantInfo("공과대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용")
     )
 
     EatssuTheme {
