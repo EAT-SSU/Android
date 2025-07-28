@@ -32,7 +32,7 @@ import com.eatssu.android.presentation.compose.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MajorBottomSheet(
+fun DepartmentBottomSheet(
     onDismiss: () -> Unit = {},
     onInputClick: () -> Unit = {}
 ) {
@@ -95,10 +95,10 @@ fun MajorBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun MajorBottomSheetPreview() {
+fun DepartmentBottomSheetPreview() {
     EatssuTheme {
         Surface {
-            MajorBottomSheet(
+            DepartmentBottomSheet(
                 onDismiss = {},
                 onInputClick = {}
             )

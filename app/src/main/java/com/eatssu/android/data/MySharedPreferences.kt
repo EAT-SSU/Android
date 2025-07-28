@@ -70,14 +70,14 @@ object MySharedPreferences {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = prefs.edit()
-        editor.putString("MY_MAJOR", input)
+        editor.putString("MY_DEPARTMENT", input)
         editor.commit()
     }
 
     fun getUserDepartment(context: Context): String {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
-        return prefs.getString("MY_MAJOR", "").toString()
+        return prefs.getString("MY_DEPARTMENT", "").toString()
     }
 
     fun setAccessToken(context: Context, input: String) {

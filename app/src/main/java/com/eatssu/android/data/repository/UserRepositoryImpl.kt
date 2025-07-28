@@ -39,7 +39,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
             emit(userService.signOut())
         }
 
-    private val collegeMajors = mapOf(
+    private val collegeToDepartment = mapOf(
         "인문대학" to listOf("기독교학과", "국어국문학과", "영어영문학과", "독어독문학과", "불어불문학과", "중어중문학과", "일어일문학과", "철학과", "문예창작전공", "영화예술전공", "스포츠학부"),
         "자연과학대학" to listOf("수학과", "물리학과", "화학과", "정보통계∙보험수리학과", "의생명시스템학부"),
         "법과대학" to listOf("법학과", "국제법무학과"),
@@ -53,10 +53,10 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
     )
 
     override fun getTotalColleges(): List<String> =
-        listOf("단과대") + collegeMajors.keys
+        listOf("단과대") + collegeToDepartment.keys
 
     override fun getTotalDepartments(college: String): List<String> =
-        collegeMajors[college] ?: emptyList()
+        collegeToDepartment[college] ?: emptyList()
 
     override suspend fun getUserDepartment(): String = userService.getUserDepartment().result?.departmentName ?: ""
 

@@ -35,6 +35,9 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.White
 import com.eatssu.android.presentation.map.model.FavoritePartnership
 
+/**
+ * 제휴 찜 도입 시 사용
+ * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritePartnershipBottomSheet(

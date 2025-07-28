@@ -18,7 +18,7 @@ import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.compose.ui.theme.*
 import com.eatssu.android.presentation.map.component.FilterType
-import com.eatssu.android.presentation.map.component.MajorBottomSheet
+import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.map.component.PlaceType
@@ -81,7 +81,7 @@ fun MapFragmentComposeView(
         if (mainUiState.showUserDepartmentBottomSheet) {
             Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
 
-            MajorBottomSheet(
+            DepartmentBottomSheet(
                 onDismiss = { viewModel.toggleDepartmentBottomSheet() },
                 onInputClick = {
                     viewModel.toggleDepartmentBottomSheet()
