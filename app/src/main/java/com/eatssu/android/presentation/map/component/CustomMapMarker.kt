@@ -31,7 +31,7 @@ enum class PlaceType(val placeCategory: String, val iconRes: Int) {
 }
 
 @Composable
-fun MapPin(
+fun CustomMapMarker(
     type: PlaceType,
     placeName: String,
     modifier: Modifier = Modifier
@@ -72,16 +72,16 @@ fun MapPin(
 fun PlaceTagPreview() {
     EatssuTheme {
         Column {
-            MapPin(
+            CustomMapMarker(
                 type = PlaceType.CAFE,
                 placeName = "카페"
             )
-            MapPin(
+            CustomMapMarker(
                 type = PlaceType.RESTAURANT,
                 placeName = "THE KONE",
                 modifier = Modifier.padding(top = 20.dp)
             )
-            MapPin(
+            CustomMapMarker(
                 type = PlaceType.Alcohol,
                 placeName = "술집",
                 modifier = Modifier.padding(top = 20.dp)
