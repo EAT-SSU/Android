@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +41,6 @@ fun MapFragmentComposeView(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
@@ -51,6 +51,7 @@ fun MapFragmentComposeView(
         )
     }
 
+    // 제휴 정보 토글 event
     LaunchedEffect(selectedFilter) {
         when (selectedFilter) {
             FilterType.All -> viewModel.loadPartnerships()
@@ -74,7 +75,6 @@ fun MapFragmentComposeView(
             )
         },
     ) { innerPadding ->
-        // TODO
         Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartment(context)}")
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
@@ -93,19 +93,19 @@ fun MapFragmentComposeView(
 
         // 특정 식당에 대한 제휴 정보 BottomSheet
         if (uiState.showPartnershipBottomSheet) {
-            MapRestaurantBottomSheet(
-                storeName = uiState.restaurantPartnershipInfo!!.storeName,
-                placeType = uiState.restaurantPartnershipInfo!!.restaurantType.let {
-                    when (it) {
+            uiState.restaurantPartnershipInfo?.let { info ->
+                MapRestaurantBottomSheet(
+                    storeName = info.storeName,
+                    placeType = when (info.restaurantType) {
                         "카페" -> PlaceType.CAFE
                         "음식점" -> PlaceType.RESTAURANT
                         "주점" -> PlaceType.Alcohol
                         else -> PlaceType.RESTAURANT
-                    }
-                },
-                mapRestaurantList = uiState.mapRestaurantInfos,
-                onDismiss = { viewModel.togglePartnershipBottomSheet() }
-            )
+                    },
+                    mapRestaurantList = uiState.mapRestaurantInfos,
+                    onDismiss = { viewModel.togglePartnershipBottomSheet() }
+                )
+            }
         }
 
         Box(
@@ -121,12 +121,13 @@ fun MapFragmentComposeView(
                 uiState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
 
+                    // TODO 마커 커스텀 방식 수정
                     Marker(
                         icon = OverlayImage.fromResource(
                             when (partnership.restaurantType) {
-                                "카페" -> R.drawable.ic_map_marker_cafe
-                                "음식점" -> R.drawable.ic_map_marker_restaurant
-                                "주점" -> R.drawable.ic_map_marker_alcohol
+                                stringResource(R.string.cafe) -> R.drawable.ic_map_marker_cafe
+                                stringResource(R.string.restaurant) -> R.drawable.ic_map_marker_restaurant
+                                stringResource(R.string.alcohol) -> R.drawable.ic_map_marker_alcohol
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
                         ),

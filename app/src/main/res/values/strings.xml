@@ -182,4 +182,7 @@
     <string name="inpur_department">학과 입력하기</string>
     <string name="Input_string_description">학과를 입력하고\n나만의 제휴를 확인해보세요!</string>
     <string name="favorite_partnership">찜한 제휴</string>
+    <string name="cafe">카페</string>
+    <string name="restaurant">음식점</string>
+    <string name="alcohol">주점</string>
 </resources>
