@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
-import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.presentation.map.component.MapRestaurantInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +13,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+
+data class MapRestaurantInfo(
+    val collegeName: String?,
+    val departmentName: String?,
+    val period: String,
+    val benefit: String
+)
 
 data class MapState(
     val showDepartmentBottomSheet: Boolean = false,
@@ -27,7 +32,6 @@ data class MapState(
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val userRepository: UserRepository,
     private val partnershipRepository: PartnershipRepository
 ) : ViewModel() {
 
@@ -35,24 +39,10 @@ class MapViewModel @Inject constructor(
     val uiState: StateFlow<MapState> = _uiState.asStateFlow()
 
     init {
-        // checkUserDepartment()
         loadPartnerships()
     }
 
-//    private fun checkUserDepartment() {
-//        viewModelScope.launch {
-//            runCatching {
-//                userRepository.checkUserDepartment()
-//            }.onSuccess { hasDepartment ->
-//                Timber.d("checkUserDepartment: $hasDepartment")
-//                _uiState.update { it.copy(showDepartmentBottomSheet = !hasDepartment)
-//                }
-//            }.onFailure {
-//                Timber.e("Error checkUserDepartment: ${it.message}")
-//            }
-//        }
-//    }
-
+    // 제휴 정보 로딩
     fun loadPartnerships() {
         viewModelScope.launch {
             runCatching {
@@ -65,6 +55,7 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    // 사용자 단과대 제휴 정보 로딩
     fun loadUserCollegePartnerships() {
         viewModelScope.launch {
             runCatching {
@@ -109,16 +100,18 @@ class MapViewModel @Inject constructor(
                 state.copy(
                     showPartnershipBottomSheet = true,
                     restaurantPartnershipInfo = restaurant,
-                    mapRestaurantInfos = restaurantInfos // 새로 추가한 필드
+                    mapRestaurantInfos = restaurantInfos
                 )
             }
         }
     }
 
+    // 학과 정보 입력 bottomSheet 보여주기 toggle
     fun toggleDepartmentBottomSheet() {
         _uiState.update { it.copy(showDepartmentBottomSheet = !it.showDepartmentBottomSheet) }
     }
 
+    // 식당별 제휴 정보 bottomSheet 보여주기 toggle
     fun togglePartnershipBottomSheet() {
         _uiState.update { it.copy(showPartnershipBottomSheet = !it.showPartnershipBottomSheet) }
     }

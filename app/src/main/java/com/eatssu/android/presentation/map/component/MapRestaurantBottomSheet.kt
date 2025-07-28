@@ -39,13 +39,7 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray500
 import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import com.eatssu.android.presentation.compose.ui.theme.White
-
-data class MapRestaurantInfo(
-    val collegeName: String?,
-    val departmentName: String?,
-    val period: String,
-    val benefit: String
-)
+import com.eatssu.android.presentation.map.MapRestaurantInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
