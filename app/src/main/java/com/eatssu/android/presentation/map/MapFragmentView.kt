@@ -30,7 +30,7 @@ import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
-import com.eatssu.android.presentation.map.component.PlaceType
+import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
