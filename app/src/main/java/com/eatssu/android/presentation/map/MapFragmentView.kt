@@ -204,7 +204,7 @@ fun MapFragmentComposeView(
                         ),
                         width = 20.dp,
                         height = 20.dp,
-                        captionAligns = arrayOf(Align.Right),
+                        captionAligns = arrayOf(Align.Bottom),
                         state = markerState,
                         captionText = partnership.storeName,
                         captionColor = Black,
