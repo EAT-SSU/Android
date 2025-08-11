@@ -139,7 +139,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     // CollectState --
     private fun checkNicknameIsNull() {
         Timber.d("관찰 시작")
-        mainViewModel.checkNameNull()
+        mainViewModel.fetchAndCheckNickname()
 
         lifecycleScope.launch {
             mainViewModel.uiState.collectLatest {

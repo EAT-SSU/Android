@@ -44,12 +44,10 @@ class MainViewModel @Inject constructor(
         getUserDepartment()
     }
 
-    fun checkNameNull() {
+    fun fetchAndCheckNickname() {
         viewModelScope.launch {
             getUserInfoUseCase().onStart {
                 _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
             }.catch { e ->
                 _uiState.update {
                     it.copy(
@@ -58,6 +56,8 @@ class MainViewModel @Inject constructor(
                     )
                 }
                 Timber.e(e.toString())
+            }.onCompletion {
+                _uiState.update { it.copy(loading = false, error = false) }
             }.collectLatest { result ->
                 Timber.d(result.toString())
                 result.result?.apply {
@@ -117,6 +117,7 @@ class MainViewModel @Inject constructor(
                 Timber.d("userDepartment: $department")
 
                 // 단과대 추론
+                // TODO ViewModel이 MySharedPreferences를 직접 다루면 저장소 계층(LocalDataSource)와 UI 계층이 강하게 결합. repository를 통해 처리하는게 좋음
                 val college = findCollegeByDepartment(department)
                 MySharedPreferences.setUserCollege(context,college)
                 MySharedPreferences.setUserDepartment(context, department)
