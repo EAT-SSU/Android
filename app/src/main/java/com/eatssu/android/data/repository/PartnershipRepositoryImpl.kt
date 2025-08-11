@@ -14,18 +14,21 @@ class PartnershipRepositoryImpl @Inject constructor(
     private val userService: UserService,
 ) : PartnershipRepository {
 
+    // 유저의 학과 상관없이 모든 제휴 정보 조회
     override suspend fun getAllPartnerships(): List<Partnership> {
         return partnershipService.getAllPartnerships()
             .result
             ?.map { it.toDomain() } ?: emptyList()
     }
 
+    // 특정 식당 클릭 시 제휴 정보 조회
     override suspend fun getPartnershipById(partnershipId: Int): PartnershipRestaurant? {
         return partnershipService.getPartnershipById(partnershipId)
             .result
             ?.toDomain()
     }
 
+    // 유저의 학과에 해당하는 제휴 정보 조회
     override suspend fun getUserCollegePartnerships(): List<Partnership> {
         return userService.getUserDepartmentPartnerships()
             .result

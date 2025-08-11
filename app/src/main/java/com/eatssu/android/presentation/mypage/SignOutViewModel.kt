@@ -24,9 +24,6 @@ import javax.inject.Inject
 class SignOutViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val setAccessTokenUseCase: SetAccessTokenUseCase,
-    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<SignOutState> = MutableStateFlow(SignOutState())
