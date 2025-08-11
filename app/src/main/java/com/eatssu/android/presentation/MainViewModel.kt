@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserInfoUseCase
@@ -52,7 +51,7 @@ class MainViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         error = true,
-                        toastMessage = context.getString(R.string.not_found)
+                        toastMessage = "정보를 불러올 수 없습니다."
                     )
                 }
                 Timber.e(e.toString())
@@ -65,17 +64,14 @@ class MainViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isNicknameNull = true,
-                                toastMessage = context.getString(R.string.set_nickname)
+                                toastMessage = "닉네임을 설정해주세요."
                             )
                         }
                     } else {
                         _uiState.update {
                             it.copy(
                                 isNicknameNull = false,
-                                toastMessage = String.format(
-                                    context.getString(R.string.hello_user),
-                                    this.nickname
-                                )
+                                toastMessage = "${this.nickname}님 반갑습니다!"
                             )
                         }
                     }
@@ -90,7 +86,7 @@ class MainViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    toastMessage = context.getString(R.string.logout_description),
+                    toastMessage = "로그아웃 되었습니다.",
                     isLoggedOut = true
                 )
             }
