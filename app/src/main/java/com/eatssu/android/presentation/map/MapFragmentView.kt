@@ -42,6 +42,7 @@ import timber.log.Timber
 private const val DEFAULT_LATITUDE = 37.49517278813046
 private const val DEFAULT_LONGITUDE = 126.95661313346206
 private const val DEFAULT_ZOOM = 15.5
+private const val PERMISSION_REQUEST_CODE = 1000
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +67,7 @@ fun MapFragmentComposeView(
 
     // 위치 추적을 위한 locationSource 생성
     val locationSource = remember {
-        FusedLocationSource(activity, 1000)
+        FusedLocationSource(activity, PERMISSION_REQUEST_CODE)
     }
 
     // 위치 권한 요청 런처
