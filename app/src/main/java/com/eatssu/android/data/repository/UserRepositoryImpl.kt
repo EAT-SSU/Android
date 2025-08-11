@@ -54,6 +54,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
         "자유전공학부" to listOf("자유전공학부")
     )
 
+    // 단과대를 설정하지 않은 초기 경우를 위해 "단과대"를 추가
     override fun getTotalColleges(): List<String> =
         listOf("단과대") + collegeToDepartment.keys
 

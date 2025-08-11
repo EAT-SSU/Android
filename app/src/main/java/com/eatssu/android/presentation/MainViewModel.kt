@@ -159,7 +159,7 @@ class MainViewModel @Inject constructor(
     ): String {
         val allColleges = userRepository.getTotalColleges()
         return allColleges
-            .drop(1)
+            .drop(1) // "단과대" 제외
             .firstOrNull { college ->
                 userRepository.getTotalDepartments(college).contains(department)
             } ?: "단과대"
