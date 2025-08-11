@@ -15,7 +15,7 @@ interface PartnershipService{
     @GET("partnerships/{partnershipId}")
     suspend fun getPartnershipById(partnershipId: Int): BaseResponse<PartnershipRestaurantResponse>
 
-    // 제휴 찜/등록하기/ 취소하기
+    // TODO 제휴 찜/등록하기/ 취소하기
     @GET("partnerships/{partnershipId}/like")
     suspend fun likePartnership(partnershipId: Int): BaseResponse<Void>
 

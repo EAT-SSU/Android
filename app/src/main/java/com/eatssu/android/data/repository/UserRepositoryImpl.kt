@@ -1,6 +1,7 @@
 package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
@@ -39,6 +40,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
             emit(userService.signOut())
         }
 
+    // TODO 하드코딩 -> API
     private val collegeToDepartment = mapOf(
         "인문대학" to listOf("기독교학과", "국어국문학과", "영어영문학과", "독어독문학과", "불어불문학과", "중어중문학과", "일어일문학과", "철학과", "문예창작전공", "영화예술전공", "스포츠학부"),
         "자연과학대학" to listOf("수학과", "물리학과", "화학과", "정보통계∙보험수리학과", "의생명시스템학부"),
@@ -61,7 +63,9 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
     override suspend fun getUserDepartment(): String = userService.getUserDepartment().result?.departmentName ?: ""
 
     override suspend fun setUserDepartment(departmentName: String): BaseResponse<Void> {
-        return userService.setUserDepartment(departmentName)
+        return userService.setUserDepartment(
+            UserDepartmentRequest(departmentName)
+        )
     }
 
 }

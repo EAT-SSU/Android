@@ -1,6 +1,7 @@
 package com.eatssu.android.data.service
 
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
@@ -39,7 +40,7 @@ interface UserService {
 
     @POST("users/department") // 유저의 학과 설정
     suspend fun setUserDepartment(
-        @Body departmentName: String,
+        @Body departmentName: UserDepartmentRequest,
     ): BaseResponse<Void>
 
     // 유저 학과의 제휴 조회
