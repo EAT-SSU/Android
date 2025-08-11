@@ -116,7 +116,6 @@ class MainViewModel @Inject constructor(
             }.onSuccess { department ->
                 Timber.d("userDepartment: $department")
 
-                MySharedPreferences.setUserDepartment(context,department)
                 // 단과대 추론
                 val college = findCollegeByDepartment(department)
                 MySharedPreferences.setUserCollege(context,college)
