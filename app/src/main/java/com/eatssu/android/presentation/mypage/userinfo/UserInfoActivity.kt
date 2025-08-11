@@ -95,6 +95,10 @@ class UserInfoActivity :
         binding.btnCheckNickname.setOnClickListener {
             userInfoViewModel.checkNickname(inputNickname)
 
+            // 닉네임 중복 확인 후 UI 상태 업데이트 로직
+            // TODO 이 부분은 ViewModel에서 처리하는 것이 더 좋음
+            // 입력 변화 이벤트(TextWatcher) 시점에서 ViewModel로 값을 보내고,
+            // 검증 결과를 StateFlow로 내려주게 수정하자
             lifecycleScope.launch {
                 userInfoViewModel.uiState.collectLatest {
                     if (it.isEnableName) {
