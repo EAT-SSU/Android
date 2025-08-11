@@ -28,7 +28,7 @@ class UserInfoViewModel @Inject constructor(
     private val getUserNameUseCase: GetUserNameUseCase,
     private val validateUserNameUseCase: ValidateUserNameUseCase,
     private val userRepository: UserRepository,
-    private val context: Context,
+    private val context: Context, // TODO 지우자 지우자
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UserNameChangeState> =
