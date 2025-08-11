@@ -95,8 +95,8 @@ class UserInfoViewModel @Inject constructor(
 
         viewModelScope.launch {
             setUserInfoUseCase(UserInfo(nickname, college, department))
-                .onStart { _uiState.update { it.copy(loading = true) } }
-                .onCompletion { _uiState.update { it.copy(loading = false) } }
+                .onStart { _uiState.update { it.copy(loading = true, error = false) } }
+                .onCompletion { _uiState.update { it.copy(loading = false, error = false) } }
                 .catch {
                     _uiState.update { it.copy(error = true, toastMessage = "정보 저장에 실패했습니다.") }
                     Timber.e(it)
