@@ -146,7 +146,7 @@ class MainViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         error = true,
-                        toastMessage = context.getString(R.string.not_found)
+                        toastMessage = "정보를 불러올 수 없습니다."
                     )
                 }
             }

@@ -94,7 +94,7 @@
     <string name="login_done">환영합니다!</string>
     <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
 
-    <string name="not_found">"정보를 불러올 수 없습니다.</string>
+    <string name="not_found">정보를 불러올 수 없습니다.</string>
     <string name="hello_user">"%1$s님 반갑습니다!</string>
 
     <string name="nickname">닉네임</string>
