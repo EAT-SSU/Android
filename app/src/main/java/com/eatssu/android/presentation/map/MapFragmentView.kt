@@ -209,7 +209,6 @@ fun MapFragmentComposeView(
                         captionText = partnership.storeName,
                         captionColor = Black,
                         captionTextSize = 10.sp,
-                        isHideCollidedCaptions = true,
                         onClick = {
                             // 마커 클릭 시 제휴 정보 업데이트
                             viewModel.selectPartnershipByStoreName(partnership.storeName)
