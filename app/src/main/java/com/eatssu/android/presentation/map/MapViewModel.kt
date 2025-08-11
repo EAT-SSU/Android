@@ -62,40 +62,48 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun selectPartnershipByStoreName(storeName: String) {
+    fun selectPartnershipByStoreName(storeName: String, partnershipId: Int? = null) {
         val matched = _uiState.value.partnerships.find { it.storeName == storeName }
-        matched?.let {
-            val restaurant = PartnershipRestaurant(
-                id = it.partnershipInfos.firstOrNull()?.id ?: 0,
-                partnershipType = it.partnershipInfos.firstOrNull()?.partnershipType ?: "",
-                storeName = it.storeName,
-                description = it.partnershipInfos.firstOrNull()?.description ?: "",
-                startDate = it.partnershipInfos.firstOrNull()?.startDate ?: "",
-                endDate = it.partnershipInfos.firstOrNull()?.endDate ?: "",
-                restaurantType = it.restaurantType,
-                longitude = it.longitude,
-                latitude = it.latitude,
-                collegeName = it.partnershipInfos.firstOrNull()?.collegeName ?: "",
-                departmentName = it.partnershipInfos.firstOrNull()?.departmentName ?: "",
-                partnershipLikeCount = it.partnershipInfos.firstOrNull()?.likeCount ?: 0,
-                likedByUser = it.partnershipInfos.firstOrNull()?.isLiked ?: false
-            )
+        matched?.let { partnership ->
 
-            val restaurantInfos = it.partnershipInfos.map { info ->
-                RestaurantInfo(
+            // 특정 id로 찾거나, 없으면 첫 번째로 fallback
+            val targetInfo = partnershipId?.let { id ->
+                partnership.partnershipInfos.find { it.id == id }
+            } ?: partnership.partnershipInfos.firstOrNull()
+
+            targetInfo?.let { info ->
+                val restaurant = PartnershipRestaurant(
+                    id = info.id,
+                    partnershipType = info.partnershipType,
+                    storeName = partnership.storeName,
+                    description = info.description,
+                    startDate = info.startDate,
+                    endDate = info.endDate,
+                    restaurantType = partnership.restaurantType,
+                    longitude = partnership.longitude,
+                    latitude = partnership.latitude,
                     collegeName = info.collegeName,
                     departmentName = info.departmentName,
-                    period = "${info.startDate} ~ ${info.endDate}",
-                    benefit = info.description
+                    partnershipLikeCount = info.likeCount,
+                    likedByUser = info.isLiked
                 )
-            }
 
-            _uiState.update { state ->
-                state.copy(
-                    showPartnershipBottomSheet = true,
-                    restaurantPartnershipInfo = restaurant,
-                    restaurantInfos = restaurantInfos
-                )
+                val restaurantInfos = partnership.partnershipInfos.map {
+                    RestaurantInfo(
+                        collegeName = it.collegeName,
+                        departmentName = it.departmentName,
+                        period = "${it.startDate} ~ ${it.endDate}",
+                        benefit = it.description
+                    )
+                }
+
+                _uiState.update { state ->
+                    state.copy(
+                        showPartnershipBottomSheet = true,
+                        restaurantPartnershipInfo = restaurant,
+                        restaurantInfos = restaurantInfos
+                    )
+                }
             }
         }
     }
