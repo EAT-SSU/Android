@@ -23,24 +23,51 @@
             android:paddingTop="10dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/title_developer"
-                style="@style/Body2"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="30dp"
-                android:text="@string/team_eatssu"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:paddingTop="10dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_instagram"
+                    android:paddingVertical="6dp"
+                    android:layout_marginEnd="6dp"
+                    />
+
+                <TextView
+                    android:id="@+id/title_developer"
+                    style="@style/Subtitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/eatssu_instagram"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/img_new_member_link"
+                android:layout_marginHorizontal="34dp"
+                />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:layout_marginHorizontal="42dp"
-                android:layout_marginBottom="118dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="30dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/img_developer" />
         </LinearLayout>
