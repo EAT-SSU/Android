@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityDeveloperBinding
 import com.eatssu.android.presentation.base.BaseActivity
