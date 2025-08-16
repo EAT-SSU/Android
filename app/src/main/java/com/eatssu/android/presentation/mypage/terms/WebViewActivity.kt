@@ -20,7 +20,6 @@ class WebViewActivity : BaseActivity<ActivityWebviewBinding>(ActivityWebviewBind
 
         binding.webview.apply {
             webViewClient = WebViewClient()
-            settings.javaScriptEnabled = true
 
             // localStorage 사용 시
             // webView.settings.domStorageEnabled = true
