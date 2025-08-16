@@ -201,8 +201,4 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
         startActivity(intent)
     }
-
-    companion object {
-        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
-    }
 }
