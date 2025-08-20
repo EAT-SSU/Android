@@ -219,9 +219,15 @@ fun MapFragmentComposeView(
                 }
             }
 
+            // 학과 정보를 입력하지 않은 상태에서 제휴 필터를 변경하려고 할 때 BottomSheet 표시
+            // 학과 정보가 없으면 제휴 필터를 변경할 수 없음
             PartnershipFilterToggle(
                 selected = selectedFilter,
-                onSelectedChange = { selectedFilter = it },
+                onSelectedChange = {
+                    if(!uiState.showPartnershipBottomSheet){
+                        selectedFilter = it
+                    }
+                },
                 modifier = Modifier.padding(top = 12.dp),
                 departmentName = mainUiState.departmentName
             )
