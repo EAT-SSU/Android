@@ -3,7 +3,7 @@
     android:minWidth="110dp"
     android:minHeight="220dp"
     android:resizeMode="horizontal"
-    android:previewImage="@drawable/img_widget_big"
+    android:previewImage="@drawable/img_widget_preview"
     android:updatePeriodMillis="3600000"
     android:configure="com.eatssu.android.presentation.widget.ui.WidgetSettingActivity"
     android:widgetCategory="home_screen" />
