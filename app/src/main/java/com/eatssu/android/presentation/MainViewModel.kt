@@ -118,7 +118,7 @@ class MainViewModel @Inject constructor(
                 MySharedPreferences.setUserCollege(context,college)
                 MySharedPreferences.setUserDepartment(context, department)
 
-                if (college.isBlank() && department.isBlank()) {
+                if (college.isNullOrBlank() || department.isNullOrBlank() || college == "단과대" || department == "학과") {
                     _uiState.update {
                         it.copy(
                             showUserDepartmentBottomSheet = true,
