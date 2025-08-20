@@ -100,7 +100,7 @@ class WidgetSettingActivity : ComponentActivity() {
         suspend fun loadRestaurantPref(context: Context, appWidgetId: Int): Restaurant {
             val key = stringPreferencesKey("widget_restaurant_$appWidgetId")
             val prefs: Preferences = context.dataStore.data.first()
-            val value = prefs[key] ?: Restaurant.DODAM.name
+            val value = prefs[key] ?: ""
 
             Timber.d("load $value")
 
