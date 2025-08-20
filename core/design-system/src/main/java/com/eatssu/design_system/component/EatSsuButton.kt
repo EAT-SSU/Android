@@ -1,7 +1,7 @@
 package com.eatssu.design_system.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,7 +23,8 @@ fun EatSsuButton(
     Button(
         onClick = onClick,
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -32,8 +33,8 @@ fun EatSsuButton(
     ) {
         Text(
             text = text,
-            modifier = Modifier
-                .padding(vertical = 13.dp),
+            modifier = Modifier,
+//                .padding(vertical = 13.dp),
             style = EatssuTheme.typography.button1,
         )
     }

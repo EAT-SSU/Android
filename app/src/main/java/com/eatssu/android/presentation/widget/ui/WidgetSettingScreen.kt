@@ -1,8 +1,11 @@
 package com.eatssu.android.presentation.widget.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,44 +18,61 @@ import androidx.compose.ui.unit.dp
 import com.eatssu.android.data.enums.Restaurant.Companion.fromDisplayName
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuRadioButtonGroup
+import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WidgetSettingScreen(
     modifier: Modifier = Modifier,
     restaurantOptions: List<String>,
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
-    onConfirm: (String) -> Unit = {}
+    onConfirm: (String) -> Unit = {},
+    onBack: () -> Unit = {} // 뒤로가기 동작을 위한 람다 추가
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp)
-    ) {
-        Text(
-            text = "확인하고 싶은 식당을 선택하세요.",
-            style = EatssuTheme.typography.body2,
-            modifier = Modifier.padding(bottom = 20.dp)
-        )
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            EatSsuTopBar(
+                title = "위젯 설정",
+                onBack = onBack
+            )
+        },
+        content = { innerPadding -> // innerPadding 값을 받습니다.
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding) // Scafffold 패딩 적용
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp) // 이후에 추가적인 패딩 적용
+            ) {
+                Text(
+                    text = "확인하고 싶은 식당을 선택하세요.",
+                    style = EatssuTheme.typography.body2,
+                    modifier = Modifier.padding(bottom = 20.dp)
+                )
 
-        EatSsuRadioButtonGroup(
-            options = restaurantOptions,
-            selectedOption = selectedRestaurant,
-            onOptionSelected = { onSelectRestaurant(it) }
-        )
+                EatSsuRadioButtonGroup(
+                    options = restaurantOptions,
+                    selectedOption = selectedRestaurant,
+                    onOptionSelected = { onSelectRestaurant(it) }
+                )
 
-        EatSsuButton(
-            text = "선택하기",
-            onClick = {
-                onConfirm(
-                    fromDisplayName(selectedRestaurant)
+                Spacer(modifier = Modifier.weight(1f))
+
+                EatSsuButton(
+                    modifier = Modifier.padding(bottom = 74.dp),
+                    text = "선택하기",
+                    onClick = {
+                        onConfirm(
+                            fromDisplayName(selectedRestaurant)
+                        )
+                    }
                 )
             }
-        )
-    }
+        }
+    )
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -64,7 +84,8 @@ fun PreviewWidgetSettingScreen() {
         WidgetSettingScreen(
             restaurantOptions = restaurantOptions,
             selectedRestaurant = selectedRestaurant,
-            onSelectRestaurant = { selectedRestaurant = it }
+            onSelectRestaurant = { selectedRestaurant = it },
+            onBack = {}
         )
     }
 }

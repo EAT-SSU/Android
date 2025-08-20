@@ -74,9 +74,8 @@ class WidgetSettingActivity : ComponentActivity() {
                             setResult(RESULT_OK, resultIntent)
                             finish()
                         }
-                    }
-
-
+                    },
+                    onBack = { finish() }
                 )
             }
         }
