@@ -17,8 +17,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.widget.MealWidget
+import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

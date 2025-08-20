@@ -22,7 +22,7 @@ android {
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 35
         versionCode = 34
         versionName = "2.1.4"
@@ -103,7 +103,7 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":core:design-system"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

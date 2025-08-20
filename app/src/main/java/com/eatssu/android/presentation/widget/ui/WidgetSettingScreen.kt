@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.widget.ui
 
-import EatSsuButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,8 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.data.enums.Restaurant.Companion.fromDisplayName
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.widget.ui.component.EatSsuRadioButtonGroup
+import com.eatssu.design_system.component.EatSsuButton
+import com.eatssu.design_system.component.EatSsuRadioButtonGroup
+import com.eatssu.design_system.theme.EatssuTheme
 
 @Composable
 fun WidgetSettingScreen(

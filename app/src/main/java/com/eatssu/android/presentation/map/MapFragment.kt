@@ -1,12 +1,11 @@
 package com.eatssu.android.presentation.map
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import androidx.fragment.app.Fragment
 
 class MapFragment : Fragment() {
 
@@ -22,7 +21,7 @@ class MapFragment : Fragment() {
         // Inflate the layout for this fragment
         return ComposeView(requireContext()).apply {
             setContent {
-                EatssuTheme {
+                com.eatssu.design_system.theme.EatssuTheme {
                     MapFragmentComposeView()
                 }
             }

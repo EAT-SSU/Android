@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "EatSSU-Android"
 include ':app'
+include ':core:design-system'

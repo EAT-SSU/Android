@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget.ui.component // Replace with your actual package name
+package com.eatssu.design_system.component
 
 
 import androidx.compose.foundation.BorderStroke
@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 
 @Composable
 fun EatSsuRadioButton(
@@ -47,7 +46,7 @@ fun EatSsuRadioButton(
         Text(
             text = text,
             color = MaterialTheme.colorScheme.onSurface,
-            style = EatssuTheme.typography.body2
+            style = com.eatssu.design_system.theme.EatssuTheme.typography.body2
         )
     }
 }
@@ -77,7 +76,7 @@ fun EatSsuRadioButtonGroup(
 fun RestaurantSelectionPreview() {
     val restaurantOptions = listOf("학생 식당", "도담 식당", "기숙사 식당")
 
-    EatssuTheme {
+    com.eatssu.design_system.theme.EatssuTheme {
         EatSsuRadioButtonGroup(
             options = restaurantOptions,
             selectedOption = restaurantOptions[0],
