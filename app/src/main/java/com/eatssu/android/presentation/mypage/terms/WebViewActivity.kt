@@ -20,10 +20,17 @@ class WebViewActivity : BaseActivity<ActivityWebviewBinding>(ActivityWebviewBind
 
         binding.webview.apply {
             webViewClient = WebViewClient()
-            settings.javaScriptEnabled = true
 
             // localStorage 사용 시
             // webView.settings.domStorageEnabled = true
+
+            // 웹 페이지에서 새 창을 열 수 있도록 설정
+            // Notion 페이지 = DOM Storage(domStorageEnabled) 없으면 동작 불가
+            settings.apply {
+                javaScriptEnabled = true // WebView에서 JavaScript 실행을 허용
+                domStorageEnabled = true // localStorage, sessionStorage 활성화
+                useWideViewPort = true // 화면 크기에 맞게 웹 페이지를 조정
+            }
 
             URL = intent.getStringExtra("URL") ?: "" //Todo 뷰모델 사용하도록 수정?
             TITLE = intent.getStringExtra("TITLE") ?: ""

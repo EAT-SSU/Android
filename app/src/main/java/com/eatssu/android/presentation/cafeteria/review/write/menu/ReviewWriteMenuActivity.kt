@@ -30,7 +30,7 @@ class ReviewWriteMenuActivity :
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
 
         getIndex()
-        lodeData()
+        loadData()
         bindData()
         setClickListener()
     }
@@ -39,7 +39,7 @@ class ReviewWriteMenuActivity :
         mealId = intent.getLongExtra("itemId", -1)
     }
 
-    fun lodeData() {
+    fun loadData() {
         viewModel.findMenuItemByMealId(mealId)
     }
 
