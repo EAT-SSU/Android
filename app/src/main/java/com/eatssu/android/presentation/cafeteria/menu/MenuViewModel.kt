@@ -38,6 +38,10 @@ class MenuViewModel @Inject constructor(
         MutableStateFlow<ArrayList<GetMealResponse>>(arrayListOf())
     val todayMealDataDormitory: StateFlow<ArrayList<GetMealResponse>> = _todayMealDataDormitory
 
+    private val _todayMealDataFaculty =
+        MutableStateFlow<ArrayList<GetMealResponse>>(arrayListOf())
+    val todayMealDataFaculty: StateFlow<ArrayList<GetMealResponse>> = _todayMealDataFaculty
+
     private val _fixedMenuDataSnack =
         MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(arrayListOf()))
     val fixedMenuDataSnack: StateFlow<GetFixedMenuResponse> = _fixedMenuDataSnack
@@ -78,6 +82,7 @@ class MenuViewModel @Inject constructor(
                                 Restaurant.HAKSIK -> _todayMealDataHaksik.value = restaurantMenuData
                                 Restaurant.DODAM -> _todayMealDataDodam.value = restaurantMenuData
                                 Restaurant.DORMITORY -> _todayMealDataDormitory.value = restaurantMenuData
+                                Restaurant.FACULTY -> _todayMealDataFaculty.value = restaurantMenuData
                                 else -> Timber.d("onResponse 실패. 잘못된 식당입니다.")
                             }
                             _uiState.value = UiState.Success(MenuState())
