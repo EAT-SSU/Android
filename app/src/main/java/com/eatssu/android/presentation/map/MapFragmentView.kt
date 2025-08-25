@@ -244,6 +244,7 @@ fun MapFragmentComposeView(
                         // 전환 막기: selectedFilter는 그대로 (All 유지)
                         // 학과 입력 바텀시트 띄우기
                         scope.launch {
+                            // suspend 함수이므로 코루틴 내에서 실행
                             sheetState.show()
                         }
                         return@PartnershipFilterToggle
