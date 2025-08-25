@@ -136,7 +136,7 @@ fun MapFragmentComposeView(
             )
         },
     ) { innerPadding ->
-        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartment(context)}")
+        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartmentName(context)}")
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
         if (sheetState.isVisible) {
@@ -244,7 +244,7 @@ fun MapFragmentComposeView(
                 onSelectedChange = { next ->
                     if (uiState.showPartnershipBottomSheet) return@PartnershipFilterToggle
 
-                    val hasDepartment = mainUiState.departmentName.isNotBlank()
+                    val hasDepartment = !mainUiState.departmentName.equals("학과")
 
                     if (next == FilterType.Mine && !hasDepartment) {
                         // 전환 막기: selectedFilter는 그대로 (All 유지)

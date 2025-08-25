@@ -29,8 +29,8 @@ class SetUserInfoUseCase @Inject constructor(
     suspend operator fun invoke(info: UserInfo): Flow<BaseResponse<Void>> {
         // 로컬 저장
         MySharedPreferences.setUserName(context, info.nickname)
-        MySharedPreferences.setUserCollege(context, info.college)
-        MySharedPreferences.setUserDepartment(context, info.department)
+        MySharedPreferences.setUserCollege(context, info.userCollege)
+        MySharedPreferences.setUserDepartment(context, info.userDepartment)
 
         return userRepository.updateUserName(ChangeNicknameRequest(info.nickname))
     }

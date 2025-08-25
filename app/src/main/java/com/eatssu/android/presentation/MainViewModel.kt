@@ -108,17 +108,20 @@ class MainViewModel @Inject constructor(
     private fun getUserDepartment(){
         viewModelScope.launch {
             runCatching {
-                userRepository.getUserDepartment()
-            }.onSuccess { department ->
-                Timber.d("userDepartment: $department")
+                userRepository.getUserCollegeDepartment()
+            }.onSuccess { it ->
+                val college = it.first
+                val department = it.second
+
+                Timber.d("userCollege: ${it.first}")
+                Timber.d("userDepartment: ${it.second}")
 
                 // 단과대 추론
                 // TODO ViewModel이 MySharedPreferences를 직접 다루면 저장소 계층(LocalDataSource)와 UI 계층이 강하게 결합. repository를 통해 처리하는게 좋음
-                val college = findCollegeByDepartment(department)
                 MySharedPreferences.setUserCollege(context,college)
                 MySharedPreferences.setUserDepartment(context, department)
 
-                if (college.isNullOrBlank() || department.isNullOrBlank() || college == "단과대" || department == "학과") {
+                if (college.collegeName.isBlank() || department.departmentName.isBlank()) {
                     _uiState.update {
                         it.copy(
                             showUserDepartmentBottomSheet = true,
@@ -128,7 +131,7 @@ class MainViewModel @Inject constructor(
 
                 _uiState.update {
                     it.copy(
-                        departmentName = department,
+                        departmentName = department.departmentName,
                     )
                 }
 
@@ -149,18 +152,6 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
-    private fun findCollegeByDepartment(
-        department: String,
-    ): String {
-        val allColleges = userRepository.getTotalColleges()
-        return allColleges
-            .drop(1) // "단과대" 제외
-            .firstOrNull { college ->
-                userRepository.getTotalDepartments(college).contains(department)
-            } ?: "단과대"
-    }
-
 }
 
 

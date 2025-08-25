@@ -3,6 +3,8 @@ package com.eatssu.android.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.eatssu.android.domain.model.College
+import com.eatssu.android.domain.model.Department
 
 //자동 로그인을 위한 SharedPreferences
 
@@ -52,29 +54,43 @@ object MySharedPreferences {
         return prefs.getString("MY_NAME", "").toString()
     }
 
-    fun setUserCollege(context: Context, input: String) {
+    fun setUserCollege(context: Context, input: College) {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = prefs.edit()
-        editor.putString("MY_COLLEGE", input)
+        editor.putInt("MY_COLLEGE_ID", input.collegeId)
+        editor.putString("MY_COLLEGE", input.collegeName)
         editor.commit()
     }
 
-    fun getUserCollege(context: Context): String {
+    fun getUserCollegeId(context: Context): Int {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getInt("MY_COLLEGE_ID", -1)
+    }
+
+    fun getUserCollegeName(context: Context): String {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getString("MY_COLLEGE", "").toString()
     }
 
-    fun setUserDepartment(context: Context, input: String) {
+    fun setUserDepartment(context: Context, input: Department) {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = prefs.edit()
-        editor.putString("MY_DEPARTMENT", input)
+        editor.putInt("MY_DEPARTMENT_ID", input.departmentId)
+        editor.putString("MY_DEPARTMENT", input.departmentName)
         editor.commit()
     }
 
-    fun getUserDepartment(context: Context): String {
+    fun getUserDepartmentId(context: Context): Int {
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getInt("MY_DEPARTMENT_ID", -1)
+    }
+
+    fun getUserDepartmentName(context: Context): String {
         val prefs: SharedPreferences =
             context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getString("MY_DEPARTMENT", "").toString()

@@ -8,7 +8,7 @@ import com.eatssu.android.data.dto.response.DepartmentResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.PartnershipResponse
-import com.eatssu.android.data.dto.response.UserDepartmentResponse
+import com.eatssu.android.data.dto.response.UserCollegeDepartmentResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -46,11 +46,11 @@ interface UserService {
     ): BaseResponse<List<DepartmentResponse>>
 
     @GET("users/department") // 유저의 단과대, 학과 조회
-    suspend fun getUserDepartmentInfo(): BaseResponse<UserDepartmentResponse>
+    suspend fun getUserCollegeDepartment(): BaseResponse<UserCollegeDepartmentResponse>
 
     @POST("users/department") // 유저의 학과 설정
     suspend fun setUserDepartment(
-        @Body departmentName: UserDepartmentRequest,
+        @Body departmentId: UserDepartmentRequest,
     ): BaseResponse<Void>
 
     // 유저 학과의 제휴 조회

@@ -2,6 +2,8 @@ package com.eatssu.android.domain.usecase.user
 
 import android.content.Context
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.domain.model.College
+import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.UserInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -11,8 +13,10 @@ class GetUserNameUseCase @Inject constructor(
 ) {
     operator fun invoke(): UserInfo {
         val nickname = MySharedPreferences.getUserName(context)
-        val college = MySharedPreferences.getUserCollege(context)
-        val department = MySharedPreferences.getUserDepartment(context)
-        return UserInfo(nickname, college, department)
+        val collegeId = MySharedPreferences.getUserCollegeId(context)
+        val collegeName = MySharedPreferences.getUserCollegeName(context)
+        val departmentId = MySharedPreferences.getUserDepartmentId(context)
+        val departmentName = MySharedPreferences.getUserDepartmentName(context)
+        return UserInfo(nickname, Department(departmentId, departmentName), College(collegeId, collegeName))
     }
 }

@@ -50,7 +50,7 @@ fun PartnershipFilterToggle(
             onClick = { onSelectedChange(FilterType.All) }
         )
         PartnershipToggleItem(
-            text = departmentName.ifBlank { "내 제휴" },
+            text = if(departmentName == "학과" || departmentName.isEmpty()) "내 제휴" else departmentName,
             isSelected = selected == FilterType.Mine,
             onClick = { onSelectedChange(FilterType.Mine) },
         )

@@ -50,8 +50,8 @@ class UserInfoActivity :
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest {
                 binding.etChNickname.setText(it.nickname)
-                binding.tvCollege.text = it.selectedCollege.ifEmpty { "단과대" }
-                binding.tvDepartment.text = it.selectedDepartment.ifEmpty { "학과" }
+                binding.tvCollege.text = it.selectedCollege.collegeName
+                binding.tvDepartment.text = it.selectedDepartment.departmentName
             }
         }
 
@@ -144,7 +144,7 @@ class UserInfoActivity :
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest { state ->
                 if (state.success) {
-                    showToast("학과 정보가 업데이트 되었습니다.")
+                    showToast("정보가 업데이트 되었습니다.")
                     finish()
                 }
             }
@@ -152,44 +152,49 @@ class UserInfoActivity :
     }
 
     private fun setCollegeDepartmentClickListener() {
-        binding.tvCollege.setOnClickListener {
-            val colleges = userInfoViewModel.getTotalColleges()
-            showDropdownPopup(binding.tvCollege, colleges, selectedCollegeIndex) { selected, index ->
-                selectedCollegeIndex = index
-                binding.tvCollege.text = selected
+        binding.flCollege.setOnClickListener {
+            // 단과대 목록 요청
+            userInfoViewModel.loadColleges()
 
-                selectedDepartmentIndex = 0
-                binding.tvDepartment.text = "학과"
+            // 최신 state 사용
+            val state = userInfoViewModel.uiState.value
+            if (state.colleges.isNotEmpty()) {
+                val collegeNames = state.colleges.map { it.collegeName }
+                showDropdownPopup(binding.tvCollege, collegeNames, selectedCollegeIndex) { selected, index ->
+                    selectedCollegeIndex = index
+                    binding.tvCollege.text = selected
 
-                val departments = userInfoViewModel.getTotalDepartments(selected)
-                showDropdownPopup(
-                    binding.tvDepartment,
-                    departments,
-                    selectedDepartmentIndex
-                ) { department, departmentIndex ->
-                    selectedDepartmentIndex = departmentIndex
-                    binding.tvDepartment.text = department
-                    userInfoViewModel.updateInputDepartment(department)
+                    selectedDepartmentIndex = 0
+                    binding.tvDepartment.text = "학과"
+
+                    val selectedCollege = state.colleges[index]
+                    userInfoViewModel.updateInputCollege(selectedCollege)
+                    userInfoViewModel.loadDepartments(selectedCollege.collegeId)
                 }
-                userInfoViewModel.updateInputCollege(selected)
             }
         }
 
-        binding.tvDepartment.setOnClickListener {
-            val selectedCollege = binding.tvCollege.text.toString()
-            val departmentList = userInfoViewModel.getTotalDepartments(selectedCollege)
+        binding.flDepartment.setOnClickListener {
+            val state = userInfoViewModel.uiState.value
 
-            showDropdownPopup(
-                binding.tvDepartment,
-                departmentList,
-                selectedDepartmentIndex
-            ) { department, departmentIndex ->
-                selectedDepartmentIndex = departmentIndex
-                binding.tvDepartment.text = department
-                userInfoViewModel.updateInputDepartment(department)
+            // 학과 리스트가 비어있다면 현재 단과대 기준으로 다시 로드
+            if (state.departments.isEmpty() && state.selectedCollege.collegeId != -1) {
+                userInfoViewModel.loadDepartments(state.selectedCollege.collegeId)
+            }
+
+            if (state.departments.isNotEmpty()) {
+                val departmentNames = state.departments.map { it.departmentName }
+                showDropdownPopup(binding.tvDepartment, departmentNames, selectedDepartmentIndex) { departmentName, departmentIndex ->
+                    selectedDepartmentIndex = departmentIndex
+                    binding.tvDepartment.text = departmentName
+                    userInfoViewModel.updateInputDepartment(state.departments[departmentIndex])
+                }
             }
         }
     }
+
+    // 팝업 여닫기 관리
+    private var currentPopup: PopupWindow? = null
 
     private fun showDropdownPopup(
         anchor: View,
@@ -197,6 +202,9 @@ class UserInfoActivity :
         selectedIndex: Int,
         onItemClick: (selected: String, selectedIndex: Int) -> Unit
     ) {
+        // 기존 팝업이 열려있다면 닫기
+        currentPopup?.dismiss()
+
         val inflater = LayoutInflater.from(this)
         val popupView = inflater.inflate(R.layout.popup_dropdown_list, null)
 
@@ -223,6 +231,8 @@ class UserInfoActivity :
                 holder.bind(items[position]) {
                     onItemClick(it, position)
                     popupWindow.dismiss()
+                    currentPopup?.dismiss()
+                    currentPopup = null
                 }
 
                 if (position == selectedIndex) {
@@ -238,5 +248,8 @@ class UserInfoActivity :
         popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.shape_text_field_small))
 
         popupWindow.showAsDropDown(anchor, -24, binding.tvDepartment.height + 8)
+
+        // 현재 팝업 윈도우를 저장
+        currentPopup = popupWindow
     }
 }
