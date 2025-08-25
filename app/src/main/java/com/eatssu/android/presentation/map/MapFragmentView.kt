@@ -52,6 +52,7 @@ fun MapFragmentComposeView(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
     val activity = remember(context) { context.findActivityOrNull() }
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
@@ -95,6 +96,15 @@ fun MapFragmentComposeView(
         }
     }
 
+    // 상태 변화 감지해서 show/hide -> Scrim 잔존 문제 해결
+    LaunchedEffect(mainUiState.showUserDepartmentBottomSheet) {
+        if (mainUiState.showUserDepartmentBottomSheet) {
+            sheetState.show()
+        } else {
+            sheetState.hide()
+        }
+    }
+
     var hasLocationPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -128,7 +138,7 @@ fun MapFragmentComposeView(
         Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartment(context)}")
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
-        if (mainUiState.showUserDepartmentBottomSheet) {
+        if (sheetState.isVisible) {
             Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
 
             DepartmentBottomSheet(
@@ -137,7 +147,8 @@ fun MapFragmentComposeView(
                     viewModel.toggleDepartmentBottomSheet()
                     val intent = Intent(context, UserInfoActivity::class.java)
                     context.startActivity(intent)
-                }
+                },
+                sheetState = sheetState
             )
         }
 

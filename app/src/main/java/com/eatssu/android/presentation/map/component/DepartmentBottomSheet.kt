@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -34,14 +35,9 @@ import com.eatssu.android.presentation.compose.ui.theme.White
 @Composable
 fun DepartmentBottomSheet(
     onDismiss: () -> Unit = {},
-    onInputClick: () -> Unit = {}
+    onInputClick: () -> Unit = {},
+    sheetState: SheetState
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    LaunchedEffect(Unit) {
-        sheetState.show()
-    }
-
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
@@ -93,14 +89,17 @@ fun DepartmentBottomSheet(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DepartmentBottomSheetPreview() {
     EatssuTheme {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         Surface {
             DepartmentBottomSheet(
                 onDismiss = {},
-                onInputClick = {}
+                onInputClick = {},
+                sheetState = sheetState
             )
         }
     }
