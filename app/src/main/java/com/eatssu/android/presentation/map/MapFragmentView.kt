@@ -222,9 +222,15 @@ fun MapFragmentComposeView(
                         captionColor = Black,
                         captionTextSize = 10.sp,
                         onClick = {
-                            // 마커 클릭 시 제휴 정보 업데이트
-                            viewModel.selectPartnershipByStoreName(partnership.storeName)
-                            true
+                            if (partnership.partnershipInfos.isEmpty()) {
+                                // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
+                                Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                                return@Marker true
+                            } else {
+                                // 제휴 정보가 있을 때만 바텀시트 띄움
+                                viewModel.selectPartnershipByStoreName(partnership.storeName)
+                                return@Marker true
+                            }
                         }
                     )
 
