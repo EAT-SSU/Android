@@ -3,6 +3,8 @@ package com.eatssu.android.data.service
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
+import com.eatssu.android.data.dto.response.CollegeResponse
+import com.eatssu.android.data.dto.response.DepartmentResponse
 import com.eatssu.android.data.dto.response.MyInfoResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.PartnershipResponse
@@ -35,8 +37,16 @@ interface UserService {
     @DELETE("users") //유저 탈퇴
     suspend fun signOut(): BaseResponse<Boolean>
 
-    @GET("users/department") // 유저의 학과 조회
-    suspend fun getUserDepartment(): BaseResponse<UserDepartmentResponse>
+    @GET("users/lookup/colleges") // 교내 모든 단과대 조회
+    suspend fun getCollegeList(): BaseResponse<List<CollegeResponse>>
+
+    @GET("users/lookup/departments") // 단과대에 따른 학과 조회
+    suspend fun getDepartmentsByCollege(
+        @Query("collegeId") collegeId: Int,
+    ): BaseResponse<List<DepartmentResponse>>
+
+    @GET("users/department") // 유저의 단과대, 학과 조회
+    suspend fun getUserDepartmentInfo(): BaseResponse<UserDepartmentResponse>
 
     @POST("users/department") // 유저의 학과 설정
     suspend fun setUserDepartment(
