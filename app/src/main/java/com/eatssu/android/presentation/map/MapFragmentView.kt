@@ -225,11 +225,11 @@ fun MapFragmentComposeView(
                             if (partnership.partnershipInfos.isEmpty()) {
                                 // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
                                 Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
-                                return@Marker true
+                                true
                             } else {
                                 // 제휴 정보가 있을 때만 바텀시트 띄움
                                 viewModel.selectPartnershipByStoreName(partnership.storeName)
-                                return@Marker true
+                                true
                             }
                         }
                     )
