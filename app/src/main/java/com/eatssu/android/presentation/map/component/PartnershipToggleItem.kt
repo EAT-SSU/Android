@@ -42,7 +42,7 @@ fun PartnershipFilterToggle(
             .clip(CircleShape)
             .background(White)
             .padding(6.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         PartnershipToggleItem(
             text = "전체",

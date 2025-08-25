@@ -37,6 +37,7 @@ import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.*
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
@@ -56,7 +57,7 @@ fun MapFragmentComposeView(
     val context = LocalContext.current
     val activity = remember(context) { context.findActivityOrNull() }
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
-
+    val scope = rememberCoroutineScope()
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
     val cameraPositionState = rememberCameraPositionState {
@@ -234,10 +235,22 @@ fun MapFragmentComposeView(
             // 학과 정보가 없으면 제휴 필터를 변경할 수 없음
             PartnershipFilterToggle(
                 selected = selectedFilter,
-                onSelectedChange = {
-                    if(!uiState.showPartnershipBottomSheet){
-                        selectedFilter = it
+                onSelectedChange = { next ->
+                    if (uiState.showPartnershipBottomSheet) return@PartnershipFilterToggle
+
+                    val hasDepartment = mainUiState.departmentName.isNotBlank()
+
+                    if (next == FilterType.Mine && !hasDepartment) {
+                        // 전환 막기: selectedFilter는 그대로 (All 유지)
+                        // 학과 입력 바텀시트 띄우기
+                        scope.launch {
+                            sheetState.show()
+                        }
+                        return@PartnershipFilterToggle
                     }
+
+                    // 학과 정보가 있거나 All 선택은 정상 전환
+                    selectedFilter = next
                 },
                 modifier = Modifier.padding(top = 12.dp),
                 departmentName = mainUiState.departmentName
