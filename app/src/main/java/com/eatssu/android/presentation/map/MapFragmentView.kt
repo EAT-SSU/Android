@@ -204,7 +204,6 @@ fun MapFragmentComposeView(
                 uiState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
 
-                    // TODO 마커 커스텀 방식 수정
                     Marker(
                         icon = OverlayImage.fromResource(
                             when (partnership.restaurantType) {
