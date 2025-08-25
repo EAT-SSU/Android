@@ -8,7 +8,7 @@ import com.eatssu.android.domain.model.UserInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class GetUserNameUseCase @Inject constructor(
+class GetUserCollegeDepartmentUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     operator fun invoke(): UserInfo {

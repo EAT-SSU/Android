@@ -7,7 +7,7 @@ import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.UserInfo
-import com.eatssu.android.domain.usecase.user.GetUserNameUseCase
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserInfoUseCase
 import com.eatssu.android.domain.usecase.user.ValidateUserNameUseCase
 import com.eatssu.android.domain.repository.UserRepository
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserInfoViewModel @Inject constructor(
     private val setUserInfoUseCase: SetUserInfoUseCase,
-    private val getUserNameUseCase: GetUserNameUseCase,
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val validateUserNameUseCase: ValidateUserNameUseCase,
     private val userRepository: UserRepository,
     private val context: Context, // TODO 지우자 지우자
@@ -43,7 +43,7 @@ class UserInfoViewModel @Inject constructor(
 
     fun loadUserInfo() {
         viewModelScope.launch {
-            val userInfo = getUserNameUseCase()
+            val userInfo = getUserCollegeDepartmentUseCase()
             _uiState.update {
                 it.copy(
                     nickname = userInfo.nickname,
@@ -56,6 +56,7 @@ class UserInfoViewModel @Inject constructor(
                     loading = false
                 )
             }
+            Timber.d("초기 유저 정보: $userInfo")
         }
     }
 

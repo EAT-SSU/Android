@@ -63,6 +63,7 @@ class UserInfoActivity :
                 val isNicknameChanged = inputNickname != userInfoViewModel.uiState.value.originalNickname
 
                 binding.btnCheckNickname.isEnabled = isValidLength && isNicknameChanged
+                binding.btnComplete.isEnabled = false
 
                 if (!isValidLength && inputNickname.isNotEmpty()) {
                     binding.tvNickname28.setTextColor(getColor(R.color.error))
@@ -102,7 +103,8 @@ class UserInfoActivity :
             lifecycleScope.launch {
                 userInfoViewModel.uiState.collectLatest {
                     if (it.isEnableName) {
-                        binding.btnComplete.isEnabled = true
+                        binding.btnCheckNickname.isEnabled = false // 중복확인 비활성화
+                        binding.btnComplete.isEnabled = true // 저장하기 활성화
                         binding.tvNickname28.text = getString(R.string.set_nickname_able)
                         binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
                         binding.tvNickname28.setTextColor(getColor(R.color.gray600))

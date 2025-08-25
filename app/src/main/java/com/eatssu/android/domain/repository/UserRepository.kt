@@ -2,7 +2,7 @@ package com.eatssu.android.domain.repository
 
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MyInfoResponse
+import com.eatssu.android.data.dto.response.MyNickNameResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
@@ -19,7 +19,7 @@ interface UserRepository {
     ): Flow<BaseResponse<Boolean>>
 
     suspend fun getUserReviews(): Flow<BaseResponse<MyReviewResponse>>
-    suspend fun getUserInfo(): Flow<BaseResponse<MyInfoResponse>>
+    suspend fun getUserNickName(): Flow<BaseResponse<MyNickNameResponse>>
     suspend fun signOut(): Flow<BaseResponse<Boolean>>
 
     // 모든 단과대 조회

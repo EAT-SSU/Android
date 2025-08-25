@@ -5,7 +5,7 @@ import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.CollegeResponse
 import com.eatssu.android.data.dto.response.DepartmentResponse
-import com.eatssu.android.data.dto.response.MyInfoResponse
+import com.eatssu.android.data.dto.response.MyNickNameResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.PartnershipResponse
 import com.eatssu.android.data.dto.response.UserCollegeDepartmentResponse
@@ -32,7 +32,7 @@ interface UserService {
     suspend fun getMyReviews(): BaseResponse<MyReviewResponse>
 
     @GET("users/mypage") //내 정보 모아보기
-    suspend fun getMyInfo(): BaseResponse<MyInfoResponse>
+    suspend fun getMyInfo(): BaseResponse<MyNickNameResponse>
 
     @DELETE("users") //유저 탈퇴
     suspend fun signOut(): BaseResponse<Boolean>

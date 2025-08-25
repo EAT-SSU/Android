@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.usecase.user.GetUserInfoUseCase
+import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val userRepository: UserRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -45,7 +45,7 @@ class MainViewModel @Inject constructor(
 
     fun fetchAndCheckNickname() {
         viewModelScope.launch {
-            getUserInfoUseCase().onStart {
+            getUserNickNameUseCase().onStart {
                 _uiState.update { it.copy(loading = true) }
             }.catch { e ->
                 _uiState.update {

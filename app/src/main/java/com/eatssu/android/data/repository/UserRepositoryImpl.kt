@@ -3,7 +3,7 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MyInfoResponse
+import com.eatssu.android.data.dto.response.MyNickNameResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.mapper.toDomain
 import com.eatssu.android.data.service.UserService
@@ -33,7 +33,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
             emit(userService.getMyReviews())
         }
 
-    override suspend fun getUserInfo(): Flow<BaseResponse<MyInfoResponse>> =
+    override suspend fun getUserNickName(): Flow<BaseResponse<MyNickNameResponse>> =
         flow {
             emit(userService.getMyInfo())
         }

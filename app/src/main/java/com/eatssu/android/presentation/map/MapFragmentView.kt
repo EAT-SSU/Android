@@ -43,7 +43,7 @@ import timber.log.Timber
 private const val DEFAULT_LATITUDE = 37.49517278813046
 private const val DEFAULT_LONGITUDE = 126.95661313346206
 private const val DEFAULT_ZOOM = 15.5
-private const val PERMISSION_REQUEST_CODE = 1000
+private const val PERMISSION_REQUEST_CODE = 1001
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
