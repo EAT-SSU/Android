@@ -16,7 +16,6 @@ import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -54,57 +53,90 @@ class MealWidget : GlanceAppWidget() {
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            LaunchedEffect(key1 = Unit) {
-                MealWorker.enqueue(context)
-            }
-
             // GlanceId -> appWidgetId 매핑
             val manager = GlanceAppWidgetManager(context)
             val appWidgetId = manager.getAppWidgetId(id)
-            // DataStore에서 식당 정보 로드
-            val restaurant = runBlocking {
-                WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
 
+            // DataStore에서 식당 정보 로드 - glanceId를 사용하여 정확한 식당 정보 가져오기
+            val restaurant = runBlocking {
+                val fileKey = "appWidget-${appWidgetId}"
+                Timber.d("loadRestaurantByFileKey 호출: fileKey = '$fileKey', appWidgetId = $appWidgetId")
+                val result = WidgetSettingActivity.loadRestaurantByFileKey(
+                    context.applicationContext,
+                    fileKey
+                )
+                Timber.d("loadRestaurantByFileKey 결과: $result")
+                result
             }
-            Timber.d("load2 ${restaurant.name}")
+            Timber.d("load2 ${restaurant?.name ?: "null"} for glanceId: ${id}")
+
+            LaunchedEffect(key1 = Unit) {
+                MealWorker.enqueue(context)
+
+                // 더 오래 기다린 후 저장된 식당 정보가 있는지 확인
+                kotlinx.coroutines.delay(2000)
+                val savedRestaurant = WidgetSettingActivity.loadRestaurantByFileKey(
+                    context.applicationContext,
+                    "appWidget-${appWidgetId}"
+                )
+                if (savedRestaurant != null) {
+                    Timber.d("LaunchedEffect: 저장된 식당 정보 발견 - ${savedRestaurant.name}, 위젯 강제 업데이트")
+                    // 위젯을 강제로 업데이트하여 저장된 식당 정보가 반영되도록 함
+                    MealWidget().update(context, id)
+                } else {
+                    Timber.d("LaunchedEffect: 저장된 식당 정보 없음")
+                }
+            }
 
             GlanceTheme(colors = EATSSUWidgetColorScheme.colors) {
-                when (val state = currentState<WidgetMealInfo>()) {
-                    is WidgetMealInfo.Available -> {
-                        if (state.mealList.isNotEmpty()) {
-                            MealWidgetContent(
-                                mealTime = state.mealTime,
-                                mealList = state.mealList,
-                                restaurant = state.restaurant.displayName,
+                if (restaurant != null) {
+                    // 저장된 식당 정보가 있으면 해당 식당의 데이터 표시
+                    when (val state = currentState<WidgetMealInfo>()) {
+                        is WidgetMealInfo.Available -> {
+                            if (state.mealList.isNotEmpty()) {
+                                MealWidgetContent(
+                                    mealTime = state.mealTime,
+                                    mealList = state.mealList,
+                                    restaurant = restaurant.displayName,
+                                    glanceId = id,
+                                )
+                            } else {
+                                MealWidgetError(
+                                    mealTime = state.mealTime,
+                                    restaurant = restaurant.displayName,
+                                    text = "오늘의 메뉴가 없습니다.",
+                                    glanceId = id,
+                                )
+                            }
+                        }
+
+                        is WidgetMealInfo.Loading -> {
+                            // Loading 상태일 때도 저장된 식당 정보 표시
+                            MealWidgetError(
+                                restaurant = restaurant.displayName,
+                                mealTime = "점심",
+                                text = "로딩 중",
                                 glanceId = id,
                             )
-                        } else {
+                        }
+
+                        is WidgetMealInfo.Unavailable -> {
                             MealWidgetError(
-                                mealTime = state.mealTime,
-                                restaurant = state.restaurant.displayName,
-                                text = "오늘의 메뉴가 없습니다.",
+                                restaurant = restaurant.displayName,
+                                mealTime = "점심",
+                                text = "네트워크 연결 상태를 확인해주세요.",
                                 glanceId = id,
                             )
                         }
                     }
-
-                    is WidgetMealInfo.Loading -> {
-                        MealWidgetError(
-                            restaurant = restaurant.displayName,
-                            mealTime = "점심",
-                            text = "로딩 중",
-                            glanceId = id,
-                        )
-                    }
-
-                    is WidgetMealInfo.Unavailable -> {
-                        MealWidgetError(
-                            restaurant = restaurant.displayName,
-                            mealTime = "점심",
-                            text = "네트워크 연결 상태를 확인해주세요.",
-                            glanceId = id,
-                        )
-                    }
+                } else {
+                    // 저장된 식당 정보가 없으면 설정 필요 메시지 표시
+                    MealWidgetError(
+                        restaurant = "설정 필요",
+                        mealTime = "점심",
+                        text = "위젯 설정에서 식당을 선택해주세요.",
+                        glanceId = id,
+                    )
                 }
             }
         }
@@ -197,8 +229,6 @@ class MealWidget : GlanceAppWidget() {
         context: Context,
         mealTime: String?,
         restaurantName: String,
-//        onLeftArrowClick: () -> Unit,
-//        onRightArrowClick: () -> Unit,
         content: @Composable () -> Unit
     ) {
         Column(
@@ -271,8 +301,5 @@ class MealWidget : GlanceAppWidget() {
 
 }
 
-class MealWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget
-        get() = MealWidget()
-}
+
 
