@@ -23,7 +23,7 @@ fun EatSsuTopBar(
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         title = {
             Text(
                 text = title,
@@ -44,7 +44,7 @@ fun EatSsuTopBar(
 
 @Preview
 @Composable
-fun previewTopBar() {
+fun PreviewTopBar() {
     EatssuTheme {
         Column {
             EatSsuTopBar("리뷰", {})
