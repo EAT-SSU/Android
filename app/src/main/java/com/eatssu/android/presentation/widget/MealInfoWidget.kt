@@ -5,6 +5,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
@@ -45,7 +49,7 @@ import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
 import com.eatssu.android.presentation.widget.util.MealTime
 import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import com.eatssu.android.presentation.widget.util.launchApp
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
 import timber.log.Timber
 
 
@@ -59,27 +63,17 @@ class MealWidget : GlanceAppWidget() {
             val manager = GlanceAppWidgetManager(context)
             val appWidgetId = manager.getAppWidgetId(id)
 
-            // DataStore에서 식당 정보 로드 - glanceId를 사용하여 정확한 식당 정보 가져오기
-            val restaurant = runBlocking {
-                val fileKey = "appWidget-${appWidgetId}"
-                Timber.d("loadRestaurantByFileKey 호출: fileKey = '$fileKey', appWidgetId = $appWidgetId")
-                val result = WidgetSettingActivity.loadRestaurantByFileKey(
-                    context.applicationContext,
-                    fileKey
-                )
-                Timber.d("loadRestaurantByFileKey 결과: $result")
-                result
-            }
-            Timber.d("load2 ${restaurant?.name ?: "null"} for glanceId: ${id}")
+            var restaurant by remember { mutableStateOf<Restaurant?>(null) }
 
             LaunchedEffect(key1 = Unit) {
 
-                // 더 오래 기다린 후 저장된 식당 정보가 있는지 확인
-                kotlinx.coroutines.delay(2000)
+                delay(5000) //딜레이 안주면 Init 상태의 위젯이 추가됨.
                 val savedRestaurant = WidgetSettingActivity.loadRestaurantByFileKey(
                     context.applicationContext,
                     "appWidget-${appWidgetId}"
                 )
+                restaurant = savedRestaurant
+
                 if (savedRestaurant != null) {
                     Timber.d("LaunchedEffect: 저장된 식당 정보 발견 - ${savedRestaurant.name}, 위젯 강제 업데이트")
                     // 위젯을 강제로 업데이트하여 저장된 식당 정보가 반영되도록 함
@@ -109,13 +103,13 @@ class MealWidget : GlanceAppWidget() {
                                 MealWidgetContent(
                                     mealTime = mealTime,
                                     mealList = mealList,
-                                    restaurant = restaurant.displayName,
+                                    restaurant = restaurant?.displayName ?: "",
                                     glanceId = id,
                                 )
                             } else {
                                 MealWidgetError(
                                     mealTime = mealTime,
-                                    restaurant = restaurant.displayName,
+                                    restaurant = restaurant?.displayName ?: "",
                                     text = "오늘의 메뉴가 없습니다.",
                                     glanceId = id,
                                 )
@@ -125,7 +119,7 @@ class MealWidget : GlanceAppWidget() {
                         is WidgetMealInfo.Loading -> {
                             // Loading 상태일 때도 저장된 식당 정보 표시
                             MealWidgetError(
-                                restaurant = restaurant.displayName,
+                                restaurant = restaurant?.displayName ?: "",
                                 mealTime = "점심",
                                 text = "로딩 중",
                                 glanceId = id,
@@ -134,7 +128,7 @@ class MealWidget : GlanceAppWidget() {
 
                         is WidgetMealInfo.Unavailable -> {
                             MealWidgetError(
-                                restaurant = restaurant.displayName,
+                                restaurant = restaurant?.displayName ?: "",
                                 mealTime = "점심",
                                 text = "네트워크 연결 상태를 확인해주세요.",
                                 glanceId = id,
