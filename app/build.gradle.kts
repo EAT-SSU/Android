@@ -8,9 +8,8 @@ plugins {
     alias(libs.plugins.hilt.android)
     id("kotlin-parcelize")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("com.google.android.gms.oss-licenses-plugin")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
+    id("kotlin-kapt")
 
 }
 
@@ -78,7 +77,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
 
     kotlin {
@@ -108,13 +107,13 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.constraintlayout)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.threetenabp)
     implementation(libs.material.calendarview)
-    implementation(libs.recyclerview)
+    implementation(libs.androidx.recyclerview)
     implementation(libs.transport.runtime)
-    implementation(libs.activity)
-    implementation(libs.fragment)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
 
     //glance
     implementation(libs.androidx.glance)
@@ -126,11 +125,11 @@ dependencies {
     // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.core)
 
     //retrofit2: 서버통신
     implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+    implementation(libs.retrofit.converter.gson)
 
     // Gson for JSON parsing
     implementation(libs.gson)
@@ -147,23 +146,23 @@ dependencies {
     implementation(libs.compressor)
 
     // Coroutines for concurrency
-    implementation(libs.coroutines)
-    implementation(libs.coroutines.core)
-    implementation(libs.lifecycle.runtime)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Kakao login SDK
     implementation(libs.kakao.login)
 
     // Hilt for Dependency Injection
-    implementation(libs.hilt)
+    implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
 
     // ViewModel and LiveData
-    implementation(libs.lifecycle.viewmodel)
-    implementation(libs.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     implementation(libs.play.services.base)
 
@@ -181,32 +180,31 @@ dependencies {
 
     // Compose
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.animation)
-    implementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v252)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.lifecycle.viewmodel)
+    implementation(libs.androidx.compose.lifecycle.runtime)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.compose.theme.adapter)
     implementation(libs.accompanist.appcompat.theme)
-    androidTestImplementation(libs.compose.bom)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.compose.bom)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // navigation
-    implementation ("androidx.navigation:navigation-fragment:2.8.9")
-    implementation ("androidx.navigation:navigation-ui:2.8.9")
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
 
     // worker (Kotlin + coroutines)
     implementation(libs.androidx.work.runtime.ktx)
 
     //data store (with flow)
-    implementation(libs.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
-    implementation(libs.kotlinx.serialization.json)
 }
 
 kapt {
