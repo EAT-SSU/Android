@@ -7,8 +7,9 @@ sealed interface WidgetMealInfo {
     object Loading : WidgetMealInfo
 
     data class Available(
-        val mealTime: String,
-        val mealList: List<List<String>>,
+        val breakfast: List<List<String>>,
+        val lunch: List<List<String>>,
+        val dinner: List<List<String>>,
         val restaurant: Restaurant,
     ) : WidgetMealInfo
 

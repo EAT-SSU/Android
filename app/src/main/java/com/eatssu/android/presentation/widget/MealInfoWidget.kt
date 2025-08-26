@@ -42,6 +42,8 @@ import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
+import com.eatssu.android.presentation.widget.util.MealTime
+import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import com.eatssu.android.presentation.widget.util.launchApp
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
@@ -71,7 +73,6 @@ class MealWidget : GlanceAppWidget() {
             Timber.d("load2 ${restaurant?.name ?: "null"} for glanceId: ${id}")
 
             LaunchedEffect(key1 = Unit) {
-                MealWorker.enqueue(context)
 
                 // 더 오래 기다린 후 저장된 식당 정보가 있는지 확인
                 kotlinx.coroutines.delay(2000)
@@ -86,6 +87,8 @@ class MealWidget : GlanceAppWidget() {
                 } else {
                     Timber.d("LaunchedEffect: 저장된 식당 정보 없음")
                 }
+
+                MealWorker.enqueue(context)
             }
 
             GlanceTheme(colors = EATSSUWidgetColorScheme.colors) {
@@ -93,16 +96,25 @@ class MealWidget : GlanceAppWidget() {
                     // 저장된 식당 정보가 있으면 해당 식당의 데이터 표시
                     when (val state = currentState<WidgetMealInfo>()) {
                         is WidgetMealInfo.Available -> {
-                            if (state.mealList.isNotEmpty()) {
+                            // 현재 시간에 맞는 식사 시간의 메뉴를 표시
+                            val currentMealTime = WidgetDataDisplayManager.getCurrentMealTime()
+                            val (mealTime, mealList) = when (currentMealTime) {
+
+                                MealTime.Morning -> "아침" to state.breakfast
+                                MealTime.Lunch -> "점심" to state.lunch
+                                MealTime.Dinner -> "저녁" to state.dinner
+                            }
+
+                            if (mealList.isNotEmpty()) {
                                 MealWidgetContent(
-                                    mealTime = state.mealTime,
-                                    mealList = state.mealList,
+                                    mealTime = mealTime,
+                                    mealList = mealList,
                                     restaurant = restaurant.displayName,
                                     glanceId = id,
                                 )
                             } else {
                                 MealWidgetError(
-                                    mealTime = state.mealTime,
+                                    mealTime = mealTime,
                                     restaurant = restaurant.displayName,
                                     text = "오늘의 메뉴가 없습니다.",
                                     glanceId = id,

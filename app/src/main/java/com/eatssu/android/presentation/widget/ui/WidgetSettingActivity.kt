@@ -21,6 +21,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.presentation.widget.MealWidget
+import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.design_system.theme.EatssuTheme
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,11 +75,6 @@ class WidgetSettingActivity : ComponentActivity() {
 
                         lifecycleScope.launch {
 
-//                            saveRestaurantPref(
-//                                this@WidgetSettingActivity,
-//                                appWidgetId ?: AppWidgetManager.INVALID_APPWIDGET_ID,
-//                                selectedRestaurantValue,
-//                            )
                             saveRestaurantByFileKey(
                                 this@WidgetSettingActivity,
                                 "appWidget-${appWidgetId}",
@@ -89,7 +85,7 @@ class WidgetSettingActivity : ComponentActivity() {
                             MealWidget().update(this@WidgetSettingActivity, glanceId)
 
                             // MealWorker 실행
-//                            MealWorker.enqueue(this@WidgetSettingActivity)
+                            MealWorker.enqueue(this@WidgetSettingActivity)
                             
                             Timber.d("선택하기 버튼으로 저장: $selectedRestaurantValue for glanceId: $glanceId")
                         }

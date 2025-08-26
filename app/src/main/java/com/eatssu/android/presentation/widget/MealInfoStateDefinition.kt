@@ -68,12 +68,15 @@ object MealInfoStateDefinition : GlanceStateDefinition<WidgetMealInfo> {
                     "Loading" -> WidgetMealInfo.Loading
                     "Unavailable" -> WidgetMealInfo.Unavailable
                     "Available" -> {
-                        val mealTime = obj.get("mealTime").asString
                         val mealListType = object : TypeToken<List<List<String>>>() {}.type
-                        val mealList =
-                            gson.fromJson<List<List<String>>>(obj.get("mealList"), mealListType)
+                        val breakfast =
+                            gson.fromJson<List<List<String>>>(obj.get("breakfast"), mealListType)
+                        val lunch =
+                            gson.fromJson<List<List<String>>>(obj.get("lunch"), mealListType)
+                        val dinner =
+                            gson.fromJson<List<List<String>>>(obj.get("dinner"), mealListType)
                         val restaurant = Restaurant.valueOf(obj.get("restaurant").asString)
-                        WidgetMealInfo.Available(mealTime, mealList, restaurant)
+                        WidgetMealInfo.Available(breakfast, lunch, dinner, restaurant)
                     }
 
                     else -> defaultValue
@@ -91,8 +94,9 @@ object MealInfoStateDefinition : GlanceStateDefinition<WidgetMealInfo> {
                 is WidgetMealInfo.Unavailable -> obj.addProperty("type", "Unavailable")
                 is WidgetMealInfo.Available -> {
                     obj.addProperty("type", "Available")
-                    obj.addProperty("mealTime", t.mealTime)
-                    obj.add("mealList", gson.toJsonTree(t.mealList))
+                    obj.add("breakfast", gson.toJsonTree(t.breakfast))
+                    obj.add("lunch", gson.toJsonTree(t.lunch))
+                    obj.add("dinner", gson.toJsonTree(t.dinner))
                     obj.addProperty("restaurant", t.restaurant.name)
                 }
             }

@@ -15,7 +15,6 @@ import androidx.work.WorkerParameters
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
 import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
-import com.eatssu.android.presentation.widget.util.MealInfoState
 import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -35,7 +34,7 @@ class MealWorker @AssistedInject constructor(
         fun enqueue(context: Context) {
             val manager = WorkManager.getInstance(context)
             val requestBuilder = PeriodicWorkRequestBuilder<MealWorker>(
-                Duration.ofMinutes(30)
+                Duration.ofMinutes(60)
             )
 
             Timber.d("Widget - enqueue")
@@ -58,14 +57,16 @@ class MealWorker @AssistedInject constructor(
                 WidgetSettingActivity.loadRestaurantByFileKey(context, "appWidget-${appWidgetId}")
             Timber.d("MealWorker: glanceId=$glanceId, appWidgetId=$appWidgetId, restaurant=$restaurant")
             if (restaurant != null) {
-                setWidgetState(
-                    glanceId = glanceId,
-                    newState = WidgetDataDisplayManager.fetchMealInfo(
-                        getMealsUseCase = getMealsUseCase,
-                        requestedMealTime = WidgetDataDisplayManager.getCurrentMealTime(),
-                        restaurant = restaurant
-                    ).toMealInfo()
+                // 저장된 식당 정보가 있으면 3개 식사 시간의 메뉴를 모두 가져와서 위젯 상태 업데이트
+                val currentMealTime = WidgetDataDisplayManager.getCurrentMealTime()
+                val newState = WidgetDataDisplayManager.fetchMealInfo(
+                    getMealsUseCase = getMealsUseCase,
+                    requestedMealTime = currentMealTime,
+                    restaurant = restaurant
                 )
+
+                setWidgetState(glanceId = glanceId, newState = newState)
+                Timber.d("MealWorker: 위젯 상태 업데이트 완료 - 식당: ${restaurant.name}, 시간: $currentMealTime")
             } else {
                 Timber.w("No restaurant saved for glanceId: $glanceId, skipping widget update")
             }
@@ -78,7 +79,6 @@ class MealWorker @AssistedInject constructor(
     }
 
     private suspend fun setWidgetState(glanceId: GlanceId, newState: WidgetMealInfo) {
-        val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(glanceId)
         updateAppWidgetState(
             context = context,
             definition = MealInfoStateDefinition,
@@ -86,11 +86,5 @@ class MealWorker @AssistedInject constructor(
             updateState = { newState }
         )
         MealWidget().update(context, glanceId)
-    }
-
-    private fun MealInfoState.toMealInfo(): WidgetMealInfo = when (this) {
-        is MealInfoState.Available -> WidgetMealInfo.Available(mealTime, mealList, restaurant)
-        is MealInfoState.Unavailable -> WidgetMealInfo.Unavailable
-        is MealInfoState.Loading -> WidgetMealInfo.Loading
     }
 }
