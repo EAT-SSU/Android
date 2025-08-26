@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,11 +20,10 @@ import com.eatssu.design_system.component.EatSsuRadioButtonGroup
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WidgetSettingScreen(
     modifier: Modifier = Modifier,
-    restaurantOptions: List<String>,
+    restaurantOptionList: List<String>,
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
     onConfirm: (String) -> Unit = {},
@@ -53,7 +51,7 @@ fun WidgetSettingScreen(
                 )
 
                 EatSsuRadioButtonGroup(
-                    options = restaurantOptions,
+                    options = restaurantOptionList,
                     selectedOption = selectedRestaurant,
                     onOptionSelected = { onSelectRestaurant(it) }
                 )
@@ -78,11 +76,11 @@ fun WidgetSettingScreen(
 @Composable
 fun PreviewWidgetSettingScreen() {
     EatssuTheme {
-        val restaurantOptions = listOf("학생 식당", "도담 식당", "기숙사 식당")
-        var selectedRestaurant by remember { mutableStateOf(restaurantOptions[0]) }
+        val restaurantOptionList = listOf("학생 식당", "도담 식당", "기숙사 식당")
+        var selectedRestaurant by remember { mutableStateOf(restaurantOptionList[0]) }
 
         WidgetSettingScreen(
-            restaurantOptions = restaurantOptions,
+            restaurantOptionList = restaurantOptionList,
             selectedRestaurant = selectedRestaurant,
             onSelectRestaurant = { selectedRestaurant = it },
             onBack = {}

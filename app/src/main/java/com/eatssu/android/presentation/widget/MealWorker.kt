@@ -53,21 +53,32 @@ class MealWorker @AssistedInject constructor(
         val glanceIds = manager.getGlanceIds(MealWidget::class.java)
         glanceIds.forEach { glanceId ->
             val appWidgetId = manager.getAppWidgetId(glanceId)
-            val restaurant = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
-            setWidgetState(
-                glanceId = glanceId,
-                newState = WidgetDataDisplayManager.fetchMealInfo(
-                    getMealsUseCase = getMealsUseCase,
-                    requestedMealTime = WidgetDataDisplayManager.getCurrentMealTime(),
-                    restaurant = restaurant
-                ).toMealInfo()
-            )
+            // glanceId를 사용하여 정확한 식당 정보 가져오기
+            val restaurant =
+                WidgetSettingActivity.loadRestaurantByFileKey(context, "appWidget-${appWidgetId}")
+            Timber.d("MealWorker: glanceId=$glanceId, appWidgetId=$appWidgetId, restaurant=$restaurant")
+            if (restaurant != null) {
+                setWidgetState(
+                    glanceId = glanceId,
+                    newState = WidgetDataDisplayManager.fetchMealInfo(
+                        getMealsUseCase = getMealsUseCase,
+                        requestedMealTime = WidgetDataDisplayManager.getCurrentMealTime(),
+                        restaurant = restaurant
+                    ).toMealInfo()
+                )
+            } else {
+                Timber.w("No restaurant saved for glanceId: $glanceId, skipping widget update")
+            }
         }
+
+        // 캐시 상태 로그 출력
+        WidgetCacheManager.logCacheStatus()
         Timber.d("Widget - 워커는 doWork")
         return Result.success()
     }
 
     private suspend fun setWidgetState(glanceId: GlanceId, newState: WidgetMealInfo) {
+        val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(glanceId)
         updateAppWidgetState(
             context = context,
             definition = MealInfoStateDefinition,

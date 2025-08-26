@@ -3,9 +3,11 @@ package com.eatssu.android.presentation.widget.util
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
 import com.eatssu.android.domain.usecase.meal.MealState
 import com.eatssu.android.presentation.util.CalendarUtil
+import com.eatssu.android.presentation.widget.WidgetCacheManager
 import timber.log.Timber
 import java.time.LocalTime
 
@@ -41,6 +43,22 @@ object WidgetDataDisplayManager {
     ): MealInfoState {
         Timber.d("Widget - fetchMealInfo")
         val targetDate = CalendarUtil.convertMillisToDateString(System.currentTimeMillis())
+
+        // 캐시에서 데이터 확인
+        val cachedMealInfo = WidgetCacheManager.getCachedMealData(restaurant, targetDate)
+        if (cachedMealInfo != null) {
+            return when (cachedMealInfo) {
+                is WidgetMealInfo.Available -> MealInfoState.Available(
+                    cachedMealInfo.mealTime,
+                    cachedMealInfo.mealList,
+                    cachedMealInfo.restaurant
+                )
+
+                WidgetMealInfo.Loading -> MealInfoState.Loading
+                WidgetMealInfo.Unavailable -> MealInfoState.Unavailable
+            }
+        }
+        
         val response = getMealsUseCase(targetDate, restaurant.name)
         Timber.d("Widget - fetchMealInfo $response")
 
@@ -59,11 +77,24 @@ object WidgetDataDisplayManager {
 
                     val menuGroups = currentMeal.first
                     if (menuGroups.flatten().isNotEmpty()) {
-                        return MealInfoState.Available(
+                        val mealInfo = MealInfoState.Available(
                             convertTimeToString(currentMealTime),
                             menuGroups,
                             restaurant
                         )
+
+                        // 캐시에 저장
+                        WidgetCacheManager.cacheMealData(
+                            restaurant,
+                            WidgetMealInfo.Available(
+                                mealInfo.mealTime,
+                                mealInfo.mealList,
+                                mealInfo.restaurant
+                            ),
+                            targetDate
+                        )
+
+                        return mealInfo
                     }
                 }
             }
@@ -86,22 +117,48 @@ object WidgetDataDisplayManager {
 
                     val menuGroups = currentMeal.first
                     if (menuGroups.flatten().isNotEmpty()) {
-                        return MealInfoState.Available(
+                        val mealInfo = MealInfoState.Available(
                             convertTimeToString(currentMealTime),
                             menuGroups,
                             restaurant
                         )
+
+                        // 캐시에 저장
+                        WidgetCacheManager.cacheMealData(
+                            restaurant,
+                            WidgetMealInfo.Available(
+                                mealInfo.mealTime,
+                                mealInfo.mealList,
+                                mealInfo.restaurant
+                            ),
+                            targetDate
+                        )
+
+                        return mealInfo
                     }
                 }
             }
         }
 
         // 요청된 시간대부터 이후의 모든 시간대의 급식이 비어있는 경우
-        return MealInfoState.Available(
+        val emptyMealInfo = MealInfoState.Available(
             mealTime = convertTimeToString(requestedMealTime),
             mealList = emptyList(),
             restaurant = restaurant
         )
+
+        // 캐시에 저장
+        WidgetCacheManager.cacheMealData(
+            restaurant,
+            WidgetMealInfo.Available(
+                emptyMealInfo.mealTime,
+                emptyMealInfo.mealList,
+                emptyMealInfo.restaurant
+            ),
+            targetDate
+        )
+
+        return emptyMealInfo
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
