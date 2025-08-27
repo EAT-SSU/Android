@@ -4,35 +4,35 @@ import com.google.gson.annotations.SerializedName
 
 data class PartnershipResponse(
     @SerializedName("storeName")
-    val storeName: String,
+    val storeName: String?,
     @SerializedName("longitude")
-    val longitude: Double,
+    val longitude: Double?,
     @SerializedName("latitude")
-    val latitude: Double,
+    val latitude: Double?,
     @SerializedName("restaurantType")
-    val restaurantType: String,
+    val restaurantType: String?,
     @SerializedName("partnershipInfos")
     val partnershipInfos: List<PartnershipInfo>
 ){
     data class PartnershipInfo(
         @SerializedName("id")
-        val id: Int,
+        val id: Int?,
         @SerializedName("partnershipType")
-        val partnershipType: String,
+        val partnershipType: String?,
         @SerializedName("collegeName")
         val collegeName: String?,
         @SerializedName("departmentName")
         val departmentName: String?,
         @SerializedName("likeCount")
-        val likeCount: Int,
+        val likeCount: Int?,
         @SerializedName("isLiked")
-        val isLiked: Boolean,
+        val isLiked: Boolean?,
         @SerializedName("description")
-        val description: String,
+        val description: String?,
         @SerializedName("startDate")
-        val startDate: String,
+        val startDate: String?,
         @SerializedName("endDate")
-        val endDate: String
+        val endDate: String?
     )
 }
 

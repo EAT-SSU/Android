@@ -40,21 +40,21 @@ class PartnershipRepositoryImpl @Inject constructor(
 
 fun PartnershipResponse.toDomain(): Partnership =
     Partnership(
-        storeName = storeName,
-        longitude = longitude,
-        latitude = latitude,
-        restaurantType = restaurantType,
+        storeName = storeName ?: "",
+        longitude = longitude ?: 126.95661313346206,
+        latitude = latitude ?: 37.49517278813046,
+        restaurantType = restaurantType ?: "",
         partnershipInfos = partnershipInfos.map {
             Partnership.PartnershipInfo(
-                id = it.id,
-                partnershipType = it.partnershipType,
+                id = it.id ?: -1,
+                partnershipType = it.partnershipType ?: "",
                 collegeName = it.collegeName ?: "",
                 departmentName = it.departmentName ?: "",
-                likeCount = it.likeCount,
-                isLiked = it.isLiked,
-                description = it.description,
-                startDate = it.startDate,
-                endDate = it.endDate
+                likeCount = it.likeCount ?: 0,
+                isLiked = it.isLiked ?: false,
+                description = it.description ?: "",
+                startDate = it.startDate ?: "",
+                endDate = it.endDate ?: ""
             )
         }
     )
