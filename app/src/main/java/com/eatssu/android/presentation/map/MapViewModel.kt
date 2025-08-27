@@ -20,7 +20,7 @@ data class MapState(
     val showPartnershipBottomSheet: Boolean = false,
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
-    val restaurantInfos: List<RestaurantInfo> = emptyList(),
+    val restaurantInfoList: List<RestaurantInfo> = emptyList(),
     var partnershipToggleText: String = "내 제휴"
 )
 
@@ -79,7 +79,7 @@ class MapViewModel @Inject constructor(
                     description = info.description,
                     startDate = info.startDate,
                     endDate = info.endDate,
-                    restaurantType = partnership.restaurantType,
+                    restaurantType = partnership.restaurantType ,
                     longitude = partnership.longitude,
                     latitude = partnership.latitude,
                     collegeName = info.collegeName,
@@ -101,7 +101,7 @@ class MapViewModel @Inject constructor(
                     state.copy(
                         showPartnershipBottomSheet = true,
                         restaurantPartnershipInfo = restaurant,
-                        restaurantInfos = restaurantInfos
+                        restaurantInfoList = restaurantInfos
                     )
                 }
             }

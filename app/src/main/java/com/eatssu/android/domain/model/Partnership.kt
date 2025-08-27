@@ -4,7 +4,7 @@ data class Partnership(
     val storeName: String,
     val longitude: Double,
     val latitude: Double,
-    val restaurantType: String,
+    val restaurantType: RestaurantType,
     val partnershipInfos: List<PartnershipInfo>
 ) {
     data class PartnershipInfo(
