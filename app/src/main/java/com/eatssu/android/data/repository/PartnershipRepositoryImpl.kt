@@ -1,7 +1,6 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.data.dto.response.PartnershipResponse
-import com.eatssu.android.data.dto.response.PartnershipRestaurantResponse
+import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.PartnershipService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.domain.model.Partnership
@@ -34,44 +33,4 @@ class PartnershipRepositoryImpl @Inject constructor(
             .result
             ?.map { it.toDomain() } ?: emptyList()
     }
-
-
 }
-
-fun PartnershipResponse.toDomain(): Partnership =
-    Partnership(
-        storeName = storeName ?: "",
-        longitude = longitude ?: 126.95661313346206,
-        latitude = latitude ?: 37.49517278813046,
-        restaurantType = restaurantType ?: "",
-        partnershipInfos = partnershipInfos.map {
-            Partnership.PartnershipInfo(
-                id = it.id ?: -1,
-                partnershipType = it.partnershipType ?: "",
-                collegeName = it.collegeName ?: "",
-                departmentName = it.departmentName ?: "",
-                likeCount = it.likeCount ?: 0,
-                isLiked = it.isLiked ?: false,
-                description = it.description ?: "",
-                startDate = it.startDate ?: "",
-                endDate = it.endDate ?: ""
-            )
-        }
-    )
-
-fun PartnershipRestaurantResponse.toDomain(): PartnershipRestaurant =
-    PartnershipRestaurant(
-        id = id,
-        partnershipType = partnershipType,
-        storeName = storeName,
-        description = description,
-        startDate = startDate,
-        endDate = endDate,
-        restaurantType = restaurantType,
-        longitude = longitude,
-        latitude = latitude,
-        collegeName = collegeName,
-        departmentName = departmentName ?: "",
-        partnershipLikeCount = partnershipLikeCount,
-        likedByUser = likedByUser
-    )

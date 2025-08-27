@@ -1,5 +1,6 @@
 package com.eatssu.android.data.dto.response
 
+import com.eatssu.android.domain.model.Partnership
 import com.google.gson.annotations.SerializedName
 
 data class PartnershipResponse(
@@ -36,3 +37,23 @@ data class PartnershipResponse(
     )
 }
 
+fun PartnershipResponse.toDomain(): Partnership =
+    Partnership(
+        storeName = storeName ?: "",
+        longitude = longitude ?: 126.95661313346206,
+        latitude = latitude ?: 37.49517278813046,
+        restaurantType = restaurantType ?: "",
+        partnershipInfos = partnershipInfos.map {
+            Partnership.PartnershipInfo(
+                id = it.id ?: -1,
+                partnershipType = it.partnershipType ?: "",
+                collegeName = it.collegeName ?: "",
+                departmentName = it.departmentName ?: "",
+                likeCount = it.likeCount ?: 0,
+                isLiked = it.isLiked ?: false,
+                description = it.description ?: "",
+                startDate = it.startDate ?: "",
+                endDate = it.endDate ?: ""
+            )
+        }
+    )
