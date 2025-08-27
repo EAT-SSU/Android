@@ -188,14 +188,14 @@ data class UserNameChangeState(
     var toastMessage: String = "",
 
     var nickname: String = "",
-    var selectedCollege: College = College(),
+    var selectedCollege: College = College(collegeId = -1, collegeName = "단과대"),
     var selectedDepartment: Department = Department(),
 
     var isEnableName: Boolean = false,
     var isDone: Boolean = false,
 
     var originalNickname: String = "",
-    var originalCollege: College = College(),
+    var originalCollege: College = College(collegeId = -1, collegeName = "단과대"),
     var originalDepartment: Department = Department(),
 
     var isNicknameChanged: Boolean = false,

@@ -53,8 +53,7 @@ interface UserService {
         @Body departmentId: UserDepartmentRequest,
     ): BaseResponse<Void>
 
-    // 유저 학과의 제휴 조회
-    @GET("users/department/partnerships")
+    @GET("users/department/partnerships")    // 유저 학과의 제휴 조회
     suspend fun getUserDepartmentPartnerships(): BaseResponse<List<PartnershipResponse>>
 
 }
