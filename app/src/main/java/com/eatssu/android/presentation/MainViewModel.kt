@@ -1,7 +1,6 @@
 package com.eatssu.android.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,14 +10,14 @@ import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -31,8 +30,11 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
-    val uiState: StateFlow<MainState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
+    val uiState: StateFlow<UiState<MainState>> = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
 //    init {
 //        checkNameNull()
@@ -41,38 +43,31 @@ class MainViewModel @Inject constructor(
     fun checkNameNull() {
         viewModelScope.launch {
             getUserInfoUseCase().onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
+                _uiState.value = UiState.Loading
             }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        error = true,
-                        toastMessage = context.getString(R.string.not_found)
-                    )
-                }
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.not_found)))
                 Timber.e(e.toString())
             }.collectLatest { result ->
                 Timber.d(result.toString())
                 result.result?.apply {
-                    if (this.nickname.isNullOrBlank()) {
-                        _uiState.update {
-                            it.copy(
-                                isNicknameNull = true,
-                                toastMessage = context.getString(R.string.set_nickname)
-                            )
-                        }
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                isNicknameNull = false,
-                                toastMessage = String.format(
-                                    context.getString(R.string.hello_user),
-                                    this.nickname
-                                )
-                            )
-                        }
+                    val nickname = this.nickname
+
+                    if (nickname.isNullOrBlank()) {
+                        _uiState.value = UiState.Success(MainState.NicknameNull)
+                        _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
+                        return@apply
                     }
+
+                    _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            String.format(
+                                context.getString(R.string.hello_user),
+                                nickname
+                            )
+                        )
+                    )
                 }
             }
         }
@@ -82,12 +77,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             logoutUseCase() //Todo 반환값이 쓰이는게 아니면 이렇게 해도 되나?
 
-            _uiState.update {
-                it.copy(
-                    toastMessage = context.getString(R.string.logout_description),
-                    isLoggedOut = true
-                )
-            }
+            _uiState.value = UiState.Success(MainState.LoggedOut)
+            _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.logout_description)))
         }
     }
 
@@ -106,10 +97,8 @@ class MainViewModel @Inject constructor(
 }
 
 
-data class MainState(
-    var loading: Boolean = true,
-    var error: Boolean = false,
-    var toastMessage: String = "",
-    var isNicknameNull: Boolean = false,
-    var isLoggedOut: Boolean = false,
-)
+sealed class MainState {
+    object NicknameNull : MainState()
+    data class NicknameExists(val nickname: String) : MainState()
+    object LoggedOut : MainState()
+}

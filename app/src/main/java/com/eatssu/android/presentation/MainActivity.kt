@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.MenuItem
-import android.view.View
 import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate){
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
@@ -49,6 +48,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         checkNicknameIsNull()
 
         collectLogoutState()
+        collectUiEvents()
     }
 
     private fun setNavigation() {
@@ -142,14 +142,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         mainViewModel.checkNameNull()
 
         lifecycleScope.launch {
-            mainViewModel.uiState.collectLatest {
-                if (it.isNicknameNull) {
+            mainViewModel.uiState.collectLatest { state ->
+                if (state is UiState.Success && state.data is MainState.NicknameNull) {
                     //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
                     intent.putExtra("force", true)
                     startActivity<UserNameChangeActivity>()
-                    showToast(it.toastMessage)
-                } else {
-                    showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸
                 }
             }
         }
@@ -159,10 +156,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private fun collectLogoutState() {
         lifecycleScope.launch {
             mainViewModel.uiState.collectLatest { state ->
-                if (state.isLoggedOut) {
-                    showToast(state.toastMessage)
+                if (state is UiState.Success && state.data is MainState.LoggedOut) {
                     startActivity<LoginActivity>()
                     finishAffinity()
+                }
+            }
+        }
+    }
+
+    // UiEvent 처리
+    private fun collectUiEvents() {
+        lifecycleScope.launch {
+            mainViewModel.uiEvent.collectLatest { event ->
+                if (event is UiEvent.ShowToast) {
+                    showToast(event.message)
                 }
             }
         }
