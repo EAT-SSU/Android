@@ -1,6 +1,7 @@
 package com.eatssu.android.data.dto.response
 
 import com.eatssu.android.domain.model.PartnershipRestaurant
+import com.eatssu.android.domain.model.RestaurantType
 import com.google.gson.annotations.SerializedName
 
 data class PartnershipRestaurantResponse(
@@ -40,7 +41,14 @@ fun PartnershipRestaurantResponse.toDomain(): PartnershipRestaurant =
         description = description ?: "",
         startDate = startDate ?: "",
         endDate = endDate ?: "",
-        restaurantType = restaurantType ?: "",
+        restaurantType = restaurantType ?.let {
+            when (it) {
+                "CAFE" -> RestaurantType.CAFE
+                "RESTAURANT" -> RestaurantType.RESTAURANT
+                "ALCOHOL" -> RestaurantType.ALCOHOL
+                else -> RestaurantType.RESTAURANT
+            }
+        } ?: RestaurantType.RESTAURANT,
         longitude = longitude ?: 126.95661313346206,
         latitude = latitude ?: 37.49517278813046,
         collegeName = collegeName ?: "",
