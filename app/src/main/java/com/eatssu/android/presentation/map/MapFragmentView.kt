@@ -208,9 +208,9 @@ fun MapFragmentComposeView(
                     Marker(
                         icon = OverlayImage.fromResource(
                             when (partnership.restaurantType) {
-                                stringResource(R.string.cafe) -> R.drawable.ic_map_marker_cafe
-                                stringResource(R.string.restaurant) -> R.drawable.ic_map_marker_restaurant
-                                stringResource(R.string.alcohol) -> R.drawable.ic_map_marker_alcohol
+                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
+                                RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
+                                RestaurantType.ALCOHOL -> R.drawable.ic_map_marker_alcohol
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
                         ),
