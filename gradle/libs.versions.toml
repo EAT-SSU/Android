@@ -7,6 +7,7 @@ androidx-appcompat = "1.6.1"
 animation = "1.7.8"
 composeBomVersion = "2025.03.00"
 composeThemeAdapter = "1.2.1"
+desugar_jdk_libs = "2.1.5"
 lifecycleRuntimeKtx = "2.5.2"
 lifecycleViewmodelCompose = "2.8.7"
 material = "1.8.0"
@@ -65,6 +66,7 @@ androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref =
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
 compose-theme-adapter = { module = "com.google.android.material:compose-theme-adapter", version.ref = "composeThemeAdapter" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }

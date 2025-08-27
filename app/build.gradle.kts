@@ -76,6 +76,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -185,6 +186,9 @@ dependencies {
     // navigation
     implementation ("androidx.navigation:navigation-fragment:2.8.9")
     implementation ("androidx.navigation:navigation-ui:2.8.9")
+
+    // Android 8.0 미만 버전 대응
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 
 kapt {
