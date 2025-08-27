@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.compose.ui.theme.*
 import com.eatssu.android.presentation.map.component.FilterType
@@ -159,9 +160,9 @@ fun MapFragmentComposeView(
                 MapRestaurantBottomSheet(
                     storeName = info.storeName,
                     placeType = when (info.restaurantType) {
-                        stringResource(R.string.cafe) -> PlaceType.CAFE
-                        stringResource(R.string.restaurant) -> PlaceType.RESTAURANT
-                        stringResource(R.string.alcohol) -> PlaceType.Alcohol
+                        RestaurantType.CAFE -> PlaceType.CAFE
+                        RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
+                        RestaurantType.ALCOHOL -> PlaceType.Alcohol
                         else -> PlaceType.RESTAURANT
                     },
                     mapRestaurantList = uiState.restaurantInfos,
