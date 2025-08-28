@@ -11,7 +11,6 @@ import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
@@ -124,7 +123,7 @@ class UserInfoActivity :
 
             if (currentState.isNicknameChanged) {
                 // 닉네임 변경이 있는 경우 서버에 전체 정보 저장
-                userInfoViewModel.changeUserInfo()
+                userInfoViewModel.changeUserNickname()
 
                 lifecycleScope.launch {
                     userInfoViewModel.uiState.collectLatest {

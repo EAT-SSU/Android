@@ -1,16 +1,14 @@
 package com.eatssu.android.presentation.mypage.userinfo
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
-import com.eatssu.android.domain.model.UserInfo
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
-import com.eatssu.android.domain.usecase.user.SetUserInfoUseCase
+import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
 import com.eatssu.android.domain.usecase.user.ValidateUserNameUseCase
 import com.eatssu.android.domain.repository.UserRepository
+import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,11 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserInfoViewModel @Inject constructor(
-    private val setUserInfoUseCase: SetUserInfoUseCase,
+    private val setUserNicknameUseCase: SetUserNicknameUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val validateUserNameUseCase: ValidateUserNameUseCase,
     private val userRepository: UserRepository,
-    private val context: Context, // TODO 지우자 지우자
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UserNameChangeState> =
@@ -91,13 +89,11 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun changeUserInfo() {
+    fun changeUserNickname() {
         val nickname = _uiState.value.nickname
-        val college = _uiState.value.selectedCollege
-        val department = _uiState.value.selectedDepartment
 
         viewModelScope.launch {
-            setUserInfoUseCase(UserInfo(nickname, department, college))
+            setUserNicknameUseCase(nickname)
                 .onStart { _uiState.update { it.copy(loading = true, error = false) } }
                 .onCompletion { _uiState.update { it.copy(loading = false, error = false) } }
                 .catch {
@@ -107,6 +103,26 @@ class UserInfoViewModel @Inject constructor(
                 .collectLatest {
                     _uiState.update { it.copy(isDone = true, toastMessage = "정보가 성공적으로 저장되었습니다.") }
                 }
+        }
+    }
+
+    fun updateUserDepartment(){
+        viewModelScope.launch {
+            runCatching {
+                userRepository.setUserDepartment(_uiState.value.selectedDepartment.departmentId)
+            }.onSuccess {
+                Timber.d("학과 정보 업데이트 성공")
+                _uiState.update{ it.copy(success = true) }
+
+                val department = _uiState.value.selectedDepartment
+                val college = _uiState.value.selectedCollege
+
+                setUserCollegeDepartmentUseCase(college, department)
+
+            }.onFailure { e ->
+                Timber.e(e, "학과 정보 업데이트 실패")
+                _uiState.update { it.copy(error = true, toastMessage = "학과 정보 업데이트에 실패했습니다.") }
+            }
         }
     }
 
@@ -131,23 +147,6 @@ class UserInfoViewModel @Inject constructor(
             val changed = department != it.originalDepartment
 
             it.copy(selectedDepartment = department, isDepartmentChanged = changed)
-        }
-    }
-
-    fun updateUserDepartment(){
-        viewModelScope.launch {
-            runCatching {
-                userRepository.setUserDepartment(_uiState.value.selectedDepartment.departmentId)
-            }.onSuccess {
-                Timber.d("학과 정보 업데이트 성공")
-                _uiState.update{ it.copy(success = true) }
-                MySharedPreferences.setUserDepartment(context, _uiState.value.selectedDepartment)
-                val college = _uiState.value.selectedCollege
-                MySharedPreferences.setUserCollege(context, college)
-            }.onFailure { e ->
-                Timber.e(e, "학과 정보 업데이트 실패")
-                _uiState.update { it.copy(error = true, toastMessage = "학과 정보 업데이트에 실패했습니다.") }
-            }
         }
     }
 

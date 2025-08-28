@@ -22,16 +22,14 @@ import javax.inject.Inject
 //    }
 //}
 
-class SetUserInfoUseCase @Inject constructor(
+class SetUserNicknameUseCase @Inject constructor(
     private val userRepository: UserRepository,
     @ApplicationContext private val context: Context
 ) {
-    suspend operator fun invoke(info: UserInfo): Flow<BaseResponse<Void>> {
+    suspend operator fun invoke(nickname: String): Flow<BaseResponse<Void>> {
         // 로컬 저장
-        MySharedPreferences.setUserName(context, info.nickname)
-        MySharedPreferences.setUserCollege(context, info.userCollege)
-        MySharedPreferences.setUserDepartment(context, info.userDepartment)
+        MySharedPreferences.setUserName(context, nickname)
 
-        return userRepository.updateUserName(ChangeNicknameRequest(info.nickname))
+        return userRepository.updateUserName(ChangeNicknameRequest(nickname))
     }
 }
