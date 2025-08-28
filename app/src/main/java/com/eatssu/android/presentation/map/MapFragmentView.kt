@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +25,8 @@ import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.compose.ui.theme.*
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
@@ -38,6 +39,7 @@ import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.*
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -53,6 +55,13 @@ fun MapFragmentComposeView(
     mainViewModel: MainViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // UiState에서 Success 상태인 실제 MapState 데이터만 추출
+    val mapState: MapState = when (val s = uiState) {
+        is UiState.Success -> s.data ?: MapState()
+        else -> MapState()
+    }
+
     val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
@@ -80,6 +89,14 @@ fun MapFragmentComposeView(
         val granted = permissions.values.all { it }
         if (!granted) {
             Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -155,8 +172,8 @@ fun MapFragmentComposeView(
         }
 
         // 특정 식당에 대한 제휴 정보 BottomSheet
-        if (uiState.showPartnershipBottomSheet) {
-            uiState.restaurantPartnershipInfo?.let { info ->
+        if (mapState.showPartnershipBottomSheet) {
+            mapState.restaurantPartnershipInfo?.let { info ->
                 MapRestaurantBottomSheet(
                     storeName = info.storeName,
                     placeType = when (info.restaurantType) {
@@ -165,7 +182,7 @@ fun MapFragmentComposeView(
                         RestaurantType.ALCOHOL -> PlaceType.Alcohol
                         else -> PlaceType.RESTAURANT
                     },
-                    mapRestaurantList = uiState.restaurantInfoList,
+                    mapRestaurantList = mapState.restaurantInfoList,
                     onDismiss = { viewModel.togglePartnershipBottomSheet() }
                 )
             }
@@ -202,7 +219,7 @@ fun MapFragmentComposeView(
                     }
                 }
             ) {
-                uiState.partnerships.forEach { partnership ->
+                mapState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
 
                     Marker(
@@ -242,7 +259,7 @@ fun MapFragmentComposeView(
             PartnershipFilterToggle(
                 selected = selectedFilter,
                 onSelectedChange = { next ->
-                    if (uiState.showPartnershipBottomSheet) return@PartnershipFilterToggle
+                    if (mapState.showPartnershipBottomSheet) return@PartnershipFilterToggle
 
                     val hasDepartment = !mainUiState.departmentName.equals("학과")
 
