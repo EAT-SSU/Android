@@ -65,7 +65,7 @@ class UserInfoViewModel @Inject constructor(
             validateUserNameUseCase(inputNickname).onStart {
                 _uiState.update { it.copy(loading = true) }
             }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
+                _uiState.update { it.copy(loading = false) }
             }.catch { e ->
                 _uiState.update { it.copy(error = true, toastMessage = "닉네임 중복 확인에 실패했습니다.") }
                 Timber.e(e.toString())

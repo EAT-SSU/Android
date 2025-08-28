@@ -1,16 +1,14 @@
 package com.eatssu.android.presentation
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,8 +26,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
+    private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val userRepository: UserRepository,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
@@ -116,10 +114,7 @@ class MainViewModel @Inject constructor(
                 Timber.d("userCollege: ${it.first}")
                 Timber.d("userDepartment: ${it.second}")
 
-                // 단과대 추론
-                // TODO ViewModel이 MySharedPreferences를 직접 다루면 저장소 계층(LocalDataSource)와 UI 계층이 강하게 결합. repository를 통해 처리하는게 좋음
-                MySharedPreferences.setUserCollege(context,college)
-                MySharedPreferences.setUserDepartment(context, department)
+                setUserCollegeDepartmentUseCase(college, department)
 
                 if (college.collegeName.isBlank() || department.departmentName.isBlank()) {
                     _uiState.update {
@@ -134,13 +129,6 @@ class MainViewModel @Inject constructor(
                         departmentName = department.departmentName,
                     )
                 }
-
-                // 뷰모델이랑 도메인에서 context를 알고 있는 것도 아니고..
-                // MySharedPreferences을 직접적으로 사용하는 것도 아닌데 지금 다 이렇게 되어있음
-                // 지금은 어쩔수없는데 MySharedPreferences 가서 TODO 봐주세요
-
-                // 학과 정보 불러온 뒤 학과가 포함된 단과대 정보 가져오기
-
             }.onFailure { it ->
                 Timber.e("getUserDepartment failed: ${it.message}")
                 _uiState.update {
