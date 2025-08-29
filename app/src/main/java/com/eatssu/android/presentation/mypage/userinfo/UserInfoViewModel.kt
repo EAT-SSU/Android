@@ -38,7 +38,7 @@ class UserInfoViewModel @Inject constructor(
     init{
         loadUserInfo()
         loadCollegeList()
-        loadDepartmentList(_uiState.value.selectedDepartment.departmentId)
+        loadDepartmentList(_uiState.value.selectedCollege.collegeId)
     }
 
     fun loadUserInfo() {
