@@ -37,6 +37,7 @@ class UserInfoViewModel @Inject constructor(
 
     init{
         loadUserInfo()
+        loadColleges()
     }
 
     fun loadUserInfo() {
@@ -138,7 +139,7 @@ class UserInfoViewModel @Inject constructor(
         _uiState.update {
             val changed = college != it.originalCollege
 
-            it.copy(selectedCollege = college, isDepartmentChanged = changed)
+            it.copy(selectedCollege = college, isCollegeChanged = changed)
         }
     }
 
@@ -155,7 +156,7 @@ class UserInfoViewModel @Inject constructor(
             runCatching {
                 userRepository.getTotalColleges()
             }.onSuccess { colleges ->
-                _uiState.update { it.copy(colleges = colleges) } // 그대로 저장
+                _uiState.update { it.copy(colleges = colleges) }
             }.onFailure { e ->
                 Timber.e(e, "단과대 불러오기 실패")
             }
@@ -198,6 +199,7 @@ data class UserNameChangeState(
     var originalDepartment: Department = Department(departmentId = -1, departmentName = "학과"),
 
     var isNicknameChanged: Boolean = false,
+    var isCollegeChanged: Boolean = false,
     var isDepartmentChanged: Boolean = false,
 
     var colleges: List<College> = emptyList(),
