@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
+import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
@@ -30,7 +31,8 @@ data class MapState(
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val partnershipRepository: PartnershipRepository
+    private val partnershipRepository: PartnershipRepository,
+    private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -84,46 +86,23 @@ class MapViewModel @Inject constructor(
         if (current !is UiState.Success) return
         val data = current.data ?: return
 
-        val matched = data.partnerships.find { it.storeName == storeName } ?: return
+        val restaurant = getPartnershipDetailUseCase(data.partnerships, storeName, partnershipId)
+            ?: return
 
-        val targetInfo = partnershipId?.let { id ->
-            matched.partnershipInfos.find { it.id == id }
-        } ?: matched.partnershipInfos.firstOrNull()
+        val restaurantInfo = RestaurantInfo(
+            collegeName = restaurant.collegeName,
+            departmentName = restaurant.departmentName,
+            period = "${restaurant.startDate} ~ ${restaurant.endDate}",
+            benefit = restaurant.description
+        )
 
-        targetInfo?.let { info ->
-            val restaurant = PartnershipRestaurant(
-                id = info.id,
-                partnershipType = info.partnershipType,
-                storeName = matched.storeName,
-                description = info.description,
-                startDate = info.startDate,
-                endDate = info.endDate,
-                restaurantType = matched.restaurantType,
-                longitude = matched.longitude,
-                latitude = matched.latitude,
-                collegeName = info.collegeName,
-                departmentName = info.departmentName,
-                partnershipLikeCount = info.likeCount,
-                likedByUser = info.isLiked
+        _uiState.value = UiState.Success(
+            data.copy(
+                showPartnershipBottomSheet = true,
+                restaurantPartnershipInfo = restaurant,
+                restaurantInfoList = listOf(restaurantInfo)
             )
-
-            val restaurantInfos = matched.partnershipInfos.map {
-                RestaurantInfo(
-                    collegeName = it.collegeName,
-                    departmentName = it.departmentName,
-                    period = "${it.startDate} ~ ${it.endDate}",
-                    benefit = it.description
-                )
-            }
-
-            _uiState.value = UiState.Success(
-                data.copy(
-                    showPartnershipBottomSheet = true,
-                    restaurantPartnershipInfo = restaurant,
-                    restaurantInfoList = restaurantInfos
-                )
-            )
-        }
+        )
     }
 
     // 학과 정보 입력 bottomSheet 보여주기 toggle
