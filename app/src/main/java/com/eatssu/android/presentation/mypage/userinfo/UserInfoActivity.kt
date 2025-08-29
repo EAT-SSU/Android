@@ -159,8 +159,8 @@ class UserInfoActivity :
 
             // 최신 state 사용
             val state = userInfoViewModel.uiState.value
-            if (state.colleges.isNotEmpty()) {
-                val collegeNames = state.colleges.map { it.collegeName }
+            if (state.collegeList.isNotEmpty()) {
+                val collegeNames = state.collegeList.map { it.collegeName }
                 showDropdownPopup(binding.tvCollege, collegeNames, selectedCollegeIndex) { selected, index ->
                     selectedCollegeIndex = index
                     binding.tvCollege.text = selected
@@ -168,7 +168,7 @@ class UserInfoActivity :
                     selectedDepartmentIndex = 0
                     binding.tvDepartment.text = "학과"
 
-                    val selectedCollege = state.colleges[index]
+                    val selectedCollege = state.collegeList[index]
                     userInfoViewModel.updateInputCollege(selectedCollege)
                     userInfoViewModel.loadDepartmentList(selectedCollege.collegeId)
                 }
@@ -179,16 +179,16 @@ class UserInfoActivity :
             val state = userInfoViewModel.uiState.value
 
             // 학과 리스트가 비어있다면 현재 단과대 기준으로 다시 로드
-            if (state.departments.isEmpty() && state.selectedCollege.collegeId != -1) {
+            if (state.departmentList.isEmpty() && state.selectedCollege.collegeId != -1) {
                 userInfoViewModel.loadDepartmentList(state.selectedCollege.collegeId)
             }
 
-            if (state.departments.isNotEmpty()) {
-                val departmentNames = state.departments.map { it.departmentName }
+            if (state.departmentList.isNotEmpty()) {
+                val departmentNames = state.departmentList.map { it.departmentName }
                 showDropdownPopup(binding.tvDepartment, departmentNames, selectedDepartmentIndex) { departmentName, departmentIndex ->
                     selectedDepartmentIndex = departmentIndex
                     binding.tvDepartment.text = departmentName
-                    userInfoViewModel.updateInputDepartment(state.departments[departmentIndex])
+                    userInfoViewModel.updateInputDepartment(state.departmentList[departmentIndex])
                 }
             }
         }

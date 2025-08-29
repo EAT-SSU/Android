@@ -38,6 +38,7 @@ class UserInfoViewModel @Inject constructor(
     init{
         loadUserInfo()
         loadCollegeList()
+        loadDepartmentList(_uiState.value.selectedDepartment.departmentId)
     }
 
     fun loadUserInfo() {
@@ -156,7 +157,7 @@ class UserInfoViewModel @Inject constructor(
             runCatching {
                 userRepository.getTotalColleges()
             }.onSuccess { colleges ->
-                _uiState.update { it.copy(colleges = colleges) }
+                _uiState.update { it.copy(collegeList = colleges) }
             }.onFailure { e ->
                 Timber.e(e, "단과대 불러오기 실패")
             }
@@ -168,7 +169,7 @@ class UserInfoViewModel @Inject constructor(
             runCatching {
                 userRepository.getTotalDepartments(collegeId)
             }.onSuccess { departments ->
-                _uiState.update { it.copy(departments = departments) }
+                _uiState.update { it.copy(departmentList = departments) }
             }.onFailure { e ->
                 Timber.e(e, "학과 불러오기 실패")
             }
@@ -202,6 +203,6 @@ data class UserNameChangeState(
     var isCollegeChanged: Boolean = false,
     var isDepartmentChanged: Boolean = false,
 
-    var colleges: List<College> = emptyList(),
-    var departments: List<Department> = emptyList(),
+    var collegeList: List<College> = emptyList(),
+    var departmentList: List<Department> = emptyList(),
 )
