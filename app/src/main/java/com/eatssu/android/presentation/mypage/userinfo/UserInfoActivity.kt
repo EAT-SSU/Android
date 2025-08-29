@@ -155,7 +155,7 @@ class UserInfoActivity :
     private fun setCollegeDepartmentClickListener() {
         binding.flCollege.setOnClickListener {
             // 단과대 목록 요청
-            userInfoViewModel.loadColleges()
+            userInfoViewModel.loadCollegeList()
 
             // 최신 state 사용
             val state = userInfoViewModel.uiState.value
@@ -170,7 +170,7 @@ class UserInfoActivity :
 
                     val selectedCollege = state.colleges[index]
                     userInfoViewModel.updateInputCollege(selectedCollege)
-                    userInfoViewModel.loadDepartments(selectedCollege.collegeId)
+                    userInfoViewModel.loadDepartmentList(selectedCollege.collegeId)
                 }
             }
         }
@@ -180,7 +180,7 @@ class UserInfoActivity :
 
             // 학과 리스트가 비어있다면 현재 단과대 기준으로 다시 로드
             if (state.departments.isEmpty() && state.selectedCollege.collegeId != -1) {
-                userInfoViewModel.loadDepartments(state.selectedCollege.collegeId)
+                userInfoViewModel.loadDepartmentList(state.selectedCollege.collegeId)
             }
 
             if (state.departments.isNotEmpty()) {

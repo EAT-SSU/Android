@@ -37,7 +37,7 @@ class UserInfoViewModel @Inject constructor(
 
     init{
         loadUserInfo()
-        loadColleges()
+        loadCollegeList()
     }
 
     fun loadUserInfo() {
@@ -151,7 +151,7 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun loadColleges() {
+    fun loadCollegeList() {
         viewModelScope.launch {
             runCatching {
                 userRepository.getTotalColleges()
@@ -163,7 +163,7 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun loadDepartments(collegeId: Int) {
+    fun loadDepartmentList(collegeId: Int) {
         viewModelScope.launch {
             runCatching {
                 userRepository.getTotalDepartments(collegeId)
