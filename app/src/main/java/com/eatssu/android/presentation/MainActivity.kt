@@ -26,7 +26,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -45,9 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         setNavigation()
 
         checkAlarmPermission()
-        checkNicknameIsNull()
-
-        collectLogoutState()
+        collectState()
         collectUiEvents()
     }
 
@@ -137,29 +134,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     // CollectState --
-    private fun checkNicknameIsNull() {
-        Timber.d("관찰 시작")
-        mainViewModel.checkNameNull()
-
+    private fun collectState() {
         lifecycleScope.launch {
             mainViewModel.uiState.collectLatest { state ->
-                if (state is UiState.Success && state.data is MainState.NicknameNull) {
-                    //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
-                    intent.putExtra("force", true)
-                    startActivity<UserNameChangeActivity>()
-                }
-            }
-        }
-    }
+                if (state is UiState.Success) {
+                    when (state.data) {
+                        is MainState.NicknameNull -> {
+                            intent.putExtra("force", true)
+                            startActivity<UserNameChangeActivity>()
+                        }
 
-    // 로그아웃 처리
-    private fun collectLogoutState() {
-        lifecycleScope.launch {
-            mainViewModel.uiState.collectLatest { state ->
-                if (state is UiState.Success && state.data is MainState.LoggedOut) {
-                    startActivity<LoginActivity>()
-                    finishAffinity()
-                }
+                        is MainState.LoggedOut -> {
+                            startActivity<LoginActivity>()
+                            finishAffinity()
+                        }
+
+                        else -> Unit
+                    }
+                } else Unit
             }
         }
     }
