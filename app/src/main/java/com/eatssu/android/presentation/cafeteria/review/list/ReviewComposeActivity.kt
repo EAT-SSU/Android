@@ -29,6 +29,7 @@ class ReviewComposeActivity : ComponentActivity() {
                 ReviewNav(
                     nav = navHostController,
                     menuType = MenuType.valueOf(menuType),
+                    menuName = itemName,
                     id = itemId
                 )
             }

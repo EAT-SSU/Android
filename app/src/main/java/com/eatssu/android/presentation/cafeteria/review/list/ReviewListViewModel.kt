@@ -55,6 +55,7 @@ class ReviewListViewModel @Inject constructor(
                     Timber.d(e.toString())
                 }
                 .collect { result ->
+                    Timber.d("ReviewListViewModel - ReviewInfo 로드 성공: name='${result.name}', reviewCnt=${result.reviewCnt}")
                     _uiState.update { currentState ->
                         val data =
                             if (currentState is UiState.Success) currentState.data else ReviewListState()
