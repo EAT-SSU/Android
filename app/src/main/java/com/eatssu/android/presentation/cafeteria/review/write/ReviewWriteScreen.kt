@@ -1,11 +1,9 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -41,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
+import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray100
 import com.eatssu.android.presentation.compose.ui.theme.Gray200
@@ -48,7 +45,6 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray300
 import com.eatssu.android.presentation.compose.ui.theme.Gray400
 import com.eatssu.android.presentation.compose.ui.theme.Gray500
 import com.eatssu.android.presentation.compose.ui.theme.Primary
-import com.eatssu.android.presentation.compose.ui.theme.White
 
 @Composable
 fun ReviewWriteScreen(
@@ -221,39 +217,22 @@ internal fun ReviewWriteScreen(
 fun MenuItem(
     modifier: Modifier,
     mealName: String,
-    onLikeClick: () -> Unit = {},
-
     ) {
+
+    var isLiked by remember { mutableStateOf(false) }
+
     Row(Modifier.padding(vertical = 6.dp)) {
         Text(
             mealName,
             style = EatssuTheme.typography.body3
         )
         Spacer(modifier = Modifier.weight(1f))
-
-        Button(
-            onClick = onLikeClick,
-            modifier = modifier.size(58.dp, 28.dp),
-            shape = RoundedCornerShape(20.dp), // 둥근 모서리 설정
-            border = BorderStroke(
-                1.dp,
-                Gray300
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = White, // 배경색
-                contentColor = Gray300// 내용(아이콘/텍스트) 색
-            ),
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp)
-
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_thumb_up),
-                contentDescription = null, // 접근성을 위해 contentDescription 추가 권장
-                modifier = Modifier.size(18.dp)
-            )
-        }
-
-
+        LikeButton(
+            isLiked = isLiked,
+            onClick = {
+                isLiked = !isLiked // 클릭 시 상태를 반전
+            }
+        )
     }
 
 
