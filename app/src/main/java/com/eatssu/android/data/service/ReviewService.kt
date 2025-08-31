@@ -2,7 +2,8 @@ package com.eatssu.android.data.service
 
 
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.dto.request.WriteMealReviewRequest
+import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.ImageResponse
 import com.eatssu.android.data.dto.response.MealReviewInfoResponse
@@ -22,10 +23,14 @@ import retrofit2.http.Query
 
 
 interface ReviewService {
-    @POST("/v2/reviews/write/{menuId}") //리뷰 작성
-    suspend fun writeReview(
-        @Path("menuId") menuId: Long,
-        @Body request: WriteReviewRequest,
+    @POST("/v2/reviews/menu/") //리뷰 작성
+    suspend fun writeMenuReview(
+        @Body request: WriteMenuReviewRequest,
+    ): BaseResponse<Void>
+
+    @POST("/v2/reviews/meal/") //리뷰 작성
+    suspend fun writeMealReview(
+        @Body request: WriteMealReviewRequest,
     ): BaseResponse<Void>
 
     @DELETE("/v2/reviews/{reviewId}") //리뷰 삭제
