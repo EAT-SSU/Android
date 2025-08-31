@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
@@ -41,8 +43,15 @@ import com.eatssu.android.presentation.compose.ui.theme.Primary
 @Composable
 fun ReviewListScreen(
     modifier: Modifier = Modifier,
-    viewModel: ReviewListViewModel = hiltViewModel()
+    viewModel: ReviewListViewModel = hiltViewModel(),
+    menuType: MenuType,
+    id: Long,
 ) {
+    LaunchedEffect(key1 = menuType, key2 = id) {
+        // 2. key가 변경되면 이 블록이 다시 실행됨
+        // 뷰모델의 함수를 호출하여 데이터를 로드
+        viewModel.loadReview(menuType, id)
+    }
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -78,7 +87,6 @@ internal fun ReviewListScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-//                                    .size(100.dp) // 박스의 크기 설정
                                     .clip(RoundedCornerShape(16.dp)) // 모서리 곡률을 16.dp로 둥글게 만듭니다.
                                     .background(Gray100) // 배경색 설정
                                     .padding(horizontal = 16.dp, vertical = 13.dp)
@@ -237,9 +245,8 @@ fun ReviewListPreview() {
                             writerNickname = "숭실푸드파이터",
                             writeDate = "2024-12-31",
                             mainGrade = 4,
-                            amountGrade = 2,
-                            tasteGrade = 4,
                             content = "맛있어요",
+                            likeMenuList = listOf("소고기"),
                             imgUrl = null
                         ),
                         Review(
@@ -249,11 +256,11 @@ fun ReviewListPreview() {
                             writerNickname = "숭실푸드파이터",
                             writeDate = "2024-12-31",
                             mainGrade = 4,
-                            amountGrade = 2,
-                            tasteGrade = 4,
                             content = "맛있어요",
-                            imgUrl = null
-                        ),
+                            imgUrl = null,
+                            likeMenuList = listOf("소고기"),
+
+                            ),
                         Review(
                             isWriter = false,
                             reviewId = 0,
@@ -261,10 +268,9 @@ fun ReviewListPreview() {
                             writerNickname = "숭실푸드파이터",
                             writeDate = "2024-12-31",
                             mainGrade = 4,
-                            amountGrade = 2,
-                            tasteGrade = 4,
                             content = "맛있어요",
-                            imgUrl = null
+                            imgUrl = null,
+                            likeMenuList = null,
                         )
                     )
                 )

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
-import com.eatssu.android.presentation.cafeteria.review.list.ReviewActivity
+import com.eatssu.android.presentation.cafeteria.review.list.ReviewComposeActivity
 
 
 class MenuSubAdapter(
@@ -45,7 +45,7 @@ class MenuSubAdapter(
 
         //intent 사용
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
+            val intent = Intent(holder.itemView.context, ReviewComposeActivity::class.java)
 
             when (menuType) {
                 MenuType.FIXED -> {

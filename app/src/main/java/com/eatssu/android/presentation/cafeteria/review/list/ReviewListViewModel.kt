@@ -2,8 +2,6 @@ package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.response.asReviewInfo
-import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
@@ -43,26 +41,20 @@ class ReviewListViewModel @Inject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
     fun loadReview(
-        menuType: String,
+        menuType: MenuType,
         itemId: Long,
     ) {
         when (menuType) {
-            MenuType.FIXED.name -> {
+            MenuType.FIXED -> {
                 callMenuReviewInfo(itemId)
                 callMenuReviewList(itemId)
             }
 
-            MenuType.VARIABLE.name -> {
+            MenuType.VARIABLE -> {
                 callMealReviewInfo(itemId)
                 callMealReviewList(itemId)
             }
-
-            else -> {
-                Timber.d("잘못된 식당 정보입니다.")
-
-            }
         }
-
     }
 
     private fun callMenuReviewInfo(menuId: Long) {
@@ -78,18 +70,18 @@ class ReviewListViewModel @Inject constructor(
 
                     Timber.d(e.toString())
                 }.collect { result ->
-                    result.result?.apply {
+                    result?.apply {
                         if (mainRating == null) {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    reviewInfo = asReviewInfo(),
+                                    reviewInfo = result,
                                     isEmpty = true
                                 )
                             )
                         } else {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    reviewInfo = asReviewInfo(),
+                                    reviewInfo = result,
                                     isEmpty = false
                                 )
                             )
@@ -114,18 +106,18 @@ class ReviewListViewModel @Inject constructor(
 
                     Timber.e(e.toString())
                 }.collect { result ->
-                    result.result?.apply {
+                    result.apply {
                         if (mainRating == null) {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-//                                    reviewInfo = asReviewInfo(),
+                                    //                                    reviewInfo = asReviewInfo(),
                                     isEmpty = true
                                 )
                             )
                         } else {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    reviewInfo = asReviewInfo(),
+                                    reviewInfo = result,
                                     isEmpty = false
                                 )
                             )
@@ -152,8 +144,8 @@ class ReviewListViewModel @Inject constructor(
 
                     Timber.e(e.toString())
                 }.collect { result ->
-                    result.result?.apply {
-                        if (numberOfElements == 0) { //리뷰 없음
+                    result?.apply {
+                        if (result.size == 0) { //리뷰 없음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     isEmpty = true,
@@ -162,7 +154,7 @@ class ReviewListViewModel @Inject constructor(
                         } else { //리뷰 있음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    reviewList = this.toReviewList(),
+                                    reviewList = result,
                                     isEmpty = false
                                 )
                             )
@@ -185,8 +177,8 @@ class ReviewListViewModel @Inject constructor(
 
                     Timber.e(e.toString())
                 }.collect { result ->
-                    result.result?.apply {
-                        if (numberOfElements == 0) { //리뷰 없음
+                    result?.apply {
+                        if (result.size == 0) { //리뷰 없음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     isEmpty = true,
@@ -195,7 +187,7 @@ class ReviewListViewModel @Inject constructor(
                         } else { //리뷰 있음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    reviewList = this.toReviewList(),
+                                    reviewList = result,
                                     isEmpty = false
                                 )
                             )

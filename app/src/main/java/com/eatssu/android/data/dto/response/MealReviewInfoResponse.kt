@@ -1,34 +1,31 @@
 package com.eatssu.android.data.dto.response
 
 import com.eatssu.android.domain.model.ReviewInfo
+import com.google.gson.annotations.SerializedName
 
-data class GetMealReviewInfoResponse(
-    val menuNames: ArrayList<String> = arrayListOf(),
-    val totalReviewCount: Int,
-    val mainRating: Double,
-    val likeCount: Int,
-    val unlikeCount: Int,
-    val reviewRatingCount: ReviewRatingCount,
+data class MealReviewInfoResponse(
+    @SerializedName("menuNames") var menuNames: List<String>? = null,
+    @SerializedName("totalReviewCount") var totalReviewCount: Int? = null,
+    @SerializedName("mainRating") var mainRating: Double? = null,
+    @SerializedName("likeCount") var likeCount: Int? = null,
+    @SerializedName("reviewRatingCount") var reviewRatingCount: ReviewRatingCount? = ReviewRatingCount()
 ) {
     data class ReviewRatingCount(
-        val oneStarCount: Int? = null,
-        val twoStarCount: Int? = null,
-        val threeStarCount: Int? = null,
-        val fourStarCount: Int? = null,
-        val fiveStarCount: Int? = null,
+        @SerializedName("oneStarCount") var oneStarCount: Int? = null,
+        @SerializedName("twoStarCount") var twoStarCount: Int? = null,
+        @SerializedName("threeStarCount") var threeStarCount: Int? = null,
+        @SerializedName("fourStarCount") var fourStarCount: Int? = null,
+        @SerializedName("fiveStarCount") var fiveStarCount: Int? = null
     )
 }
 
-fun GetMealReviewInfoResponse.asReviewInfo() = ReviewInfo(
-
-    name = menuNames.joinToString(separator = "+"),
-    reviewCnt = totalReviewCount,
-    mainRating = mainRating,
-//    likeCount = likeCount,
-//    unlikeCount = unlikeCount,
-    one = reviewRatingCount.oneStarCount ?: 0,
-    two = reviewRatingCount.twoStarCount ?: 0,
-    three = reviewRatingCount.threeStarCount ?: 0,
-    four = reviewRatingCount.fourStarCount ?: 0,
-    five = reviewRatingCount.fiveStarCount ?: 0,
+fun MealReviewInfoResponse.toDomain() = ReviewInfo(
+    name = menuNames?.joinToString(separator = " + "),
+    reviewCnt = totalReviewCount ?: 0,
+    mainRating = mainRating ?: 0.0,
+    one = reviewRatingCount?.oneStarCount ?: 0,
+    two = reviewRatingCount?.twoStarCount ?: 0,
+    three = reviewRatingCount?.threeStarCount ?: 0,
+    four = reviewRatingCount?.fourStarCount ?: 0,
+    five = reviewRatingCount?.fiveStarCount ?: 0,
 )

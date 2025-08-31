@@ -1,7 +1,7 @@
 package com.eatssu.android.domain.model
 
 data class ReviewInfo(
-    var name: String,
+    var name: String?,
     var reviewCnt: Int,
     var mainRating: Double,
     var one: Int,

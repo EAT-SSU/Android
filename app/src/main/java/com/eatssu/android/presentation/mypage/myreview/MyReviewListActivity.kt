@@ -86,8 +86,6 @@ class MyReviewListActivity :
                 putString("menu", review.menu)
                 putString("content", review.content)
                 putInt("mainGrade", review.mainGrade)
-                putInt("amountGrade", review.amountGrade)
-                putInt("tasteGrade", review.tasteGrade)
             }
             onReviewDeletedListener = this@MyReviewListActivity
         }

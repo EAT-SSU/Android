@@ -3,11 +3,11 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.domain.model.Review
+import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.repository.ReviewRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -41,23 +41,26 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
             emit(reviewService.modifyReview(reviewId, body))
         }
 
-    override suspend fun getReviewList(
-        menuType: String,
-        mealId: Long?,
-        menuId: Long?,
-    ): Flow<BaseResponse<GetReviewListResponse>> = flow {
-        emit(reviewService.getReviewList(menuType, mealId, menuId))
+    override suspend fun getMenuReviewList(menuId: Long?): Flow<List<Review>> = flow {
+
+        reviewService.getMenuReviewList(menuId).result?.toDomain()?.let { emit(it) }
     }
 
-    override suspend fun getMenuReviewInfo(menuId: Long): Flow<BaseResponse<GetMenuReviewInfoResponse>> =
+    override suspend fun getMealReviewList(menuId: Long?): Flow<List<Review>> = flow {
+        reviewService.getMealReviewList(menuId).result?.toDomain()?.let { emit(it) }
+    }
+
+
+    override suspend fun getMenuReviewInfo(menuId: Long): Flow<ReviewInfo> =
         flow {
-            emit(reviewService.getMenuReviewInfo(menuId))
+            reviewService.getMenuReviewInfo(menuId).result?.toDomain()?.let { emit(it) }
         }
 
-    override suspend fun getMealReviewInfo(mealId: Long): Flow<BaseResponse<GetMealReviewInfoResponse>> =
+    override suspend fun getMealReviewInfo(mealId: Long): Flow<ReviewInfo> =
         flow {
-            emit(reviewService.getMealReviewInfo(mealId))
+            reviewService.getMealReviewInfo(mealId).result?.toDomain()?.let { emit(it) }
         }
+
     override suspend fun getImageString(file: File): Flow<BaseResponse<ImageResponse>> = flow {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         val multipart = MultipartBody.Part.createFormData("image", file.name, requestFile)
