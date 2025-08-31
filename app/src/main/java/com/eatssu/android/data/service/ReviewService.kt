@@ -46,10 +46,10 @@ interface ReviewService {
 
     @GET("/v2/reviews/list/menu") //리뷰 리스트 조회
     suspend fun getMenuReviewList(
-        @Query("mealId") mealId: Long?,
+        @Query("menuId") menuId: Long?,
     ): BaseResponse<MenuReviewListResponse>
 
-    @GET("/v2/reviews/statistics/meals/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
+    @GET("/v2/reviews/statistics/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
     suspend fun getMenuReviewInfo(
         @Path("menuId") menuId: Long,
     ): BaseResponse<MenuReviewInfoResponse>
