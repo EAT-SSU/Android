@@ -33,6 +33,7 @@ fun ReviewItem(
     writeDate: String,
     content: String,
     rating: Int,
+    likeMenuList: List<String>?,
     imgUrl: String?,
 ) {
 
@@ -80,7 +81,18 @@ fun ReviewItem(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        Tag(menuName = "고구마치즈돈까스", modifier = Modifier) //todo tag 변환
+
+        // 좋아하는 메뉴 태그들 (있는 경우에만 표시)
+        if (!likeMenuList.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Row {
+                likeMenuList.forEach { likedMenu ->
+                    Tag(menuName = likedMenu, modifier = Modifier)
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
+            }
+        }
+        
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(content, style = EatssuTheme.typography.body3)
