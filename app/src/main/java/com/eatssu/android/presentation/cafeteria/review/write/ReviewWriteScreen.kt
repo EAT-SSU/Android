@@ -1,6 +1,9 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
 import EatSsuButton
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
@@ -65,6 +69,15 @@ fun ReviewWriteScreen(
 
     val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
     val viewModelMenuList by viewModel.menuList.collectAsStateWithLifecycle()
+    val selectedImageUri by viewModel.selectedImageUri.collectAsStateWithLifecycle()
+    val uploadedImageUrl by viewModel.uploadedImageUrl.collectAsStateWithLifecycle()
+
+    // 갤러리 선택을 위한 launcher
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        viewModel.setSelectedImage(uri)
+    }
 
     // menuList를 Pair<Long, String> 리스트로 통일
     val menuList = remember(menuName, menuType, viewModelMenuList) {
@@ -106,9 +119,17 @@ fun ReviewWriteScreen(
     ReviewWriteScreen(
         menuList = menuList,
         uiState = reviewWriteState,
+        selectedImageUri = selectedImageUri,
+        uploadedImageUrl = uploadedImageUrl,
         modifier = modifier,
-        addPhotoButtonClick = {
-
+        onImageSelect = {
+            galleryLauncher.launch("image/*")
+        },
+        onImageDelete = {
+            viewModel.setSelectedImage(null)
+        },
+        onImageUpload = {
+            viewModel.uploadSelectedImage()
         },
         writeReviewButtonClick = { rating, content, menuLikes ->
             viewModel.postReview(
@@ -126,14 +147,25 @@ fun ReviewWriteScreen(
 internal fun ReviewWriteScreen(
     menuList: List<Pair<Long, String>>,
     uiState: UiState<WriteReviewState>,
+    selectedImageUri: Uri?,
+    uploadedImageUrl: String?,
     modifier: Modifier = Modifier,
-    addPhotoButtonClick: () -> Unit,
+    onImageSelect: () -> Unit,
+    onImageDelete: () -> Unit,
+    onImageUpload: () -> Unit,
     writeReviewButtonClick: (rating: Int, content: String, menuLikes: List<Long>) -> Unit,
 ) {
 
     var rating by remember { mutableIntStateOf(0) }
     var text by remember { mutableStateOf("") }
     var likedMenus by remember { mutableStateOf(mutableListOf<Long>()) }
+
+    // 갤러리 선택을 위한 launcher
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        // 콜백을 통해 메인 함수에서 처리
+    }
     Surface(Modifier.fillMaxSize()) {
         Box(Modifier.fillMaxSize()) {
             Column(
@@ -240,45 +272,61 @@ internal fun ReviewWriteScreen(
 
             //사진
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        addPhotoButtonClick()
-                    },
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start,
             ) {
-                Column(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(5.dp)) // 먼저 클립하여 모양을 정의
-                        .background(Gray100) // 연한 회색 배경 (예시)
-                        // 테두리 추가 📏
-                        .border(
-                            width = 1.dp, // 테두리 두께
-                            color = Gray200, // 테두리 색상
-                            shape = RoundedCornerShape(5.dp) // 테두리도 같은 둥근 모양으로 적용
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_camera_light),
-                        "add photo",
-                        tint = Gray300
-                    )
+                if (selectedImageUri != null) {
+                    // 선택된 이미지가 있는 경우
+                    Column(
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable {
+                                onImageDelete()
+                            }
+                    ) {
+                        AsyncImage(
+                            model = selectedImageUri,
+                            contentDescription = "Selected image",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                     Text(
-                        "사진 0/1",
-                        color = Gray400,
+                        modifier = Modifier.padding(top = 8.dp),
+                        text = "사진 클릭 시, 삭제됩니다.",
+                        color = Gray500,
                         style = EatssuTheme.typography.caption3
                     )
+                } else {
+                    // 이미지가 선택되지 않은 경우
+                    Column(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Gray100)
+                            .border(
+                                width = 1.dp,
+                                color = Gray200,
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                            .clickable {
+                                onImageSelect()
+                            },
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_camera_light),
+                            "add photo",
+                            tint = Gray300
+                        )
+                        Text(
+                            "사진 0/1",
+                            color = Gray400,
+                            style = EatssuTheme.typography.caption3
+                        )
+                    }
                 }
-
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = "사진 클릭 시, 삭제됩니다.",
-                    color = Gray500,
-                    style = EatssuTheme.typography.caption3
-                )
             }
         }
 
@@ -288,6 +336,11 @@ internal fun ReviewWriteScreen(
                 text = "리뷰 작성하기",
                 onClick = {
                     val menuLikesList = likedMenus.map { it }
+
+                    // 이미지가 선택된 경우 먼저 업로드
+                    if (selectedImageUri != null) {
+                        onImageUpload()
+                    }
 
                     writeReviewButtonClick(
                         rating,
@@ -339,7 +392,11 @@ fun ReviewListPreview() {
                 3L to "김말이",
             ),
             uiState = UiState.Success(WriteReviewState.Init),
-            addPhotoButtonClick = {},
+            selectedImageUri = null,
+            uploadedImageUrl = null,
+            onImageSelect = {},
+            onImageDelete = {},
+            onImageUpload = {},
             writeReviewButtonClick = { _, _, _ -> }
         )
     }

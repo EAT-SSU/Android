@@ -43,6 +43,13 @@ class ReviewWriteViewModel @Inject constructor(
     private val _menuList = MutableStateFlow<List<Pair<Long, String>>>(emptyList())
     val menuList = _menuList.asStateFlow()
 
+    // 이미지 관련 상태
+    private val _selectedImageUri = MutableStateFlow<android.net.Uri?>(null)
+    val selectedImageUri = _selectedImageUri.asStateFlow()
+
+    private val _uploadedImageUrl = MutableStateFlow<String?>(null)
+    val uploadedImageUrl = _uploadedImageUrl.asStateFlow()
+
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
             getMenuNameListOfMealUseCase(mealId)
@@ -99,6 +106,35 @@ class ReviewWriteViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = UiState.Success(WriteReviewState.Error)
                 _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun setSelectedImage(uri: android.net.Uri?) {
+        _selectedImageUri.value = uri
+    }
+
+    fun uploadSelectedImage() {
+        viewModelScope.launch {
+            val uri = _selectedImageUri.value ?: return@launch
+
+            _uiState.value = UiState.Success(WriteReviewState.Loading)
+
+            try {
+                // Uri를 File로 변환 (실제 구현에서는 ContentResolver 사용)
+                val file = File(uri.path ?: "")
+                if (file.exists()) {
+                    val imageUrl = saveS3(file)
+                    _uploadedImageUrl.value = imageUrl
+                    _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+                } else {
+                    _uiState.value = UiState.Success(WriteReviewState.Error)
+                    _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
+                }
+            } catch (e: Exception) {
+                _uiState.value = UiState.Success(WriteReviewState.Error)
+                _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
                 Timber.e(e)
             }
         }
