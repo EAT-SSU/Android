@@ -38,7 +38,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.domain.model.MenuList
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
@@ -49,49 +48,76 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray300
 import com.eatssu.android.presentation.compose.ui.theme.Gray400
 import com.eatssu.android.presentation.compose.ui.theme.Gray500
 import com.eatssu.android.presentation.compose.ui.theme.Primary
+import timber.log.Timber
 
 @Composable
 fun ReviewWriteScreen(
     modifier: Modifier = Modifier,
     viewModel: ReviewWriteViewModel = hiltViewModel(),
-    menuList: List<MenuList>,
+    menuName: String,
     menuType: MenuType,
     id: Long,
 ) {
+    Timber.d("넘어온 메뉴명: $menuName, 메뉴타입: $menuType, ID: $id")
 
     val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
+    val viewModelMenuList by viewModel.menuList.collectAsStateWithLifecycle()
 
-    LaunchedEffect(menuType, id) {
+    // 메뉴 타입에 따라 처리
+    val menuList = remember(menuName, menuType, viewModelMenuList) {
         when (menuType) {
-            MenuType.FIXED -> { //todo 메뉴명 전달
+            MenuType.FIXED -> {
+                // 고정 메뉴: +로 붙여진 메뉴명을 List<String>으로 분리
+                if (menuName.isNotEmpty()) {
+                    menuName.split("+").map { it.trim() }
+                } else {
+                    emptyList()
+                }
             }
 
             MenuType.VARIABLE -> {
-//                    viewModel.findMenuItemByMealId(id)
+                // 변동 메뉴: ViewModel에서 조회한 메뉴 목록 사용
+                viewModelMenuList
             }
         }
     }
 
-    val mealId by remember { mutableIntStateOf(13) }
+    LaunchedEffect(menuType, id) {
+        when (menuType) {
+            MenuType.FIXED -> {
+                Timber.d("고정 메뉴 - 분리된 메뉴 목록: $menuList")
+            }
+            MenuType.VARIABLE -> {
+                // 변동 메뉴: meal ID로 메뉴 목록 조회
+                viewModel.findMenuItemByMealId(id)
+            }
+        }
+    }
 
     ReviewWriteScreen(
+        menuList = menuList,
         uiState = reviewWriteState,
         modifier = modifier,
         addPhotoButtonClick = {
 
-        }
+        },
+//        writeReviewButtonClick = viewModel::postReview
     )
+
+    val mealId by remember { mutableIntStateOf(13) }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReviewWriteScreen(
+    menuList: List<String>,
     uiState: UiState<WriteReviewState>,
     modifier: Modifier = Modifier,
     addPhotoButtonClick: () -> Unit,
+//    writeReviewButtonClick:( ) -> Unit,
 ) {
 
-    val mealList = listOf("맑은 미역국", "연탄불맛돈불고기", "김말이 데리강정")
 
     var rating by remember { mutableIntStateOf(0) }
     var text by remember { mutableStateOf("") }
@@ -128,9 +154,9 @@ internal fun ReviewWriteScreen(
 
 
             LazyColumn {
-                items(mealList) { item ->
+                items(menuList) { menuName ->
                     MenuItem(
-                        mealName = item,
+                        mealName = menuName,
                         modifier = Modifier,
                     )
                 }
@@ -268,6 +294,7 @@ fun MenuItem(
 fun ReviewListPreview() {
     EatssuTheme {
         ReviewWriteScreen(
+            menuList = listOf("맑은 미역국", "맑은 연탄불맛돈불고기", "김말이 데리강정"),
             uiState = UiState.Success(),
             addPhotoButtonClick = {}
         )
