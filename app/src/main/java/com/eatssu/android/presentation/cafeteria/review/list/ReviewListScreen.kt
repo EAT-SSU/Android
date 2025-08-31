@@ -130,22 +130,22 @@ internal fun ReviewListScreen(
 //                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        RatingBar(
-                                            isBig = true,
-                                            rating = 1,
-                                            onRatingChanged = {},
-                                            maxRating = 1
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                            info?.mainRating.toString(),
-                                            modifier = Modifier.align(Alignment.CenterVertically),
-                                            style = EatssuTheme.typography.rate
-                                        )
-                                    }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    RatingBar(
+                                        isBig = true,
+                                        rating = 1,
+                                        onRatingChanged = {},
+                                        maxRating = 1
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        info?.mainRating.toString(),
+                                        modifier = Modifier.align(Alignment.CenterVertically),
+                                        style = EatssuTheme.typography.rate
+                                    )
+                                }
 
 
                                 Spacer(modifier = Modifier.width(37.dp))
@@ -163,32 +163,37 @@ internal fun ReviewListScreen(
 
                             Row {
 
-                            Text(
-                                "리뷰",
-                                style = EatssuTheme.typography.h2,
-                            )
+                                Text(
+                                    "리뷰",
+                                    style = EatssuTheme.typography.h2,
+                                )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
                                     text = "${info?.reviewCnt}",
                                     color = Primary,
                                     style = EatssuTheme.typography.h2,
-                            )
+                                )
                             }
 
+                            if (uiState.data?.reviewInfo?.reviewCnt == 0) {
 
 
-                            LazyColumn {
-                                items(reviewList) { item ->
-                                    ReviewItem(
-                                        modifier = Modifier,
-                                        writeName = item.writerNickname,
-                                        writeDate = item.writeDate,
-                                        content = item.content
-                                    )
+                            } else {
+
+                                LazyColumn {
+                                    items(reviewList) { item ->
+                                        ReviewItem(
+                                            modifier = Modifier,
+                                            writeName = item.writerNickname,
+                                            writeDate = item.writeDate,
+                                            content = item.content
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
+
 
                     UiState.Loading -> {
                         // TODO: 로딩 UI
@@ -224,7 +229,6 @@ fun ReviewListPreview() {
         ReviewListScreen(
             uiState = UiState.Success(
                 ReviewListState(
-                    isEmpty = false,
                     reviewInfo = ReviewInfo(
                         name = "소고기+닭고기+돼지고기+양고기+오리고기",
                         reviewCnt = 123,

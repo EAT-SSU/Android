@@ -70,19 +70,17 @@ class ReviewListViewModel @Inject constructor(
 
                     Timber.d(e.toString())
                 }.collect { result ->
-                    result?.apply {
-                        if (mainRating == null) {
+                    result.apply {
+                        if (reviewCnt == 0) {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     reviewInfo = result,
-                                    isEmpty = true
                                 )
                             )
                         } else {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     reviewInfo = result,
-                                    isEmpty = false
                                 )
                             )
                             Timber.d("리뷰 있다")
@@ -107,26 +105,22 @@ class ReviewListViewModel @Inject constructor(
                     Timber.e(e.toString())
                 }.collect { result ->
                     result.apply {
-                        if (mainRating == null) {
+                        if (reviewCnt == 0) {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    //                                    reviewInfo = asReviewInfo(),
-                                    isEmpty = true
+                                    reviewInfo = result
                                 )
                             )
                         } else {
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     reviewInfo = result,
-                                    isEmpty = false
                                 )
                             )
                             Timber.d("리뷰 있다")
                         }
                     }
                 }
-
-
         }
     }
 
@@ -148,14 +142,13 @@ class ReviewListViewModel @Inject constructor(
                         if (result.size == 0) { //리뷰 없음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    isEmpty = true,
+                                    reviewList = emptyList()
                                 )
                             )
                         } else { //리뷰 있음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     reviewList = result,
-                                    isEmpty = false
                                 )
                             )
                         }
@@ -177,18 +170,17 @@ class ReviewListViewModel @Inject constructor(
 
                     Timber.e(e.toString())
                 }.collect { result ->
-                    result?.apply {
-                        if (result.size == 0) { //리뷰 없음
+                    result.apply {
+                        if (result.isEmpty()) { //리뷰 없음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
-                                    isEmpty = true,
+                                    reviewList = emptyList()
                                 )
                             )
                         } else { //리뷰 있음
                             _uiState.value = UiState.Success(
                                 ReviewListState(
                                     reviewList = result,
-                                    isEmpty = false
                                 )
                             )
                         }
@@ -226,7 +218,6 @@ class ReviewListViewModel @Inject constructor(
 }
 
 data class ReviewListState(
-    val isEmpty: Boolean = true,
     val reviewInfo: ReviewInfo? = null,
     val reviewList: List<Review>? = null
 )
