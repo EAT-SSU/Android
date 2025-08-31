@@ -14,11 +14,11 @@ interface ReviewRepository {
 
     suspend fun writeMenuReview(
         body: WriteMenuReviewRequest,
-    ) // todo : Flow<BaseResponse<Void>> 없애기
+    )
 
     suspend fun writeMealReview(
         body: WriteMealReviewRequest,
-    ) // todo : Flow<BaseResponse<Void>> 없애기
+    )
 
     suspend fun deleteReview(
         reviewId: Long,

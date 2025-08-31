@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
+import EatSsuButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,7 +33,6 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.cafeteria.review.list.component.EatssuButton
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
@@ -73,10 +73,14 @@ internal fun ReviewListScreen(
         modifier = modifier.fillMaxSize(),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+
+//            val scrollState = rememberScrollState()
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(bottom = 72.dp),
+//                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("리뷰")
@@ -195,7 +199,7 @@ internal fun ReviewListScreen(
                                 }
                             }
                         }                         // 하단 고정 버튼
-                        EatssuButton(
+                        EatSsuButton(
                             "리뷰 작성하기",
                             onClick = {
                                 // info.name을 전달 (메뉴명이 +로 합쳐진 값)

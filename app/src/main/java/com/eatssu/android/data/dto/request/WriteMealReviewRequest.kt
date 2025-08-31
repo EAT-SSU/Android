@@ -14,7 +14,7 @@ data class WriteMenuReviewRequest(
 ) {
     data class MenuLike(
 
-        @SerializedName("menuId") var menuId: Int? = null,
+        @SerializedName("menuId") var menuId: Long? = null,
         @SerializedName("isLike") var isLike: Boolean? = null
 
     )

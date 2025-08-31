@@ -2,7 +2,9 @@ package com.eatssu.android.presentation.cafeteria.review.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
+import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.domain.model.Result
+import com.eatssu.android.domain.model.ReviewWriteData
 import com.eatssu.android.domain.usecase.menu.GetMenuNameListOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
@@ -14,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -31,14 +32,15 @@ class ReviewWriteViewModel @Inject constructor(
     private val getMenuNameListOfMealUseCase: GetMenuNameListOfMealUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
+    private val _uiState =
+        MutableStateFlow<UiState<WriteReviewState>>(UiState.Success(WriteReviewState.Init))
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
     // 메뉴 목록을 저장할 상태 추가
-    private val _menuList = MutableStateFlow<List<String>>(emptyList())
+    private val _menuList = MutableStateFlow<List<Pair<Long, String>>>(emptyList())
     val menuList = _menuList.asStateFlow()
 
     fun findMenuItemByMealId(mealId: Long) {
@@ -50,8 +52,9 @@ class ReviewWriteViewModel @Inject constructor(
                 }
                 .collect { response ->
                     response.result?.let { menuOfMealResponse ->
+                        // `map` 함수에서 `Pair` 객체를 명시적으로 반환
                         val menuList = menuOfMealResponse.briefMenus.map { menuInfo ->
-                            menuInfo.name
+                            Pair(menuInfo.menuId, menuInfo.name)
                         }
                         _menuList.value = menuList
                         Timber.d("변동 메뉴 목록 로드 성공: $menuList")
@@ -62,31 +65,49 @@ class ReviewWriteViewModel @Inject constructor(
         }
     }
 
-    fun postReview(menuId: Long, reviewData: WriteMenuReviewRequest) {//todo dto 그대로 쓰기 말기
+    fun postReview(
+        menuType: MenuType,
+        itemId: Long,
+        rating: Int,
+        content: String,
+        menuLikes: List<Long>
+    ) {
         viewModelScope.launch {
-            writeReviewUseCase(menuId, reviewData)
-                .onStart {
-                    _uiState.value = UiState.Loading
+            _uiState.value = UiState.Success(WriteReviewState.Loading)
+
+            val reviewData = ReviewWriteData(
+                rating = rating,
+                content = content,
+                menuLikes = menuLikes
+            )
+
+            try {
+                when (val result = writeReviewUseCase(menuType, itemId, reviewData)) {
+                    is Result.Success -> {
+                        _uiState.value = UiState.Success(WriteReviewState.Success)
+                        _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
+                    }
+
+                    is Result.Failure -> {
+                        _uiState.value = UiState.Success(WriteReviewState.Error)
+                        _uiEvent.emit(UiEvent.ShowToast(result.message))
+                    }
                 }
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
-                    Timber.e(e)
-                }
-                .collectLatest {
-                    _uiState.value = UiState.Success()
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
-                }
+            } catch (e: Exception) {
+                _uiState.value = UiState.Success(WriteReviewState.Error)
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+                Timber.e(e)
+            }
         }
     }
 
     suspend fun saveS3(file: File): String? {
         return getImageUrlUseCase(file)
             .onStart {
-                _uiState.value = UiState.Loading
+                _uiState.value = UiState.Success(WriteReviewState.Loading)
             }
             .catch { e ->
-                _uiState.value = UiState.Error
+                _uiState.value = UiState.Success(WriteReviewState.Error)
                 _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
                 Timber.e(e)
             }
@@ -95,6 +116,9 @@ class ReviewWriteViewModel @Inject constructor(
     }
 }
 
-sealed class WriteReviewState(
-    val menuList: List<String>,
-)
+sealed class WriteReviewState {
+    object Init : WriteReviewState()
+    object Loading : WriteReviewState()
+    object Success : WriteReviewState()
+    object Error : WriteReviewState()
+}
