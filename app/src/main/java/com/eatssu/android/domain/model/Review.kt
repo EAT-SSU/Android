@@ -8,11 +8,12 @@ data class Review(
     val writerNickname: String,
 
     val mainGrade: Int,
-    val amountGrade: Int,
-    val tasteGrade: Int,
 
     val writeDate: String,
 
     val content: String,
+
+    val likeMenuList: List<String>?,
+
     val imgUrl: ArrayList<String>?,
 )

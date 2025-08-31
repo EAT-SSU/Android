@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.dto.response.toReviewList
+import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
@@ -53,7 +53,7 @@ class MyReviewViewModel @Inject constructor(
                         _uiState.update { it.copy(isEmpty = true) }
                     } else {
                         //Todo 리뷰 바인딩을...
-                        _uiState.update { it.copy(myReviews = this.toReviewList()) }
+                        _uiState.update { it.copy(myReviews = this.toDomain()) }
                     }
 
 

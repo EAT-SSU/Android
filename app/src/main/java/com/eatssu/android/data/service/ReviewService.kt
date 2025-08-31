@@ -4,10 +4,11 @@ package com.eatssu.android.data.service
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.data.dto.response.MealReviewInfoResponse
+import com.eatssu.android.data.dto.response.MealReviewListResponse
+import com.eatssu.android.data.dto.response.MenuReviewInfoResponse
+import com.eatssu.android.data.dto.response.MenuReviewListResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -38,27 +39,25 @@ interface ReviewService {
         @Body request: ModifyReviewRequest,
     ): BaseResponse<Void>
 
-    //Todo paging 라이브러리 써보기
-    @GET("/v2/reviews") //리뷰 리스트 조회
-    suspend fun getReviewList(
-        @Query("menuType") menuType: String,
+    @GET("/v2/reviews/list/meal") //리뷰 리스트 조회
+    suspend fun getMealReviewList(
         @Query("mealId") mealId: Long?,
-        @Query("menuId") menuId: Long?,
-//        @Query("lastReviewId") lastReviewId: Long?,
-        @Query("page") page: Int? = 0,
-        @Query("size") size: Int? = 20,
-        @Query("sort") sort: List<String>? = arrayListOf("date", "DESC"),
-    ): BaseResponse<GetReviewListResponse>
+    ): BaseResponse<MealReviewListResponse>
 
-    @GET("/v2/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
+    @GET("/v2/reviews/list/menu") //리뷰 리스트 조회
+    suspend fun getMenuReviewList(
+        @Query("mealId") mealId: Long?,
+    ): BaseResponse<MenuReviewListResponse>
+
+    @GET("/v2/reviews/statistics/meals/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
     suspend fun getMenuReviewInfo(
         @Path("menuId") menuId: Long,
-    ): BaseResponse<GetMenuReviewInfoResponse>
+    ): BaseResponse<MenuReviewInfoResponse>
 
-    @GET("/v2/reviews/meals/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
+    @GET("/v2/reviews/statistics/meals/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
     suspend fun getMealReviewInfo(
         @Path("mealId") mealId: Long,
-    ): BaseResponse<GetMealReviewInfoResponse>
+    ): BaseResponse<MealReviewInfoResponse>
 
     @Multipart
     @POST("/reviews/upload/image") //리뷰 이미지 업로드
