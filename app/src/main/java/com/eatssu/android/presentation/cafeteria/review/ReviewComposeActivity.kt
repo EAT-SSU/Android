@@ -1,11 +1,10 @@
-package com.eatssu.android.presentation.cafeteria.review.list
+package com.eatssu.android.presentation.cafeteria.review
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.presentation.cafeteria.review.ReviewNav
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
