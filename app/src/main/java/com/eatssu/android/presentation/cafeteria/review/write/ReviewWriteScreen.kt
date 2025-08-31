@@ -45,6 +45,7 @@ import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.cafeteria.review.list.component.CloseTopBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
@@ -170,7 +171,7 @@ internal fun ReviewWriteScreen(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-            Text("리뷰 작성하기")
+                CloseTopBar("리뷰 작성하기", onClose = {})
 
             Text(
                 "오늘의 식사는 어뗘셨나요?",
