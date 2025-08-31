@@ -20,7 +20,6 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.presentation.widget.MealWidget
 import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.design_system.theme.EatssuTheme
 import com.google.gson.Gson
@@ -124,37 +123,11 @@ class WidgetSettingActivity : ComponentActivity() {
         private fun fileKeyRestaurantKey(fileKey: String) =
             stringPreferencesKey("widget_restaurant_by_fileKey_$fileKey")
 
-
-        suspend fun saveRestaurantPref(
-            context: Context,
-            appWidgetId: Int,
-            restaurant: String
-        ) {
-            // Normalize input which may be a display name → store enum name
-            val enumName = Restaurant.fromRestaurantEnumName(restaurant) ?: ""
-            context.dataStore.edit { prefs ->
-                val key = settingsKey(appWidgetId)
-                val currentJson = prefs[key]
-                val current = runCatching {
-                    gson.fromJson(
-                        currentJson,
-                        WidgetSettings::class.java
-                    )
-                }.getOrNull() ?: WidgetSettings()
-                val updated = current.copy(restaurant = enumName)
-                prefs[key] = gson.toJson(updated)
-                // clean legacy
-                prefs.remove(legacyRestaurantKey(appWidgetId))
-            }
-            Timber.d("save restaurant $enumName (from input '$restaurant') for appWidgetId $appWidgetId")
-        }
-
         suspend fun saveRestaurantByFileKey(
             context: Context,
             fileKey: String,
             restaurant: String,
         ) {
-//            val enumName = Restaurant.fromRestaurantEnumName(restaurant) ?: ""
             context.dataStore.edit { prefs ->
                 prefs[fileKeyRestaurantKey(fileKey)] = restaurant
             }
@@ -195,6 +168,5 @@ class WidgetSettingActivity : ComponentActivity() {
                 Restaurant.HAKSIK
             }
         }
-
     }
 }

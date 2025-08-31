@@ -76,7 +76,7 @@ fun WidgetSettingScreen(
 @Composable
 fun PreviewWidgetSettingScreen() {
     EatssuTheme {
-        val restaurantOptionList = listOf("학생 식당", "도담 식당", "기숙사 식당")
+        val restaurantOptionList = listOf("학생 식당", "도담 식당", "기숙사 식당", "FACULTY(교직원 전용)")
         var selectedRestaurant by remember { mutableStateOf(restaurantOptionList[0]) }
 
         WidgetSettingScreen(

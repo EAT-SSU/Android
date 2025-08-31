@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.widget
+package com.eatssu.android.presentation.widget.ui
 
 import android.content.Context
 import android.os.Build
@@ -44,8 +44,9 @@ import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
+import com.eatssu.android.presentation.widget.MealInfoStateDefinition
+import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
-import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
 import com.eatssu.android.presentation.widget.util.MealTime
 import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import com.eatssu.android.presentation.widget.util.launchApp

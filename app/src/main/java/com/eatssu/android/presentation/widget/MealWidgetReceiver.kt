@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.widget
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.eatssu.android.presentation.widget.ui.MealWidget
 import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber

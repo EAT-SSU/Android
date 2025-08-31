@@ -4,7 +4,7 @@ import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.domain.repository.MealRepository
-import com.eatssu.android.presentation.widget.GetMealsResponseModel
+import com.eatssu.android.presentation.widget.WidgetMealList
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -30,7 +30,7 @@ sealed interface MealException {
 sealed interface MealState {
     data object Loading : MealState
 
-    data class Success(val response: GetMealsResponseModel) : MealState
+    data class Success(val response: WidgetMealList) : MealState
 
     data object Failure : MealState
 }
@@ -49,7 +49,7 @@ class GetTodayMealUseCase @Inject constructor(
 
         combine(breakfastFlow, lunchFlow, dinnerFlow) { breakfastList, lunchList, dinnerList ->
 
-            GetMealsResponseModel(
+            WidgetMealList(
                 breakfast = mapToMealPair(breakfastList, "breakfast"),
                 lunch = mapToMealPair(lunchList, "lunch"),
                 dinner = mapToMealPair(dinnerList, "dinner"),

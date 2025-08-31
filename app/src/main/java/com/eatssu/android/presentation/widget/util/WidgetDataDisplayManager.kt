@@ -95,7 +95,7 @@ object WidgetDataDisplayManager {
             return mealInfo
         }
 
-        // 모든 시간대의 급식이 비어있는 경우
+        // 모든 시간대의 식단이 비어있는 경우
         val emptyMealInfo = WidgetMealInfo.Available(
             breakfast = emptyList(),
             lunch = emptyList(),
@@ -119,14 +119,6 @@ object WidgetDataDisplayManager {
             currentTime.isBefore(morningEnd) -> MealTime.Morning
             currentTime.isBefore(lunchEnd) -> MealTime.Lunch
             else -> MealTime.Dinner
-        }
-    }
-
-    private fun convertTimeToString(time: MealTime): String {
-        return when (time) {
-            MealTime.Morning -> "아침"
-            MealTime.Lunch -> "점심"
-            MealTime.Dinner -> "저녁"
         }
     }
 }

@@ -41,6 +41,7 @@ object WidgetCacheManager {
     /**
      * 캐시에서 식당별 메뉴 데이터 조회
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCachedMealData(restaurant: Restaurant, currentDate: String): WidgetMealInfo? {
         val cachedData = cacheMap[restaurant] ?: return null
 
@@ -57,6 +58,7 @@ object WidgetCacheManager {
     /**
      * 식당별 메뉴 데이터를 캐시에 저장
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     fun cacheMealData(restaurant: Restaurant, mealInfo: WidgetMealInfo, date: String) {
         val cachedData = CachedMealData(
             mealInfo = mealInfo,
