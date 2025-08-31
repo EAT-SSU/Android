@@ -23,12 +23,12 @@ import retrofit2.http.Query
 
 
 interface ReviewService {
-    @POST("/v2/reviews/menu/") //리뷰 작성
+    @POST("/v2/reviews/menu") //리뷰 작성
     suspend fun writeMenuReview(
         @Body request: WriteMenuReviewRequest,
     ): BaseResponse<Void>
 
-    @POST("/v2/reviews/meal/") //리뷰 작성
+    @POST("/v2/reviews/meal") //리뷰 작성
     suspend fun writeMealReview(
         @Body request: WriteMealReviewRequest,
     ): BaseResponse<Void>

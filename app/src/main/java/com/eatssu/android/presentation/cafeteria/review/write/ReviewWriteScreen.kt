@@ -1,9 +1,11 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
+import EatSsuButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -63,13 +65,15 @@ fun ReviewWriteScreen(
     val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
     val viewModelMenuList by viewModel.menuList.collectAsStateWithLifecycle()
 
-    // 메뉴 타입에 따라 처리
+    // menuList를 Pair<Long, String> 리스트로 통일
     val menuList = remember(menuName, menuType, viewModelMenuList) {
         when (menuType) {
             MenuType.FIXED -> {
-                listOf(menuName)
+                // 고정 메뉴인 경우, Pair(id, menuName) 형태로 리스트를 만듭니다.
+                listOf(Pair(id, menuName))
             }
             MenuType.VARIABLE -> {
+                // 변동 메뉴는 이미 Pair 리스트이므로 그대로 사용합니다.
                 viewModelMenuList
             }
         }
@@ -86,7 +90,7 @@ fun ReviewWriteScreen(
         }
     }
 
-    // menuList가 변경될 때마다 로그 출력
+// menuList가 변경될 때마다 로그 출력
     LaunchedEffect(menuList) {
         Timber.d("최종 메뉴 목록: $menuList")
     }
@@ -98,7 +102,15 @@ fun ReviewWriteScreen(
         addPhotoButtonClick = {
 
         },
-//        writeReviewButtonClick = viewModel::postReview
+        writeReviewButtonClick = { rating, content, menuLikes ->
+            viewModel.postReview(
+                menuType = menuType,
+                itemId = id,
+                rating = rating,
+                content = content,
+                menuLikes = menuLikes
+            )
+        }
     )
 
     val mealId by remember { mutableIntStateOf(13) }
@@ -108,23 +120,24 @@ fun ReviewWriteScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReviewWriteScreen(
-    menuList: List<String>,
+    menuList: List<Pair<Long, String>>,
     uiState: UiState<WriteReviewState>,
     modifier: Modifier = Modifier,
     addPhotoButtonClick: () -> Unit,
-//    writeReviewButtonClick:( ) -> Unit,
+    writeReviewButtonClick: (rating: Int, content: String, menuLikes: List<Long>) -> Unit,
 ) {
-
 
     var rating by remember { mutableIntStateOf(0) }
     var text by remember { mutableStateOf("") }
-
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    var likedMenus by remember { mutableStateOf(mutableListOf<Long>()) }
+    Surface(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize()) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             Text("리뷰 작성하기")
 
             Text(
@@ -150,11 +163,23 @@ internal fun ReviewWriteScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f) // 이 부분이 중요합니다.
+                        .fillMaxWidth()
+                ) {
                 items(menuList) { menuName ->
                     MenuItem(
-                        mealName = menuName,
+                        mealName = menuName.second,
                         modifier = Modifier,
+                        isLiked = likedMenus.contains(menuName.first),
+                        onLikeChanged = { isLiked ->
+                            if (isLiked) {
+                                likedMenus.add(menuName.first)
+                            } else {
+                                likedMenus.remove(menuName.first)
+                            }
+                        }
                     )
                 }
             }
@@ -252,12 +277,24 @@ internal fun ReviewWriteScreen(
             }
         }
 
+
         // 하단 고정 버튼
-//        EatssuButton(
-//            modifier = Modifier,
-//           title =  "리뷰 작성하기",
-//           onClick =  {},
-//        )
+            EatSsuButton(
+                text = "리뷰 작성하기",
+                onClick = {
+                    val menuLikesList = likedMenus.map { it }
+
+                    writeReviewButtonClick(
+                        rating,
+                        text,
+                        menuLikesList
+                    )
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(12.dp)
+            )
+        }
     }
 }
 
@@ -266,9 +303,9 @@ internal fun ReviewWriteScreen(
 fun MenuItem(
     modifier: Modifier,
     mealName: String,
-    ) {
-
-    var isLiked by remember { mutableStateOf(false) }
+    isLiked: Boolean,
+    onLikeChanged: (Boolean) -> Unit,
+) {
 
     Row(Modifier.padding(vertical = 6.dp)) {
         Text(
@@ -279,7 +316,7 @@ fun MenuItem(
         LikeButton(
             isLiked = isLiked,
             onClick = {
-                isLiked = !isLiked // 클릭 시 상태를 반전
+                onLikeChanged(!isLiked) // 클릭 시 상태를 반전
             }
         )
     }
@@ -291,9 +328,14 @@ fun MenuItem(
 fun ReviewListPreview() {
     EatssuTheme {
         ReviewWriteScreen(
-            menuList = listOf("맑은 미역국", "맑은 연탄불맛돈불고기", "김말이 데리강정"),
-            uiState = UiState.Success(),
-            addPhotoButtonClick = {}
+            menuList = listOf(
+                1L to "맑은 미역국",
+                2L to "연탄불맛돈불고기",
+                3L to "김말이",
+            ),
+            uiState = UiState.Success(WriteReviewState.Init),
+            addPhotoButtonClick = {},
+            writeReviewButtonClick = { _, _, _ -> }
         )
     }
 }
