@@ -193,7 +193,7 @@ internal fun ReviewListScreen(
                                             modifier = Modifier,
                                             writeName = item.writerNickname,
                                             writeDate = item.writeDate,
-                                            content = item.content
+                                            content = item.content,
                                         )
                                     }
                                 }
