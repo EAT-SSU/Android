@@ -20,7 +20,7 @@ data class MealReviewInfoResponse(
 }
 
 fun MealReviewInfoResponse.toDomain() = ReviewInfo(
-    name = menuNames?.joinToString(separator = " + "),
+    name = menuNames?.joinToString(separator = " + ") ?: "",
     reviewCnt = totalReviewCount ?: 0,
     mainRating = mainRating ?: 0.0,
     one = reviewRatingCount?.oneStarCount ?: 0,

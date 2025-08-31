@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -44,6 +44,8 @@ class ReviewListViewModel @Inject constructor(
         menuType: MenuType,
         itemId: Long,
     ) {
+        _uiState.value = UiState.Loading // Set loading state once at the start
+
         when (menuType) {
             MenuType.FIXED -> {
                 callMenuReviewInfo(itemId)
@@ -60,130 +62,75 @@ class ReviewListViewModel @Inject constructor(
     private fun callMenuReviewInfo(menuId: Long) {
         viewModelScope.launch {
             getMenuReviewInfoUseCase(menuId)
-
-                .onStart {
-                    _uiState.value = UiState.Loading
-                }
                 .catch { e ->
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("리뷰 정보를 불러오는데 실패하였습니다."))
-
                     Timber.d(e.toString())
-                }.collect { result ->
-                    result.apply {
-                        if (reviewCnt == 0) {
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewInfo = result,
-                                )
-                            )
-                        } else {
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewInfo = result,
-                                )
-                            )
-                            Timber.d("리뷰 있다")
-                        }
+                }
+                .collect { result ->
+                    // Use update to safely modify only the reviewInfo part of the state
+                    _uiState.update { currentState ->
+                        val data =
+                            if (currentState is UiState.Success) currentState.data else ReviewListState()
+                        UiState.Success(data?.copy(reviewInfo = result))
                     }
                 }
         }
     }
 
-    private fun callMealReviewInfo(
-        mealId: Long,
-    ) {
+    private fun callMealReviewInfo(itemId: Long) {
         viewModelScope.launch {
-            getMealReviewInfoUseCase(mealId)
-                .onStart {
-                    _uiState.value = UiState.Loading
-
-                }.catch { e ->
+            getMealReviewInfoUseCase(itemId)
+                .catch { e ->
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("리뷰 정보를 불러오는데 실패했습니다."))
-
                     Timber.e(e.toString())
-                }.collect { result ->
-                    result.apply {
-                        if (reviewCnt == 0) {
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewInfo = result
-                                )
-                            )
-                        } else {
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewInfo = result,
-                                )
-                            )
-                            Timber.d("리뷰 있다")
-                        }
+                }
+                .collect { result ->
+                    _uiState.update { currentState ->
+                        val data =
+                            if (currentState is UiState.Success) currentState.data else ReviewListState()
+                        UiState.Success(data?.copy(reviewInfo = result))
                     }
                 }
         }
     }
 
-
-    private fun callMenuReviewList(
-        itemId: Long,
-    ) {
+    private fun callMenuReviewList(itemId: Long) {
         viewModelScope.launch {
             getMenuReviewListUseCase(itemId)
-                .onStart {
-                    _uiState.value = UiState.Loading
-                }.catch { e ->
+                .catch { e ->
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("리뷰 조회에 실패했습니다."))
-
                     Timber.e(e.toString())
-                }.collect { result ->
-                    result?.apply {
-                        if (result.size == 0) { //리뷰 없음
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewList = emptyList()
-                                )
-                            )
-                        } else { //리뷰 있음
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewList = result,
-                                )
-                            )
-                        }
+                }
+                .collect { result ->
+                    _uiState.update { currentState ->
+                        val data =
+                            if (currentState is UiState.Success) currentState.data else ReviewListState()
+                        // Ensure an empty list is used if no reviews are returned
+                        val reviewList = if (result.isEmpty()) emptyList() else result
+                        UiState.Success(data?.copy(reviewList = reviewList))
                     }
                 }
         }
     }
 
-    private fun callMealReviewList(
-        itemId: Long,
-    ) {
+    private fun callMealReviewList(itemId: Long) {
         viewModelScope.launch {
             getMealReviewListUseCase(itemId)
-                .onStart {
-                    _uiState.value = UiState.Loading
-                }.catch { e ->
+                .catch { e ->
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("리뷰 조회에 실패했습니다."))
-
                     Timber.e(e.toString())
-                }.collect { result ->
-                    result.apply {
-                        if (result.isEmpty()) { //리뷰 없음
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewList = emptyList()
-                                )
-                            )
-                        } else { //리뷰 있음
-                            _uiState.value = UiState.Success(
-                                ReviewListState(
-                                    reviewList = result,
-                                )
-                            )
-                        }
+                }
+                .collect { result ->
+                    _uiState.update { currentState ->
+                        val data =
+                            if (currentState is UiState.Success) currentState.data else ReviewListState()
+                        // Ensure an empty list is used if no reviews are returned
+                        val reviewList = if (result.isEmpty()) emptyList() else result
+                        UiState.Success(data?.copy(reviewList = reviewList))
                     }
                 }
         }
