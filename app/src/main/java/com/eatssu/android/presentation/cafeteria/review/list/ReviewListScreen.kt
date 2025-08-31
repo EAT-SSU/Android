@@ -17,12 +17,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +58,8 @@ fun ReviewListScreen(
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
     id: Long,
-    onReviewWriteButtonClick: (menuName: String) -> Unit // menuName을 인자로 받도록 수정
+    onReviewWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
+    onModifyClick: () -> Unit,
 ) {
 
     LaunchedEffect(key1 = menuType, key2 = id) {
@@ -65,16 +71,30 @@ fun ReviewListScreen(
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
-        onReviewWriteButtonClick = onReviewWriteButtonClick
+        onReviewWriteButtonClick = onReviewWriteButtonClick,
+        onModifyClick = onModifyClick,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
     onReviewWriteButtonClick: (menuName: String) -> Unit,
+    onModifyClick: () -> Unit,
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
+            MyReviewBottomSheet(
+                onModify = { onModifyClick() },
+                onDelete = { /* 삭제하기 */ }
+            )
+        }
+    }
+
     Surface(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -224,12 +244,14 @@ internal fun ReviewListScreen(
                                     items(reviewList) { item ->
                                         ReviewItem(
                                             modifier = Modifier,
+                                            isWriter = item.isWriter,
                                             writeName = item.writerNickname,
                                             writeDate = item.writeDate,
                                             content = item.content,
                                             rating = item.mainGrade,
                                             likeMenuList = item.likeMenuList,
                                             imgUrl = item.imgUrl?.toString(),
+                                            onMoreClick = { showBottomSheet = true }
                                         )
                                     }
                                 }
@@ -283,6 +305,7 @@ fun ReviewListPreview() {
     EatssuTheme {
         ReviewListScreen(
             onReviewWriteButtonClick = {},
+            onModifyClick = {},
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
@@ -342,6 +365,7 @@ fun ReviewListEmptyPreview() {
     EatssuTheme {
         ReviewListScreen(
             onReviewWriteButtonClick = {},
+            onModifyClick = {},
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(

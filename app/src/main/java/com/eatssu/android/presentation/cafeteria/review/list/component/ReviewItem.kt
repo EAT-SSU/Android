@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.list.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ import com.eatssu.android.presentation.compose.ui.theme.Gray400
 
 @Composable
 fun ReviewItem(
+    isWriter: Boolean,
     modifier: Modifier,
     writeName: String,
     writeDate: String,
@@ -35,6 +37,7 @@ fun ReviewItem(
     rating: Int,
     likeMenuList: List<String>?,
     imgUrl: String?,
+    onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
 ) {
 
     Column(modifier = Modifier.padding(vertical = 24.dp)) {
@@ -69,8 +72,14 @@ fun ReviewItem(
             Column(horizontalAlignment = Alignment.End) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_three_dot),
-                    contentDescription = "Profile Image",
-                    modifier = Modifier.size(24.dp),
+                    contentDescription = "etc",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .then(
+                            if (isWriter) Modifier
+                                .clickable { onMoreClick() }
+                            else Modifier
+                        ),
                     tint = Color.Unspecified,
                 )
                 Text(
@@ -120,6 +129,7 @@ fun ReviewItem(
 fun ReviewItemPreview() {
     ReviewItem(
         modifier = Modifier,
+        isWriter = true,
         writeName = "숭실푸드파이터",
         writeDate = "2024-12-31",
         content = "맛있어요",
@@ -134,6 +144,7 @@ fun ReviewItemPreview() {
 fun ReviewItemWithoutImagePreview() {
     ReviewItem(
         modifier = Modifier,
+        isWriter = true,
         writeName = "맛있는리뷰어",
         writeDate = "2024-12-30",
         content = "사진 없이 텍스트만 있는 리뷰입니다.",
