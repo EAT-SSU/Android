@@ -98,11 +98,7 @@ fun Tag(
 @Preview(showBackground = true)
 @Composable
 fun TagPreview() {
-    EatssuTheme {
-//        Tag(menuName = "고구마치즈돈까스")
-
-
+    com.eatssu.android.presentation.compose.ui.theme.EatssuTheme {
         Tag("고구마치즈돈까스")
-
     }
 }

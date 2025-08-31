@@ -30,7 +30,7 @@ fun MyReviewResponse.toDomain(): List<Review> {
             mainGrade = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
-            imgUrl = data.imageUrls,
+            imgUrl = data.imageUrls.firstOrNull(),
             likeMenuList = data.likedMenuNames
         )
     }
