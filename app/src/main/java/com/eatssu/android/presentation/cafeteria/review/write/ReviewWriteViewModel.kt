@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.cafeteria.review.write
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.domain.usecase.menu.GetMenuNameListOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
 import com.eatssu.android.presentation.UiEvent
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class ReviewWriteViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
+    private val getMenuNameListOfMealUseCase: GetMenuNameListOfMealUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
@@ -34,6 +36,31 @@ class ReviewWriteViewModel @Inject constructor(
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
+
+    // 메뉴 목록을 저장할 상태 추가
+    private val _menuList = MutableStateFlow<List<String>>(emptyList())
+    val menuList = _menuList.asStateFlow()
+
+    fun findMenuItemByMealId(mealId: Long) {
+        viewModelScope.launch {
+            getMenuNameListOfMealUseCase(mealId)
+                .catch { e ->
+                    Timber.e("메뉴 목록 로드 실패: ${e.message}")
+                    _menuList.value = emptyList()
+                }
+                .collect { response ->
+                    response.result?.let { menuOfMealResponse ->
+                        val menuList = menuOfMealResponse.briefMenus.map { menuInfo ->
+                            menuInfo.name
+                        }
+                        _menuList.value = menuList
+                        Timber.d("변동 메뉴 목록 로드 성공: $menuList")
+                    } ?: run {
+                        _menuList.value = emptyList()
+                    }
+                }
+        }
+    }
 
     fun postReview(menuId: Long, reviewData: WriteReviewRequest) {//todo dto 그대로 쓰기 말기
         viewModelScope.launch {

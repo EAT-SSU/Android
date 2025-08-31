@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.domain.model.MenuList
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteScreen
 
@@ -28,14 +27,14 @@ fun ReviewNav(
         navController = nav,
         startDestination = ReviewNav.List
     ) {
-        // 최소형(POI 내부 시작점, 실제로는 바로 Search로 밀어버림)
+        // 리뷰 리스트
         composable(ReviewNav.List) {
             ReviewListScreen(
                 menuType = menuType,
                 id = id,
-                onReviewWriteButtonClick = { menuList ->
-                    // SavedStateHandle을 사용하여 menuList 전달
-                    nav.currentBackStackEntry?.savedStateHandle?.set("menuList", menuList)
+                onReviewWriteButtonClick = { menuName ->
+                    // SavedStateHandle을 사용하여 menuName 전달
+                    nav.currentBackStackEntry?.savedStateHandle?.set("menuName", menuName)
                     
                     nav.navigate(ReviewNav.Write) {
                         launchSingleTop = true
@@ -44,14 +43,14 @@ fun ReviewNav(
             )
         }
 
-        // 자동완성
+        // 리뷰 작성
         composable(ReviewNav.Write) { backStackEntry ->
             val savedStateHandle = backStackEntry.savedStateHandle
-            val menuList = savedStateHandle.get<ArrayList<MenuList>>("menuList") ?: arrayListOf()
+            val menuName = savedStateHandle.get<String>("menuName") ?: ""
             
             ReviewWriteScreen(
                 menuType = menuType,
-                menuList = menuList,
+                menuName = menuName,
                 id = id
             )
         }
