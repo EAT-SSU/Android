@@ -38,7 +38,7 @@ class MyReviewAdapter :
             binding.rbRate.rating = data.mainGrade.toFloat()
 
             val imageView: ImageView = binding.ivReviewPhoto
-            if (data.imgUrl?.isEmpty() == true || data.imgUrl?.get(0).isNullOrEmpty()) {
+            if (data.imgUrl?.isEmpty() == true) {
                 imageView.visibility = View.GONE
             } else {
                 Glide.with(itemView)

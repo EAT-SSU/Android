@@ -194,6 +194,9 @@ internal fun ReviewListScreen(
                                             writeName = item.writerNickname,
                                             writeDate = item.writeDate,
                                             content = item.content,
+                                            rating = item.mainGrade,
+                                            likeMenuList = item.likeMenuList,
+                                            imgUrl = item.imgUrl?.toString(),
                                         )
                                     }
                                 }
@@ -258,30 +261,29 @@ fun ReviewListPreview() {
                             mainGrade = 4,
                             content = "맛있어요",
                             likeMenuList = listOf("소고기"),
-                            imgUrl = null
+                            imgUrl = "https://picsum.photos/400/300" // 실제 이미지 URL 사용
                         ),
                         Review(
                             isWriter = false,
-                            reviewId = 0,
-                            menu = "고구마치즈돈까스",
-                            writerNickname = "숭실푸드파이터",
-                            writeDate = "2024-12-31",
-                            mainGrade = 4,
-                            content = "맛있어요",
+                            reviewId = 1,
+                            menu = "치킨가라아게",
+                            writerNickname = "맛있는리뷰어",
+                            writeDate = "2024-12-30",
+                            mainGrade = 5,
+                            content = "정말 맛있어요! 다음에도 먹고 싶어요.",
                             imgUrl = null,
-                            likeMenuList = listOf("소고기"),
-
-                            ),
+                            likeMenuList = listOf("치킨가라아게", "감자튀김")
+                        ),
                         Review(
                             isWriter = false,
-                            reviewId = 0,
-                            menu = "고구마치즈돈까스",
-                            writerNickname = "숭실푸드파이터",
-                            writeDate = "2024-12-31",
-                            mainGrade = 4,
-                            content = "맛있어요",
-                            imgUrl = null,
-                            likeMenuList = null,
+                            reviewId = 2,
+                            menu = "돈까스",
+                            writerNickname = "음식평론가",
+                            writeDate = "2024-12-29",
+                            mainGrade = 3,
+                            content = "그럭저럭 괜찮아요",
+                            imgUrl = "https://picsum.photos/400/301", // 실제 이미지 URL 사용
+                            likeMenuList = null
                         )
                     )
                 )

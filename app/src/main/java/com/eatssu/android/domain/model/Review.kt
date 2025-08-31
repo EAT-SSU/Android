@@ -15,5 +15,5 @@ data class Review(
 
     val likeMenuList: List<String>?,
 
-    val imgUrl: ArrayList<String>?,
+    val imgUrl: String?,
 )
