@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray200
+import timber.log.Timber
 
 @Composable
 fun ReviewProgressBar(
@@ -37,11 +38,13 @@ fun ReviewProgressBar(
         2 to twoRatingCount,
         1 to oneRatingCount
     )
+    Timber.d(ratingList.toString() + "rating")
 
     Column(modifier = modifier) {
 
         ratingList.forEach { (rating, count) ->
-            val percent = if (reviewCount > 0) count / reviewCount.toFloat() else 0f
+            val percent = if (reviewCount > 0) (count.toFloat() / reviewCount.toFloat()) else 0f
+            Timber.d("ReviewProgressBar - rating: $rating, count: $count, reviewCount: $reviewCount, percent: $percent")
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -63,16 +66,6 @@ fun ReviewProgressBar(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-//                Box( modifier = Modifier
-//                            .weight(1f)) {
-//                    LinearProgressIndicator(
-//                        progress = { 0f },
-//                        modifier = Modifier
-////                            .weight(1f)
-//                            .height(10.dp),
-//                        color = MaterialTheme.colorScheme.primary,
-//                        trackColor = Gray200,
-//                    )
                 LinearProgressIndicator(
                     progress = { percent.coerceIn(0f, 1f) },
                     modifier = Modifier
@@ -81,8 +74,6 @@ fun ReviewProgressBar(
                     color = MaterialTheme.colorScheme.primary,
                     trackColor = Gray200,
                 )
-
-//                }
             }
         }
     }
@@ -100,6 +91,20 @@ fun ReviewProgressBarPreview() {
             twoRatingCount = 7,
             oneRatingCount = 3
         )
+    }
+}
 
+@Preview(showBackground = true)
+@Composable
+fun ReviewProgressBarEmptyPreview() {
+    EatssuTheme {
+        ReviewProgressBar(
+            reviewCount = 0,
+            fiveRatingCount = 0,
+            fourRatingCount = 0,
+            threeRatingCount = 0,
+            twoRatingCount = 0,
+            oneRatingCount = 0
+        )
     }
 }
