@@ -128,9 +128,6 @@ fun ReviewWriteScreen(
         onImageDelete = {
             viewModel.setSelectedImage(null)
         },
-        onImageUpload = {
-            viewModel.uploadSelectedImage()
-        },
         writeReviewButtonClick = { rating, content, menuLikes ->
             viewModel.postReview(
                 menuType = menuType,
@@ -152,7 +149,6 @@ internal fun ReviewWriteScreen(
     modifier: Modifier = Modifier,
     onImageSelect: () -> Unit,
     onImageDelete: () -> Unit,
-    onImageUpload: () -> Unit,
     writeReviewButtonClick: (rating: Int, content: String, menuLikes: List<Long>) -> Unit,
 ) {
 
@@ -337,11 +333,6 @@ internal fun ReviewWriteScreen(
                 onClick = {
                     val menuLikesList = likedMenus.map { it }
 
-                    // 이미지가 선택된 경우 먼저 업로드
-                    if (selectedImageUri != null) {
-                        onImageUpload()
-                    }
-
                     writeReviewButtonClick(
                         rating,
                         text,
@@ -396,7 +387,6 @@ fun ReviewListPreview() {
             uploadedImageUrl = null,
             onImageSelect = {},
             onImageDelete = {},
-            onImageUpload = {},
             writeReviewButtonClick = { _, _, _ -> }
         )
     }

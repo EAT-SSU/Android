@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.enums.MenuType
@@ -22,6 +23,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import javax.inject.Inject
 
 
@@ -30,6 +33,7 @@ class ReviewWriteViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val getMenuNameListOfMealUseCase: GetMenuNameListOfMealUseCase,
+    private val context: Context,
 ) : ViewModel() {
 
     private val _uiState =
@@ -80,15 +84,58 @@ class ReviewWriteViewModel @Inject constructor(
         menuLikes: List<Long>
     ) {
         viewModelScope.launch {
+            Timber.d("postReview 시작 - rating: $rating, content: $content, menuLikes: $menuLikes")
             _uiState.value = UiState.Success(WriteReviewState.Loading)
+
+            var imageUrl: String? = null
+
+            // 이미지가 선택된 경우 먼저 업로드
+            val selectedUri = _selectedImageUri.value
+            Timber.d("선택된 이미지 URI: $selectedUri")
+            if (selectedUri != null) {
+                try {
+                    Timber.d("이미지 업로드 시작")
+                    // Uri를 File로 변환 (ContentResolver 사용)
+                    val file = uriToFile(selectedUri)
+                    Timber.d("변환된 파일 경로: ${file.absolutePath}, 파일 존재: ${file.exists()}")
+                    if (file.exists()) {
+                        Timber.d("S3 업로드 시작")
+                        imageUrl = saveS3(file)
+                        Timber.d("S3 업로드 결과: $imageUrl")
+                        if (imageUrl != null) {
+                            _uploadedImageUrl.value = imageUrl
+                            _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+                            Timber.d("이미지 업로드 성공: $imageUrl")
+                        } else {
+                            _uiState.value = UiState.Success(WriteReviewState.Error)
+                            _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+                            Timber.e("이미지 업로드 실패: imageUrl이 null")
+                            return@launch
+                        }
+                    } else {
+                        _uiState.value = UiState.Success(WriteReviewState.Error)
+                        _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
+                        Timber.e("이미지 파일이 존재하지 않음: ${file.absolutePath}")
+                        return@launch
+                    }
+                } catch (e: Exception) {
+                    _uiState.value = UiState.Success(WriteReviewState.Error)
+                    _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+                    Timber.e(e, "이미지 업로드 중 예외 발생")
+                    return@launch
+                }
+            }
 
             val reviewData = ReviewWriteData(
                 rating = rating,
                 content = content,
-                menuLikes = menuLikes
+                menuLikes = menuLikes,
+                imageUrl = imageUrl
             )
+            Timber.d("리뷰 데이터 생성: $reviewData")
 
             try {
+                Timber.d("리뷰 작성 시작")
                 when (val result = writeReviewUseCase(menuType, itemId, reviewData)) {
                     is Result.Success -> {
                         _uiState.value = UiState.Success(WriteReviewState.Success)
@@ -115,43 +162,44 @@ class ReviewWriteViewModel @Inject constructor(
         _selectedImageUri.value = uri
     }
 
-    fun uploadSelectedImage() {
-        viewModelScope.launch {
-            val uri = _selectedImageUri.value ?: return@launch
 
-            _uiState.value = UiState.Success(WriteReviewState.Loading)
+    private fun uriToFile(uri: android.net.Uri): File {
+        val inputStream: InputStream = context.contentResolver.openInputStream(uri)
+            ?: throw IllegalArgumentException("Cannot open input stream for URI: $uri")
 
-            try {
-                // Uri를 File로 변환 (실제 구현에서는 ContentResolver 사용)
-                val file = File(uri.path ?: "")
-                if (file.exists()) {
-                    val imageUrl = saveS3(file)
-                    _uploadedImageUrl.value = imageUrl
-                    _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
-                } else {
-                    _uiState.value = UiState.Success(WriteReviewState.Error)
-                    _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
-                }
-            } catch (e: Exception) {
-                _uiState.value = UiState.Success(WriteReviewState.Error)
-                _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
-                Timber.e(e)
+        val file = File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+        val outputStream = FileOutputStream(file)
+
+        inputStream.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
             }
         }
+
+        Timber.d("URI를 파일로 변환 완료: ${file.absolutePath}")
+        return file
     }
 
     suspend fun saveS3(file: File): String? {
+        Timber.d("saveS3 시작 - 파일: ${file.absolutePath}")
         return getImageUrlUseCase(file)
             .onStart {
+                Timber.d("saveS3 onStart")
                 _uiState.value = UiState.Success(WriteReviewState.Loading)
             }
             .catch { e ->
+                Timber.e(e, "saveS3 catch - 에러 발생")
                 _uiState.value = UiState.Success(WriteReviewState.Error)
                 _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
-                Timber.e(e)
             }
-            .map { it.result?.url }
+            .map { response ->
+                Timber.d("saveS3 map - 응답: $response")
+                response.result?.url
+            }
             .firstOrNull()
+            .also { url ->
+                Timber.d("saveS3 결과: $url")
+            }
     }
 }
 
