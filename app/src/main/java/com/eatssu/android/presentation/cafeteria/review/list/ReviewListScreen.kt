@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.cafeteria.review.list
 import EatSsuButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,11 +36,13 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.cafeteria.review.list.component.EatSsuTopBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray100
+import com.eatssu.android.presentation.compose.ui.theme.Gray600
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -78,7 +83,8 @@ internal fun ReviewListScreen(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text("리뷰")
+                EatSsuTopBar("리뷰",
+                    onBack = {})
 
                 when (uiState) {
                     is UiState.Success -> {
@@ -134,7 +140,6 @@ internal fun ReviewListScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 24.dp),
-//                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Row(
@@ -186,6 +191,30 @@ internal fun ReviewListScreen(
                             }
 
                             if (uiState.data?.reviewInfo?.reviewCnt == 0) {
+
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        painterResource(R.drawable.ic_none_review),
+                                        "empty review",
+                                        tint = Gray600,
+                                        modifier = Modifier.size(48.dp)
+                                    )
+
+                                    Text(
+                                        "아직 작성된 리뷰가 없어요",
+                                        style = EatssuTheme.typography.subtitle2,
+                                        color = Gray600
+                                    )
+                                    Text(
+                                        "메뉴에 가장 먼저 리뷰를 남겨주세요!",
+                                        style = EatssuTheme.typography.subtitle2,
+                                        color = Gray600
+                                    )
+                                }
                                 //todo 텅처리
                                 Spacer(modifier = Modifier.weight(1f))
                             } else {
@@ -301,6 +330,31 @@ fun ReviewListPreview() {
                             likeMenuList = null
                         )
                     )
+                )
+            ),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ReviewListEmptyPreview() {
+    EatssuTheme {
+        ReviewListScreen(
+            onReviewWriteButtonClick = {},
+            uiState = UiState.Success(
+                ReviewListState(
+                    reviewInfo = ReviewInfo(
+                        name = "소고기+닭고기+돼지고기+양고기+오리고기",
+                        reviewCnt = 0,
+                        five = 0,
+                        four = 0,
+                        three = 0,
+                        two = 0,
+                        one = 0,
+                        mainRating = 0.0,
+                    ),
+                    reviewList = emptyList()
                 )
             ),
         )
