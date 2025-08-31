@@ -40,6 +40,7 @@ import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray100
 import com.eatssu.android.presentation.compose.ui.theme.Primary
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 @Composable
 fun ReviewListScreen(
@@ -132,7 +133,7 @@ internal fun ReviewListScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 36.dp),
+                                    .padding(horizontal = 24.dp),
 //                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -141,10 +142,12 @@ internal fun ReviewListScreen(
                                 ) {
                                     RatingBar(
                                         isBig = true,
-                                        rating = 1,
+                                        rating = info?.mainRating?.roundToInt() ?: 0,
                                         onRatingChanged = {},
                                         maxRating = 1
-                                    )
+                                    ).also {
+                                        Timber.d("ReviewListScreen - mainRating: ${info?.mainRating}, rounded: ${info?.mainRating?.roundToInt()}")
+                                    }
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         info?.mainRating.toString(),
@@ -157,12 +160,13 @@ internal fun ReviewListScreen(
                                 Spacer(modifier = Modifier.width(37.dp))
 
                                 ReviewProgressBar(
+                                    reviewCount = info?.reviewCnt ?: 0,
                                     fiveRatingCount = info?.five ?: 0,
                                     fourRatingCount = info?.four ?: 0,
                                     threeRatingCount = info?.three ?: 0,
                                     twoRatingCount = info?.two ?: 0,
                                     oneRatingCount = info?.one ?: 0,
-                                    modifier = Modifier.width(150.dp)
+                                    modifier = Modifier.fillMaxWidth()
                                 )
                             }
 

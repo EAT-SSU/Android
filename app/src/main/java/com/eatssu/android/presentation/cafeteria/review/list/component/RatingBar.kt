@@ -24,8 +24,6 @@ fun RatingBar(
     Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
         for (i in 1..maxRating) {
             val tintColor = if (i <= rating) Color(0xFFFFC107) else Color(0xFFDADADA) // 노랑 / 회색
-
-
             val iconSize = if (isBig) 24.dp else 12.dp
 
             Icon(
@@ -36,7 +34,6 @@ fun RatingBar(
                     .clickable { onRatingChanged(i) },
                 tint = tintColor
             )
-
         }
     }
 }
