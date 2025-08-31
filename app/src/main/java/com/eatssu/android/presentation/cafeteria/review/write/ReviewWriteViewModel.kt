@@ -86,6 +86,9 @@ class ReviewWriteViewModel @Inject constructor(
                     is Result.Success -> {
                         _uiState.value = UiState.Success(WriteReviewState.Success)
                         _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
+                        // 성공 후 잠시 후 상태 초기화
+                        kotlinx.coroutines.delay(1000)
+                        _uiState.value = UiState.Success(WriteReviewState.Init)
                     }
 
                     is Result.Failure -> {
