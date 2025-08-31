@@ -21,10 +21,10 @@ android {
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
-        minSdk = 24
-        targetSdk = 35
-        versionCode = 34
-        versionName = "2.1.4"
+        minSdk = 23
+        targetSdk = 34
+        versionCode = 35
+        versionName = "2.1.15"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -77,7 +77,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     kotlin {

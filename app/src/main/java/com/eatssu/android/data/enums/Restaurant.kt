@@ -16,8 +16,8 @@ enum class Restaurant(val displayName: String, val menuType: MenuType) {
         fun getVariableRestaurants(): List<Restaurant> {
             return entries.filter { it.menuType == MenuType.VARIABLE }
         }
-        // enum의 이름 (예: DODAM)을 사용하여 한글명 (displayName)을 찾는 메소드
-        fun fromRestaurantEnumName(enumName: String): String {
+      
+      fun fromRestaurantEnumName(enumName: String): String {
             return entries.find { it.name == enumName }?.displayName ?: ""
         }
 

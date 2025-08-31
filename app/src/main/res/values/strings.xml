@@ -158,7 +158,7 @@
     <string name="signout_nickname">닉네임을 입력해주세요</string>
 
     <string name="developer">만든 사람들</string>
-    <string name="team_eatssu">\@TEAM EAT\-SSU</string>
+    <string name="team_eatssu">TEAM EAT\-SSU</string>
 
     <string name="notification_context_title">🤔 오늘 밥 뭐 먹지</string>
     <string name="notification_context_text">오늘의 학식을 확인해보세요!</string>
@@ -177,4 +177,7 @@
     <string name="login_failed">로그인이 실패했습니다.\n</string>
     <string name="token_expired">세션이 만료되었습니다. 다시 로그인 해주세요.</string>
     <string name="token_server_error">시스템 오류로 다시 로그인해주세요.</string>
+
+    <string name="eatssu_instagram">eatssu.official</string>
+    <string name="recruiting_url">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
 </resources>

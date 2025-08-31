@@ -43,6 +43,7 @@ class MenuFragment : Fragment() {
     val haksikDataLoaded = MutableLiveData<Boolean>()
     val dodamDataLoaded = MutableLiveData<Boolean>()
     val dormitoryDataLoaded = MutableLiveData<Boolean>()
+    val facultyDataLoaded = MutableLiveData<Boolean>()
 
     private val totalMenuList = ArrayList<Section>()
 
@@ -106,6 +107,7 @@ class MenuFragment : Fragment() {
             menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
             menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
+            menuViewModel.loadTodayMeal(menuDate, Restaurant.FACULTY, time)
         }
     }
 
@@ -163,6 +165,24 @@ class MenuFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                menuViewModel.todayMealDataFaculty.collect { result ->
+                    totalMenuList.removeAll { it.cafeteria == Restaurant.FACULTY }
+                    if (result.isNotEmpty()) {
+                        totalMenuList.add(
+                            Section(MenuType.VARIABLE, Restaurant.FACULTY,
+                                result.mapTodayMenuResponseToMenu(),
+                                infoViewModel.getRestaurantInfo(Restaurant.FACULTY)?.location ?: ""
+                            )
+                        )
+                    }
+                    facultyDataLoaded.value = true
+                    checkDataLoaded()
+                }
+            }
+        }
     }
 
     private fun collectFixedMenuData() {
@@ -216,7 +236,8 @@ class MenuFragment : Fragment() {
             snackCornerDataLoaded.value == true &&
             haksikDataLoaded.value == true &&
             dodamDataLoaded.value == true &&
-            dormitoryDataLoaded.value == true
+            dormitoryDataLoaded.value == true &&
+            facultyDataLoaded.value == true
         ) {
             totalMenuList.sortBy { it.cafeteria.ordinal }
             setupTodayRecyclerView()
