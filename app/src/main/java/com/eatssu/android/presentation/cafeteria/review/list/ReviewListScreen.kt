@@ -73,14 +73,8 @@ internal fun ReviewListScreen(
         modifier = modifier.fillMaxSize(),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-
-//            val scrollState = rememberScrollState()
-
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 72.dp),
-//                    .verticalScroll(scrollState),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("리뷰")
@@ -90,7 +84,13 @@ internal fun ReviewListScreen(
                         val info = uiState.data?.reviewInfo
                         val reviewList = uiState.data?.reviewList ?: emptyList()
 
-                        Column(modifier = Modifier.padding(24.dp)) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .weight(1f)
+                                .padding(24.dp)
+                                .padding(bottom = 16.dp)
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -183,11 +183,11 @@ internal fun ReviewListScreen(
 
                             if (uiState.data?.reviewInfo?.reviewCnt == 0) {
                                 //todo 텅처리
-
-
+                                Spacer(modifier = Modifier.weight(1f))
                             } else {
-
-                                LazyColumn {
+                                LazyColumn(
+                                    modifier = Modifier.weight(1f)
+                                ) {
                                     items(reviewList) { item ->
                                         ReviewItem(
                                             modifier = Modifier,
@@ -201,31 +201,42 @@ internal fun ReviewListScreen(
                                     }
                                 }
                             }
-                        }                         // 하단 고정 버튼
-                        EatSsuButton(
-                            "리뷰 작성하기",
-                            onClick = {
-                                // info.name을 전달 (메뉴명이 +로 합쳐진 값)
-                                val menuName = info?.name ?: ""
-                                Timber.d("ReviewListScreen - info.name: '${info?.name}', menuName: '$menuName'")
-                                onReviewWriteButtonClick(menuName)
-                            },
-                        )
+                        }
                     }
-
 
                     UiState.Loading -> {
                         // TODO: 로딩 UI
+                        Spacer(modifier = Modifier.weight(1f))
                     }
 
                     UiState.Error -> {
                         // TODO: 에러 UI
+                        Spacer(modifier = Modifier.weight(1f))
                     }
 
                     UiState.Init -> {
                         // TODO: 초기 상태 UI
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
+            }
+
+            // 하단 고정 버튼
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(24.dp)
+            ) {
+                EatSsuButton(
+                    "리뷰 작성하기",
+                    onClick = {
+                        // info.name을 전달 (메뉴명이 +로 합쳐진 값)
+                        val menuName = (uiState as? UiState.Success)?.data?.reviewInfo?.name ?: ""
+                        Timber.d("ReviewListScreen - info.name: '${(uiState as? UiState.Success)?.data?.reviewInfo?.name}', menuName: '$menuName'")
+                        onReviewWriteButtonClick(menuName)
+                    },
+                )
             }
         }
     }

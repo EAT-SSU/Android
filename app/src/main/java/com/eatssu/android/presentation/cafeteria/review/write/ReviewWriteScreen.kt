@@ -341,7 +341,7 @@ internal fun ReviewWriteScreen(
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(12.dp)
+                    .padding(24.dp)
             )
         }
     }
