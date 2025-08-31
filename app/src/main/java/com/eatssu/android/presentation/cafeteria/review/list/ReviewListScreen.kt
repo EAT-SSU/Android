@@ -39,7 +39,6 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewPro
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray100
 import com.eatssu.android.presentation.compose.ui.theme.Primary
-import timber.log.Timber
 
 @Composable
 fun ReviewListScreen(
@@ -47,18 +46,19 @@ fun ReviewListScreen(
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
     id: Long,
+    onReviewWriteButtonClick: () -> Unit,
 ) {
+
     LaunchedEffect(key1 = menuType, key2 = id) {
         viewModel.loadReview(menuType, id)
     }
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Timber.d("리부 ${reviewListState.toString()}")
-
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
+        onReviewWriteButtonClick = onReviewWriteButtonClick
     )
 }
 
@@ -66,6 +66,7 @@ fun ReviewListScreen(
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
+    onReviewWriteButtonClick: () -> Unit,
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -74,7 +75,7 @@ internal fun ReviewListScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 72.dp), // 버튼 영역만큼 아래 패딩,
+                    .padding(bottom = 72.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("리뷰")
@@ -88,8 +89,8 @@ internal fun ReviewListScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(16.dp)) // 모서리 곡률을 16.dp로 둥글게 만듭니다.
-                                    .background(Gray100) // 배경색 설정
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(Gray100)
                                     .padding(horizontal = 16.dp, vertical = 13.dp)
                             ) {
                                 Column(
@@ -114,7 +115,6 @@ internal fun ReviewListScreen(
                                         style = EatssuTheme.typography.body1
                                     )
                                 }
-
                             }
 
                             Box(
@@ -177,6 +177,7 @@ internal fun ReviewListScreen(
                             }
 
                             if (uiState.data?.reviewInfo?.reviewCnt == 0) {
+                                //todo 텅처리
 
 
                             } else {
@@ -214,7 +215,7 @@ internal fun ReviewListScreen(
             // 하단 고정 버튼
             EatssuButton(
                 "리뷰 작성하기",
-                {},
+                onClick = onReviewWriteButtonClick,
                 modifier.align(Alignment.BottomCenter),
             )
         }
@@ -228,6 +229,7 @@ internal fun ReviewListScreen(
 fun ReviewListPreview() {
     EatssuTheme {
         ReviewListScreen(
+            onReviewWriteButtonClick = {},
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(

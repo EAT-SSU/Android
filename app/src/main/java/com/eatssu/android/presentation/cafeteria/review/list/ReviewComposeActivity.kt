@@ -3,7 +3,9 @@ package com.eatssu.android.presentation.cafeteria.review.list
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.presentation.cafeteria.review.ReviewNav
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -22,7 +24,10 @@ class ReviewComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             EatssuTheme {
-                ReviewListScreen(
+                val navHostController = rememberNavController()
+
+                ReviewNav(
+                    nav = navHostController,
                     menuType = MenuType.valueOf(menuType),
                     id = itemId
                 )
