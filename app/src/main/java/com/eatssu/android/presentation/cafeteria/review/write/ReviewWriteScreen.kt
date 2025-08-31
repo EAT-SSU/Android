@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.write
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
+import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.domain.model.MenuList
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
@@ -49,16 +53,33 @@ import com.eatssu.android.presentation.compose.ui.theme.Primary
 @Composable
 fun ReviewWriteScreen(
     modifier: Modifier = Modifier,
-    viewModel: ReviewWriteViewModel = hiltViewModel()
+    viewModel: ReviewWriteViewModel = hiltViewModel(),
+    menuList: List<MenuList>,
+    menuType: MenuType,
+    id: Long,
 ) {
 
     val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(menuType, id) {
+        when (menuType) {
+            MenuType.FIXED -> { //todo 메뉴명 전달
+            }
+
+            MenuType.VARIABLE -> {
+//                    viewModel.findMenuItemByMealId(id)
+            }
+        }
+    }
 
     val mealId by remember { mutableIntStateOf(13) }
 
     ReviewWriteScreen(
         uiState = reviewWriteState,
         modifier = modifier,
+        addPhotoButtonClick = {
+
+        }
     )
 }
 
@@ -67,6 +88,7 @@ fun ReviewWriteScreen(
 internal fun ReviewWriteScreen(
     uiState: UiState<WriteReviewState>,
     modifier: Modifier = Modifier,
+    addPhotoButtonClick: () -> Unit,
 ) {
 
     val mealList = listOf("맑은 미역국", "연탄불맛돈불고기", "김말이 데리강정")
@@ -165,7 +187,11 @@ internal fun ReviewWriteScreen(
 
             //사진
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        addPhotoButtonClick()
+                    },
                 horizontalAlignment = Alignment.Start,
             ) {
                 Column(
@@ -234,8 +260,6 @@ fun MenuItem(
             }
         )
     }
-
-
 }
 
 
@@ -245,6 +269,7 @@ fun ReviewListPreview() {
     EatssuTheme {
         ReviewWriteScreen(
             uiState = UiState.Success(),
+            addPhotoButtonClick = {}
         )
     }
 }

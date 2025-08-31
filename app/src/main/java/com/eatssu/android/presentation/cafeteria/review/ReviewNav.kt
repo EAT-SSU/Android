@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.domain.model.MenuList
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteScreen
 
@@ -32,7 +33,10 @@ fun ReviewNav(
             ReviewListScreen(
                 menuType = menuType,
                 id = id,
-                onReviewWriteButtonClick = {
+                onReviewWriteButtonClick = { menuList ->
+                    // SavedStateHandle을 사용하여 menuList 전달
+                    nav.currentBackStackEntry?.savedStateHandle?.set("menuList", menuList)
+                    
                     nav.navigate(ReviewNav.Write) {
                         launchSingleTop = true
                     }
@@ -41,23 +45,14 @@ fun ReviewNav(
         }
 
         // 자동완성
-        composable(ReviewNav.Write) {
+        composable(ReviewNav.Write) { backStackEntry ->
+            val savedStateHandle = backStackEntry.savedStateHandle
+            val menuList = savedStateHandle.get<ArrayList<MenuList>>("menuList") ?: arrayListOf()
+            
             ReviewWriteScreen(
-//                onSearchBarClick = {
-//                    nav.navigate(PoiRoutes.Suggest) {
-//                        launchSingleTop = true
-//                    }
-//                },
-//                onQueryClick = { query ->
-//                    nav.navigate(PoiRoutes.resultRoute(query)) {
-//                        launchSingleTop = true
-//                    }
-//                },
-//                onPlaceClick = { placeName, x, y ->
-//                    nav.navigate(PoiRoutes.routeSearch(placeName, x, y)) {
-//                        launchSingleTop = true
-//                    }
-//                }
+                menuType = menuType,
+                menuList = menuList,
+                id = id
             )
         }
     }
