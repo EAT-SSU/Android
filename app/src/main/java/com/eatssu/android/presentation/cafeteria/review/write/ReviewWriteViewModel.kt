@@ -2,7 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.domain.usecase.menu.GetMenuNameListOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
@@ -62,7 +62,7 @@ class ReviewWriteViewModel @Inject constructor(
         }
     }
 
-    fun postReview(menuId: Long, reviewData: WriteReviewRequest) {//todo dto 그대로 쓰기 말기
+    fun postReview(menuId: Long, reviewData: WriteMenuReviewRequest) {//todo dto 그대로 쓰기 말기
         viewModelScope.launch {
             writeReviewUseCase(menuId, reviewData)
                 .onStart {
