@@ -39,6 +39,7 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewPro
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
 import com.eatssu.android.presentation.compose.ui.theme.Gray100
 import com.eatssu.android.presentation.compose.ui.theme.Primary
+import timber.log.Timber
 
 @Composable
 fun ReviewListScreen(
@@ -48,12 +49,12 @@ fun ReviewListScreen(
     id: Long,
 ) {
     LaunchedEffect(key1 = menuType, key2 = id) {
-        // 2. key가 변경되면 이 블록이 다시 실행됨
-        // 뷰모델의 함수를 호출하여 데이터를 로드
         viewModel.loadReview(menuType, id)
     }
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    Timber.d("리부 ${reviewListState.toString()}")
 
     ReviewListScreen(
         uiState = reviewListState,
@@ -238,8 +239,6 @@ fun ReviewListPreview() {
                         two = 5,
                         one = 8,
                         mainRating = 4.5,
-//                        likeCount = 100,
-//                        unlikeCount = 50,
                     ),
                     reviewList = listOf(
                         Review(
