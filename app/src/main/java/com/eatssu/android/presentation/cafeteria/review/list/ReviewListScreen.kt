@@ -1,5 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,18 +10,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,8 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import com.eatssu.android.presentation.compose.ui.theme.Gray100
+import com.eatssu.android.presentation.compose.ui.theme.Primary
 
 @Composable
 fun ReviewListScreen(
@@ -43,14 +46,14 @@ fun ReviewListScreen(
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    InternalReviewListScreen(
+    ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
     )
 }
 
 @Composable
-internal fun InternalReviewListScreen(
+internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
 ) {
@@ -72,24 +75,53 @@ internal fun InternalReviewListScreen(
                         val reviewList = uiState.data?.reviewList ?: emptyList()
 
                         Column(modifier = Modifier.padding(24.dp)) {
-                            Text(
-                                info?.name.toString(),
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                style = EatssuTheme.typography.h2
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+//                                    .size(100.dp) // 박스의 크기 설정
+                                    .clip(RoundedCornerShape(16.dp)) // 모서리 곡률을 16.dp로 둥글게 만듭니다.
+                                    .background(Gray100) // 배경색 설정
+                                    .padding(horizontal = 16.dp, vertical = 13.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Row {
+                                        Image(
+                                            painter = painterResource(R.drawable.ic_map_restaurant),
+                                            "map restaurant icon"
+                                        )
+                                        Text(
+                                            "오늘의 메뉴",
+                                            style = EatssuTheme.typography.subtitle1
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(12.dp))
 
-                            Spacer(modifier = Modifier.height(13.dp))
+                                    Text(
+                                        info?.name.toString(),
+                                        modifier = Modifier,
+                                        style = EatssuTheme.typography.body1
+                                    )
+                                }
+
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .background(Gray100)
+                                    .padding(vertical = 16.dp)
+                            )
 
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 12.dp),
+                                    .padding(horizontal = 36.dp),
 //                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
@@ -107,39 +139,10 @@ internal fun InternalReviewListScreen(
                                         )
                                     }
 
-                                    Spacer(modifier = Modifier.height(4.dp))
-
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.ic_thumb_up),
-                                            contentDescription = "thumb up icon",
-                                            modifier = Modifier.size(28.dp),
-                                            tint = Color.Unspecified
-                                        )
-                                        Text(
-                                            info?.reviewCnt.toString(),
-                                            style = EatssuTheme.typography.subtitle2
-                                        ) // TODO 좋아요
-
-                                        Spacer(modifier = Modifier.width(12.dp))
-
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.ic_thumb_down),
-                                            contentDescription = "thumb down icon",
-                                            modifier = Modifier.size(28.dp),
-                                            tint = Color.Unspecified
-                                        )
-                                        Text(
-                                            info?.reviewCnt.toString(),
-                                            style = EatssuTheme.typography.subtitle2
-                                        ) // TODO 싫어요
-                                    }
-                                }
 
                                 Spacer(modifier = Modifier.width(37.dp))
 
                                 ReviewProgressBar(
-                                    reviewCount = info?.reviewCnt ?: 0,
                                     fiveRatingCount = info?.five ?: 0,
                                     fourRatingCount = info?.four ?: 0,
                                     threeRatingCount = info?.three ?: 0,
@@ -149,12 +152,22 @@ internal fun InternalReviewListScreen(
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(12.dp))
+
+                            Row {
 
                             Text(
                                 "리뷰",
                                 style = EatssuTheme.typography.h2,
                             )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "${info?.reviewCnt}",
+                                    color = Primary,
+                                    style = EatssuTheme.typography.h2,
+                            )
+                            }
+
+
 
                             LazyColumn {
                                 items(reviewList) { item ->
@@ -200,7 +213,7 @@ internal fun InternalReviewListScreen(
 @Composable
 fun ReviewListPreview() {
     EatssuTheme {
-        InternalReviewListScreen(
+        ReviewListScreen(
             uiState = UiState.Success(
                 ReviewListState(
                     isEmpty = false,
@@ -213,8 +226,8 @@ fun ReviewListPreview() {
                         two = 5,
                         one = 8,
                         mainRating = 4.5,
-                        likeCount = 100,
-                        unlikeCount = 50,
+//                        likeCount = 100,
+//                        unlikeCount = 50,
                     ),
                     reviewList = listOf(
                         Review(

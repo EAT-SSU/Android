@@ -68,4 +68,6 @@ class ReviewWriteViewModel @Inject constructor(
     }
 }
 
-sealed class WriteReviewState
+sealed class WriteReviewState(
+    val menuList: List<String>,
+)
