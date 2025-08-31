@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.domain.model.MenuList
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
@@ -46,7 +47,7 @@ fun ReviewListScreen(
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
     id: Long,
-    onReviewWriteButtonClick: () -> Unit,
+    onReviewWriteButtonClick: (menuList: List<MenuList>) -> Unit // menuList를 인자로 받도록 수정
 ) {
 
     LaunchedEffect(key1 = menuType, key2 = id) {
@@ -66,7 +67,7 @@ fun ReviewListScreen(
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
-    onReviewWriteButtonClick: () -> Unit,
+    onReviewWriteButtonClick: (menuList: List<MenuList>) -> Unit,
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -193,7 +194,20 @@ internal fun ReviewListScreen(
                                     }
                                 }
                             }
-                        }
+                        } // 하단 고정 버튼
+                        EatssuButton(
+                            "리뷰 작성하기",
+                            onClick = {
+                                // 실제 메뉴 리스트를 만들어서 전달
+                                val menuList = reviewList.map { review ->
+                                    MenuList(
+                                        menuName = review.menu,
+                                        menuId = review.reviewId
+                                    )
+                                }
+                                onReviewWriteButtonClick(menuList)
+                            },
+                        )
                     }
 
 
@@ -210,14 +224,6 @@ internal fun ReviewListScreen(
                     }
                 }
             }
-
-
-            // 하단 고정 버튼
-            EatssuButton(
-                "리뷰 작성하기",
-                onClick = onReviewWriteButtonClick,
-                modifier.align(Alignment.BottomCenter),
-            )
         }
     }
 }
