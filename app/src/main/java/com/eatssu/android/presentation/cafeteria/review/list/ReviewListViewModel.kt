@@ -6,10 +6,8 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
-import com.eatssu.android.domain.usecase.review.GetMealReviewInfoUseCase
-import com.eatssu.android.domain.usecase.review.GetMealReviewListUseCase
-import com.eatssu.android.domain.usecase.review.GetMenuReviewInfoUseCase
-import com.eatssu.android.domain.usecase.review.GetMenuReviewListUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewListUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,10 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReviewListViewModel @Inject constructor(
-    private val getMenuReviewInfoUseCase: GetMenuReviewInfoUseCase,
-    private val getMenuReviewListUseCase: GetMenuReviewListUseCase,
-    private val getMealReviewInfoUseCase: GetMealReviewInfoUseCase,
-    private val getMealReviewListUseCase: GetMealReviewListUseCase,
+    private val getReviewInfoUseCase: GetReviewInfoUseCase,
+    private val getReviewListUseCase: GetReviewListUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
 
@@ -44,31 +40,21 @@ class ReviewListViewModel @Inject constructor(
         menuType: MenuType,
         itemId: Long,
     ) {
-        _uiState.value = UiState.Loading // Set loading state once at the start
+        _uiState.value = UiState.Loading
 
-        when (menuType) {
-            MenuType.FIXED -> {
-                callMenuReviewInfo(itemId)
-                callMenuReviewList(itemId)
-            }
-
-            MenuType.VARIABLE -> {
-                callMealReviewInfo(itemId)
-                callMealReviewList(itemId)
-            }
-        }
+        callReviewInfo(menuType, itemId)
+        callReviewList(menuType, itemId)
     }
 
-    private fun callMenuReviewInfo(menuId: Long) {
+    private fun callReviewInfo(menuType: MenuType, itemId: Long) {
         viewModelScope.launch {
-            getMenuReviewInfoUseCase(menuId)
+            getReviewInfoUseCase(menuType, itemId)
                 .catch { e ->
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("리뷰 정보를 불러오는데 실패하였습니다."))
                     Timber.d(e.toString())
                 }
                 .collect { result ->
-                    // Use update to safely modify only the reviewInfo part of the state
                     _uiState.update { currentState ->
                         val data =
                             if (currentState is UiState.Success) currentState.data else ReviewListState()
@@ -78,27 +64,9 @@ class ReviewListViewModel @Inject constructor(
         }
     }
 
-    private fun callMealReviewInfo(itemId: Long) {
+    private fun callReviewList(menuType: MenuType, itemId: Long) {
         viewModelScope.launch {
-            getMealReviewInfoUseCase(itemId)
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰 정보를 불러오는데 실패했습니다."))
-                    Timber.e(e.toString())
-                }
-                .collect { result ->
-                    _uiState.update { currentState ->
-                        val data =
-                            if (currentState is UiState.Success) currentState.data else ReviewListState()
-                        UiState.Success(data?.copy(reviewInfo = result))
-                    }
-                }
-        }
-    }
-
-    private fun callMenuReviewList(itemId: Long) {
-        viewModelScope.launch {
-            getMenuReviewListUseCase(itemId)
+            getReviewListUseCase(menuType, itemId)
                 .catch { e ->
                     _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("리뷰 조회에 실패했습니다."))
@@ -108,27 +76,6 @@ class ReviewListViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         val data =
                             if (currentState is UiState.Success) currentState.data else ReviewListState()
-                        // Ensure an empty list is used if no reviews are returned
-                        val reviewList = if (result.isEmpty()) emptyList() else result
-                        UiState.Success(data?.copy(reviewList = reviewList))
-                    }
-                }
-        }
-    }
-
-    private fun callMealReviewList(itemId: Long) {
-        viewModelScope.launch {
-            getMealReviewListUseCase(itemId)
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰 조회에 실패했습니다."))
-                    Timber.e(e.toString())
-                }
-                .collect { result ->
-                    _uiState.update { currentState ->
-                        val data =
-                            if (currentState is UiState.Success) currentState.data else ReviewListState()
-                        // Ensure an empty list is used if no reviews are returned
                         val reviewList = if (result.isEmpty()) emptyList() else result
                         UiState.Success(data?.copy(reviewList = reviewList))
                     }
