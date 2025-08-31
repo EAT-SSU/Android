@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -38,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
@@ -59,6 +59,7 @@ fun ReviewWriteScreen(
     menuName: String,
     menuType: MenuType,
     id: Long,
+    navController: NavController,
 ) {
     Timber.d("넘어온 메뉴명: $menuName, 메뉴타입: $menuType, ID: $id")
 
@@ -90,9 +91,16 @@ fun ReviewWriteScreen(
         }
     }
 
-// menuList가 변경될 때마다 로그 출력
+    // menuList가 변경될 때마다 로그 출력
     LaunchedEffect(menuList) {
         Timber.d("최종 메뉴 목록: $menuList")
+    }
+
+    // 리뷰 작성 성공 시 이전 화면으로 돌아가기
+    LaunchedEffect(reviewWriteState) {
+        if (reviewWriteState is UiState.Success && (reviewWriteState as UiState.Success<WriteReviewState>).data == WriteReviewState.Success) {
+            navController.popBackStack()
+        }
     }
 
     ReviewWriteScreen(
@@ -112,11 +120,8 @@ fun ReviewWriteScreen(
             )
         }
     )
-
-
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReviewWriteScreen(
     menuList: List<Pair<Long, String>>,

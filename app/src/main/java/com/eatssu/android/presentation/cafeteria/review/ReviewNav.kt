@@ -46,11 +46,11 @@ fun ReviewNav(
 
         // 리뷰 작성
         composable(ReviewNav.Write) { backStackEntry ->
-
-        ReviewWriteScreen(
+            ReviewWriteScreen(
                 menuType = menuType,
                 menuName = menuName,
-                id = id
+                id = id,
+                navController = nav
             )
         }
     }
