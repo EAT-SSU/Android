@@ -18,6 +18,7 @@ object ReviewNav {
 @Composable
 fun ReviewNav(
     nav: NavHostController = rememberNavController(),
+    menuName: String,
     menuType: MenuType,
     id: Long,
     onExit: () -> Unit = {}
@@ -45,10 +46,8 @@ fun ReviewNav(
 
         // 리뷰 작성
         composable(ReviewNav.Write) { backStackEntry ->
-            val savedStateHandle = backStackEntry.savedStateHandle
-            val menuName = savedStateHandle.get<String>("menuName") ?: ""
-            
-            ReviewWriteScreen(
+
+        ReviewWriteScreen(
                 menuType = menuType,
                 menuName = menuName,
                 id = id

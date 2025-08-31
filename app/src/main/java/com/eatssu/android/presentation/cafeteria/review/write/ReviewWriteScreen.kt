@@ -67,16 +67,9 @@ fun ReviewWriteScreen(
     val menuList = remember(menuName, menuType, viewModelMenuList) {
         when (menuType) {
             MenuType.FIXED -> {
-                // 고정 메뉴: +로 붙여진 메뉴명을 List<String>으로 분리
-                if (menuName.isNotEmpty()) {
-                    menuName.split("+").map { it.trim() }
-                } else {
-                    emptyList()
-                }
+                listOf(menuName)
             }
-
             MenuType.VARIABLE -> {
-                // 변동 메뉴: ViewModel에서 조회한 메뉴 목록 사용
                 viewModelMenuList
             }
         }
@@ -85,13 +78,17 @@ fun ReviewWriteScreen(
     LaunchedEffect(menuType, id) {
         when (menuType) {
             MenuType.FIXED -> {
-                Timber.d("고정 메뉴 - 분리된 메뉴 목록: $menuList")
+                Timber.d("고정 메뉴 - 원본 메뉴명: $menuName")
             }
             MenuType.VARIABLE -> {
-                // 변동 메뉴: meal ID로 메뉴 목록 조회
                 viewModel.findMenuItemByMealId(id)
             }
         }
+    }
+
+    // menuList가 변경될 때마다 로그 출력
+    LaunchedEffect(menuList) {
+        Timber.d("최종 메뉴 목록: $menuList")
     }
 
     ReviewWriteScreen(

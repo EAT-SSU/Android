@@ -200,7 +200,7 @@ internal fun ReviewListScreen(
                             onClick = {
                                 // info.name을 전달 (메뉴명이 +로 합쳐진 값)
                                 val menuName = info?.name ?: ""
-                                Timber.d("넘김 $menuName")
+                                Timber.d("ReviewListScreen - info.name: '${info?.name}', menuName: '$menuName'")
                                 onReviewWriteButtonClick(menuName)
                             },
                         )
