@@ -67,7 +67,7 @@ class MealWidget : GlanceAppWidget() {
 
             LaunchedEffect(key1 = Unit) {
 
-                delay(5000) //딜레이 안주면 Init 상태의 위젯이 추가됨.
+                delay(2000) //딜레이 안주면 Init 상태의 위젯이 추가됨.
                 val savedRestaurant = WidgetSettingActivity.loadRestaurantByFileKey(
                     context.applicationContext,
                     "appWidget-${appWidgetId}"
