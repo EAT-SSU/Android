@@ -113,7 +113,6 @@ fun ReviewWriteScreen(
         }
     )
 
-    val mealId by remember { mutableIntStateOf(13) }
 
 }
 
@@ -163,28 +162,29 @@ internal fun ReviewWriteScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
 
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f) // 이 부분이 중요합니다.
-                        .fillMaxWidth()
-                ) {
-                items(menuList) { menuName ->
-                    MenuItem(
-                        mealName = menuName.second,
-                        modifier = Modifier,
-                        isLiked = likedMenus.contains(menuName.first),
-                        onLikeChanged = { isLiked ->
-                            if (isLiked) {
-                                likedMenus.add(menuName.first)
-                            } else {
-                                likedMenus.remove(menuName.first)
+                LazyColumn {
+                    items(menuList) { menuPair -> // 매개변수 이름을 menuPair로 변경하여 혼동 방지
+                        MenuItem(
+                            mealName = menuPair.second,
+                            modifier = Modifier,
+                            isLiked = likedMenus.contains(menuPair.first),
+                            onLikeChanged = { isLiked ->
+                                // Set을 사용하여 중복 제거 및 상태 변경
+                                val newSet = likedMenus.toSet()
+                                val updatedList = if (isLiked) {
+                                    (newSet + menuPair.first).toList()
+                                } else {
+                                    (newSet - menuPair.first).toList()
+                                }
+                                likedMenus =
+                                    updatedList.toMutableList() // mutableStateOf를 위해 MutableList로 다시 변환
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-            }
 
-            // 최대 글자 수
+
+                // 최대 글자 수
             val maxChar = 300
 
 
