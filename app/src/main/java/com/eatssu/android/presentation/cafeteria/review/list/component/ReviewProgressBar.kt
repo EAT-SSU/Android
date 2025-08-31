@@ -13,12 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import com.eatssu.android.presentation.compose.ui.theme.Gray200
 
 @Composable
 fun ReviewProgressBar(
@@ -39,21 +39,6 @@ fun ReviewProgressBar(
     )
 
     Column(modifier = modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.total_review_num),
-                style = EatssuTheme.typography.caption2,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "$reviewCount",
-                style = EatssuTheme.typography.caption1,
-//                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
 
         ratingList.forEach { (rating, count) ->
             val percent = if (reviewCount > 0) count / reviewCount.toFloat() else 0f
@@ -62,7 +47,7 @@ fun ReviewProgressBar(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .padding(vertical = 2.dp)
             ) {
                 Text(
                     text = stringResource(
@@ -75,17 +60,29 @@ fun ReviewProgressBar(
                         }
                     ),
                     style = EatssuTheme.typography.caption2,
-//                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.width(8.dp))
+
+//                Box( modifier = Modifier
+//                            .weight(1f)) {
+//                    LinearProgressIndicator(
+//                        progress = { 0f },
+//                        modifier = Modifier
+////                            .weight(1f)
+//                            .height(10.dp),
+//                        color = MaterialTheme.colorScheme.primary,
+//                        trackColor = Gray200,
+//                    )
                 LinearProgressIndicator(
                     progress = { percent.coerceIn(0f, 1f) },
                     modifier = Modifier
                         .weight(1f)
                         .height(10.dp),
                     color = MaterialTheme.colorScheme.primary,
-                    trackColor = Color.LightGray,
+                    trackColor = Gray200,
                 )
+
+//                }
             }
         }
     }
@@ -103,5 +100,6 @@ fun ReviewProgressBarPreview() {
             twoRatingCount = 7,
             oneRatingCount = 3
         )
+
     }
 }

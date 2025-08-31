@@ -1,258 +1,271 @@
-//package com.eatssu.android.presentation.cafeteria.review.write
-//
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.Row
-//import androidx.compose.foundation.layout.Spacer
-//import androidx.compose.foundation.layout.fillMaxHeight
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.fillMaxWidth
-//import androidx.compose.foundation.layout.height
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.foundation.layout.size
-//import androidx.compose.foundation.layout.width
-//import androidx.compose.foundation.lazy.LazyColumn
-//import androidx.compose.material3.Icon
-//import androidx.compose.material3.Surface
-//import androidx.compose.material3.Text
-//import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.getValue
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.res.painterResource
-//import androidx.compose.ui.tooling.preview.Preview
-//import androidx.compose.ui.unit.dp
-//import androidx.hilt.navigation.compose.hiltViewModel
-//import androidx.lifecycle.compose.collectAsStateWithLifecycle
-//import com.eatssu.android.R
-//import com.eatssu.android.domain.model.Review
-//import com.eatssu.android.domain.model.ReviewInfo
-//import com.eatssu.android.presentation.UiState
-//import com.eatssu.android.presentation.cafeteria.review.list.ReviewListState
-//import com.eatssu.android.presentation.cafeteria.review.list.ReviewListViewModel
-//import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
-//import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
-//import com.eatssu.android.presentation.cafeteria.review.list.component.Tag
-//import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-//
-//@Composable
-//fun ReviewWriteScreen(
-//    modifier: Modifier = Modifier,
-//    viewModel: ReviewListViewModel = hiltViewModel()
-//) {
-//
-//    val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
-//
-//    ReviewWriteScreen(
-//        uiState = reviewListState,
-//        modifier = modifier,
-//    )
-//}
-//
-//@Composable
-//internal fun ReviewWriteScreen(
-//    uiState: UiState<ReviewListState>,
-//    modifier: Modifier = Modifier,
-//) {
-//
-//    Surface(
-//        modifier = modifier.fillMaxSize(),
-////        color = EatssuTheme.colors.background
-//    ) {
-//        Column(
+package com.eatssu.android.presentation.cafeteria.review.write
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.eatssu.android.R
+import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
+import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import com.eatssu.android.presentation.compose.ui.theme.Gray100
+import com.eatssu.android.presentation.compose.ui.theme.Gray200
+import com.eatssu.android.presentation.compose.ui.theme.Gray300
+import com.eatssu.android.presentation.compose.ui.theme.Gray400
+import com.eatssu.android.presentation.compose.ui.theme.Gray500
+import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.eatssu.android.presentation.compose.ui.theme.White
+
+@Composable
+fun ReviewWriteScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ReviewWriteViewModel = hiltViewModel()
+) {
+
+    val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val mealId by remember { mutableIntStateOf(13) }
+
+    ReviewWriteScreen(
+        uiState = reviewWriteState,
+        modifier = modifier,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun ReviewWriteScreen(
+    uiState: UiState<WriteReviewState>,
+    modifier: Modifier = Modifier,
+) {
+
+    val mealList = listOf("맑은 미역국", "연탄불맛돈불고기", "김말이 데리강정")
+
+    var rating by remember { mutableIntStateOf(0) }
+    var text by remember { mutableStateOf("") }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("리뷰 작성하기")
+
+            Text(
+                "오늘의 식사는 어뗘셨나요?",
+                style = EatssuTheme.typography.subtitle1
+            )
+
+            RatingBar(
+                modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
+                isBig = true,
+                rating = rating, // 현재 상태 값 전달
+                maxRating = 5,
+                onRatingChanged = { newRating ->
+                    rating = newRating // 클릭 시 상태 값 업데이트
+                },
+            )
+
+            Text(
+                "추천하고 싶은 메뉴가 있나요?",
+                style = EatssuTheme.typography.subtitle1
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            LazyColumn {
+                items(mealList) { item ->
+                    MenuItem(
+                        mealName = item,
+                        modifier = Modifier,
+                    )
+                }
+            }
+
+            // 최대 글자 수
+            val maxChar = 300
+
+
+            Column {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    value = text,
+                    onValueChange = { newText ->
+                        // 최대 글자 수를 초과하지 않도록 함
+                        if (newText.length <= maxChar) {
+                            text = newText
+                        }
+                    },
+                    label = {
+                        Text(
+                            "메뉴에 대한 상세한 리뷰를 작성해주세요",
+                            style = EatssuTheme.typography.body2
+                        )
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        // 배경색
+                        focusedContainerColor = Gray100,
+                        unfocusedContainerColor = Gray100,
+
+                        // 테두리 색상 지정 🎨
+                        unfocusedBorderColor = Gray200,
+                        focusedBorderColor = Gray200,
+
+                        // 힌트 문구 색상
+                        unfocusedLabelColor = Gray400,
+                        focusedLabelColor = Gray400,
+                        cursorColor = Primary
+                    )
+                )
+
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(top = 8.dp),
+                    text = "${text.length}/$maxChar",
+                    color = Gray400,
+                    style = EatssuTheme.typography.caption3
+                )
+            }
+
+            //사진
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Column(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(RoundedCornerShape(5.dp)) // 먼저 클립하여 모양을 정의
+                        .background(Gray100) // 연한 회색 배경 (예시)
+                        // 테두리 추가 📏
+                        .border(
+                            width = 1.dp, // 테두리 두께
+                            color = Gray200, // 테두리 색상
+                            shape = RoundedCornerShape(5.dp) // 테두리도 같은 둥근 모양으로 적용
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_camera_light),
+                        "add photo",
+                        tint = Gray300
+                    )
+                    Text(
+                        "사진 0/1",
+                        color = Gray400,
+                        style = EatssuTheme.typography.caption3
+                    )
+                }
+
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = "사진 클릭 시, 삭제됩니다.",
+                    color = Gray500,
+                    style = EatssuTheme.typography.caption3
+                )
+            }
+        }
+
+        // 하단 고정 버튼
+//        EatssuButton(
 //            modifier = Modifier,
-//            horizontalAlignment = Alignment.CenterHorizontally,
-////            verticalArrangement = Arrangement.Center,
-//        ) {
-//            Text("리뷰")
-//
-//            when (uiState) {
-//                is UiState.Success -> {
-//                    Text(uiState.data?.reviewInfo!!.name)
-//                    Row {
-//                        Column {
-//                            Row {
-//                                RatingBar(rating = 1, onRatingChanged = {}, isBig = true, maxRating = 1)
-//                                Text(uiState.data?.reviewInfo?.mainRating.toString())
-//                            }
-//                            Row {
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.ic_thumb_up),
-//                                    contentDescription = "thumb up icon",
-//                                    modifier = Modifier.size(28.dp),
-//                                    tint = Color.Unspecified,
-//                                )
-//                                Text(uiState.data?.reviewInfo?.reviewCnt.toString()) // todo 좋아요
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.ic_thumb_down),
-//                                    contentDescription = "thumb down icon",
-//                                    modifier = Modifier.size(28.dp),
-//                                    tint = Color.Unspecified,
-//                                )
-//                                Text(uiState.data?.reviewInfo?.reviewCnt.toString()) // todo 싫어요
-//                            }
-//                        }
-//
-//                        Row {
-//                            val info = uiState.data?.reviewInfo
-//
-//                            if (info != null) {
-//                                ReviewProgressBar(
-//                                    reviewCount = info.reviewCnt,
-//                                    fiveRatingCount = info.five,
-//                                    fourRatingCount = info.four,
-//                                    threeRatingCount = info.three,
-//                                    twoRatingCount = info.two,
-//                                    oneRatingCount = info.one
-//                                )
-//                            }
-//                        }
-//                    }
-//
-//                    Spacer(modifier = Modifier.height(12.dp))
-//
-//                    Text(
-//                        "리뷰",
-////                textAlign = TextAlign.Start
-//                    )
-//
-//
-//                    val list = uiState?.data?.reviewList ?: emptyList()
-//
-//                    LazyColumn {
-//                        items(count = list.size) { index ->
-//                            val item = list[index]
-//                            ReviewItem(
-//                                modifier = Modifier,
-//                                writeName = item.writerNickname,
-//                                writeDate = item.writeDate,
-//                                content = item.content,
-//
-//                                )
-//                        }
-//                    }
-//
-//                }
-//
-//                UiState.Error -> TODO()
-//                UiState.Init -> TODO()
-//                UiState.Loading -> TODO()
-//                //todo 리뷰 없을 때 처리
-//            }
-//
-//
-//        }
-//    }
-//}
-//
-//
-//@Composable
-//fun ReviewItem(
-//    modifier: Modifier,
-//    writeName: String,
-//    writeDate: String,
-//    content: String,
-//) {
-//
-//    Column(modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)) {
-//        Row(modifier = modifier.fillMaxWidth()) {
-//            Icon(
-//                painter = painterResource(id = R.drawable.ic_profile_24),
-//                contentDescription = "Profile Image",
-//                modifier = Modifier.size(30.dp),
-//                tint = Color.Unspecified,
-//            )
-//
-//            Spacer(modifier = Modifier.width(10.dp))
-//
-//            Column {
-//                Text(writeName)
-//                RatingBar(isBig = true,3, {})
-//            }
-//
-//            Spacer(
-//                modifier = Modifier
-//                    .fillMaxHeight()
-//                    .weight(1f)
-//            )
-//
-//            Column(horizontalAlignment = Alignment.End) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.ic_three_dot),
-//                    contentDescription = "Profile Image",
-//                    modifier = Modifier.size(24.dp),
-//                    tint = Color.Unspecified,
-//                )
-//                Text(writeDate)
-//            }
-//        }
-//        Tag(menuName = "고구마치즈돈까스", modifier = Modifier) //todo tag 변환
-//
-//        Text(content)
-//    }
-//}
-//
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun ReviewListPreview() {
-//    EatssuTheme {
-//        ReviewWriteScreen(
-//            uiState = UiState.Success(
-//                ReviewListState(
-//                    isEmpty = false,
-//                    reviewInfo = ReviewInfo(
-//                        name = "고기",
-//                        reviewCnt = 123,
-//                        five = 80,
-//                        four = 20,
-//                        three = 10,
-//                        two = 5,
-//                        one = 8,
-//                        mainRating = 4.5,
-//                        amountRating = 2.3,
-//                        tasteRating = 4.5
-//                    ),
-//                    reviewList = listOf(
-//                        Review(
-//                            isWriter = false,
-//                            reviewId = 0,
-//                            menu = "고구마치즈돈까스",
-//                            writerNickname = "숭실푸드파이터",
-//                            writeDate = "2024-12-31",
-//                            mainGrade = 4,
-//                            amountGrade = 2,
-//                            tasteGrade = 4,
-//                            content = "맛있어요",
-//                            imgUrl = null
-//                        ),
-//                        Review(
-//                            isWriter = false,
-//                            reviewId = 0,
-//                            menu = "고구마치즈돈까스",
-//                            writerNickname = "숭실푸드파이터",
-//                            writeDate = "2024-12-31",
-//                            mainGrade = 4,
-//                            amountGrade = 2,
-//                            tasteGrade = 4,
-//                            content = "맛있어요",
-//                            imgUrl = null
-//                        ),
-//                        Review(
-//                            isWriter = false,
-//                            reviewId = 0,
-//                            menu = "고구마치즈돈까스",
-//                            writerNickname = "숭실푸드파이터",
-//                            writeDate = "2024-12-31",
-//                            mainGrade = 4,
-//                            amountGrade = 2,
-//                            tasteGrade = 4,
-//                            content = "맛있어요",
-//                            imgUrl = null
-//                        )
-//                    )
-//                )
-//            ),
+//           title =  "리뷰 작성하기",
+//           onClick =  {},
 //        )
-//    }
-//}
+    }
+}
+
+
+@Composable
+fun MenuItem(
+    modifier: Modifier,
+    mealName: String,
+    onLikeClick: () -> Unit = {},
+
+    ) {
+    Row(Modifier.padding(vertical = 6.dp)) {
+        Text(
+            mealName,
+            style = EatssuTheme.typography.body3
+        )
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(
+            onClick = onLikeClick,
+            modifier = modifier.size(58.dp, 28.dp),
+            shape = RoundedCornerShape(20.dp), // 둥근 모서리 설정
+            border = BorderStroke(
+                1.dp,
+                Gray300
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = White, // 배경색
+                contentColor = Gray300// 내용(아이콘/텍스트) 색
+            ),
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp)
+
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_thumb_up),
+                contentDescription = null, // 접근성을 위해 contentDescription 추가 권장
+                modifier = Modifier.size(18.dp)
+            )
+        }
+
+
+    }
+
+
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ReviewListPreview() {
+    EatssuTheme {
+        ReviewWriteScreen(
+            uiState = UiState.Success(),
+        )
+    }
+}

@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
@@ -124,27 +123,27 @@ class ReviewWriteActivity :
 
     private fun postPhotoReview(imageUrl: String) {
 
-        val photoReview = WriteReviewRequest(
-            mainRating = binding.rbMain.rating.toInt(),
-            amountRating = binding.rbAmount.rating.toInt(),
-            tasteRating = binding.rbTaste.rating.toInt(),
-            content = comment.toString(),
-            imageUrl = imageUrl
-        )
-
-        viewModel.postReview(itemId, photoReview)
+//        val photoReview = WriteReviewRequest(
+//            mainRating = binding.rbMain.rating.toInt(),
+//            amountRating = binding.rbAmount.rating.toInt(),
+//            tasteRating = binding.rbTaste.rating.toInt(),
+//            content = comment.toString(),
+//            imageUrl = imageUrl
+//        )
+//
+//        viewModel.postReview(itemId, photoReview)
         Timber.d("사진있는 리뷰 전송")
     }
 
     private fun postReview() {
-        val review = WriteReviewRequest(
-            mainRating = binding.rbMain.rating.toInt(),
-            amountRating = binding.rbAmount.rating.toInt(),
-            tasteRating = binding.rbTaste.rating.toInt(),
-            content = comment.toString(),
-        )
-
-        viewModel.postReview(itemId, review)
+//        val review = WriteReviewRequest(
+//            mainRating = binding.rbMain.rating.toInt(),
+//            amountRating = binding.rbAmount.rating.toInt(),
+//            tasteRating = binding.rbTaste.rating.toInt(),
+//            content = comment.toString(),
+//        )
+//
+//        viewModel.postReview(itemId, review)
         Timber.d("사진없는 리뷰 전송")
     }
 
