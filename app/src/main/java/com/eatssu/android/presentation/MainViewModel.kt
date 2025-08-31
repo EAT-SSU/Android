@@ -50,13 +50,13 @@ class MainViewModel @Inject constructor(
                 Timber.e(e.toString())
             }.collectLatest { result ->
                 Timber.d(result.toString())
-                result.result?.apply {
-                    val nickname = this.nickname
+                result.result?.let { userInfo ->
+                    val nickname = userInfo.nickname
 
                     if (nickname.isNullOrBlank()) {
                         _uiState.value = UiState.Success(MainState.NicknameNull)
                         _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
-                        return@apply
+                        return@let
                     }
 
                     _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
