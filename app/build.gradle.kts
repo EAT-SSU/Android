@@ -56,7 +56,7 @@ android {
         }
 
         debug {
-//            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".debug"
 //            isDebuggable = false
 
             val p = Properties()
