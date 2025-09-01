@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.MenuItem
-import android.view.View
 import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -27,12 +26,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate){
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
@@ -46,9 +44,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         setNavigation()
 
         checkAlarmPermission()
-        checkNicknameIsNull()
-
-        collectLogoutState()
+        collectState()
+        collectUiEvents()
     }
 
     private fun setNavigation() {
@@ -137,32 +134,34 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     // CollectState --
-    private fun checkNicknameIsNull() {
-        Timber.d("관찰 시작")
-        mainViewModel.checkNameNull()
-
+    private fun collectState() {
         lifecycleScope.launch {
-            mainViewModel.uiState.collectLatest {
-                if (it.isNicknameNull) {
-                    //닉네임이 null일 때는 닉네임 설정을 안하면 서비스를 못쓰게 막아야함
-                    intent.putExtra("force", true)
-                    startActivity<UserNameChangeActivity>()
-                    showToast(it.toastMessage)
-                } else {
-                    showToast(it.toastMessage) //Todo 이게 누구님 반갑습니다. 인데 두번 뜸
-                }
+            mainViewModel.uiState.collectLatest { state ->
+                if (state is UiState.Success) {
+                    when (state.data) {
+                        is MainState.NicknameNull -> {
+                            intent.putExtra("force", true)
+                            startActivity<UserNameChangeActivity>()
+                        }
+
+                        is MainState.LoggedOut -> {
+                            startActivity<LoginActivity>()
+                            finishAffinity()
+                        }
+
+                        else -> Unit
+                    }
+                } else Unit
             }
         }
     }
 
-    // 로그아웃 처리
-    private fun collectLogoutState() {
+    // UiEvent 처리
+    private fun collectUiEvents() {
         lifecycleScope.launch {
-            mainViewModel.uiState.collectLatest { state ->
-                if (state.isLoggedOut) {
-                    showToast(state.toastMessage)
-                    startActivity<LoginActivity>()
-                    finishAffinity()
+            mainViewModel.uiEvent.collectLatest { event ->
+                if (event is UiEvent.ShowToast) {
+                    showToast(event.message)
                 }
             }
         }
