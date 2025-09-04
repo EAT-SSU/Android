@@ -35,3 +35,10 @@ fun ArrayList<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
 
     return menuList
 }
+
+
+fun ArrayList<GetMealResponse>.toDomain(): List<List<String>> {
+    return this.map { meal ->
+        meal.briefMenus.mapNotNull { it.name }
+    }
+}

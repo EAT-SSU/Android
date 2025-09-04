@@ -1,6 +1,5 @@
 package com.eatssu.android.domain.usecase.widget
 
-import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.domain.repository.MealRepository
@@ -50,9 +49,9 @@ class GetTodayMealUseCase @Inject constructor(
         combine(breakfastFlow, lunchFlow, dinnerFlow) { breakfastList, lunchList, dinnerList ->
 
             WidgetMealList(
-                breakfast = mapToMealPair(breakfastList, "breakfast"),
-                lunch = mapToMealPair(lunchList, "lunch"),
-                dinner = mapToMealPair(dinnerList, "dinner"),
+                breakfast = (breakfastList to "breakfast"),
+                lunch = (lunchList to "lunch"),
+                dinner = (dinnerList to "dinner"),
                 restaurant = Restaurant.valueOf(restaurant)
             )
         }.first() // 여기서 Flow 실행
@@ -72,16 +71,5 @@ class GetTodayMealUseCase @Inject constructor(
             MealState.Failure
         }
     )
-
-    private fun mapToMealPair(
-        meals: List<GetMealResponse>,
-        mealType: String
-    ): Pair<List<List<String>>, String> {
-        // 각 meal(예: 점심)에 대해 여러 그룹(메뉴묶음)으로 변환
-        val menuGroups = meals.map { meal ->
-            meal.briefMenus.mapNotNull { it.name }
-        }
-        return menuGroups to mealType
-    }
 }
 
