@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import com.eatssu.android.presentation.widget.ui.MealWidget
-import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.io.File
@@ -25,17 +24,13 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
     private fun cleanupWidgetDataStore(context: Context, appWidgetId: Int) {
         try {
             runBlocking {
-                val restaurant = WidgetSettingActivity.loadRestaurantPref(context, appWidgetId)
-                val filename = "MealInfo_${restaurant.name}"
-                val dataStoreFile = File(context.filesDir, "datastore/$filename.preferences_pb")
+                val filename = "appWidgetLayout-${appWidgetId}"
+                val dataStoreFile = File(context.filesDir, "datastore/$filename")
 
                 if (dataStoreFile.exists()) {
                     dataStoreFile.delete()
-                    Timber.d("Deleted DataStore file for widget $appWidgetId (${restaurant.name})")
+                    Timber.d("Deleted DataStore file for widget $appWidgetId")
                 }
-
-                // 캐시도 정리
-                WidgetCacheManager.clearCacheForRestaurant(restaurant)
             }
         } catch (e: Exception) {
             Timber.e("Failed to cleanup DataStore for widget $appWidgetId: ${e.message}")
