@@ -200,7 +200,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.compose.theme.adapter)
     implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.androidx.compose.bom)
