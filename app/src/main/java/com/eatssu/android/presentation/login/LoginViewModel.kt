@@ -57,7 +57,6 @@ class LoginViewModel @Inject constructor(
                         setUserEmailUseCase(email)
 
                         _uiState.value = UiState.Success(LoginState.LoginSuccess)
-                        _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_done)))
 
                         TokenStateManager.setTokenValid()
                     }
