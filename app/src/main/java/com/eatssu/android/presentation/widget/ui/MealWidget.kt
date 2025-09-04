@@ -44,12 +44,17 @@ import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
+import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.MealInfoStateDefinition
 import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.util.MealTime
 import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import com.eatssu.android.presentation.widget.util.launchApp
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.delay
 import timber.log.Timber
 
@@ -57,9 +62,20 @@ import timber.log.Timber
 class MealWidget : GlanceAppWidget() {
     override val stateDefinition = MealInfoStateDefinition
 
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface MealWidgetEntryPoint {
+        fun loadRestaurantByFileKeyUseCase(): LoadRestaurantByFileKeyUseCase
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+            val appContext = context.applicationContext
+            val entryPoint =
+                EntryPointAccessors.fromApplication(appContext, MealWidgetEntryPoint::class.java)
+            val loadRestaurantByFileKeyUseCase = entryPoint.loadRestaurantByFileKeyUseCase()
+
             // GlanceId -> appWidgetId 매핑
             val manager = GlanceAppWidgetManager(context)
             val appWidgetId = manager.getAppWidgetId(id)
@@ -69,8 +85,7 @@ class MealWidget : GlanceAppWidget() {
             LaunchedEffect(key1 = Unit) {
 
                 delay(2000) //딜레이 안주면 Init 상태의 위젯이 추가됨.
-                val savedRestaurant = WidgetSettingActivity.loadRestaurantByFileKey(
-                    context.applicationContext,
+                val savedRestaurant = loadRestaurantByFileKeyUseCase(
                     "appWidget-${appWidgetId}"
                 )
                 restaurant = savedRestaurant
@@ -242,11 +257,11 @@ class MealWidget : GlanceAppWidget() {
             modifier = GlanceModifier.fillMaxSize()
                 .background(GlanceTheme.colors.onPrimary)
                 .padding(16.dp)
-                .cornerRadius(20.dp)
-                .clickable {
-                    Timber.d("위젯 클릭")
-                    context.launchApp()
-                },
+                .cornerRadius(20.dp),
+//                .clickable {
+//                    Timber.d("위젯 클릭")
+//                    context.launchApp()
+//                },
         ) {
             Row(
                 modifier = GlanceModifier.fillMaxWidth(),
@@ -289,7 +304,6 @@ class MealWidget : GlanceAppWidget() {
         }
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview
@@ -305,8 +319,4 @@ class MealWidget : GlanceAppWidget() {
     fun MealWidgetPreviewError() {
         MealWidgetError("저녁", Restaurant.DODAM.displayName, "에러임")
     }
-
 }
-
-
-

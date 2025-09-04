@@ -13,9 +13,9 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.eatssu.android.domain.model.WidgetMealInfo
-import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
+import com.eatssu.android.domain.usecase.widget.GetTodayMealUseCase
+import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.ui.MealWidget
-import com.eatssu.android.presentation.widget.ui.WidgetSettingActivity
 import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -27,6 +27,7 @@ class MealWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workParams: WorkerParameters,
     private var getMealsUseCase: GetTodayMealUseCase,
+    private var loadRestaurantByFileKeyUseCase: LoadRestaurantByFileKeyUseCase,
 ) : CoroutineWorker(context, workParams) {
     companion object {
         private val uniqueWorkName = MealWorker::class.java.simpleName
@@ -54,8 +55,7 @@ class MealWorker @AssistedInject constructor(
         glanceIds.forEach { glanceId ->
             val appWidgetId = manager.getAppWidgetId(glanceId)
             // glanceId를 사용하여 정확한 식당 정보 가져오기
-            val restaurant =
-                WidgetSettingActivity.loadRestaurantByFileKey(context, "appWidget-${appWidgetId}")
+            val restaurant = loadRestaurantByFileKeyUseCase("appWidget-${appWidgetId}")
             Timber.d("MealWorker: glanceId=$glanceId, appWidgetId=$appWidgetId, restaurant=$restaurant")
             if (restaurant != null) {
                 // 저장된 식당 정보가 있으면 3개 식사 시간의 메뉴를 모두 가져와서 위젯 상태 업데이트

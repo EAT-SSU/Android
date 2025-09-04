@@ -32,6 +32,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate){
     @Inject
     lateinit var workManager: WorkManager

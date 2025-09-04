@@ -4,8 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
-import com.eatssu.android.domain.usecase.meal.GetTodayMealUseCase
-import com.eatssu.android.domain.usecase.meal.MealState
+import com.eatssu.android.domain.usecase.widget.GetTodayMealUseCase
+import com.eatssu.android.domain.usecase.widget.MealState
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.widget.WidgetCacheManager
 import timber.log.Timber

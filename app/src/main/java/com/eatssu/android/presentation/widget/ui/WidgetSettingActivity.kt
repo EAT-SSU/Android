@@ -1,45 +1,44 @@
 package com.eatssu.android.presentation.widget.ui
 
 import android.appwidget.AppWidgetManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.compose.ui.platform.LocalContext
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.android.domain.usecase.widget.SaveRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.design_system.theme.EatssuTheme
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-
-val Context.dataStore by preferencesDataStore(name = "widget_prefs")
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class WidgetSettingActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var saveRestaurantByFileKeyUseCase: SaveRestaurantByFileKeyUseCase
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             EatssuTheme {
 
-                val restaurantOptions = Restaurant.getVariableRestaurants().map {
+                val restaurantOptions = Restaurant.getVariableRestaurantList().map {
                     it.displayName
                 } // 변동 식당만 불러옵니다. 하드코딩 x
 
@@ -49,16 +48,16 @@ class WidgetSettingActivity : ComponentActivity() {
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID
                 )
-                val glanceId: GlanceId? =
-                    if (appWidgetId != null && appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                        runBlocking {
-                            GlanceAppWidgetManager(this@WidgetSettingActivity).getGlanceIdBy(
-                                appWidgetId
-                            )
-                        }
+                var glanceId by remember { mutableStateOf<GlanceId?>(null) }
+                val context = LocalContext.current
+                LaunchedEffect(appWidgetId) {
+                    glanceId =
+                        if (appWidgetId != null && appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                            GlanceAppWidgetManager(context).getGlanceIdBy(appWidgetId)
                     } else {
                         null
                     }
+                }
 
                 WidgetSettingScreen(
                     restaurantOptionList = restaurantOptions,
@@ -74,14 +73,15 @@ class WidgetSettingActivity : ComponentActivity() {
 
                         lifecycleScope.launch {
 
-                            saveRestaurantByFileKey(
-                                this@WidgetSettingActivity,
+                            saveRestaurantByFileKeyUseCase(
                                 "appWidget-${appWidgetId}",
                                 selectedRestaurantValue
                             )
 
                             // 위젯 업데이트
-                            MealWidget().update(this@WidgetSettingActivity, glanceId)
+                            glanceId?.let {
+                                MealWidget().update(this@WidgetSettingActivity, it)
+                            }
 
                             // MealWorker 실행
                             MealWorker.enqueue(this@WidgetSettingActivity)
@@ -101,71 +101,6 @@ class WidgetSettingActivity : ComponentActivity() {
                     },
                     onBack = { finish() }
                 )
-            }
-        }
-    }
-
-
-    companion object {
-        private val gson = Gson()
-
-        data class WidgetSettings(
-            val restaurant: String = "",
-            val appWidgetLayout: String? = null,
-        )
-
-        private fun settingsKey(appWidgetId: Int) =
-            stringPreferencesKey("widget_settings_$appWidgetId")
-
-        private fun legacyRestaurantKey(appWidgetId: Int) =
-            stringPreferencesKey("widget_restaurant_$appWidgetId")
-
-        private fun fileKeyRestaurantKey(fileKey: String) =
-            stringPreferencesKey("widget_restaurant_by_fileKey_$fileKey")
-
-        suspend fun saveRestaurantByFileKey(
-            context: Context,
-            fileKey: String,
-            restaurant: String,
-        ) {
-            context.dataStore.edit { prefs ->
-                prefs[fileKeyRestaurantKey(fileKey)] = restaurant
-            }
-            Timber.d("saveRestaurantByFileKey 호출됨: fileKey='$fileKey', restaurant='$restaurant'")
-        }
-
-        suspend fun loadRestaurantByFileKey(context: Context, fileKey: String): Restaurant? {
-            val prefs: Preferences = context.dataStore.data.first()
-            val value = prefs[fileKeyRestaurantKey(fileKey)]
-            Timber.d("loadRestaurantByFileKey 호출됨: fileKey='$fileKey', value='$value'")
-            if (value.isNullOrBlank()) {
-                return null
-            }
-            return runCatching { Restaurant.valueOf(value) }.getOrNull()
-        }
-
-
-        suspend fun loadRestaurantPref(context: Context, appWidgetId: Int): Restaurant {
-            val prefs: Preferences = context.dataStore.data.first()
-            val json = prefs[settingsKey(appWidgetId)]
-            if (!json.isNullOrBlank()) {
-                val settings =
-                    runCatching { gson.fromJson(json, WidgetSettings::class.java) }.getOrNull()
-                if (settings != null && settings.restaurant.isNotBlank()) {
-                    val enumName = Restaurant.fromDisplayName(settings.restaurant)
-                    Timber.d("load restaurant from settings $enumName")
-                    return Restaurant.valueOf(enumName)
-                }
-            }
-            // fallback to legacy key
-            val legacyRaw = prefs[legacyRestaurantKey(appWidgetId)] ?: ""
-            val legacyEnumName = Restaurant.fromDisplayName(legacyRaw)
-            return if (legacyEnumName.isNotBlank()) {
-                Timber.d("load restaurant (legacy) $legacyEnumName from '$legacyRaw' for appWidgetId $appWidgetId")
-                Restaurant.valueOf(legacyEnumName)
-            } else {
-                Timber.w("No saved restaurant for appWidgetId=$appWidgetId, defaulting to HAKSIK")
-                Restaurant.HAKSIK
             }
         }
     }

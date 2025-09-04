@@ -13,7 +13,7 @@ enum class Restaurant(val displayName: String, val menuType: MenuType) {
 
     companion object {
 
-        fun getVariableRestaurants(): List<Restaurant> {
+        fun getVariableRestaurantList(): List<Restaurant> {
             return entries.filter { it.menuType == MenuType.VARIABLE }
         }
       

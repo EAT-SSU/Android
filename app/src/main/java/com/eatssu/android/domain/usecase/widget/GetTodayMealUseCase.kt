@@ -1,4 +1,4 @@
-package com.eatssu.android.domain.usecase.meal
+package com.eatssu.android.domain.usecase.widget
 
 import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.enums.Restaurant
