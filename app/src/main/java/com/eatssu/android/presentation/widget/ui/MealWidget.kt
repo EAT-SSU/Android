@@ -257,11 +257,11 @@ class MealWidget : GlanceAppWidget() {
             modifier = GlanceModifier.fillMaxSize()
                 .background(GlanceTheme.colors.onPrimary)
                 .padding(16.dp)
-                .cornerRadius(20.dp)
-                .clickable {
-                    Timber.d("위젯 클릭")
-                    context.launchApp()
-                },
+                .cornerRadius(20.dp),
+//                .clickable {
+//                    Timber.d("위젯 클릭")
+//                    context.launchApp()
+//                },
         ) {
             Row(
                 modifier = GlanceModifier.fillMaxWidth(),
