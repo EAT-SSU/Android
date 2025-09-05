@@ -88,7 +88,7 @@ fun MapFragmentComposeView(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -206,18 +206,6 @@ fun MapFragmentComposeView(
                     // 위치가 업데이트되면 위치 권한 있다고 간주
                     hasLocationPermission = true
                 },
-                onMapClick = { _, _ ->
-                    // 만약 지도 클릭이 발생했는데 권한이 없고 위치가 null이라면 권한 요청
-                    if (!hasLocationPermission) {
-                        Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-                        permissionLauncher.launch(
-                            arrayOf(
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION
-                            )
-                        )
-                    }
-                }
             ) {
                 mapState.partnerships.forEach { partnership ->
                     val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
@@ -228,7 +216,6 @@ fun MapFragmentComposeView(
                                 RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
                                 RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
                                 RestaurantType.ALCOHOL -> R.drawable.ic_map_marker_alcohol
-                                else -> R.drawable.ic_map_marker_restaurant
                             }
                         ),
                         width = 20.dp,
