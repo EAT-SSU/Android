@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,14 +11,15 @@ import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -32,8 +34,11 @@ class MainViewModel @Inject constructor(
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
-    val uiState: StateFlow<MainState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
+    val uiState: StateFlow<UiState<MainState>> = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
 //    init {
 //        checkNameNull()
@@ -55,36 +60,32 @@ class MainViewModel @Inject constructor(
 
     fun fetchAndCheckNickname() {
         viewModelScope.launch {
-            getUserNickNameUseCase().onStart {
-                _uiState.update { it.copy(loading = true) }
+            getUserInfoUseCase().onStart {
+                _uiState.value = UiState.Loading
             }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        error = true,
-                        toastMessage = "정보를 불러올 수 없습니다."
-                    )
-                }
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.not_found)))
                 Timber.e(e.toString())
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = false) }
             }.collectLatest { result ->
                 Timber.d(result.toString())
-                result.result?.apply {
-                    if (this.nickname.isNullOrBlank()) {
-                        _uiState.update {
-                            it.copy(
-                                isNicknameNull = true,
-                                toastMessage = "닉네임을 설정해주세요."
-                            )
-                        }
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                isNicknameNull = false,
-                                toastMessage = "${this.nickname}님 반갑습니다!"
-                            )
-                        }
+                result.result?.let { userInfo ->
+                    val nickname = userInfo.nickname
+
+                    if (nickname.isNullOrBlank()) {
+                        _uiState.value = UiState.Success(MainState.NicknameNull)
+                        _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
+                        return@let
                     }
+
+                    _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            String.format(
+                                context.getString(R.string.hello_user),
+                                nickname
+                            )
+                        )
+                    )
                 }
             }
         }
@@ -100,6 +101,8 @@ class MainViewModel @Inject constructor(
                     isLoggedOut = true
                 )
             }
+            _uiState.value = UiState.Success(MainState.LoggedOut)
+            _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.logout_description)))
         }
     }
 
@@ -155,12 +158,9 @@ class MainViewModel @Inject constructor(
 }
 
 
-data class MainState(
-    var loading: Boolean = true,
-    var error: Boolean = false,
-    var toastMessage: String = "",
-    var isNicknameNull: Boolean = false,
-    var isLoggedOut: Boolean = false,
-    var showUserDepartmentBottomSheet: Boolean = false,
-    var departmentName: String = "",
-)
+sealed class MainState {
+    object NicknameNull : MainState()
+    data class NicknameExists(val nickname: String) : MainState()
+    object LoggedOut : MainState()
+
+}

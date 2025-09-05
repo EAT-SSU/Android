@@ -22,8 +22,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 23
         targetSdk = 34
-        versionCode = 34
-        versionName = "2.1.14"
+        versionCode = 35
+        versionName = "2.1.15"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -91,7 +91,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     splits {
