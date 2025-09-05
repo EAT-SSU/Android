@@ -164,8 +164,8 @@ class UserInfoActivity :
             // 최신 state 사용
             val state = userInfoViewModel.uiState.value
 
-            // 닉네임 변경 후 중복 확인 안 했으면 막기
-            if (!state.isNicknameChecked) {
+            // 닉네임이 변경되었고 + 아직 중복확인을 안 했다면 막기
+            if (state.isNicknameChanged && !state.isNicknameChecked) {
                 showToast("닉네임 중복 확인을 완료해 주세요.")
                 return@setOnClickListener
             }
@@ -192,8 +192,8 @@ class UserInfoActivity :
         binding.flDepartment.setOnClickListener {
             val state = userInfoViewModel.uiState.value
 
-            // 닉네임 변경 후 중복 확인 안 했으면 막기
-            if (!state.isNicknameChecked) {
+            // 닉네임이 변경되었고 + 아직 중복확인을 안 했다면 막기
+            if (state.isNicknameChanged && !state.isNicknameChecked) {
                 showToast("닉네임 중복 확인을 완료해 주세요.")
                 return@setOnClickListener
             }
