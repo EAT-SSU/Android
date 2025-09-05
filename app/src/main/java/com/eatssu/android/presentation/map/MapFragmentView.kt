@@ -19,6 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
@@ -134,7 +137,26 @@ fun MapFragmentComposeView(
     LaunchedEffect(selectedFilter) {
         when (selectedFilter) {
             FilterType.All -> viewModel.loadPartnerships()
-            FilterType.Mine -> viewModel.loadUserCollegePartnerships()
+            FilterType.Mine -> {
+                viewModel.loadUserCollegePartnerships()
+            }
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // onResume 시마다 학과 정보 반영
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                Timber.d("MapFragmentComposeView: onResume -> 학과 정보 갱신")
+                mainViewModel.refreshUserDepartment()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 

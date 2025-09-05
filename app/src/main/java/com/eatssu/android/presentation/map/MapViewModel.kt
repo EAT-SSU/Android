@@ -6,6 +6,7 @@ import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
@@ -26,13 +27,15 @@ data class MapState(
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
-    var partnershipToggleText: String = "내 제휴"
+    var partnershipToggleText: String = "내 제휴",
+    val currentCollegeName: String = "",
+    val currentDepartmentName: String = "",
 )
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val partnershipRepository: PartnershipRepository,
-    private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase
+    private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -40,7 +43,6 @@ class MapViewModel @Inject constructor(
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
-
 
     init {
         loadPartnerships()

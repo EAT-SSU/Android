@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +29,8 @@ class MainViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val userRepository: UserRepository,
-) : ViewModel() {
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
     val uiState: StateFlow<MainState> = _uiState.asStateFlow()
@@ -39,6 +41,17 @@ class MainViewModel @Inject constructor(
 
     init{
         getUserDepartment()
+    }
+
+    fun refreshUserDepartment() {
+        val userInfo = getUserCollegeDepartmentUseCase()
+        Timber.d("학과 정보     갱신: ${userInfo.userCollege.collegeName}, ${userInfo.userDepartment.departmentName}")
+
+        _uiState.update {
+            it.copy(
+                departmentName = userInfo.userDepartment.departmentName,
+            )
+        }
     }
 
     fun fetchAndCheckNickname() {
@@ -116,7 +129,7 @@ class MainViewModel @Inject constructor(
 
                 setUserCollegeDepartmentUseCase(college, department)
 
-                if (college.collegeName.isBlank() || department.departmentName.isBlank()) {
+                if (college.collegeId == -1 || department.departmentId == -1) {
                     _uiState.update {
                         it.copy(
                             showUserDepartmentBottomSheet = true,
