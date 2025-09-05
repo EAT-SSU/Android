@@ -75,6 +75,7 @@ class UserInfoViewModel @Inject constructor(
                         it.copy(
                             isEnableName = true,
                             toastMessage = "사용가능한 닉네임 입니다.",
+                            isNicknameChecked = true,
                             nickname = inputNickname,
                         )
                     }
@@ -199,6 +200,7 @@ data class UserNameChangeState(
     var originalCollege: College = College(collegeId = -1, collegeName = "단과대"),
     var originalDepartment: Department = Department(departmentId = -1, departmentName = "학과"),
 
+    var isNicknameChecked: Boolean = false,
     var isNicknameChanged: Boolean = false,
     var isCollegeChanged: Boolean = false,
     var isDepartmentChanged: Boolean = false,

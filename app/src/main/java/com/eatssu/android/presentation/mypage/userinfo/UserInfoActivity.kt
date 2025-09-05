@@ -71,6 +71,8 @@ class UserInfoActivity :
                 } else {
                     binding.tvNickname28.setTextColor(getColor(R.color.gray600))
                 }
+
+                userInfoViewModel.updateNickname(inputNickname)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -85,8 +87,12 @@ class UserInfoActivity :
 
     private fun collectButtonEnableState() {
         lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest {
-                binding.btnComplete.isEnabled = it.isNicknameChanged || it.isDepartmentChanged
+            userInfoViewModel.uiState.collectLatest { state ->
+                binding.btnComplete.isEnabled =
+                        // 닉네임이 바뀌었으면 중복 확인까지 통과해야만 활성화
+                    (state.isNicknameChecked && state.isNicknameChanged && state.isEnableName) ||
+                            // 닉네임이 안 바뀌었을 때는 학과/단과대만 바뀌면 활성화
+                            (!state.isNicknameChanged && state.isDepartmentChanged)
             }
         }
     }
@@ -154,11 +160,19 @@ class UserInfoActivity :
 
     private fun setCollegeDepartmentClickListener() {
         binding.flCollege.setOnClickListener {
-            // 단과대 목록 요청
-            userInfoViewModel.loadCollegeList()
 
             // 최신 state 사용
             val state = userInfoViewModel.uiState.value
+
+            // 닉네임 변경 후 중복 확인 안 했으면 막기
+            if (!state.isNicknameChecked) {
+                showToast("닉네임 중복 확인을 완료해 주세요.")
+                return@setOnClickListener
+            }
+
+            // 단과대 목록 요청
+            userInfoViewModel.loadCollegeList()
+
             if (state.collegeList.isNotEmpty()) {
                 val collegeNames = state.collegeList.map { it.collegeName }
                 showDropdownPopup(binding.tvCollege, collegeNames, selectedCollegeIndex) { selected, index ->
@@ -177,6 +191,12 @@ class UserInfoActivity :
 
         binding.flDepartment.setOnClickListener {
             val state = userInfoViewModel.uiState.value
+
+            // 닉네임 변경 후 중복 확인 안 했으면 막기
+            if (!state.isNicknameChecked) {
+                showToast("닉네임 중복 확인을 완료해 주세요.")
+                return@setOnClickListener
+            }
 
             // 학과 리스트가 비어있다면 현재 단과대 기준으로 다시 로드
             if (state.departmentList.isEmpty() && state.selectedCollege.collegeId != -1) {
