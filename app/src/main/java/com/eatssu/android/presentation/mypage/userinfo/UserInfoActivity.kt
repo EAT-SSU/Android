@@ -128,21 +128,25 @@ class UserInfoActivity :
             val currentState = userInfoViewModel.uiState.value
 
             if (currentState.isNicknameChanged) {
-                // 닉네임 변경이 있는 경우 서버에 전체 정보 저장
+                // 닉네임 변경 → 닉네임 저장 + 완료 시 학과 저장도 호출
                 userInfoViewModel.changeUserNickname()
 
                 lifecycleScope.launch {
                     userInfoViewModel.uiState.collectLatest {
                         if (it.isDone) {
-                            showToast(it.toastMessage)
-                            finish()
+                            // 닉네임 저장 성공 후 학과 변경도 필요하다면 호출
+                            if (it.isCollegeChanged || it.isDepartmentChanged) {
+                                userInfoViewModel.updateUserDepartment()
+                            } else {
+                                showToast(it.toastMessage)
+                                finish()
+                            }
                         }
                     }
                 }
             } else {
-                // 닉네임은 그대로이고 학과/단과대만 변경된 경우
+                // 닉네임 변경 없음 → 학과만 변경
                 userInfoViewModel.updateUserDepartment()
-
             }
         }
     }
