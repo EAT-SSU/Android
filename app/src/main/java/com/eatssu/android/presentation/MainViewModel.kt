@@ -45,7 +45,6 @@ class MainViewModel @Inject constructor(
 
     fun refreshUserDepartment() {
         val userInfo = getUserCollegeDepartmentUseCase()
-        Timber.d("학과 정보     갱신: ${userInfo.userCollege.collegeName}, ${userInfo.userDepartment.departmentName}")
 
         _uiState.update {
             it.copy(
