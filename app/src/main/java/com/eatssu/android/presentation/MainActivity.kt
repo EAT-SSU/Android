@@ -142,7 +142,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     when (state.data) {
                         is MainState.NicknameNull -> {
                             intent.putExtra("force", true)
-                            startActivity<UserNameChangeActivity>()
+                            startActivity<UserInfoActivity>()
                         }
 
                         is MainState.LoggedOut -> {
