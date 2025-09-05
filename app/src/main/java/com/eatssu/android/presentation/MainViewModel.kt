@@ -53,7 +53,7 @@ class MainViewModel @Inject constructor(
     fun refreshUserDepartment() {
         val userInfo = getUserCollegeDepartmentUseCase()
         _uiState.value = UiState.Success(
-            MainState.Content(
+            MainState.DepartmentState(
                 departmentName = userInfo.userDepartment.departmentName
             )
         )
@@ -122,7 +122,7 @@ class MainViewModel @Inject constructor(
                 setUserCollegeDepartmentUseCase(college, department)
 
                 _uiState.value = UiState.Success(
-                    MainState.Content(
+                    MainState.DepartmentState(
                         departmentName = department.departmentName,
                         showUserDepartmentBottomSheet =
                             (college.collegeId == -1 || department.departmentId == -1)
@@ -142,7 +142,7 @@ sealed class MainState {
     object NicknameNull : MainState()
     data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
-    data class Content(
+    data class DepartmentState(
         val departmentName: String = "",
         val showUserDepartmentBottomSheet: Boolean = false
     ) : MainState()

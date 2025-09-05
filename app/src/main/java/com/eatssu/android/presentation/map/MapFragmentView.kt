@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.RestaurantType
+import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
@@ -95,6 +96,17 @@ fun MapFragmentComposeView(
         }
     }
 
+    // MainState
+    val (departmentName, showUserDepartmentBottomSheet) = when (val state = mainUiState) {
+        is UiState.Success -> {
+            when (val data = state.data) {
+                is MainState.DepartmentState -> data.departmentName to data.showUserDepartmentBottomSheet
+                else -> "" to false
+            }
+        }
+        else -> "" to false
+    }
+
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
@@ -119,8 +131,8 @@ fun MapFragmentComposeView(
     }
 
     // 상태 변화 감지해서 show/hide -> Scrim 잔존 문제 해결
-    LaunchedEffect(mainUiState.showUserDepartmentBottomSheet) {
-        if (mainUiState.showUserDepartmentBottomSheet) {
+    LaunchedEffect(showUserDepartmentBottomSheet) {
+        if (showUserDepartmentBottomSheet) {
             sheetState.show()
         } else {
             sheetState.hide()
@@ -270,7 +282,7 @@ fun MapFragmentComposeView(
                 onSelectedChange = { next ->
                     if (mapState.showPartnershipBottomSheet) return@PartnershipFilterToggle
 
-                    val hasDepartment = !mainUiState.departmentName.equals("학과")
+                    val hasDepartment = !departmentName.equals("학과")
 
                     if (next == FilterType.Mine && !hasDepartment) {
                         // 전환 막기: selectedFilter는 그대로 (All 유지)
@@ -286,7 +298,7 @@ fun MapFragmentComposeView(
                     selectedFilter = next
                 },
                 modifier = Modifier.padding(top = 12.dp),
-                departmentName = mainUiState.departmentName
+                departmentName = departmentName
             )
 
             // 찜 기능
