@@ -46,7 +46,7 @@ class MenuAdapter(
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)
                 adapter = sectionModel.menuList?.let {
-                    MenuSubAdapter(it, sectionModel.cafeteria.menuType)
+                    MenuSubAdapter(it, sectionModel.cafeteria)
                 }
             }
         }
