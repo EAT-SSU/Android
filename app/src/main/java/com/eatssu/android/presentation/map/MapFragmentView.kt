@@ -37,6 +37,7 @@ import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.common.EventLogger
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
 import com.naver.maps.geometry.LatLng
@@ -74,6 +75,9 @@ fun MapFragmentComposeView(
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
     val scope = rememberCoroutineScope()
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
+
+    val departmentId = MySharedPreferences.getUserDepartmentId(context).toLong()
+    val collegeId = MySharedPreferences.getUserCollegeId(context).toLong()
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition(
@@ -149,9 +153,14 @@ fun MapFragmentComposeView(
     // 제휴 정보 토글 event
     LaunchedEffect(selectedFilter) {
         when (selectedFilter) {
-            FilterType.All -> viewModel.loadPartnerships()
+            FilterType.All -> {
+                viewModel.loadPartnerships()
+                EventLogger.clickMap()
+            }
             FilterType.Mine -> {
                 viewModel.loadUserCollegePartnerships()
+
+                EventLogger.clickMapMine(collegeId, departmentId)
             }
         }
     }
@@ -209,6 +218,12 @@ fun MapFragmentComposeView(
         // 특정 식당에 대한 제휴 정보 BottomSheet
         if (mapState.showPartnershipBottomSheet) {
             mapState.restaurantPartnershipInfo?.let { info ->
+                EventLogger.clickPartnerRestaurant(
+                    college = collegeId,
+                    major = departmentId,
+                    partnerRestaurantId = info.id.toLong()
+                )
+
                 MapRestaurantBottomSheet(
                     storeName = info.storeName,
                     placeType = when (info.restaurantType) {

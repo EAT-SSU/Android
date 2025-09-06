@@ -117,7 +117,15 @@ object EventLogger {
         }
     }
 
-    fun addWidget() {
+    fun addWidget(restaurant: Restaurant) {
+        firebaseAnalytics.logEvent("add_widget") {
+            param("restaurant", restaurant.value)
+        }
+    }
 
+    fun removeWidget(restaurant: Restaurant) {
+        firebaseAnalytics.logEvent("remove_widget") {
+            param("restaurant", restaurant.value)
+        }
     }
 }
