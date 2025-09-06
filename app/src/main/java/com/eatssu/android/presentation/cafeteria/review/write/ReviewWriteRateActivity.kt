@@ -20,6 +20,7 @@ import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.EventLogger
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -133,6 +134,11 @@ class ReviewWriteRateActivity :
         )
 
         viewModel.postReview(itemId, photoReview)
+        EventLogger.completeReview(
+            rating = binding.rbMain.rating.toLong(),
+            likes = emptyList(),
+            photoAttached = true
+        )
         Timber.d("사진있는 리뷰 전송")
     }
 
@@ -145,6 +151,11 @@ class ReviewWriteRateActivity :
         )
 
         viewModel.postReview(itemId, review)
+        EventLogger.completeReview(
+            rating = binding.rbMain.rating.toLong(),
+            likes = emptyList(),
+            photoAttached = false
+        )
         Timber.d("사진없는 리뷰 전송")
     }
 

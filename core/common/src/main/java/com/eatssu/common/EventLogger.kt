@@ -80,12 +80,12 @@ object EventLogger {
     }
 
     fun completeReview(
-        rating: Int,
+        rating: Long,
         likes: List<Long>,
         photoAttached: Boolean,
     ) {
         firebaseAnalytics.logEvent("complete_review_v1") {
-            param("rating", rating.toLong())
+            param("rating", rating)
             param("likes", likes.joinToString(","))
             param("photoAttached", if (photoAttached) 1 else 0)
         }
