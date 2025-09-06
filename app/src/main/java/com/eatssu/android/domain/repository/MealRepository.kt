@@ -5,12 +5,20 @@ import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import kotlinx.coroutines.flow.Flow
 
 interface MealRepository {
-//    suspend fun getTodayMeal(
-//        date: String,
-//        restaurant: String,
-//        time: String,
-//    ): Flow<BaseResponse<ArrayList<GetMealResponse>>>
 
+    /**
+     * 오늘의 식단을 가져오는 api
+     */
+    suspend fun getTodayMeal(
+        date: String,
+        restaurant: String,
+        time: String,
+    ): Flow<List<List<String>>>
+
+
+    /**
+     * MealId를 이용해서 Menu를 찾기 api
+     */
     suspend fun getMenuInfoByMealId(
         mealId: Long,
     ): Flow<BaseResponse<MenuOfMealResponse>>

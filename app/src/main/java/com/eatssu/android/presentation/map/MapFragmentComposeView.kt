@@ -3,8 +3,8 @@ package com.eatssu.android.presentation.map
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Primary
 
 @Composable
 fun MapFragmentComposeView() {

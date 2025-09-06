@@ -2,6 +2,8 @@ package com.eatssu.android
 
 import android.app.Application
 import android.content.Context
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.eatssu.android.domain.model.TokenState
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.presentation.base.TokenEventBus
@@ -16,10 +18,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 /** App: 앱이 살아있는 동안 공통 리소스 관리를 위한 클래스 */
 @HiltAndroidApp
-class App: Application() {
+class App : Application(), Configuration.Provider {
     companion object{
         lateinit var appContext: Context //todo 이거 빼기
     }
@@ -28,6 +31,9 @@ class App: Application() {
      *  자식 CoroutineScope가 취소되더라도 부모 CoroutineScope는 취소되지 않음
      * */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -60,4 +66,9 @@ class App: Application() {
             }
         }
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.compose.ui.theme
+package com.eatssu.design_system.theme
 
 import androidx.compose.ui.graphics.Color
 

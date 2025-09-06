@@ -3,15 +3,11 @@ package com.eatssu.android.di
 
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
-import com.eatssu.android.data.service.MealService
-import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.OauthService
-import com.eatssu.android.data.service.ReportService
-import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.data.service.UserService
 import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
+import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import dagger.Module
@@ -25,10 +21,8 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
-import javax.inject.Singleton
-import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
-import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
 import javax.inject.Qualifier
+import javax.inject.Singleton
 
 class NullOnEmptyConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(
@@ -130,12 +124,5 @@ object NetworkModule {
             reissueTokenUseCase,
             logoutUseCase,
         )
-    }
-
-    // provide service
-    @Provides
-    @Singleton
-    fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
-        return noTokenRetrofit.create(OauthService::class.java)
     }
 }
