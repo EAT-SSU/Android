@@ -1,13 +1,13 @@
 package com.eatssu.common.enums
 
-enum class Time(val displayName: String) {
-    MORNING("조식"),
-    LUNCH("중식"),
-    DINNER("석식");
+enum class Time(val value: String, val korean: String) {
+    MORNING("breakfast", "조식"),
+    LUNCH("lunch", "중식"),
+    DINNER("dinner", "석식");
 
     companion object {
         fun fromTimeEnumName(enumName: String): String {
-            return Time.values().find { it.name == enumName }?.displayName ?: ""
+            return Time.values().find { it.name == enumName }?.korean ?: ""
         }
     }
 }

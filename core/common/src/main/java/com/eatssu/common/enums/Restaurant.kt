@@ -1,14 +1,14 @@
 package com.eatssu.common.enums
 
 
-enum class Restaurant(val korean: String, val menuType: MenuType) {
-    HAKSIK("학생 식당", MenuType.VARIABLE),
-    DODAM("도담 식당", MenuType.VARIABLE),
-    DORMITORY("기숙사 식당", MenuType.VARIABLE),
-    FACULTY("FACULTY (교직원 전용)", MenuType.VARIABLE),
-    FOOD_COURT("푸드 코트", MenuType.FIXED),
-    SNACK_CORNER("스낵 코너", MenuType.FIXED),
-    THE_KITCHEN("더 키친", MenuType.FIXED);
+enum class Restaurant(val value: String, val korean: String, val menuType: MenuType) {
+    HAKSIK("haksik", "학생 식당", MenuType.VARIABLE),
+    DODAM("dodam", "도담 식당", MenuType.VARIABLE),
+    DORMITORY("dormitory", "기숙사 식당", MenuType.VARIABLE),
+    FACULTY("faculty", "FACULTY (교직원 전용)", MenuType.VARIABLE),
+    FOOD_COURT("food_court", "푸드 코트", MenuType.FIXED),
+    SNACK_CORNER("snack_corner", "스낵 코너", MenuType.FIXED),
+    THE_KITCHEN("the_kitchen", "더 키친", MenuType.FIXED);
 
     companion object {
 
