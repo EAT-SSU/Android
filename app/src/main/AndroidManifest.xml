@@ -108,16 +108,6 @@
         </activity>
 
         <activity
-            android:name=".presentation.widget.ui.WidgetSettingActivity"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".presentation.mypage.DeveloperActivity"
             android:exported="false" />
         <activity
