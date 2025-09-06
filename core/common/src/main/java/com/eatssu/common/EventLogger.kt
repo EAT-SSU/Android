@@ -51,9 +51,21 @@ object EventLogger {
         }
     }
 
-    fun clickDay(day: Day) {
+    fun clickDay(day: String) {
+        val weekDay = when (day) {
+            "SUNDAY" -> "sun"
+            "MONDAY" -> "mon"
+            "TUESDAY" -> "tue"
+            "WEDNESDAY" -> "wed"
+            "THURSDAY" -> "thu"
+            "FRIDAY" -> "fri"
+            "SATURDAY" -> "sat"
+            else -> {
+                ""
+            }
+        }
         firebaseAnalytics.logEvent("click_day") {
-            param("restaurants", day.value)
+            param("restaurants", weekDay)
         }
     }
 

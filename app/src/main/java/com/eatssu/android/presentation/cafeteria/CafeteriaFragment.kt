@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.FragmentCafeteriaBinding
-import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
+import com.eatssu.common.EventLogger
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -94,5 +95,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         mainViewModel.setData(date)
         mainPosition = position
         setWeekView()
+        EventLogger.clickDay(date.dayOfWeek.name)
     }
 }
