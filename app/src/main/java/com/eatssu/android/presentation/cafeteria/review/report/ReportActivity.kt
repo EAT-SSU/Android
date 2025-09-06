@@ -57,7 +57,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             content = if (selectedReportType == ReportType.EXTRA) {
                 inputText
             } else {
-                getString(selectedReportType.description)
+                selectedReportType.description
             }
 
             reportViewModel.postData(reviewId, reportType, content)
