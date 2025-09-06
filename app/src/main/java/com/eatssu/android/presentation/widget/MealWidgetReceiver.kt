@@ -14,7 +14,7 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
-
+//        EventLogger.removeWidget()
         // 삭제된 위젯들의 DataStore 파일 정리
         appWidgetIds.forEach { appWidgetId ->
             cleanupWidgetDataStore(context, appWidgetId)

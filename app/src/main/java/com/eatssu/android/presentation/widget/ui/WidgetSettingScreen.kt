@@ -14,6 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Restaurant.Companion.fromKorean
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuRadioButtonGroup
@@ -65,6 +67,7 @@ fun WidgetSettingScreen(
                         onConfirm(
                             fromKorean(selectedRestaurant)
                         )
+                        EventLogger.addWidget(Restaurant.valueOf(selectedRestaurant))
                     }
                 )
             }
