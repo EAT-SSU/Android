@@ -15,6 +15,14 @@ enum class Screen(val value: String) {
     MODIFY_TIME_TABLE("modify_time_table_page"),
 }
 
+enum class LaunchPath(val value: String) {
+    ICON("icon"),
+    LOCAL_NOTIFICATION("local_notification"),
+    WIDGET("widget"),
+}
+
+
+
 enum class InquiryType(val value: String) {
     MAIL("mail"),
     GITHUB("github"),
@@ -42,41 +50,7 @@ enum class Weekday(val value: String) {
     SUNDAY("일")
 }
 
-enum class Allergy(val value: String) {
-    EGG("난류"),
-    MILK("우유"),
-    BUCKWHEAT("메밀"),
-    PEANUT("땅콩"),
-    SOYBEAN("대두"),
-    WHEAT("밀"),
-    MACKEREL("고등어"),
-    CRAB("게"),
-    SHRIMP("새우"),
-    PORK("돼지고기"),
-    PEACH("복숭아"),
-    TOMATO("토마토"),
-    SULFITE("아황산염"),
-    WALNUT("호두"),
-    CHICKEN("닭고기"),
-    BEEF("쇠고기"),
-    SQUID("오징어"),
-    SHELLFISH("조개류");
-}
 
-enum class WidgetFamily(val value: String) {
-    SYSTEM_SMALL("systemSmall"),
-    SYSTEM_MEDIUM("systemMedium"),
-    SYSTEM_LARGE("systemLarge"),
-    SYSTEM_EXTRA_LARGE("systemExtraLarge"),
-    ACCESSORY_CIRCULAR("accessoryCircular"),
-    ACCESSORY_RECTANGULAR("accessoryRectangular"),
-}
-
-enum class WidgetKind(val value: String) {
-    MEAL("TodayWhatMealWidget"),
-    TIMETABLE("TodayWhatTimeWidget"),
-    MEAL_TIMETABLE("TodayWhatMealTimetableWidget"),
-}
 
 object EventLogger {
 
@@ -85,6 +59,13 @@ object EventLogger {
             firebaseAnalytics.setUserProperty(property.first, property.second)
         }
     }
+
+    fun appLaunch(launchPath: LaunchPath) {
+        firebaseAnalytics.logEvent("app_launch") {
+            param("launch_path", launchPath.value)
+        }
+    }
+
 
     fun pageShowed(screen: Screen) {
         firebaseAnalytics.logEvent("page_showed") {
@@ -108,12 +89,6 @@ object EventLogger {
         }
     }
 
-    fun widgetConfiguration(family: WidgetFamily, kind: WidgetKind) {
-        firebaseAnalytics.logEvent("widget_configuration") {
-            param("family", family.value)
-            param("kind", kind.value)
-        }
-    }
 
     fun clickIsOnModifiedTimeTableToggle(isOnModifiedTimeTable: Boolean) {
         firebaseAnalytics.logEvent("click_is_on_modified_time_table_toggle") {
@@ -175,9 +150,7 @@ object EventLogger {
         }
     }
 
-    fun completeSettingAllergy(allergies: List<Allergy>) {
-        firebaseAnalytics.logEvent("complete_setting_allergy") {
-            param("allergies", allergies.joinToString { it.value })
-        }
+    fun addWidget() {
+
     }
 }
