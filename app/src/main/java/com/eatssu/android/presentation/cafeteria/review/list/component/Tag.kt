@@ -18,49 +18,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Primary
 
-//@Composable
-//fun Tag(
-//    menuName: String,
-//    modifier: Modifier = Modifier
-//) {
-//    FilterChip(
-//        onClick = {},
-//        leadingIcon = {
-//            Icon(
-//                painter = painterResource(id = R.drawable.ic_thumb_up),
-//                contentDescription = "thumb up Image",
-//                modifier = Modifier.size(20.dp),
-//                tint = Color.Unspecified,
-//            )
-//        },
-//        label = {
-//            Text(
-//                text = menuName,
-//                style = EatssuTheme.typography.caption3,
-//                color = Primary
-//            )
-//        },
-//        selected = true,
-//        modifier = modifier,
-//        shape = RoundedCornerShape(30.dp),
-//        colors = FilterChipDefaults.filterChipColors(
-//            selectedContainerColor = MaterialTheme.colorScheme.secondary,
-//            containerColor = MaterialTheme.colorScheme.surface,
-//            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
-//            labelColor = MaterialTheme.colorScheme.secondary,
-//        ),
-//        border = FilterChipDefaults.filterChipBorder(
-//            enabled = true,
-//            selected = false,
-//            borderColor = Primary,
-//            borderWidth = 0.5.dp
-//        ),
-//
-//    )
-//}
+
 
 @Composable
 fun Tag(
@@ -98,7 +59,7 @@ fun Tag(
 @Preview(showBackground = true)
 @Composable
 fun TagPreview() {
-    com.eatssu.android.presentation.compose.ui.theme.EatssuTheme {
+    EatssuTheme {
         Tag("고구마치즈돈까스")
     }
 }

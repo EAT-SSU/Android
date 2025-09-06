@@ -48,13 +48,13 @@ import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.CloseTopBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray100
-import com.eatssu.android.presentation.compose.ui.theme.Gray200
-import com.eatssu.android.presentation.compose.ui.theme.Gray300
-import com.eatssu.android.presentation.compose.ui.theme.Gray400
-import com.eatssu.android.presentation.compose.ui.theme.Gray500
-import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray100
+import com.eatssu.design_system.theme.Gray200
+import com.eatssu.design_system.theme.Gray300
+import com.eatssu.design_system.theme.Gray400
+import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.Primary
 import timber.log.Timber
 
 @Composable
@@ -246,7 +246,7 @@ internal fun ReviewWriteScreen(
                         focusedContainerColor = Gray100,
                         unfocusedContainerColor = Gray100,
 
-                        // 테두리 색상 지정 🎨
+                        // 테두리 색상
                         unfocusedBorderColor = Gray200,
                         focusedBorderColor = Gray200,
 

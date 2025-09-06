@@ -17,9 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -180,26 +177,9 @@ class ReviewWriteViewModel @Inject constructor(
         return file
     }
 
-    suspend fun saveS3(file: File): String? {
+    suspend fun saveS3(file: File): String {
         Timber.d("saveS3 시작 - 파일: ${file.absolutePath}")
         return getImageUrlUseCase(file)
-            .onStart {
-                Timber.d("saveS3 onStart")
-                _uiState.value = UiState.Success(WriteReviewState.Loading)
-            }
-            .catch { e ->
-                Timber.e(e, "saveS3 catch - 에러 발생")
-                _uiState.value = UiState.Success(WriteReviewState.Error)
-                _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
-            }
-            .map { response ->
-                Timber.d("saveS3 map - 응답: $response")
-                response.result?.url
-            }
-            .firstOrNull()
-            .also { url ->
-                Timber.d("saveS3 결과: $url")
-            }
     }
 }
 

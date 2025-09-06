@@ -33,14 +33,16 @@ fun ReviewNav(
             ReviewListScreen(
                 menuType = menuType,
                 id = id,
-                onReviewWriteButtonClick = { menuName ->
-                    // SavedStateHandle을 사용하여 menuName 전달
-                    nav.currentBackStackEntry?.savedStateHandle?.set("menuName", menuName)
-                    
-                    nav.navigate(ReviewNav.Write) {
-                        launchSingleTop = true
-                    }
-                }
+                onModifyClick = {},
+                onReviewWriteButtonClick = {},
+//                onReviewWriteButtonClick = { menuName ->
+//                    // SavedStateHandle을 사용하여 menuName 전달
+//                    nav.currentBackStackEntry?.savedStateHandle?.set("menuName", menuName)
+//
+//                    nav.navigate(ReviewNav.Write) {
+//                        launchSingleTop = true
+//                    }
+//                }
             )
         }
 

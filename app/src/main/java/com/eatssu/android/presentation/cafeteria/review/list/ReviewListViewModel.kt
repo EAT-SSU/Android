@@ -16,10 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -48,39 +46,25 @@ class ReviewListViewModel @Inject constructor(
 
     private fun callReviewInfo(menuType: MenuType, itemId: Long) {
         viewModelScope.launch {
-            getReviewInfoUseCase(menuType, itemId)
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰 정보를 불러오는데 실패하였습니다."))
-                    Timber.d(e.toString())
-                }
-                .collect { result ->
-                    Timber.d("ReviewListViewModel - ReviewInfo 로드 성공: name='${result.name}', reviewCnt=${result.reviewCnt}")
-                    _uiState.update { currentState ->
-                        val data =
-                            if (currentState is UiState.Success) currentState.data else ReviewListState()
-                        UiState.Success(data?.copy(reviewInfo = result))
-                    }
-                }
+            val reviewInfo = getReviewInfoUseCase(menuType, itemId)
+            _uiState.update { currentState ->
+                val data =
+                    if (currentState is UiState.Success) currentState.data else ReviewListState()
+                UiState.Success(data?.copy(reviewInfo = reviewInfo))
+            }
         }
     }
 
     private fun callReviewList(menuType: MenuType, itemId: Long) {
         viewModelScope.launch {
-            getReviewListUseCase(menuType, itemId)
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰 조회에 실패했습니다."))
-                    Timber.e(e.toString())
-                }
-                .collect { result ->
+            val reviewList = getReviewListUseCase(menuType, itemId)
+
                     _uiState.update { currentState ->
                         val data =
                             if (currentState is UiState.Success) currentState.data else ReviewListState()
-                        val reviewList = if (result.isEmpty()) emptyList() else result
-                        UiState.Success(data?.copy(reviewList = reviewList))
+                        UiState.Success(data?.copy(reviewList = if (reviewList.isEmpty()) emptyList() else reviewList))
                     }
-                }
+
         }
     }
 
