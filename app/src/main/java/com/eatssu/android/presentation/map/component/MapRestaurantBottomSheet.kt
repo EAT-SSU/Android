@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +59,7 @@ fun MapRestaurantBottomSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
+        containerColor = White,
         sheetState = sheetState,
         dragHandle = null
     ) {
@@ -147,7 +149,7 @@ fun MapRestaurantBottomSheet(
 
             // 제휴 리스트
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(mapRestaurantList) { item ->
+                itemsIndexed(mapRestaurantList) { index, item ->
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
                             text = buildAnnotatedString {
@@ -185,13 +187,15 @@ fun MapRestaurantBottomSheet(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(Gray200)
-                                .padding(vertical = 10.dp)
-                        )
+                        if (index < mapRestaurantList.lastIndex) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(Gray200)
+                                    .padding(vertical = 10.dp)
+                            )
+                        }
                     }
                 }
             }
