@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.eatssu.android.databinding.FragmentBottomsheetInfoBinding
+import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.Restaurant
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +36,8 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         val name = arguments?.getString("name")
         val restaurantType = enumValues<Restaurant>().find { it.name == name } ?: Restaurant.HAKSIK
         Timber.d("onViewCreated: $name $restaurantType")
+
+        EventLogger.clickCafeteriaInfo(restaurantType)
 
         binding.tvName.text = restaurantType.korean
 
