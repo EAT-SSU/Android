@@ -139,7 +139,6 @@ dependencies {
     implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.androidx.compose.bom)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-//    debugImplementation(libs.androidx.ui.tooling)
 
     // navigation
     implementation(libs.androidx.navigation.fragment)
@@ -193,6 +192,7 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
+    implementation(libs.hilt.navigation.compose)
 
     // ViewModel and LiveData
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
