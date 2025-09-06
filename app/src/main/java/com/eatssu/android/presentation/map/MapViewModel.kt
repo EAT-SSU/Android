@@ -88,21 +88,29 @@ class MapViewModel @Inject constructor(
         if (current !is UiState.Success) return
         val data = current.data ?: return
 
-        val restaurant = getPartnershipDetailUseCase(data.partnerships, storeName, partnershipId)
-            ?: return
+        // 가게 단위의 Partnership 찾기
+        val partnership = data.partnerships.firstOrNull { it.storeName == storeName } ?: return
 
-        val restaurantInfo = RestaurantInfo(
-            collegeName = restaurant.collegeName,
-            departmentName = restaurant.departmentName,
-            period = "${restaurant.startDate} ~ ${restaurant.endDate}",
-            benefit = restaurant.description
-        )
+        val repId = partnershipId ?: partnership.partnershipInfos.firstOrNull()?.id ?: return
+        val representative: PartnershipRestaurant =
+            getPartnershipDetailUseCase(data.partnerships, storeName, repId)
+                ?: return
+
+        // 바텀시트 리스트에 표시할 모든 제휴를 RestaurantInfo로 매핑
+        val restaurantInfoList = partnership.partnershipInfos.map { info ->
+            RestaurantInfo(
+                collegeName = info.collegeName,
+                departmentName = info.departmentName,
+                period = "${info.startDate} ~ ${info.endDate}",
+                benefit = info.description
+            )
+        }
 
         _uiState.value = UiState.Success(
             data.copy(
                 showPartnershipBottomSheet = true,
-                restaurantPartnershipInfo = restaurant,
-                restaurantInfoList = listOf(restaurantInfo)
+                restaurantPartnershipInfo = representative,
+                restaurantInfoList = restaurantInfoList
             )
         )
     }
