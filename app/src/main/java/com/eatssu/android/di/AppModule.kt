@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.repository.WidgetPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +32,11 @@ object AppModule {
     @Singleton
     fun provideFirebaseRemoteConfigRepository(): FirebaseRemoteConfigRepository {
         return FirebaseRemoteConfigRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWidgetPreferencesRepository(@ApplicationContext context: Context): WidgetPreferencesRepository {
+        return WidgetPreferencesRepository(context)
     }
 }

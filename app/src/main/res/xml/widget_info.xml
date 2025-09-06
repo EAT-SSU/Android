@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="110dp"
+    android:minHeight="220dp"
+    android:resizeMode="horizontal"
+    android:previewImage="@drawable/img_widget_preview"
+    android:updatePeriodMillis="3600000"
+    android:configure="com.eatssu.android.presentation.widget.ui.WidgetSettingActivity"
+    android:widgetCategory="home_screen" />

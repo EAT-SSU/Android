@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.compose.ui.theme
+package com.eatssu.design_system.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -9,7 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.eatssu.android.R
+import com.eatssu.design_system.R
 
 // 폰트 패밀리 설정
 val pretendardBold = FontFamily(Font(R.font.pretendard_bold, FontWeight.Bold))
