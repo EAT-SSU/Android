@@ -3,6 +3,7 @@ package com.eatssu.android.di
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.PartnershipService
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.data.service.UserService
@@ -49,5 +50,11 @@ object ServiceModule {
     @Singleton
     fun provideMenuService(retrofit: Retrofit): MenuService {
         return retrofit.create(MenuService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePartnershipService(retrofit: Retrofit): PartnershipService {
+        return retrofit.create(PartnershipService::class.java)
     }
 }

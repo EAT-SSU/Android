@@ -2,10 +2,7 @@ package com.eatssu.android.presentation.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
-import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,9 +21,6 @@ import javax.inject.Inject
 class SignOutViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val setAccessTokenUseCase: SetAccessTokenUseCase,
-    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<SignOutState> = MutableStateFlow(SignOutState())

@@ -48,6 +48,11 @@ android {
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
+            val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
+            buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
+            manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
+
+            isShrinkResources = false
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
@@ -68,6 +73,12 @@ android {
             val kakaoKey: String = p.getProperty("KAKAO_NATIVE_APP_KEY")
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+
+            val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
+            buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
+            manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
+
+            isMinifyEnabled = false
         }
     }
 
@@ -204,6 +215,16 @@ dependencies {
 
     //data store (with flow)
     implementation(libs.androidx.datastore.preferences)
+
+    // naver maps
+    implementation (libs.map.sdk)
+
+    // naver maps to compose
+    implementation(libs.naver.map.compose)
+    implementation(libs.naver.map.location)
+
+    // 현재 위치 정보
+    implementation(libs.play.services.location)
 
 }
 

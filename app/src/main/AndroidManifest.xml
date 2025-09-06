@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <!-- 이미지 관련 -->
     <queries>
         <intent>
@@ -53,6 +56,10 @@
         <meta-data
             android:name="com.google.android.gms.oss.licenses.enabled"
             android:value="true" />
+
+        <meta-data
+            android:name="com.naver.maps.map.NCP_KEY_ID"
+            android:value="${NAVER_MAPS_CLIENT_ID}" />
 
         <!--   푸시알림 리시버     -->
         <receiver
@@ -171,7 +178,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.mypage.usernamechange.UserNameChangeActivity"
+            android:name=".presentation.mypage.userinfo.UserInfoActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data

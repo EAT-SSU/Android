@@ -20,7 +20,7 @@ import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
-import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -57,6 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        binding.bottomNaviBar.itemIconTintList = null
 
         binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
             when (item.itemId) {
@@ -65,10 +66,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     true
                 }
 
-//                R.id.map_menu -> {
-//                    navController.navigate(R.id.mapFragment)
-//                    true
-//                }
+                R.id.map_menu -> {
+                    navController.navigate(R.id.mapFragment)
+                    true
+                }
 
                 R.id.mypage_menu -> {
                     navController.navigate(R.id.myPageFragment)
@@ -146,7 +147,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     when (state.data) {
                         is MainState.NicknameNull -> {
                             intent.putExtra("force", true)
-                            startActivity<UserNameChangeActivity>()
+                            startActivity<UserInfoActivity>()
                         }
 
                         is MainState.LoggedOut -> {

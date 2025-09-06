@@ -1,4 +1,4 @@
-package com.eatssu.android.domain.usecase.auth
+package com.eatssu.android.domain.usecase.user
 
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.domain.repository.UserRepository

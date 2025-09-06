@@ -1,13 +1,15 @@
 package com.eatssu.android.presentation.map
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
 import com.eatssu.design_system.theme.EatssuTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +29,5 @@ class MapFragment : Fragment() {
                 }
             }
         }
-        // return inflater.inflate(R.layout.fragment_map, container, false)
     }
-
 }

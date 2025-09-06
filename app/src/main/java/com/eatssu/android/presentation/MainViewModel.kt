@@ -6,8 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.domain.usecase.auth.GetUserInfoUseCase
+import com.eatssu.android.domain.repository.UserRepository
+import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +29,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getUserNickNameUseCase: GetUserNickNameUseCase,
+    private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
+    private val userRepository: UserRepository,
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -40,9 +46,22 @@ class MainViewModel @Inject constructor(
 //        checkNameNull()
 //    } 얘 떄문에 두번씩 처리됨.
 
-    fun checkNameNull() {
+    init {
+        getUserDepartment()
+    }
+
+    fun refreshUserDepartment() {
+        val userInfo = getUserCollegeDepartmentUseCase()
+        _uiState.value = UiState.Success(
+            MainState.DepartmentState(
+                departmentName = userInfo.userDepartment.departmentName
+            )
+        )
+    }
+
+    fun fetchAndCheckNickname() {
         viewModelScope.launch {
-            getUserInfoUseCase().onStart {
+            getUserNickNameUseCase().onStart {
                 _uiState.value = UiState.Loading
             }.catch { e ->
                 _uiState.value = UiState.Error
@@ -75,10 +94,9 @@ class MainViewModel @Inject constructor(
 
     fun logOut() {
         viewModelScope.launch {
-            logoutUseCase() //Todo 반환값이 쓰이는게 아니면 이렇게 해도 되나?
-
+            logoutUseCase()
             _uiState.value = UiState.Success(MainState.LoggedOut)
-            _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.logout_description)))
+            _uiEvent.emit(UiEvent.ShowToast("로그아웃 되었습니다."))
         }
     }
 
@@ -94,6 +112,29 @@ class MainViewModel @Inject constructor(
         return data
     }
 
+    private fun getUserDepartment() {
+        viewModelScope.launch {
+            runCatching {
+                userRepository.getUserCollegeDepartment()
+            }.onSuccess { it ->
+                val college = it.first
+                val department = it.second
+                setUserCollegeDepartmentUseCase(college, department)
+
+                _uiState.value = UiState.Success(
+                    MainState.DepartmentState(
+                        departmentName = department.departmentName,
+                        showUserDepartmentBottomSheet =
+                            (college.collegeId == -1 || department.departmentId == -1)
+                    )
+                )
+            }.onFailure { e ->
+                Timber.e("getUserDepartment failed: ${e.message}")
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+            }
+        }
+    }
 }
 
 
@@ -101,4 +142,8 @@ sealed class MainState {
     object NicknameNull : MainState()
     data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
+    data class DepartmentState(
+        val departmentName: String = "",
+        val showUserDepartmentBottomSheet: Boolean = false
+    ) : MainState()
 }

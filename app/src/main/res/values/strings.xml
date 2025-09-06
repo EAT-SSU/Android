@@ -94,7 +94,7 @@
     <string name="login_done">환영합니다!</string>
     <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
 
-    <string name="not_found">"정보를 불러올 수 없습니다.</string>
+    <string name="not_found">정보를 불러올 수 없습니다.</string>
     <string name="hello_user">"%1$s님 반갑습니다!</string>
 
     <string name="nickname">닉네임</string>
@@ -177,6 +177,15 @@
     <string name="login_failed">로그인이 실패했습니다.\n</string>
     <string name="token_expired">세션이 만료되었습니다. 다시 로그인 해주세요.</string>
     <string name="token_server_error">시스템 오류로 다시 로그인해주세요.</string>
+
+    <string name="my_info">내 정보</string>
+    <string name="save">저장하기</string>
+    <string name="inpur_department">학과 입력하기</string>
+    <string name="Input_string_description">학과를 입력하고\n나만의 제휴를 확인해보세요!</string>
+    <string name="favorite_partnership">찜한 제휴</string>
+    <string name="cafe">카페</string>
+    <string name="restaurant">음식점</string>
+    <string name="pub">주점</string>
 
     <string name="eatssu_instagram">eatssu.official</string>
     <string name="recruiting_url">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
