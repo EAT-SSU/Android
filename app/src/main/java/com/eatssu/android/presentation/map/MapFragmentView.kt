@@ -213,7 +213,7 @@ fun MapFragmentComposeView(
                     placeType = when (info.restaurantType) {
                         RestaurantType.CAFE -> PlaceType.CAFE
                         RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
-                        RestaurantType.ALCOHOL -> PlaceType.Alcohol
+                        RestaurantType.PUB -> PlaceType.PUB
                         else -> PlaceType.RESTAURANT
                     },
                     mapRestaurantList = mapState.restaurantInfoList,
@@ -249,7 +249,7 @@ fun MapFragmentComposeView(
                             when (partnership.restaurantType) {
                                 RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
                                 RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
-                                RestaurantType.ALCOHOL -> R.drawable.ic_map_marker_alcohol
+                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
                             }
                         ),
                         width = 20.dp,

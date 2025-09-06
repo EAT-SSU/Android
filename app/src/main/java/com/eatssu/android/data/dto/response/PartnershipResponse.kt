@@ -47,7 +47,7 @@ fun PartnershipResponse.toDomain(): Partnership =
             when(it) {
                 "CAFE" -> RestaurantType.CAFE
                 "RESTAURANT" -> RestaurantType.RESTAURANT
-                "ALCOHOL" -> RestaurantType.ALCOHOL
+                "PUB" -> RestaurantType.PUB
                 else -> RestaurantType.RESTAURANT
             }
         } ?: RestaurantType.RESTAURANT,

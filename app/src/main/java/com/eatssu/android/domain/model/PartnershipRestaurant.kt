@@ -17,5 +17,5 @@ data class PartnershipRestaurant(
 )
 
 enum class RestaurantType {
-    CAFE, RESTAURANT, ALCOHOL
+    CAFE, RESTAURANT, PUB
 }
