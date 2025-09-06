@@ -124,6 +124,28 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
 
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.lifecycle.viewmodel)
+    implementation(libs.androidx.compose.lifecycle.runtime)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.compose.theme.adapter)
+    implementation(libs.accompanist.appcompat.theme)
+    androidTestImplementation(libs.androidx.compose.bom)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+//    debugImplementation(libs.androidx.ui.tooling)
+
+    // navigation
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.compose)
+
     //glance
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.preview)
@@ -150,6 +172,9 @@ dependencies {
     //glide: 사진 업로드
     implementation(libs.glide)
     kapt(libs.glide.compiler)
+
+    //coil: 이미지 로딩
+    implementation(libs.coil.compose)
 
     //compressor: 이미지 압축
     implementation(libs.compressor)
@@ -187,26 +212,6 @@ dependencies {
 
     // OSS
     implementation(libs.oss.licenses)
-
-    // Compose
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.animation)
-    implementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.compose.lifecycle.viewmodel)
-    implementation(libs.androidx.compose.lifecycle.runtime)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.compose.theme.adapter)
-    implementation(libs.accompanist.appcompat.theme)
-    androidTestImplementation(libs.androidx.compose.bom)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // navigation
-    implementation(libs.androidx.navigation.fragment)
-    implementation(libs.androidx.navigation.ui)
 
     // worker (Kotlin + coroutines)
     implementation(libs.androidx.work.runtime.ktx)
