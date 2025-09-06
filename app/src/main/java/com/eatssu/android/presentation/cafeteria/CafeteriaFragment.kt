@@ -19,6 +19,7 @@ import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
 import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.Time
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,11 +52,31 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         val tabTitles = listOf("아침", "점심", "저녁")
         TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
+        // ViewPager 페이지 변경 감지
+        setupViewPagerPageChangeListener(viewPager)
+
         initWidgets()
         CalendarUtil.selectedDate = LocalDate.now()
         mainViewModel.setData(CalendarUtil.selectedDate)
         setWeekView()
         setCalendarWeekClickListener()
+    }
+
+    private fun setupViewPagerPageChangeListener(viewPager: ViewPager2) {
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                // 페이지 변경 시 이벤트 로깅
+                val time = when (position) {
+                    0 -> Time.MORNING
+                    1 -> Time.LUNCH
+                    2 -> Time.DINNER
+                    else -> Time.LUNCH // 기본값
+                }
+                EventLogger.selectMealtype(time)
+            }
+        })
     }
 
     private fun initWidgets() {
