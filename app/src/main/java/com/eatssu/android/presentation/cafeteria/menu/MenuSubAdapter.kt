@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewActivity
+import com.eatssu.common.enums.MenuType
 
 
 class MenuSubAdapter(

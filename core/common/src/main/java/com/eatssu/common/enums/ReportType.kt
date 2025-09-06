@@ -1,4 +1,4 @@
-package com.eatssu.android.data.enums
+package com.eatssu.common.enums
 
 import com.eatssu.android.R
 

@@ -1,9 +1,9 @@
 package com.eatssu.android.presentation.cafeteria.info
 
 import androidx.lifecycle.ViewModel
-import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.model.RestaurantInfo
+import com.eatssu.common.enums.Restaurant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -3,8 +3,8 @@ package com.eatssu.android.presentation.widget
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
+import com.eatssu.common.enums.Restaurant
 import timber.log.Timber
 import java.time.LocalDateTime
 

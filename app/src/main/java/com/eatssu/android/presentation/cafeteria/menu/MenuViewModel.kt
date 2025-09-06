@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetFixedMenuResponse
 import com.eatssu.android.data.dto.response.GetMealResponse
-import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.data.enums.Time
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.presentation.UiState
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

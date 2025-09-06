@@ -17,9 +17,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.usecase.widget.SaveRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.MealWorker
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -39,7 +39,7 @@ class WidgetSettingActivity : ComponentActivity() {
             EatssuTheme {
 
                 val restaurantOptions = Restaurant.getVariableRestaurantList().map {
-                    it.displayName
+                    it.korean
                 } // 변동 식당만 불러옵니다. 하드코딩 x
 
                 var selectedRestaurant by rememberSaveable { mutableStateOf(restaurantOptions[0]) }

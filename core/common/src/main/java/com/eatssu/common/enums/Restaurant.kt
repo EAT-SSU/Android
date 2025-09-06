@@ -1,8 +1,7 @@
-package com.eatssu.android.data.enums
+package com.eatssu.common.enums
 
 
-
-enum class Restaurant(val displayName: String, val menuType: MenuType) {
+enum class Restaurant(val korean: String, val menuType: MenuType) {
     HAKSIK("학생 식당", MenuType.VARIABLE),
     DODAM("도담 식당", MenuType.VARIABLE),
     DORMITORY("기숙사 식당", MenuType.VARIABLE),
@@ -18,10 +17,10 @@ enum class Restaurant(val displayName: String, val menuType: MenuType) {
         }
       
       fun fromRestaurantEnumName(enumName: String): String {
-            return entries.find { it.name == enumName }?.displayName ?: ""
+          return entries.find { it.name == enumName }?.korean ?: ""
         }
 
-        fun fromDisplayName(name: String): String =
-            entries.find { it.displayName == name }?.name ?: error("Unknown display name: $name")
+        fun fromKorean(name: String): String =
+            entries.find { it.korean == name }?.name ?: error("Unknown display name: $name")
     }
 }

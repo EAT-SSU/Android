@@ -1,4 +1,4 @@
-package com.eatssu.android.data.enums
+package com.eatssu.common.enums
 
 enum class Time(val displayName: String) {
     MORNING("조식"),

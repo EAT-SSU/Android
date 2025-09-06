@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.data.enums.Restaurant.Companion.fromDisplayName
+import com.eatssu.common.enums.Restaurant.Companion.fromKorean
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuRadioButtonGroup
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -63,7 +63,7 @@ fun WidgetSettingScreen(
                     text = "선택하기",
                     onClick = {
                         onConfirm(
-                            fromDisplayName(selectedRestaurant)
+                            fromKorean(selectedRestaurant)
                         )
                     }
                 )

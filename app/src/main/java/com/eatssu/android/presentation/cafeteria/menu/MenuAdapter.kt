@@ -39,7 +39,7 @@ class MenuAdapter(
                 Log.d("MenuAdapter", "bind: ${sectionModel.cafeteria}")
             }
 
-            binding.tvCafeteria.text = sectionModel.cafeteria.displayName
+            binding.tvCafeteria.text = sectionModel.cafeteria.korean
             binding.tvCafeteriaLocation.text = sectionModel.cafeteriaLocation
 
             binding.rvMenu.apply {
