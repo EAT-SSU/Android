@@ -17,8 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray200
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray200
 import timber.log.Timber
 
 @Composable

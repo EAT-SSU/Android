@@ -114,6 +114,7 @@ android {
 
 dependencies {
     implementation(project(":core:design-system"))
+    implementation(project(":core:design-system"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -141,6 +142,7 @@ dependencies {
     implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.androidx.compose.bom)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+//    debugImplementation(libs.androidx.ui.tooling2)
 
     // navigation
     implementation(libs.androidx.navigation.fragment)

@@ -20,8 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray500
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray500
 
 @Composable
 fun EatSsuTopBar(

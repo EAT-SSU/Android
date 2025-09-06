@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.presentation.compose.ui.theme.Gray300
-import com.eatssu.android.presentation.compose.ui.theme.Primary
-import com.eatssu.android.presentation.compose.ui.theme.White
+import com.eatssu.design_system.theme.Gray300
+import com.eatssu.design_system.theme.Primary
+import com.eatssu.design_system.theme.White
 
 @Composable
 fun LikeButton(

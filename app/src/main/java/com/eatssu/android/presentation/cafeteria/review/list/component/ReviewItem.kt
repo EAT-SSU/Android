@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray400
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray400
 
 @Composable
 fun ReviewItem(

@@ -45,10 +45,10 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.EatSsuTop
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray100
-import com.eatssu.android.presentation.compose.ui.theme.Gray600
-import com.eatssu.android.presentation.compose.ui.theme.Primary
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray100
+import com.eatssu.design_system.theme.Gray600
+import com.eatssu.design_system.theme.Primary
 import timber.log.Timber
 import kotlin.math.roundToInt
 

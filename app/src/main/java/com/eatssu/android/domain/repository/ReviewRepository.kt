@@ -4,7 +4,6 @@ import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.ImageResponse
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import kotlinx.coroutines.flow.Flow
@@ -31,21 +30,21 @@ interface ReviewRepository {
 
     suspend fun getMenuReviewList(
         menuId: Long?,
-    ): Flow<List<Review>>
+    ): List<Review>
 
     suspend fun getMealReviewList(
         menuId: Long?,
-    ): Flow<List<Review>>
+    ): List<Review>
 
     suspend fun getMenuReviewInfo(
         menuId: Long,
-    ): Flow<ReviewInfo>
+    ): ReviewInfo
 
     suspend fun getMealReviewInfo(
         mealId: Long,
-    ): Flow<ReviewInfo>
+    ): ReviewInfo
 
     suspend fun getImageString(
         file: File
-    ): Flow<BaseResponse<ImageResponse>>
+    ): String
 }
