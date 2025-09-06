@@ -18,7 +18,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,10 +25,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray400
-import com.eatssu.android.presentation.compose.ui.theme.Primary
-import com.eatssu.android.presentation.compose.ui.theme.White
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray400
+import com.eatssu.design_system.theme.Primary
+import com.eatssu.design_system.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +39,7 @@ fun DepartmentBottomSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
+        containerColor = White,
         sheetState = sheetState,
         dragHandle = null
     ) {

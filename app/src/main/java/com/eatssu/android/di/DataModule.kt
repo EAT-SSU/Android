@@ -9,10 +9,8 @@ import com.eatssu.android.data.repository.ReportRepositoryImpl
 import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.OauthRepository
-import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.domain.repository.PartnershipRepository
 import dagger.Binds
 import dagger.Module

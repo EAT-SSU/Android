@@ -22,18 +22,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.android.presentation.compose.ui.theme.Black
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray200
-import com.eatssu.android.presentation.compose.ui.theme.Gray400
-import com.eatssu.android.presentation.compose.ui.theme.Gray500
-import com.eatssu.android.presentation.compose.ui.theme.Gray600
-import com.eatssu.android.presentation.compose.ui.theme.White
 import com.eatssu.android.presentation.map.model.FavoritePartnership
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray200
+import com.eatssu.design_system.theme.Gray400
+import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.Gray600
+import com.eatssu.design_system.theme.White
 
 /**
  * 제휴 찜 도입 시 사용
@@ -52,6 +52,7 @@ fun FavoritePartnershipBottomSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
+        containerColor = White,
         sheetState = sheetState,
         dragHandle = null
     ) {

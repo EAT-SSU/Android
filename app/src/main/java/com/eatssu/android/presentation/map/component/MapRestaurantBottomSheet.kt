@@ -27,21 +27,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
-import com.eatssu.android.presentation.compose.ui.theme.Gray200
-import com.eatssu.android.presentation.compose.ui.theme.Gray400
-import com.eatssu.android.presentation.compose.ui.theme.Gray500
-import com.eatssu.android.presentation.compose.ui.theme.Gray600
-import com.eatssu.android.presentation.compose.ui.theme.Primary
-import com.eatssu.android.presentation.compose.ui.theme.White
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.map.model.RestaurantInfo
+import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray200
+import com.eatssu.design_system.theme.Gray400
+import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.Gray600
+import com.eatssu.design_system.theme.Primary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

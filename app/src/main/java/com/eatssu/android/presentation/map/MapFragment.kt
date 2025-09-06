@@ -1,15 +1,12 @@
 package com.eatssu.android.presentation.map
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import com.eatssu.android.presentation.compose.ui.theme.EatssuTheme
+import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

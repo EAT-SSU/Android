@@ -31,13 +31,14 @@ import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.compose.ui.theme.*
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.design_system.theme.Black
+import com.eatssu.design_system.theme.EatssuTheme
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.*
