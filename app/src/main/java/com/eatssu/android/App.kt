@@ -45,7 +45,7 @@ class App : Application(), Configuration.Provider {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
-            Firebase.analytics.setAnalyticsCollectionEnabled(true)
+            Firebase.analytics.setAnalyticsCollectionEnabled(false)
         } else {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
             Firebase.analytics.setAnalyticsCollectionEnabled(true)
