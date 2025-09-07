@@ -74,7 +74,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
                     2 -> Time.DINNER
                     else -> Time.LUNCH // 기본값
                 }
-                EventLogger.selectMealtype(time)
+                EventLogger.selectMealTime(time)
             }
         })
     }
@@ -116,6 +116,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         mainViewModel.setData(date)
         mainPosition = position
         setWeekView()
-        EventLogger.clickDay(date.dayOfWeek.name)
+        EventLogger.selectDay(date.dayOfWeek.name)
     }
 }

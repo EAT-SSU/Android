@@ -29,19 +29,19 @@ object EventLogger {
         }
     }
 
-    fun clickCafeteriaInfo(restaurant: Restaurant) {
-        firebaseAnalytics.logEvent("click_cafeteria_info") {
+    fun clickRestaurantInfo(restaurant: Restaurant) {
+        firebaseAnalytics.logEvent("click_restaurant_info") {
             param("restaurants", restaurant.value)
         }
     }
 
-    fun selectMealtype(time: Time) {
-        firebaseAnalytics.logEvent("select_mealtype") {
-            param("restaurants", time.value)
+    fun selectMealTime(time: Time) {
+        firebaseAnalytics.logEvent("select_mealtime") {
+            param("mealtime", time.value)
         }
     }
 
-    fun clickDay(day: String) {
+    fun selectDay(day: String) {
         val weekDay = when (day) {
             "SUNDAY" -> "sun"
             "MONDAY" -> "mon"
@@ -77,7 +77,7 @@ object EventLogger {
         firebaseAnalytics.logEvent("complete_review_v1") {
             param("rating", rating)
             param("selection", selection)
-            param("photoAttached", if (photoAttached) 1 else 0)
+            param("photo_attached", if (photoAttached) 1 else 0)
         }
     }
 
@@ -89,7 +89,7 @@ object EventLogger {
         firebaseAnalytics.logEvent("complete_review_v1") {
             param("rating", rating)
             param("likes", likes)
-            param("photoAttached", if (photoAttached) 1 else 0)
+            param("photo_attached", if (photoAttached) 1 else 0)
         }
     }
 
@@ -116,13 +116,13 @@ object EventLogger {
         firebaseAnalytics.logEvent("click_partner_restaurant") {
             param("college", college)
             param("major", major)
-            param("partner_restaurant_ID", partnerRestaurantId)
+            param("partner_restaurant_id", partnerRestaurantId)
         }
     }
 
     fun addWidget(restaurant: Restaurant) {
         firebaseAnalytics.logEvent("add_widget") {
-            param("restaurant", restaurant.value)
+            param("restaurants", restaurant.value)
         }
     }
 
@@ -133,9 +133,14 @@ object EventLogger {
     //todo 파라미터 넣을지 추후 논의
     fun removeWidget(restaurant: Restaurant) {
         firebaseAnalytics.logEvent("remove_widget") {
-            param("restaurant", restaurant.value)
+            param("restaurants", restaurant.value)
         }
     }
 
     //todo change_widget
+    fun changeWidget(restaurant: Restaurant) {
+        firebaseAnalytics.logEvent("change_widget") {
+            param("restaurants", restaurant.value)
+        }
+    }
 }

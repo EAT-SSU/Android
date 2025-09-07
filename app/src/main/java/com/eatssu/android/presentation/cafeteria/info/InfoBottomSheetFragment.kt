@@ -37,7 +37,7 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         val restaurantType = enumValues<Restaurant>().find { it.name == name } ?: Restaurant.HAKSIK
         Timber.d("onViewCreated: $name $restaurantType")
 
-        EventLogger.clickCafeteriaInfo(restaurantType)
+        EventLogger.clickRestaurantInfo(restaurantType)
 
         binding.tvName.text = restaurantType.korean
 
