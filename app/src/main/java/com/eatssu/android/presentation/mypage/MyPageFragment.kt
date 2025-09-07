@@ -25,7 +25,7 @@ import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
-import com.eatssu.android.presentation.mypage.usernamechange.UserNameChangeActivity
+import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,8 +93,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setOnClickListener() {
-        binding.llNickname.setOnClickListener {
-            startActivity(Intent(requireContext(), UserNameChangeActivity::class.java))
+        binding.llMyInfo.setOnClickListener {
+            startActivity(Intent(requireContext(), UserInfoActivity::class.java))
         }
 
         binding.llInquire.setOnClickListener {

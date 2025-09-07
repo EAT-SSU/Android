@@ -2,8 +2,12 @@ package com.eatssu.android.di.network
 
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.TokenResponse
-import com.eatssu.android.domain.usecase.auth.*
 import com.eatssu.android.domain.model.TokenStateManager
+import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -27,7 +31,7 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     /**
-     * 401 Unauthorized 응답을h 받았을 때 호출되는 메서드
+     * 401 Unauthorized 응답을 받았을 때 호출되는 메서드
      * @param route : 요청한 경로
      * @param response : 응답 객체
      * @return : 새로운 요청 객체

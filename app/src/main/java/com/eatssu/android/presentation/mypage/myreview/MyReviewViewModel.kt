@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.domain.usecase.auth.GetMyReviewsUseCase
+import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

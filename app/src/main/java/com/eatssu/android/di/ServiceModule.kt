@@ -2,6 +2,8 @@ package com.eatssu.android.di
 
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
+import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.data.service.PartnershipService
 import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.data.service.UserService
@@ -15,7 +17,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
-
+    @Provides
+    @Singleton
+    fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
+        return noTokenRetrofit.create(OauthService::class.java)
+    }
     @Provides
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
@@ -36,13 +42,19 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideMealService(retrofit: Retrofit): MealService {
-        return retrofit.create(MealService::class.java)
+    fun provideMealService(@NoToken noTokenRetrofit: Retrofit): MealService {
+        return noTokenRetrofit.create(MealService::class.java)
     }
 
     @Provides
     @Singleton
     fun provideMenuService(retrofit: Retrofit): MenuService {
         return retrofit.create(MenuService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePartnershipService(retrofit: Retrofit): PartnershipService {
+        return retrofit.create(PartnershipService::class.java)
     }
 }
