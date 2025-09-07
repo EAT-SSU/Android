@@ -15,16 +15,6 @@ enum class LaunchPath(val value: String) {
     WIDGET("widget"),
 }
 
-enum class Day(val value: String) {
-    MONDAY("mon"),
-    TUESDAY("tue"),
-    WEDNESDAY("wed"),
-    THURSDAY("thu"),
-    FRIDAY("fri"),
-    SATURDAY("sat"),
-    SUNDAY("sun")
-}
-
 object EventLogger {
 
     fun setUserProperties(vararg properties: Pair<String, String>) {
@@ -79,17 +69,30 @@ object EventLogger {
         firebaseAnalytics.logEvent("write_review_v1", null)
     }
 
-    fun completeReview(
+    fun completeReviewV1(
         rating: Long,
-        likes: List<Long>,
+        selection: Long,
         photoAttached: Boolean,
     ) {
         firebaseAnalytics.logEvent("complete_review_v1") {
             param("rating", rating)
-            param("likes", likes.joinToString(","))
+            param("selection", selection)
             param("photoAttached", if (photoAttached) 1 else 0)
         }
     }
+
+    fun completeReviewV2(
+        rating: Long,
+        likes: Long,
+        photoAttached: Boolean,
+    ) {
+        firebaseAnalytics.logEvent("complete_review_v1") {
+            param("rating", rating)
+            param("likes", likes)
+            param("photoAttached", if (photoAttached) 1 else 0)
+        }
+    }
+
 
     fun clickMap() {
         firebaseAnalytics.logEvent("click_map", null)
@@ -123,6 +126,11 @@ object EventLogger {
         }
     }
 
+    fun removeWidget() {
+        firebaseAnalytics.logEvent("remove_widget", null)
+    }
+
+    //todo 파라미터 넣을지 추후 논의
     fun removeWidget(restaurant: Restaurant) {
         firebaseAnalytics.logEvent("remove_widget") {
             param("restaurant", restaurant.value)
