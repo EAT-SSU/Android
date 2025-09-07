@@ -115,7 +115,7 @@ fun eatssuTypography(): EatssuTypography {
             lineHeight = 20.sp
         ),
         caption1 = EatssuTextStyle(
-            fontFamily = pretendardBold,
+            fontFamily = pretendardSemiBold,
             fontSize = 12.sp,
             lineHeight = 18.sp
         ),
