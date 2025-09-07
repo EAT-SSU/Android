@@ -28,7 +28,7 @@ fun WidgetSettingScreen(
     restaurantOptionList: List<String>,
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
-    onConfirm: (String) -> Unit = {},
+    onConfirm: (Restaurant) -> Unit = {},
     onBack: () -> Unit = {} // 뒤로가기 동작을 위한 람다 추가
 ) {
     Scaffold(
@@ -67,7 +67,7 @@ fun WidgetSettingScreen(
                         onConfirm(
                             fromKorean(selectedRestaurant)
                         )
-                        EventLogger.addWidget(Restaurant.valueOf(selectedRestaurant))
+                        EventLogger.addWidget(Restaurant.fromKorean(selectedRestaurant))
                     }
                 )
             }

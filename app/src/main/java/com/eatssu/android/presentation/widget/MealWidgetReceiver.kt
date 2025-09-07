@@ -3,17 +3,15 @@ package com.eatssu.android.presentation.widget
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.ui.MealWidget
 import com.eatssu.common.EventLogger
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.io.File
-import javax.inject.Inject
 
-class MealWidgetReceiver @Inject constructor(
-    private var loadRestaurantByFileKeyUseCase: LoadRestaurantByFileKeyUseCase,
-) : GlanceAppWidgetReceiver() {
+@AndroidEntryPoint
+class MealWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
         get() = MealWidget()
 
@@ -37,10 +35,8 @@ class MealWidgetReceiver @Inject constructor(
                     Timber.d("Deleted DataStore file for widget $appWidgetId")
                 }
 
-                val restaurant = loadRestaurantByFileKeyUseCase("appWidget-${appWidgetId}")
-                if (restaurant != null) {
-                    EventLogger.removeWidget(restaurant)
-                }
+                EventLogger.removeWidget()
+
             }
         } catch (e: Exception) {
             Timber.e("Failed to cleanup DataStore for widget $appWidgetId: ${e.message}")

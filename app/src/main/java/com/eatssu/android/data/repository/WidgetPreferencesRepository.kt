@@ -20,9 +20,9 @@ class WidgetPreferencesRepository @Inject constructor(
     private fun fileKeyRestaurantKey(fileKey: String) =
         stringPreferencesKey("widget_restaurant_by_fileKey_$fileKey")
 
-    suspend fun saveRestaurantByFileKey(fileKey: String, restaurant: String) {
+    suspend fun saveRestaurantByFileKey(fileKey: String, restaurant: Restaurant) {
         context.widgetPrefsDataStore.edit { prefs ->
-            prefs[fileKeyRestaurantKey(fileKey)] = restaurant
+            prefs[fileKeyRestaurantKey(fileKey)] = restaurant.name
         }
         Timber.d("saveRestaurantByFileKey 호출됨: fileKey='$fileKey', restaurant='$restaurant'")
     }

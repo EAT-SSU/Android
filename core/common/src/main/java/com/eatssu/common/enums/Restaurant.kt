@@ -20,7 +20,7 @@ enum class Restaurant(val value: String, val korean: String, val menuType: MenuT
           return entries.find { it.name == enumName }?.korean ?: ""
         }
 
-        fun fromKorean(name: String): String =
-            entries.find { it.korean == name }?.name ?: error("Unknown display name: $name")
+        fun fromKorean(name: String): Restaurant =
+            entries.find { it.korean == name } ?: error("Unknown display name: $name")
     }
 }
