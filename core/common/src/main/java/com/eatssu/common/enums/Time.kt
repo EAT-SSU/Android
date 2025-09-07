@@ -7,7 +7,7 @@ enum class Time(val value: String, val korean: String) {
 
     companion object {
         fun fromTimeEnumName(enumName: String): String {
-            return Time.values().find { it.name == enumName }?.korean ?: ""
+            return entries.find { it.name == enumName }?.korean ?: ""
         }
     }
 }

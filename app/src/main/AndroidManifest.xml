@@ -91,12 +91,6 @@
             android:authorities="com.eatssu.android.androidx-startup"
             tools:node="remove" />
 
-        <!--    워커 매니저를 위한 프로바이더    -->
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.eatssu.android.androidx-startup"
-            tools:node="remove" />
-
         <activity
             android:name=".presentation.widget.ui.WidgetSettingActivity"
             android:excludeFromRecents="true"

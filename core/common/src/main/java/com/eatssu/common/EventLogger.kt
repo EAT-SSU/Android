@@ -55,7 +55,7 @@ object EventLogger {
             }
         }
         firebaseAnalytics.logEvent("click_day") {
-            param("restaurants", weekDay)
+            param("day", weekDay)
         }
     }
 
