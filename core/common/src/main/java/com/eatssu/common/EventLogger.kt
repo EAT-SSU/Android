@@ -128,4 +128,6 @@ object EventLogger {
             param("restaurant", restaurant.value)
         }
     }
+
+    //todo change_widget
 }
