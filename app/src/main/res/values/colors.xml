@@ -17,4 +17,7 @@
     <color name="black">#ff000000</color>
 
     <color name="kakao_login">#FEE500</color>
+
+    <color name="icon_background">#FFFFFF</color>
+    <color name="icon_foreground">#000000</color>
 </resources>
