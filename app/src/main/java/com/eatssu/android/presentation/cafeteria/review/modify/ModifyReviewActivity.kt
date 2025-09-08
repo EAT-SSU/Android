@@ -70,15 +70,17 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(
     }
 
     private fun postData(reviewId: Long) {
-        val comment = binding.etReview2Comment.text.toString()
-        val mainGrade = binding.rbMain.rating.toInt()
-        val amountGrade = binding.rbAmount.rating.toInt()
-        val tasteGrade = binding.rbTaste.rating.toInt()
+        lifecycleScope.launch {
+            val comment = binding.etReview2Comment.text.toString()
+            val mainGrade = binding.rbMain.rating.toInt()
+            val amountGrade = binding.rbAmount.rating.toInt()
+            val tasteGrade = binding.rbTaste.rating.toInt()
 
-        modifyViewModel.modifyMyReview(
-            reviewId,
-            ModifyReviewRequest(mainGrade, amountGrade, tasteGrade, comment)
-        )
+            modifyViewModel.modifyMyReview(
+                reviewId,
+                ModifyReviewRequest(mainGrade, amountGrade, tasteGrade, comment)
+            )
+        }
     }
 
     private fun observeViewModel() {
