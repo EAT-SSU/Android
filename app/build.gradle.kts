@@ -21,7 +21,7 @@ android {
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
-        minSdk = 23
+        minSdk = 28
         targetSdk = 34
         versionCode = 35
         versionName = "2.1.15"
