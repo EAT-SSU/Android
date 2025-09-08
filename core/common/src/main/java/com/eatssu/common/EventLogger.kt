@@ -1,5 +1,6 @@
 package com.eatssu.common
 
+import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -8,12 +9,6 @@ import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
 
 private val firebaseAnalytics: FirebaseAnalytics by lazy { Firebase.analytics }
-
-enum class LaunchPath(val value: String) {
-    ICON("icon"),
-    LOCAL_NOTIFICATION("local_notification"),
-    WIDGET("widget"),
-}
 
 object EventLogger {
 
