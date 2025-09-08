@@ -15,9 +15,7 @@ class ReviewComposeActivity : ComponentActivity() {
 
     private lateinit var menuType: String
     private var itemId by Delegates.notNull<Long>()
-
     private lateinit var itemName: String
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +35,6 @@ class ReviewComposeActivity : ComponentActivity() {
     }
 
     private fun getIntents() {
-        //get menuId
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
         itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
