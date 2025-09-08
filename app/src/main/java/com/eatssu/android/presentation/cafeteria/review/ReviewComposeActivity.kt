@@ -24,7 +24,7 @@ class ReviewComposeActivity : ComponentActivity() {
                 val navHostController = rememberNavController()
 
                 ReviewNav(
-                    nav = navHostController,
+                    navHostController = navHostController,
                     menuType = MenuType.valueOf(menuType),
                     menuName = itemName,
                     id = itemId
@@ -34,7 +34,7 @@ class ReviewComposeActivity : ComponentActivity() {
         getIntents()
     }
 
-    private fun getIntents() {
+    private fun getIntents() { //todo 추후 변경
         menuType = intent.getStringExtra("menuType").toString()
         itemId = intent.getLongExtra("itemId", 0)
         itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
