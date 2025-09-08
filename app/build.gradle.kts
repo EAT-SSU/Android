@@ -52,12 +52,9 @@ android {
             buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
             manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
 
-            isShrinkResources = false
-            isMinifyEnabled = false
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
-            var shrinkResources = false
-            var minifyEnabled = false
         }
 
         debug {
