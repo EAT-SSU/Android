@@ -17,8 +17,15 @@ android {
     namespace = "com.eatssu.android"
     compileSdk = 35
 
-    // S8: API 28
-    // S21: API 33
+    /**
+     * 현재 팀 내 안드로이드 OS 버전
+     * 진 S8: 9 (sdk 28)
+     * 진 S21: 14 (sdk 33)
+     * 윤소: 9
+     * 유리: 10
+     * 제훈: 14
+     */
+
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 28

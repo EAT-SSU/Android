@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,6 +80,8 @@ fun ReviewWriteScreen(
     ) { uri: Uri? ->
         viewModel.setSelectedImage(uri)
     }
+
+    val context = LocalContext.current
 
     // menuList를 Pair<Long, String> 리스트로 통일
     val menuList = remember(menuName, menuType, viewModelMenuList) {
@@ -135,7 +138,8 @@ fun ReviewWriteScreen(
                 itemId = id,
                 rating = rating,
                 content = content,
-                menuLikes = menuLikes
+                menuLikes = menuLikes,
+                context = context,
             )
         }
     )
@@ -361,7 +365,7 @@ fun MenuItem(
     onLikeChanged: (Boolean) -> Unit,
 ) {
 
-    Row(Modifier.padding(vertical = 6.dp)) {
+    Row(modifier.padding(vertical = 6.dp)) {
         Text(
             mealName,
             style = EatssuTheme.typography.body3
