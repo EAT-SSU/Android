@@ -226,7 +226,7 @@ internal fun ReviewListScreen(
                                 )
                             }
 
-                            if (uiState.data?.reviewInfo?.reviewCnt == 0) {
+                            if (uiState.data?.reviewList?.size == 0) {
                                 Column(
                                     modifier = Modifier.fillMaxSize(),
                                     horizontalAlignment = Alignment.CenterHorizontally,
