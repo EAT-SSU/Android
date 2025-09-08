@@ -1,7 +1,9 @@
 package com.eatssu.android.presentation.cafeteria.review.write.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -10,7 +12,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.White
@@ -42,4 +46,17 @@ fun LikeButton(
             modifier = Modifier.size(18.dp)
         )
     }
+}
+
+@Preview
+@Composable
+fun LikeButtonPreview() {
+    EatssuTheme {
+        Column {
+            LikeButton(isLiked = true, onClick = {})
+            Spacer(Modifier.size(8.dp))
+            LikeButton(isLiked = false, onClick = {})
+        }
+    }
+
 }
