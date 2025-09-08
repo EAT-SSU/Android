@@ -133,15 +133,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.cafeteria.review.write.ReviewWriteRateActivity"
+            android:name=".presentation.cafeteria.review.ReviewComposeActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity"
-            android:exported="false" />
         <activity
             android:name=".presentation.login.LoginActivity"
             android:exported="true">
@@ -187,13 +184,6 @@
         </activity>
         <activity
             android:name=".presentation.mypage.myreview.MyReviewListActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.list.ReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
