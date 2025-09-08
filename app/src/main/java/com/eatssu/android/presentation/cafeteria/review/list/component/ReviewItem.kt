@@ -58,8 +58,7 @@ fun ReviewItem(
                     writeName,
                     style = EatssuTheme.typography.caption1
                 )
-                RatingBar(isBig = false, rating = rating, onRatingChanged = {}).also {
-                }
+                RatingBarSmall(rating = rating)
             }
 
             Spacer(

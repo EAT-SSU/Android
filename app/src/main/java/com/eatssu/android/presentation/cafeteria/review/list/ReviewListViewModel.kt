@@ -16,10 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class ReviewListViewModel @Inject constructor(
@@ -34,69 +32,40 @@ class ReviewListViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun loadReview(
-        menuType: MenuType,
-        itemId: Long,
-    ) {
+    fun loadReview(menuType: MenuType, itemId: Long) {
         _uiState.value = UiState.Loading
 
-        callReviewInfo(menuType, itemId)
-        callReviewList(menuType, itemId)
-    }
-
-    private fun callReviewInfo(menuType: MenuType, itemId: Long) {
         viewModelScope.launch {
-            val reviewInfo = getReviewInfoUseCase(menuType, itemId)
-            _uiState.update { currentState ->
-                val data =
-                    if (currentState is UiState.Success) currentState.data else ReviewListState()
-                UiState.Success(data?.copy(reviewInfo = reviewInfo))
+            try {
+                val reviewInfo = getReviewInfoUseCase(menuType, itemId)
+                val reviewList = getReviewListUseCase(menuType, itemId)
+
+                _uiState.value = UiState.Success(
+                    ReviewListState(
+                        reviewInfo = reviewInfo,
+                        reviewList = reviewList
+                    )
+                )
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("Failed to load reviews."))
             }
         }
     }
 
-    private fun callReviewList(menuType: MenuType, itemId: Long) {
+    fun deleteReview(reviewId: Long) {
         viewModelScope.launch {
-            val reviewList = getReviewListUseCase(menuType, itemId)
-
-                    _uiState.update { currentState ->
-                        val data =
-                            if (currentState is UiState.Success) currentState.data else ReviewListState()
-                        UiState.Success(data?.copy(reviewList = if (reviewList.isEmpty()) emptyList() else reviewList))
-                    }
-
+            try {
+                deleteReviewUseCase(reviewId)
+                _uiEvent.emit(UiEvent.ShowToast("Review deleted successfully!"))
+            } catch (e: Exception) {
+                _uiEvent.emit(UiEvent.ShowToast("Failed to delete review."))
+            }
         }
     }
-
-//    fun deleteReview(reviewId: Long) {
-//        viewModelScope.launch {
-//            deleteReviewUseCase(reviewId).onStart {
-//                _uiState.update { it.copy(loading = true) }
-//            }.onCompletion {
-//                _uiState.update { it.copy(loading = false, error = true) }
-//            }.catch { e ->
-//                _uiState.update {
-//                    it.copy(
-//                        error = true,
-////                        toastMessage = context.getString(R.string.delete_not)
-//                    )
-//                }
-//                Timber.e(e.toString())
-//            }.collectLatest { result ->
-//                Timber.d(result.toString())
-//
-//                _uiState.update {
-//                    it.copy(
-////                        isDeleted = true,
-////                        toastMessage = context.getString(R.string.delete_done)
-//                    )
-//                }
-//            }
-//        }
-//    }
 }
 
 data class ReviewListState(
     val reviewInfo: ReviewInfo? = null,
-    val reviewList: List<Review>? = null
+    val reviewList: List<Review> = emptyList()
 )

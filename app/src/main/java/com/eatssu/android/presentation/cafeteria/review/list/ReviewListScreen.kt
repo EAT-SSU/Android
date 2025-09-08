@@ -41,7 +41,6 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.design_system.component.EatSsuButton
@@ -50,6 +49,7 @@ import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
+import com.eatssu.design_system.theme.Star
 import timber.log.Timber
 
 @Composable
@@ -183,9 +183,12 @@ internal fun ReviewListScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    RatingBar(
-                                        isBig = true,
-                                        maxRating = 1
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_star_24),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(24.dp),
+                                        tint = Star
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
@@ -211,7 +214,6 @@ internal fun ReviewListScreen(
 
 
                             Row {
-
                                 Text(
                                     "리뷰",
                                     style = EatssuTheme.typography.h2,

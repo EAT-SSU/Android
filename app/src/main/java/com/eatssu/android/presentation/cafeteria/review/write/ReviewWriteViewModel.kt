@@ -30,7 +30,7 @@ class ReviewWriteViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val getMenuNameListOfMealUseCase: GetMenuNameListOfMealUseCase,
-    private val context: Context,
+//    private val context: Context,
 ) : ViewModel() {
 
     private val _uiState =
@@ -78,7 +78,8 @@ class ReviewWriteViewModel @Inject constructor(
         itemId: Long,
         rating: Int,
         content: String,
-        menuLikes: List<Long>
+        menuLikes: List<Long>,
+        context: Context,
     ) {
         viewModelScope.launch {
             Timber.d("postReview 시작 - rating: $rating, content: $content, menuLikes: $menuLikes")
@@ -93,22 +94,15 @@ class ReviewWriteViewModel @Inject constructor(
                 try {
                     Timber.d("이미지 업로드 시작")
                     // Uri를 File로 변환 (ContentResolver 사용)
-                    val file = uriToFile(selectedUri)
+                    val file = uriToFile(selectedUri, context)
                     Timber.d("변환된 파일 경로: ${file.absolutePath}, 파일 존재: ${file.exists()}")
                     if (file.exists()) {
                         Timber.d("S3 업로드 시작")
                         imageUrl = saveS3(file)
                         Timber.d("S3 업로드 결과: $imageUrl")
-                        if (imageUrl != null) {
-                            _uploadedImageUrl.value = imageUrl
-                            _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
-                            Timber.d("이미지 업로드 성공: $imageUrl")
-                        } else {
-                            _uiState.value = UiState.Success(WriteReviewState.Error)
-                            _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
-                            Timber.e("이미지 업로드 실패: imageUrl이 null")
-                            return@launch
-                        }
+                        _uploadedImageUrl.value = imageUrl
+                        _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+                        Timber.d("이미지 업로드 성공: $imageUrl")
                     } else {
                         _uiState.value = UiState.Success(WriteReviewState.Error)
                         _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
@@ -160,7 +154,7 @@ class ReviewWriteViewModel @Inject constructor(
     }
 
 
-    private fun uriToFile(uri: android.net.Uri): File {
+    private fun uriToFile(uri: android.net.Uri, context: Context): File {
         val inputStream: InputStream = context.contentResolver.openInputStream(uri)
             ?: throw IllegalArgumentException("Cannot open input stream for URI: $uri")
 
