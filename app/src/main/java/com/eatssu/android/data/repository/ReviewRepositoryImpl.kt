@@ -3,14 +3,11 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
-import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.repository.ReviewRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -66,18 +63,16 @@ class ReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteReview(reviewId: Long): Flow<BaseResponse<Void>> =
-        flow {
-            emit(reviewService.deleteReview(reviewId))
-        }
+    override suspend fun deleteReview(reviewId: Long) {
+        reviewService.deleteReview(reviewId)
+    }
 
     override suspend fun modifyReview(
         reviewId: Long,
         body: ModifyReviewRequest,
-    ): Flow<BaseResponse<Void>> =
-        flow {
-            emit(reviewService.modifyReview(reviewId, body))
-        }
+    ) {
+        reviewService.modifyReview(reviewId, body)
+    }
 
     override suspend fun getMenuReviewList(menuId: Long?): List<Review> {
         return reviewService.getMenuReviewList(menuId).result?.toDomain() ?: emptyList()
@@ -89,11 +84,11 @@ class ReviewRepositoryImpl @Inject constructor(
 
     override suspend fun getMenuReviewInfo(menuId: Long): ReviewInfo {
         return reviewService.getMenuReviewInfo(menuId).result?.toDomain()!! //non null 하면 안될 것 같은데
-        }
+    }
 
     override suspend fun getMealReviewInfo(mealId: Long): ReviewInfo {
         return reviewService.getMealReviewInfo(mealId).result?.toDomain()!!
-        }
+    }
 
     override suspend fun getImageString(file: File): String {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())

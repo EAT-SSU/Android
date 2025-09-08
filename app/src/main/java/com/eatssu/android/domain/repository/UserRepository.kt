@@ -3,9 +3,9 @@ package com.eatssu.android.domain.repository
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.MyNickNameResponse
-import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
+import com.eatssu.android.domain.model.Review
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -18,7 +18,7 @@ interface UserRepository {
         nickname: String,
     ): Flow<BaseResponse<Boolean>>
 
-    suspend fun getUserReviews(): Flow<BaseResponse<MyReviewResponse>>
+    suspend fun getUserReviews(): List<Review>
     suspend fun getUserNickName(): Flow<BaseResponse<MyNickNameResponse>>
     suspend fun signOut(): Flow<BaseResponse<Boolean>>
 
