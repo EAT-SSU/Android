@@ -81,7 +81,7 @@ object EventLogger {
         likes: Long,
         photoAttached: Boolean,
     ) {
-        firebaseAnalytics.logEvent("complete_review_v1") {
+        firebaseAnalytics.logEvent("complete_review_v2") {
             param("rating", rating)
             param("likes", likes)
             param("photo_attached", if (photoAttached) 1 else 0)

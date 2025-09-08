@@ -12,7 +12,7 @@ import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
-import com.eatssu.common.LaunchPath
+import com.eatssu.common.enums.LaunchPath
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
