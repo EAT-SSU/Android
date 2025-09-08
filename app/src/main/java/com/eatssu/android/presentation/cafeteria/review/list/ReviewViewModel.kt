@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.dto.response.asReviewInfo
 import com.eatssu.android.data.dto.response.toReviewList
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
@@ -12,6 +11,7 @@ import com.eatssu.android.domain.usecase.review.GetMealReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetMealReviewListUseCase
 import com.eatssu.android.domain.usecase.review.GetMenuReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetMenuReviewListUseCase
+import com.eatssu.common.enums.MenuType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

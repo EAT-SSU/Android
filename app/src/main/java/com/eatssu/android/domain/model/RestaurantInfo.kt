@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.model
 
-import com.eatssu.android.data.enums.Restaurant
+import com.eatssu.common.enums.Restaurant
 
 data class RestaurantInfo(
     val enum: Restaurant,

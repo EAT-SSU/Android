@@ -36,7 +36,6 @@ class MealRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun getMenuInfoByMealId(mealId: Long): Flow<BaseResponse<MenuOfMealResponse>> =
         flow {
             emit(mealService.getMenuInfoByMealId(mealId))

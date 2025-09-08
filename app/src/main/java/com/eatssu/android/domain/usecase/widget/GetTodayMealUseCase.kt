@@ -1,9 +1,9 @@
 package com.eatssu.android.domain.usecase.widget
 
-import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.data.enums.Time
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.presentation.widget.WidgetMealList
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import timber.log.Timber

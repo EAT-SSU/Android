@@ -55,9 +55,6 @@ android {
             isShrinkResources = false
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
-            var shrinkResources = false
-            var minifyEnabled = false
         }
 
         debug {
@@ -114,6 +111,7 @@ android {
 
 dependencies {
     implementation(project(":core:design-system"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -200,7 +198,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.compose.theme.adapter)
     implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.androidx.compose.bom)

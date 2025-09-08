@@ -39,14 +39,14 @@ class MenuAdapter(
                 Log.d("MenuAdapter", "bind: ${sectionModel.cafeteria}")
             }
 
-            binding.tvCafeteria.text = sectionModel.cafeteria.displayName
+            binding.tvCafeteria.text = sectionModel.cafeteria.korean
             binding.tvCafeteriaLocation.text = sectionModel.cafeteriaLocation
 
             binding.rvMenu.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)
                 adapter = sectionModel.menuList?.let {
-                    MenuSubAdapter(it, sectionModel.cafeteria.menuType)
+                    MenuSubAdapter(it, sectionModel.cafeteria)
                 }
             }
         }

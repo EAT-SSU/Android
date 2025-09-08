@@ -5,10 +5,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.data.enums.ReportType
 import com.eatssu.android.databinding.ActivityReportBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.enums.ReportType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding
             content = if (selectedReportType == ReportType.EXTRA) {
                 inputText
             } else {
-                getString(selectedReportType.description)
+                selectedReportType.description
             }
 
             reportViewModel.postData(reviewId, reportType, content)
