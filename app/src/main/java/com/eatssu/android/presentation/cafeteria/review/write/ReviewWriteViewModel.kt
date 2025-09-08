@@ -177,7 +177,7 @@ class ReviewWriteViewModel @Inject constructor(
         return file
     }
 
-    suspend fun saveS3(file: File): String {
+    private suspend fun saveS3(file: File): String {
         Timber.d("saveS3 시작 - 파일: ${file.absolutePath}")
         return getImageUrlUseCase(file)
     }

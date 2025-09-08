@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
-import EatSsuButton
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -8,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,9 +44,10 @@ import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.cafeteria.review.list.component.CloseTopBar
-import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
+import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBarMedium
 import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
+import com.eatssu.design_system.component.CloseTopBar
+import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray200
@@ -163,37 +163,58 @@ internal fun ReviewWriteScreen(
     ) { uri: Uri? ->
         // 콜백을 통해 메인 함수에서 처리
     }
-    Surface(Modifier.fillMaxSize()) {
-        Box(Modifier.fillMaxSize()) {
+
+    Scaffold(
+        topBar = {
+            CloseTopBar("리뷰 작성하기", onClose = { /* TODO: Handle close action */ })
+        },
+        bottomBar = {    // 하단에 버튼을 고정하기 위함
+            EatSsuButton(
+                text = "완료하기",
+                onClick = {
+                    val menuLikesList = likedMenus.map { it }
+                    writeReviewButtonClick(
+                        rating,
+                        text,
+                        menuLikesList
+                    )
+                },
+                modifier = Modifier
+                    .padding(24.dp)
+            )
+        }
+    ) { innerPadding ->
+        Surface(
+            modifier = modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CloseTopBar("리뷰 작성하기", onClose = {})
 
-            Text(
-                "오늘의 식사는 어뗘셨나요?",
-                style = EatssuTheme.typography.subtitle1
-            )
+                Text(
+                    "오늘의 식사는 어뗘셨나요?",
+                    style = EatssuTheme.typography.subtitle1
+                )
 
-            RatingBar(
-                modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
-                isBig = true,
-                rating = rating, // 현재 상태 값 전달
-                maxRating = 5,
-                onRatingChanged = { newRating ->
-                    rating = newRating // 클릭 시 상태 값 업데이트
-                },
-            )
+                RatingBarMedium(
+                    modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
+                    rating = rating, // 현재 상태 값 전달
+                    onRatingChanged = { newRating ->
+                        rating = newRating // 클릭 시 상태 값 업데이트
+                    },
+                )
 
-            Text(
-                "추천하고 싶은 메뉴가 있나요?",
-                style = EatssuTheme.typography.subtitle1
-            )
+                Text(
+                    "추천하고 싶은 메뉴가 있나요?",
+                    style = EatssuTheme.typography.subtitle1
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
 
                 LazyColumn {
@@ -219,131 +240,114 @@ internal fun ReviewWriteScreen(
 
 
                 // 최대 글자 수
-            val maxChar = 300
+                val maxChar = 300
 
 
-            Column {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp),
-                    value = text,
-                    onValueChange = { newText ->
-                        // 최대 글자 수를 초과하지 않도록 함
-                        if (newText.length <= maxChar) {
-                            text = newText
-                        }
-                    },
-                    label = {
-                        Text(
-                            "메뉴에 대한 상세한 리뷰를 작성해주세요",
-                            style = EatssuTheme.typography.body2
-                        )
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        // 배경색
-                        focusedContainerColor = Gray100,
-                        unfocusedContainerColor = Gray100,
-
-                        // 테두리 색상
-                        unfocusedBorderColor = Gray200,
-                        focusedBorderColor = Gray200,
-
-                        // 힌트 문구 색상
-                        unfocusedLabelColor = Gray400,
-                        focusedLabelColor = Gray400,
-                        cursorColor = Primary
-                    )
-                )
-
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(top = 8.dp),
-                    text = "${text.length}/$maxChar",
-                    color = Gray400,
-                    style = EatssuTheme.typography.caption3
-                )
-            }
-
-            //사진
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                if (selectedImageUri != null) {
-                    // 선택된 이미지가 있는 경우
-                    Column(
+                Column {
+                    OutlinedTextField(
                         modifier = Modifier
-                            .size(120.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable {
-                                onImageDelete()
+                            .fillMaxWidth()
+                            .height(160.dp),
+                        value = text,
+                        onValueChange = { newText ->
+                            // 최대 글자 수를 초과하지 않도록 함
+                            if (newText.length <= maxChar) {
+                                text = newText
                             }
-                    ) {
-                        AsyncImage(
-                            model = selectedImageUri,
-                            contentDescription = "Selected image",
-                            modifier = Modifier.fillMaxSize()
+                        },
+                        label = {
+                            Text(
+                                "메뉴에 대한 상세한 리뷰를 작성해주세요",
+                                style = EatssuTheme.typography.body2
+                            )
+                        },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            // 배경색
+                            focusedContainerColor = Gray100,
+                            unfocusedContainerColor = Gray100,
+
+                            // 테두리 색상
+                            unfocusedBorderColor = Gray200,
+                            focusedBorderColor = Gray200,
+
+                            // 힌트 문구 색상
+                            unfocusedLabelColor = Gray400,
+                            focusedLabelColor = Gray400,
+                            cursorColor = Primary
                         )
-                    }
+                    )
+
                     Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = "사진 클릭 시, 삭제됩니다.",
-                        color = Gray500,
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(top = 8.dp),
+                        text = "${text.length}/$maxChar",
+                        color = Gray400,
                         style = EatssuTheme.typography.caption3
                     )
-                } else {
-                    // 이미지가 선택되지 않은 경우
-                    Column(
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Gray100)
-                            .border(
-                                width = 1.dp,
-                                color = Gray200,
-                                shape = RoundedCornerShape(5.dp)
+                }
+
+                //사진
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    if (selectedImageUri != null) {
+                        // 선택된 이미지가 있는 경우
+                        Column(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable {
+                                    onImageDelete()
+                                }
+                        ) {
+                            AsyncImage(
+                                model = selectedImageUri,
+                                contentDescription = "Selected image",
+                                modifier = Modifier.fillMaxSize()
                             )
-                            .clickable {
-                                onImageSelect()
-                            },
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_camera_light),
-                            "add photo",
-                            tint = Gray300
-                        )
+                        }
                         Text(
-                            "사진 0/1",
-                            color = Gray400,
+                            modifier = Modifier.padding(top = 8.dp),
+                            text = "사진 클릭 시, 삭제됩니다.",
+                            color = Gray500,
                             style = EatssuTheme.typography.caption3
                         )
+                    } else {
+                        // 이미지가 선택되지 않은 경우
+                        Column(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(Gray100)
+                                .border(
+                                    width = 1.dp,
+                                    color = Gray200,
+                                    shape = RoundedCornerShape(5.dp)
+                                )
+                                .clickable {
+                                    onImageSelect()
+                                },
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_camera_light),
+                                "add photo",
+                                tint = Gray300
+                            )
+                            Text(
+                                "사진 0/1",
+                                color = Gray400,
+                                style = EatssuTheme.typography.caption3
+                            )
+                        }
                     }
                 }
             }
-        }
 
-
-        // 하단 고정 버튼
-            EatSsuButton(
-                text = "리뷰 작성하기",
-                onClick = {
-                    val menuLikesList = likedMenus.map { it }
-
-                    writeReviewButtonClick(
-                        rating,
-                        text,
-                        menuLikesList
-                    )
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(24.dp)
-            )
         }
     }
 }

@@ -17,7 +17,7 @@ object ReviewNav {
 
 @Composable
 fun ReviewNav(
-    nav: NavHostController = rememberNavController(),
+    navHostController: NavHostController = rememberNavController(),
     menuName: String,
     menuType: MenuType,
     id: Long,
@@ -25,7 +25,7 @@ fun ReviewNav(
 ) {
 
     NavHost(
-        navController = nav,
+        navController = navHostController,
         startDestination = ReviewNav.List
     ) {
         // 리뷰 리스트
@@ -34,15 +34,17 @@ fun ReviewNav(
                 menuType = menuType,
                 id = id,
                 onModifyClick = {},
-                onReviewWriteButtonClick = {},
-//                onReviewWriteButtonClick = { menuName ->
-//                    // SavedStateHandle을 사용하여 menuName 전달
-//                    nav.currentBackStackEntry?.savedStateHandle?.set("menuName", menuName)
-//
-//                    nav.navigate(ReviewNav.Write) {
-//                        launchSingleTop = true
-//                    }
-//                }
+                onWriteWriteButtonClick = { menuName ->
+                    // SavedStateHandle을 사용하여 menuName 전달
+                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                        "menuName",
+                        menuName
+                    )
+
+                    navHostController.navigate(ReviewNav.Write) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
@@ -52,7 +54,7 @@ fun ReviewNav(
                 menuType = menuType,
                 menuName = menuName,
                 id = id,
-                navController = nav
+                navController = navHostController
             )
         }
     }

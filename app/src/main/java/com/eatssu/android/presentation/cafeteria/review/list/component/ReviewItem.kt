@@ -30,16 +30,15 @@ import com.eatssu.design_system.theme.Gray400
 @Composable
 fun ReviewItem(
     isWriter: Boolean,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     writeName: String,
     writeDate: String,
     content: String,
     rating: Int,
-    likeMenuList: List<String>?,
-    imgUrl: String?,
+    likeMenuList: List<String>? = null,
+    imgUrl: String? = null,
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
 ) {
-
     Column(modifier = Modifier.padding(vertical = 24.dp)) {
         Row(
             modifier = modifier.fillMaxWidth(),
@@ -97,7 +96,10 @@ fun ReviewItem(
             Spacer(modifier = Modifier.height(4.dp))
             Row {
                 likeMenuList.forEach { likedMenu ->
-                    Tag(menuName = likedMenu, modifier = Modifier)
+                    Tag(
+                        menuName = likedMenu, modifier = Modifier,
+                        isLike = true
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                 }
             }
@@ -127,29 +129,33 @@ fun ReviewItem(
 @Preview(showBackground = true)
 @Composable
 fun ReviewItemPreview() {
-    ReviewItem(
-        modifier = Modifier,
-        isWriter = true,
-        writeName = "숭실푸드파이터",
-        writeDate = "2024-12-31",
-        content = "맛있어요",
-        rating = 4,
-        likeMenuList = listOf("소고기", "닭고기"),
-        imgUrl = "https://picsum.photos/400/300"
-    )
+    EatssuTheme {
+        ReviewItem(
+            modifier = Modifier,
+            isWriter = true,
+            writeName = "숭실푸드파이터",
+            writeDate = "2024-12-31",
+            content = "맛있어요",
+            rating = 4,
+            likeMenuList = listOf("소고기", "닭고기"),
+            imgUrl = "https://www.adobe.com/kr/creativecloud/photography/hub/features/media_19243bf806dc1c5a3532f3e32f4c14d44f81cae9f.jpeg?width=1200&format=pjpg&optimize=medium"
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ReviewItemWithoutImagePreview() {
-    ReviewItem(
-        modifier = Modifier,
-        isWriter = true,
-        writeName = "맛있는리뷰어",
-        writeDate = "2024-12-30",
-        content = "사진 없이 텍스트만 있는 리뷰입니다.",
-        rating = 5,
-        likeMenuList = null,
-        imgUrl = null
-    )
+    EatssuTheme {
+        ReviewItem(
+            modifier = Modifier,
+            isWriter = true,
+            writeName = "맛있는리뷰어",
+            writeDate = "2024-12-30",
+            content = "사진 없이 텍스트만 있는 리뷰입니다.",
+            rating = 5,
+            likeMenuList = null,
+            imgUrl = null
+        )
+    }
 }

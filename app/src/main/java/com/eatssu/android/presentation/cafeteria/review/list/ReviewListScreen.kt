@@ -1,7 +1,5 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
-import EatSsuButton
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,16 +41,16 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.cafeteria.review.list.component.EatSsuTopBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBar
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
+import com.eatssu.design_system.component.EatSsuButton
+import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
 import timber.log.Timber
-import kotlin.math.roundToInt
 
 @Composable
 fun ReviewListScreen(
@@ -58,7 +58,7 @@ fun ReviewListScreen(
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
     id: Long,
-    onReviewWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
+    onWriteWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
     onModifyClick: () -> Unit,
 ) {
 
@@ -71,7 +71,7 @@ fun ReviewListScreen(
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
-        onReviewWriteButtonClick = onReviewWriteButtonClick,
+        onReviewWriteButtonClick = onWriteWriteButtonClick,
         onModifyClick = onModifyClick,
     )
 }
@@ -95,16 +95,32 @@ internal fun ReviewListScreen(
         }
     }
 
-    Surface(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        topBar = {
+            EatSsuTopBar(
+                title = "리뷰",
+                onBack = { /* 뒤로가기 */ }
+            )
+        },
+        bottomBar = { // 하단에 버튼을 고정하기 위함
+            EatSsuButton(
+                text = "리뷰 작성하기",
+                onClick = {
+                    // info.name을 전달 (메뉴명이 +로 합쳐진 값)
+                    val menuName = (uiState as? UiState.Success)?.data?.reviewInfo?.name ?: ""
+                    Timber.d("ReviewListScreen - info.name: '${(uiState as? UiState.Success)?.data?.reviewInfo?.name}', menuName: '$menuName'")
+                    onReviewWriteButtonClick(menuName)
+                },
+                modifier = Modifier
+                    .padding(24.dp)
+            )
+        },
+    ) { innerPadding ->
+        Surface(modifier = modifier.padding(innerPadding)) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                EatSsuTopBar("리뷰",
-                    onBack = {})
 
                 when (uiState) {
                     is UiState.Success -> {
@@ -115,8 +131,7 @@ internal fun ReviewListScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .weight(1f)
-                                .padding(24.dp)
-                                .padding(bottom = 16.dp)
+                                .padding(horizontal = 24.dp)
                         ) {
                             Box(
                                 modifier = Modifier
@@ -130,10 +145,13 @@ internal fun ReviewListScreen(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Row {
-                                        Image(
-                                            painter = painterResource(R.drawable.ic_map_restaurant),
-                                            "map restaurant icon"
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_cafeteria_menu_selected),
+                                            modifier = Modifier.size(24.dp),
+                                            tint = Primary,
+                                            contentDescription = "map restaurant icon"
                                         )
+                                        Spacer(Modifier.width(4.dp))
                                         Text(
                                             "오늘의 메뉴",
                                             style = EatssuTheme.typography.subtitle1
@@ -143,7 +161,7 @@ internal fun ReviewListScreen(
 
                                     Text(
                                         info?.name.toString(),
-                                        modifier = Modifier,
+                                        textAlign = TextAlign.Center,
                                         style = EatssuTheme.typography.body1
                                     )
                                 }
@@ -167,12 +185,8 @@ internal fun ReviewListScreen(
                                 ) {
                                     RatingBar(
                                         isBig = true,
-                                        rating = info?.mainRating?.roundToInt() ?: 0,
-                                        onRatingChanged = {},
                                         maxRating = 1
-                                    ).also {
-                                        Timber.d("ReviewListScreen - mainRating: ${info?.mainRating}, rounded: ${info?.mainRating?.roundToInt()}")
-                                    }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         info?.mainRating.toString(),
@@ -211,7 +225,6 @@ internal fun ReviewListScreen(
                             }
 
                             if (uiState.data?.reviewInfo?.reviewCnt == 0) {
-
                                 Column(
                                     modifier = Modifier.fillMaxSize(),
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -223,20 +236,19 @@ internal fun ReviewListScreen(
                                         tint = Gray600,
                                         modifier = Modifier.size(48.dp)
                                     )
-
+                                    Spacer(Modifier.height(16.dp))
                                     Text(
                                         "아직 작성된 리뷰가 없어요",
                                         style = EatssuTheme.typography.subtitle2,
                                         color = Gray600
                                     )
+                                    Spacer(Modifier.height(8.dp))
                                     Text(
                                         "메뉴에 가장 먼저 리뷰를 남겨주세요!",
-                                        style = EatssuTheme.typography.subtitle2,
+                                        style = EatssuTheme.typography.caption2,
                                         color = Gray600
                                     )
                                 }
-                                //todo 텅처리
-                                Spacer(modifier = Modifier.weight(1f))
                             } else {
                                 LazyColumn(
                                     modifier = Modifier.weight(1f)
@@ -250,7 +262,7 @@ internal fun ReviewListScreen(
                                             content = item.content,
                                             rating = item.mainGrade,
                                             likeMenuList = item.likeMenuList,
-                                            imgUrl = item.imgUrl?.toString(),
+                                            imgUrl = item.imgUrl,
                                             onMoreClick = { showBottomSheet = true }
                                         )
                                     }
@@ -274,24 +286,6 @@ internal fun ReviewListScreen(
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }
-            }
-
-            // 하단 고정 버튼
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(24.dp)
-            ) {
-                EatSsuButton(
-                    "리뷰 작성하기",
-                    onClick = {
-                        // info.name을 전달 (메뉴명이 +로 합쳐진 값)
-                        val menuName = (uiState as? UiState.Success)?.data?.reviewInfo?.name ?: ""
-                        Timber.d("ReviewListScreen - info.name: '${(uiState as? UiState.Success)?.data?.reviewInfo?.name}', menuName: '$menuName'")
-                        onReviewWriteButtonClick(menuName)
-                    },
-                )
             }
         }
     }
@@ -328,7 +322,7 @@ fun ReviewListPreview() {
                             mainGrade = 4,
                             content = "맛있어요",
                             likeMenuList = listOf("소고기"),
-                            imgUrl = "https://picsum.photos/400/300" // 실제 이미지 URL 사용
+                            imgUrl = null,
                         ),
                         Review(
                             isWriter = false,
@@ -340,6 +334,17 @@ fun ReviewListPreview() {
                             content = "정말 맛있어요! 다음에도 먹고 싶어요.",
                             imgUrl = null,
                             likeMenuList = listOf("치킨가라아게", "감자튀김")
+                        ),
+                        Review(
+                            isWriter = false,
+                            reviewId = 2,
+                            menu = "돈까스",
+                            writerNickname = "음식평론가",
+                            writeDate = "2024-12-29",
+                            mainGrade = 3,
+                            content = "그럭저럭 괜찮아요",
+                            imgUrl = null,
+                            likeMenuList = null
                         ),
                         Review(
                             isWriter = false,
@@ -369,7 +374,7 @@ fun ReviewListEmptyPreview() {
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
-                        name = "소고기+닭고기+돼지고기+양고기+오리고기",
+                        name = "소고기+닭고기+돼지고기+양고기+오리고기+닭고기+돼지고기+양고기",
                         reviewCnt = 0,
                         five = 0,
                         four = 0,
