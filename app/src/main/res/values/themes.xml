@@ -95,7 +95,7 @@
     </style>
 
     <style name="Caption1">
-        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">12sp</item>
         <!--        <item name="android:lineHeight">18dp</item>-->
     </style>
