@@ -3,21 +3,30 @@ name: Android APK Build and Slack Upload
 on:
   workflow_dispatch:  # 버튼을 누를 시 실행되도록 설정
     inputs:
-      environment:
-        description: 'Select environment'
+      buildVariant:
+        description: 'Build Variant'
         required: true
-        default: 'qa'
+        default: 'debug'
         type: choice
         options:
-          - qa
-          - production
+          - debug
+          - release
+      branch:
+        description: '빌드할 브랜치'
+        required: true
+        default: 'develop'
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
 
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -62,14 +71,23 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
+      - name: Set Distribution Target
+        id: set-target
+        run: |
+          if [[ "${{ github.event.inputs.buildVariant }}" == "debug" ]]; then
+            echo "VARIANT=Debug" >> $GITHUB_ENV
+          else
+            echo "VARIANT=Release" >> $GITHUB_ENV
+          fi
+
+      - name: Build APK
+        run: ./gradlew assemble${{ env.VARIANT }}
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: app/build/outputs/apk/${{ github.event.inputs.buildVariant }}/app-${{ github.event.inputs.buildVariant }}.apk
 
     - name: Slack - Send Msg
       uses: 8398a7/action-slack@v3
@@ -85,7 +103,7 @@ jobs:
       with:
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL }}
-        initial_comment: 'APK 빌드가 완료되었습니다.'
+        initial_comment: '${{ github.event.inputs.branch }} 브랜치의 ${{ github.event.inputs.buildVariant }} Variant APK 빌드가 완료되었습니다.'
         file_type: 'apk'
-        file_name: 'app-debug.apk'
-        file_path: './app/build/outputs/apk/debug/app-debug.apk'
+        file_name: 'app-${{ github.event.inputs.buildVariant }}.apk'
+        file_path: './app/build/outputs/apk/${{ github.event.inputs.buildVariant }}/app-${{ github.event.inputs.buildVariant }}.apk'
