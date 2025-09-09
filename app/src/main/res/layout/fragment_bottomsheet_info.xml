@@ -18,10 +18,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="70dp"
             android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:orientation="vertical"
