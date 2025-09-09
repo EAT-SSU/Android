@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.widget
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
@@ -32,7 +30,6 @@ class MealWorker @AssistedInject constructor(
     companion object {
         private val uniqueWorkName = MealWorker::class.java.simpleName
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun enqueue(context: Context) {
             val manager = WorkManager.getInstance(context)
             val requestBuilder = PeriodicWorkRequestBuilder<MealWorker>(
@@ -48,7 +45,6 @@ class MealWorker @AssistedInject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result {
         val manager = GlanceAppWidgetManager(context)
         val glanceIds = manager.getGlanceIds(MealWidget::class.java)

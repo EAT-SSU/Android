@@ -1,12 +1,9 @@
 package com.eatssu.android.presentation.util
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -14,13 +11,11 @@ import java.util.Locale
 object CalendarUtil {
     lateinit var selectedDate: LocalDate
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun monthYearFromDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM")
         return date.format(formatter)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun daysInWeekArray(selectedDate: LocalDate): ArrayList<LocalDate> {
         val days = ArrayList<LocalDate>()
         var current = sundayForDate(selectedDate)
@@ -32,7 +27,6 @@ object CalendarUtil {
         return days
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun sundayForDate(current: LocalDate): LocalDate? {
         var current = current
         val oneWeekAgo = current.minusWeeks(1)
@@ -50,15 +44,8 @@ object CalendarUtil {
     }
 
     fun getNextDayDate(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nextDay = LocalDate.now().plusDays(1)
-            val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
-            nextDay.format(formatter)
-        } else {
-            val calendar = Calendar.getInstance()
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-            val formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-            formatter.format(calendar.time)
-        }
+        val nextDay = LocalDate.now().plusDays(1)
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
+        return nextDay.format(formatter)
     }
 }

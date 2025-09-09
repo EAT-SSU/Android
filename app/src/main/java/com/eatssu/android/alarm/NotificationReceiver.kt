@@ -6,8 +6,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
 import com.eatssu.android.presentation.cafeteria.CafeteriaFragment
@@ -16,7 +14,6 @@ import java.time.LocalDateTime
 
 class NotificationReceiver : BroadcastReceiver() {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
         // 현재 요일이 평일인 경우에만 알림을 발송
         val currentDay = LocalDateTime.now().dayOfWeek
@@ -29,19 +26,17 @@ class NotificationReceiver : BroadcastReceiver() {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "점심시간 전 알림",
-                NotificationManager.IMPORTANCE_HIGH // 중요도를 높게 설정
-            ).apply {
-                description = "점심시간 전, 푸시알림을 발송합니다."
-                enableLights(true)
-                enableVibration(true)  // 진동도 활성화
-                lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC // 잠금 화면에서도 표시
-            }
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "점심시간 전 알림",
+            NotificationManager.IMPORTANCE_HIGH // 중요도를 높게 설정
+        ).apply {
+            description = "점심시간 전, 푸시알림을 발송합니다."
+            enableLights(true)
+            enableVibration(true)  // 진동도 활성화
+            lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC // 잠금 화면에서도 표시
         }
+        notificationManager.createNotificationChannel(channel)
 
 
         val intent = Intent(context, CafeteriaFragment::class.java).apply {

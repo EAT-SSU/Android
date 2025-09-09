@@ -1,18 +1,16 @@
 package com.eatssu.android.presentation.cafeteria
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.databinding.FragmentCafeteriaBinding
-import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.presentation.util.CalendarUtil
@@ -36,7 +34,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         return FragmentCafeteriaBinding.inflate(layoutInflater)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,7 +59,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         monthYearText = binding.monthYearTV
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setWeekView() {
         monthYearText?.text = CalendarUtil.selectedDate?.let { monthYearFromDate(it) }
         val days = CalendarUtil.selectedDate?.let { daysInWeekArray(it) }
@@ -73,7 +69,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         calendarRecyclerView?.adapter = calendarAdapter
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun setCalendarWeekClickListener() {
         binding.btnPreviousWeek.setOnClickListener {
             CalendarUtil.selectedDate = CalendarUtil.selectedDate.minusWeeks(1)
@@ -88,7 +83,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListen
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(position: Int, date: LocalDate) {
         CalendarUtil.selectedDate = date
         mainViewModel.setData(date)

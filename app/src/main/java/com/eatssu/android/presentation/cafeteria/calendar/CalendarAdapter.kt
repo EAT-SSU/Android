@@ -1,9 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.calendar
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
@@ -34,7 +32,6 @@ internal class CalendarAdapter(
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val date = days[position]
         holder.dayOfMonth.text = date.dayOfMonth.toString()

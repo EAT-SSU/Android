@@ -1,7 +1,5 @@
 package com.eatssu.android.presentation.cafeteria
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -35,7 +33,6 @@ class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :
     }
 
     // 4. 디폴트로 노출할 Fragment의 위치를 설정
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getDefaultFragmentPosition(): Int {
         // 여기에서 디폴트로 노출할 Fragment의 위치를 반환해줍니다.
         // 예를 들어, 첫 번째 Fragment를 디폴트로 설정하려면 0을 반환합니다.

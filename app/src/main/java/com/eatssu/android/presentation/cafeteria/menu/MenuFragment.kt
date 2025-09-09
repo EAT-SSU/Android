@@ -1,11 +1,9 @@
 package com.eatssu.android.presentation.cafeteria.menu
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -21,9 +19,9 @@ import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.data.enums.Time
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
+import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
-import com.eatssu.android.presentation.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -69,7 +67,6 @@ class MenuFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -82,7 +79,6 @@ class MenuFragment : Fragment() {
         observeViewModel()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun observeViewModel() {
         mainViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
 
