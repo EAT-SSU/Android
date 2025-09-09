@@ -16,7 +16,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="70dp"
             android:gravity="center"
             android:orientation="vertical"
@@ -29,14 +28,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <View
+                    android:id="@+id/drag_handle"
+                    android:layout_width="30dp"
+                    android:layout_height="2dp"
+                    android:layout_gravity="center"
+                    android:background="@color/gray400"
+                    android:contentDescription="@null" />
+
                 <TextView
                     android:id="@+id/tv_name"
                     style="@style/H1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="학생식당"
-                    android:textColor="@color/black" />
+                    android:paddingTop="16dp"
+                    android:textColor="@color/black"
+                    tools:text="학생식당"/>
 
                 <View
                     android:layout_width="match_parent"
