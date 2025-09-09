@@ -36,6 +36,18 @@ android {
         compose = true
     }
 
+    signingConfigs {
+        val p = Properties()
+        p.load(project.rootProject.file("local.properties").reader())
+
+        create("release") {
+            keyAlias = p.getProperty("KEY_ALIAS")
+            keyPassword = p.getProperty("KEY_PASSWORD")
+            storeFile = file(p.getProperty("KEYSTORE_FILE"))
+            storePassword = p.getProperty("KEYSTORE_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             val p = Properties()
@@ -55,6 +67,8 @@ android {
             isShrinkResources = false
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            signingConfig = signingConfigs["release"]
         }
 
         debug {
