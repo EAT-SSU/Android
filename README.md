@@ -63,7 +63,7 @@
 ## 🤖 Android
 - Android Studio : Android Studio Koala | 2024.1.1
 - JDK : 17
-- minSDK : 23
+- minSDK : 28
 - targetSDK : 34
 
 ## 🐚 Convertion
