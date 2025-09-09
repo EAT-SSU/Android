@@ -55,11 +55,20 @@ jobs:
           KAKAO_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
           NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
 
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
         run: |
           echo DEV_BASE_URL=\"$DEV_BASE_URL\" >> local.properties
           echo PROD_BASE_URL=\"$PROD_BASE_URL\" >> local.properties
           echo KAKAO_NATIVE_APP_KEY=$KAKAO_NATIVE_APP_KEY >> local.properties
           echo NAVER_MAPS_CLIENT_ID=$NAVER_MAPS_CLIENT_ID >> local.properties
+          
+          echo KEY_ALIAS=$KEY_ALIAS >> local.properties
+          echo KEY_PASSWORD=$KEY_PASSWORD >> local.properties
+          echo KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD >> local.properties
+          echo KEYSTORE_FILE=eatssu.keystore >> local.properties
 
       - name: Generate google-services.json
         run: |
@@ -67,6 +76,13 @@ jobs:
           base64 -d -i app/google-services.json.b64 > app/google-services.json
         env:
           GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
+
+      - name: Generate eatssu.keystore
+        env:
+          KEYSTORE_CONTENT: ${{ secrets.KEYSTORE_CONTENT }}
+        run: |
+          echo "$KEYSTORE_CONTENT" > app/eatssu.keystore.b64
+          base64 -d -i app/eatssu.keystore.b64 > app/eatssu.keystore
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
