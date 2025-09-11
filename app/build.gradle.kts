@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 35
         versionName = "2.1.15"
 

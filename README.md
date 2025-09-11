@@ -64,7 +64,7 @@
 - Android Studio : Android Studio Koala | 2024.1.1
 - JDK : 17
 - minSDK : 23
-- targetSDK : 34
+- targetSDK : 35
 
 ## 🐚 Convertion
 - [Android Convention Docs](https://github.com/EAT-SSU/Android/wiki/Android-convention)  
