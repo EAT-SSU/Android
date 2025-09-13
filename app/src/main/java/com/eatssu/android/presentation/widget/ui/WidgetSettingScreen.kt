@@ -14,7 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.data.enums.Restaurant.Companion.fromDisplayName
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Restaurant.Companion.fromKorean
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuRadioButtonGroup
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -26,7 +28,7 @@ fun WidgetSettingScreen(
     restaurantOptionList: List<String>,
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
-    onConfirm: (String) -> Unit = {},
+    onConfirm: (Restaurant) -> Unit = {},
     onBack: () -> Unit = {} // 뒤로가기 동작을 위한 람다 추가
 ) {
     Scaffold(
@@ -63,8 +65,9 @@ fun WidgetSettingScreen(
                     text = "선택하기",
                     onClick = {
                         onConfirm(
-                            fromDisplayName(selectedRestaurant)
+                            fromKorean(selectedRestaurant)
                         )
+                        EventLogger.addWidget(Restaurant.fromKorean(selectedRestaurant))
                     }
                 )
             }

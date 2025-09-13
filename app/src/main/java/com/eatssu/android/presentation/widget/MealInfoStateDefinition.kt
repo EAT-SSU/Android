@@ -7,8 +7,8 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
 import androidx.glance.state.GlanceStateDefinition
-import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
+import com.eatssu.common.enums.Restaurant
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser

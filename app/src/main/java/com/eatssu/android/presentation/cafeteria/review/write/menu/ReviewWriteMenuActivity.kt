@@ -76,6 +76,7 @@ class ReviewWriteMenuActivity :
             val intent = Intent(this, ReviewWriteRateActivity::class.java)
             intent.putExtra("itemName", currentItem.first)
             intent.putExtra("itemId", currentItem.second)
+            intent.putExtra("itemCount", items.size.toLong())
 
             // BActivity 실행
             startActivity(intent)

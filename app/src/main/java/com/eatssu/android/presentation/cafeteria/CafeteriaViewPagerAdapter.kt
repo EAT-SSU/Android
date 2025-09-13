@@ -3,8 +3,8 @@ package com.eatssu.android.presentation.cafeteria
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.eatssu.android.data.enums.Time
 import com.eatssu.android.presentation.cafeteria.menu.MenuFragment
+import com.eatssu.common.enums.Time
 import java.time.LocalTime
 
 class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :

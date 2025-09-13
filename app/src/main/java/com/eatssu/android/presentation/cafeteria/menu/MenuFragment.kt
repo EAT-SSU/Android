@@ -14,14 +14,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
 import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
-import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.data.enums.Restaurant
-import com.eatssu.android.data.enums.Time
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
+import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -114,7 +114,8 @@ class MenuFragment : Fragment() {
                     totalMenuList.removeAll { it.cafeteria == Restaurant.HAKSIK }
                     if (result.isNotEmpty()) {
                         totalMenuList.add(
-                            Section(MenuType.VARIABLE, Restaurant.HAKSIK,
+                            Section(
+                                MenuType.VARIABLE, Restaurant.HAKSIK,
                                 result.mapTodayMenuResponseToMenu(),
                                 infoViewModel.getRestaurantInfo(Restaurant.HAKSIK)?.location ?: ""
                             )
@@ -132,7 +133,8 @@ class MenuFragment : Fragment() {
                     totalMenuList.removeAll { it.cafeteria == Restaurant.DODAM }
                     if (result.isNotEmpty()) {
                         totalMenuList.add(
-                            Section(MenuType.VARIABLE, Restaurant.DODAM,
+                            Section(
+                                MenuType.VARIABLE, Restaurant.DODAM,
                                 result.mapTodayMenuResponseToMenu(),
                                 infoViewModel.getRestaurantInfo(Restaurant.DODAM)?.location ?: ""
                             )
@@ -150,7 +152,9 @@ class MenuFragment : Fragment() {
                     totalMenuList.removeAll { it.cafeteria == Restaurant.DORMITORY }
                     if (result.isNotEmpty()) {
                         totalMenuList.add(
-                            Section(MenuType.VARIABLE, Restaurant.DORMITORY,
+                            Section(
+                                MenuType.VARIABLE,
+                                Restaurant.DORMITORY,
                                 result.mapTodayMenuResponseToMenu(),
                                 infoViewModel.getRestaurantInfo(Restaurant.DORMITORY)?.location ?: ""
                             )
@@ -168,7 +172,8 @@ class MenuFragment : Fragment() {
                     totalMenuList.removeAll { it.cafeteria == Restaurant.FACULTY }
                     if (result.isNotEmpty()) {
                         totalMenuList.add(
-                            Section(MenuType.VARIABLE, Restaurant.FACULTY,
+                            Section(
+                                MenuType.VARIABLE, Restaurant.FACULTY,
                                 result.mapTodayMenuResponseToMenu(),
                                 infoViewModel.getRestaurantInfo(Restaurant.FACULTY)?.location ?: ""
                             )
@@ -188,7 +193,9 @@ class MenuFragment : Fragment() {
                     totalMenuList.removeAll { it.cafeteria == Restaurant.FOOD_COURT }
                     if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
                         totalMenuList.add(
-                            Section(MenuType.FIXED, Restaurant.FOOD_COURT,
+                            Section(
+                                MenuType.FIXED,
+                                Restaurant.FOOD_COURT,
                                 result.mapFixedMenuResponseToMenu(),
                                 infoViewModel.getRestaurantInfo(Restaurant.FOOD_COURT)?.location ?: ""
                             )
@@ -206,7 +213,9 @@ class MenuFragment : Fragment() {
                     totalMenuList.removeAll { it.cafeteria == Restaurant.SNACK_CORNER }
                     if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
                         totalMenuList.add(
-                            Section(MenuType.FIXED, Restaurant.SNACK_CORNER,
+                            Section(
+                                MenuType.FIXED,
+                                Restaurant.SNACK_CORNER,
                                 result.mapFixedMenuResponseToMenu(),
                                 infoViewModel.getRestaurantInfo(Restaurant.SNACK_CORNER)?.location ?: ""
                             )

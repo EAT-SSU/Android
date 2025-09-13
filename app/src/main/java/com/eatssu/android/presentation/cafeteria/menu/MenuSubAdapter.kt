@@ -6,15 +6,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewActivity
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 
 
 class MenuSubAdapter(
     private val dataList: List<Menu>,
-    private val menuType: MenuType
+    private val restaurant: Restaurant,
 ) :
     RecyclerView.Adapter<MenuSubAdapter.ViewHolder>() {
 
@@ -47,7 +49,7 @@ class MenuSubAdapter(
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
 
-            when (menuType) {
+            when (restaurant.menuType) {
                 MenuType.FIXED -> {
                     Log.d("SubMenuAdapter", "고정메뉴${dataList[position].name}")
                     intent.putExtra("itemId", dataList[position].id)
@@ -63,10 +65,8 @@ class MenuSubAdapter(
                 }
             }
             ContextCompat.startActivity(holder.itemView.context, intent, null)
-
+            EventLogger.clickMenu(restaurant)
         }
-
-
     }
 
     override fun getItemCount(): Int = dataList.size

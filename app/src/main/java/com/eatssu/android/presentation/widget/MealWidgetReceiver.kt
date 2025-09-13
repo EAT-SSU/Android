@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import com.eatssu.android.presentation.widget.ui.MealWidget
+import com.eatssu.common.EventLogger
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.io.File
 
+@AndroidEntryPoint
 class MealWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
         get() = MealWidget()
@@ -31,6 +34,9 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
                     dataStoreFile.delete()
                     Timber.d("Deleted DataStore file for widget $appWidgetId")
                 }
+
+                EventLogger.removeWidget()
+
             }
         } catch (e: Exception) {
             Timber.e("Failed to cleanup DataStore for widget $appWidgetId: ${e.message}")

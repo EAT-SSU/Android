@@ -1,11 +1,11 @@
 package com.eatssu.android.presentation.widget.util
 
-import com.eatssu.android.data.enums.Restaurant
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.widget.GetTodayMealUseCase
 import com.eatssu.android.domain.usecase.widget.MealState
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.widget.WidgetCacheManager
+import com.eatssu.common.enums.Restaurant
 import timber.log.Timber
 import java.time.LocalTime
 

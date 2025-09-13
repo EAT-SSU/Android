@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 35
         versionName = "2.1.15"
 
@@ -111,6 +111,7 @@ android {
 
 dependencies {
     implementation(project(":core:design-system"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -197,7 +198,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.compose.theme.adapter)
     implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.androidx.compose.bom)

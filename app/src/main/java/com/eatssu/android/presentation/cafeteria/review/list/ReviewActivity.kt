@@ -8,14 +8,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.R
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
-import com.eatssu.android.presentation.common.OthersBottomSheetFragment
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
 import com.eatssu.android.presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity
+import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
+import com.eatssu.android.presentation.common.OthersBottomSheetFragment
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.MenuType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -153,6 +154,7 @@ class ReviewActivity :
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("menuType", menuType)
                     startActivity(intent)
+                    EventLogger.writeReview()
                 }
             }
 
@@ -162,6 +164,7 @@ class ReviewActivity :
                     intent.putExtra("itemId", itemId)
                     intent.putExtra("menuType", menuType)
                     startActivity(intent)
+                    EventLogger.writeReview()
                 }
             }
 

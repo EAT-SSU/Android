@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
-import com.eatssu.android.presentation.cafeteria.CafeteriaFragment
+import com.eatssu.android.presentation.login.IntroActivity
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
@@ -39,14 +39,14 @@ class NotificationReceiver : BroadcastReceiver() {
         notificationManager.createNotificationChannel(channel)
 
 
-        val intent = Intent(context, CafeteriaFragment::class.java).apply {
+        val intent = Intent(context, IntroActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
-            intent,
+            intent.putExtra("launch_path", "notification"),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 

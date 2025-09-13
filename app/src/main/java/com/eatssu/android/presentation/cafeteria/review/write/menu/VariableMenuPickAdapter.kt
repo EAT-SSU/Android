@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuPickBinding
 import com.eatssu.android.domain.model.MenuMini
 
-class VariableMenuPickAdapter(private val menuList: List<MenuMini>?) :
+class
+VariableMenuPickAdapter(private val menuList: List<MenuMini>?) :
     RecyclerView.Adapter<VariableMenuPickAdapter.ViewHolder>() {
 
     private val checkedItems: ArrayList<Pair<String, Long>> = ArrayList()
