@@ -58,14 +58,14 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(
 
         lifecycleScope.launch {
             myReviewViewModel.uiState.collectLatest {
-                if (it.isEmpty) {
-                    binding.llNonReview.visibility = View.VISIBLE
-                    binding.nestedScrollView.visibility = View.GONE
-                } else {
-                    binding.llNonReview.visibility = View.GONE
-                    binding.nestedScrollView.visibility = View.VISIBLE
-                    it.myReviews?.let { reviews -> setAdapter(reviews) }
-                }
+//                if (it.isEmpty) {
+//                    binding.llNonReview.visibility = View.VISIBLE
+//                    binding.nestedScrollView.visibility = View.GONE
+//                } else {
+//                    binding.llNonReview.visibility = View.GONE
+//                    binding.nestedScrollView.visibility = View.VISIBLE
+//                    it.myReviews?.let { reviews -> setAdapter(reviews) }
+//                }
             }
         }
     }

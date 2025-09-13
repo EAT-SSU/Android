@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentBottomsheetMyReviewBinding
-import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewActivity
+import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.util.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,10 +90,10 @@ class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
                     viewModel.deleteReview(reviewId)
                     lifecycleScope.launch {
                         viewModel.uiState.collectLatest {
-                            if (it.isDeleted) {
-                                onReviewDeletedListener?.onReviewDeleted() // 콜백 호출
-                                dismiss()
-                            }
+//                            if (it.isDeleted) {
+//                                onReviewDeletedListener?.onReviewDeleted() // 콜백 호출
+//                                dismiss()
+//                            }
                         }
                     }
                 }

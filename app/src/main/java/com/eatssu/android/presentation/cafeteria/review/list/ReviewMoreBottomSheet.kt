@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,63 +27,67 @@ import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyReviewBottomSheet(
+    onDismissRequest: () -> Unit,
     onModify: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(24.dp), // root padding
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(
-            text = "리뷰 설정",
-            style = MaterialTheme.typography.titleMedium, // XML: Subtitle2 대응
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(bottom = 22.dp)
-        )
-
-        Row(
-            modifier = Modifier
+    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+        Column(
+            modifier = modifier
                 .fillMaxWidth()
-                .clickable(role = Role.Button, onClick = onModify)
-                .padding(vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(24.dp), // root padding
+            horizontalAlignment = Alignment.Start
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_pencil),
-                contentDescription = null,
-                modifier = Modifier.size(12.dp)
-            )
-            Spacer(modifier = Modifier.width(20.dp))
             Text(
-                text = "수정하기",
-                style = MaterialTheme.typography.bodyLarge, // XML: Body1 대응
-                color = MaterialTheme.colorScheme.onSurface
+                text = "리뷰 설정",
+                style = MaterialTheme.typography.titleMedium, // XML: Subtitle2 대응
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 22.dp)
             )
-        }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(role = Role.Button, onClick = onDelete)
-                .padding(vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_remove),
-                contentDescription = null,
-                modifier = Modifier.size(12.dp)
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "삭제하기",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(role = Role.Button, onClick = onModify)
+                    .padding(vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_pencil),
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    text = "수정하기",
+                    style = MaterialTheme.typography.bodyLarge, // XML: Body1 대응
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(role = Role.Button, onClick = onDelete)
+                    .padding(vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_remove),
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    text = "삭제하기",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 }
@@ -92,7 +97,7 @@ fun MyReviewBottomSheet(
 private fun ReviewActionsSheetPreview() {
     EatssuTheme {
         Surface {
-            MyReviewBottomSheet(onModify = {}, onDelete = {})
+            MyReviewBottomSheet(onDismissRequest = {}, onModify = {}, onDelete = {})
         }
     }
 }
@@ -106,7 +111,7 @@ private fun ReviewActionsSheetPreview() {
 private fun ReviewActionsSheetDarkPreview() {
     EatssuTheme {
         Surface {
-            MyReviewBottomSheet(onModify = {}, onDelete = {})
+            MyReviewBottomSheet(onDismissRequest = {}, onModify = {}, onDelete = {})
         }
     }
 }
