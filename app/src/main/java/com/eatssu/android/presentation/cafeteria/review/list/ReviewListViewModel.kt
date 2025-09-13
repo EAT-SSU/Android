@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +32,7 @@ class ReviewListViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun loadReview(menuType: MenuType, itemId: Long) {
+    fun getReview(menuType: MenuType, itemId: Long) {
         _uiState.value = UiState.Loading
 
         viewModelScope.launch {
@@ -47,7 +46,6 @@ class ReviewListViewModel @Inject constructor(
                         reviewList = reviewList
                     )
                 )
-                Timber.d("리뷰 로드 성공: $reviewInfo, 리뷰 개수: ${reviewList.size}")
             } catch (e: Exception) {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast("Failed to load reviews."))
