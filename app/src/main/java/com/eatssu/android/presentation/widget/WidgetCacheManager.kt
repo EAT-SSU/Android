@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.widget
 
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.common.enums.Restaurant
 import timber.log.Timber
@@ -29,7 +27,6 @@ object WidgetCacheManager {
     /**
      * 캐시된 데이터가 유효한지 확인
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun isCacheValid(cachedData: CachedMealData, currentDate: String): Boolean {
         val now = LocalDateTime.now()
         val timeDiff = java.time.Duration.between(cachedData.timestamp, now)
@@ -41,7 +38,6 @@ object WidgetCacheManager {
     /**
      * 캐시에서 식당별 메뉴 데이터 조회
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getCachedMealData(restaurant: Restaurant, currentDate: String): WidgetMealInfo? {
         val cachedData = cacheMap[restaurant] ?: return null
 
@@ -58,7 +54,6 @@ object WidgetCacheManager {
     /**
      * 식당별 메뉴 데이터를 캐시에 저장
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     fun cacheMealData(restaurant: Restaurant, mealInfo: WidgetMealInfo, date: String) {
         val cachedData = CachedMealData(
             mealInfo = mealInfo,

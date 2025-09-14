@@ -1,7 +1,5 @@
 package com.eatssu.android.presentation.widget.util
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.widget.GetTodayMealUseCase
 import com.eatssu.android.domain.usecase.widget.MealState
@@ -35,7 +33,6 @@ sealed class MealInfoState {
 
 object WidgetDataDisplayManager {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     internal suspend fun fetchMealInfo(
         getMealsUseCase: GetTodayMealUseCase,
         requestedMealTime: MealTime,
@@ -109,7 +106,6 @@ object WidgetDataDisplayManager {
         return emptyMealInfo
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     internal fun getCurrentMealTime(): MealTime {
         val currentTime = LocalTime.now()
         val morningEnd = LocalTime.of(9, 0)

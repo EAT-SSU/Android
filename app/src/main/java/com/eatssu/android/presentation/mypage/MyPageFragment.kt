@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -20,8 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
-import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
@@ -43,7 +42,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         return FragmentMyPageBinding.inflate(layoutInflater)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -52,7 +50,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         setOnClickListener()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -73,7 +70,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun handleAlarmSwitchChange(isChecked: Boolean) {
         val nowDatetime = LocalDateTime.now()
         val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
@@ -91,7 +87,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setOnClickListener() {
         binding.llMyInfo.setOnClickListener {
             startActivity(Intent(requireContext(), UserInfoActivity::class.java))
@@ -137,7 +132,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotificationPermissionDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("알림 권한 필요")
@@ -182,7 +176,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun openAppNotificationSettings(context: Context) {
         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
             putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)

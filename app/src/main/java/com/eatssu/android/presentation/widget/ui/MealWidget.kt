@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.widget.ui
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,7 +66,6 @@ class MealWidget : GlanceAppWidget() {
         fun loadRestaurantByFileKeyUseCase(): LoadRestaurantByFileKeyUseCase
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             val appContext = context.applicationContext
@@ -164,7 +161,6 @@ class MealWidget : GlanceAppWidget() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     private fun MealWidgetContent(
         mealTime: String,
@@ -202,7 +198,6 @@ class MealWidget : GlanceAppWidget() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun MealWidgetError(
         mealTime: String,
@@ -297,7 +292,6 @@ class MealWidget : GlanceAppWidget() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview
     @Composable
@@ -305,7 +299,6 @@ class MealWidget : GlanceAppWidget() {
         MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")), Restaurant.DODAM.korean)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview
     @Composable

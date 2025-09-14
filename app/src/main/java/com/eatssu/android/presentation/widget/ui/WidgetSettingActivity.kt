@@ -2,11 +2,9 @@ package com.eatssu.android.presentation.widget.ui
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +30,6 @@ class WidgetSettingActivity : ComponentActivity() {
     @Inject
     lateinit var saveRestaurantByFileKeyUseCase: SaveRestaurantByFileKeyUseCase
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

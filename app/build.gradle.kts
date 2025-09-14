@@ -21,7 +21,7 @@ android {
     // S21: API 33
     defaultConfig {
         applicationId = "com.eatssu.android"
-        minSdk = 23
+        minSdk = 28
         targetSdk = 35
         versionCode = 37
         versionName = "3.0.0"
@@ -52,8 +52,8 @@ android {
             buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
             manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
 
-            isShrinkResources = false
-            isMinifyEnabled = false
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
 

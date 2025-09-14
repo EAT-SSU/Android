@@ -1,10 +1,8 @@
 package com.eatssu.android.presentation.cafeteria.review.write.menu
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
@@ -24,7 +22,6 @@ class ReviewWriteMenuActivity :
 
     private lateinit var variableMenuPickAdapter: VariableMenuPickAdapter
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
