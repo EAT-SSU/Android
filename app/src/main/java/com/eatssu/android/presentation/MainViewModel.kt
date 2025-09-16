@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,12 +42,9 @@ class MainViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
-//    init {
-//        checkNameNull()
-//    } 얘 떄문에 두번씩 처리됨.
-
     init {
         getUserDepartment()
+        fetchAndCheckNickname()
     }
 
     fun refreshUserDepartment() {
@@ -72,7 +69,7 @@ class MainViewModel @Inject constructor(
                 result.result?.let { userInfo ->
                     val nickname = userInfo.nickname
 
-                    if (nickname.isNullOrBlank()) {
+                    if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
                         _uiState.value = UiState.Success(MainState.NicknameNull)
                         _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
                         return@let
