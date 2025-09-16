@@ -29,7 +29,7 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: 0,
             isWriter = data.isWriter ?: false,
-            menu = data.menuNames?.joinToString(separator = " + ") ?: "",
+            menuList = data.menuNames ?: emptyList(),
             writerNickname = data.writerNickname ?: "유저",
             mainGrade = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",

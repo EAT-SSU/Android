@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.cafeteria.review.write.component
+package com.eatssu.design_system.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Primary
@@ -41,7 +42,7 @@ fun LikeButton(
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp)
     ) {
         Icon(
-            painter = painterResource(id = com.eatssu.android.R.drawable.ic_thumb_up), // R.drawable 경로가 올바른지 확인
+            painter = painterResource(id = R.drawable.ic_thumb_up), // R.drawable 경로가 올바른지 확인
             contentDescription = "like",
             modifier = Modifier.size(18.dp)
         )

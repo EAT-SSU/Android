@@ -4,7 +4,7 @@ data class Review(
     val isWriter: Boolean,
     val reviewId: Long,
 
-    val menu: String,
+    val menuList: List<String>,
     val writerNickname: String,
 
     val mainGrade: Int,

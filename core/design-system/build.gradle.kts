@@ -62,4 +62,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
+    //coil: 이미지 로딩
+    implementation(libs.coil.compose)
 }

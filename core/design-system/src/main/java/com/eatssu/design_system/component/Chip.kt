@@ -1,9 +1,10 @@
-package com.eatssu.android.presentation.cafeteria.review.list.component
+package com.eatssu.design_system.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,14 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.R
+import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Secondary
 
 
 @Composable
-fun Tag(
+fun Chip(
     menuName: String,
     isLike: Boolean,
     modifier: Modifier = Modifier
@@ -38,14 +39,15 @@ fun Tag(
     ) {
         Row(
             modifier = Modifier
-                .padding(horizontal = 6.dp, vertical = 5.dp), // 원하는 상하 여백 명시
+                .padding(horizontal = 6.dp, vertical = 5.dp) // 원하는 상하 여백 명시
+                .heightIn(min = 16.dp), // 아이콘 유무와 상관없이 동일한 높이 유지 (16dp 아이콘 + 상하 5dp + 라운드 여유)
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isLike) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_thumb_up),
                     contentDescription = "thumb up Image",
-                    modifier = Modifier.size(16.dp), // 아이콘 크기도 조절
+                    modifier = Modifier.size(16.dp),
                     tint = Primary
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -61,12 +63,12 @@ fun Tag(
 
 @Preview(showBackground = true)
 @Composable
-fun TagPreview() {
+fun ChipPreview() {
     EatssuTheme {
         Column {
-            Tag("고구마치즈돈까스", true)
+            Chip("고구마치즈돈까스", true)
             Spacer(modifier = Modifier.size(8.dp))
-            Tag("고구마치즈돈까스", false)
+            Chip("고구마치즈돈까스", false)
         }
     }
 }
