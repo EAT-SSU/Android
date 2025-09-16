@@ -29,10 +29,10 @@ class SignOutViewModel @Inject constructor(
 
     fun signOut() {
         viewModelScope.launch {
-            val isSingOut = signOutUseCase()
             _uiState.value = UiState.Loading
-            if (isSingOut) {
-                _uiState.value = UiState.Success(SignOutState(isSignOuted = false))
+            val isSignOut = signOutUseCase()
+            if (isSignOut) {
+                _uiState.value = UiState.Success(SignOutState(isSignOuted = true))
                 _uiEvent.emit(UiEvent.ShowToast("탈퇴가 완료되었습니다."))
                 logoutUseCase() // 자동 로그인 정보 삭제
             } else {

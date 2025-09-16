@@ -44,46 +44,48 @@ class SignOutActivity :
         })
 
         setOnClickListener()
+
+        lifecycleScope.launch {
+            signOutViewModel.uiState.collectLatest {
+                when (it) {
+                    is UiState.Init -> {}
+
+                    is UiState.Loading -> {
+                        //로딩중
+                    }
+
+                    is UiState.Success -> {
+                        if (it.data?.isSignOuted == true) {
+                            val intent = Intent(this@SignOutActivity, LoginActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+
+                    is UiState.Error -> {
+                        //에러
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            signOutViewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    is UiEvent.ShowToast -> {
+                        showToast(event.message)
+                    }
+                }
+            }
+        }
     }
 
 
     private fun setOnClickListener() {
         binding.btnSignOut.setOnClickListener {
             signOutViewModel.signOut()
-
-            lifecycleScope.launch {
-                signOutViewModel.uiState.collectLatest {
-                    when (it) {
-                        is UiState.Init -> {}
-
-                        is UiState.Loading -> {
-                            //로딩중
-                        }
-
-                        is UiState.Success -> {
-                            if (it.data?.isSignOuted == true) {
-                                val intent = Intent(this@SignOutActivity, LoginActivity::class.java)
-                                intent.flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
-                                finish()
-                            }
-                        }
-
-                        is UiState.Error -> {
-                            //에러
-                        }
-                    }
-                }
-
-                signOutViewModel.uiEvent.collectLatest { event ->
-                    when (event) {
-                        is UiEvent.ShowToast -> {
-                            showToast(event.message)
-                        }
-                    }
-                }
-            }
         }
     }
 
