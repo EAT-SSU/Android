@@ -20,10 +20,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
-import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.login.LoginActivity
-import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
+import com.eatssu.android.presentation.mypage.myreview.MyReviewListComposeActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
@@ -102,7 +102,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
 
         binding.llMyReview.setOnClickListener {
-            startActivity(Intent(requireContext(), MyReviewListActivity::class.java))
+            startActivity(Intent(requireContext(), MyReviewListComposeActivity::class.java))
         }
 
         binding.tvLogout.setOnClickListener {
