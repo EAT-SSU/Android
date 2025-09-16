@@ -82,7 +82,7 @@ class SignOutActivity :
         }
     }
 
-    fun compareNickname(nickname: String) {
+    private fun compareNickname(nickname: String) {
         //입력값 담기
         inputNickname = binding.etEnterNickname.text?.toString()?.trim() ?: ""
         // 값 유무에 따른 활성화 여부
