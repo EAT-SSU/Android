@@ -4,17 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.SignOutUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,45 +21,29 @@ class SignOutViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<SignOutState> = MutableStateFlow(SignOutState())
-    val uiState: StateFlow<SignOutState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState<SignOutState>> = MutableStateFlow(UiState.Init)
+    val uiState: StateFlow<UiState<SignOutState>> = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     fun signOut() {
         viewModelScope.launch {
-            signOutUseCase().onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Timber.d(TAG, e.toString())
-            }.collectLatest { result ->
-                Timber.d(TAG, result.toString())
-                if (result.result == true) {
-                    logoutUseCase()
-                    _uiState.update {
-                        it.copy(
-                            isSignOuted = true,
-                            toastMessage = "탈퇴가 완료되었습니다."
-                        )
-                    }
-                }
+            val isSingOut = signOutUseCase()
+            _uiState.value = UiState.Loading
+            if (isSingOut) {
+                _uiState.value = UiState.Success(SignOutState(isSignOuted = false))
+                _uiEvent.emit(UiEvent.ShowToast("탈퇴가 완료되었습니다."))
+                logoutUseCase() // 자동 로그인 정보 삭제
+            } else {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다."))
+                return@launch
             }
         }
-    }
-
-    companion object {
-        val TAG = "SignOutViewModel"
     }
 }
 
 data class SignOutState(
-    var loading: Boolean = true,
-    var error: Boolean = false,
-    var toastMessage: String = "",
-    var nickname: String = "",
-    var platform: String = "",
-    var isNicknameNull: Boolean = false,
-    var isLoginOuted: Boolean = false,
     var isSignOuted: Boolean = false,
 )

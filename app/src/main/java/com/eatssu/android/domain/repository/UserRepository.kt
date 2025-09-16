@@ -20,7 +20,7 @@ interface UserRepository {
 
     suspend fun getUserReviews(): Flow<BaseResponse<MyReviewResponse>>
     suspend fun getUserNickName(): Flow<BaseResponse<MyNickNameResponse>>
-    suspend fun signOut(): Flow<BaseResponse<Boolean>>
+    suspend fun signOut(): Boolean
 
     // 모든 단과대 조회
     suspend fun getTotalColleges(): List<College>
