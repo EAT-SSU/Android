@@ -52,7 +52,13 @@ class MyReviewViewModel @Inject constructor(
 
     fun deleteReview(reviewId: Long) {
         viewModelScope.launch {
-            deleteReviewUseCase(reviewId)
+            try {
+                deleteReviewUseCase(reviewId)
+                _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
+            } catch (e: Exception) {
+                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
+                Timber.d("deleteReview: ${e.message}")
+            }
         }
     }
 }
