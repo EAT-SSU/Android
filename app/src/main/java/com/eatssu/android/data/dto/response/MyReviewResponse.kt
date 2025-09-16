@@ -16,7 +16,7 @@ data class MyReviewResponse(
         @SerializedName("content") var content: String? = null,
         @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
         @SerializedName("likedMenuNames") var likedMenuNames: ArrayList<String> = arrayListOf(),
-        @SerializedName("menuNames") var menuNames: String? = null
+        @SerializedName("menuNames") var menuNames: ArrayList<String> = arrayListOf(),
         )
 }
 
@@ -25,7 +25,7 @@ fun MyReviewResponse.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: 0,
             isWriter = true,
-            menu = data.menuNames ?: "",
+            menuList = data.menuNames,
             writerNickname = "",
             mainGrade = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",

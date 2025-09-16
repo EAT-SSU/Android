@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,15 +29,24 @@ class MyReviewViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun getMyReviews() {
-        viewModelScope.launch {
-            val myReviewList = getMyReviewsUseCase()
+    fun getMyReviewList() {
+        _uiState.value = UiState.Loading
 
-            _uiState.value = UiState.Success(
-                MyReviewState(
-                    myReviews = myReviewList
+        viewModelScope.launch {
+            try {
+                val myReviewList = getMyReviewsUseCase()
+                _uiState.value = UiState.Success(
+                    if (myReviewList.isEmpty()) {
+                        MyReviewState.NoReview
+                    } else {
+                        MyReviewState.ReviewExists(myReviews = myReviewList)
+                    }
                 )
-            )
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
+                Timber.d("getMyReviewList: ${e.message}")
+            }
         }
     }
 
@@ -48,7 +58,10 @@ class MyReviewViewModel @Inject constructor(
 }
 
 
-data class MyReviewState(
-    var myReviews: List<Review>? = null,
-    var isDeleted: Boolean = false,
-    )
+sealed class MyReviewState {
+    data class ReviewExists(
+        var myReviews: List<Review>? = null,
+    ) : MyReviewState()
+
+    data object NoReview : MyReviewState()
+}
