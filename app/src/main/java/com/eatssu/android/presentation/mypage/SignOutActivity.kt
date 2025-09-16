@@ -2,9 +2,8 @@ package com.eatssu.android.presentation.mypage
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.activity.viewModels
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivitySignOutBinding
 import com.eatssu.android.presentation.UiEvent
@@ -33,15 +32,9 @@ class SignOutActivity :
         binding.btnSignOut.isEnabled = false
 
         binding.etEnterNickname.hint = nickname
-        binding.etEnterNickname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                compareNickname(nickname)
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        })
+        binding.etEnterNickname.doAfterTextChanged {
+            compareNickname(nickname)
+        }
 
         setOnClickListener()
 
