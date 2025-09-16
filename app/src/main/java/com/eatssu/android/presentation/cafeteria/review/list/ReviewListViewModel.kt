@@ -33,7 +33,13 @@ class ReviewListViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
+    // 마지막 조회 파라미터 저장하여 삭제 후 재조회에 사용
+    private var lastMenuType: MenuType? = null
+    private var lastItemId: Long? = null
+
     fun getReview(menuType: MenuType, itemId: Long) {
+        lastMenuType = menuType
+        lastItemId = itemId
         _uiState.value = UiState.Loading
 
         viewModelScope.launch {
@@ -59,6 +65,12 @@ class ReviewListViewModel @Inject constructor(
             try {
                 deleteReviewUseCase(reviewId)
                 _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
+                // 삭제 성공 시 목록 재조회
+                val type = lastMenuType
+                val id = lastItemId
+                if (type != null && id != null) {
+                    getReview(type, id)
+                }
             } catch (e: Exception) {
                 _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
                 Timber.d("deleteReview: ${e.message}")

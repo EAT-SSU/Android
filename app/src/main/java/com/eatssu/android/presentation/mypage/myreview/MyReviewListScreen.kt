@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.mypage.myreview
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,7 +45,6 @@ import timber.log.Timber
 fun MyReviewListScreen(
     modifier: Modifier = Modifier,
     viewModel: MyReviewViewModel = hiltViewModel(),
-//    onWriteWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
 //    onModifyClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -65,7 +66,6 @@ fun MyReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
-//        onReviewWriteButtonClick = onWriteWriteButtonClick,
 //        onModifyClick = onModifyClick,
     )
 }
@@ -74,7 +74,6 @@ fun MyReviewListScreen(
 internal fun MyReviewListScreen(
     uiState: UiState<MyReviewState>,
     modifier: Modifier = Modifier,
-//    onReviewWriteButtonClick: (menuName: String) -> Unit,
 //    onModifyClick: () -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
@@ -173,8 +172,13 @@ internal fun MyReviewListScreen(
 
 
                     UiState.Loading -> {
-                        // TODO: 로딩 UI
-                        Spacer(modifier = Modifier.weight(1f))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
 
                     UiState.Error -> {
