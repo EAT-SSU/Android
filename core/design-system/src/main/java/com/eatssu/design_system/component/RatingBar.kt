@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.cafeteria.review.list.component
+package com.eatssu.design_system.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.R
+import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Star
 

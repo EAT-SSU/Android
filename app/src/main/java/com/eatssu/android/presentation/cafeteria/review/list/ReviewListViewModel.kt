@@ -48,7 +48,7 @@ class ReviewListViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("Failed to load reviews."))
+                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
             }
         }
     }

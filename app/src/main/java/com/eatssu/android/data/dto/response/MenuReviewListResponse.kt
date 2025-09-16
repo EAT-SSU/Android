@@ -28,7 +28,7 @@ fun MenuReviewListResponse.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: 0,
             isWriter = data.isWriter ?: false,
-            menu = data.menu ?: "",
+            menuList = listOf(data.menu ?: ""),
             writerNickname = data.writerNickname ?: "유저",
             mainGrade = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",

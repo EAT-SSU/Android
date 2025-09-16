@@ -45,10 +45,10 @@ import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.cafeteria.review.list.component.RatingBarMedium
-import com.eatssu.android.presentation.cafeteria.review.write.component.LikeButton
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
+import com.eatssu.design_system.component.LikeButton
+import com.eatssu.design_system.component.RatingBarMedium
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray200

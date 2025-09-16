@@ -1,10 +1,9 @@
-package com.eatssu.android.presentation.cafeteria.review.list.component
+package com.eatssu.design_system.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,13 +18,62 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.eatssu.android.R
+import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray400
+
+@Composable
+private fun SimpleFlowRow(
+    horizontalSpacing: androidx.compose.ui.unit.Dp,
+    verticalSpacing: androidx.compose.ui.unit.Dp,
+    content: @Composable () -> Unit
+) {
+    Layout(content = content) { measurables, constraints ->
+        val placeables = measurables.map { measurable ->
+            measurable.measure(constraints)
+        }
+
+        val maxWidth = constraints.maxWidth
+        var currentRowWidth = 0
+        var currentRowHeight = 0
+        var totalHeight = 0
+        val positions = mutableListOf<androidx.compose.ui.unit.IntOffset>()
+
+        var x = 0
+        var y = 0
+
+        placeables.forEach { placeable ->
+            val itemWidth = placeable.width
+            val itemHeight = placeable.height
+
+            if (x > 0 && x + itemWidth > maxWidth) {
+                // wrap to next line
+                y += currentRowHeight + verticalSpacing.roundToPx()
+                x = 0
+                currentRowHeight = 0
+            }
+
+            positions.add(androidx.compose.ui.unit.IntOffset(x, y))
+            x += itemWidth + horizontalSpacing.roundToPx()
+            currentRowHeight = maxOf(currentRowHeight, itemHeight)
+            currentRowWidth = maxOf(currentRowWidth, x)
+        }
+
+        totalHeight = y + currentRowHeight
+
+        layout(width = maxWidth, height = totalHeight) {
+            placeables.forEachIndexed { index, placeable ->
+                val pos = positions[index]
+                placeable.placeRelative(pos.x, pos.y)
+            }
+        }
+    }
+}
 
 @Composable
 fun ReviewItem(
@@ -35,6 +83,7 @@ fun ReviewItem(
     writeDate: String,
     content: String,
     rating: Int,
+    menuList: List<String>? = null,
     likeMenuList: List<String>? = null,
     imgUrl: String? = null,
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
@@ -62,9 +111,7 @@ fun ReviewItem(
             }
 
             Spacer(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
+                modifier = Modifier.weight(1f)
             )
 
             Column(horizontalAlignment = Alignment.End) {
@@ -90,16 +137,28 @@ fun ReviewItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 좋아하는 메뉴 태그들 (있는 경우에만 표시)
-        if (!likeMenuList.isNullOrEmpty()) {
+        // 태그 표시: likeMenuList는 좋아요 아이콘 표시, menuList 중 likeMenuList에 없는 항목은 아이콘 없이 표시
+        val liked = likeMenuList.orEmpty()
+        val allMenus = menuList.orEmpty()
+        val others = allMenus.filter { it !in liked }
+
+        if (liked.isNotEmpty() || others.isNotEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
-            Row {
-                likeMenuList.forEach { likedMenu ->
-                    Tag(
-                        menuName = likedMenu, modifier = Modifier,
+            SimpleFlowRow(horizontalSpacing = 4.dp, verticalSpacing = 2.dp) {
+                liked.forEach { likedMenu ->
+                    Chip(
+                        menuName = likedMenu,
+                        modifier = Modifier.padding(end = 4.dp, bottom = 2.dp),
                         isLike = true
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                }
+
+                others.forEach { menu ->
+                    Chip(
+                        menuName = menu,
+                        modifier = Modifier.padding(end = 4.dp, bottom = 2.dp),
+                        isLike = false
+                    )
                 }
             }
         }
@@ -136,6 +195,7 @@ fun ReviewItemPreview() {
             writeDate = "2024-12-31",
             content = "맛있어요",
             rating = 4,
+            menuList = listOf("소고기", "닭고기"),
             likeMenuList = listOf("소고기", "닭고기"),
             imgUrl = "https://www.adobe.com/kr/creativecloud/photography/hub/features/media_19243bf806dc1c5a3532f3e32f4c14d44f81cae9f.jpeg?width=1200&format=pjpg&optimize=medium"
         )
@@ -153,6 +213,7 @@ fun ReviewItemWithoutImagePreview() {
             writeDate = "2024-12-30",
             content = "사진 없이 텍스트만 있는 리뷰입니다.",
             rating = 5,
+            menuList = listOf("소고기", "닭고기"),
             likeMenuList = null,
             imgUrl = null
         )

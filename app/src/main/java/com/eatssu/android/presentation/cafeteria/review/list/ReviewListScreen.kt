@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,10 +39,10 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
+import com.eatssu.design_system.component.ReviewItem
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
@@ -75,7 +74,6 @@ fun ReviewListScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
@@ -182,7 +180,7 @@ internal fun ReviewListScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.ic_star_24),
+                                        painter = painterResource(id = com.eatssu.design_system.R.drawable.ic_star_24),
                                         contentDescription = null,
                                         modifier = Modifier
                                             .size(24.dp),
@@ -195,7 +193,6 @@ internal fun ReviewListScreen(
                                         style = EatssuTheme.typography.rate
                                     )
                                 }
-
 
                                 Spacer(modifier = Modifier.width(37.dp))
 
@@ -261,6 +258,7 @@ internal fun ReviewListScreen(
                                             writeDate = item.writeDate,
                                             content = item.content,
                                             rating = item.mainGrade,
+                                            menuList = item.menuList,
                                             likeMenuList = item.likeMenuList,
                                             imgUrl = item.imgUrl,
                                             onMoreClick = { showBottomSheet = true }
@@ -316,7 +314,7 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 0,
-                            menu = "고구마치즈돈까스",
+                            menuList = listOf("고구마치즈돈까스"),
                             writerNickname = "숭실푸드파이터",
                             writeDate = "2024-12-31",
                             mainGrade = 4,
@@ -327,7 +325,7 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 1,
-                            menu = "치킨가라아게",
+                            menuList = listOf("치킨가라아게"),
                             writerNickname = "맛있는리뷰어",
                             writeDate = "2024-12-30",
                             mainGrade = 5,
@@ -338,7 +336,7 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 2,
-                            menu = "돈까스",
+                            menuList = listOf("돈까스"),
                             writerNickname = "음식평론가",
                             writeDate = "2024-12-29",
                             mainGrade = 3,
@@ -349,7 +347,7 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 2,
-                            menu = "돈까스",
+                            menuList = listOf("돈까스"),
                             writerNickname = "음식평론가",
                             writeDate = "2024-12-29",
                             mainGrade = 3,
