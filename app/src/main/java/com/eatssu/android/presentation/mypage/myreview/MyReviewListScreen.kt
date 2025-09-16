@@ -64,6 +64,7 @@ fun MyReviewListScreen(
     MyReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
+        onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
 //        onReviewWriteButtonClick = onWriteWriteButtonClick,
 //        onModifyClick = onModifyClick,
     )
@@ -75,14 +76,20 @@ internal fun MyReviewListScreen(
     modifier: Modifier = Modifier,
 //    onReviewWriteButtonClick: (menuName: String) -> Unit,
 //    onModifyClick: () -> Unit,
+    onDeleteClick: (reviewId: Long) -> Unit,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
+    var selectedReviewId by remember { mutableStateOf<Long?>(null) }
 
-    if (showBottomSheet) {
+    if (showBottomSheet && selectedReviewId != null) {
         MyReviewBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
-            onModify = { /* 수정하기 */ },
-            onDelete = { /* 삭제하기 */ }
+            onDismiss = { showBottomSheet = false; selectedReviewId = null },
+            onModify = { },
+            onDelete = {
+                selectedReviewId?.let { onDeleteClick(it) }
+                showBottomSheet = false
+                selectedReviewId = null
+            }
         )
     }
 
@@ -123,7 +130,10 @@ internal fun MyReviewListScreen(
                                             menuList = item.menuList,
                                             likeMenuList = item.likeMenuList,
                                             imgUrl = item.imgUrl,
-                                            onMoreClick = { showBottomSheet = true }
+                                            onMoreClick = {
+                                                selectedReviewId = item.reviewId
+                                                showBottomSheet = true
+                                            }
                                         )
                                     }
                                 }
@@ -190,6 +200,7 @@ internal fun MyReviewListScreen(
 fun ReviewListPreview() {
     EatssuTheme {
         MyReviewListScreen(
+            onDeleteClick = {},
             uiState = UiState.Success(
                 MyReviewState.ReviewExists(
                     myReviews = listOf(
@@ -249,6 +260,7 @@ fun ReviewListPreview() {
 fun ReviewListEmptyPreview() {
     EatssuTheme {
         MyReviewListScreen(
+            onDeleteClick = {},
             uiState = UiState.Success(
                 MyReviewState.NoReview
             )
