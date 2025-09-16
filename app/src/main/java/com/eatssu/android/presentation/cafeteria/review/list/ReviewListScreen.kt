@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,8 +39,10 @@ import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.component.ReviewItem
@@ -59,18 +62,27 @@ fun ReviewListScreen(
     onWriteWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
     onModifyClick: () -> Unit,
 ) {
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = menuType, key2 = id) {
         viewModel.getReview(menuType, id)
     }
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
+
+    when (uiEvent) {
+        is UiEvent.ShowToast -> {
+            context.showToast((uiEvent as UiEvent.ShowToast).message) // context 필요
+        }
+    }
 
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
         onReviewWriteButtonClick = onWriteWriteButtonClick,
         onModifyClick = onModifyClick,
+        onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) }
     )
 }
 
@@ -80,14 +92,20 @@ internal fun ReviewListScreen(
     modifier: Modifier = Modifier,
     onReviewWriteButtonClick: (menuName: String) -> Unit,
     onModifyClick: () -> Unit,
+    onDeleteClick: (reviewId: Long) -> Unit,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
+    var selectedReviewId by remember { mutableStateOf<Long?>(null) }
 
-    if (showBottomSheet) {
+    if (showBottomSheet && selectedReviewId != null) {
         MyReviewBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
+            onDismiss = { showBottomSheet = false; selectedReviewId = null },
             onModify = { onModifyClick() },
-            onDelete = { /* 삭제하기 */ }
+            onDelete = {
+                selectedReviewId?.let { onDeleteClick(it) }
+                showBottomSheet = false
+                selectedReviewId = null
+            }
         )
     }
 
@@ -261,7 +279,10 @@ internal fun ReviewListScreen(
                                             menuList = item.menuList,
                                             likeMenuList = item.likeMenuList,
                                             imgUrl = item.imgUrl,
-                                            onMoreClick = { showBottomSheet = true }
+                                            onMoreClick = {
+                                                selectedReviewId = item.reviewId
+                                                showBottomSheet = true
+                                            }
                                         )
                                     }
                                 }
@@ -298,6 +319,7 @@ fun ReviewListPreview() {
         ReviewListScreen(
             onReviewWriteButtonClick = {},
             onModifyClick = {},
+            onDeleteClick = {},
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
@@ -369,6 +391,7 @@ fun ReviewListEmptyPreview() {
         ReviewListScreen(
             onReviewWriteButtonClick = {},
             onModifyClick = {},
+            onDeleteClick = {},
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(

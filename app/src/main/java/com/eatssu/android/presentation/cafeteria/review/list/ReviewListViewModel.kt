@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,9 +58,10 @@ class ReviewListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 deleteReviewUseCase(reviewId)
-                _uiEvent.emit(UiEvent.ShowToast("Review deleted successfully!"))
+                _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
             } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.ShowToast("Failed to delete review."))
+                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
+                Timber.d("deleteReview: ${e.message}")
             }
         }
     }

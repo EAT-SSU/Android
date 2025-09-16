@@ -1,6 +1,5 @@
 package com.eatssu.design_system.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -115,18 +115,22 @@ fun ReviewItem(
             )
 
             Column(horizontalAlignment = Alignment.End) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_three_dot),
-                    contentDescription = "etc",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .then(
-                            if (isWriter) Modifier
-                                .clickable { onMoreClick() }
-                            else Modifier
-                        ),
-                    tint = Color.Unspecified,
-                )
+                IconButton(
+                    onClick = {
+                        if (isWriter) onMoreClick()
+                        else { //todo 신고하기
+                        }
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_three_dot),
+                        contentDescription = "etc",
+                        modifier = Modifier
+                            .size(24.dp),
+                        tint = Color.Unspecified,
+                    )
+                }
+
                 Text(
                     writeDate,
                     style = EatssuTheme.typography.caption3,
