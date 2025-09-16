@@ -84,6 +84,23 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+        <!--   Firebase Cloud Messaging     -->
+        <service
+                android:name=".alarm.EatSsuFirebaseMessagingService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- 기본 알림 아이콘과 색상 설정 -->
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/ic_mini_logo" />
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_color"
+                android:resource="@color/primary" />
+
 
         <!--    워커 매니저를 위한 프로바이더    -->
         <provider
