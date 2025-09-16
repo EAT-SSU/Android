@@ -55,6 +55,8 @@ class MyReviewViewModel @Inject constructor(
             try {
                 deleteReviewUseCase(reviewId)
                 _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
+                // 삭제 성공 시 내 리뷰 목록 재조회
+                getMyReviewList()
             } catch (e: Exception) {
                 _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
                 Timber.d("deleteReview: ${e.message}")
