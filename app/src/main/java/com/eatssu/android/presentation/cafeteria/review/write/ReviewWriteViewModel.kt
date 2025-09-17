@@ -30,11 +30,10 @@ class ReviewWriteViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val getMenuNameListOfMealUseCase: GetMenuNameListOfMealUseCase,
-//    private val context: Context,
 ) : ViewModel() {
 
     private val _uiState =
-        MutableStateFlow<UiState<WriteReviewState>>(UiState.Success(WriteReviewState.Init))
+        MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -83,7 +82,7 @@ class ReviewWriteViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             Timber.d("postReview 시작 - rating: $rating, content: $content, menuLikes: $menuLikes")
-            _uiState.value = UiState.Success(WriteReviewState.Loading)
+            _uiState.value = UiState.Loading
 
             var imageUrl: String? = null
 
@@ -104,13 +103,13 @@ class ReviewWriteViewModel @Inject constructor(
                         _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
                         Timber.d("이미지 업로드 성공: $imageUrl")
                     } else {
-                        _uiState.value = UiState.Success(WriteReviewState.Error)
+                        _uiState.value = UiState.Error
                         _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
                         Timber.e("이미지 파일이 존재하지 않음: ${file.absolutePath}")
                         return@launch
                     }
                 } catch (e: Exception) {
-                    _uiState.value = UiState.Success(WriteReviewState.Error)
+                    _uiState.value = UiState.Error
                     _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
                     Timber.e(e, "이미지 업로드 중 예외 발생")
                     return@launch
@@ -129,20 +128,20 @@ class ReviewWriteViewModel @Inject constructor(
                 Timber.d("리뷰 작성 시작")
                 when (val result = writeReviewUseCase(menuType, itemId, reviewData)) {
                     is Result.Success -> {
-                        _uiState.value = UiState.Success(WriteReviewState.Success)
+                        _uiState.value = UiState.Success(WriteReviewState.Write)
                         _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
                         // 성공 후 잠시 후 상태 초기화
-                        kotlinx.coroutines.delay(1000)
-                        _uiState.value = UiState.Success(WriteReviewState.Init)
+//                        kotlinx.coroutines.delay(1000)
+//                        _uiState.value = UiState.Success(WriteReviewState.Init)
                     }
 
                     is Result.Failure -> {
-                        _uiState.value = UiState.Success(WriteReviewState.Error)
+                        _uiState.value = UiState.Error
                         _uiEvent.emit(UiEvent.ShowToast(result.message))
                     }
                 }
             } catch (e: Exception) {
-                _uiState.value = UiState.Success(WriteReviewState.Error)
+                _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
                 Timber.e(e)
             }
@@ -178,8 +177,5 @@ class ReviewWriteViewModel @Inject constructor(
 }
 
 sealed class WriteReviewState {
-    object Init : WriteReviewState()
-    object Loading : WriteReviewState()
-    object Success : WriteReviewState()
-    object Error : WriteReviewState()
+    object Write : WriteReviewState()
 }

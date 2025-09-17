@@ -1,11 +1,15 @@
 package com.eatssu.android.presentation.cafeteria.review.modify
 
 import androidx.lifecycle.ViewModel
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
+import com.eatssu.android.domain.model.ReviewWriteData
 import com.eatssu.android.domain.usecase.review.ModifyReviewUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
@@ -14,24 +18,36 @@ class ModifyViewModel @Inject constructor(
     private val modifyReviewUseCase: ModifyReviewUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<ModifyState> = MutableStateFlow(ModifyState())
-    val uiState: StateFlow<ModifyState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState<ModifyState>> = MutableStateFlow(UiState.Init)
+    val uiState: StateFlow<UiState<ModifyState>> = _uiState.asStateFlow()
+
+    private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     suspend fun modifyMyReview(
         reviewId: Long,
-        body: ModifyReviewRequest,
+        rating: Int,
+        content: String,
+        menuLikes: List<Long>,
     ) {
+        _uiState.value = UiState.Loading
+        try {
+            val reviewData = ReviewWriteData(
+                rating = rating,
+                content = content,
+                menuLikes = menuLikes,
+            )
 
-        modifyReviewUseCase(reviewId, body)
+            modifyReviewUseCase(reviewId, reviewData)
+            _uiState.value = UiState.Success(ModifyState.ModifyDone)
+        } catch (e: Exception) {
+            _uiState.value = UiState.Error
+            _uiEvent.emit(UiEvent.ShowToast("리뷰 수정에 실패했습니다: ${e.message}"))
+            return
         }
-
+    }
 }
 
-data class ModifyState(
-    var loading: Boolean = true,
-    var error: Boolean = false,
-    var toastMessage: String = "",
-
-    var isDone: Boolean = false,
-
-    )
+sealed class ModifyState {
+    data object ModifyDone : ModifyState()
+}
