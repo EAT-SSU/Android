@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
+import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteScreen
 
 object ReviewNav {
@@ -33,7 +34,11 @@ fun ReviewNav(
             ReviewListScreen(
                 menuType = menuType,
                 id = id,
-                onModifyClick = {},
+                onModifyClick = {
+                    navHostController.navigate(ReviewNav.Modify) {
+                        launchSingleTop = true
+                    }
+                },
                 onWriteWriteButtonClick = { menuName ->
                     // SavedStateHandle을 사용하여 menuName 전달
                     navHostController.currentBackStackEntry?.savedStateHandle?.set(
@@ -53,6 +58,14 @@ fun ReviewNav(
             ReviewWriteScreen(
                 menuType = menuType,
                 menuName = menuName,
+                id = id,
+                navController = navHostController
+            )
+        }
+
+        // 리뷰 작성
+        composable(ReviewNav.Modify) { backStackEntry ->
+            ModifyReviewScreen(
                 id = id,
                 navController = navHostController
             )

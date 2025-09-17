@@ -1,8 +1,5 @@
-package com.eatssu.android.presentation.cafeteria.review.write
+package com.eatssu.android.presentation.cafeteria.review.modify
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,7 +40,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.eatssu.android.R
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
@@ -59,54 +55,31 @@ import com.eatssu.design_system.theme.Primary
 import timber.log.Timber
 
 @Composable
-fun ReviewWriteScreen(
+fun ModifyReviewScreen(
     modifier: Modifier = Modifier,
-    viewModel: ReviewWriteViewModel = hiltViewModel(),
-    menuName: String,
-    menuType: MenuType,
+    viewModel: ModifyViewModel = hiltViewModel(),
     id: Long,
     navController: NavController,
 ) {
-    Timber.d("넘어온 메뉴명: $menuName, 메뉴타입: $menuType, ID: $id")
 
     val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
-    val viewModelMenuList by viewModel.menuList.collectAsStateWithLifecycle()
-    val selectedImageUri by viewModel.selectedImageUri.collectAsStateWithLifecycle()
-    val uploadedImageUrl by viewModel.uploadedImageUrl.collectAsStateWithLifecycle()
+//    val viewModelMenuList by viewModel.menuList.collectAsStateWithLifecycle()
 
-    // 갤러리 선택을 위한 launcher
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        viewModel.setSelectedImage(uri)
-    }
 
     val context = LocalContext.current
 
     // menuList를 Pair<Long, String> 리스트로 통일
-    val menuList = remember(menuName, menuType, viewModelMenuList) {
-        when (menuType) {
-            MenuType.FIXED -> {
-                // 고정 메뉴인 경우, Pair(id, menuName) 형태로 리스트를 만듭니다.
-                listOf(Pair(id, menuName))
-            }
-            MenuType.VARIABLE -> {
-                // 변동 메뉴는 이미 Pair 리스트이므로 그대로 사용합니다.
-                viewModelMenuList
-            }
-        }
-    }
-
-    LaunchedEffect(menuType, id) {
-        when (menuType) {
-            MenuType.FIXED -> {
-                Timber.d("고정 메뉴 - 원본 메뉴명: $menuName")
-            }
-            MenuType.VARIABLE -> {
-                viewModel.findMenuItemByMealId(id)
-            }
-        }
-    }
+//    val menuList = remember(menuName, menuType, viewModelMenuList) {
+//    LaunchedEffect(menuType, id) {
+//        when (menuType) {
+//            MenuType.FIXED -> {
+//                Timber.d("고정 메뉴 - 원본 메뉴명: $menuName")
+//            }
+//            MenuType.VARIABLE -> {
+//                viewModel.findMenuItemByMealId(id)
+//            }
+//        }
+//    }
 
     // menuList가 변경될 때마다 로그 출력
     LaunchedEffect(menuList) {
@@ -115,45 +88,30 @@ fun ReviewWriteScreen(
 
     // 리뷰 작성 성공 시 이전 화면으로 돌아가기
     LaunchedEffect(reviewWriteState) {
-        if (reviewWriteState is UiState.Success && (reviewWriteState as UiState.Success<WriteReviewState>).data == WriteReviewState.Write) {
+        if (reviewWriteState is UiState.Success && (reviewWriteState as UiState.Success<ModifyState>).data == ModifyState.ModifyDone) {
             navController.popBackStack()
         }
     }
 
-    ReviewWriteScreen(
+    ModifyReviewScreen(
         menuList = menuList,
         uiState = reviewWriteState,
-        selectedImageUri = selectedImageUri,
-        uploadedImageUrl = uploadedImageUrl,
         modifier = modifier,
-        onImageSelect = {
-            galleryLauncher.launch("image/*")
-        },
-        onImageDelete = {
-            viewModel.setSelectedImage(null)
-        },
         writeReviewButtonClick = { rating, content, menuLikes ->
-            viewModel.postReview(
-                menuType = menuType,
-                itemId = id,
+            viewModel.modifyMyReview(
                 rating = rating,
                 content = content,
                 menuLikes = menuLikes,
-                context = context,
             )
         }
     )
 }
 
 @Composable
-internal fun ReviewWriteScreen(
+internal fun ModifyReviewScreen(
     menuList: List<Pair<Long, String>>,
-    uiState: UiState<WriteReviewState>,
-    selectedImageUri: Uri?,
-    uploadedImageUrl: String?,
+    uiState: UiState<ModifyState>,
     modifier: Modifier = Modifier,
-    onImageSelect: () -> Unit,
-    onImageDelete: () -> Unit,
     writeReviewButtonClick: (rating: Int, content: String, menuLikes: List<Long>) -> Unit,
 ) {
 
@@ -161,12 +119,6 @@ internal fun ReviewWriteScreen(
     var text by remember { mutableStateOf("") }
     var likedMenus by remember { mutableStateOf(mutableListOf<Long>()) }
 
-    // 갤러리 선택을 위한 launcher
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        // 콜백을 통해 메인 함수에서 처리
-    }
 
     Scaffold(
         topBar = {
@@ -391,11 +343,7 @@ fun ReviewListPreview() {
                 2L to "연탄불맛돈불고기",
                 3L to "김말이",
             ),
-            uiState = UiState.Success(WriteReviewState.Write),
-            selectedImageUri = null,
-            uploadedImageUrl = null,
-            onImageSelect = {},
-            onImageDelete = {},
+            uiState = UiState.Success(ModifyState.Init),
             writeReviewButtonClick = { _, _, _ -> }
         )
     }
