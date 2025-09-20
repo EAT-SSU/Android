@@ -60,8 +60,8 @@ fun ReviewListScreen(
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
     id: Long,
-    onWriteWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
-    onModifyClick: () -> Unit,
+    onWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
+    onModifyClick: (Review) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -74,14 +74,14 @@ fun ReviewListScreen(
 
     when (uiEvent) {
         is UiEvent.ShowToast -> {
-            context.showToast((uiEvent as UiEvent.ShowToast).message) // context 필요
+            context.showToast((uiEvent as UiEvent.ShowToast).message)
         }
     }
 
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
-        onReviewWriteButtonClick = onWriteWriteButtonClick,
+        onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) }
     )
@@ -92,20 +92,27 @@ internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
     onReviewWriteButtonClick: (menuName: String) -> Unit,
-    onModifyClick: () -> Unit,
+    onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedReviewId by remember { mutableStateOf<Long?>(null) }
+    var selectedReview by remember { mutableStateOf<Review?>(null) }
 
     if (showBottomSheet && selectedReviewId != null) {
         MyReviewBottomSheet(
             onDismiss = { showBottomSheet = false; selectedReviewId = null },
-            onModify = { onModifyClick() },
+            onModify = {
+                selectedReview?.let { onModifyClick(it) }
+                showBottomSheet = false
+                selectedReviewId = null
+                selectedReview = null
+            },
             onDelete = {
                 selectedReviewId?.let { onDeleteClick(it) }
                 showBottomSheet = false
                 selectedReviewId = null
+                selectedReview = null
             }
         )
     }
@@ -282,6 +289,7 @@ internal fun ReviewListScreen(
                                             imgUrl = item.imgUrl,
                                             onMoreClick = {
                                                 selectedReviewId = item.reviewId
+                                                selectedReview = item
                                                 showBottomSheet = true
                                             }
                                         )

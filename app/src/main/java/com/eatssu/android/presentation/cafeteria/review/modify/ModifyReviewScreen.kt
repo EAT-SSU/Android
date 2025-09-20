@@ -1,9 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.modify
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -30,7 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,8 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.eatssu.android.R
 import com.eatssu.android.presentation.UiState
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
@@ -48,57 +42,56 @@ import com.eatssu.design_system.component.RatingBarMedium
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray200
-import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray400
-import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Primary
+import com.eatssu.design_system.theme.Secondary
 import timber.log.Timber
 
 @Composable
 fun ModifyReviewScreen(
     modifier: Modifier = Modifier,
     viewModel: ModifyViewModel = hiltViewModel(),
-    id: Long,
+    reviewId: Long,
+    initialRating: Int = 0,
+    initialContent: String = "",
+    menuList: List<Pair<Long, String>> = emptyList(),
+    likedNames: List<String> = emptyList(),
     navController: NavController,
 ) {
 
     val reviewWriteState by viewModel.uiState.collectAsStateWithLifecycle()
-//    val viewModelMenuList by viewModel.menuList.collectAsStateWithLifecycle()
-
 
     val context = LocalContext.current
 
-    // menuList를 Pair<Long, String> 리스트로 통일
-//    val menuList = remember(menuName, menuType, viewModelMenuList) {
-//    LaunchedEffect(menuType, id) {
-//        when (menuType) {
-//            MenuType.FIXED -> {
-//                Timber.d("고정 메뉴 - 원본 메뉴명: $menuName")
-//            }
-//            MenuType.VARIABLE -> {
-//                viewModel.findMenuItemByMealId(id)
-//            }
-//        }
-//    }
-
-    // menuList가 변경될 때마다 로그 출력
-    LaunchedEffect(menuList) {
-        Timber.d("최종 메뉴 목록: $menuList")
-    }
+    val initialLikedSet = likedNames.toSet()
 
     // 리뷰 작성 성공 시 이전 화면으로 돌아가기
     LaunchedEffect(reviewWriteState) {
-        if (reviewWriteState is UiState.Success && (reviewWriteState as UiState.Success<ModifyState>).data == ModifyState.ModifyDone) {
-            navController.popBackStack()
+        when (reviewWriteState) {
+            is UiState.Error -> {
+                Timber.d("리뷰 작성 오류")
+            }
+
+            UiState.Init, UiState.Loading -> {
+            }
+
+            is UiState.Success -> {
+                navController.popBackStack()
+
+            }
         }
     }
 
     ModifyReviewScreen(
         menuList = menuList,
+        initialRating = initialRating,
+        initialContent = initialContent,
+        initialLikedNames = likedNames,
         uiState = reviewWriteState,
         modifier = modifier,
         writeReviewButtonClick = { rating, content, menuLikes ->
             viewModel.modifyMyReview(
+                reviewId = reviewId,
                 rating = rating,
                 content = content,
                 menuLikes = menuLikes,
@@ -110,14 +103,17 @@ fun ModifyReviewScreen(
 @Composable
 internal fun ModifyReviewScreen(
     menuList: List<Pair<Long, String>>,
+    initialRating: Int = 0,
+    initialContent: String = "",
+    initialLikedNames: List<String> = emptyList(),
     uiState: UiState<ModifyState>,
     modifier: Modifier = Modifier,
     writeReviewButtonClick: (rating: Int, content: String, menuLikes: List<Long>) -> Unit,
 ) {
 
-    var rating by remember { mutableIntStateOf(0) }
-    var text by remember { mutableStateOf("") }
-    var likedMenus by remember { mutableStateOf(mutableListOf<Long>()) }
+    var rating by remember { mutableIntStateOf(initialRating) }
+    var text by remember { mutableStateOf(initialContent) }
+    var likedNameSet by remember { mutableStateOf(initialLikedNames.toSet()) }
 
 
     Scaffold(
@@ -128,7 +124,9 @@ internal fun ModifyReviewScreen(
             EatSsuButton(
                 text = "완료하기",
                 onClick = {
-                    val menuLikesList = likedMenus.map { it }
+                    val menuLikesList = menuList
+                        .filter { likedNameSet.contains(it.second) }
+                        .map { it.first }
                     writeReviewButtonClick(
                         rating,
                         text,
@@ -173,24 +171,38 @@ internal fun ModifyReviewScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
 
-                LazyColumn {
-                    items(menuList) { menuPair -> // 매개변수 이름을 menuPair로 변경하여 혼동 방지
-                        MenuItem(
-                            mealName = menuPair.second,
-                            modifier = Modifier,
-                            isLiked = likedMenus.contains(menuPair.first),
-                            onLikeChanged = { isLiked ->
-                                // Set을 사용하여 중복 제거 및 상태 변경
-                                val newSet = likedMenus.toSet()
-                                val updatedList = if (isLiked) {
-                                    (newSet + menuPair.first).toList()
-                                } else {
-                                    (newSet - menuPair.first).toList()
+                SimpleFlowRow(horizontalSpacing = 4.dp, verticalSpacing = 8.dp) {
+                    menuList.forEach { pair ->
+                        val name = pair.second
+                        val isLiked = likedNameSet.contains(name)
+                        Surface(
+                            shape = RoundedCornerShape(30.dp),
+                            border = BorderStroke(0.5.dp, Primary),
+                            color = Secondary,
+                            contentColor = Primary,
+                            modifier = Modifier
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (isLiked) {
+                                    Icon(
+                                        painter = painterResource(id = com.eatssu.design_system.R.drawable.ic_thumb_up),
+                                        contentDescription = null,
+                                        tint = Primary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
                                 }
-                                likedMenus =
-                                    updatedList.toMutableList() // mutableStateOf를 위해 MutableList로 다시 변환
+                                Text(
+                                    name,
+                                    style = EatssuTheme.typography.caption3,
+                                    color = Primary
+                                )
                             }
-                        )
+                        }
                     }
                 }
 
@@ -206,7 +218,6 @@ internal fun ModifyReviewScreen(
                             .height(160.dp),
                         value = text,
                         onValueChange = { newText ->
-                            // 최대 글자 수를 초과하지 않도록 함
                             if (newText.length <= maxChar) {
                                 text = newText
                             }
@@ -219,15 +230,10 @@ internal fun ModifyReviewScreen(
                         },
                         shape = RoundedCornerShape(10.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            // 배경색
                             focusedContainerColor = Gray100,
                             unfocusedContainerColor = Gray100,
-
-                            // 테두리 색상
                             unfocusedBorderColor = Gray200,
                             focusedBorderColor = Gray200,
-
-                            // 힌트 문구 색상
                             unfocusedLabelColor = Gray400,
                             focusedLabelColor = Gray400,
                             cursorColor = Primary
@@ -243,67 +249,43 @@ internal fun ModifyReviewScreen(
                         style = EatssuTheme.typography.caption3
                     )
                 }
-
-                //사진
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    if (selectedImageUri != null) {
-                        // 선택된 이미지가 있는 경우
-                        Column(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .clickable {
-                                    onImageDelete()
-                                }
-                        ) {
-                            AsyncImage(
-                                model = selectedImageUri,
-                                contentDescription = "Selected image",
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                        Text(
-                            modifier = Modifier.padding(top = 8.dp),
-                            text = "사진 클릭 시, 삭제됩니다.",
-                            color = Gray500,
-                            style = EatssuTheme.typography.caption3
-                        )
-                    } else {
-                        // 이미지가 선택되지 않은 경우
-                        Column(
-                            modifier = Modifier
-                                .size(60.dp)
-                                .clip(RoundedCornerShape(5.dp))
-                                .background(Gray100)
-                                .border(
-                                    width = 1.dp,
-                                    color = Gray200,
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .clickable {
-                                    onImageSelect()
-                                },
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_camera_light),
-                                "add photo",
-                                tint = Gray300
-                            )
-                            Text(
-                                "사진 0/1",
-                                color = Gray400,
-                                style = EatssuTheme.typography.caption3
-                            )
-                        }
-                    }
-                }
             }
 
+        }
+    }
+}
+
+@Composable
+private fun SimpleFlowRow(
+    horizontalSpacing: androidx.compose.ui.unit.Dp,
+    verticalSpacing: androidx.compose.ui.unit.Dp,
+    content: @Composable () -> Unit
+) {
+    Layout(content = content) { measurables, constraints ->
+        val placeables = measurables.map { it.measure(constraints) }
+        val maxWidth = constraints.maxWidth
+        var x = 0
+        var y = 0
+        var rowHeight = 0
+        val positions = mutableListOf<androidx.compose.ui.unit.IntOffset>()
+
+        placeables.forEach { p ->
+            if (x > 0 && x + p.width > maxWidth) {
+                x = 0
+                y += rowHeight + verticalSpacing.roundToPx()
+                rowHeight = 0
+            }
+            positions.add(androidx.compose.ui.unit.IntOffset(x, y))
+            x += p.width + horizontalSpacing.roundToPx()
+            rowHeight = maxOf(rowHeight, p.height)
+        }
+
+        val height = y + rowHeight
+        layout(width = maxWidth, height = height) {
+            placeables.forEachIndexed { index, placeable ->
+                val pos = positions[index]
+                placeable.placeRelative(pos.x, pos.y)
+            }
         }
     }
 }
@@ -326,7 +308,7 @@ fun MenuItem(
         LikeButton(
             isLiked = isLiked,
             onClick = {
-                onLikeChanged(!isLiked) // 클릭 시 상태를 반전
+                onLikeChanged(!isLiked)
             }
         )
     }
@@ -337,13 +319,13 @@ fun MenuItem(
 @Composable
 fun ReviewListPreview() {
     EatssuTheme {
-        ReviewWriteScreen(
+        ModifyReviewScreen(
             menuList = listOf(
                 1L to "맑은 미역국",
                 2L to "연탄불맛돈불고기",
                 3L to "김말이",
             ),
-            uiState = UiState.Success(ModifyState.Init),
+            uiState = UiState.Success(ModifyState.ModifyDone),
             writeReviewButtonClick = { _, _, _ -> }
         )
     }
