@@ -30,7 +30,7 @@ interface MealService {
     /**
      * 메뉴 정보 리스트 조회
      */
-    @GET("meals/{mealId}/menus-info")
+    @GET("v2/reviews/meal/valid-for-review/{mealId}")
     suspend fun getMenuInfoByMealId(
         @Path("mealId") mealId: Long,
     ): BaseResponse<MenuOfMealResponse>
