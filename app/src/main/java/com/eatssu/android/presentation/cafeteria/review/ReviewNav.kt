@@ -34,12 +34,21 @@ fun ReviewNav(
             ReviewListScreen(
                 menuType = menuType,
                 id = id,
-                onModifyClick = {
-                    navHostController.navigate(ReviewNav.Modify) {
-                        launchSingleTop = true
+                onModifyClick = { review ->
+                    // 선택된 리뷰 데이터를 Modify 화면으로 전달
+                    navHostController.currentBackStackEntry?.savedStateHandle?.apply {
+                        set("reviewId", review.reviewId)
+                        set("initialRating", review.mainGrade)
+                        set("initialContent", review.content)
+                        // 메뉴는 (id, name) 쌍이 필요하므로 이름만 전달하는 경우, id 매핑은 서버/화면에서 보유하고 있어야 합니다.
+                        // 여기서는 임시로 name만 전달. Modify에서 Pair<Long,String>로 이미 있는 경우 그걸 넣어주세요.
+                        set("menuList", ArrayList(review.menuList))
+                        set("likeMenuList", ArrayList(review.likeMenuList ?: emptyList()))
                     }
+
+                    navHostController.navigate(ReviewNav.Modify) { launchSingleTop = true }
                 },
-                onWriteWriteButtonClick = { menuName ->
+                onWriteButtonClick = { menuName ->
                     // SavedStateHandle을 사용하여 menuName 전달
                     navHostController.currentBackStackEntry?.savedStateHandle?.set(
                         "menuName",
@@ -65,8 +74,19 @@ fun ReviewNav(
 
         // 리뷰 작성
         composable(ReviewNav.Modify) { backStackEntry ->
+            val prev = navHostController.previousBackStackEntry?.savedStateHandle
+            val reviewId = prev?.get<Long>("reviewId") ?: 0L
+            val initialRating = prev?.get<Int>("initialRating") ?: 0
+            val initialContent = prev?.get<String>("initialContent") ?: ""
+            val menuNames = prev?.get<ArrayList<String>>("menuList") ?: arrayListOf()
+            val likeMenuList = prev?.get<ArrayList<String>>("likeMenuList") ?: arrayListOf()
+
             ModifyReviewScreen(
-                id = id,
+                reviewId = reviewId,
+                initialRating = initialRating,
+                initialContent = initialContent,
+                menuList = menuNames.mapIndexed { index, name -> index.toLong() to name },
+                likedNames = likeMenuList,
                 navController = navHostController
             )
         }
