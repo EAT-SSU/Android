@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.login
+package com.eatssu.android.presentation.intro
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
