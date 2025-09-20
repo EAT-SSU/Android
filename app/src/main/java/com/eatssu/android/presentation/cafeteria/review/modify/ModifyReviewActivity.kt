@@ -7,13 +7,17 @@ import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(ActivityFixMenuBinding::inflate) {
+class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(
+    ActivityFixMenuBinding::inflate,
+    ScreenId.REVIEW_V1_MODIFY
+) {
 
     private val modifyViewModel: ModifyViewModel by viewModels()
 

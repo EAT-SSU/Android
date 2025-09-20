@@ -22,6 +22,7 @@ import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.eatssu.common.enums.ScreenId
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -32,10 +33,14 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate){
+class MainActivity : BaseActivity<ActivityMainBinding>(
+    ActivityMainBinding::inflate,
+    ScreenId.HOME_MAIN
+) {
+
     @Inject
     lateinit var workManager: WorkManager
-  
+
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
 
@@ -189,4 +194,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
+
+    override fun shouldLogScreenId() = false
 }

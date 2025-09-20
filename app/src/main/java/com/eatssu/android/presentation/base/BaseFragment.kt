@@ -6,8 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
+import timber.log.Timber
 
-abstract class BaseFragment<B : ViewBinding> : Fragment() {
+abstract class BaseFragment<B : ViewBinding>(
+    val screenId: ScreenId
+) : Fragment() {
 
     private var _binding: B? = null
     val binding get() = _binding!!
@@ -26,5 +31,11 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventLogger.screenView(screenId)
+        Timber.d("screen view logging: $screenId")
     }
 }

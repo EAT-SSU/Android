@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.map.model.RestaurantInfo
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray400
@@ -55,6 +56,10 @@ fun MapRestaurantBottomSheet(
 
     LaunchedEffect(Unit) {
         sheetState.show()
+    }
+
+    LaunchedEffect(Unit) {
+        EventLogger.screenView(ScreenId.MAP_DETAIL)
     }
 
     ModalBottomSheet(
@@ -174,7 +179,9 @@ fun MapRestaurantBottomSheet(
                                 }
                             },
                             style = EatssuTheme.typography.body2,
-                            modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp)
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))

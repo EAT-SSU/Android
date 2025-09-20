@@ -11,14 +11,16 @@ import com.eatssu.android.databinding.ActivityMyReviewListBinding
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MyReviewListActivity :
-    BaseActivity<ActivityMyReviewListBinding>(ActivityMyReviewListBinding::inflate),
-    MyReviewBottomSheetFragment.OnReviewDeletedListener {
+class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(
+    ActivityMyReviewListBinding::inflate,
+    ScreenId.MYPAGE_REVIEWS,
+), MyReviewBottomSheetFragment.OnReviewDeletedListener {
 
     private val myReviewViewModel: MyReviewViewModel by viewModels()
 

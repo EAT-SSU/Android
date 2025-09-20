@@ -9,13 +9,17 @@ import com.eatssu.android.databinding.ActivityReportBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ReportType
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class ReportActivity : BaseActivity<ActivityReportBinding>(ActivityReportBinding::inflate) {
+class ReportActivity : BaseActivity<ActivityReportBinding>(
+    ActivityReportBinding::inflate,
+    ScreenId.REVIEW_REPORT
+) {
     private val reportViewModel: ReportViewModel by viewModels()
 
     private var reviewId = -1L

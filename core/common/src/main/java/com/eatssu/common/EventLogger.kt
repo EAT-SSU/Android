@@ -2,9 +2,9 @@ package com.eatssu.common
 
 import android.os.Bundle
 import com.eatssu.common.enums.EventType
-import com.eatssu.common.enums.FirebaseScreenId
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.Time
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ParametersBuilder
@@ -143,10 +143,13 @@ object EventLogger {
         }
     }
 
-    fun screenView(screenId: FirebaseScreenId, screenClass: String) {
+    fun screenView(screenId: ScreenId, screenClass: String? = null) {
         logEvent(EventType.SCREEN_VIEW) {
             param(FirebaseAnalytics.Param.SCREEN_NAME, screenId.value)
-            param(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
+
+            // screen_class를 설정하지 않으면 자동으로 포커스에 있는 UIViewController 또는 Activity를 기반으로 설정됨
+            if (screenClass != null)
+                param(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
         }
     }
 

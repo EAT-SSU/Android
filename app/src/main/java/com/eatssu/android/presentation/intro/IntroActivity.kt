@@ -70,4 +70,9 @@ class IntroActivity : AppCompatActivity() {
             else -> EventLogger.appLaunch(LaunchPath.ICON)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        EventLogger.screenView(ScreenId.LOGIN_SPLASH)
+    }
 }

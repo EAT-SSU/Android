@@ -8,13 +8,17 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivitySignOutBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignOutActivity :
-    BaseActivity<ActivitySignOutBinding>(ActivitySignOutBinding::inflate) {
+    BaseActivity<ActivitySignOutBinding>(
+        ActivitySignOutBinding::inflate,
+        ScreenId.MYPAGE_SIGNOUT
+    ) {
     //TODO 현재 dev서버 탈퇴하기 500
 
     private val signOutViewModel: SignOutViewModel by viewModels()

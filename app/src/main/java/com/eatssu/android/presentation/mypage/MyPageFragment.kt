@@ -25,6 +25,7 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
-class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
+class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN) {
 
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels<MainViewModel>()

@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.webkit.WebViewClient
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.common.enums.ScreenId
 import timber.log.Timber
 
 
-class WebViewActivity : BaseActivity<ActivityWebviewBinding>(ActivityWebviewBinding::inflate) {
+class WebViewActivity :
+    BaseActivity<ActivityWebviewBinding>(ActivityWebviewBinding::inflate, ScreenId.EXTERNAL_LINK) {
 
 
     private var URL = ""

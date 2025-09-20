@@ -9,9 +9,24 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,18 +46,27 @@ import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
+import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.compose.*
+import com.naver.maps.map.compose.Align
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.LocationTrackingMode
+import com.naver.maps.map.compose.MapProperties
+import com.naver.maps.map.compose.MapUiSettings
+import com.naver.maps.map.compose.Marker
+import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.rememberCameraPositionState
+import com.naver.maps.map.compose.rememberMarkerState
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.flow.collectLatest
@@ -164,6 +188,13 @@ fun MapFragmentComposeView(
             }
         }
     }
+
+
+    // Screen View 기록
+    LaunchedEffect(Unit) {
+        EventLogger.screenView(ScreenId.MAP_MAIN)
+    }
+
 
     val lifecycleOwner = LocalLifecycleOwner.current
 

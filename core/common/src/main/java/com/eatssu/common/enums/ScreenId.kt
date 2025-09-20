@@ -1,6 +1,6 @@
 package com.eatssu.common.enums
 
-enum class FirebaseScreenId(val value: String) {
+enum class ScreenId(val value: String) {
     LOGIN_SPLASH("LOG_001000"),
     LOGIN_MAINTENANCE("LOG_001001"),
     LOGIN_LOGIN("LOG_002000"),
@@ -9,10 +9,10 @@ enum class FirebaseScreenId(val value: String) {
     HOME_MAIN("MNU_001000"),
     HOME_INFO("MNU_002000"),
 
-    REVIEW_V1_1("REV_001000_V1"),
-    REVIEW_V1_2("REV_001001_V1"),
-    REVIEW_V1_3("REV_001002_V1"),
-    REVIEW_V1_4("REV_001003_V1"),
+    REVIEW_V1_VIEW("REV_001000_V1"),
+    REVIEW_V1_WRITE("REV_001001_V1"),
+    REVIEW_V1_WRITE_RATE("REV_001002_V1"),
+    REVIEW_V1_LOGIN_REQUIRED("REV_001003_V1"), // TODO: 필수 로그인이라 사용하지 않음
     REVIEW_V1_MODIFY("REV_001004_V1"), // TODO: Figma에 존재하지 않음
 
     REVIEW_V2_1("REV_001000_V2"),
@@ -24,14 +24,16 @@ enum class FirebaseScreenId(val value: String) {
     // V1과 V2가 같음
     REVIEW_REPORT("REV_002000"),
 
-    MAP_1("MAP_001000"),
-    MAP_2("MAP_001001"),
-    MAP_3("MAP_001002"),
-    MAP_4("MAP_002000"),
+    MAP_MAIN("MAP_001000"),
+    MAP_DETAIL("MAP_001001"),
+    MAP_NO_DEPARTMENT("MAP_001002"),
+    MAP_FAVORITE("MAP_002000"),
 
-    MYPAGE_1("MYP_001000"),
-    MYPAGE_2("MYP_001001"),
+    MYPAGE_MAIN("MYP_001000"),
+    MYPAGE_USERINFO("MYP_001001"),
     MYPAGE_REVIEWS("MYP_001002"),
-    MYPAGE_4("MYP_001003"),
+    MYPAGE_SIGNOUT("MYP_001003"),
     MYPAGE_DEVELOPER("MYP_001004"),
+
+    EXTERNAL_LINK("EXT_001000"),
 }

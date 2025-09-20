@@ -28,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.map.model.FavoritePartnership
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray400
@@ -48,6 +50,10 @@ fun FavoritePartnershipBottomSheet(
 
     LaunchedEffect(Unit) {
         sheetState.show()
+    }
+
+    LaunchedEffect(Unit) {
+        EventLogger.screenView(ScreenId.MAP_FAVORITE)
     }
 
     ModalBottomSheet(
