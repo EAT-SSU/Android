@@ -38,11 +38,11 @@ class SignOutViewModel @Inject constructor(
                     logoutUseCase() // 자동 로그인 정보 삭제
                 } else {
                     _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다."))
+                    _uiEvent.emit(UiEvent.ShowToast("탈퇴에 실패했습니다."))
                 }
             } catch (e: Exception) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다."))
+                _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다. $e"))
             }
         }
     }
