@@ -40,6 +40,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <!-- 자동 화면 추적 사용 중지: 수동 화면 ID로 트래킹 -->
+        <meta-data
+                android:name="google_analytics_automatic_screen_reporting_enabled"
+                android:value="false" />
+
         <!-- 사진 접근 관련 : minSDK가 30이상이면 필요없음 -->
         <service android:name="com.google.android.gms.metadata.ModuleDependencies"
             android:enabled="false"
