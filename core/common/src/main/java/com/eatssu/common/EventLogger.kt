@@ -1,9 +1,13 @@
 package com.eatssu.common
 
+import android.os.Bundle
+import com.eatssu.common.enums.EventType
+import com.eatssu.common.enums.FirebaseScreenId
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ParametersBuilder
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
@@ -19,19 +23,19 @@ object EventLogger {
     }
 
     fun appLaunch(launchPath: LaunchPath) {
-        firebaseAnalytics.logEvent("app_launch") {
+        logEvent(EventType.APP_LAUNCH) {
             param("launch_path", launchPath.value)
         }
     }
 
     fun clickRestaurantInfo(restaurant: Restaurant) {
-        firebaseAnalytics.logEvent("click_restaurant_info") {
+        logEvent(EventType.CLICK_RESTAURANT_INFO) {
             param("restaurants", restaurant.value)
         }
     }
 
     fun selectMealTime(time: Time) {
-        firebaseAnalytics.logEvent("select_mealtime") {
+        logEvent(EventType.SELECT_MEALTIME) {
             param("mealtime", time.value)
         }
     }
@@ -49,19 +53,19 @@ object EventLogger {
                 ""
             }
         }
-        firebaseAnalytics.logEvent("click_day") {
+        logEvent(EventType.CLICK_DAY) {
             param("day", weekDay)
         }
     }
 
     fun clickMenu(restaurant: Restaurant) {
-        firebaseAnalytics.logEvent("click_menu") {
+        logEvent(EventType.CLICK_MENU) {
             param("restaurants", restaurant.value)
         }
     }
 
     fun writeReview() { //todo v2로 바꿀시 v1 제거
-        firebaseAnalytics.logEvent("write_review_v1", null)
+        logEvent(EventType.WRITE_REVIEW_V1)
     }
 
     fun completeReviewV1(
@@ -69,7 +73,7 @@ object EventLogger {
         selection: Long,
         photoAttached: Boolean,
     ) {
-        firebaseAnalytics.logEvent("complete_review_v1") {
+        logEvent(EventType.COMPLETE_REVIEW_V1) {
             param("rating", rating)
             param("selection", selection)
             param("photo_attached", if (photoAttached) 1 else 0)
@@ -81,7 +85,7 @@ object EventLogger {
         likes: Long,
         photoAttached: Boolean,
     ) {
-        firebaseAnalytics.logEvent("complete_review_v2") {
+        logEvent(EventType.COMPLETE_REVIEW_V2) {
             param("rating", rating)
             param("likes", likes)
             param("photo_attached", if (photoAttached) 1 else 0)
@@ -90,14 +94,14 @@ object EventLogger {
 
 
     fun clickMap() {
-        firebaseAnalytics.logEvent("click_map", null)
+        logEvent(EventType.CLICK_MAP)
     }
 
     fun clickMapMine(
         college: Long,
         major: Long,
     ) {
-        firebaseAnalytics.logEvent("click_map_mine") {
+        logEvent(EventType.CLICK_MAP_MINE) {
             param("college", college)
             param("major", major)
         }
@@ -108,7 +112,7 @@ object EventLogger {
         major: Long,
         partnerRestaurantId: Long
     ) {
-        firebaseAnalytics.logEvent("click_partner_restaurant") {
+        logEvent(EventType.CLICK_PARTNER_RESTAURANT) {
             param("college", college)
             param("major", major)
             param("partner_restaurant_id", partnerRestaurantId)
@@ -116,26 +120,47 @@ object EventLogger {
     }
 
     fun addWidget(restaurant: Restaurant) {
-        firebaseAnalytics.logEvent("add_widget") {
+        logEvent(EventType.ADD_WIDGET) {
             param("restaurants", restaurant.value)
         }
     }
 
     fun removeWidget() {
-        firebaseAnalytics.logEvent("remove_widget", null)
+        logEvent(EventType.REMOVE_WIDGET)
     }
 
     //todo 파라미터 넣을지 추후 논의
     fun removeWidget(restaurant: Restaurant) {
-        firebaseAnalytics.logEvent("remove_widget") {
+        logEvent(EventType.REMOVE_WIDGET) {
             param("restaurants", restaurant.value)
         }
     }
 
     //todo change_widget
     fun changeWidget(restaurant: Restaurant) {
-        firebaseAnalytics.logEvent("change_widget") {
+        logEvent(EventType.CHANGE_WIDGET) {
             param("restaurants", restaurant.value)
         }
+    }
+
+    fun screenView(screenId: FirebaseScreenId, screenClass: String) {
+        logEvent(EventType.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, screenId.value)
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
+        }
+    }
+
+    private fun logEvent(
+        eventType: EventType,
+        bundle: Bundle? = null
+    ) {
+        firebaseAnalytics.logEvent(eventType.value, bundle)
+    }
+
+    private fun logEvent(
+        eventType: EventType,
+        block: ParametersBuilder.() -> Unit
+    ) {
+        firebaseAnalytics.logEvent(eventType.value, block)
     }
 }
