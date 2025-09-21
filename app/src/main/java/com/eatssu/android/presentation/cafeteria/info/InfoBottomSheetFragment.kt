@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.eatssu.android.databinding.FragmentBottomsheetInfoBinding
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.ScreenId
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +57,11 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventLogger.screenView(ScreenId.HOME_INFO)
     }
 
     companion object {
