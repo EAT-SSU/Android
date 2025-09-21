@@ -249,6 +249,7 @@ fun MapFragmentComposeView(
                 cameraPositionState = cameraPositionState,
                 uiSettings = MapUiSettings(isZoomControlEnabled = false, isLocationButtonEnabled = true),
                 locationSource = locationSource,
+                contentPadding = PaddingValues(bottom = 60.dp),
                 properties = MapProperties(
                     locationTrackingMode = LocationTrackingMode.Follow,
                 ),
