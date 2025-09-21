@@ -52,6 +52,7 @@ import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.Black
@@ -191,9 +192,7 @@ fun MapFragmentComposeView(
 
 
     // Screen View 기록
-    LaunchedEffect(Unit) {
-        EventLogger.screenView(ScreenId.MAP_MAIN)
-    }
+    TrackScreenViewEvent(ScreenId.MAP_MAIN)
 
 
     val lifecycleOwner = LocalLifecycleOwner.current

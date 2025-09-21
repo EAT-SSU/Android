@@ -18,7 +18,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.common.EventLogger
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray400
@@ -40,9 +39,7 @@ fun DepartmentBottomSheet(
     onInputClick: () -> Unit = {},
     sheetState: SheetState
 ) {
-    LaunchedEffect(Unit) {
-        EventLogger.screenView(ScreenId.MAP_NO_DEPARTMENT)
-    }
+    TrackScreenViewEvent(ScreenId.MAP_NO_DEPARTMENT)
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
