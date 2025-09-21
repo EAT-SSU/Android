@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
