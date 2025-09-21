@@ -38,10 +38,9 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
             emit(userService.getMyInfo())
         }
 
-    override suspend fun signOut(): Flow<BaseResponse<Boolean>> =
-        flow {
-            emit(userService.signOut())
-        }
+    override suspend fun signOut(): Boolean {
+        return userService.signOut().result ?: false
+    }
 
     override suspend fun getTotalColleges(): List<College> =
         userService.getCollegeList().result?.map { it.toDomain() }.orEmpty()
