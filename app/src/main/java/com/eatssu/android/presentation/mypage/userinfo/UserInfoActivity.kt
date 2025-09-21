@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.mypage.userinfo
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +8,7 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,43 +42,40 @@ class UserInfoActivity :
 
         force = intent.getBooleanExtra("force", false)
 
-        binding.btnCheckNickname.isEnabled = false
+        binding.btnCheckNicknameDuplication.isEnabled = false
         binding.btnComplete.isEnabled = false
 
         lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest {
-                binding.etChNickname.setText(it.nickname)
-                binding.tvCollege.text = it.selectedCollege.collegeName
-                binding.tvDepartment.text = it.selectedDepartment.departmentName
+            userInfoViewModel.uiState.collectLatest { state ->
+                if (binding.etChNickname.text.toString() != state.nickname) {
+                    binding.etChNickname.setText(state.nickname)
+                    binding.etChNickname.setSelection(state.nickname.length) // 커서 끝으로 이동
+                }
+                binding.tvCollege.text = state.selectedCollege.collegeName
+                binding.tvDepartment.text = state.selectedDepartment.departmentName
             }
         }
 
-        binding.etChNickname.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                inputNickname = binding.etChNickname.text.trim().toString()
-                val nicknameLength = inputNickname.length
-                val isValidLength = nicknameLength in 2..8
-                val isNicknameChanged = inputNickname != userInfoViewModel.uiState.value.originalNickname
+        // TextWatcher → doAfterTextChanged 로 교체
+        binding.etChNickname.doAfterTextChanged { editable ->
+            inputNickname = editable?.toString()?.trim().orEmpty()
+            val isValidLength = inputNickname.length in 2..8
+            val isNicknameChanged =
+                inputNickname != userInfoViewModel.uiState.value.originalNickname
 
-                binding.btnCheckNickname.isEnabled = isValidLength && isNicknameChanged
-                binding.btnComplete.isEnabled = false
+            binding.btnCheckNicknameDuplication.isEnabled = isValidLength && isNicknameChanged
+            binding.btnComplete.isEnabled = false
 
-                if (!isValidLength && inputNickname.isNotEmpty()) {
-                    binding.tvNickname28.setTextColor(getColor(R.color.error))
-                    binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
-                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-                } else {
-                    binding.tvNickname28.setTextColor(getColor(R.color.gray600))
-                }
-
-                userInfoViewModel.updateNickname(inputNickname)
+            if (!isValidLength && inputNickname.isNotEmpty()) {
+                binding.tvNickname28.setTextColor(getColor(R.color.error))
+                binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+            } else {
+                binding.tvNickname28.setTextColor(getColor(R.color.gray600))
             }
+        }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-
-        setOnCheckNicknameClickListener()
+        setOnCheckNicknameDuplicationClickListener()
         setCollegeDepartmentClickListener()
         collectButtonEnableState()
         collectUIState()
@@ -97,8 +93,8 @@ class UserInfoActivity :
         }
     }
 
-    private fun setOnCheckNicknameClickListener() {
-        binding.btnCheckNickname.setOnClickListener {
+    private fun setOnCheckNicknameDuplicationClickListener() {
+        binding.btnCheckNicknameDuplication.setOnClickListener {
             userInfoViewModel.checkNickname(inputNickname)
 
             // 닉네임 중복 확인 후 UI 상태 업데이트 로직
@@ -108,7 +104,7 @@ class UserInfoActivity :
             lifecycleScope.launch {
                 userInfoViewModel.uiState.collectLatest {
                     if (it.isEnableName) {
-                        binding.btnCheckNickname.isEnabled = false // 중복확인 비활성화
+                        binding.btnCheckNicknameDuplication.isEnabled = false // 중복확인 비활성화
                         binding.btnComplete.isEnabled = true // 저장하기 활성화
                         binding.tvNickname28.text = getString(R.string.set_nickname_able)
                         binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
