@@ -1,6 +1,8 @@
 package com.eatssu.android.presentation.mypage.userinfo
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,24 +58,28 @@ class UserInfoActivity :
             }
         }
 
-        // TextWatcher → doAfterTextChanged 로 교체
-        binding.etChNickname.doAfterTextChanged { editable ->
-            inputNickname = editable?.toString()?.trim().orEmpty()
-            val isValidLength = inputNickname.length in 2..8
-            val isNicknameChanged =
-                inputNickname != userInfoViewModel.uiState.value.originalNickname
+        binding.etChNickname.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                inputNickname = binding.etChNickname.text.trim().toString()
+                val nicknameLength = inputNickname.length
+                val isValidLength = nicknameLength in 2..8
+                val isNicknameChanged = inputNickname != userInfoViewModel.uiState.value.originalNickname
 
-            binding.btnCheckNicknameDuplication.isEnabled = isValidLength && isNicknameChanged
-            binding.btnComplete.isEnabled = false
+                binding.btnCheckNicknameDuplication.isEnabled = isValidLength && isNicknameChanged
+                binding.btnComplete.isEnabled = false
 
-            if (!isValidLength && inputNickname.isNotEmpty()) {
-                binding.tvNickname28.setTextColor(getColor(R.color.error))
-                binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
-                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-            } else {
-                binding.tvNickname28.setTextColor(getColor(R.color.gray600))
+                if (!isValidLength && inputNickname.isNotEmpty()) {
+                    binding.tvNickname28.setTextColor(getColor(R.color.error))
+                    binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
+                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+                } else {
+                    binding.tvNickname28.setTextColor(getColor(R.color.gray600))
+                }
             }
-        }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+        })
 
         setOnCheckNicknameDuplicationClickListener()
         setCollegeDepartmentClickListener()
