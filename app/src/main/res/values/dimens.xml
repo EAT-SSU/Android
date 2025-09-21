@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 바텀 네비바 높이 만큼의 패딩 -->
+    <dimen name="bottom_nav_height">60dp</dimen>
+</resources>
