@@ -45,6 +45,7 @@ import timber.log.Timber
 fun MyReviewListScreen(
     modifier: Modifier = Modifier,
     viewModel: MyReviewViewModel = hiltViewModel(),
+    onBack: () -> Unit = {},
 //    onModifyClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -65,6 +66,7 @@ fun MyReviewListScreen(
     MyReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
+        onBack = onBack,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
 //        onModifyClick = onModifyClick,
     )
@@ -74,6 +76,7 @@ fun MyReviewListScreen(
 internal fun MyReviewListScreen(
     uiState: UiState<MyReviewState>,
     modifier: Modifier = Modifier,
+    onBack: () -> Unit = {},
 //    onModifyClick: () -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
@@ -96,7 +99,7 @@ internal fun MyReviewListScreen(
         topBar = {
             EatSsuTopBar(
                 title = "내 리뷰",
-                onBack = { /* 뒤로가기 */ }
+                onBack = onBack
             )
         },
     ) { innerPadding ->

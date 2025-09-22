@@ -14,7 +14,9 @@ class MyReviewListComposeActivity : ComponentActivity() {
 
         setContent {
             EatssuTheme {
-                MyReviewListScreen()
+                MyReviewListScreen(
+                    onBack = { finish() }
+                )
             }
         }
     }
