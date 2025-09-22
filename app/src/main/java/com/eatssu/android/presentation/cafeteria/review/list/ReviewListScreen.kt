@@ -101,22 +101,42 @@ internal fun ReviewListScreen(
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
-    var showBottomSheet by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    var showMyBottomSheet by remember { mutableStateOf(false) }
+    var showOthersBottomSheet by remember { mutableStateOf(false) }
+
     var selectedReviewId by remember { mutableStateOf<Long?>(null) }
     var selectedReview by remember { mutableStateOf<Review?>(null) }
 
-    if (showBottomSheet && selectedReviewId != null) {
+    if (showOthersBottomSheet && selectedReviewId != null) {
+        OthersReviewBottomSheet(
+            onDismiss = { showOthersBottomSheet = false; selectedReviewId = null },
+            onReport = {
+                val intent = android.content.Intent(
+                    context,
+                    com.eatssu.android.presentation.cafeteria.review.report.ReportActivity::class.java
+                )
+                intent.putExtra("reviewId", selectedReviewId)
+                context.startActivity(intent)
+                showOthersBottomSheet = false
+                selectedReviewId = null
+            }
+        )
+    }
+
+    if (showMyBottomSheet && selectedReviewId != null) {
         MyReviewBottomSheet(
-            onDismiss = { showBottomSheet = false; selectedReviewId = null },
+            onDismiss = { showMyBottomSheet = false; selectedReviewId = null },
             onModify = {
                 selectedReview?.let { onModifyClick(it) }
-                showBottomSheet = false
+                showMyBottomSheet = false
                 selectedReviewId = null
                 selectedReview = null
             },
             onDelete = {
                 selectedReviewId?.let { onDeleteClick(it) }
-                showBottomSheet = false
+                showMyBottomSheet = false
                 selectedReviewId = null
                 selectedReview = null
             }
@@ -246,9 +266,17 @@ internal fun ReviewListScreen(
                                         likeMenuList = item.likeMenuList,
                                         imgUrl = item.imgUrl,
                                         onMoreClick = {
-                                            selectedReviewId = item.reviewId
-                                            selectedReview = item
-                                            showBottomSheet = true
+                                            if (item.isWriter) {
+                                                showMyBottomSheet = true
+                                                selectedReviewId = item.reviewId
+                                                selectedReview = item
+                                                Timber.d("ReviewListScreen - onMoreClick: 내 리뷰")
+                                            } else {
+                                                showOthersBottomSheet = true
+                                                Timber.d("ReviewListScreen - onMoreClick: 다른 사람 리뷰")
+                                                selectedReviewId = item.reviewId
+                                                selectedReview = item
+                                            }
                                         }
                                     )
                                 }
