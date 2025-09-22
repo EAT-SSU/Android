@@ -42,7 +42,7 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideMealService(@NoToken noTokenRetrofit: Retrofit): MealService {
+    fun provideMealService(noTokenRetrofit: Retrofit): MealService {
         return noTokenRetrofit.create(MealService::class.java)
     }
 
