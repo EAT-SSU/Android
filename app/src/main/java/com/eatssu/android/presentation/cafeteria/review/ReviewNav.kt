@@ -34,6 +34,7 @@ fun ReviewNav(
             ReviewListScreen(
                 menuType = menuType,
                 id = id,
+                onBack = { onExit() },
                 onModifyClick = { review ->
                     // 선택된 리뷰 데이터를 Modify 화면으로 전달
                     navHostController.currentBackStackEntry?.savedStateHandle?.apply {
@@ -68,7 +69,8 @@ fun ReviewNav(
                 menuType = menuType,
                 menuName = menuName,
                 id = id,
-                navController = navHostController
+                navController = navHostController,
+                onBack = { navHostController.popBackStack() },
             )
         }
 
@@ -87,6 +89,7 @@ fun ReviewNav(
                 initialContent = initialContent,
                 menuList = menuNames.mapIndexed { index, name -> index.toLong() to name },
                 likedNames = likeMenuList,
+                onBack = { navHostController.popBackStack() },
                 navController = navHostController
             )
         }

@@ -56,6 +56,7 @@ fun ModifyReviewScreen(
     initialContent: String = "",
     menuList: List<Pair<Long, String>> = emptyList(),
     likedNames: List<String> = emptyList(),
+    onBack: () -> Unit = {},
     navController: NavController,
 ) {
 
@@ -84,6 +85,7 @@ fun ModifyReviewScreen(
 
     ModifyReviewScreen(
         menuList = menuList,
+        onBack = onBack,
         initialRating = initialRating,
         initialContent = initialContent,
         initialLikedNames = likedNames,
@@ -103,6 +105,7 @@ fun ModifyReviewScreen(
 @Composable
 internal fun ModifyReviewScreen(
     menuList: List<Pair<Long, String>>,
+    onBack: () -> Unit,
     initialRating: Int = 0,
     initialContent: String = "",
     initialLikedNames: List<String> = emptyList(),
@@ -118,7 +121,7 @@ internal fun ModifyReviewScreen(
 
     Scaffold(
         topBar = {
-            CloseTopBar("리뷰 작성하기", onClose = { /* TODO: Handle close action */ })
+            CloseTopBar("리뷰 수정하기", onClose = { onBack() })
         },
         bottomBar = {    // 하단에 버튼을 고정하기 위함
             EatSsuButton(
@@ -320,6 +323,7 @@ fun MenuItem(
 fun ReviewListPreview() {
     EatssuTheme {
         ModifyReviewScreen(
+            onBack = {},
             menuList = listOf(
                 1L to "맑은 미역국",
                 2L to "연탄불맛돈불고기",

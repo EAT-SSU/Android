@@ -27,7 +27,8 @@ class ReviewComposeActivity : ComponentActivity() {
                     navHostController = navHostController,
                     menuType = MenuType.valueOf(menuType),
                     menuName = itemName,
-                    id = itemId
+                    id = itemId,
+                    onExit = { finish() }
                 )
             }
         }

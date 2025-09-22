@@ -60,6 +60,7 @@ fun ReviewListScreen(
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
     id: Long,
+    onBack: () -> Unit = {},
     onWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
     onModifyClick: (Review) -> Unit,
 ) {
@@ -81,6 +82,7 @@ fun ReviewListScreen(
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
+        onBack = onBack,
         onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) }
@@ -91,6 +93,7 @@ fun ReviewListScreen(
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
+    onBack: () -> Unit = {},
     onReviewWriteButtonClick: (menuName: String) -> Unit,
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
@@ -121,7 +124,7 @@ internal fun ReviewListScreen(
         topBar = {
             EatSsuTopBar(
                 title = "리뷰",
-                onBack = { /* 뒤로가기 */ }
+                onBack = onBack
             )
         },
         bottomBar = { // 하단에 버튼을 고정하기 위함

@@ -65,6 +65,7 @@ fun ReviewWriteScreen(
     menuName: String,
     menuType: MenuType,
     id: Long,
+    onBack: () -> Unit,
     navController: NavController,
 ) {
     Timber.d("넘어온 메뉴명: $menuName, 메뉴타입: $menuType, ID: $id")
@@ -141,7 +142,8 @@ fun ReviewWriteScreen(
                 menuLikes = menuLikes,
                 context = context,
             )
-        }
+        },
+        onBack = onBack
     )
 }
 
@@ -155,6 +157,7 @@ internal fun ReviewWriteScreen(
     onImageSelect: () -> Unit,
     onImageDelete: () -> Unit,
     writeReviewButtonClick: (rating: Int, content: String, menuLikes: List<Long>) -> Unit,
+    onBack: () -> Unit,
 ) {
 
     var rating by remember { mutableIntStateOf(0) }
@@ -170,7 +173,7 @@ internal fun ReviewWriteScreen(
 
     Scaffold(
         topBar = {
-            CloseTopBar("리뷰 작성하기", onClose = { /* TODO: Handle close action */ })
+            CloseTopBar("리뷰 작성하기", onClose = { onBack() })
         },
         bottomBar = {    // 하단에 버튼을 고정하기 위함
             EatSsuButton(
@@ -396,7 +399,8 @@ fun ReviewListPreview() {
             uploadedImageUrl = null,
             onImageSelect = {},
             onImageDelete = {},
-            writeReviewButtonClick = { _, _, _ -> }
+            writeReviewButtonClick = { _, _, _ -> },
+            onBack = {}
         )
     }
 }
