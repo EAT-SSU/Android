@@ -126,6 +126,7 @@ internal fun ModifyReviewScreen(
         bottomBar = {    // 하단에 버튼을 고정하기 위함
             EatSsuButton(
                 text = "완료하기",
+                enabled = rating != 0,
                 onClick = {
                     val menuLikesList = menuList
                         .filter { likedNameSet.contains(it.second) }
