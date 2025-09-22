@@ -206,6 +206,7 @@ internal fun ReviewListScreen(
                         val reviewList = uiState.data?.reviewList ?: emptyList()
 
                         ReviewInfoContent(info)
+
                         Column(modifier = Modifier.fillMaxSize()) {
                             Spacer(
                                 modifier = Modifier

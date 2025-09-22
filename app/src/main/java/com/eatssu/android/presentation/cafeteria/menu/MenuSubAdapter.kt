@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.menu
 
 import android.content.Intent
+import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,6 +21,46 @@ class MenuSubAdapter(
 
     inner class ViewHolder(private val binding: ItemMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private var lastClickTimeMs: Long = 0L
+
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position == RecyclerView.NO_POSITION) return@setOnClickListener
+
+                val now = SystemClock.elapsedRealtime()
+                if (now - lastClickTimeMs < 600) return@setOnClickListener
+                lastClickTimeMs = now
+
+                // Prevent duplicate clicks at the View level
+                if (!binding.root.isEnabled) return@setOnClickListener
+                binding.root.isEnabled = false
+
+                val item = dataList[position]
+                val intent = Intent(binding.root.context, ReviewComposeActivity::class.java)
+
+                when (menuType) {
+                    MenuType.FIXED -> {
+                        Log.d("SubMenuAdapter", "고정메뉴${item.name}")
+                        intent.putExtra("itemId", item.id)
+                        intent.putExtra("itemName", item.name)
+                        intent.putExtra("menuType", MenuType.FIXED.toString())
+                    }
+
+                    MenuType.VARIABLE -> {
+                        Log.d("SubMenuAdapter", "변동메뉴${item.name}")
+                        intent.putExtra("itemId", item.id)
+                        intent.putExtra("itemName", item.name)
+                        intent.putExtra("menuType", MenuType.VARIABLE.toString())
+                    }
+                }
+                ContextCompat.startActivity(binding.root.context, intent, null)
+
+                // Re-enable after short delay
+                binding.root.postDelayed({ binding.root.isEnabled = true }, 800)
+            }
+        }
 
         fun bind(position: Int) {
             binding.tvMenu.text = dataList[position].name
@@ -42,31 +83,6 @@ class MenuSubAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
-
-        //intent 사용
-        holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewComposeActivity::class.java)
-
-            when (menuType) {
-                MenuType.FIXED -> {
-                    Log.d("SubMenuAdapter", "고정메뉴${dataList[position].name}")
-                    intent.putExtra("itemId", dataList[position].id)
-                    intent.putExtra("itemName", dataList[position].name)
-                    intent.putExtra("menuType", MenuType.FIXED.toString())
-                }
-
-                MenuType.VARIABLE -> {
-                    Log.d("SubMenuAdapter", "변동메뉴${dataList[position].name}")
-                    intent.putExtra("itemId", dataList[position].id)
-                    intent.putExtra("itemName", dataList[position].name)
-                    intent.putExtra("menuType", MenuType.VARIABLE.toString())
-                }
-            }
-            ContextCompat.startActivity(holder.itemView.context, intent, null)
-
-        }
-
-
     }
 
     override fun getItemCount(): Int = dataList.size
