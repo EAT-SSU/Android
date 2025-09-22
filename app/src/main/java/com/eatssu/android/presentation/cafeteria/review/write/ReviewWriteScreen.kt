@@ -115,7 +115,7 @@ fun ReviewWriteScreen(
 
     // 리뷰 작성 성공 시 이전 화면으로 돌아가기
     LaunchedEffect(reviewWriteState) {
-        if (reviewWriteState is UiState.Success && (reviewWriteState as UiState.Success<WriteReviewState>).data == WriteReviewState.Write) {
+        if (reviewWriteState is UiState.Success && (reviewWriteState as UiState.Success<WriteReviewState>).data == WriteReviewState.WriteDone) {
             navController.popBackStack()
         }
     }
@@ -391,7 +391,7 @@ fun ReviewListPreview() {
                 2L to "연탄불맛돈불고기",
                 3L to "김말이",
             ),
-            uiState = UiState.Success(WriteReviewState.Write),
+            uiState = UiState.Success(WriteReviewState.WriteDone),
             selectedImageUri = null,
             uploadedImageUrl = null,
             onImageSelect = {},

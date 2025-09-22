@@ -1,7 +1,5 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.domain.repository.MealRepository
@@ -35,10 +33,5 @@ class MealRepositoryImpl @Inject constructor(
             }
         }
     }
-
-
-    override suspend fun getMenuInfoByMealId(mealId: Long): Flow<BaseResponse<MenuOfMealResponse>> =
-        flow {
-            emit(mealService.getMenuInfoByMealId(mealId))
-        }
 }
+

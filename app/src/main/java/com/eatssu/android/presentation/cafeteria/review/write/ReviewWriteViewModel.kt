@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -52,23 +51,7 @@ class ReviewWriteViewModel @Inject constructor(
 
     fun findMenuItemByMealId(mealId: Long) {
         viewModelScope.launch {
-            getMenuNameListOfMealUseCase(mealId)
-                .catch { e ->
-                    Timber.e("메뉴 목록 로드 실패: ${e.message}")
-                    _menuList.value = emptyList()
-                }
-                .collect { response ->
-                    response.result?.let { menuOfMealResponse ->
-                        // `map` 함수에서 `Pair` 객체를 명시적으로 반환
-                        val menuList = menuOfMealResponse.briefMenus.map { menuInfo ->
-                            Pair(menuInfo.menuId, menuInfo.name)
-                        }
-                        _menuList.value = menuList
-                        Timber.d("변동 메뉴 목록 로드 성공: $menuList")
-                    } ?: run {
-                        _menuList.value = emptyList()
-                    }
-                }
+            _menuList.value = getMenuNameListOfMealUseCase(mealId)
         }
     }
 
@@ -128,7 +111,7 @@ class ReviewWriteViewModel @Inject constructor(
                 Timber.d("리뷰 작성 시작")
                 when (val result = writeReviewUseCase(menuType, itemId, reviewData)) {
                     is Result.Success -> {
-                        _uiState.value = UiState.Success(WriteReviewState.Write)
+                        _uiState.value = UiState.Success(WriteReviewState.WriteDone)
                         _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
                         // 성공 후 잠시 후 상태 초기화
 //                        kotlinx.coroutines.delay(1000)
@@ -177,5 +160,5 @@ class ReviewWriteViewModel @Inject constructor(
 }
 
 sealed class WriteReviewState {
-    object Write : WriteReviewState()
+    data object WriteDone : WriteReviewState()
 }

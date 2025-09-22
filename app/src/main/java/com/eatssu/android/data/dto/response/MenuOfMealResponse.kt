@@ -1,26 +1,20 @@
 package com.eatssu.android.data.dto.response
 
-import com.eatssu.android.domain.model.MenuMini
 import com.google.gson.annotations.SerializedName
 
 data class MenuOfMealResponse(
-    @SerializedName("briefMenus") var briefMenus: ArrayList<MenusInformation> = arrayListOf(),
+    @SerializedName("menuList") var menuList: ArrayList<MenuList> = arrayListOf()
 )
 
-data class MenusInformation(
+data class MenuList(
 
-    @SerializedName("menuId") var menuId: Long,
-    @SerializedName("name") var name: String,
+    @SerializedName("menuId") var menuId: Long? = null,
+    @SerializedName("name") var name: String? = null
 
-    )
+)
 
-fun MenuOfMealResponse.toMenuMiniList(): List<MenuMini> {
-    return briefMenus.map { it.toMenuMini() }
-}
-
-fun MenusInformation.toMenuMini(): MenuMini {
-    return MenuMini(
-        id = this.menuId,
-        name = this.name
-    )
+fun MenuOfMealResponse.toDomain(): List<Pair<Long, String>> {
+    return menuList.map {
+        (it.menuId ?: -1L) to (it.name ?: "")
+    }
 }

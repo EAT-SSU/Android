@@ -2,10 +2,8 @@ package com.eatssu.android.data.service
 
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealResponse
-import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MealService {
@@ -26,13 +24,5 @@ interface MealService {
         @Query("restaurant") restaurant: String,
         @Query("time") time: String,
     ): BaseResponse<ArrayList<GetMealResponse>>
-
-    /**
-     * 메뉴 정보 리스트 조회
-     */
-    @GET("v2/reviews/meal/valid-for-review/{mealId}")
-    suspend fun getMenuInfoByMealId(
-        @Path("mealId") mealId: Long,
-    ): BaseResponse<MenuOfMealResponse>
 
 }

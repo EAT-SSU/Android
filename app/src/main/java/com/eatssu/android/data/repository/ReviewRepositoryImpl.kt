@@ -95,4 +95,8 @@ class ReviewRepositoryImpl @Inject constructor(
         val multipart = MultipartBody.Part.createFormData("image", file.name, requestFile)
         return reviewService.uploadImage(multipart).result?.url ?: ""
     }
+
+    override suspend fun getMenuInfoByMealId(mealId: Long): List<Pair<Long, String>> {
+        return reviewService.getMenuInfoByMealId(mealId).result?.toDomain() ?: emptyList()
+    }
 }
