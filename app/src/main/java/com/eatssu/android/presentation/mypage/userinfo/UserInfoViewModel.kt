@@ -63,7 +63,7 @@ class UserInfoViewModel @Inject constructor(
     fun checkNickname(inputNickname: String) {
         viewModelScope.launch {
             validateUserNameUseCase(inputNickname).onStart {
-                _uiState.update { it.copy(loading = true) }
+                _uiState.update { it.copy(loading = true, nickname = inputNickname) }
             }.onCompletion {
                 _uiState.update { it.copy(loading = false) }
             }.catch { e ->
@@ -76,7 +76,6 @@ class UserInfoViewModel @Inject constructor(
                             isEnableName = true,
                             toastMessage = "사용가능한 닉네임 입니다.",
                             isNicknameChecked = true,
-                            nickname = inputNickname,
                         )
                     }
                 } else {
@@ -84,7 +83,6 @@ class UserInfoViewModel @Inject constructor(
                         it.copy(
                             isEnableName = false,
                             toastMessage = "이미 사용 중인 닉네임 입니다.",
-                            nickname = inputNickname,
                         )
                     }
                 }

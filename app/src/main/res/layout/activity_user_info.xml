@@ -46,7 +46,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_ch_nickname" />
 
         <Button
-            android:id="@+id/btn_check_nickname"
+            android:id="@+id/btn_check_nickname_duplication"
             style="@style/Button2"
             android:layout_width="wrap_content"
             android:layout_height="52dp"
