@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -143,7 +143,9 @@ internal fun ReviewListScreen(
     ) { innerPadding ->
         Surface(modifier = modifier.padding(innerPadding)) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
@@ -152,92 +154,17 @@ internal fun ReviewListScreen(
                         val info = uiState.data?.reviewInfo
                         val reviewList = uiState.data?.reviewList ?: emptyList()
 
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f)
-                                .padding(horizontal = 24.dp)
-                        ) {
-                            Box(
+                        ReviewInfoContent(info)
+                        Column {
+                            Spacer(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(Gray100)
-                                    .padding(horizontal = 16.dp, vertical = 13.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Row {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_cafeteria_menu_selected),
-                                            modifier = Modifier.size(24.dp),
-                                            tint = Primary,
-                                            contentDescription = "map restaurant icon"
-                                        )
-                                        Spacer(Modifier.width(4.dp))
-                                        Text(
-                                            "오늘의 메뉴",
-                                            style = EatssuTheme.typography.subtitle1
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(12.dp))
-
-                                    Text(
-                                        info?.name.toString(),
-                                        textAlign = TextAlign.Center,
-                                        style = EatssuTheme.typography.body1
-                                    )
-                                }
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .height(12.dp)
-                                    .background(Gray100)
                                     .padding(vertical = 16.dp)
+                                    .fillMaxWidth()   // 가로 전체 차지
+                                    .height(16.dp)
+                                    .background(Gray100) // 배경색 적용
                             )
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 24.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = com.eatssu.design_system.R.drawable.ic_star_24),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(24.dp),
-                                        tint = Star
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        info?.mainRating.toString(),
-                                        modifier = Modifier.align(Alignment.CenterVertically),
-                                        style = EatssuTheme.typography.rate
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.width(37.dp))
-
-                                ReviewProgressBar(
-                                    reviewCount = info?.reviewCnt ?: 0,
-                                    fiveRatingCount = info?.five ?: 0,
-                                    fourRatingCount = info?.four ?: 0,
-                                    threeRatingCount = info?.three ?: 0,
-                                    twoRatingCount = info?.two ?: 0,
-                                    oneRatingCount = info?.one ?: 0,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-
-
-                            Row {
+                            Row(Modifier.padding(horizontal = 24.dp)) {
                                 Text(
                                     "리뷰",
                                     style = EatssuTheme.typography.h2,
@@ -251,58 +178,31 @@ internal fun ReviewListScreen(
                             }
 
                             if (uiState.data?.reviewList?.size == 0) {
-                                Column(
-                                    modifier = Modifier.fillMaxSize(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Icon(
-                                        painterResource(R.drawable.ic_none_review),
-                                        "empty review",
-                                        tint = Gray600,
-                                        modifier = Modifier.size(48.dp)
-                                    )
-                                    Spacer(Modifier.height(16.dp))
-                                    Text(
-                                        "아직 작성된 리뷰가 없어요",
-                                        style = EatssuTheme.typography.subtitle2,
-                                        color = Gray600
-                                    )
-                                    Spacer(Modifier.height(8.dp))
-                                    Text(
-                                        "메뉴에 가장 먼저 리뷰를 남겨주세요!",
-                                        style = EatssuTheme.typography.caption2,
-                                        color = Gray600
-                                    )
-                                }
+                                EmptyReviewContent(modifier = Modifier.fillMaxSize())
                             } else {
-                                LazyColumn(
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    items(reviewList) { item ->
-                                        ReviewItem(
-                                            modifier = Modifier,
-                                            isWriter = item.isWriter,
-                                            writeName = item.writerNickname,
-                                            writeDate = item.writeDate,
-                                            content = item.content,
-                                            rating = item.mainGrade,
-                                            menuList = item.menuList,
-                                            likeMenuList = item.likeMenuList,
-                                            imgUrl = item.imgUrl,
-                                            onMoreClick = {
-                                                selectedReviewId = item.reviewId
-                                                selectedReview = item
-                                                showBottomSheet = true
-                                            }
-                                        )
-                                    }
+                                reviewList.forEach { item ->
+                                    ReviewItem(
+                                        modifier = Modifier.padding(horizontal = 24.dp),
+                                        isWriter = item.isWriter,
+                                        writeName = item.writerNickname,
+                                        writeDate = item.writeDate,
+                                        content = item.content,
+                                        rating = item.mainGrade,
+                                        menuList = item.menuList,
+                                        likeMenuList = item.likeMenuList,
+                                        imgUrl = item.imgUrl,
+                                        onMoreClick = {
+                                            selectedReviewId = item.reviewId
+                                            selectedReview = item
+                                            showBottomSheet = true
+                                        }
+                                    )
                                 }
                             }
                         }
                     }
 
-                    UiState.Loading -> {
+                    is UiState.Init, UiState.Loading -> {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize(),
@@ -316,17 +216,127 @@ internal fun ReviewListScreen(
                         // TODO: 에러 UI
                         Spacer(modifier = Modifier.weight(1f))
                     }
-
-                    UiState.Init -> {
-                        // TODO: 초기 상태 UI
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
                 }
             }
         }
     }
 }
 
+@Composable
+fun ReviewInfoContent(info: ReviewInfo?) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Gray100)
+                .padding(horizontal = 16.dp, vertical = 13.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_cafeteria_menu_selected),
+                        modifier = Modifier.size(24.dp),
+                        tint = Primary,
+                        contentDescription = "map restaurant icon"
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        "오늘의 메뉴",
+                        style = EatssuTheme.typography.subtitle1
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    info?.name.toString(),
+                    textAlign = TextAlign.Center,
+                    style = EatssuTheme.typography.body1
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .height(12.dp)
+                .background(Gray100)
+                .padding(vertical = 16.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(id = com.eatssu.design_system.R.drawable.ic_star_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(24.dp),
+                    tint = Star
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    info?.mainRating.toString(),
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    style = EatssuTheme.typography.rate
+                )
+            }
+
+            Spacer(modifier = Modifier.width(37.dp))
+
+            ReviewProgressBar(
+                reviewCount = info?.reviewCnt ?: 0,
+                fiveRatingCount = info?.five ?: 0,
+                fourRatingCount = info?.four ?: 0,
+                threeRatingCount = info?.three ?: 0,
+                twoRatingCount = info?.two ?: 0,
+                oneRatingCount = info?.one ?: 0,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+    }
+}
+
+@Composable
+fun EmptyReviewContent(modifier: Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painterResource(R.drawable.ic_none_review),
+            "empty review",
+            tint = Gray600,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            "아직 작성된 리뷰가 없어요",
+            style = EatssuTheme.typography.subtitle2,
+            color = Gray600
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            "메뉴에 가장 먼저 리뷰를 남겨주세요!",
+            style = EatssuTheme.typography.caption2,
+            color = Gray600
+        )
+    }
+}
 
 
 @Preview(showBackground = true)
