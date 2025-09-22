@@ -47,13 +47,13 @@ class UserInfoActivity :
         binding.btnComplete.isEnabled = false
 
         lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest { state ->
-                if (binding.etChNickname.text.toString() != state.nickname) {
-                    binding.etChNickname.setText(state.nickname)
-                    binding.etChNickname.setSelection(state.nickname.length) // 커서 끝으로 이동
+            userInfoViewModel.uiState.collectLatest { it ->
+                if (binding.etChNickname.text.toString() != it.nickname) {
+                    binding.etChNickname.setText(it.nickname)
+                    binding.etChNickname.setSelection(it.nickname.length) // 커서 끝으로 이동
                 }
-                binding.tvCollege.text = state.selectedCollege.collegeName
-                binding.tvDepartment.text = state.selectedDepartment.departmentName
+                binding.tvCollege.text = it.selectedCollege.collegeName
+                binding.tvDepartment.text = it.selectedDepartment.departmentName
             }
         }
 
