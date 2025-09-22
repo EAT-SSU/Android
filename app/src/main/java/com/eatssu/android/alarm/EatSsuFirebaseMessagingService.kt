@@ -45,7 +45,7 @@ class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
         notificationManager.createNotificationChannel(channel)
 
         val intent = Intent(this, IntroActivity::class.java).apply {
-            putExtra("launch_path", "notification")
+            putExtra("launch_path", "remote_notification")
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 

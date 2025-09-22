@@ -46,7 +46,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
-            intent.putExtra("launch_path", "notification"),
+            intent.putExtra("launch_path", "local_notification"),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
