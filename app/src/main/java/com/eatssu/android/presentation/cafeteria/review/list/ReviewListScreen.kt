@@ -59,6 +59,7 @@ fun ReviewListScreen(
     modifier: Modifier = Modifier,
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
+    menuName: String,
     id: Long,
     onBack: () -> Unit = {},
     onWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
@@ -82,6 +83,7 @@ fun ReviewListScreen(
     ReviewListScreen(
         uiState = reviewListState,
         modifier = modifier,
+        menuName = menuName,
         onBack = onBack,
         onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
@@ -93,6 +95,7 @@ fun ReviewListScreen(
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
     modifier: Modifier = Modifier,
+    menuName: String,
     onBack: () -> Unit = {},
     onReviewWriteButtonClick: (menuName: String) -> Unit,
     onModifyClick: (Review) -> Unit,
@@ -141,7 +144,9 @@ internal fun ReviewListScreen(
             )
         },
     ) { innerPadding ->
-        Surface(modifier = modifier.padding(innerPadding)) {
+        Surface(modifier = modifier
+            .padding(innerPadding)
+            .fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -150,12 +155,58 @@ internal fun ReviewListScreen(
             ) {
 
                 when (uiState) {
+
+                    is UiState.Init, UiState.Loading -> {
+                        ReviewInfoContent(
+                            ReviewInfo(
+                                name = menuName,
+                                reviewCnt = 0,
+                                five = 0,
+                                four = 0,
+                                three = 0,
+                                two = 0,
+                                one = 0,
+                                mainRating = 0.0,
+                            )
+                        )
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(vertical = 16.dp)
+                                    .fillMaxWidth()   // 가로 전체 차지
+                                    .height(16.dp)
+                                    .background(Gray100) // 배경색 적용
+                            )
+
+                            Row(Modifier.padding(horizontal = 24.dp)) {
+                                Text(
+                                    "리뷰",
+                                    style = EatssuTheme.typography.h2,
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "0",
+                                    color = Primary,
+                                    style = EatssuTheme.typography.h2,
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+
+
                     is UiState.Success -> {
                         val info = uiState.data?.reviewInfo
                         val reviewList = uiState.data?.reviewList ?: emptyList()
 
                         ReviewInfoContent(info)
-                        Column {
+                        Column(modifier = Modifier.fillMaxSize()) {
                             Spacer(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
@@ -178,7 +229,9 @@ internal fun ReviewListScreen(
                             }
 
                             if (uiState.data?.reviewList?.size == 0) {
-                                EmptyReviewContent(modifier = Modifier.fillMaxSize())
+                                EmptyReviewContent(
+                                    modifier = Modifier.fillMaxSize(),
+                                )
                             } else {
                                 reviewList.forEach { item ->
                                     ReviewItem(
@@ -199,16 +252,6 @@ internal fun ReviewListScreen(
                                     )
                                 }
                             }
-                        }
-                    }
-
-                    is UiState.Init, UiState.Loading -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
                         }
                     }
 
@@ -344,6 +387,7 @@ fun EmptyReviewContent(modifier: Modifier) {
 fun ReviewListPreview() {
     EatssuTheme {
         ReviewListScreen(
+            menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
@@ -413,9 +457,24 @@ fun ReviewListPreview() {
 
 @Preview(showBackground = true)
 @Composable
+fun ReviewListLoadingPreview() {
+    EatssuTheme {
+        ReviewListScreen(
+            menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
+            onReviewWriteButtonClick = {},
+            onModifyClick = {},
+            onDeleteClick = {},
+            uiState = UiState.Loading
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 fun ReviewListEmptyPreview() {
     EatssuTheme {
         ReviewListScreen(
+            menuName = "소고기+닭고기+돼지고기+양고기+오리고기+닭고기+돼지고기+양고기",
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
