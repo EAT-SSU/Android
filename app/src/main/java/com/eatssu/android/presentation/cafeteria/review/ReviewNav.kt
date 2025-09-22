@@ -32,6 +32,7 @@ fun ReviewNav(
         // 리뷰 리스트
         composable(ReviewNav.List) {
             ReviewListScreen(
+                menuName = menuName,
                 menuType = menuType,
                 id = id,
                 onBack = { onExit() },
