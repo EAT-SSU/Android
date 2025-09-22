@@ -8,6 +8,7 @@ import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.ImageResponse
 import com.eatssu.android.data.dto.response.MealReviewInfoResponse
 import com.eatssu.android.data.dto.response.MealReviewListResponse
+import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.dto.response.MenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.MenuReviewListResponse
 import okhttp3.MultipartBody
@@ -69,5 +70,13 @@ interface ReviewService {
     suspend fun uploadImage(
         @Part image: MultipartBody.Part,
     ): BaseResponse<ImageResponse>
+
+    /**
+     * 메뉴 정보 리스트 조회
+     */
+    @GET("v2/reviews/meal/valid-for-review/{mealId}")
+    suspend fun getMenuInfoByMealId(
+        @Path("mealId") mealId: Long,
+    ): BaseResponse<MenuOfMealResponse>
 
 }

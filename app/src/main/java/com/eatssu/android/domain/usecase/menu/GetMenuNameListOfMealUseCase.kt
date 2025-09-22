@@ -1,14 +1,12 @@
 package com.eatssu.android.domain.usecase.menu
 
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MenuOfMealResponse
-import com.eatssu.android.domain.repository.MealRepository
-import kotlinx.coroutines.flow.Flow
+import com.eatssu.android.domain.repository.ReviewRepository
 import javax.inject.Inject
 
 class GetMenuNameListOfMealUseCase @Inject constructor(
-    private val mealRepository: MealRepository,
+    private val reviewRepository: ReviewRepository
 ) {
-    suspend operator fun invoke(menuId: Long): Flow<BaseResponse<MenuOfMealResponse>> =
-        mealRepository.getMenuInfoByMealId(menuId)
+    suspend operator fun invoke(menuId: Long): List<Pair<Long, String>> {
+        return reviewRepository.getMenuInfoByMealId(menuId)
+    }
 }
