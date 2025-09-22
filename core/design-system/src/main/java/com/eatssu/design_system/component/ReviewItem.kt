@@ -117,9 +117,7 @@ fun ReviewItem(
             Column(horizontalAlignment = Alignment.End) {
                 IconButton(
                     onClick = {
-                        if (isWriter) onMoreClick()
-                        else { //todo 신고하기
-                        }
+                        onMoreClick()
                     },
                 ) {
                     Icon(
