@@ -88,9 +88,9 @@ fun ReviewItem(
     imgUrl: String? = null,
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
 ) {
-    Column(modifier = Modifier.padding(vertical = 24.dp)) {
+    Column(modifier = modifier.padding(vertical = 24.dp)) {
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
