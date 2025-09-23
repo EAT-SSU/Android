@@ -59,7 +59,7 @@ class IntroViewModel @Inject constructor(
                 .collect {
                     if (it.result == true) { //토큰이 있고 유효함
                         _uiState.value = UiState.Success(IntroState.ValidToken)
-                    } else { //토큰이 있어도 유효하지 않음
+                    } else if (it.code != 500) { // 토큰이 있어도 유효하지 않음
                         _uiState.value = UiState.Error
                         _uiEvent.emit(UiEvent.ShowToast("로그인이 필요합니다"))
                     }
