@@ -1,8 +1,10 @@
 package com.eatssu.android.di
 
 
+import android.content.Context
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
+import com.eatssu.android.di.network.NetworkErrorInterceptor
 import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
@@ -13,6 +15,7 @@ import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -55,12 +58,14 @@ object NetworkModule {
     @Provides
     fun provideAuthOkHttpClient(
         tokenInterceptor: TokenInterceptor,
-        tokenAuthenticator: TokenAuthenticator
+        tokenAuthenticator: TokenAuthenticator,
+        networkErrorInterceptor: NetworkErrorInterceptor
     ) = if (BuildConfig.DEBUG) {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         OkHttpClient.Builder()
+            .addInterceptor(networkErrorInterceptor)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(tokenInterceptor)
             .authenticator(tokenAuthenticator)
@@ -68,6 +73,7 @@ object NetworkModule {
     } else {
         // 프로덕션 환경에서는 로깅 인터셉터를 추가하지 않음
         OkHttpClient.Builder()
+            .addInterceptor(networkErrorInterceptor)
             .addInterceptor(tokenInterceptor)
             .authenticator(tokenAuthenticator)
             .build()
@@ -77,8 +83,11 @@ object NetworkModule {
     @Singleton
     @Provides
     @NoToken
-    fun provideNoAuthOkHttpClient(): OkHttpClient {
+    fun provideNoAuthOkHttpClient(
+        networkErrorInterceptor: NetworkErrorInterceptor
+    ): OkHttpClient {
         val builder = OkHttpClient.Builder()
+            .addInterceptor(networkErrorInterceptor)
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
@@ -106,6 +115,14 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkErrorInterceptor(
+        @ApplicationContext context: Context
+    ): NetworkErrorInterceptor {
+        return NetworkErrorInterceptor(context)
     }
 
     @Provides
