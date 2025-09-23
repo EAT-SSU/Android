@@ -130,6 +130,9 @@
             android:name=".presentation.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
+                android:name=".presentation.error.ErrorActivity"
+                android:exported="false" />
+        <activity
             android:name=".presentation.login.IntroActivity"
             android:exported="true">
             <!-- 기본 런처 필터 -->
