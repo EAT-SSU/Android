@@ -25,7 +25,7 @@ data class MyReviewResponse(
 fun MyReviewResponse.toReviewList(): List<Review> {
     return dataList.map { data ->
         Review(
-            reviewId = data.reviewId ?: 1,
+            reviewId = data.reviewId ?: -1L,
             isWriter = true,
             menu = data.menuName ?: "",
             writerNickname = "",
