@@ -29,6 +29,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -116,7 +117,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
 
         binding.llOss.setOnClickListener {
-            startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+            moveToOss()
         }
 
         binding.llAppVersion.setOnClickListener {
@@ -162,6 +163,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
             }
             .setNegativeButton("취소", null)
             .show()
+    }
+
+    private fun moveToOss() {
+        try {
+            OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스")
+            startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showSnackbar("오픈소스 라이브러리를 불러올 수 없습니다.")
+            Timber.e("Error opening OSS Licenses: ${e.message}")
+        }
     }
 
     private fun moveToPlayStore() {
