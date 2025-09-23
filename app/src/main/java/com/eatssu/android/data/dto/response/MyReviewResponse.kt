@@ -25,16 +25,16 @@ data class MyReviewResponse(
 fun MyReviewResponse.toReviewList(): List<Review> {
     return dataList.map { data ->
         Review(
-            reviewId = data.reviewId,
-            isWriter = true,
-            menu = data.menuName,
+            reviewId = data.reviewId ?: 1,
+            isWriter = true ?: false,
+            menu = data.menuName ?: "",
             writerNickname = "",
-            mainGrade = data.mainRating,
-            amountGrade = data.amountRating,
-            tasteGrade = data.tasteRating,
-            writeDate = data.writeDate,
-            content = data.content,
-            imgUrl = data.imgUrlList
+            mainGrade = data.mainRating ?: 0,
+            amountGrade = data.amountRating ?: 0,
+            tasteGrade = data.tasteRating ?: 0,
+            writeDate = data.writeDate ?: "",
+            content = data.content ?: "",
+            imgUrl = data.imgUrlList ?: arrayListOf(),
         )
     }
 }
