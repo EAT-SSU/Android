@@ -169,7 +169,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         try {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
         } catch (e: Exception) {
-            e.printStackTrace()
             showSnackbar("오픈소스 라이브러리를 불러올 수 없습니다.")
             Timber.e("Error opening OSS Licenses: ${e.message}")
         }
