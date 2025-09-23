@@ -167,7 +167,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     private fun moveToOss() {
         try {
-            OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스")
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
         } catch (e: Exception) {
             e.printStackTrace()
