@@ -3,17 +3,15 @@ package com.eatssu.android.presentation.error
 import android.app.AlertDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.eatssu.android.databinding.ActivityIntroBinding
+import com.eatssu.android.databinding.ActivityErrorBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ErrorActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityIntroBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityIntroBinding.inflate(layoutInflater)
+        val binding = ActivityErrorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         showDialog()
