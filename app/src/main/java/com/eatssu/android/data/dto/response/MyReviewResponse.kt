@@ -26,7 +26,7 @@ fun MyReviewResponse.toReviewList(): List<Review> {
     return dataList.map { data ->
         Review(
             reviewId = data.reviewId ?: 1,
-            isWriter = true ?: false,
+            isWriter = true,
             menu = data.menuName ?: "",
             writerNickname = "",
             mainGrade = data.mainRating ?: 0,
