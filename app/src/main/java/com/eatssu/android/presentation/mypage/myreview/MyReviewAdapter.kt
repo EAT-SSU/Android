@@ -3,7 +3,6 @@ package com.eatssu.android.presentation.mypage.myreview
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
@@ -37,14 +36,17 @@ class MyReviewAdapter :
             binding.tvMenuName.text = data.menu
             binding.rbRate.rating = data.mainGrade.toFloat()
 
-            val imageView: ImageView = binding.ivReviewPhoto
-            if (data.imgUrl?.isEmpty() == true || data.imgUrl?.get(0).isNullOrEmpty()) {
-                imageView.visibility = View.GONE
-            } else {
+            val firstImageUrl = data.imgUrl?.firstOrNull()
+
+            if (!firstImageUrl.isNullOrEmpty()) {
                 Glide.with(itemView)
-                    .load(data.imgUrl?.get(0))
-                    .into(imageView)
-                imageView.visibility = View.VISIBLE
+                    .load(firstImageUrl)
+                    .into(binding.ivReviewPhoto)
+                binding.ivReviewPhoto.visibility = View.VISIBLE
+                binding.cvPhotoReview.visibility = View.VISIBLE
+            } else {
+                binding.ivReviewPhoto.visibility = View.GONE
+                binding.cvPhotoReview.visibility = View.GONE
             }
 
             binding.btnDetail.setOnClickListener { v: View ->

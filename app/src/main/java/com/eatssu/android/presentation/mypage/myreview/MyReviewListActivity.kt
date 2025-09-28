@@ -26,7 +26,7 @@ class MyReviewListActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = "내가 쓴 리뷰" // 툴바 제목 설정
+        toolbarTitle.text = "내 리뷰" // 툴바 제목 설정
 
         loadReview()
     }
