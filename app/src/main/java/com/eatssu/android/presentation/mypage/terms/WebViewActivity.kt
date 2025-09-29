@@ -66,6 +66,7 @@ class WebViewActivity :
         val screenId = ScreenId.entries.find { it.name == screenIdString } ?: return
 
         EventLogger.screenView(screenId)
+        Timber.d("WebViewActivity screen view logging: $screenId")
     }
 
     override fun shouldLogScreenId() = false
