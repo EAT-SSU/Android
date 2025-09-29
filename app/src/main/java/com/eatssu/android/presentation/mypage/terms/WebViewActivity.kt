@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.webkit.WebViewClient
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import timber.log.Timber
 
 
 class WebViewActivity :
-    BaseActivity<ActivityWebviewBinding>(ActivityWebviewBinding::inflate, ScreenId.EXTERNAL_LINK) {
+    BaseActivity<ActivityWebviewBinding>(
+        ActivityWebviewBinding::inflate,
+        ScreenId.EXTERNAL_INQUIRE // shouldLogScreenId가 false라 미사용
+    ) {
 
 
     private var URL = ""
@@ -54,4 +58,15 @@ class WebViewActivity :
         super.onSaveInstanceState(outState)
         binding.webview.saveState(outState)
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val screenIdString = intent.getStringExtra("SCREEN_ID") ?: return
+        val screenId = ScreenId.entries.find { it.name == screenIdString } ?: return
+
+        EventLogger.screenView(screenId)
+    }
+
+    override fun shouldLogScreenId() = false
 }

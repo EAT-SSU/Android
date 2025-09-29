@@ -34,6 +34,7 @@ class DeveloperActivity :
             val intent = Intent(this, WebViewActivity::class.java).apply {
                 putExtra("TITLE", "Who’s next?")
                 putExtra("URL", getString(R.string.recruiting_url))
+                putExtra("SCREEN_ID", ScreenId.EXTERNAL_RECRUIT.name)
             }
             startActivity(intent)
         }

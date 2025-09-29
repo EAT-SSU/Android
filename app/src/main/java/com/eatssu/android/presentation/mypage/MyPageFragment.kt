@@ -94,7 +94,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llInquire.setOnClickListener {
-            startWebView(getString(R.string.kakao_talk_channel_url), getString(R.string.contact))
+            startWebView(
+                getString(R.string.kakao_talk_channel_url),
+                getString(R.string.contact),
+                ScreenId.EXTERNAL_INQUIRE
+            )
         }
 
         binding.llMyReview.setOnClickListener {
@@ -125,11 +129,19 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llServiceRule.setOnClickListener {
-            startWebView(getString(R.string.terms_url), getString(R.string.terms))
+            startWebView(
+                getString(R.string.terms_url),
+                getString(R.string.terms),
+                ScreenId.EXTERNAL_TERMS
+            )
         }
 
         binding.llPrivateInformation.setOnClickListener {
-            startWebView(getString(R.string.policy_url), getString(R.string.policy))
+            startWebView(
+                getString(R.string.policy_url),
+                getString(R.string.policy),
+                ScreenId.EXTERNAL_POLICY
+            )
         }
     }
 
@@ -188,10 +200,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun startWebView(url: String, title: String) {
+    private fun startWebView(url: String, title: String, screenId: ScreenId) {
         val intent = Intent(requireContext(), WebViewActivity::class.java).apply {
             putExtra("URL", url)
             putExtra("TITLE", title)
+            putExtra("SCREEN_ID", screenId.name)
         }
         startActivity(intent)
     }
