@@ -65,7 +65,8 @@ class IntroActivity : AppCompatActivity() {
         val launchPath = intent.getStringExtra("launch_path")
         when (launchPath) {
             "widget" -> EventLogger.appLaunch(LaunchPath.WIDGET)
-            "notification" -> EventLogger.appLaunch(LaunchPath.LOCAL_NOTIFICATION)
+            "local_notification" -> EventLogger.appLaunch(LaunchPath.LOCAL_NOTIFICATION)
+            "remote_notification" -> EventLogger.appLaunch(LaunchPath.REMOTE_NOTIFICATION)
             // launch_path가 없으면 일반적인 앱 아이콘 클릭으로 간주
             else -> EventLogger.appLaunch(LaunchPath.ICON)
         }

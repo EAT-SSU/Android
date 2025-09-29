@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -279,6 +281,7 @@ fun MapFragmentComposeView(
                 cameraPositionState = cameraPositionState,
                 uiSettings = MapUiSettings(isZoomControlEnabled = false, isLocationButtonEnabled = true),
                 locationSource = locationSource,
+                contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
                     locationTrackingMode = LocationTrackingMode.Follow,
                 ),

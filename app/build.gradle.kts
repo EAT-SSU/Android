@@ -23,8 +23,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 28
         targetSdk = 35
-        versionCode = 37
-        versionName = "3.0.0"
+        versionCode = 38
+        versionName = "3.1.0"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -180,6 +180,7 @@ dependencies {
     implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
 
     // Timber for logging
     implementation(libs.timber)

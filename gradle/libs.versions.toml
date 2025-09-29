@@ -53,8 +53,8 @@ google-services = "4.4.2"
 timber = "5.0.1"
 kotlin-android = "1.9.25"
 ksp = "1.9.0-1.0.13"
-ossLicenses = "17.1.0"
-ossLicensesPlugin = "0.10.4"
+ossLicenses = "17.3.0"
+ossLicensesPlugin = "0.10.6"
 glanceAppwidget = "1.1.1"
 glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
@@ -125,6 +125,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
 
 # etc
