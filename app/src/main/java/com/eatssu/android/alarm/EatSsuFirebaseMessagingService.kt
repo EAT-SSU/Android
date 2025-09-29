@@ -5,9 +5,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.eatssu.android.R
-import com.eatssu.android.presentation.login.IntroActivity
+import com.eatssu.android.presentation.intro.IntroActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
