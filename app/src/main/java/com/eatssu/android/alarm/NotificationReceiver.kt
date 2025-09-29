@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
-import com.eatssu.android.presentation.login.IntroActivity
+import com.eatssu.android.presentation.intro.IntroActivity
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 

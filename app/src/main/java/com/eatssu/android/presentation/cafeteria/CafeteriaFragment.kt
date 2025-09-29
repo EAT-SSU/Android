@@ -17,6 +17,7 @@ import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
 import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.Time
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -24,7 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
 @AndroidEntryPoint
-class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(), OnItemListener {
+class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
+    ScreenId.HOME_MAIN
+), OnItemListener {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
 

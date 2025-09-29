@@ -54,7 +54,9 @@ import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
 import com.naver.maps.geometry.LatLng
@@ -189,6 +191,11 @@ fun MapFragmentComposeView(
             }
         }
     }
+
+
+    // Screen View 기록
+    TrackScreenViewEvent(ScreenId.MAP_MAIN)
+
 
     val lifecycleOwner = LocalLifecycleOwner.current
 

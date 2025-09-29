@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
+import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
 import com.eatssu.android.domain.usecase.user.ValidateUserNameUseCase
-import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

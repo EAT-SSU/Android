@@ -2,17 +2,21 @@ package com.eatssu.android.presentation.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.toColorInt
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityDeveloperBinding
 import com.eatssu.android.presentation.base.BaseActivity
-import dagger.hilt.android.AndroidEntryPoint
-import androidx.core.graphics.toColorInt
-import androidx.core.graphics.drawable.toDrawable
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
+import com.eatssu.common.enums.ScreenId
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DeveloperActivity :
-    BaseActivity<ActivityDeveloperBinding>(ActivityDeveloperBinding::inflate) {
+    BaseActivity<ActivityDeveloperBinding>(
+        ActivityDeveloperBinding::inflate,
+        ScreenId.MYPAGE_DEVELOPER
+    ) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,6 +34,7 @@ class DeveloperActivity :
             val intent = Intent(this, WebViewActivity::class.java).apply {
                 putExtra("TITLE", "Who’s next?")
                 putExtra("URL", getString(R.string.recruiting_url))
+                putExtra("SCREEN_ID", ScreenId.EXTERNAL_RECRUIT.name)
             }
             startActivity(intent)
         }

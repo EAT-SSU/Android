@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Primary
@@ -37,6 +39,8 @@ fun DepartmentBottomSheet(
     onInputClick: () -> Unit = {},
     sheetState: SheetState
 ) {
+    TrackScreenViewEvent(ScreenId.MAP_NO_DEPARTMENT)
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         containerColor = White,

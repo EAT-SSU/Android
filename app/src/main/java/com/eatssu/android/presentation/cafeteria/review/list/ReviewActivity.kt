@@ -17,6 +17,7 @@ import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
 import com.eatssu.android.presentation.common.OthersBottomSheetFragment
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ReviewActivity :
-    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate),
+    BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate, ScreenId.REVIEW_V1_VIEW),
     MyReviewBottomSheetFragment.OnReviewDeletedListener {
 
     private val reviewViewModel: ReviewViewModel by viewModels()

@@ -21,6 +21,7 @@ import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -29,7 +30,10 @@ import java.io.File
 
 @AndroidEntryPoint
 class ReviewWriteRateActivity :
-    BaseActivity<ActivityReviewWriteRateBinding>(ActivityReviewWriteRateBinding::inflate) {
+    BaseActivity<ActivityReviewWriteRateBinding>(
+        ActivityReviewWriteRateBinding::inflate,
+        ScreenId.REVIEW_V1_WRITE_RATE
+    ) {
 
     private val viewModel: UploadReviewViewModel by viewModels()
 

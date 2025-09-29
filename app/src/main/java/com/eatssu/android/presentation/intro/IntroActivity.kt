@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation.login
+package com.eatssu.android.presentation.intro
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -9,10 +9,12 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.LaunchPath
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -68,5 +70,10 @@ class IntroActivity : AppCompatActivity() {
             // launch_path가 없으면 일반적인 앱 아이콘 클릭으로 간주
             else -> EventLogger.appLaunch(LaunchPath.ICON)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventLogger.screenView(ScreenId.LOGIN_SPLASH)
     }
 }

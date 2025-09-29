@@ -25,6 +25,7 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +35,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
-class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
+class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN) {
 
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels<MainViewModel>()
@@ -94,7 +95,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
 
         binding.llInquire.setOnClickListener {
-            startWebView(getString(R.string.kakao_talk_channel_url), getString(R.string.contact))
+            startWebView(
+                getString(R.string.kakao_talk_channel_url),
+                getString(R.string.contact),
+                ScreenId.EXTERNAL_INQUIRE
+            )
         }
 
         binding.llMyReview.setOnClickListener {
@@ -125,11 +130,19 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
 
         binding.llServiceRule.setOnClickListener {
-            startWebView(getString(R.string.terms_url), getString(R.string.terms))
+            startWebView(
+                getString(R.string.terms_url),
+                getString(R.string.terms),
+                ScreenId.EXTERNAL_TERMS
+            )
         }
 
         binding.llPrivateInformation.setOnClickListener {
-            startWebView(getString(R.string.policy_url), getString(R.string.policy))
+            startWebView(
+                getString(R.string.policy_url),
+                getString(R.string.policy),
+                ScreenId.EXTERNAL_POLICY
+            )
         }
     }
 
@@ -197,10 +210,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun startWebView(url: String, title: String) {
+    private fun startWebView(url: String, title: String, screenId: ScreenId) {
         val intent = Intent(requireContext(), WebViewActivity::class.java).apply {
             putExtra("URL", url)
             putExtra("TITLE", title)
+            putExtra("SCREEN_ID", screenId.name)
         }
         startActivity(intent)
     }

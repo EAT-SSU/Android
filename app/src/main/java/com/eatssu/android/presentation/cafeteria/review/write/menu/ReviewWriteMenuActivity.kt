@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.ActivityReviewWriteMenuBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,7 +16,10 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class ReviewWriteMenuActivity :
-    BaseActivity<ActivityReviewWriteMenuBinding>(ActivityReviewWriteMenuBinding::inflate) {
+    BaseActivity<ActivityReviewWriteMenuBinding>(
+        ActivityReviewWriteMenuBinding::inflate,
+        ScreenId.REVIEW_V1_WRITE
+    ) {
 
     private val viewModel: VariableMenuViewModel by viewModels()
     private var mealId: Long = -1

@@ -17,13 +17,17 @@ import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UserInfoActivity :
-    BaseActivity<ActivityUserInfoBinding>(ActivityUserInfoBinding::inflate) {
+    BaseActivity<ActivityUserInfoBinding>(
+        ActivityUserInfoBinding::inflate,
+        ScreenId.MYPAGE_USERINFO
+    ) {
 
     private val userInfoViewModel: UserInfoViewModel by viewModels()
 

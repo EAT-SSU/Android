@@ -28,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.map.model.FavoritePartnership
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray400
@@ -49,6 +51,8 @@ fun FavoritePartnershipBottomSheet(
     LaunchedEffect(Unit) {
         sheetState.show()
     }
+
+    TrackScreenViewEvent(ScreenId.MAP_FAVORITE)
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,

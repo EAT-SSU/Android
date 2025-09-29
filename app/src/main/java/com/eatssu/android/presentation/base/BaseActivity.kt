@@ -1,7 +1,6 @@
 package com.eatssu.android.presentation.base
 
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,13 +26,16 @@ import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
 abstract class BaseActivity<B : ViewBinding>(
-    val bindingFactory: (LayoutInflater, ViewGroup?, Boolean) -> B
+    val bindingFactory: (LayoutInflater, ViewGroup?, Boolean) -> B,
+    val screenId: ScreenId
 ) : AppCompatActivity() {
 
     private var _binding: B? = null
@@ -167,5 +169,18 @@ abstract class BaseActivity<B : ViewBinding>(
         intent.putExtra("message",message)
         Timber.d("BaseActivity", "공지사항: $message")
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (shouldLogScreenId()) {
+            EventLogger.screenView(screenId)
+            Timber.d("screen view logging: $screenId")
+        }
+    }
+
+    open fun shouldLogScreenId(): Boolean {
+        return true
     }
 }
