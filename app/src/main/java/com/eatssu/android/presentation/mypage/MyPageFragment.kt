@@ -27,9 +27,9 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -62,7 +62,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // 1) 화면 상태 구독
                 launch {
                     myPageViewModel.uiState.collectLatest { ui ->
                         when (ui) {
@@ -72,16 +71,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                             }
 
                             is UiState.Error -> {
-                                showSnackbar(getString(R.string.not_found))
+                                showToast(getString(R.string.not_found))
                             }
                         }
                     }
                 }
-                // 2) 이벤트 구독 (토스트/스낵바 등)
                 launch {
                     myPageViewModel.uiEvent.collectLatest { event ->
                         when (event) {
-                            is UiEvent.ShowToast -> showSnackbar(event.message)
+                            is UiEvent.ShowToast -> showToast(event.message)
                             else -> Unit
                         }
                     }
@@ -117,7 +115,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
-                showSnackbar("EAT-SSU 알림 수신을 동의하였습니다.\n$formattedDate")
+                showToast("EAT-SSU 알림 수신을 동의하였습니다.\n$formattedDate")
             } else {
                 showNotificationPermissionDialog()
                 // 권한 미허용이면 스위치 원복
@@ -129,7 +127,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             }
         } else {
             myPageViewModel.setNotificationOff()
-            showSnackbar("EAT-SSU 알림 수신을 거부하였습니다.\n$formattedDate")
+            showToast("EAT-SSU 알림 수신을 거부하였습니다.\n$formattedDate")
         }
     }
 
@@ -224,7 +222,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         try {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
         } catch (e: Exception) {
-            showSnackbar("오픈소스 라이브러리를 불러올 수 없습니다.")
+            showToast("오픈소스 라이브러리를 불러올 수 없습니다.")
             Timber.e("Error opening OSS Licenses: ${e.message}")
         }
     }
@@ -245,10 +243,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
         }
         context.startActivity(intent)
-    }
-
-    private fun showSnackbar(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun startWebView(url: String, title: String, screenId: ScreenId) {
