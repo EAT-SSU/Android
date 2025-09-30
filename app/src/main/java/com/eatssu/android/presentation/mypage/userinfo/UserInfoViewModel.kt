@@ -93,17 +93,28 @@ class UserInfoViewModel @Inject constructor(
     fun changeUserNickname() {
         val nickname = _uiState.value.nickname
 
+        _uiState.update { it.copy(loading = true) }
         viewModelScope.launch {
-            setUserNicknameUseCase(nickname)
-                .onStart { _uiState.update { it.copy(loading = true, error = false) } }
-                .onCompletion { _uiState.update { it.copy(loading = false, error = false) } }
-                .catch {
-                    _uiState.update { it.copy(error = true, toastMessage = "정보 저장에 실패했습니다.") }
-                    Timber.e(it)
+            try {
+                setUserNicknameUseCase(nickname)
+            } catch (e: Exception) {
+                Timber.e(e, "닉네임 변경 실패")
+                _uiState.update {
+                    it.copy(
+                        loading = false,
+                        error = true,
+                        toastMessage = "닉네임 변경에 실패했습니다."
+                    )
                 }
-                .collectLatest {
-                    _uiState.update { it.copy(isDone = true, toastMessage = "정보가 성공적으로 저장되었습니다.") }
-                }
+                return@launch
+            }
+        }
+        _uiState.update {
+            it.copy(
+                loading = false,
+                isDone = true,
+                toastMessage = "닉네임 변경에 성공했습니다."
+            )
         }
     }
 

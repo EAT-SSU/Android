@@ -3,7 +3,6 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MyNickNameResponse
 import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.UserService
@@ -17,10 +16,10 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(private val userService: UserService) :
     UserRepository {
 
-    override suspend fun updateUserName(body: ChangeNicknameRequest): Flow<BaseResponse<Void>> =
-        flow {
-            emit(userService.changeNickname(body))
-        }
+    override suspend fun updateUserName(body: ChangeNicknameRequest) {
+        userService.changeNickname(body)
+    }
+
 
 
     override suspend fun checkUserNameValidation(nickname: String): Flow<BaseResponse<Boolean>> =
@@ -33,10 +32,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
             emit(userService.getMyReviews())
         }
 
-    override suspend fun getUserNickName(): Flow<BaseResponse<MyNickNameResponse>> =
-        flow {
-            emit(userService.getMyInfo())
-        }
+    override suspend fun getUserNickName() = userService.getMyInfo().result?.nickname ?: ""
 
     override suspend fun signOut(): Boolean {
         return userService.signOut().result ?: false

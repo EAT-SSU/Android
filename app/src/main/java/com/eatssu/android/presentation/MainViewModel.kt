@@ -13,15 +13,14 @@ import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -56,35 +55,39 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun fetchAndCheckNickname() {
+    private fun fetchAndCheckNickname() {
         viewModelScope.launch {
-            getUserNickNameUseCase().onStart {
-                _uiState.value = UiState.Loading
-            }.catch { e ->
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.not_found)))
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
-                result.result?.let { userInfo ->
-                    val nickname = userInfo.nickname
+            _uiState.value = UiState.Loading
+            runCatching {
+                withContext(Dispatchers.IO) { getUserNickNameUseCase() }
+            }.onSuccess { nickname ->
+                // 1) 닉네임 없음/기본 프리셋
+                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
+                    _uiState.value = UiState.Success(MainState.NicknameNull)
+                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
+                    return@launch // ← 아래 분기 실행 막기
+                }
 
-                    if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
-                        _uiState.value = UiState.Success(MainState.NicknameNull)
-                        _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
-                        return@let
-                    }
-
-                    _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            String.format(
-                                context.getString(R.string.hello_user),
-                                nickname
-                            )
+                // 2) 정상 닉네임
+                _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        String.format(
+                            context.getString(R.string.hello_user),
+                            nickname
                         )
                     )
-                }
+                )
+            }.onFailure { e ->
+                _uiState.value = UiState.Error
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        String.format(
+                            context.getString(R.string.not_found)
+                        )
+                    )
+                )
+                Timber.e(e)
             }
         }
     }
