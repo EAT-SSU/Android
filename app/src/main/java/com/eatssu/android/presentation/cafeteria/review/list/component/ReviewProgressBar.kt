@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray200
-import timber.log.Timber
 
 @Composable
 fun ReviewProgressBar(
@@ -38,13 +37,10 @@ fun ReviewProgressBar(
         2 to twoRatingCount,
         1 to oneRatingCount
     )
-    Timber.d(ratingList.toString() + "rating")
-
     Column(modifier = modifier) {
 
         ratingList.forEach { (rating, count) ->
             val percent = if (reviewCount > 0) (count.toFloat() / reviewCount.toFloat()) else 0f
-            Timber.d("ReviewProgressBar - rating: $rating, count: $count, reviewCount: $reviewCount, percent: $percent")
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -70,7 +66,7 @@ fun ReviewProgressBar(
                     progress = { percent.coerceIn(0f, 1f) },
                     modifier = Modifier
                         .weight(1f)
-                        .height(10.dp),
+                        .height(5.dp),
                     color = MaterialTheme.colorScheme.primary,
                     trackColor = Gray200,
                 )
