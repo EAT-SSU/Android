@@ -62,7 +62,7 @@ fun ReviewListScreen(
     menuName: String,
     id: Long,
     onBack: () -> Unit = {},
-    onWriteButtonClick: (menuName: String) -> Unit, // menuName을 인자로 받도록 수정
+    onWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
 ) {
     val context = LocalContext.current
@@ -97,7 +97,7 @@ internal fun ReviewListScreen(
     modifier: Modifier = Modifier,
     menuName: String,
     onBack: () -> Unit = {},
-    onReviewWriteButtonClick: (menuName: String) -> Unit,
+    onReviewWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
@@ -154,19 +154,18 @@ internal fun ReviewListScreen(
             EatSsuButton(
                 text = "리뷰 작성하기",
                 onClick = {
-                    // info.name을 전달 (메뉴명이 +로 합쳐진 값)
-                    val menuName = (uiState as? UiState.Success)?.data?.reviewInfo?.name ?: ""
-                    Timber.d("ReviewListScreen - info.name: '${(uiState as? UiState.Success)?.data?.reviewInfo?.name}', menuName: '$menuName'")
-                    onReviewWriteButtonClick(menuName)
+                    onReviewWriteButtonClick()
                 },
                 modifier = Modifier
                     .padding(24.dp)
             )
         },
     ) { innerPadding ->
-        Surface(modifier = modifier
-            .padding(innerPadding)
-            .fillMaxSize()) {
+        Surface(
+            modifier = modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -178,8 +177,7 @@ internal fun ReviewListScreen(
 
                     is UiState.Init, UiState.Loading -> {
                         ReviewInfoContent(
-                            ReviewInfo(
-                                name = menuName,
+                            menuName, ReviewInfo(
                                 reviewCnt = 0,
                                 five = 0,
                                 four = 0,
@@ -225,7 +223,7 @@ internal fun ReviewListScreen(
                         val info = uiState.data?.reviewInfo
                         val reviewList = uiState.data?.reviewList ?: emptyList()
 
-                        ReviewInfoContent(info)
+                        ReviewInfoContent(menuName, info)
 
                         Column(modifier = Modifier.fillMaxSize()) {
                             Spacer(
@@ -294,7 +292,10 @@ internal fun ReviewListScreen(
 }
 
 @Composable
-fun ReviewInfoContent(info: ReviewInfo?) {
+fun ReviewInfoContent(
+    menuName: String,
+    info: ReviewInfo?
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -327,7 +328,7 @@ fun ReviewInfoContent(info: ReviewInfo?) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    info?.name.toString(),
+                    menuName,
                     textAlign = TextAlign.Center,
                     style = EatssuTheme.typography.body1
                 )
@@ -359,7 +360,7 @@ fun ReviewInfoContent(info: ReviewInfo?) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    info?.mainRating.toString(),
+                    if (info?.reviewCnt == 0) "-" else info?.mainRating.toString(),
                     modifier = Modifier.align(Alignment.CenterVertically),
                     style = EatssuTheme.typography.rate
                 )
@@ -422,7 +423,6 @@ fun ReviewListPreview() {
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
-                        name = "소고기+닭고기+돼지고기+양고기+오리고기",
                         reviewCnt = 123,
                         five = 80,
                         four = 20,
@@ -545,7 +545,6 @@ fun ReviewListEmptyPreview() {
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
-                        name = "소고기+닭고기+돼지고기+양고기+오리고기+닭고기+돼지고기+양고기",
                         reviewCnt = 0,
                         five = 0,
                         four = 0,

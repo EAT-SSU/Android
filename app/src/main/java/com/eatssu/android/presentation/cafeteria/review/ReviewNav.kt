@@ -50,13 +50,7 @@ fun ReviewNav(
 
                     navHostController.navigate(ReviewNav.Modify) { launchSingleTop = true }
                 },
-                onWriteButtonClick = { menuName ->
-                    // SavedStateHandle을 사용하여 menuName 전달
-                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                        "menuName",
-                        menuName
-                    )
-
+                onWriteButtonClick = {
                     navHostController.navigate(ReviewNav.Write) {
                         launchSingleTop = true
                     }

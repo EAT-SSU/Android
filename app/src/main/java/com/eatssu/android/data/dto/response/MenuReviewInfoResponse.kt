@@ -20,7 +20,6 @@ data class MenuReviewInfoResponse(
 }
 
 fun MenuReviewInfoResponse.toDomain() = ReviewInfo(
-    name = menuName ?: "",
     reviewCnt = totalReviewCount ?: 0,
     mainRating = mainRating ?: 0.0,
     one = reviewRatingCount?.oneStarCount ?: 0,
