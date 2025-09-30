@@ -1,41 +1,31 @@
-package com.eatssu.android.presentation.cafeteria.review
+package com.eatssu.android.presentation.mypage.myreview
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteScreen
 
-object ReviewNav {
+object MyReviewNav {
     const val List = "list"
-    const val Write = "write"
     const val Modify = "modify"
 }
 
 @Composable
-fun ReviewNav(
+fun MyReviewNav(
     navHostController: NavHostController = rememberNavController(),
-    menuName: String,
-    menuType: MenuType,
-    id: Long,
     onExit: () -> Unit = {}
 ) {
 
     NavHost(
         navController = navHostController,
-        startDestination = ReviewNav.List
+        startDestination = MyReviewNav.List
     ) {
         // 리뷰 리스트
-        composable(ReviewNav.List) {
-            ReviewListScreen(
-                menuName = menuName,
-                menuType = menuType,
-                id = id,
+        composable(MyReviewNav.List) {
+            MyReviewListScreen(
                 onBack = { onExit() },
                 onModifyClick = { review ->
                     // 선택된 리뷰 데이터를 Modify 화면으로 전달
@@ -46,28 +36,13 @@ fun ReviewNav(
                         set("menuList", review.menuList)
                     }
 
-                    navHostController.navigate(ReviewNav.Modify) { launchSingleTop = true }
+                    navHostController.navigate(MyReviewNav.Modify) { launchSingleTop = true }
                 },
-                onWriteButtonClick = {
-                    navHostController.navigate(ReviewNav.Write) {
-                        launchSingleTop = true
-                    }
-                }
             )
         }
 
         // 리뷰 작성
-        composable(ReviewNav.Write) { backStackEntry ->
-            ReviewWriteScreen(
-                menuType = menuType,
-                menuName = menuName,
-                id = id,
-                onBack = { navHostController.popBackStack() },
-            )
-        }
-
-        // 리뷰 작성
-        composable(ReviewNav.Modify) { backStackEntry ->
+        composable(MyReviewNav.Modify) { backStackEntry ->
             val prev = navHostController.previousBackStackEntry?.savedStateHandle
             val reviewId = prev?.get<Long>("reviewId") ?: 0L
             val initialRating = prev?.get<Int>("initialRating") ?: 0

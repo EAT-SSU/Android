@@ -52,7 +52,6 @@ import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Star
-import timber.log.Timber
 
 @Composable
 fun ReviewListScreen(
@@ -106,38 +105,35 @@ internal fun ReviewListScreen(
     var showMyBottomSheet by remember { mutableStateOf(false) }
     var showOthersBottomSheet by remember { mutableStateOf(false) }
 
-    var selectedReviewId by remember { mutableStateOf<Long?>(null) }
     var selectedReview by remember { mutableStateOf<Review?>(null) }
 
-    if (showOthersBottomSheet && selectedReviewId != null) {
+    if (showOthersBottomSheet && selectedReview != null) {
         OthersReviewBottomSheet(
-            onDismiss = { showOthersBottomSheet = false; selectedReviewId = null },
+            onDismiss = { showOthersBottomSheet = false; selectedReview = null },
             onReport = {
                 val intent = android.content.Intent(
                     context,
                     com.eatssu.android.presentation.cafeteria.review.report.ReportActivity::class.java
                 )
-                intent.putExtra("reviewId", selectedReviewId)
+                intent.putExtra("reviewId", selectedReview?.reviewId)
                 context.startActivity(intent)
                 showOthersBottomSheet = false
-                selectedReviewId = null
+                selectedReview = null
             }
         )
     }
 
-    if (showMyBottomSheet && selectedReviewId != null) {
+    if (showMyBottomSheet && selectedReview != null) {
         MyReviewBottomSheet(
-            onDismiss = { showMyBottomSheet = false; selectedReviewId = null },
+            onDismiss = { showMyBottomSheet = false; selectedReview = null },
             onModify = {
                 selectedReview?.let { onModifyClick(it) }
                 showMyBottomSheet = false
-                selectedReviewId = null
                 selectedReview = null
             },
             onDelete = {
-                selectedReviewId?.let { onDeleteClick(it) }
+                selectedReview?.let { onDeleteClick(it.reviewId) }
                 showMyBottomSheet = false
-                selectedReviewId = null
                 selectedReview = null
             }
         )
@@ -265,13 +261,9 @@ internal fun ReviewListScreen(
                                         onMoreClick = {
                                             if (item.isWriter) {
                                                 showMyBottomSheet = true
-                                                selectedReviewId = item.reviewId
                                                 selectedReview = item
-                                                Timber.d("ReviewListScreen - onMoreClick: 내 리뷰")
                                             } else {
                                                 showOthersBottomSheet = true
-                                                Timber.d("ReviewListScreen - onMoreClick: 다른 사람 리뷰")
-                                                selectedReviewId = item.reviewId
                                                 selectedReview = item
                                             }
                                         }

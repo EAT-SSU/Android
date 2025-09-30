@@ -56,6 +56,8 @@ import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Primary
 import timber.log.Timber
 
+const val MAX_TEXT_COUNT = 300
+
 @Composable
 fun ReviewWriteScreen(
     modifier: Modifier = Modifier,
@@ -232,11 +234,6 @@ internal fun ReviewWriteScreen(
                                     }
                                 }
 
-
-                                // 최대 글자 수
-                                val maxChar = 300
-
-
                                 Column {
                                     OutlinedTextField(
                                         modifier = Modifier
@@ -245,7 +242,7 @@ internal fun ReviewWriteScreen(
                                         value = text,
                                         onValueChange = { newText ->
                                             // 최대 글자 수를 초과하지 않도록 함
-                                            if (newText.length <= maxChar) {
+                                            if (newText.length <= MAX_TEXT_COUNT) {
                                                 text = newText
                                             }
                                         },
@@ -276,7 +273,7 @@ internal fun ReviewWriteScreen(
                                         modifier = Modifier
                                             .align(Alignment.End)
                                             .padding(top = 8.dp),
-                                        text = "${text.length}/$maxChar",
+                                        text = "${text.length}/$MAX_TEXT_COUNT",
                                         color = Gray400,
                                         style = EatssuTheme.typography.caption3
                                     )

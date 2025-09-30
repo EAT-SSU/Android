@@ -46,7 +46,7 @@ fun MyReviewListScreen(
     modifier: Modifier = Modifier,
     viewModel: MyReviewViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
-//    onModifyClick: () -> Unit,
+    onModifyClick: (Review) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -68,7 +68,7 @@ fun MyReviewListScreen(
         modifier = modifier,
         onBack = onBack,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
-//        onModifyClick = onModifyClick,
+        onModifyClick = onModifyClick,
     )
 }
 
@@ -77,20 +77,24 @@ internal fun MyReviewListScreen(
     uiState: UiState<MyReviewState>,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
-//    onModifyClick: () -> Unit,
+    onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedReviewId by remember { mutableStateOf<Long?>(null) }
+    var selectedReview by remember { mutableStateOf<Review?>(null) }
 
-    if (showBottomSheet && selectedReviewId != null) {
+    if (showBottomSheet && selectedReview != null) {
         MyReviewBottomSheet(
-            onDismiss = { showBottomSheet = false; selectedReviewId = null },
-            onModify = { },
-            onDelete = {
-                selectedReviewId?.let { onDeleteClick(it) }
+            onDismiss = { showBottomSheet = false; selectedReview = null },
+            onModify = {
+                selectedReview?.let { onModifyClick(it) }
                 showBottomSheet = false
-                selectedReviewId = null
+                selectedReview = null
+            },
+            onDelete = {
+                selectedReview?.let { onDeleteClick(it.reviewId) }
+                showBottomSheet = false
+                selectedReview = null
             }
         )
     }
@@ -132,7 +136,7 @@ internal fun MyReviewListScreen(
                                             menuList = item.menuList,
                                             imgUrl = item.imgUrl,
                                             onMoreClick = {
-                                                selectedReviewId = item.reviewId
+                                                selectedReview = item
                                                 showBottomSheet = true
                                             }
                                         )
@@ -207,6 +211,7 @@ fun ReviewListPreview() {
     EatssuTheme {
         MyReviewListScreen(
             onDeleteClick = {},
+            onModifyClick = {},
             uiState = UiState.Success(
                 MyReviewState.ReviewExists(
                     myReviews = listOf(
@@ -303,6 +308,7 @@ fun ReviewListEmptyPreview() {
     EatssuTheme {
         MyReviewListScreen(
             onDeleteClick = {},
+            onModifyClick = {},
             uiState = UiState.Success(
                 MyReviewState.NoReview
             )
