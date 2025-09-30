@@ -366,7 +366,7 @@ fun ReviewInfoContent(
                 )
             }
 
-            Spacer(modifier = Modifier.width(37.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             ReviewProgressBar(
                 reviewCount = info?.reviewCnt ?: 0,
@@ -375,7 +375,7 @@ fun ReviewInfoContent(
                 threeRatingCount = info?.three ?: 0,
                 twoRatingCount = info?.two ?: 0,
                 oneRatingCount = info?.one ?: 0,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.width(150.dp)
             )
         }
 
