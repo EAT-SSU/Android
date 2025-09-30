@@ -10,13 +10,10 @@ class GetUserNickNameUseCase @Inject constructor(
     private val context: Context // SharedPreferences 접근용
 ) {
     suspend operator fun invoke(): String {
-        val userNickname = MySharedPreferences.getUserName(context).let {
-            it.ifEmpty {
-                val userNickname = userRepository.getUserNickName()
-                MySharedPreferences.setUserName(context, userNickname)
-                userNickname
-            }
+        return MySharedPreferences.getUserName(context).ifEmpty {
+            val remoteNickname = userRepository.getUserNickName()
+            MySharedPreferences.setUserName(context, remoteNickname)
+            remoteNickname
         }
-        return userNickname
     }
 }

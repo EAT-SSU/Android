@@ -93,10 +93,17 @@ class UserInfoViewModel @Inject constructor(
     fun changeUserNickname() {
         val nickname = _uiState.value.nickname
 
-        _uiState.update { it.copy(loading = true) }
         viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
             try {
                 setUserNicknameUseCase(nickname)
+                _uiState.update {
+                    it.copy(
+                        loading = false,
+                        isDone = true,
+                        toastMessage = "닉네임 변경에 성공했습니다."
+                    )
+                }
             } catch (e: Exception) {
                 Timber.e(e, "닉네임 변경 실패")
                 _uiState.update {
@@ -106,15 +113,7 @@ class UserInfoViewModel @Inject constructor(
                         toastMessage = "닉네임 변경에 실패했습니다."
                     )
                 }
-                return@launch
             }
-        }
-        _uiState.update {
-            it.copy(
-                loading = false,
-                isDone = true,
-                toastMessage = "닉네임 변경에 성공했습니다."
-            )
         }
     }
 

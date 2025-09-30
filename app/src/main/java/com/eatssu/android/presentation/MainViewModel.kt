@@ -82,9 +82,7 @@ class MainViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                        String.format(
                             context.getString(R.string.not_found)
-                        )
                     )
                 )
                 Timber.e(e)
