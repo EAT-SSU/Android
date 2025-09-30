@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.presentation.common.AndroidMessageDialogActivity
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
@@ -171,13 +170,6 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private fun showForceUpdateDialog() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun showAndroidMessageDialog(message: String) {
-        val intent = Intent(this, AndroidMessageDialogActivity::class.java)
-        intent.putExtra("message",message)
-        Timber.d("BaseActivity", "공지사항: $message")
         startActivity(intent)
     }
 
