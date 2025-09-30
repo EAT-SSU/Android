@@ -99,4 +99,9 @@ class ReviewRepositoryImpl @Inject constructor(
     override suspend fun getMenuInfoByMealId(mealId: Long): List<Pair<Long, String>> {
         return reviewService.getMenuInfoByMealId(mealId).result?.toDomain() ?: emptyList()
     }
+
+    override suspend fun getUserReviews(): List<Review> {
+        return reviewService.getMyReviews().result?.toDomain() ?: emptyList()
+    }
+
 }

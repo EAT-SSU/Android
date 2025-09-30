@@ -52,4 +52,7 @@ interface ReviewRepository {
     suspend fun getMenuInfoByMealId(
         mealId: Long,
     ): List<Pair<Long, String>>
+
+    suspend fun getUserReviews(): List<Review>
+
 }

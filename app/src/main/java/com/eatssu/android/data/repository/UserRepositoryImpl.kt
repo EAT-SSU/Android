@@ -8,7 +8,6 @@ import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
-import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,10 +26,6 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
         flow {
             emit(userService.checkNickname(nickname))
         }
-
-    override suspend fun getUserReviews(): List<Review> {
-        return userService.getMyReviews().result?.toDomain() ?: emptyList()
-    }
 
     override suspend fun getUserNickName(): Flow<BaseResponse<MyNickNameResponse>> =
         flow {
