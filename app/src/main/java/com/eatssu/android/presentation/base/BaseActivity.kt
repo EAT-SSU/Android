@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.presentation.common.AndroidMessageDialogActivity
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
@@ -84,25 +83,35 @@ abstract class BaseActivity<B : ViewBinding>(
         // refreshtoken 관리
         observeTokenExpiration()
 
-        setInset()
+        setContainerInset()
 
     }
 
-    private fun setInset() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar)) { view, insets ->
+    private fun setContainerInset() {
+        // Toolbar: topInset만 적용
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
             val topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            view.setPadding(0, topInset, 0, 24)
-            WindowInsetsCompat.CONSUMED
+            view.setPadding(
+                /* left = */ 0,
+                /* top = */ topInset,
+                /* right = */ 0,
+                /* bottom = */ 0
+            )
+            insets
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fl_content)) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
             view.setPadding(
-                systemInsets.left,
-                view.paddingTop,
-                systemInsets.right,
-                systemInsets.bottom
+                /* left = */ systemInsets.left,
+                /* top = */ 0,
+                /* right = */ systemInsets.right,
+                /* bottom = */ systemInsets.bottom
             )
+
+            // 소비된 인셋을 반환하여 자식 뷰가 다시 받지 않도록 함
             WindowInsetsCompat.CONSUMED
         }
     }
@@ -161,13 +170,6 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private fun showForceUpdateDialog() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun showAndroidMessageDialog(message: String) {
-        val intent = Intent(this, AndroidMessageDialogActivity::class.java)
-        intent.putExtra("message",message)
-        Timber.d("BaseActivity", "공지사항: $message")
         startActivity(intent)
     }
 
