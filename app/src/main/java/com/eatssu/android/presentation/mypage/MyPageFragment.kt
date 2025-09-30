@@ -54,6 +54,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         setOnClickListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        myPageViewModel.fetchMyInfo() // 닉네임 변경 등으로부터 복귀 시 정보 갱신
+    }
+
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -61,15 +66,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 launch {
                     myPageViewModel.uiState.collectLatest { ui ->
                         when (ui) {
-                            is UiState.Init -> Unit
-                            is UiState.Loading -> showLoading(true)
+                            is UiState.Init, UiState.Loading -> Unit // 닉네임만 불러옴으로 로딩 인디케이터 없음
                             is UiState.Success -> {
-                                showLoading(false)
                                 ui.data?.let { render(it) }
                             }
 
                             is UiState.Error -> {
-                                showLoading(false)
                                 showSnackbar(getString(R.string.not_found))
                             }
                         }
@@ -106,11 +108,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         binding.alarmSwitch.setOnCheckedChangeListener { _, isChecked ->
             handleAlarmSwitchChange(isChecked)
         }
-    }
-
-    private fun showLoading(visible: Boolean) {
-        // 필요 시 ProgressBar가 있다면 여기서 처리
-        // binding.progress.isVisible = visible
     }
 
     private fun handleAlarmSwitchChange(isChecked: Boolean) {

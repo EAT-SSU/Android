@@ -63,7 +63,7 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    private fun fetchMyInfo() {
+    fun fetchMyInfo() {
         viewModelScope.launch {
             // 로딩 상태는 UiState에서만 표현하고 싶다면 아래 한 줄 필요
             // (초기 구독자에게 로딩 보여주고 싶을 때)
