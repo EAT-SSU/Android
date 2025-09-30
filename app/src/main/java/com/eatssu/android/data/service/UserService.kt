@@ -6,7 +6,6 @@ import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.CollegeResponse
 import com.eatssu.android.data.dto.response.DepartmentResponse
 import com.eatssu.android.data.dto.response.MyNickNameResponse
-import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.PartnershipResponse
 import com.eatssu.android.data.dto.response.UserCollegeDepartmentResponse
 import retrofit2.http.Body

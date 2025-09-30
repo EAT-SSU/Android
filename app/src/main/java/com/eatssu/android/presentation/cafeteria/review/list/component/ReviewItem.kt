@@ -1,4 +1,4 @@
-package com.eatssu.design_system.component
+package com.eatssu.android.presentation.cafeteria.review.list.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.eatssu.android.domain.model.Review
 import com.eatssu.design_system.R
+import com.eatssu.design_system.component.Chip
+import com.eatssu.design_system.component.RatingBarSmall
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray400
 
@@ -83,8 +86,7 @@ fun ReviewItem(
     writeDate: String,
     content: String,
     rating: Int,
-    menuList: List<String>? = null,
-    likeMenuList: List<String>? = null,
+    menuList: List<Review.Menu>? = null,
     imgUrl: String? = null,
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
 ) {
@@ -139,32 +141,19 @@ fun ReviewItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 태그 표시: likeMenuList는 좋아요 아이콘 표시, menuList 중 likeMenuList에 없는 항목은 아이콘 없이 표시
-        val liked = likeMenuList.orEmpty()
-        val allMenus = menuList.orEmpty()
-        val others = allMenus.filter { it !in liked }
-
-        if (liked.isNotEmpty() || others.isNotEmpty()) {
+        if (menuList?.isNotEmpty() == true || menuList != null) {
             Spacer(modifier = Modifier.height(4.dp))
             SimpleFlowRow(horizontalSpacing = 4.dp, verticalSpacing = 2.dp) {
-                liked.forEach { likedMenu ->
+                menuList.forEach {
                     Chip(
-                        menuName = likedMenu,
+                        menuName = it.name,
                         modifier = Modifier.padding(end = 4.dp, bottom = 2.dp),
-                        isLike = true
-                    )
-                }
-
-                others.forEach { menu ->
-                    Chip(
-                        menuName = menu,
-                        modifier = Modifier.padding(end = 4.dp, bottom = 2.dp),
-                        isLike = false
+                        isLike = it.isLike
                     )
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(content, style = EatssuTheme.typography.body3)
@@ -197,8 +186,17 @@ fun ReviewItemPreview() {
             writeDate = "2024-12-31",
             content = "맛있어요",
             rating = 4,
-            menuList = listOf("소고기", "닭고기"),
-            likeMenuList = listOf("소고기", "닭고기"),
+            menuList = listOf(
+                Review.Menu(
+                    menuId = 1L,
+                    name = "소고기",
+                    isLike = true
+                ), Review.Menu(
+                    menuId = 2L,
+                    name = "닭고기",
+                    isLike = false
+                )
+            ),
             imgUrl = "https://www.adobe.com/kr/creativecloud/photography/hub/features/media_19243bf806dc1c5a3532f3e32f4c14d44f81cae9f.jpeg?width=1200&format=pjpg&optimize=medium"
         )
     }
@@ -215,8 +213,17 @@ fun ReviewItemWithoutImagePreview() {
             writeDate = "2024-12-30",
             content = "사진 없이 텍스트만 있는 리뷰입니다.",
             rating = 5,
-            menuList = listOf("소고기", "닭고기"),
-            likeMenuList = null,
+            menuList = listOf(
+                Review.Menu(
+                    menuId = 1L,
+                    name = "소고기",
+                    isLike = true
+                ), Review.Menu(
+                    menuId = 2L,
+                    name = "닭고기",
+                    isLike = false
+                )
+            ),
             imgUrl = null
         )
     }

@@ -8,33 +8,38 @@ data class MenuReviewListResponse(
     @SerializedName("hasNext") var hasNext: Boolean? = null,
     @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf()
 ) {
-    data class DataList(
+    data class DataList( //todo 변경
         @SerializedName("reviewId") var reviewId: Long? = null,
+        @SerializedName("menu") var menu: String? = null,
         @SerializedName("writerId") var writerId: Long? = null,
         @SerializedName("isWriter") var isWriter: Boolean? = null,
         @SerializedName("writerNickname") var writerNickname: String? = null,
-        @SerializedName("rating") var rating: Int? = null,
-        @SerializedName("writtenAt") var writtenAt: String? = null,
+        @SerializedName("mainRating") var mainRating: Int? = null,
+        @SerializedName("amountRating") var amountRating: String? = null,
+        @SerializedName("tasteRating") var tasteRating: String? = null,
+        @SerializedName("writedAt") var writtenAt: String? = null,
         @SerializedName("content") var content: String? = null,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
-        @SerializedName("likedMenuNames") var likedMenuNames: ArrayList<String> = arrayListOf(),
-        @SerializedName("menu") var menu: String? = null
+        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf()
     )
 }
 
 fun MenuReviewListResponse.toDomain(): List<Review> {
-    // MealReviewListResponse 객체 자체가 null이면 emptyList() 반환
     return this.dataList.map { data ->
         Review(
             reviewId = data.reviewId ?: 0,
             isWriter = data.isWriter ?: false,
-            menuList = listOf(data.menu ?: ""),
+            menuList = listOf(
+                Review.Menu(
+                    0,
+                    data.menu ?: "",
+                    false
+                ),
+            ),
             writerNickname = data.writerNickname ?: "유저",
-            mainGrade = data.rating ?: 0,
+            mainGrade = data.mainRating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
             imgUrl = data.imageUrls.firstOrNull(),
-            likeMenuList = data.likedMenuNames ?: emptyList()
         )
     } ?: emptyList()
 }
