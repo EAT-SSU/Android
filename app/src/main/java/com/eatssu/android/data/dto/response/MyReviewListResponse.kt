@@ -38,7 +38,7 @@ fun MyReviewListResponse.toDomain(): List<Review> {
                 )
             },
             writerNickname = "",
-            mainGrade = data.rating ?: 0,
+            rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
             imgUrl = data.imageUrls.firstOrNull(),

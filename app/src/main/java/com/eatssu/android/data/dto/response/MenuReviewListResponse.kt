@@ -8,19 +8,23 @@ data class MenuReviewListResponse(
     @SerializedName("hasNext") var hasNext: Boolean? = null,
     @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf()
 ) {
-    data class DataList( //todo 변경
+    data class DataList(
         @SerializedName("reviewId") var reviewId: Long? = null,
-        @SerializedName("menu") var menu: String? = null,
+        @SerializedName("menu") var menu: Menu? = Menu(),
         @SerializedName("writerId") var writerId: Long? = null,
         @SerializedName("isWriter") var isWriter: Boolean? = null,
         @SerializedName("writerNickname") var writerNickname: String? = null,
-        @SerializedName("mainRating") var mainRating: Int? = null,
-        @SerializedName("amountRating") var amountRating: String? = null,
-        @SerializedName("tasteRating") var tasteRating: String? = null,
-        @SerializedName("writedAt") var writtenAt: String? = null,
+        @SerializedName("rating") var rating: Int? = null,
+        @SerializedName("writtenAt") var writtenAt: String? = null,
         @SerializedName("content") var content: String? = null,
         @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf()
-    )
+    ) {
+        data class Menu(
+            @SerializedName("id") var id: Long? = null,
+            @SerializedName("name") var name: String? = null,
+            @SerializedName("isLike") var isLike: Boolean? = null
+        )
+    }
 }
 
 fun MenuReviewListResponse.toDomain(): List<Review> {
@@ -30,13 +34,13 @@ fun MenuReviewListResponse.toDomain(): List<Review> {
             isWriter = data.isWriter ?: false,
             menuList = listOf(
                 Review.Menu(
-                    0,
-                    data.menu ?: "",
-                    false
+                    menuId = data.menu?.id ?: -1L,
+                    name = data.menu?.name ?: "",
+                    isLike = data.menu?.isLike ?: false
                 ),
             ),
             writerNickname = data.writerNickname ?: "유저",
-            mainGrade = data.mainRating ?: 0,
+            rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
             imgUrl = data.imageUrls.firstOrNull(),

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class MealReviewInfoResponse(
     @SerializedName("menuNames") var menuNames: List<String>? = null,
     @SerializedName("totalReviewCount") var totalReviewCount: Int? = null,
-    @SerializedName("mainRating") var mainRating: Double? = null,
+    @SerializedName("rating") var rating: Double? = null,
     @SerializedName("likeCount") var likeCount: Int? = null,
     @SerializedName("reviewRatingCount") var reviewRatingCount: ReviewRatingCount? = ReviewRatingCount()
 ) {
@@ -21,7 +21,7 @@ data class MealReviewInfoResponse(
 
 fun MealReviewInfoResponse.toDomain() = ReviewInfo(
     reviewCnt = totalReviewCount ?: 0,
-    mainRating = mainRating ?: 0.0,
+    rating = rating ?: 0.0,
     one = reviewRatingCount?.oneStarCount ?: 0,
     two = reviewRatingCount?.twoStarCount ?: 0,
     three = reviewRatingCount?.threeStarCount ?: 0,

@@ -180,7 +180,7 @@ internal fun ReviewListScreen(
                                 three = 0,
                                 two = 0,
                                 one = 0,
-                                mainRating = 0.0,
+                                rating = 0.0,
                             )
                         )
                         Column(modifier = Modifier.fillMaxSize()) {
@@ -255,7 +255,7 @@ internal fun ReviewListScreen(
                                         writeName = item.writerNickname,
                                         writeDate = item.writeDate,
                                         content = item.content,
-                                        rating = item.mainGrade,
+                                        rating = item.rating,
                                         menuList = item.menuList,
                                         imgUrl = item.imgUrl,
                                         onMoreClick = {
@@ -352,7 +352,7 @@ fun ReviewInfoContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    if (info?.reviewCnt == 0) "-" else info?.mainRating.toString(),
+                    if (info?.reviewCnt == 0) "-" else info?.rating.toString(),
                     modifier = Modifier.align(Alignment.CenterVertically),
                     style = EatssuTheme.typography.rate
                 )
@@ -421,7 +421,7 @@ fun ReviewListPreview() {
                         three = 10,
                         two = 5,
                         one = 8,
-                        mainRating = 4.5,
+                        rating = 4.5,
                     ),
                     reviewList = listOf(
                         Review(
@@ -440,7 +440,7 @@ fun ReviewListPreview() {
                             ),
                             writerNickname = "숭실푸드파이터",
                             writeDate = "2024-12-31",
-                            mainGrade = 4,
+                            rating = 4,
                             content = "맛있어요",
                             imgUrl = null,
                         ),
@@ -460,7 +460,7 @@ fun ReviewListPreview() {
                             ),
                             writerNickname = "맛있는리뷰어",
                             writeDate = "2024-12-30",
-                            mainGrade = 5,
+                            rating = 5,
                             content = "정말 맛있어요! 다음에도 먹고 싶어요.",
                             imgUrl = null,
                         ),
@@ -480,7 +480,7 @@ fun ReviewListPreview() {
                             ),
                             writerNickname = "음식평론가",
                             writeDate = "2024-12-29",
-                            mainGrade = 3,
+                            rating = 3,
                             content = "그럭저럭 괜찮아요",
                             imgUrl = null,
                         ),
@@ -500,7 +500,7 @@ fun ReviewListPreview() {
                             ),
                             writerNickname = "음식평론가",
                             writeDate = "2024-12-29",
-                            mainGrade = 3,
+                            rating = 3,
                             content = "그럭저럭 괜찮아요",
                             imgUrl = "https://picsum.photos/400/301", // 실제 이미지 URL 사용
                         )
@@ -543,7 +543,7 @@ fun ReviewListEmptyPreview() {
                         three = 0,
                         two = 0,
                         one = 0,
-                        mainRating = 0.0,
+                        rating = 0.0,
                     ),
                     reviewList = emptyList()
                 )

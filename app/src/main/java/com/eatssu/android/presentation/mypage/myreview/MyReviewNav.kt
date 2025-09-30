@@ -31,7 +31,7 @@ fun MyReviewNav(
                     // 선택된 리뷰 데이터를 Modify 화면으로 전달
                     navHostController.currentBackStackEntry?.savedStateHandle?.apply {
                         set("reviewId", review.reviewId)
-                        set("initialRating", review.mainGrade)
+                        set("initialRating", review.rating)
                         set("initialContent", review.content)
                         set("menuList", review.menuList)
                     }
