@@ -1,14 +1,12 @@
 package com.eatssu.android.di.network
 
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.TokenResponse
+import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -49,9 +47,9 @@ class TokenAuthenticator @Inject constructor(
             try {
                 Timber.d("TokenAuthenticator → refreshToken으로 재발급 시도")
 
-                val newTokenResponse:  BaseResponse<TokenResponse>? = reissueTokenUseCase(expiredRefreshToken).firstOrNull()
-                val newAccessToken = newTokenResponse?.result?.accessToken
-                val newRefreshToken = newTokenResponse?.result?.refreshToken
+                val newToken: Token = reissueTokenUseCase(expiredRefreshToken)
+                val newAccessToken = newToken.accessToken
+                val newRefreshToken = newToken.refreshToken
 
                 if (newAccessToken != null && newRefreshToken != null) {
                     Timber.d("TokenAuthenticator → 새 토큰 발급 성공")

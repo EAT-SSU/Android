@@ -14,14 +14,14 @@ import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -42,25 +42,24 @@ class LoginViewModel @Inject constructor(
 
     fun getKakaoLogin(email: String, providerID: String) {
         viewModelScope.launch {
-            loginUseCase(LoginWithKakaoRequest(email, providerID))
-                .onStart {
-                    _uiState.value = UiState.Loading
+            _uiState.value = UiState.Loading
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    loginUseCase(LoginWithKakaoRequest(email, providerID))
                 }
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
-                }
-                .collect { result ->
-                    result.result?.let {
-                        setAccessTokenUseCase(it.accessToken)
-                        setRefreshTokenUseCase(it.refreshToken)
-                        setUserEmailUseCase(email)
+            }.onSuccess {
+                setAccessTokenUseCase(it.accessToken)
+                setRefreshTokenUseCase(it.refreshToken)
+                setUserEmailUseCase(email)
 
-                        _uiState.value = UiState.Success(LoginState.LoginSuccess)
+                _uiState.value = UiState.Success(LoginState.LoginSuccess)
 
-                        TokenStateManager.setTokenValid()
-                    }
-                }
+                TokenStateManager.setTokenValid()
+
+            }.onFailure {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
+            }
         }
     }
 

@@ -9,3 +9,8 @@ data class TokenResponse(
     @SerializedName("refreshToken")
     val refreshToken: String,
 )
+
+fun TokenResponse.toDomain() = com.eatssu.android.domain.model.Token(
+    accessToken = accessToken,
+    refreshToken = refreshToken,
+)
