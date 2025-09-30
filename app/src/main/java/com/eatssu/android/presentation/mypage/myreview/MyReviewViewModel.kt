@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
-import com.eatssu.android.domain.usecase.user.GetMyReviewsUseCase
+import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
