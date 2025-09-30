@@ -84,25 +84,35 @@ abstract class BaseActivity<B : ViewBinding>(
         // refreshtoken 관리
         observeTokenExpiration()
 
-        setInset()
+        setContainerInset()
 
     }
 
-    private fun setInset() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar)) { view, insets ->
+    private fun setContainerInset() {
+        // Toolbar: topInset만 적용
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
             val topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            view.setPadding(0, topInset, 0, 24)
-            WindowInsetsCompat.CONSUMED
+            view.setPadding(
+                /* left = */ 0,
+                /* top = */ topInset,
+                /* right = */ 0,
+                /* bottom = */ 0
+            )
+            insets
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fl_content)) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
             view.setPadding(
-                systemInsets.left,
-                view.paddingTop,
-                systemInsets.right,
-                systemInsets.bottom
+                /* left = */ systemInsets.left,
+                /* top = */ 0,
+                /* right = */ systemInsets.right,
+                /* bottom = */ systemInsets.bottom
             )
+
+            // 소비된 인셋을 반환하여 자식 뷰가 다시 받지 않도록 함
             WindowInsetsCompat.CONSUMED
         }
     }
