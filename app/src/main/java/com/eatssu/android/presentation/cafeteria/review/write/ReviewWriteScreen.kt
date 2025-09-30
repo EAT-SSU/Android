@@ -8,7 +8,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,9 +43,9 @@ import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
-import com.eatssu.design_system.component.LikeButton
 import com.eatssu.design_system.component.RatingBarMedium
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
@@ -213,18 +212,18 @@ internal fun ReviewWriteScreen(
                         when (uiState.data) {
                             is WriteReviewState.ValidMenuListForReview -> {
                                 LazyColumn {
-                                    items(uiState.data.menuList) { menuPair -> // 매개변수 이름을 menuPair로 변경하여 혼동 방지
-                                        MenuItem(
-                                            mealName = menuPair.second,
+                                    items(uiState.data.menuList) { menu -> // 매개변수 이름을 menuPair로 변경하여 혼동 방지
+                                        MenuLikeButtonItem(
+                                            mealName = menu.second,
                                             modifier = Modifier,
-                                            isLiked = likedMenus.contains(menuPair.first),
+                                            isLiked = likedMenus.contains(menu.first),
                                             onLikeChanged = { isLiked ->
                                                 // Set을 사용하여 중복 제거 및 상태 변경
                                                 val newSet = likedMenus.toSet()
                                                 val updatedList = if (isLiked) {
-                                                    (newSet + menuPair.first).toList()
+                                                    (newSet + menu.first).toList()
                                                 } else {
-                                                    (newSet - menuPair.first).toList()
+                                                    (newSet - menu.first).toList()
                                                 }
                                                 likedMenus =
                                                     updatedList.toMutableList() // mutableStateOf를 위해 MutableList로 다시 변환
@@ -360,31 +359,6 @@ internal fun ReviewWriteScreen(
         }
     }
 }
-
-
-@Composable
-fun MenuItem(
-    modifier: Modifier,
-    mealName: String,
-    isLiked: Boolean,
-    onLikeChanged: (Boolean) -> Unit,
-) {
-
-    Row(modifier.padding(vertical = 6.dp)) {
-        Text(
-            mealName,
-            style = EatssuTheme.typography.body3
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        LikeButton(
-            isLiked = isLiked,
-            onClick = {
-                onLikeChanged(!isLiked) // 클릭 시 상태를 반전
-            }
-        )
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable

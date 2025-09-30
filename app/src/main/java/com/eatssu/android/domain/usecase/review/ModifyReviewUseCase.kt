@@ -1,8 +1,7 @@
 package com.eatssu.android.domain.usecase.review
 
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
-import com.eatssu.android.domain.model.ReviewWriteData
+import com.eatssu.android.domain.model.ReviewModifyData
 import com.eatssu.android.domain.repository.ReviewRepository
 import javax.inject.Inject
 
@@ -11,15 +10,17 @@ class ModifyReviewUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         reviewId: Long,
-        reviewData: ReviewWriteData,
+        reviewData: ReviewModifyData,
     ) {
         val request = ModifyReviewRequest(
             content = reviewData.content,
             rating = reviewData.rating,
-            menuLikes = WriteMenuReviewRequest.MenuLike(
-                menuId = reviewData.menuLikes.firstOrNull(),
-                isLike = true,
-            )
+            menuLikes = reviewData.menuLikes.map {
+                ModifyReviewRequest.MenuLikes(
+                    menuId = it.menuId,
+                    isLike = it.isLike,
+                )
+            },
         )
         reviewRepository.modifyReview(reviewId, request)
     }

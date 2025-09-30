@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.data.enums.MenuType
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteScreen
@@ -44,7 +45,7 @@ fun ReviewNav(
                         set("initialContent", review.content)
                         // 메뉴는 (id, name) 쌍이 필요하므로 이름만 전달하는 경우, id 매핑은 서버/화면에서 보유하고 있어야 합니다.
                         // 여기서는 임시로 name만 전달. Modify에서 Pair<Long,String>로 이미 있는 경우 그걸 넣어주세요.
-                        set("menuList", ArrayList(review.menuList))
+                        set("menuList", review.menuList)
 //                        set("likeMenuList", ArrayList(review.likeMenuList ?: emptyList()))
                     }
 
@@ -74,15 +75,15 @@ fun ReviewNav(
             val reviewId = prev?.get<Long>("reviewId") ?: 0L
             val initialRating = prev?.get<Int>("initialRating") ?: 0
             val initialContent = prev?.get<String>("initialContent") ?: ""
-            val menuNames = prev?.get<ArrayList<String>>("menuList") ?: arrayListOf()
-            val likeMenuList = prev?.get<ArrayList<String>>("likeMenuList") ?: arrayListOf()
+            val menuNames = prev?.get<ArrayList<Review.Menu>>("menuList") ?: arrayListOf()
+//            val likeMenuList = prev?.get<ArrayList<String>>("likeMenuList") ?: arrayListOf()
 
             ModifyReviewScreen(
                 reviewId = reviewId,
                 initialRating = initialRating,
                 initialContent = initialContent,
-                menuList = menuNames.mapIndexed { index, name -> index.toLong() to name },
-                likedNames = likeMenuList,
+                menuList = menuNames,
+//                likedNames = likeMenuList,
                 onBack = { navHostController.popBackStack() },
                 navController = navHostController
             )
