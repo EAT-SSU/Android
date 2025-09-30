@@ -11,6 +11,7 @@ import com.eatssu.android.data.dto.response.MealReviewListResponse
 import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.dto.response.MenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.MenuReviewListResponse
+import com.eatssu.android.data.dto.response.MyReviewListResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -78,5 +79,12 @@ interface ReviewService {
     suspend fun getMenuInfoByMealId(
         @Path("mealId") mealId: Long,
     ): BaseResponse<MenuOfMealResponse>
+
+    /**
+     * 내가 쓴 리뷰
+     */
+    @GET("users/v2/reviews")
+    suspend fun getMyReviews(): BaseResponse<MyReviewListResponse>
+
 
 }
