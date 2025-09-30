@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray100"
     tools:context=".presentation.cafeteria.CafeteriaFragment">
 
     <!--  로고 및 상단 바  -->
