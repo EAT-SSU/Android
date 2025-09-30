@@ -45,7 +45,7 @@ fun ReviewNav(
                         // 메뉴는 (id, name) 쌍이 필요하므로 이름만 전달하는 경우, id 매핑은 서버/화면에서 보유하고 있어야 합니다.
                         // 여기서는 임시로 name만 전달. Modify에서 Pair<Long,String>로 이미 있는 경우 그걸 넣어주세요.
                         set("menuList", ArrayList(review.menuList))
-                        set("likeMenuList", ArrayList(review.likeMenuList ?: emptyList()))
+//                        set("likeMenuList", ArrayList(review.likeMenuList ?: emptyList()))
                     }
 
                     navHostController.navigate(ReviewNav.Modify) { launchSingleTop = true }

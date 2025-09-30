@@ -42,11 +42,11 @@ import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
-import com.eatssu.design_system.component.ReviewItem
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
@@ -263,7 +263,6 @@ internal fun ReviewListScreen(
                                         content = item.content,
                                         rating = item.mainGrade,
                                         menuList = item.menuList,
-                                        likeMenuList = item.likeMenuList,
                                         imgUrl = item.imgUrl,
                                         onMoreClick = {
                                             if (item.isWriter) {
@@ -436,46 +435,82 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 0,
-                            menuList = listOf("고구마치즈돈까스"),
+                            menuList = listOf(
+                                Review.Menu(
+                                    menuId = 1L,
+                                    name = "소고기",
+                                    isLike = true
+                                ), Review.Menu(
+                                    menuId = 2L,
+                                    name = "닭고기",
+                                    isLike = false
+                                )
+                            ),
                             writerNickname = "숭실푸드파이터",
                             writeDate = "2024-12-31",
                             mainGrade = 4,
                             content = "맛있어요",
-                            likeMenuList = listOf("소고기"),
                             imgUrl = null,
                         ),
                         Review(
                             isWriter = false,
                             reviewId = 1,
-                            menuList = listOf("치킨가라아게"),
+                            menuList = listOf(
+                                Review.Menu(
+                                    menuId = 1L,
+                                    name = "소고기",
+                                    isLike = true
+                                ), Review.Menu(
+                                    menuId = 2L,
+                                    name = "닭고기",
+                                    isLike = false
+                                )
+                            ),
                             writerNickname = "맛있는리뷰어",
                             writeDate = "2024-12-30",
                             mainGrade = 5,
                             content = "정말 맛있어요! 다음에도 먹고 싶어요.",
                             imgUrl = null,
-                            likeMenuList = listOf("치킨가라아게", "감자튀김")
                         ),
                         Review(
                             isWriter = false,
                             reviewId = 2,
-                            menuList = listOf("돈까스"),
+                            menuList = listOf(
+                                Review.Menu(
+                                    menuId = 1L,
+                                    name = "소고기",
+                                    isLike = true
+                                ), Review.Menu(
+                                    menuId = 2L,
+                                    name = "닭고기",
+                                    isLike = false
+                                )
+                            ),
                             writerNickname = "음식평론가",
                             writeDate = "2024-12-29",
                             mainGrade = 3,
                             content = "그럭저럭 괜찮아요",
                             imgUrl = null,
-                            likeMenuList = null
                         ),
                         Review(
                             isWriter = false,
                             reviewId = 2,
-                            menuList = listOf("돈까스"),
+                            menuList = listOf(
+                                Review.Menu(
+                                    menuId = 1L,
+                                    name = "소고기",
+                                    isLike = true
+                                ), Review.Menu(
+                                    menuId = 2L,
+                                    name = "닭고기",
+                                    isLike = false
+                                )
+                            ),
                             writerNickname = "음식평론가",
                             writeDate = "2024-12-29",
                             mainGrade = 3,
                             content = "그럭저럭 괜찮아요",
                             imgUrl = "https://picsum.photos/400/301", // 실제 이미지 URL 사용
-                            likeMenuList = null
                         )
                     )
                 )

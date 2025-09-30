@@ -3,17 +3,16 @@ package com.eatssu.android.domain.model
 data class Review(
     val isWriter: Boolean,
     val reviewId: Long,
-
-    val menuList: List<String>,
+    val menuList: List<Menu>,
     val writerNickname: String,
-
     val mainGrade: Int,
-
     val writeDate: String,
-
     val content: String,
-
-    val likeMenuList: List<String>?,
-
     val imgUrl: String?,
-)
+) {
+    data class Menu(
+        val menuId: Long,
+        val name: String,
+        val isLike: Boolean,
+    )
+}

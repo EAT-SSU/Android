@@ -17,9 +17,14 @@ data class MealReviewListResponse(
         @SerializedName("writtenAt") var writtenAt: String? = null,
         @SerializedName("content") var content: String? = null,
         @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
-        @SerializedName("likedMenuNames") var likedMenuNames: ArrayList<String> = arrayListOf(),
-        @SerializedName("menuNames") var menuNames: List<String>? = null
-    )
+        @SerializedName("menuList") var menuList: ArrayList<MenuList> = arrayListOf()
+    ) {
+        data class MenuList(
+            @SerializedName("id") var id: Long? = null,
+            @SerializedName("name") var name: String? = null,
+            @SerializedName("isLike") var isLike: Boolean? = null
+        )
+    }
 }
 
 
@@ -29,13 +34,18 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: 0,
             isWriter = data.isWriter ?: false,
-            menuList = data.menuNames ?: emptyList(),
+            menuList = data.menuList.map {
+                Review.Menu(
+                    menuId = it.id ?: -1L,
+                    name = it.name ?: "",
+                    isLike = it.isLike ?: false
+                )
+            },
             writerNickname = data.writerNickname ?: "유저",
             mainGrade = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
             imgUrl = data.imageUrls.firstOrNull(),
-            likeMenuList = data.likedMenuNames ?: emptyList()
         )
     } ?: emptyList()
 }
