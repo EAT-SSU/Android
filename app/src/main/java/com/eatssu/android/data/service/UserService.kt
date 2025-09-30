@@ -27,7 +27,6 @@ interface UserService {
         @Query("nickname") nickname: String,
     ): BaseResponse<Boolean>
 
-
     @GET("users/mypage") //내 정보 모아보기
     suspend fun getMyInfo(): BaseResponse<MyNickNameResponse>
 
