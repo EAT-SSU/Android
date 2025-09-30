@@ -65,10 +65,6 @@ class MyPageViewModel @Inject constructor(
 
     fun fetchMyInfo() {
         viewModelScope.launch {
-            // 로딩 상태는 UiState에서만 표현하고 싶다면 아래 한 줄 필요
-            // (초기 구독자에게 로딩 보여주고 싶을 때)
-            // _uiState.value = UiState.Loading
-
             runCatching {
                 withContext(Dispatchers.IO) { getUserNickNameUseCase() }
             }.onSuccess { nickname ->
@@ -77,8 +73,6 @@ class MyPageViewModel @Inject constructor(
                     _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
                 } else {
                     _state.update { it.copy(nickname = nickname) }
-                    // 필요시 환영 토스트
-                    // _uiEvent.emit(UiEvent.ShowToast("안녕하세요, $nickname 님"))
                 }
             }.onFailure { e ->
                 // 에러 화면을 꼭 별도로 보여주고 싶다면 uiState를 에러로 전환하는 방식 선택
@@ -104,9 +98,8 @@ class MyPageViewModel @Inject constructor(
     }
 }
 
-// 상태: 하나로 단일화
 data class MyPageState(
-    val nickname: String? = null,        // null이면 미설정
+    val nickname: String? = null,
     val platform: String = "KAKAO",
     val isAlarmOn: Boolean = false,
     val appVersion: String = "0.0.0"
