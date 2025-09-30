@@ -38,10 +38,6 @@ class ReviewWriteViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    // 메뉴 목록을 저장할 상태 추가
-    private val _menuList = MutableStateFlow<List<Pair<Long, String>>>(emptyList())
-    val menuList = _menuList.asStateFlow()
-
     // 이미지 관련 상태
     private val _selectedImageUri = MutableStateFlow<android.net.Uri?>(null)
     val selectedImageUri = _selectedImageUri.asStateFlow()
@@ -50,9 +46,23 @@ class ReviewWriteViewModel @Inject constructor(
     val uploadedImageUrl = _uploadedImageUrl.asStateFlow()
 
     fun findMenuItemByMealId(mealId: Long) {
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
-            _menuList.value = getMenuNameListOfMealUseCase(mealId)
+            val menuList = getMenuNameListOfMealUseCase(mealId)
+            _uiState.value = UiState.Success(
+                WriteReviewState.ValidMenuListForReview(
+                    menuList = menuList
+                )
+            )
         }
+    }
+
+    fun returnMenuItem(id: Long, menuName: String) {
+        _uiState.value = UiState.Success(
+            WriteReviewState.ValidMenuListForReview(
+                menuList = listOf(Pair(id, menuName))
+            )
+        )
     }
 
     fun postReview(
@@ -160,5 +170,8 @@ class ReviewWriteViewModel @Inject constructor(
 }
 
 sealed class WriteReviewState {
+    data class ValidMenuListForReview(
+        val menuList: List<Pair<Long, String>>
+    ) : WriteReviewState()
     data object WriteDone : WriteReviewState()
 }

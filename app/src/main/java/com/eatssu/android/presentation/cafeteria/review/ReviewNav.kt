@@ -64,7 +64,6 @@ fun ReviewNav(
                 menuType = menuType,
                 menuName = menuName,
                 id = id,
-                navController = navHostController,
                 onBack = { navHostController.popBackStack() },
             )
         }
