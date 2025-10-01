@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -44,7 +44,9 @@ import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
+import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
@@ -111,10 +113,7 @@ internal fun ReviewListScreen(
         OthersReviewBottomSheet(
             onDismiss = { showOthersBottomSheet = false; selectedReview = null },
             onReport = {
-                val intent = android.content.Intent(
-                    context,
-                    com.eatssu.android.presentation.cafeteria.review.report.ReportActivity::class.java
-                )
+                val intent = android.content.Intent(context, ReportActivity::class.java)
                 intent.putExtra("reviewId", selectedReview?.reviewId)
                 context.startActivity(intent)
                 showOthersBottomSheet = false
@@ -206,10 +205,11 @@ internal fun ReviewListScreen(
                             }
                             Box(
                                 modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center
+                                    .align(Alignment.CenterHorizontally)
+                                    .fillMaxHeight()
+                                    .padding(top = 100.dp)
                             ) {
-                                CircularProgressIndicator()
+                                DelayedLoadingIndicator(modifier = Modifier)
                             }
                         }
                     }
@@ -245,7 +245,9 @@ internal fun ReviewListScreen(
 
                             if (uiState.data?.reviewList?.size == 0) {
                                 EmptyReviewContent(
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .padding(top = 100.dp),
                                 )
                             } else {
                                 reviewList.forEach { item ->
@@ -275,7 +277,53 @@ internal fun ReviewListScreen(
 
                     UiState.Error -> {
                         // TODO: 에러 UI
-                        Spacer(modifier = Modifier.weight(1f))
+                        ReviewInfoContent(
+                            menuName,
+                            ReviewInfo(
+                                reviewCnt = 0,
+                                five = 0,
+                                four = 0,
+                                three = 0,
+                                two = 0,
+                                one = 0,
+                                rating = 0.0,
+                            )
+                        )
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(vertical = 16.dp)
+                                    .fillMaxWidth()   // 가로 전체 차지
+                                    .height(16.dp)
+                                    .background(Gray100) // 배경색 적용
+                            )
+
+                            Row(Modifier.padding(horizontal = 24.dp)) {
+                                Text(
+                                    "리뷰",
+                                    style = EatssuTheme.typography.h2,
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "0",
+                                    color = Primary,
+                                    style = EatssuTheme.typography.h2,
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .fillMaxHeight()
+                                    .padding(top = 100.dp)
+                            ) {
+                                Text(
+                                    "에러가 발생했습니다.",
+                                    style = EatssuTheme.typography.body1,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -548,6 +596,20 @@ fun ReviewListEmptyPreview() {
                     reviewList = emptyList()
                 )
             ),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ReviewListErrorPreview() {
+    EatssuTheme {
+        ReviewListScreen(
+            menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
+            onReviewWriteButtonClick = {},
+            onModifyClick = {},
+            onDeleteClick = {},
+            uiState = UiState.Error
         )
     }
 }
