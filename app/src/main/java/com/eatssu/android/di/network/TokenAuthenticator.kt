@@ -51,7 +51,7 @@ class TokenAuthenticator @Inject constructor(
                 val newAccessToken = newToken.accessToken
                 val newRefreshToken = newToken.refreshToken
 
-                if (newAccessToken != null && newRefreshToken != null) {
+                if (newAccessToken.isNotEmpty() && newRefreshToken.isNotEmpty()) {
                     Timber.d("TokenAuthenticator → 새 토큰 발급 성공")
                     setAccessTokenUseCase(newAccessToken)
                     setRefreshTokenUseCase(newRefreshToken)
