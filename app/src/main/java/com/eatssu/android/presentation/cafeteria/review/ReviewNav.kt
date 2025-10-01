@@ -9,7 +9,7 @@ import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
-import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteScreen
+import com.eatssu.android.presentation.cafeteria.review.write.WriteReviewScreen
 
 object ReviewNav {
     const val List = "list"
@@ -58,7 +58,7 @@ fun ReviewNav(
 
         // 리뷰 작성
         composable(ReviewNav.Write) { backStackEntry ->
-            ReviewWriteScreen(
+            WriteReviewScreen(
                 menuType = menuType,
                 menuName = menuName,
                 id = id,
@@ -80,7 +80,6 @@ fun ReviewNav(
                 initialContent = initialContent,
                 menuList = menuNames,
                 onBack = { navHostController.popBackStack() },
-                navController = navHostController
             )
         }
     }

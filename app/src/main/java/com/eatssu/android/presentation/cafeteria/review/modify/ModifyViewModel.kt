@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,53 +21,68 @@ class ModifyViewModel @Inject constructor(
     private val modifyReviewUseCase: ModifyReviewUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<ModifyState>> = MutableStateFlow(UiState.Init)
+    private val _uiState = MutableStateFlow<UiState<ModifyState>>(UiState.Init)
     val uiState: StateFlow<UiState<ModifyState>> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
-
-    private val _menus = MutableStateFlow<List<Review.Menu>>(emptyList())
-    val menus: StateFlow<List<Review.Menu>> = _menus
-
-    fun setInitialMenus(initial: List<Review.Menu>) {
-        _menus.value = initial
+    fun init(rating: Int, content: String, menus: List<Review.Menu>) {
+        _uiState.value = UiState.Success(
+            ModifyState.Editing(rating = rating, content = content, menus = menus)
+        )
     }
 
-    fun toggleLike(id: Long) {
-        _menus.update { list ->
-            list.map { m ->
-                if (m.menuId == id) m.copy(isLike = !m.isLike) else m
-            }
-        }
+    fun onRatingChanged(new: Int) = updateEditing { it.copy(rating = new) }
+    fun onContentChanged(new: String) = updateEditing { it.copy(content = new) }
+    fun toggleLike(id: Long) = updateEditing {
+        it.copy(menus = it.menus.map { m -> if (m.menuId == id) m.copy(isLike = !m.isLike) else m })
     }
 
-    fun modifyMyReview(
-        reviewId: Long,
-        rating: Int,
-        content: String,
-        menuLikes: List<Review.Menu>,
-    ) {
-        _uiState.value = UiState.Loading
+    private inline fun updateEditing(block: (ModifyState.Editing) -> ModifyState.Editing) {
+        val cur = (_uiState.value as? UiState.Success)?.data as? ModifyState.Editing ?: return
+        _uiState.value = UiState.Success(block(cur))
+    }
+
+    fun submit(reviewId: Long) {
+        val editing = (_uiState.value as? UiState.Success)?.data as? ModifyState.Editing ?: return
+        if (!editing.canSubmit) return
+
+        _uiState.value = UiState.Success(
+            ModifyState.Modifying(editing.rating, editing.content, editing.menus)
+        )
 
         viewModelScope.launch {
             try {
-                val reviewData = ReviewModifyData(
-                    rating = rating,
-                    content = content,
-                    menuLikes = menuLikes,
+                modifyReviewUseCase(
+                    reviewId,
+                    ReviewModifyData(editing.rating, editing.content, editing.menus)
                 )
+                _uiEvent.emit(UiEvent.NavigateBack)
+                _uiEvent.emit(UiEvent.ShowToast("리뷰를 수정했습니다."))
 
-                modifyReviewUseCase(reviewId, reviewData)
-                _uiState.value = UiState.Success(ModifyState.ModifyDone)
             } catch (e: Exception) {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 수정에 실패했습니다: ${e.message}"))
+                // 실패 시 다시 Editing 상태로 되돌림
+                _uiState.value = UiState.Success(editing)
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 수정 실패: ${e.message}"))
             }
         }
     }
+
 }
 
 sealed class ModifyState {
-    data object ModifyDone : ModifyState()
+    data class Editing(
+        val rating: Int = 0,
+        val content: String = "",
+        val menus: List<Review.Menu> = emptyList(),
+    ) : ModifyState() {
+        val canSubmit: Boolean get() = rating > 0
+        val contentCount: Int get() = content.length
+    }
+
+    data class Modifying(
+        val rating: Int,
+        val content: String,
+        val menus: List<Review.Menu>,
+    ) : ModifyState()
 }

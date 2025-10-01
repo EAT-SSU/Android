@@ -1,17 +1,23 @@
-package com.eatssu.android.presentation.cafeteria.review.modify
+package com.eatssu.android.presentation.cafeteria.review.write
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,12 +26,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.eatssu.android.domain.model.Review
+import coil.compose.AsyncImage
+import com.eatssu.android.R
+import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
@@ -36,30 +46,36 @@ import com.eatssu.design_system.component.RatingBarMedium
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray200
+import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray400
+import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Primary
 
 const val MAX_TEXT_COUNT = 300
 
+/** Route */
 @Composable
-fun ModifyReviewScreen(
+fun WriteReviewScreen(
     modifier: Modifier = Modifier,
-    viewModel: ModifyViewModel = hiltViewModel(),
-    reviewId: Long,
-    initialRating: Int = 0,
-    initialContent: String = "",
-    menuList: List<Review.Menu> = emptyList(),
-    onBack: () -> Unit = {},
+    viewModel: WriteReviewViewModel = hiltViewModel(),
+    menuName: String,
+    menuType: MenuType,
+    id: Long,
+    onBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val ui by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // 최초 1회 초기화
-    LaunchedEffect(Unit) {
-        viewModel.init(initialRating, initialContent, menuList)
+    // 갤러리 런처
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? -> viewModel.setSelectedImage(uri) }
+
+    // 메뉴 읽기
+    LaunchedEffect(menuType, id, menuName) {
+        viewModel.loadMenus(menuType, id, menuName)
     }
 
-    // 완료 이펙트 처리
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -72,44 +88,49 @@ fun ModifyReviewScreen(
     }
 
     when (val data = (ui as? UiState.Success)?.data) {
-        is ModifyState.Editing -> {
-            ModifyReviewScreen(
+        is WriteReviewState.Editing -> {
+            WriteReviewScreen(
                 modifier = modifier,
-                title = "리뷰 수정하기",
+                title = "리뷰 작성하기",
+                menuList = data.menuList,
                 rating = data.rating,
                 content = data.content,
-                menus = data.menus,
-                isSubmitting = false,
+                likedMenuIds = data.likedMenuIds,
+                selectedImageUri = data.selectedImageUri,
+                isPosting = false,
                 onBack = onBack,
                 onRatingChanged = viewModel::onRatingChanged,
                 onContentChanged = { new ->
                     if (new.length <= MAX_TEXT_COUNT) viewModel.onContentChanged(new)
                 },
                 onToggleLike = viewModel::toggleLike,
-                onSubmit = { viewModel.submit(reviewId) }
+                onImageSelect = { galleryLauncher.launch("image/*") },
+                onImageDelete = { viewModel.setSelectedImage(null) },
+                onSubmit = { viewModel.postReview(menuType, id, context) }
             )
         }
 
-        is ModifyState.Modifying -> {
-            // 통신 중에도 폼은 유지, 버튼/입력 제한만
-            ModifyReviewScreen(
+        is WriteReviewState.Posting -> {
+            WriteReviewScreen(
                 modifier = modifier,
-                title = "리뷰 수정하기",
+                title = "리뷰 작성하기",
+                menuList = data.menuList,
                 rating = data.rating,
                 content = data.content,
-                menus = data.menus,
-                isSubmitting = true,
+                likedMenuIds = data.likedMenuIds,
+                selectedImageUri = data.selectedImageUri,
+                isPosting = true,
                 onBack = onBack,
-                onRatingChanged = {},          // 수정 불가
-                onContentChanged = {},         // 수정 불가
-                onToggleLike = {},             // 수정 불가
-                onSubmit = {}                  // 중복 제출 방지
+                onRatingChanged = {}, // 비활성
+                onContentChanged = {}, // 비활성
+                onToggleLike = {}, // 비활성
+                onImageSelect = {}, // 비활성
+                onImageDelete = {}, // 비활성
+                onSubmit = {} // 중복 제출 방지
             )
         }
 
-//        null, // UiState.Init
         else -> {
-            // 에러나 초기 로딩 등: 최소 로딩 UI
             Surface(modifier = modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
@@ -118,8 +139,6 @@ fun ModifyReviewScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(Modifier.height(24.dp))
-                    CircularProgressIndicator()
-                    Spacer(Modifier.height(8.dp))
                     Text("화면을 준비하는 중입니다.", style = EatssuTheme.typography.body2)
                 }
             }
@@ -127,31 +146,31 @@ fun ModifyReviewScreen(
     }
 }
 
-/**
- * 순수 UI: 상태를 받아 그림. 로컬 remember 상태 없음.
- * - 본문은 스크롤, 하단 버튼은 고정
- * - isSubmitting 동안 입력/버튼 비활성화
- */
+/** 순수 UI */
 @Composable
-internal fun ModifyReviewScreen(
+internal fun WriteReviewScreen(
     modifier: Modifier = Modifier,
     title: String,
+    menuList: List<Pair<Long, String>>,
     rating: Int,
     content: String,
-    menus: List<Review.Menu>,
-    isSubmitting: Boolean,
+    likedMenuIds: Set<Long>,
+    selectedImageUri: Uri?,
+    isPosting: Boolean,
     onBack: () -> Unit,
     onRatingChanged: (Int) -> Unit,
     onContentChanged: (String) -> Unit,
     onToggleLike: (Long) -> Unit,
+    onImageSelect: () -> Unit,
+    onImageDelete: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     Scaffold(
         topBar = { CloseTopBar(title, onClose = onBack) },
         bottomBar = {
             EatSsuButton(
-                text = if (isSubmitting) "수정 중..." else "완료하기",
-                enabled = rating > 0 && !isSubmitting,
+                text = if (isPosting) "작성 중..." else "완료하기",
+                enabled = rating > 0 && !isPosting,
                 onClick = onSubmit,
                 modifier = Modifier.padding(24.dp)
             )
@@ -173,7 +192,7 @@ internal fun ModifyReviewScreen(
                 RatingBarMedium(
                     modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
                     rating = rating,
-                    onRatingChanged = { if (!isSubmitting) onRatingChanged(it) }
+                    onRatingChanged = { if (!isPosting) onRatingChanged(it) }
                 )
 
                 Text("추천하고 싶은 메뉴가 있나요?", style = EatssuTheme.typography.subtitle1)
@@ -184,27 +203,28 @@ internal fun ModifyReviewScreen(
                         .fillMaxWidth()
                         .weight(1f) // 본문 스크롤, 버튼 고정
                 ) {
-                    items(items = menus, key = { it.menuId }) { menu ->
+                    items(menuList, key = { it.first }) { (id, name) ->
                         MenuLikeButtonItem(
                             modifier = Modifier.fillMaxWidth(),
-                            mealName = menu.name,
-                            isLiked = menu.isLike,
+                            mealName = name,
+                            isLiked = id in likedMenuIds,
                             onLikeChanged = {
-                                if (!isSubmitting) onToggleLike(menu.menuId)
+                                if (!isPosting) onToggleLike(id)
                             }
                         )
                     }
 
                     item {
                         Spacer(Modifier.height(16.dp))
+                        // 텍스트 입력
                         Column {
-                            OutlinedTextField(
+                            androidx.compose.material3.OutlinedTextField(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(160.dp),
                                 value = content,
                                 onValueChange = { new ->
-                                    if (!isSubmitting && new.length <= MAX_TEXT_COUNT) {
+                                    if (!isPosting && new.length <= MAX_TEXT_COUNT) {
                                         onContentChanged(new)
                                     }
                                 },
@@ -215,7 +235,7 @@ internal fun ModifyReviewScreen(
                                     )
                                 },
                                 shape = RoundedCornerShape(10.dp),
-                                colors = OutlinedTextFieldDefaults.colors(
+                                colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
                                     focusedContainerColor = Gray100,
                                     unfocusedContainerColor = Gray100,
                                     unfocusedBorderColor = Gray200,
@@ -234,6 +254,56 @@ internal fun ModifyReviewScreen(
                                 style = EatssuTheme.typography.caption3
                             )
                         }
+                        Spacer(Modifier.height(16.dp))
+
+                        // 사진
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            if (selectedImageUri != null) {
+                                Column(
+                                    modifier = Modifier
+                                        .size(120.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .clickable(enabled = !isPosting) { onImageDelete() }
+                                ) {
+                                    AsyncImage(
+                                        model = selectedImageUri,
+                                        contentDescription = "Selected image",
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                Text(
+                                    modifier = Modifier.padding(top = 8.dp),
+                                    text = "사진 클릭 시, 삭제됩니다.",
+                                    color = Gray500,
+                                    style = EatssuTheme.typography.caption3
+                                )
+                            } else {
+                                Column(
+                                    modifier = Modifier
+                                        .size(60.dp)
+                                        .clip(RoundedCornerShape(5.dp))
+                                        .background(Gray100)
+                                        .border(1.dp, Gray200, RoundedCornerShape(5.dp))
+                                        .clickable(enabled = !isPosting) { onImageSelect() },
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_camera_light),
+                                        contentDescription = "add photo",
+                                        tint = Gray300
+                                    )
+                                    Text(
+                                        "사진 0/1",
+                                        color = Gray400,
+                                        style = EatssuTheme.typography.caption3
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -241,26 +311,24 @@ internal fun ModifyReviewScreen(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-private fun ModifyReviewPreview() {
+private fun ReviewWritePreview() {
     EatssuTheme {
-        ModifyReviewScreen(
-            title = "리뷰 수정하기",
+        WriteReviewScreen(
+            title = "리뷰 작성하기",
+            menuList = listOf(1L to "맑은 미역국", 2L to "연탄불맛돈불고기"),
             rating = 3,
-            content = "국밥 맛있음!",
-            menus = listOf(
-                Review.Menu(1, "된장찌개", true),
-                Review.Menu(2, "김치찌개", false),
-                Review.Menu(3, "계란말이", true),
-                Review.Menu(4, "돈까스", false),
-            ),
-            isSubmitting = false,
+            content = "맛있었습니다!",
+            likedMenuIds = setOf(1L),
+            selectedImageUri = null,
+            isPosting = false,
             onBack = {},
             onRatingChanged = {},
             onContentChanged = {},
             onToggleLike = {},
+            onImageSelect = {},
+            onImageDelete = {},
             onSubmit = {}
         )
     }

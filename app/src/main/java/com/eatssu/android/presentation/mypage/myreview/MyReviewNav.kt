@@ -55,7 +55,6 @@ fun MyReviewNav(
                 initialContent = initialContent,
                 menuList = menuNames,
                 onBack = { navHostController.popBackStack() },
-                navController = navHostController
             )
         }
     }
