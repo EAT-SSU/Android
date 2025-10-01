@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.list.component
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -62,14 +63,28 @@ fun ReviewProgressBar(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                LinearProgressIndicator(
-                    progress = { percent.coerceIn(0f, 1f) },
+                Box(
                     modifier = Modifier
                         .weight(1f)
-                        .height(5.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = Gray200,
-                )
+                ) {
+                    LinearProgressIndicator(
+                        progress = { 0f },
+                        modifier = Modifier
+                            .height(5.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = Gray200,
+                    )
+                    LinearProgressIndicator(
+                        progress = { percent.coerceIn(0f, 1f) },
+                        modifier = Modifier
+                            .matchParentSize()
+                            .height(5.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        drawStopIndicator = {},
+                        trackColor = Gray200,
+                    )
+
+                }
             }
         }
     }
@@ -79,6 +94,7 @@ fun ReviewProgressBar(
 @Composable
 fun ReviewProgressBarPreview() {
     EatssuTheme {
+
         ReviewProgressBar(
             reviewCount = 100,
             fiveRatingCount = 60,
@@ -86,6 +102,22 @@ fun ReviewProgressBarPreview() {
             threeRatingCount = 10,
             twoRatingCount = 7,
             oneRatingCount = 3
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ReviewProgressBar1Preview() {
+    EatssuTheme {
+
+        ReviewProgressBar(
+            reviewCount = 100,
+            fiveRatingCount = 100,
+            fourRatingCount = 0,
+            threeRatingCount = 0,
+            twoRatingCount = 0,
+            oneRatingCount = 0
         )
     }
 }
