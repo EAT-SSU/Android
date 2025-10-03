@@ -42,7 +42,7 @@ fun LikeButton(
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_thumb_up), // R.drawable 경로가 올바른지 확인
+            painter = painterResource(id = R.drawable.ic_thumb_up),
             contentDescription = "like",
             modifier = Modifier.size(18.dp)
         )

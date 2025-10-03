@@ -23,7 +23,7 @@ fun MyReviewNav(
         navController = navHostController,
         startDestination = MyReviewNav.List
     ) {
-        // 리뷰 리스트
+        // 리뷰 보기
         composable(MyReviewNav.List) {
             MyReviewListScreen(
                 onBack = { onExit() },
@@ -41,7 +41,7 @@ fun MyReviewNav(
             )
         }
 
-        // 리뷰 작성
+        // 리뷰 수정
         composable(MyReviewNav.Modify) { backStackEntry ->
             val prev = navHostController.previousBackStackEntry?.savedStateHandle
             val reviewId = prev?.get<Long>("reviewId") ?: 0L

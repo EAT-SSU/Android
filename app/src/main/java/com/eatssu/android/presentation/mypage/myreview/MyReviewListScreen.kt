@@ -52,6 +52,7 @@ fun MyReviewListScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getMyReviewList()
+        viewModel.getUserNickname()
     }
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -129,7 +130,7 @@ internal fun MyReviewListScreen(
                                         ReviewItem(
                                             modifier = Modifier,
                                             isWriter = item.isWriter,
-                                            writeName = item.writerNickname,
+                                            writeName = userNickname,
                                             writeDate = item.writeDate,
                                             content = item.content,
                                             rating = item.rating,

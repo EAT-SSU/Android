@@ -57,7 +57,6 @@ class WriteReviewViewModel @Inject constructor(
         }
     }
 
-    /** 입력 변경들 */
     fun onRatingChanged(new: Int) = updateEditing { it.copy(rating = new) }
 
     fun onContentChanged(new: String) = updateEditing { it.copy(content = new) }
@@ -75,7 +74,6 @@ class WriteReviewViewModel @Inject constructor(
         _uiState.value = UiState.Success(block(cur))
     }
 
-    /** 제출 */
     fun postReview(
         menuType: MenuType,
         itemId: Long,

@@ -29,6 +29,27 @@ class MyReviewViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
+    fun getUserNickname() {
+        _uiState.value = UiState.Loading
+
+        viewModelScope.launch {
+            try {
+                val myReviewList = getMyReviewsUseCase()
+                _uiState.value = UiState.Success(
+                    if (myReviewList.isEmpty()) {
+                        MyReviewState.NoReview
+                    } else {
+                        MyReviewState.ReviewExists(myReviews = myReviewList)
+                    }
+                )
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
+                Timber.d("getMyReviewList: ${e.message}")
+            }
+        }
+    }
+
     fun getMyReviewList() {
         _uiState.value = UiState.Loading
 
