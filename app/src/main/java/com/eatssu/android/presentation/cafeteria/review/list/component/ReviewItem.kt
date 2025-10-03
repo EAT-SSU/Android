@@ -23,8 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
-import com.eatssu.design_system.R
 import com.eatssu.design_system.component.Chip
 import com.eatssu.design_system.component.RatingBarSmall
 import com.eatssu.design_system.theme.EatssuTheme
@@ -96,7 +96,7 @@ fun ReviewItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_profile_24),
+                painter = painterResource(id = com.eatssu.design_system.R.drawable.ic_profile_24),
                 contentDescription = "Profile Image",
                 modifier = Modifier.size(30.dp),
                 tint = Color.Unspecified,
@@ -109,6 +109,7 @@ fun ReviewItem(
                     writeName,
                     style = EatssuTheme.typography.caption1
                 )
+                Spacer(modifier = Modifier.height(2.dp))
                 RatingBarSmall(rating = rating)
             }
 
@@ -116,17 +117,17 @@ fun ReviewItem(
                 modifier = Modifier.weight(1f)
             )
 
-            Column(horizontalAlignment = Alignment.End) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End
+            ) {
                 IconButton(
-                    onClick = {
-                        onMoreClick()
-                    },
+                    onClick = { onMoreClick() }
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_three_dot),
+                        painter = painterResource(id = R.drawable.ic_menu_12),
                         contentDescription = "etc",
-                        modifier = Modifier
-                            .size(24.dp),
+                        modifier = Modifier.size(12.dp),
                         tint = Color.Unspecified,
                     )
                 }
@@ -135,6 +136,7 @@ fun ReviewItem(
                     writeDate,
                     style = EatssuTheme.typography.caption3,
                     color = Gray400,
+                    modifier = Modifier.padding(end = 20.dp) //20인 이유는 없음 IconButton에 넣으면서 padding 생겨서 끝점을 맞추려고 조절한 것임
                 )
             }
         }
