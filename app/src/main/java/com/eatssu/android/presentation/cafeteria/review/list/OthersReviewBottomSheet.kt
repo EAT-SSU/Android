@@ -98,7 +98,7 @@ fun OthersReviewBottomSheet(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = "수정하기",
+                    text = "신고하기",
                     style = EatssuTheme.typography.body2,
                     color = Black
                 )
