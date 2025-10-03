@@ -208,7 +208,7 @@ internal fun ModifyReviewScreen(
                                         onContentChanged(new)
                                     }
                                 },
-                                label = {
+                                placeholder = {
                                     Text(
                                         "메뉴에 대한 상세한 리뷰를 작성해주세요",
                                         style = EatssuTheme.typography.body2
