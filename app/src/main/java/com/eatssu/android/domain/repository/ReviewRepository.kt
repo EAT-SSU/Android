@@ -31,7 +31,7 @@ interface ReviewRepository {
     ): List<Review>
 
     suspend fun getMealReviewList(
-        menuId: Long?,
+        mealId: Long?,
     ): List<Review>
 
     suspend fun getMenuReviewInfo(
@@ -39,7 +39,7 @@ interface ReviewRepository {
     ): ReviewInfo
 
     suspend fun getMealReviewInfo(
-        menuId: Long,
+        mealId: Long,
     ): ReviewInfo
 
     suspend fun getImageString(

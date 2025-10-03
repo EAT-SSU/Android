@@ -3,19 +3,15 @@ package com.eatssu.android.data.dto.request
 import com.google.gson.annotations.SerializedName
 
 
-data class WriteMenuReviewRequest(
-    @SerializedName("menuId") var menuId: Int? = null,
-    @SerializedName("mainRating") var mainRating: Int? = null,
-    @SerializedName("amountRating") var amountRating: Int? = null,
-    @SerializedName("tasteRating") var tasteRating: Int? = null,
+data class WriteMealReviewRequest(
+    @SerializedName("mealId") var mealId: Long? = null,
+    @SerializedName("rating") var rating: Int? = null,
+    @SerializedName("menuLikes") var menuLikes: List<MenuLikes> = arrayListOf(),
     @SerializedName("content") var content: String? = null,
-    @SerializedName("imageUrl") var imageUrl: String? = null,
-    @SerializedName("menuLike") var menuLike: MenuLike? = MenuLike()
+    @SerializedName("imageUrls") var imageUrls: ArrayList<String>? = arrayListOf()
 ) {
-    data class MenuLike(
-
+    data class MenuLikes(
         @SerializedName("menuId") var menuId: Long? = null,
         @SerializedName("isLike") var isLike: Boolean? = null
-
     )
 }
