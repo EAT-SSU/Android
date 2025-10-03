@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetReviewInfoUseCase @Inject constructor(
     private val reviewRepository: ReviewRepository,
 ) {
-    suspend operator fun invoke(menuType: MenuType, itemId: Long): ReviewInfo =
+    suspend operator fun invoke(menuType: MenuType, itemId: Long): ReviewInfo? =
         when (menuType) {
             MenuType.FIXED -> reviewRepository.getMenuReviewInfo(itemId)
             MenuType.VARIABLE -> reviewRepository.getMealReviewInfo(itemId)

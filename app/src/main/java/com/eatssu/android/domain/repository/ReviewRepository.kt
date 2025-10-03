@@ -36,11 +36,11 @@ interface ReviewRepository {
 
     suspend fun getMenuReviewInfo(
         menuId: Long,
-    ): ReviewInfo
+    ): ReviewInfo?
 
     suspend fun getMealReviewInfo(
         mealId: Long,
-    ): ReviewInfo
+    ): ReviewInfo?
 
     suspend fun getImageString(
         file: File

@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyReviewViewModel @Inject constructor(
-    private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val getMyReviewsUseCase: GetMyReviewsUseCase,
+    private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
 

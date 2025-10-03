@@ -27,10 +27,10 @@ data class MenuReviewListResponse(
     }
 }
 
-fun MenuReviewListResponse.toDomain(): List<Review> {
-    return this.dataList.map { data ->
+fun MenuReviewListResponse?.toDomain(): List<Review> {
+    return this?.dataList?.map { data ->
         Review(
-            reviewId = data.reviewId ?: 0,
+            reviewId = data.reviewId ?: -1L,
             isWriter = data.isWriter ?: false,
             menuList = listOf(
                 Review.Menu(

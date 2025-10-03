@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class MyReviewListResponse(
     @SerializedName("numberOfElements") var numberOfElements: Int? = null,
     @SerializedName("hasNext") var hasNext: Boolean? = null,
-    @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf()
+    @SerializedName("dataList") var dataList: ArrayList<DataList>? = arrayListOf()
 ) {
     data class DataList(
 
@@ -25,10 +25,10 @@ data class MyReviewListResponse(
     }
 }
 
-fun MyReviewListResponse.toDomain(): List<Review> {
-    return dataList.map { data ->
+fun MyReviewListResponse?.toDomain(): List<Review> {
+    return this?.dataList?.map { data ->
         Review(
-            reviewId = data.reviewId ?: 0,
+            reviewId = data.reviewId ?: -1L,
             isWriter = true,
             menuList = data.menuList.map { menu ->
                 Review.Menu(

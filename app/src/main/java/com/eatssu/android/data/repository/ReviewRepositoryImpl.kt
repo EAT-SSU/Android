@@ -82,12 +82,12 @@ class ReviewRepositoryImpl @Inject constructor(
         return reviewService.getMealReviewList(mealId).result?.toDomain() ?: emptyList()
     }
 
-    override suspend fun getMenuReviewInfo(menuId: Long): ReviewInfo {
-        return reviewService.getMenuReviewInfo(menuId).result?.toDomain()!! //non null 하면 안될 것 같은데
+    override suspend fun getMenuReviewInfo(menuId: Long): ReviewInfo? {
+        return reviewService.getMenuReviewInfo(menuId).result?.toDomain()
     }
 
-    override suspend fun getMealReviewInfo(mealId: Long): ReviewInfo {
-        return reviewService.getMealReviewInfo(mealId).result?.toDomain()!!
+    override suspend fun getMealReviewInfo(mealId: Long): ReviewInfo? {
+        return reviewService.getMealReviewInfo(mealId).result?.toDomain()
     }
 
     override suspend fun getImageString(file: File): String {

@@ -32,7 +32,7 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
     // MealReviewListResponse 객체 자체가 null이면 emptyList() 반환
     return this?.dataList?.map { data ->
         Review(
-            reviewId = data.reviewId ?: 0,
+            reviewId = data.reviewId ?: -1L,
             isWriter = data.isWriter ?: false,
             menuList = data.menuList.map { menu ->
                 Review.Menu(
