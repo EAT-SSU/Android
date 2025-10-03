@@ -1,4 +1,4 @@
-package com.eatssu.android.data.repository
+package com.eatssu.android.data.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,16 +7,18 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.eatssu.common.enums.Restaurant
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private val Context.widgetPrefsDataStore: DataStore<Preferences> by preferencesDataStore(name = "widget_prefs")
+
 @Singleton
-class WidgetPreferencesRepository @Inject constructor(
-    private val context: Context,
+class WidgetDataStore @Inject constructor(
+    @ApplicationContext private val context: Context,
 ) {
-    private val Context.widgetPrefsDataStore: DataStore<Preferences> by preferencesDataStore(name = "widget_prefs")
     private fun fileKeyRestaurantKey(fileKey: String) =
         stringPreferencesKey("widget_restaurant_by_fileKey_$fileKey")
 

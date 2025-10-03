@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.databinding.ItemReviewBinding
 import com.eatssu.android.domain.model.Review
 import timber.log.Timber
@@ -30,7 +29,7 @@ class MyReviewAdapter :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(data: Review) {
-            binding.tvWriterNickname.text = MySharedPreferences.getUserName(binding.root.context)
+            binding.tvWriterNickname.text = ""
             binding.tvReviewItemComment.text = data.content
             binding.tvReviewItemDate.text = data.writeDate
             binding.tvMenuName.text = data.menu

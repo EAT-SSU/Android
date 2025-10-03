@@ -1,14 +1,18 @@
 package com.eatssu.android.domain.usecase.auth
 
-import android.content.Context
-import com.eatssu.android.data.MySharedPreferences
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.eatssu.android.data.local.AccountDataStore
+import com.eatssu.android.data.local.SettingDataStore
+import com.eatssu.android.data.local.TokenStore
 import javax.inject.Inject
 
 class LogoutUseCase @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val accountDataStore: AccountDataStore,
+    private val tokenStore: TokenStore,
+    private val settingDataStore: SettingDataStore,
 ) {
     suspend operator fun invoke() {
-        MySharedPreferences.clearUser(context)
+        accountDataStore.clear()
+        tokenStore.clear()
+        settingDataStore.clear()
     }
 }

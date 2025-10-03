@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
@@ -30,7 +29,7 @@ class MyPageViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
-    private val preferencesRepository: PreferencesRepository,
+    private val settingDataStore: SettingDataStore,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -64,7 +63,7 @@ class MyPageViewModel @Inject constructor(
 
     private fun observeNotificationStatus() {
         viewModelScope.launch {
-            preferencesRepository.dailyNotificationStatus.collectLatest { isOn ->
+            settingDataStore.dailyNotificationStatus.collectLatest { isOn ->
                 _state.update { it.copy(isAlarmOn = isOn) }
             }
         }

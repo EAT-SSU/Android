@@ -50,12 +50,14 @@ class MainViewModel @Inject constructor(
     }
 
     fun refreshUserDepartment() {
-        val userInfo = getUserCollegeDepartmentUseCase()
-        _uiState.value = UiState.Success(
-            MainState.DepartmentState(
-                departmentName = userInfo.userDepartment.departmentName
+        viewModelScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = userInfo.userDepartment?.departmentName
+                )
             )
-        )
+        }
     }
 
     private fun fetchAndCheckNickname() {
@@ -97,7 +99,7 @@ class MainViewModel @Inject constructor(
     fun setData(dataToSend: LocalDate) {
         data.value = dataToSend
 
-        Timber.d("setdata", dataToSend.toString())
+        Timber.d("setdata $dataToSend")
     }
 
     fun getData(): LiveData<LocalDate> {
@@ -131,7 +133,7 @@ sealed class MainState {
     data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
-        val departmentName: String = "",
+        val departmentName: String? = "",
         val showUserDepartmentBottomSheet: Boolean = false
     ) : MainState()
 }
