@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation
+package com.eatssu.common
 
 sealed interface UiState<out T> {
     object Init : UiState<Nothing>

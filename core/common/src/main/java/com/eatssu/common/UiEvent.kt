@@ -1,4 +1,4 @@
-package com.eatssu.android.presentation
+package com.eatssu.common
 
 
 /**

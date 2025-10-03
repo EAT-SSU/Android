@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -21,14 +20,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListComposeActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +47,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         return FragmentMyPageBinding.inflate(layoutInflater)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

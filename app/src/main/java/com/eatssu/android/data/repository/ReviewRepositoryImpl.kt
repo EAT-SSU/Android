@@ -96,11 +96,11 @@ class ReviewRepositoryImpl @Inject constructor(
         return reviewService.uploadImage(multipart).result?.url ?: ""
     }
 
-    override suspend fun getMenuInfoByMealId(mealId: Long): List<Pair<Long, String>> {
+    override suspend fun getValidMenusByMealId(mealId: Long): List<Pair<Long, String>> {
         return reviewService.getMenuInfoByMealId(mealId).result?.toDomain() ?: emptyList()
     }
 
-    override suspend fun getUserReviews(): List<Review> {
+    override suspend fun getMyReviews(): List<Review> {
         return reviewService.getMyReviews().result?.toDomain() ?: emptyList()
     }
 

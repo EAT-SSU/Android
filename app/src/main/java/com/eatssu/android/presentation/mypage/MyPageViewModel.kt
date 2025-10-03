@@ -7,8 +7,8 @@ import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -39,20 +39,17 @@ interface ReviewRepository {
     ): ReviewInfo
 
     suspend fun getMealReviewInfo(
-        mealId: Long,
+        menuId: Long,
     ): ReviewInfo
 
     suspend fun getImageString(
         file: File
     ): String
 
-    /**
-     * MealId를 이용해서 Menu를 찾기 api (+ 리뷰 작성 가능한 메뉴 조회 v2)
-     */
-    suspend fun getMenuInfoByMealId(
+    suspend fun getValidMenusByMealId(
         mealId: Long,
     ): List<Pair<Long, String>>
 
-    suspend fun getUserReviews(): List<Review>
+    suspend fun getMyReviews(): List<Review>
 
 }

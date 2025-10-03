@@ -5,11 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
 import com.eatssu.android.presentation.cafeteria.review.write.WriteReviewScreen
+import com.eatssu.common.enums.MenuType
 
 object ReviewNav {
     const val List = "list"

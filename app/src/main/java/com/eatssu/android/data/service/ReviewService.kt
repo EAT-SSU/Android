@@ -72,19 +72,12 @@ interface ReviewService {
         @Part image: MultipartBody.Part,
     ): BaseResponse<ImageResponse>
 
-    /**
-     * 메뉴 정보 리스트 조회
-     */
-    @GET("v2/reviews/meal/valid-for-review/{mealId}")
+    @GET("v2/reviews/meal/valid-for-review/{mealId}") //메뉴 정보 리스트 조회
     suspend fun getMenuInfoByMealId(
         @Path("mealId") mealId: Long,
     ): BaseResponse<MenuOfMealResponse>
 
-    /**
-     * 내가 쓴 리뷰
-     */
-    @GET("users/v2/reviews")
+    @GET("users/v2/reviews") // 내가 쓴 리뷰
     suspend fun getMyReviews(): BaseResponse<MyReviewListResponse>
-
 
 }

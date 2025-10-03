@@ -3,8 +3,6 @@ package com.eatssu.android.data.repository
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MyNickNameResponse
-import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.domain.model.College

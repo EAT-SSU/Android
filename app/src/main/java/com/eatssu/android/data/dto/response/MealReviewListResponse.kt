@@ -17,12 +17,12 @@ data class MealReviewListResponse(
         @SerializedName("rating") var rating: Int? = null,
         @SerializedName("writtenAt") var writtenAt: String? = null,
         @SerializedName("content") var content: String? = null,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf()
+        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
     ) {
         data class MenuList(
             @SerializedName("id") var id: Long? = null,
             @SerializedName("name") var name: String? = null,
-            @SerializedName("isLike") var isLike: Boolean? = null
+            @SerializedName("isLike") var isLike: Boolean? = null,
         )
     }
 }

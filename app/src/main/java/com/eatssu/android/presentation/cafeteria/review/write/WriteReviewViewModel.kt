@@ -4,14 +4,14 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Result
 import com.eatssu.android.domain.model.ReviewWriteData
-import com.eatssu.android.domain.usecase.menu.GetMenuNameListOfMealUseCase
+import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
+import com.eatssu.common.enums.MenuType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class WriteReviewViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
-    private val getMenuNameListOfMealUseCase: GetMenuNameListOfMealUseCase,
+    private val getValidMenusOfMealUseCase: GetValidMenusOfMealUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
@@ -43,7 +43,7 @@ class WriteReviewViewModel @Inject constructor(
             _uiState.value = UiState.Loading
             val menuList: List<Pair<Long, String>> = when (menuType) {
                 MenuType.FIXED -> listOf(id to menuName)
-                MenuType.VARIABLE -> getMenuNameListOfMealUseCase(id)
+                MenuType.VARIABLE -> getValidMenusOfMealUseCase(id)
             }
             _uiState.value = UiState.Success(
                 WriteReviewState.Editing(

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class MenuReviewListResponse(
     @SerializedName("numberOfElements") var numberOfElements: Int? = null,
     @SerializedName("hasNext") var hasNext: Boolean? = null,
-    @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf()
+    @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf(),
 ) {
     data class DataList(
         @SerializedName("reviewId") var reviewId: Long? = null,
@@ -17,7 +17,7 @@ data class MenuReviewListResponse(
         @SerializedName("rating") var rating: Int? = null,
         @SerializedName("writtenAt") var writtenAt: String? = null,
         @SerializedName("content") var content: String? = null,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf()
+        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
     ) {
         data class Menu(
             @SerializedName("id") var id: Long? = null,

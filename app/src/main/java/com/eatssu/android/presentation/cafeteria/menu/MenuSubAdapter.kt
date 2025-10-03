@@ -7,15 +7,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.cafeteria.review.ReviewComposeActivity
+import com.eatssu.common.EventLogger
+import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 
 
 class MenuSubAdapter(
     private val dataList: List<Menu>,
-    private val menuType: MenuType
+    private val restaurant: Restaurant,
 ) :
     RecyclerView.Adapter<MenuSubAdapter.ViewHolder>() {
 
@@ -40,7 +42,7 @@ class MenuSubAdapter(
                 val item = dataList[position]
                 val intent = Intent(binding.root.context, ReviewComposeActivity::class.java)
 
-                when (menuType) {
+                when (restaurant.menuType) {
                     MenuType.FIXED -> {
                         Log.d("SubMenuAdapter", "고정메뉴${item.name}")
                         intent.putExtra("itemId", item.id)
@@ -56,7 +58,7 @@ class MenuSubAdapter(
                     }
                 }
                 ContextCompat.startActivity(binding.root.context, intent, null)
-
+                EventLogger.clickMenu(restaurant)
                 // Re-enable after short delay
                 binding.root.postDelayed({ binding.root.isEnabled = true }, 800)
             }

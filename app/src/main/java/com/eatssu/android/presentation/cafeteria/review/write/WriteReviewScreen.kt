@@ -35,11 +35,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.eatssu.android.R
-import com.eatssu.android.data.enums.MenuType
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.enums.MenuType
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.RatingBarMedium

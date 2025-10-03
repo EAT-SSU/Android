@@ -2,14 +2,14 @@ package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.enums.MenuType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
+import com.eatssu.common.enums.MenuType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

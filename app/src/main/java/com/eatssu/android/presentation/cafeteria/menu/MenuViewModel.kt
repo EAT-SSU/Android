@@ -8,7 +8,7 @@ import com.eatssu.android.data.dto.response.GetMealResponse
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.domain.model.MenuMini
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel

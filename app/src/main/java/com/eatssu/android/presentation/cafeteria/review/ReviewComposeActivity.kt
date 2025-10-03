@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
-import com.eatssu.android.data.enums.MenuType
+import com.eatssu.common.enums.MenuType
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber

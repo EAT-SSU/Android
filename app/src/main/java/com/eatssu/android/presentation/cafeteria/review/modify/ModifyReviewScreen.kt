@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.RatingBarMedium

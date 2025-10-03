@@ -8,5 +8,5 @@ class GetMyReviewsUseCase @Inject constructor(
     private val reviewRepository: ReviewRepository,
 ) {
     suspend operator fun invoke(): List<Review> =
-        reviewRepository.getUserReviews()
+        reviewRepository.getMyReviews()
 }

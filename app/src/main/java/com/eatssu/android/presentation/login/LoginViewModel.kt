@@ -10,8 +10,8 @@ import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
