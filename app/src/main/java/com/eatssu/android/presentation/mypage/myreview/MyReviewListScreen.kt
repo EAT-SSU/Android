@@ -52,10 +52,11 @@ fun MyReviewListScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getMyReviewList()
-        viewModel.getUserNickname()
+        viewModel.loadUserNickname()
     }
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
+    val userNickname by viewModel.nickname.collectAsStateWithLifecycle()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
     when (uiEvent) {
@@ -66,6 +67,7 @@ fun MyReviewListScreen(
 
     MyReviewListScreen(
         uiState = reviewListState,
+        userNickname = userNickname,
         modifier = modifier,
         onBack = onBack,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
@@ -76,6 +78,7 @@ fun MyReviewListScreen(
 @Composable
 internal fun MyReviewListScreen(
     uiState: UiState<MyReviewState>,
+    userNickname: String,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
     onModifyClick: (Review) -> Unit,
@@ -211,6 +214,7 @@ internal fun MyReviewListScreen(
 fun ReviewListPreview() {
     EatssuTheme {
         MyReviewListScreen(
+            userNickname = "숭실푸드파이터",
             onDeleteClick = {},
             onModifyClick = {},
             uiState = UiState.Success(
@@ -308,6 +312,7 @@ fun ReviewListPreview() {
 fun ReviewListEmptyPreview() {
     EatssuTheme {
         MyReviewListScreen(
+            userNickname = "숭실푸드파이터",
             onDeleteClick = {},
             onModifyClick = {},
             uiState = UiState.Success(

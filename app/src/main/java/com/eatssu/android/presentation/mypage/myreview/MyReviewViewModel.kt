@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
+import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyReviewViewModel @Inject constructor(
+    private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val getMyReviewsUseCase: GetMyReviewsUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
@@ -29,24 +31,12 @@ class MyReviewViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun getUserNickname() {
-        _uiState.value = UiState.Loading
+    private val _nickname = MutableStateFlow<String>("")
+    val nickname: StateFlow<String> = _nickname
 
+    fun loadUserNickname() {
         viewModelScope.launch {
-            try {
-                val myReviewList = getMyReviewsUseCase()
-                _uiState.value = UiState.Success(
-                    if (myReviewList.isEmpty()) {
-                        MyReviewState.NoReview
-                    } else {
-                        MyReviewState.ReviewExists(myReviews = myReviewList)
-                    }
-                )
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
-                Timber.d("getMyReviewList: ${e.message}")
-            }
+            _nickname.value = getUserNickNameUseCase()
         }
     }
 
