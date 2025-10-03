@@ -7,16 +7,21 @@ import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,75 +30,63 @@ class MyPageViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
-    private val preferencesRepository: PreferencesRepository // Assuming you're using DataStore here
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<MyPageState> = MutableStateFlow(MyPageState())
-    val uiState: StateFlow<MyPageState> = _uiState.asStateFlow()
+    // 내부는 항상 "값 그 자체"만 들고 있고,
+    // 화면엔 UiState로 감싸서 노출
+    private val _state = MutableStateFlow(
+        MyPageState(appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+    )
+    val uiState: StateFlow<UiState<MyPageState>> =
+        _state
+            .map { UiState.Success(it) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Init)
+
+    // 이벤트 버퍼를 주면 토스트 연속 발생 시 유실을 줄일 수 있음
+    private val _uiEvent = MutableSharedFlow<UiEvent>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+    val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
-        setAppVersion()
-        getMyInfo()
-        getNotificationStatus()
+        observeNotificationStatus()
+        fetchMyInfo()
     }
 
-    private fun setAppVersion() {
+    private fun observeNotificationStatus() {
         viewModelScope.launch {
-            _uiState.value =
-                _uiState.value.copy(appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
-        }
-    }
-
-    private fun getNotificationStatus() {
-        viewModelScope.launch {
-            preferencesRepository.dailyNotificationStatus.collect { isAlarmOn ->
-                _uiState.value = _uiState.value.copy(isAlarmOn = isAlarmOn)
+            preferencesRepository.dailyNotificationStatus.collectLatest { isOn ->
+                _state.update { it.copy(isAlarmOn = isOn) }
             }
         }
     }
 
-    private fun getMyInfo() {
+    fun fetchMyInfo() {
         viewModelScope.launch {
-            getUserNickNameUseCase().onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
-                result.result?.apply {
-                    if (this.nickname.isNullOrBlank()) {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                isNicknameNull = true,
-                                toastMessage = "닉네임을 설정해주세요."
-                            )
-                        }
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                isNicknameNull = false,
-                                toastMessage = "${this.nickname} 님 환영합니다.",
-                                nickname = this.nickname.toString(),
-                                platform = this.provider
-                            )
-                        }
-                    }
+            runCatching {
+                withContext(Dispatchers.IO) { getUserNickNameUseCase() }
+            }.onSuccess { nickname ->
+                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
+                    _state.update { it.copy(nickname = null) }
+                    _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
+                } else {
+                    _state.update { it.copy(nickname = nickname) }
                 }
+            }.onFailure { e ->
+                // 에러 화면을 꼭 별도로 보여주고 싶다면 uiState를 에러로 전환하는 방식 선택
+                // 여기서는 '상태 유지 + 토스트'만 처리
+                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                Timber.e(e)
             }
         }
     }
 
     fun setNotificationOn() {
         viewModelScope.launch {
-            setNotificationStatusUseCase(true) //로컬 디비 저장
-            alarmUseCase.scheduleAlarm() //알람 매니저
+            setNotificationStatusUseCase(true)
+            alarmUseCase.scheduleAlarm()
         }
     }
 
@@ -105,17 +98,11 @@ class MyPageViewModel @Inject constructor(
     }
 }
 
-
 data class MyPageState(
-    var loading: Boolean = true,
-    var error: Boolean = false,
-
-    var toastMessage: String = "",
-
-    var nickname: String = "",
-    var platform: String = "",
-    var isAlarmOn: Boolean = false,
-    var appVersion: String = "0.0.0",
-
-    var isNicknameNull: Boolean = false,
-)
+    val nickname: String? = null,
+    val platform: String = "KAKAO",
+    val isAlarmOn: Boolean = false,
+    val appVersion: String = "0.0.0"
+) {
+    val hasNickname: Boolean get() = !nickname.isNullOrBlank() && !nickname.startsWith("user-")
+}
