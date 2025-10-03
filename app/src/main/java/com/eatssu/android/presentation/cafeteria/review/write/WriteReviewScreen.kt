@@ -35,10 +35,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.eatssu.android.R
-import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
@@ -71,7 +71,7 @@ fun WriteReviewScreen(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? -> viewModel.setSelectedImage(uri) }
 
-    // 메뉴 읽기
+    // 처음 진입 시, 메뉴 불러오기: 기본찬(김치, 단무지, 밥) 등을 거르기 위함
     LaunchedEffect(menuType, id, menuName) {
         viewModel.loadMenus(menuType, id, menuName)
     }

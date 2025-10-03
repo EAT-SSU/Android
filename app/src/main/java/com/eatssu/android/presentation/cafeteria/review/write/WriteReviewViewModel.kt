@@ -37,7 +37,7 @@ class WriteReviewViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    /** 메뉴 목록 불러오기 (Route에서 호출) */
+
     fun loadMenus(menuType: MenuType, id: Long, menuName: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
@@ -145,7 +145,6 @@ class WriteReviewViewModel @Inject constructor(
         }
     }
 
-    /** Uri -> File */
     private fun uriToFile(uri: Uri, context: Context): File {
         val inputStream: InputStream = context.contentResolver.openInputStream(uri)
             ?: throw IllegalArgumentException("Cannot open input stream for URI: $uri")
@@ -158,14 +157,13 @@ class WriteReviewViewModel @Inject constructor(
     }
 }
 
-/** 단계적 상태 */
 sealed class WriteReviewState {
     data class Editing(
         val menuList: List<Pair<Long, String>>,
         val rating: Int,
         val content: String,
         val likedMenuIds: Set<Long>,
-        val selectedImageUri: android.net.Uri?,
+        val selectedImageUri: Uri?,
     ) : WriteReviewState() {
         val canSubmit: Boolean get() = rating > 0
         val contentCount: Int get() = content.length
@@ -176,7 +174,7 @@ sealed class WriteReviewState {
         val rating: Int,
         val content: String,
         val likedMenuIds: Set<Long>,
-        val selectedImageUri: android.net.Uri?,
+        val selectedImageUri: Uri?,
     ) : WriteReviewState()
 
 }

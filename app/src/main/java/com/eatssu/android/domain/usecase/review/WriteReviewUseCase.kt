@@ -26,7 +26,7 @@ class WriteReviewUseCase @Inject constructor(
                         tasteRating = reviewData.rating,
                         content = reviewData.content,
                         imageUrl = reviewData.imageUrl,
-                        menuLike = if (reviewData.menuLikes.isNotEmpty()) WriteMenuReviewRequest.MenuLike(
+                        menuLike = if (reviewData.menuLikes?.isNotEmpty() == true) WriteMenuReviewRequest.MenuLike(
                             menuId = reviewData.menuLikes.first(),
                             isLike = true,
                         ) else null
@@ -50,10 +50,11 @@ class WriteReviewUseCase @Inject constructor(
 
                 MenuType.VARIABLE -> {
                     val request = WriteMealReviewRequest(
+                        mealId = itemId,
                         rating = reviewData.rating,
                         content = reviewData.content,
                         imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
-                        menuLikes = reviewData.menuLikes.map {
+                        menuLikes = reviewData.menuLikes?.map {
                             WriteMealReviewRequest.MenuLikes(
                                 menuId = it,
                                 isLike = true,
