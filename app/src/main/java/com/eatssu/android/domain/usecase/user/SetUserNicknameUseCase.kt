@@ -1,7 +1,7 @@
 package com.eatssu.android.domain.usecase.user
 
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.local.AccountDataStore
+import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.repository.UserRepository
 import javax.inject.Inject
 

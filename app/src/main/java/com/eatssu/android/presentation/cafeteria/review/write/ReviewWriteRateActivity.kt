@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState

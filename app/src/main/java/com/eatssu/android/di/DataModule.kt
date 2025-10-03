@@ -11,6 +11,11 @@ import com.eatssu.android.data.repository.ReportRepositoryImpl
 import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.repository.HealthCheckRepository
+import com.eatssu.android.data.remote.repository.MealRepositoryImpl
+import com.eatssu.android.data.remote.repository.OauthRepositoryImpl
+import com.eatssu.android.data.remote.repository.PartnershipRepositoryImpl
+import com.eatssu.android.data.remote.repository.ReportRepositoryImpl
+import com.eatssu.android.data.remote.repository.UserRepositoryImpl
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.MenuRepository
 import com.eatssu.android.domain.repository.OauthRepository
@@ -22,7 +27,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.eatssu.android.data.repository.ReviewRepositoryImpl as ReviewRepositoryImpl1
+import com.eatssu.android.data.remote.repository.ReviewRepositoryImpl as ReviewRepositoryImpl1
 
 @Module
 @InstallIn(SingletonComponent::class)

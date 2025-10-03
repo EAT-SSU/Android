@@ -2,7 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.write
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
 import com.eatssu.android.presentation.UiEvent

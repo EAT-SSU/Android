@@ -3,7 +3,7 @@ package com.eatssu.android.presentation.cafeteria.review.modify
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
+import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
 import com.eatssu.android.databinding.ActivityFixMenuBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast

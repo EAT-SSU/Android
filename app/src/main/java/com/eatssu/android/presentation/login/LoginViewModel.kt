@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
+import com.eatssu.android.data.remote.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
