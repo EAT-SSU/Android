@@ -80,6 +80,7 @@ fun ModifyReviewScreen(
                 content = data.content,
                 menus = data.menus,
                 isSubmitting = false,
+                canSubmit = data.canSubmit,
                 onBack = onBack,
                 onRatingChanged = viewModel::onRatingChanged,
                 onContentChanged = { new ->
@@ -99,6 +100,7 @@ fun ModifyReviewScreen(
                 content = data.content,
                 menus = data.menus,
                 isSubmitting = true,
+                canSubmit = false,
                 onBack = onBack,
                 onRatingChanged = {},          // 수정 불가
                 onContentChanged = {},         // 수정 불가
@@ -140,6 +142,7 @@ internal fun ModifyReviewScreen(
     content: String,
     menus: List<Review.Menu>,
     isSubmitting: Boolean,
+    canSubmit: Boolean,              // <- 추가
     onBack: () -> Unit,
     onRatingChanged: (Int) -> Unit,
     onContentChanged: (String) -> Unit,
@@ -151,7 +154,7 @@ internal fun ModifyReviewScreen(
         bottomBar = {
             EatSsuButton(
                 text = if (isSubmitting) "수정 중..." else "완료하기",
-                enabled = rating > 0 && !isSubmitting,
+                enabled = canSubmit && rating > 0 && !isSubmitting,
                 onClick = onSubmit,
                 modifier = Modifier.padding(24.dp)
             )
@@ -257,6 +260,7 @@ private fun ModifyReviewPreview() {
                 Review.Menu(4, "돈까스", false),
             ),
             isSubmitting = false,
+            canSubmit = false,
             onBack = {},
             onRatingChanged = {},
             onContentChanged = {},

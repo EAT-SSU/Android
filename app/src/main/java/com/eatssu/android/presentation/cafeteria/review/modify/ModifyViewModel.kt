@@ -26,9 +26,13 @@ class ModifyViewModel @Inject constructor(
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
+
     fun init(rating: Int, content: String, menus: List<Review.Menu>) {
+        val base = ModifyState.Baseline(rating, content, menus)
         _uiState.value = UiState.Success(
-            ModifyState.Editing(rating = rating, content = content, menus = menus)
+            ModifyState.Editing(
+                rating = rating, content = content, menus = menus, baseline = base
+            )
         )
     }
 
@@ -48,7 +52,12 @@ class ModifyViewModel @Inject constructor(
         if (!editing.canSubmit) return
 
         _uiState.value = UiState.Success(
-            ModifyState.Modifying(editing.rating, editing.content, editing.menus)
+            ModifyState.Modifying(
+                editing.rating,
+                editing.content,
+                editing.menus,
+                editing.baseline
+            )
         )
 
         viewModelScope.launch {
@@ -67,16 +76,30 @@ class ModifyViewModel @Inject constructor(
             }
         }
     }
-
 }
 
 sealed class ModifyState {
+
+    data class Baseline(
+        val rating: Int,
+        val content: String,
+        val menus: List<Review.Menu>,
+    )
+
     data class Editing(
         val rating: Int = 0,
         val content: String = "",
         val menus: List<Review.Menu> = emptyList(),
+        val baseline: Baseline, // 초기 스냅샷
     ) : ModifyState() {
-        val canSubmit: Boolean get() = rating > 0
+        val hasChanges: Boolean
+            get() = rating != baseline.rating ||
+                    content != baseline.content ||
+                    menus != baseline.menus
+
+        val canSubmit: Boolean
+            get() = rating > 0 && hasChanges
+
         val contentCount: Int get() = content.length
     }
 
@@ -84,5 +107,6 @@ sealed class ModifyState {
         val rating: Int,
         val content: String,
         val menus: List<Review.Menu>,
+        val baseline: Baseline, // 유지
     ) : ModifyState()
 }
