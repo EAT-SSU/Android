@@ -66,7 +66,10 @@ fun ReviewProgressBar(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                ) {
+                ) { // LinearProgressIndicator의 구현 자체가 progress와 track 중간에 여백이 있어서
+                    // 이를 커버하기 위해 Box로 감싸서 두개를 겹쳐놓음
+                    // 첫번째 LinearProgressIndicator는 그레이색 배경만
+                    // 두번째 LinearProgressIndicator가 진행
                     LinearProgressIndicator(
                         progress = { 0f },
                         modifier = Modifier
