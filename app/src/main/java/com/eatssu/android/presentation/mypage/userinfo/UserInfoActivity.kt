@@ -54,7 +54,7 @@ class UserInfoActivity :
             userInfoViewModel.uiState.collectLatest { it ->
                 if (binding.etChNickname.text.toString() != it.nickname) {
                     binding.etChNickname.setText(it.nickname)
-                    binding.etChNickname.setSelection(it.nickname.length) // 커서 끝으로 이동
+                    binding.etChNickname.setSelection(it.nickname.length.coerceAtMost(8)) // 커서 끝으로 이동
                 }
                 binding.tvCollege.text = it.selectedCollege.collegeName
                 binding.tvDepartment.text = it.selectedDepartment.departmentName
