@@ -2,29 +2,22 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.request.CheckValidTokenRequest
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.TokenResponse
+import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.OauthService
+import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.repository.OauthRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthService) :
     OauthRepository {
-    override suspend fun reissueToken(refreshToken: String): Flow<BaseResponse<TokenResponse>> =
-        flow {
-            emit(oauthService.getNewToken(refreshToken))
-        }
+    override suspend fun reissueToken(refreshToken: String): Token =
+        oauthService.getNewToken(refreshToken).result?.toDomain()
+            ?: throw IllegalStateException("Failed to get a new token.")
 
+    override suspend fun login(body: LoginWithKakaoRequest): Token =
+        oauthService.loginWithKakao(body).result?.toDomain()
+            ?: throw IllegalStateException("Failed to login.")
 
-    override suspend fun login(body: LoginWithKakaoRequest): Flow<BaseResponse<TokenResponse>> =
-        flow {
-            emit(oauthService.loginWithKakao(body))
-        }
-
-    override suspend fun checkValidToken(body: CheckValidTokenRequest): Flow<BaseResponse<Boolean>> =
-        flow {
-            emit(oauthService.checkValidToken(body))
-        }
+    override suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean =
+        oauthService.checkValidToken(body).result ?: false
 }
