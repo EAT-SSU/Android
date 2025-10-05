@@ -14,10 +14,10 @@ class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthSer
         oauthService.getNewToken(refreshToken).result?.toDomain()
             ?: throw IllegalStateException("Failed to get a new token.")
 
-
     override suspend fun login(body: LoginWithKakaoRequest): Token =
         oauthService.loginWithKakao(body).result?.toDomain()
             ?: throw IllegalStateException("Failed to login.")
+
     override suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean =
         oauthService.checkValidToken(body).result ?: false
 }
