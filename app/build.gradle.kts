@@ -226,6 +226,10 @@ dependencies {
 
 }
 
+configurations.all {
+    exclude(group = "io.github.fornewid", module = "naver-map-location")
+}
+
 kapt {
     correctErrorTypes = true
 }
