@@ -14,8 +14,9 @@ lifecycleViewmodelCompose = "2.8.7"
 mapSdk = "3.21.0"
 material = "1.8.0"
 constraintlayout = "2.1.4"
-naverMapCompose = "1.8.2"
+naverMapCompose = "fc~cluster-SNAPSHOT"
 naverMapLocation = "21.0.2"
+naverMapClustering = "1.0.2"
 navigationUi = "2.8.9"
 playServicesLocation = "21.3.0"
 navigationFragment = "2.9.3"
@@ -142,7 +143,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "mapSdk" }
-naver-map-compose = { module = "io.github.fornewid:naver-map-compose", version.ref = "naverMapCompose" }
+naver-map-compose = { module = "com.github.ho8278:naver-map-compose", version.ref = "naverMapCompose" }
 naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "naverMapLocation" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
