@@ -9,11 +9,19 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -30,11 +38,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -43,6 +52,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
@@ -57,20 +67,20 @@ import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
-import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray300
+import com.eatssu.design_system.theme.Primary
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.compose.Align
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.clustering.ClusteringKey
+import com.naver.maps.map.compose.Clustering
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
-import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
-import com.naver.maps.map.compose.rememberMarkerState
-import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -78,7 +88,7 @@ import timber.log.Timber
 
 private const val DEFAULT_LATITUDE = 37.49517278813046
 private const val DEFAULT_LONGITUDE = 126.95661313346206
-private const val DEFAULT_ZOOM = 17.5
+private const val DEFAULT_ZOOM = 17.0
 private const val PERMISSION_REQUEST_CODE = 1001
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
@@ -124,7 +134,11 @@ fun MapFragmentComposeView(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(context, "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -136,21 +150,25 @@ fun MapFragmentComposeView(
                 else -> "" to false
             }
         }
+
         else -> "" to false
     }
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     // 최초 실행 시 위치 권한 요청
     LaunchedEffect(Unit) {
-        val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-        val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val fine =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+        val coarse =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (fine != PackageManager.PERMISSION_GRANTED || coarse != PackageManager.PERMISSION_GRANTED) {
             permissionLauncher.launch(
@@ -173,7 +191,10 @@ fun MapFragmentComposeView(
 
     var hasLocationPermission by remember {
         mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         )
     }
 
@@ -184,6 +205,7 @@ fun MapFragmentComposeView(
                 viewModel.loadPartnerships()
                 EventLogger.clickMap()
             }
+
             FilterType.Mine -> {
                 viewModel.loadUserCollegePartnerships()
 
@@ -279,49 +301,148 @@ fun MapFragmentComposeView(
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(isZoomControlEnabled = false, isLocationButtonEnabled = true),
+                uiSettings = MapUiSettings(
+                    isZoomControlEnabled = false,
+                    isLocationButtonEnabled = true
+                ),
                 locationSource = locationSource,
                 contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
-                    locationTrackingMode = LocationTrackingMode.Follow,
+                    locationTrackingMode = LocationTrackingMode.NoFollow,
                 ),
                 onLocationChange = { location ->
                     // 위치가 업데이트되면 위치 권한 있다고 간주
                     hasLocationPermission = true
                 },
             ) {
-                mapState.partnerships.forEach { partnership ->
-                    val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
-
-                    Marker(
-                        icon = OverlayImage.fromResource(
-                            when (partnership.restaurantType) {
-                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
-                                RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
-                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
-                            }
-                        ),
-                        width = 20.dp,
-                        height = 20.dp,
-                        captionAligns = arrayOf(Align.Bottom),
-                        state = markerState,
-                        captionText = partnership.storeName,
-                        captionColor = Black,
-                        captionTextSize = 10.sp,
-                        onClick = {
-                            if (partnership.partnershipInfos.isEmpty()) {
-                                // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-                                Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
-                                true
-                            } else {
-                                // 제휴 정보가 있을 때만 바텀시트 띄움
-                                viewModel.selectPartnershipByStoreName(partnership.storeName)
-                                true
-                            }
-                        }
+                val clusterItems = mapState.partnerships.associateBy {
+                    ItemKey(
+                        it.storeName,
+                        LatLng(it.latitude, it.longitude)
                     )
-
                 }
+
+                Clustering(
+                    items = clusterItems,
+                    thresholdStrategy = { zoom ->
+                        25.0
+                    },
+
+                    clusterContent = {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(Primary, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${it.size}",
+                                color = Color.White,
+                                style = EatssuTheme.typography.body2
+                            )
+                        }
+                    },
+                    leafContent = { info ->
+                        val partnership = info.tag as? Partnership ?: return@Clustering
+
+                        Row(
+                            modifier = Modifier
+                                .background(Color.White, RoundedCornerShape(13.dp))
+                                .border(1.dp, Gray300, RoundedCornerShape(13.dp))
+                                .padding(start = 3.dp, end = 7.dp, top = 2.5.dp, bottom = 2.5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = spacedBy(
+                                3.dp
+                            )
+                        ) {
+                            val iconRes = when (partnership.restaurantType) {
+                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
+                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
+                                else -> R.drawable.ic_map_marker_restaurant
+                            }
+
+                            Image(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+
+                            Text(
+                                text = partnership.storeName,
+                                style = EatssuTheme.typography.caption3,
+                                color = Color.Black
+                            )
+                        }
+                    },
+                    onClickCluster = { info, _ ->
+                        scope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdate.toCameraPosition(
+                                    CameraPosition(
+                                        info.position,
+                                        cameraPositionState.position.zoom + 2.0
+                                    )
+                                )
+                            )
+                        }
+                        true
+                    },
+                    onClickLeaf = { info, _ ->
+                        val partnership = info.tag as? Partnership ?: return@Clustering true
+
+                        if (partnership.partnershipInfos.isEmpty()) {
+                            // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
+                            Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                            true
+                        } else {
+                            // 제휴 정보가 있을 때만 바텀시트 띄움
+                            viewModel.selectPartnershipByStoreName(partnership.storeName)
+                            true
+                        }
+                        true
+                    }
+
+                )
+//                mapState.partnerships.forEach { partnership ->
+//                    val markerState = rememberSaveable(saver = MarkerState.Saver) {
+//                        MarkerState(
+//                            position = LatLng(
+//                                partnership.latitude,
+//                                partnership.longitude
+//                            )
+//                        )
+//                    }
+//
+//                    Marker(
+//                        icon = OverlayImage.fromResource(
+//                            when (partnership.restaurantType) {
+//                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
+//                                RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
+//                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
+//                            }
+//                        ),
+//                        width = 20.dp,
+//                        height = 20.dp,
+//                        captionAligns = arrayOf(Align.Bottom),
+//                        state = markerState,
+//                        captionText = partnership.storeName,
+//                        captionColor = Black,
+//                        captionTextSize = 10.sp,
+//
+//                        onClick = {
+//                            if (partnership.partnershipInfos.isEmpty()) {
+//                                // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
+//                                Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+//                                true
+//                            } else {
+//                                // 제휴 정보가 있을 때만 바텀시트 띄움
+//                                viewModel.selectPartnershipByStoreName(partnership.storeName)
+//                                true
+//                            }
+//                        }
+//                    )
+//
+//                }
             }
 
             // 학과 정보를 입력하지 않은 상태에서 제휴 필터를 변경하려고 할 때 BottomSheet 표시
@@ -385,4 +506,8 @@ fun MapFragmentComposeViewPreview() {
     EatssuTheme {
         MapFragmentComposeView()
     }
+}
+
+data class ItemKey(val id: String, private val latLng: LatLng) : ClusteringKey {
+    override fun getPosition() = latLng
 }
