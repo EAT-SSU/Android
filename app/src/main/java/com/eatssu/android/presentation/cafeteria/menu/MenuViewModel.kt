@@ -40,15 +40,15 @@ class MenuViewModel @Inject constructor(
     val todayMealDataFaculty: StateFlow<List<GetMealResponse>> = _todayMealDataFaculty
 
     private val _fixedMenuDataSnack =
-        MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(emptyList()))
+        MutableStateFlow(GetFixedMenuResponse())
     val fixedMenuDataSnack: StateFlow<GetFixedMenuResponse> = _fixedMenuDataSnack
 
     private val _fixedMenuDataKitchen =
-        MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(emptyList()))
+        MutableStateFlow(GetFixedMenuResponse())
     val fixedMenuDataKitchen: StateFlow<GetFixedMenuResponse> = _fixedMenuDataKitchen
 
     private val _fixedMenuDataFood =
-        MutableStateFlow<GetFixedMenuResponse>(GetFixedMenuResponse(emptyList()))
+        MutableStateFlow(GetFixedMenuResponse())
     val fixedMenuDataFood: StateFlow<GetFixedMenuResponse> = _fixedMenuDataFood
 
     private val _uiState: MutableStateFlow<UiState<MenuState>> = MutableStateFlow(UiState.Init)
@@ -61,7 +61,7 @@ class MenuViewModel @Inject constructor(
         time: Time,
     ) {
         _uiState.value = UiState.Loading
-        Timber.d("Debug", "loadTodayMeal called with type: $restaurantType")
+        Timber.d("loadTodayMeal called with type: $restaurantType")
 
         viewModelScope.launch {
             when (val result =
@@ -87,9 +87,8 @@ class MenuViewModel @Inject constructor(
 
     // Fixed Menu 데이터 로드도 유사한 방식으로 구현
     fun loadFixedMenu(restaurantType: Restaurant) {
-        Timber.d("Debug", "loadFixedMenu called with type: $restaurantType")
-
         _uiState.value = UiState.Loading
+        Timber.d("loadFixedMenu called with type: $restaurantType")
 
         viewModelScope.launch {
             when (val result = menuService.getFixMenu(restaurantType.toString())) {
