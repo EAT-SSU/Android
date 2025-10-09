@@ -1,6 +1,5 @@
 package com.eatssu.android.di.network
 
-import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
@@ -41,41 +40,38 @@ class TokenAuthenticator @Inject constructor(
             return null
         }
 
-        val expiredRefreshToken = runBlocking { getRefreshTokenUseCase() }
-
         return runBlocking {
-            try {
-                Timber.d("TokenAuthenticator → refreshToken으로 재발급 시도")
+            Timber.d("TokenAuthenticator → refreshToken으로 재발급 시도")
 
-                val newToken: Token = reissueTokenUseCase(expiredRefreshToken)
-                val newAccessToken = newToken.accessToken
-                val newRefreshToken = newToken.refreshToken
+            val expiredRefreshToken = getRefreshTokenUseCase()
+            val newToken = reissueTokenUseCase(expiredRefreshToken)
 
-                if (newAccessToken.isNotEmpty() && newRefreshToken.isNotEmpty()) {
-                    Timber.d("TokenAuthenticator → 새 토큰 발급 성공")
-                    setAccessTokenUseCase(newAccessToken)
-                    setRefreshTokenUseCase(newRefreshToken)
-                } else {
-                    // 잘못된 토큰을 받은 경우
-                    Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
-                    logoutUseCase() // 로그아웃 처리
-                    TokenStateManager.setTokenError()
-                }
-
-                Timber.d("TokenAuthenticator → 새 토큰 저장 및 기존 API 재요청")
-
-                response.request.newBuilder()
-                    .header("Authorization", "Bearer ${newAccessToken}")
-                    .build()
-
-            } catch (e: Exception) {
-                // refreshToken이 만료된 경우
-                Timber.e(e, "refreshToken이 만료")
-                logoutUseCase()
-                TokenStateManager.setTokenExpired()
-
-                null
+            if (newToken == null) {
+                Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
+                logoutUseCase() // 로그아웃 처리
+                TokenStateManager.setTokenError()
+                return@runBlocking null
             }
+
+            val newAccessToken = newToken.accessToken
+            val newRefreshToken = newToken.refreshToken
+
+            if (newAccessToken.isEmpty() || newRefreshToken.isEmpty()) {
+                // 잘못된 토큰을 받은 경우
+                Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
+                logoutUseCase() // 로그아웃 처리
+                TokenStateManager.setTokenError()
+                return@runBlocking null
+            }
+
+            Timber.d("TokenAuthenticator → 새 토큰 발급 성공")
+            setAccessTokenUseCase(newAccessToken)
+            setRefreshTokenUseCase(newRefreshToken)
+
+            Timber.d("TokenAuthenticator → 새 토큰 저장 및 기존 API 재요청")
+            response.request.newBuilder()
+                .header("Authorization", "Bearer $newAccessToken")
+                .build()
         }
     }
 
