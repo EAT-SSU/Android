@@ -3,11 +3,11 @@ package com.eatssu.android.data.service
 
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.data.model.ApiResult
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -25,18 +25,18 @@ interface ReviewService {
     suspend fun writeReview(
         @Path("menuId") menuId: Long,
         @Body request: WriteReviewRequest,
-    ): BaseResponse<Void>
+    ): ApiResult<Unit>
 
     @DELETE("/reviews/{reviewId}") //리뷰 삭제
     suspend fun deleteReview(
         @Path("reviewId") reviewId: Long,
-    ): BaseResponse<Void>
+    ): ApiResult<Unit>
 
     @PATCH("/reviews/{reviewId}") //리뷰 수정(글 수정)
     suspend fun modifyReview(
         @Path("reviewId") reviewId: Long,
         @Body request: ModifyReviewRequest,
-    ): BaseResponse<Void>
+    ): ApiResult<Unit>
 
     //Todo paging 라이브러리 써보기
     @GET("/reviews") //리뷰 리스트 조회
@@ -48,22 +48,22 @@ interface ReviewService {
         @Query("page") page: Int? = 0,
         @Query("size") size: Int? = 20,
         @Query("sort") sort: List<String>? = arrayListOf("date", "DESC"),
-    ): BaseResponse<GetReviewListResponse>
+    ): ApiResult<GetReviewListResponse>
 
     @GET("/reviews/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
     suspend fun getMenuReviewInfo(
         @Path("menuId") menuId: Long,
-    ): BaseResponse<GetMenuReviewInfoResponse>
+    ): ApiResult<GetMenuReviewInfoResponse>
 
     @GET("/reviews/meals/{mealId}") //식단(변동 메뉴) 리뷰 정보 조회(메뉴명, 평점 등등)
     suspend fun getMealReviewInfo(
         @Path("mealId") mealId: Long,
-    ): BaseResponse<GetMealReviewInfoResponse>
+    ): ApiResult<GetMealReviewInfoResponse>
 
     @Multipart
     @POST("/reviews/upload/image") //리뷰 이미지 업로드
     suspend fun uploadImage(
         @Part image: MultipartBody.Part,
-    ): BaseResponse<ImageResponse>
+    ): ApiResult<ImageResponse>
 
 }
