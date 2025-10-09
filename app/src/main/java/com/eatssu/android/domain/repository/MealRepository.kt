@@ -1,8 +1,6 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MenuOfMealResponse
-import kotlinx.coroutines.flow.Flow
+import com.eatssu.android.data.dto.response.MenusInformation
 
 interface MealRepository {
 
@@ -13,7 +11,7 @@ interface MealRepository {
         date: String,
         restaurant: String,
         time: String,
-    ): Flow<List<List<String>>>
+    ): List<List<String>>
 
 
     /**
@@ -21,5 +19,5 @@ interface MealRepository {
      */
     suspend fun getMenuInfoByMealId(
         mealId: Long,
-    ): Flow<BaseResponse<MenuOfMealResponse>>
+    ): List<MenusInformation>
 }

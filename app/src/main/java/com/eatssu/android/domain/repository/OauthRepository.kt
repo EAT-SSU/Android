@@ -7,9 +7,9 @@ import com.eatssu.android.domain.model.Token
 interface OauthRepository {
     suspend fun reissueToken(
         refreshToken: String,
-    ): Token
+    ): Token?
 
-    suspend fun login(body: LoginWithKakaoRequest): Token
+    suspend fun login(body: LoginWithKakaoRequest): Token?
 
     suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean
 }

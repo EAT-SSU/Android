@@ -2,12 +2,10 @@ package com.eatssu.android.domain.repository
 
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
-import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface ReviewRepository {
@@ -15,33 +13,33 @@ interface ReviewRepository {
     suspend fun writeReview(
         menuId: Long,
         body: WriteReviewRequest,
-    ): Flow<BaseResponse<Void>>
+    ): Boolean
 
     suspend fun deleteReview(
         reviewId: Long,
-    ): Flow<BaseResponse<Void>>
+    ): Boolean
 
     suspend fun modifyReview(
         reviewId: Long,
         body: ModifyReviewRequest,
-    ): Flow<BaseResponse<Void>>
+    ): Boolean
 
     suspend fun getReviewList(
         menuType: String,
         mealId: Long?,
         menuId: Long?,
-    ): Flow<BaseResponse<GetReviewListResponse>>
+    ): GetReviewListResponse?
 
     suspend fun getMenuReviewInfo(
         menuId: Long,
-    ): Flow<BaseResponse<GetMenuReviewInfoResponse>>
+    ): GetMenuReviewInfoResponse?
 
 
     suspend fun getMealReviewInfo(
         mealId: Long,
-    ): Flow<BaseResponse<GetMealReviewInfoResponse>>
+    ): GetMealReviewInfoResponse?
 
     suspend fun getImageString(
         file: File
-    ): Flow<BaseResponse<ImageResponse>>
+    ): ImageResponse?
 }
