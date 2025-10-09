@@ -11,7 +11,7 @@ interface MenuService {
      * 고정 메뉴 리스트 조회
      */
     @GET("menus")
-    fun getFixMenu(
+    suspend fun getFixMenu(
         @Query("restaurant") restaurant: String,
     ): ApiResult<GetFixedMenuResponse>
 
