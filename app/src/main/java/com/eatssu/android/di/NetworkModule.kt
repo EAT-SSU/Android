@@ -4,7 +4,6 @@ package com.eatssu.android.di
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.di.network.ApiResultCallAdapterFactory
-import com.eatssu.android.di.network.BaseResponseConverter
 import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
@@ -103,7 +102,6 @@ object NetworkModule {
     ): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
             .addCallAdapterFactory(callAdapterFactory)
-            .addConverterFactory(BaseResponseConverter())
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
@@ -119,7 +117,6 @@ object NetworkModule {
     ): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
             .addCallAdapterFactory(callAdapterFactory)
-            .addConverterFactory(BaseResponseConverter())
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
