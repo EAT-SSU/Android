@@ -82,7 +82,7 @@ class MainViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                            context.getString(R.string.not_found)
+                        context.getString(R.string.not_found)
                     )
                 )
                 Timber.e(e)
@@ -112,25 +112,21 @@ class MainViewModel @Inject constructor(
 
     private fun getUserDepartment() {
         viewModelScope.launch {
-            runCatching {
-                userRepository.getUserCollegeDepartment()
-            }.onSuccess { it ->
-                val college = it.first
-                val department = it.second
-                setUserCollegeDepartmentUseCase(college, department)
-
-                _uiState.value = UiState.Success(
-                    MainState.DepartmentState(
-                        departmentName = department.departmentName,
-                        showUserDepartmentBottomSheet =
-                            (college.collegeId == -1 || department.departmentId == -1)
-                    )
-                )
-            }.onFailure { e ->
-                Timber.e("getUserDepartment failed: ${e.message}")
+            val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                return@launch
             }
+
+            setUserCollegeDepartmentUseCase(college, department)
+
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = department.departmentName,
+                    showUserDepartmentBottomSheet =
+                        (college.collegeId == -1 || department.departmentId == -1)
+                )
+            )
         }
     }
 }

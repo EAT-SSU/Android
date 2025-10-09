@@ -4,22 +4,16 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
+import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,53 +32,43 @@ class MyReviewViewModel @Inject constructor(
 
     fun getMyReviews() {
         viewModelScope.launch {
-            getMyReviewsUseCase().onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "정보를 불러올 수 없습니다.") }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
+            _uiState.update { it.copy(loading = true) }
 
-                result.result?.apply {
-                    if (dataList.isEmpty()) {
-                        _uiState.update { it.copy(isEmpty = true) }
-                    } else {
-                        //Todo 리뷰 바인딩을...
-                        _uiState.update { it.copy(myReviews = this.toReviewList()) }
-                    }
-
-
-                }
+            val myReviewList = getMyReviewsUseCase()
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    myReviews = myReviewList,
+                    isEmpty = myReviewList.isEmpty()
+                )
             }
         }
     }
 
     fun deleteReview(reviewId: Long) {
         viewModelScope.launch {
-            deleteReviewUseCase(reviewId).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
+            _uiState.update { it.copy(loading = true) }
+
+            val success = deleteReviewUseCase(reviewId)
+            if (!success) {
                 _uiState.update {
                     it.copy(
+                        loading = false,
                         error = true,
                         toastMessage = context.getString(R.string.delete_not)
                     )
                 }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
+                return@launch
+            }
 
-                _uiState.update {
-                    it.copy(
-                        isDeleted = true,
-                        toastMessage = context.getString(R.string.delete_done)
-                    )
-                }
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    isDeleted = true,
+                    toastMessage = context.getString(R.string.delete_done)
+                )
             }
         }
     }

@@ -12,13 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -37,34 +31,31 @@ class UploadReviewViewModel @Inject constructor(
 
     fun postReview(menuId: Long, reviewData: WriteReviewRequest) {
         viewModelScope.launch {
-            writeReviewUseCase(menuId, reviewData)
-                .onStart {
-                    _uiState.value = UiState.Loading
-                }
-                .catch { e ->
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
-                    Timber.e(e)
-                }
-                .collectLatest {
-                    _uiState.value = UiState.Success()
-                    _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
-                }
+            _uiState.value = UiState.Loading
+            val success = writeReviewUseCase(menuId, reviewData)
+
+            if (!success) {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+            }
+
+            _uiState.value = UiState.Success()
+            _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
         }
     }
 
     suspend fun saveS3(file: File): String? {
-        return getImageUrlUseCase(file)
-            .onStart {
-                _uiState.value = UiState.Loading
-            }
-            .catch { e ->
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
-                Timber.e(e)
-            }
-            .map { it.result?.url }
-            .firstOrNull()
+        _uiState.value = UiState.Loading
+        val url = getImageUrlUseCase(file)
+
+        if (url == null) {
+            _uiState.value = UiState.Error
+            _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+            return null
+        }
+
+        _uiState.value = UiState.Success()
+        return url
     }
 }
 

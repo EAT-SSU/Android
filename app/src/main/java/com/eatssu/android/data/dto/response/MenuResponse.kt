@@ -7,14 +7,14 @@ import timber.log.Timber
 
 data class GetFixedMenuResponse(
 
-    @SerializedName("categoryMenuListCollection") var categoryMenuListCollection: ArrayList<CategoryMenuListCollection> = arrayListOf(),
+    @SerializedName("categoryMenuListCollection") var categoryMenuListCollection: List<CategoryMenuListCollection> = arrayListOf(),
 
     )
 
 data class CategoryMenuListCollection(
 
     @SerializedName("category") var category: String? = null,
-    @SerializedName("menus") var menus: ArrayList<MenuInformationList> = arrayListOf(),
+    @SerializedName("menus") var menus: List<MenuInformationList> = arrayListOf(),
 
     )
 

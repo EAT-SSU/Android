@@ -8,7 +8,7 @@ data class GetMealResponse(
     @SerializedName("mealId") var mealId: Long? = null,
     @SerializedName("price") var price: Int? = null,
     @SerializedName("rating") var rating: Double? = null,
-    @SerializedName("briefMenus") var briefMenus: ArrayList<MenusInformationList> = arrayListOf(),
+    @SerializedName("briefMenus") var briefMenus: List<MenusInformationList> = emptyList(),
 )
 
 data class MenusInformationList(
@@ -18,7 +18,7 @@ data class MenusInformationList(
 
     )
 
-fun ArrayList<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
+fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
     val menuList = mutableListOf<Menu>()
 
     this.forEach { mealResponse ->
@@ -37,7 +37,7 @@ fun ArrayList<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
 }
 
 
-fun ArrayList<GetMealResponse>.toDomain(): List<List<String>> {
+fun List<GetMealResponse>.toDomain(): List<List<String>> {
     return this.map { meal ->
         meal.briefMenus.mapNotNull { it.name }
     }
