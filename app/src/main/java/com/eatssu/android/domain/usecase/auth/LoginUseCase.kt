@@ -8,6 +8,6 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
     private val oauthRepository: OauthRepository,
 ) {
-    suspend operator fun invoke(body: LoginWithKakaoRequest): Token =
+    suspend operator fun invoke(body: LoginWithKakaoRequest): Token? =
         oauthRepository.login(body)
 }

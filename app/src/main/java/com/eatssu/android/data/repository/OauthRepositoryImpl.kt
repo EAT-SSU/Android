@@ -10,14 +10,12 @@ import javax.inject.Inject
 
 class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthService) :
     OauthRepository {
-    override suspend fun reissueToken(refreshToken: String): Token =
-        oauthService.getNewToken(refreshToken).result?.toDomain()
-            ?: throw IllegalStateException("Failed to get a new token.")
+    override suspend fun reissueToken(refreshToken: String): Token? =
+        oauthService.getNewToken(refreshToken).map { it.toDomain() }.orNull()
 
-    override suspend fun login(body: LoginWithKakaoRequest): Token =
-        oauthService.loginWithKakao(body).result?.toDomain()
-            ?: throw IllegalStateException("Failed to login.")
+    override suspend fun login(body: LoginWithKakaoRequest): Token? =
+        oauthService.loginWithKakao(body).map { it.toDomain() }.orNull()
 
     override suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean =
-        oauthService.checkValidToken(body).result ?: false
+        oauthService.checkValidToken(body).orElse(false)
 }

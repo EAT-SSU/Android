@@ -1,6 +1,7 @@
 package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.response.toDomain
+import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.service.PartnershipService
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.domain.model.Partnership
@@ -13,24 +14,15 @@ class PartnershipRepositoryImpl @Inject constructor(
     private val userService: UserService,
 ) : PartnershipRepository {
 
-    // 유저의 학과 상관없이 모든 제휴 정보 조회
-    override suspend fun getAllPartnerships(): List<Partnership> {
-        return partnershipService.getAllPartnerships()
-            .result
-            ?.map { it.toDomain() } ?: emptyList()
-    }
+    override suspend fun getAllPartnerships(): List<Partnership> =
+        partnershipService.getAllPartnerships()
+            .map { list -> list.map { partnershipResponse -> partnershipResponse.toDomain() } }
+            .orEmptyList()
 
-    // 특정 식당 클릭 시 제휴 정보 조회
-    override suspend fun getPartnershipById(partnershipId: Int): PartnershipRestaurant? {
-        return partnershipService.getPartnershipById(partnershipId)
-            .result
-            ?.toDomain()
-    }
+    override suspend fun getPartnershipById(partnershipId: Int): PartnershipRestaurant? =
+        partnershipService.getPartnershipById(partnershipId).map { it.toDomain() }.orNull()
 
-    // 유저의 학과에 해당하는 제휴 정보 조회
-    override suspend fun getUserCollegePartnerships(): List<Partnership> {
-        return userService.getUserDepartmentPartnerships()
-            .result
-            ?.map { it.toDomain() } ?: emptyList()
-    }
+    override suspend fun getUserCollegePartnerships(): List<Partnership> =
+        userService.getUserDepartmentPartnerships().map { list -> list.map { it.toDomain() } }
+            .orEmptyList()
 }

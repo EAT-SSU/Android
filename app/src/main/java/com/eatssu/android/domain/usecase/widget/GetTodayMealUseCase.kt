@@ -4,8 +4,6 @@ import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.presentation.widget.WidgetMealList
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import java.net.UnknownHostException
 import java.nio.channels.UnresolvedAddressException
@@ -42,19 +40,16 @@ class GetTodayMealUseCase @Inject constructor(
         date: String,
         restaurant: String
     ): MealState = runCatching {
-        val breakfastFlow = mealRepository.getTodayMeal(date, restaurant, Time.MORNING.name)
-        val lunchFlow = mealRepository.getTodayMeal(date, restaurant, Time.LUNCH.name)
-        val dinnerFlow = mealRepository.getTodayMeal(date, restaurant, Time.DINNER.name)
+        val breakfastList = mealRepository.getTodayMeal(date, restaurant, Time.MORNING.name)
+        val lunchList = mealRepository.getTodayMeal(date, restaurant, Time.LUNCH.name)
+        val dinnerList = mealRepository.getTodayMeal(date, restaurant, Time.DINNER.name)
 
-        combine(breakfastFlow, lunchFlow, dinnerFlow) { breakfastList, lunchList, dinnerList ->
-
-            WidgetMealList(
-                breakfast = (breakfastList to "breakfast"),
-                lunch = (lunchList to "lunch"),
-                dinner = (dinnerList to "dinner"),
-                restaurant = Restaurant.valueOf(restaurant)
-            )
-        }.first() // 여기서 Flow 실행
+        WidgetMealList(
+            breakfast = (breakfastList to "breakfast"),
+            lunch = (lunchList to "lunch"),
+            dinner = (dinnerList to "dinner"),
+            restaurant = Restaurant.valueOf(restaurant)
+        )
     }.fold(
         onSuccess = { result ->
             Timber.d("메뉴 가져오기 성공 $result")

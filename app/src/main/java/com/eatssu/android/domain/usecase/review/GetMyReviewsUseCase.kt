@@ -1,14 +1,13 @@
 package com.eatssu.android.domain.usecase.review
 
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.MyReviewResponse
+import com.eatssu.android.data.dto.response.toReviewList
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetMyReviewsUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
-    suspend operator fun invoke(): Flow<BaseResponse<MyReviewResponse>> =
-        userRepository.getUserReviews()
+    suspend operator fun invoke(): List<Review> =
+        userRepository.getUserReviews()?.toReviewList() ?: emptyList()
 }
