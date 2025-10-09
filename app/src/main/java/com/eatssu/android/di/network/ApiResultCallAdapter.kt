@@ -7,13 +7,14 @@ import retrofit2.CallAdapter
 import java.lang.reflect.Type
 
 class ApiResultCallAdapter<T : Any>(
-    private val successType: Type,
+    private val baseResponseType: Type,
+    private val dataType: Type
 ) : CallAdapter<BaseResponse<T>, Call<ApiResult<T>>> {
 
-    override fun responseType(): Type = successType
+    override fun responseType(): Type = baseResponseType
 
     override fun adapt(call: Call<BaseResponse<T>>): Call<ApiResult<T>> {
-        return ApiResultCall(call, successType)
+        return ApiResultCall(call, dataType)
     }
 }
 
