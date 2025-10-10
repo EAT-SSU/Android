@@ -46,18 +46,12 @@ class TokenAuthenticator @Inject constructor(
             val expiredRefreshToken = getRefreshTokenUseCase()
             val newToken = reissueTokenUseCase(expiredRefreshToken)
 
-            if (newToken == null) {
-                Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
-                logoutUseCase() // 로그아웃 처리
-                TokenStateManager.setTokenError()
-                return@runBlocking null
-            }
+            val newAccessToken = newToken?.accessToken
+            val newRefreshToken = newToken?.refreshToken
 
-            val newAccessToken = newToken.accessToken
-            val newRefreshToken = newToken.refreshToken
-
-            if (newAccessToken.isEmpty() || newRefreshToken.isEmpty()) {
-                // 잘못된 토큰을 받은 경우
+            if (newAccessToken.isNullOrEmpty() ||
+                newRefreshToken.isNullOrEmpty()
+            ) {
                 Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
                 logoutUseCase() // 로그아웃 처리
                 TokenStateManager.setTokenError()
