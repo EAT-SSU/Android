@@ -13,7 +13,7 @@ interface MealService {
         @Query("date") date: String,
         @Query("restaurant") restaurant: String,
         @Query("time") time: String,
-    ): ApiResult<ArrayList<GetMealResponse>>
+    ): ApiResult<List<GetMealResponse>>
 
     @GET("meals/{mealId}/menus-info")
     suspend fun getMenuInfoByMealId(
