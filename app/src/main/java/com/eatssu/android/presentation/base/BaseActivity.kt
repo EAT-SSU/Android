@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
-import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.health.CheckServerHealthUseCase
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
@@ -67,7 +66,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
         toolbar = findViewById(R.id.toolbar)
         toolbarTitle = findViewById(R.id.toolbar_title)
-        backBtn =findViewById(R.id.mcv_setting)
+        backBtn = findViewById(R.id.mcv_setting)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false) // 툴바 기본 제목 비활성화
@@ -79,9 +78,12 @@ abstract class BaseActivity<B : ViewBinding>(
         networkCheck.register() // 네트워크 객체 등록
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
+        versionViewModel = ViewModelProvider(
+            this,
+            VersionViewModelFactory(firebaseRemoteConfigRepository)
+        )[VersionViewModel::class.java]
 
-        if(versionViewModel.checkForceUpdate()){
+        if (versionViewModel.checkForceUpdate()) {
             showForceUpdateDialog()
         }
 
@@ -126,16 +128,20 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun observeTokenExpiration() {
         lifecycleScope.launch {
             TokenEventBus.tokenExpired.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_expired), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@BaseActivity,
+                    getString(R.string.token_expired), Toast.LENGTH_SHORT
+                ).show()
                 navigateToLogin()
             }
         }
 
         lifecycleScope.launch {
             TokenEventBus.tokenServerError.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_server_error), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this@BaseActivity,
+                    getString(R.string.token_server_error), Toast.LENGTH_SHORT
+                )
                     .show()
                 navigateToLogin()
             }
@@ -195,24 +201,20 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private fun checkServerHealth() {
         lifecycleScope.launch {
-            val result = checkServerHealthUseCase()
-            when (result) {
-                is ApiResult.NetworkError -> {
-                    val intent = Intent(this@BaseActivity, ServerErrorActivity::class.java).apply {
-                        putExtra(
-                            ServerErrorActivity.EXTRA_TITLE,
-                            getString(R.string.server_error_title)
-                        )
-                        putExtra(
-                            ServerErrorActivity.EXTRA_MESSAGE,
-                            getString(R.string.server_error_message)
-                        )
-                    }
-                    startActivity(intent)
-                    finishAffinity()
+            if (!checkServerHealthUseCase()) {
+                val intent = Intent(this@BaseActivity, ServerErrorActivity::class.java).apply {
+                    putExtra(
+                        ServerErrorActivity.EXTRA_TITLE,
+                        getString(R.string.server_error_title)
+                    )
+                    putExtra(
+                        ServerErrorActivity.EXTRA_MESSAGE,
+                        getString(R.string.server_error_message)
+                    )
                 }
-
-                else -> Unit
+                startActivity(intent)
+                finishAffinity()
+                return@launch
             }
         }
     }
