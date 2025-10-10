@@ -19,17 +19,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.domain.usecase.health.CheckServerHealthUseCase
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
+import com.eatssu.android.presentation.error.ServerErrorActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 
 abstract class BaseActivity<B : ViewBinding>(
@@ -46,6 +50,9 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private lateinit var versionViewModel: VersionViewModel
     private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
+
+    @Inject
+    lateinit var checkServerHealthUseCase: CheckServerHealthUseCase
 
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
@@ -176,10 +183,42 @@ abstract class BaseActivity<B : ViewBinding>(
     override fun onResume() {
         super.onResume()
 
+        if (shouldCheckServerHealth()) {
+            checkServerHealth()
+        }
+
         if (shouldLogScreenId()) {
             EventLogger.screenView(screenId)
             Timber.d("screen view logging: $screenId")
         }
+    }
+
+    private fun checkServerHealth() {
+        lifecycleScope.launch {
+            val result = checkServerHealthUseCase()
+            when (result) {
+                is ApiResult.NetworkError -> {
+                    val intent = Intent(this@BaseActivity, ServerErrorActivity::class.java).apply {
+                        putExtra(
+                            ServerErrorActivity.EXTRA_TITLE,
+                            getString(R.string.server_error_title)
+                        )
+                        putExtra(
+                            ServerErrorActivity.EXTRA_MESSAGE,
+                            getString(R.string.server_error_message)
+                        )
+                    }
+                    startActivity(intent)
+                    finishAffinity()
+                }
+
+                else -> Unit
+            }
+        }
+    }
+
+    open fun shouldCheckServerHealth(): Boolean {
+        return true
     }
 
     open fun shouldLogScreenId(): Boolean {

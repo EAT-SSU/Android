@@ -189,4 +189,8 @@
 
     <string name="eatssu_instagram">eatssu.official</string>
     <string name="recruiting_url">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
+
+    <string name="server_error_title">서버 오류</string>
+    <string name="server_error_message">서버에 연결할 수 없습니다.\n잠시 후 다시 시도해주세요.</string>
+    <string name="confirm">확인</string>
 </resources>

@@ -7,6 +7,7 @@ import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
 import com.eatssu.android.data.model.isSuccess
+import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.service.ReviewService
 import com.eatssu.android.domain.repository.ReviewRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

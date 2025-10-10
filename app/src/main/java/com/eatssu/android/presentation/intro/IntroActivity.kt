@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.intro
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -9,6 +10,7 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.error.ServerErrorActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -18,6 +20,7 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
@@ -49,12 +52,24 @@ class IntroActivity : AppCompatActivity() {
                     else -> Unit
                 }
             }
+        }
 
+        lifecycleScope.launch {
             introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
                     is UiEvent.ShowToast -> {
-                        // 에러 메시지 표시
                         showToast(event.message)
+                    }
+
+                    is UiEvent.NavigateToServerError -> {
+                        Timber.e("Navigate to Server Error: ${event.title}, ${event.message}")
+                        val intent =
+                            Intent(this@IntroActivity, ServerErrorActivity::class.java).apply {
+                                putExtra(ServerErrorActivity.EXTRA_TITLE, event.title)
+                                putExtra(ServerErrorActivity.EXTRA_MESSAGE, event.message)
+                            }
+                        startActivity(intent)
+                        finish()
                     }
                 }
             }
