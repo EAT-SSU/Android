@@ -20,7 +20,6 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
@@ -35,6 +34,11 @@ class IntroActivity : AppCompatActivity() {
         setContentView(binding.root)
         log()
 
+        observeState()
+        observeEvents()
+    }
+
+    private fun observeState() {
         lifecycleScope.launch {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
@@ -53,7 +57,9 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    private fun observeEvents() {
         lifecycleScope.launch {
             introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
@@ -62,7 +68,6 @@ class IntroActivity : AppCompatActivity() {
                     }
 
                     is UiEvent.NavigateToServerError -> {
-                        Timber.e("Navigate to Server Error: ${event.title}, ${event.message}")
                         val intent =
                             Intent(this@IntroActivity, ServerErrorActivity::class.java).apply {
                                 putExtra(ServerErrorActivity.EXTRA_TITLE, event.title)
