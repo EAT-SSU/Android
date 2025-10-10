@@ -37,6 +37,7 @@ class UploadReviewViewModel @Inject constructor(
             if (!success) {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+                return@launch
             }
 
             _uiState.value = UiState.Success()
