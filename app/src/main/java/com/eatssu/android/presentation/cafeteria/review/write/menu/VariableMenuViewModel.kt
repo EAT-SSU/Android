@@ -33,7 +33,7 @@ class VariableMenuViewModel @Inject constructor(
                 it.copy(
                     loading = false,
                     error = false,
-                    menuOfMeal = menuNameList.map { it.toMenuMini() })
+                    menuOfMeal = menuNameList.map { menuInfo -> menuInfo.toMenuMini() })
             }
 
             Timber.d("findMenuItemByMealId: $menuNameList")
