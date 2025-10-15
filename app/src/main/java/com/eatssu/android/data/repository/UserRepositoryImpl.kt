@@ -28,7 +28,7 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
         userService.getMyReviews().orNull()
 
     override suspend fun getUserNickName(): String =
-        userService.getMyInfo().map { it.nickname ?: "" }.orNull() ?: ""
+        userService.getMyInfo().map { it.nickname }.orNull() ?: ""
 
     override suspend fun signOut(): Boolean =
         userService.signOut().orElse(false)
