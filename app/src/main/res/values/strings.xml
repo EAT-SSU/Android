@@ -99,7 +99,7 @@
 
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
-    <string name="set_nickname_2_8">2~8글자를 입력해주세요.</string>
+    <string name="set_nickname_length">2~16글자를 입력해주세요.</string>
     <string name="set_nickname_able">사용 가능한 닉네임입니다!</string>
     <string name="set_nickname_unable">이미 사용 중인 닉네임입니다.</string>
 
