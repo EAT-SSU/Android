@@ -2,8 +2,8 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.request.UserDepartmentRequest
-import com.eatssu.android.data.dto.response.MyReviewResponse
 import com.eatssu.android.data.dto.response.toDomain
+import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orElse
@@ -12,6 +12,7 @@ import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.service.UserService
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
 import javax.inject.Inject
 
@@ -24,8 +25,8 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
     override suspend fun checkUserNameValidation(nickname: String): Boolean =
         userService.checkNickname(nickname).orElse(false)
 
-    override suspend fun getUserReviews(): MyReviewResponse? =
-        userService.getMyReviews().orNull()
+    override suspend fun getUserReviews(): List<Review> =
+        userService.getMyReviews().map { it.toReviewList() }.orEmptyList()
 
     override suspend fun getUserNickName(): String =
         userService.getMyInfo().map { it.nickname }.orNull() ?: ""

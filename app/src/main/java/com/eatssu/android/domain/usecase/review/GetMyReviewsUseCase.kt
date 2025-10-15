@@ -1,6 +1,5 @@
 package com.eatssu.android.domain.usecase.review
 
-import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
 import javax.inject.Inject
@@ -9,5 +8,5 @@ class GetMyReviewsUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(): List<Review> =
-        userRepository.getUserReviews()?.toReviewList() ?: emptyList()
+        userRepository.getUserReviews()
 }
