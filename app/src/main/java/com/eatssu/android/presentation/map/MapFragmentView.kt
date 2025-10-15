@@ -128,15 +128,17 @@ fun MapFragmentComposeView(
         }
     }
 
-    // MainState
+    // MainState - 로컬 SharedPreferences를 fallback으로 사용
+    val localDepartmentName = remember { MySharedPreferences.getUserDepartmentName(context) }
     val (departmentName, showUserDepartmentBottomSheet) = when (val state = mainUiState) {
         is UiState.Success -> {
             when (val data = state.data) {
                 is MainState.DepartmentState -> data.departmentName to data.showUserDepartmentBottomSheet
-                else -> "" to false
+                else -> localDepartmentName to false
             }
         }
-        else -> "" to false
+
+        else -> localDepartmentName to false
     }
 
     LaunchedEffect(Unit) {
