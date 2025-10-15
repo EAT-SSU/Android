@@ -1,6 +1,6 @@
 package com.eatssu.android.data.repository
 
-import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.service.HealthCheckService
 import com.eatssu.android.domain.repository.HealthCheckRepository
 import javax.inject.Inject
@@ -8,11 +8,8 @@ import javax.inject.Inject
 class HealthCheckRepositoryImpl @Inject constructor(
     private val healthCheckService: HealthCheckService
 ) : HealthCheckRepository {
-    override suspend fun checkServerHealth(): Boolean =
-        when (val result = healthCheckService.checkHealth()) {
-            is ApiResult.NetworkError -> false
-            is ApiResult.Success -> result.data.status == "UP"
-            else -> false
-        }
+    override suspend fun checkServerHealth(): Boolean {
+        return healthCheckService.checkHealth().isSuccess()
+    }
 }
 
