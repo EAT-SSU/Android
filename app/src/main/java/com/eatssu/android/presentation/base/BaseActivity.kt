@@ -219,11 +219,7 @@ abstract class BaseActivity<B : ViewBinding>(
         }
     }
 
-    open fun shouldCheckServerHealth(): Boolean {
-        return true
-    }
+    open fun shouldCheckServerHealth(): Boolean = true
 
-    open fun shouldLogScreenId(): Boolean {
-        return true
-    }
+    open fun shouldLogScreenId(): Boolean = true
 }
