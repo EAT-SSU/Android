@@ -4,6 +4,7 @@ import com.eatssu.android.data.dto.request.CheckValidTokenRequest
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orElse
 import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.service.OauthService

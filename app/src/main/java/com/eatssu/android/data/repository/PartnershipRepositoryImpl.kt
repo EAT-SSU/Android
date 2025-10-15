@@ -1,6 +1,7 @@
 package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.response.toDomain
+import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.service.PartnershipService
@@ -18,7 +19,7 @@ class PartnershipRepositoryImpl @Inject constructor(
     // 유저의 학과 상관없이 모든 제휴 정보 조회
     override suspend fun getAllPartnerships(): List<Partnership> =
         partnershipService.getAllPartnerships()
-            .map { list -> list.map { partnershipResponse -> partnershipResponse.toDomain() } }
+            .map { list -> list.map { it.toDomain() } }
             .orEmptyList()
 
     override suspend fun getPartnershipById(partnershipId: Int): PartnershipRestaurant? =

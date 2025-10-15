@@ -2,6 +2,7 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.response.MenusInformation
 import com.eatssu.android.data.dto.response.toDomain
+import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.domain.repository.MealRepository
