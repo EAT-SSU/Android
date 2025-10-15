@@ -15,6 +15,7 @@ class PartnershipRepositoryImpl @Inject constructor(
     private val userService: UserService,
 ) : PartnershipRepository {
 
+    // 유저의 학과 상관없이 모든 제휴 정보 조회
     override suspend fun getAllPartnerships(): List<Partnership> =
         partnershipService.getAllPartnerships()
             .map { list -> list.map { partnershipResponse -> partnershipResponse.toDomain() } }
