@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.toDrawable
 import com.eatssu.android.R
 
@@ -87,4 +88,17 @@ fun Context.showDialog(
     builder: DialogBuilder.() -> Unit = {}
 ) {
     DialogBuilder(this, title, description).apply(builder).show()
+}
+
+
+fun Context.showDialog(
+    @StringRes titleId: Int,
+    @StringRes descriptionId: Int,
+    builder: DialogBuilder.() -> Unit = {}
+) {
+    DialogBuilder(
+        this,
+        getString(titleId),
+        getString(descriptionId)
+    ).apply(builder).show()
 }

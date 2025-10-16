@@ -5,15 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentBottomsheetMyReviewBinding
-import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewActivity
-import com.eatssu.android.presentation.util.showToast
+import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
+import com.eatssu.android.presentation.util.showDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -80,24 +78,27 @@ class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         binding.llDelete.setOnClickListener {
-            AlertDialog.Builder(requireContext()).apply {
-                setTitle(R.string.delete)
-                setMessage(R.string.delete_description)
-                setNegativeButton("취소") { _, _ ->
-                    activity?.showToast(App.appContext.getString(R.string.delete_undo))
-                }
-                setPositiveButton("삭제") { _, _ ->
-                    viewModel.deleteReview(reviewId)
-                    lifecycleScope.launch {
-                        viewModel.uiState.collectLatest {
-                            if (it.isDeleted) {
-                                onReviewDeletedListener?.onReviewDeleted() // 콜백 호출
-                                dismiss()
+            requireContext().run {
+                showDialog(
+                    R.string.delete,
+                    R.string.delete_description
+                ) {
+                    isDestructive = true
+                    confirmText = "삭제"
+
+                    onConfirm {
+                        viewModel.deleteReview(reviewId)
+                        lifecycleScope.launch {
+                            viewModel.uiState.collectLatest {
+                                if (it.isDeleted) {
+                                    onReviewDeletedListener?.onReviewDeleted() // 콜백 호출
+                                    dismiss()
+                                }
                             }
                         }
                     }
                 }
-            }.create().show()
+            }
         }
 
     }
