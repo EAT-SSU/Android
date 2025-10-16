@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.intro
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -9,6 +10,7 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
@@ -35,6 +37,23 @@ class IntroActivity : AppCompatActivity() {
 
         observeState()
         observeEvents()
+
+        lifecycleScope.launch {
+            // 버전 체크 결과 관찰
+            introViewModel.versionCheckResult.collectLatest { result ->
+                result?.let {
+                    when (it) {
+                        is VersionCheckResult.ForceUpdateRequired -> {
+                            showForceUpdateDialog()
+                        }
+
+                        VersionCheckResult.UpdateNotRequired -> {
+                            // 업데이트 불필요 - 정상 진행
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun observeState() {
@@ -63,6 +82,7 @@ class IntroActivity : AppCompatActivity() {
             introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
                     is UiEvent.ShowToast -> {
+                        // 에러 메시지 표시
                         showToast(event.message)
                     }
                 }
@@ -86,5 +106,10 @@ class IntroActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventLogger.screenView(ScreenId.LOGIN_SPLASH)
+    }
+
+    private fun showForceUpdateDialog() {
+        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
+        startActivity(intent)
     }
 }

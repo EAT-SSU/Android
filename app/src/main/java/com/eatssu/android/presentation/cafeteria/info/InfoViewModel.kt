@@ -1,13 +1,10 @@
 package com.eatssu.android.presentation.cafeteria.info
 
 import androidx.lifecycle.ViewModel
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.model.RestaurantInfo
+import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.common.enums.Restaurant
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,20 +13,18 @@ class InfoViewModel @Inject constructor(
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : ViewModel() {
 
-    private val _infoList = MutableStateFlow<List<RestaurantInfo>>(emptyList())
-    val infoList: StateFlow<List<RestaurantInfo>> = _infoList.asStateFlow()
-
-    private val restaurantInfoMap: MutableMap<Restaurant, RestaurantInfo> = mutableMapOf()
-
-    init {
-        _infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
-        Timber.d(_infoList.value.toString())
-        _infoList.value.forEach { restaurantInfo ->
-            restaurantInfoMap[restaurantInfo.enum] = restaurantInfo
-        }
-    }
-
+    /**
+     * 특정 식당 정보를 가져옵니다.
+     * 필요할 때만 호출하여 메모리 효율성을 높입니다.
+     */
     fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
-        return restaurantInfoMap[restaurant]
+        return try {
+            val restaurantInfo = firebaseRemoteConfigRepository.getRestaurantInfo(restaurant)
+            Timber.d("Loaded restaurant info for $restaurant: $restaurantInfo")
+            restaurantInfo
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to load restaurant info for $restaurant")
+            null
+        }
     }
 }
