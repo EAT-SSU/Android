@@ -36,8 +36,8 @@ class DialogBuilder(
     // 취소 버튼 표시 여부
     var showCancelButton: Boolean = true
 
-    // confirm, cancel 버튼 순서 변경 여부
-    var swapConfirmCancel: Boolean = false
+    // Destructive한 동작인지 여부 - 확인/취소 버튼 위치 변경, 확인 색 Error 색 변경
+    var isDestructive: Boolean = false
 
     fun onConfirm(action: (dialog: Dialog) -> Unit) = apply {
         this.onConfirm = action
@@ -53,7 +53,7 @@ class DialogBuilder(
         // Dialog Radius 적용
         dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(if (swapConfirmCancel) R.layout.dialog_destructive else R.layout.dialog_default)
+        dialog.setContentView(if (isDestructive) R.layout.dialog_destructive else R.layout.dialog_default)
 
         // UI 설정
         dialog.findViewById<TextView>(R.id.dialog_title).text = title
