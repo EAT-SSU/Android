@@ -197,4 +197,7 @@
     <string name="toast_notification_enable">EAT-SSU 수신 동의 (%1$s)</string>
     <string name="toast_notification_disable">EAT-SSU 수신 거절 (%1$s)</string>
     <string name="toast_oss_load_fail">오픈소스 라이브러리를 불러올 수 없어요.</string>
+
+    <string name="toast_map_partnership_load_fail">제휴 정보를 불러오지 못했어요.</string>
+    <string name="toast_map_departure_load_fail">내 제휴 정보를 불러오지 못했어요.</string>
 </resources>

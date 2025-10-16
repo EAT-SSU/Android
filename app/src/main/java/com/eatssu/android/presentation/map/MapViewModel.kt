@@ -1,22 +1,24 @@
 package com.eatssu.android.presentation.map
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
-import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
+import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,6 +36,7 @@ data class MapState(
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val partnershipRepository: PartnershipRepository,
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
 ) : ViewModel() {
@@ -60,7 +63,12 @@ class MapViewModel @Inject constructor(
                 .onFailure {
                     Timber.e(it, "제휴 정보 로딩 실패")
                     _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("제휴 정보를 불러오지 못했습니다."))
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            context.getString(R.string.toast_map_partnership_load_fail),
+                            ToastType.ERROR
+                        )
+                    )
                 }
         }
     }
@@ -78,7 +86,12 @@ class MapViewModel @Inject constructor(
                 .onFailure {
                     Timber.e(it, "사용자 단과대 제휴 정보 로딩 실패")
                     _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("내 단과대 제휴 정보를 불러오지 못했습니다."))
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            context.getString(R.string.toast_map_departure_load_fail),
+                            ToastType.ERROR
+                        )
+                    )
                 }
         }
     }
