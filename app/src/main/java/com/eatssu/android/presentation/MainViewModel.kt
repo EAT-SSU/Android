@@ -11,6 +11,7 @@ import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
+import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -61,28 +62,12 @@ class MainViewModel @Inject constructor(
             runCatching {
                 withContext(Dispatchers.IO) { getUserNickNameUseCase() }
             }.onSuccess { nickname ->
-                // 1) 닉네임 없음/기본 프리셋
-                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
-                    _uiState.value = UiState.Success(MainState.NicknameNull)
-                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
-                    return@launch // ← 아래 분기 실행 막기
-                }
-
-                // 2) 정상 닉네임
                 _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        String.format(
-                            context.getString(R.string.hello_user),
-                            nickname
-                        )
-                    )
-                )
             }.onFailure { e ->
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                            context.getString(R.string.not_found)
+                        context.getString(R.string.not_found), ToastType.ERROR
                     )
                 )
                 Timber.e(e)
@@ -94,7 +79,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             logoutUseCase()
             _uiState.value = UiState.Success(MainState.LoggedOut)
-            _uiEvent.emit(UiEvent.ShowToast("로그아웃 되었습니다."))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    context.getString(R.string.logout_success),
+                    ToastType.SUCCESS
+                )
+            )
         }
     }
 
@@ -122,14 +112,17 @@ class MainViewModel @Inject constructor(
                 _uiState.value = UiState.Success(
                     MainState.DepartmentState(
                         departmentName = department.departmentName,
-                        showUserDepartmentBottomSheet =
-                            (college.collegeId == -1 || department.departmentId == -1)
+                        showUserDepartmentBottomSheet = (college.collegeId == -1 || department.departmentId == -1)
                     )
                 )
             }.onFailure { e ->
                 Timber.e("getUserDepartment failed: ${e.message}")
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.not_found), ToastType.ERROR
+                    )
+                )
             }
         }
     }
@@ -141,7 +134,6 @@ sealed class MainState {
     data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
-        val departmentName: String = "",
-        val showUserDepartmentBottomSheet: Boolean = false
+        val departmentName: String = "", val showUserDepartmentBottomSheet: Boolean = false
     ) : MainState()
 }

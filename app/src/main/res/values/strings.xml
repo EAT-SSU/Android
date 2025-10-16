@@ -94,8 +94,7 @@
     <string name="login_done">환영합니다!</string>
     <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
 
-    <string name="not_found">정보를 불러올 수 없습니다.</string>
-    <string name="hello_user">"%1$s님 반갑습니다!</string>
+    <string name="not_found">정보를 불러올 수 없어요.</string>
 
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
@@ -148,7 +147,7 @@
     <string name="inquiry_send_done">문의 전송이 완료되었습니다. 답변은 영업일 기준 2~3일 소요됩니다.</string>
     <string name="inquiry_send_not">문의 전송이 실패하였습니다. 다시 시도 해주세요.</string>
 
-    <string name="logout_description">로그아웃 되었습니다.</string>
+    <string name="logout_success">로그아웃했어요.</string>
     <string name="policy">개인정보 처리방침</string>
     <string name="terms">서비스 이용약관</string>
     <string name="contact">문의하기</string>
