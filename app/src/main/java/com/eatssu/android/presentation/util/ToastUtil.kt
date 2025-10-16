@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.eatssu.android.R
 
 enum class ToastType(@DrawableRes val iconId: Int, @DrawableRes val shapeId: Int) {
@@ -51,12 +52,28 @@ fun Context.showInfoToast(
     showToast(message, ToastType.INFO, location, root)
 }
 
+fun Context.showInfoToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    showToast(getString(messageId), ToastType.INFO, location, root)
+}
+
 fun Context.showSuccessToast(
     message: String,
     location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
     showToast(message, ToastType.SUCCESS, location, root)
+}
+
+fun Context.showSuccessToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    showToast(getString(messageId), ToastType.SUCCESS, location, root)
 }
 
 fun Context.showWarningToast(
@@ -67,6 +84,14 @@ fun Context.showWarningToast(
     showToast(message, ToastType.WARNING, location, root)
 }
 
+fun Context.showWarningToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    showToast(getString(messageId), ToastType.WARNING, location, root)
+}
+
 fun Context.showErrorToast(
     message: String,
     location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
@@ -75,3 +100,10 @@ fun Context.showErrorToast(
     showToast(message, ToastType.ERROR, location, root)
 }
 
+fun Context.showErrorToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    showToast(getString(messageId), ToastType.ERROR, location, root)
+}
