@@ -40,6 +40,9 @@ class DialogBuilder(
     // Destructive한 동작인지 여부 - 확인/취소 버튼 위치 변경, 확인 색 Error 색 변경
     var isDestructive: Boolean = false
 
+    // Dialog를 생성 후 바로 열 것인지 여부
+    var showWhenStart: Boolean = true
+
     fun onConfirm(action: (dialog: Dialog) -> Unit) = apply {
         this.onConfirm = action
     }
@@ -48,7 +51,7 @@ class DialogBuilder(
         this.onCancel = action
     }
 
-    fun show() {
+    fun show(): Dialog {
         val dialog = Dialog(context)
 
         // Dialog Radius 적용
@@ -78,7 +81,11 @@ class DialogBuilder(
         }
 
         dialog.setCancelable(cancellable)
-        dialog.show()
+
+        if (showWhenStart)
+            dialog.show()
+
+        return dialog
     }
 }
 
@@ -86,8 +93,8 @@ fun Context.showDialog(
     title: String,
     description: String,
     builder: DialogBuilder.() -> Unit = {}
-) {
-    DialogBuilder(this, title, description).apply(builder).show()
+): Dialog {
+    return DialogBuilder(this, title, description).apply(builder).show()
 }
 
 
@@ -95,8 +102,8 @@ fun Context.showDialog(
     @StringRes titleId: Int,
     @StringRes descriptionId: Int,
     builder: DialogBuilder.() -> Unit = {}
-) {
-    DialogBuilder(
+): Dialog {
+    return DialogBuilder(
         this,
         getString(titleId),
         getString(descriptionId)
