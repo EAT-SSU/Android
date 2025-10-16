@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Result
 import com.eatssu.android.domain.model.ReviewWriteData
 import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
@@ -41,8 +42,13 @@ class WriteReviewViewModel @Inject constructor(
     fun loadMenus(menuType: MenuType, id: Long, menuName: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            val menuList: List<Pair<Long, String>> = when (menuType) {
-                MenuType.FIXED -> listOf(id to menuName)
+            val menuList: List<MenuMini> = when (menuType) {
+                MenuType.FIXED -> listOf(
+                    MenuMini(
+                        id = id,
+                        name = menuName
+                    )
+                )
                 MenuType.VARIABLE -> getValidMenusOfMealUseCase(id)
             }
             _uiState.value = UiState.Success(
@@ -157,7 +163,7 @@ class WriteReviewViewModel @Inject constructor(
 
 sealed class WriteReviewState {
     data class Editing(
-        val menuList: List<Pair<Long, String>>,
+        val menuList: List<MenuMini>,
         val rating: Int,
         val content: String,
         val likedMenuIds: Set<Long>,
@@ -168,7 +174,7 @@ sealed class WriteReviewState {
     }
 
     data class Posting(
-        val menuList: List<Pair<Long, String>>,
+        val menuList: List<MenuMini>,
         val rating: Int,
         val content: String,
         val likedMenuIds: Set<Long>,

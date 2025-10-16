@@ -5,6 +5,7 @@ import com.eatssu.android.data.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.repository.ReviewRepository
@@ -96,7 +97,7 @@ class ReviewRepositoryImpl @Inject constructor(
         return reviewService.uploadImage(multipart).result?.url ?: ""
     }
 
-    override suspend fun getValidMenusByMealId(mealId: Long): List<Pair<Long, String>> {
+    override suspend fun getValidMenusByMealId(mealId: Long): List<MenuMini> {
         return reviewService.getMenuInfoByMealId(mealId).result?.toDomain() ?: emptyList()
     }
 

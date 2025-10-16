@@ -48,7 +48,7 @@ fun ModifyReviewScreen(
     reviewId: Long,
     initialRating: Int = 0,
     initialContent: String = "",
-    menuList: List<Review.Menu> = emptyList(),
+    menuLikeInfoList: List<Review.MenuLikeInfo> = emptyList(),
     onBack: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -56,7 +56,7 @@ fun ModifyReviewScreen(
 
     // 최초 1회 초기화
     LaunchedEffect(Unit) {
-        viewModel.init(initialRating, initialContent, menuList)
+        viewModel.init(initialRating, initialContent, menuLikeInfoList)
     }
 
     // 완료 이펙트 처리
@@ -78,7 +78,7 @@ fun ModifyReviewScreen(
                 title = "리뷰 수정하기",
                 rating = data.rating,
                 content = data.content,
-                menus = data.menus,
+                menuLikeInfos = data.menuLikeInfos,
                 isSubmitting = false,
                 canSubmit = data.canSubmit,
                 onBack = onBack,
@@ -98,7 +98,7 @@ fun ModifyReviewScreen(
                 title = "리뷰 수정하기",
                 rating = data.rating,
                 content = data.content,
-                menus = data.menus,
+                menuLikeInfos = data.menuLikeInfos,
                 isSubmitting = true,
                 canSubmit = false,
                 onBack = onBack,
@@ -140,7 +140,7 @@ internal fun ModifyReviewScreen(
     title: String,
     rating: Int,
     content: String,
-    menus: List<Review.Menu>,
+    menuLikeInfos: List<Review.MenuLikeInfo>,
     isSubmitting: Boolean,
     canSubmit: Boolean,              // <- 추가
     onBack: () -> Unit,
@@ -187,7 +187,7 @@ internal fun ModifyReviewScreen(
                         .fillMaxWidth()
                         .weight(1f) // 본문 스크롤, 버튼 고정
                 ) {
-                    items(items = menus, key = { it.menuId }) { menu ->
+                    items(items = menuLikeInfos, key = { it.menuId }) { menu ->
                         MenuLikeButtonItem(
                             modifier = Modifier.fillMaxWidth(),
                             mealName = menu.name,
@@ -253,11 +253,11 @@ private fun ModifyReviewPreview() {
             title = "리뷰 수정하기",
             rating = 3,
             content = "국밥 맛있음!",
-            menus = listOf(
-                Review.Menu(1, "된장찌개", true),
-                Review.Menu(2, "김치찌개", false),
-                Review.Menu(3, "계란말이", true),
-                Review.Menu(4, "돈까스", false),
+            menuLikeInfos = listOf(
+                Review.MenuLikeInfo(1, "된장찌개", true),
+                Review.MenuLikeInfo(2, "김치찌개", false),
+                Review.MenuLikeInfo(3, "계란말이", true),
+                Review.MenuLikeInfo(4, "돈까스", false),
             ),
             isSubmitting = false,
             canSubmit = false,

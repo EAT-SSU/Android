@@ -1,5 +1,6 @@
 package com.eatssu.android.data.dto.response
 
+import com.eatssu.android.domain.model.MenuMini
 import com.google.gson.annotations.SerializedName
 
 data class MenuOfMealResponse(
@@ -13,8 +14,11 @@ data class MenuList(
 
 )
 
-fun MenuOfMealResponse.toDomain(): List<Pair<Long, String>> {
+fun MenuOfMealResponse.toDomain(): List<MenuMini> {
     return menuList.map {
-        (it.menuId ?: -1L) to (it.name ?: "")
+        MenuMini(
+            id = it.menuId ?: -1L,
+            name = it.name ?: ""
+        )
     }
 }

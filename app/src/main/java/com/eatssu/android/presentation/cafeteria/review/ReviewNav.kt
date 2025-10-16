@@ -43,7 +43,7 @@ fun ReviewNav(
                         set("reviewId", review.reviewId)
                         set("initialRating", review.rating)
                         set("initialContent", review.content)
-                        set("menuList", review.menuList)
+                        set("menuList", review.menuLikeInfoList)
                     }
 
                     navHostController.navigate(ReviewNav.Modify) { launchSingleTop = true }
@@ -72,13 +72,14 @@ fun ReviewNav(
             val reviewId = prev?.get<Long>("reviewId") ?: 0L
             val initialRating = prev?.get<Int>("initialRating") ?: 0
             val initialContent = prev?.get<String>("initialContent") ?: ""
-            val menuNames = prev?.get<ArrayList<Review.Menu>>("menuList") ?: arrayListOf()
+            val menuLikeInfoNames =
+                prev?.get<ArrayList<Review.MenuLikeInfo>>("menuList") ?: arrayListOf()
 
             ModifyReviewScreen(
                 reviewId = reviewId,
                 initialRating = initialRating,
                 initialContent = initialContent,
-                menuList = menuNames,
+                menuLikeInfoList = menuLikeInfoNames,
                 onBack = { navHostController.popBackStack() },
             )
         }

@@ -39,7 +39,7 @@ fun ReviewItem(
     content: String,
     rating: Int,
     modifier: Modifier = Modifier,
-    menuList: List<Review.Menu>? = null,
+    menuLikeInfoList: List<Review.MenuLikeInfo>? = null,
     imgUrl: String? = null,
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
 ) {
@@ -96,14 +96,14 @@ fun ReviewItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (!menuList.isNullOrEmpty()) {
+        if (!menuLikeInfoList.isNullOrEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
             FlowRow(
                 modifier = Modifier.padding(horizontal = 6.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                menuList.forEach {
+                menuLikeInfoList.forEach {
                     Chip(
                         menuName = it.name,
                         modifier = Modifier.padding(end = 4.dp, bottom = 2.dp),
@@ -144,12 +144,12 @@ fun ReviewItemPreview() {
             writeDate = "2024-12-31",
             content = "맛있어요",
             rating = 4,
-            menuList = listOf(
-                Review.Menu(
+            menuLikeInfoList = listOf(
+                Review.MenuLikeInfo(
                     menuId = 1L,
                     name = "소고기",
                     isLike = true
-                ), Review.Menu(
+                ), Review.MenuLikeInfo(
                     menuId = 2L,
                     name = "닭고기",
                     isLike = false
@@ -170,12 +170,12 @@ fun ReviewItemWithoutImagePreview() {
             writeDate = "2024-12-30",
             content = "사진 없이 텍스트만 있는 리뷰입니다.",
             rating = 5,
-            menuList = listOf(
-                Review.Menu(
+            menuLikeInfoList = listOf(
+                Review.MenuLikeInfo(
                     menuId = 1L,
                     name = "소고기",
                     isLike = true
-                ), Review.Menu(
+                ), Review.MenuLikeInfo(
                     menuId = 2L,
                     name = "닭고기",
                     isLike = false

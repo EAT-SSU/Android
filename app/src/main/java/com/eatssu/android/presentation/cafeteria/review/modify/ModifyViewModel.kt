@@ -27,11 +27,11 @@ class ModifyViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun init(rating: Int, content: String, menus: List<Review.Menu>) {
-        val base = ModifyState.Baseline(rating, content, menus)
+    fun init(rating: Int, content: String, menuLikeInfos: List<Review.MenuLikeInfo>) {
+        val base = ModifyState.Baseline(rating, content, menuLikeInfos)
         _uiState.value = UiState.Success(
             ModifyState.Editing(
-                rating = rating, content = content, menus = menus, baseline = base
+                rating = rating, content = content, menuLikeInfos = menuLikeInfos, baseline = base
             )
         )
     }
@@ -39,7 +39,7 @@ class ModifyViewModel @Inject constructor(
     fun onRatingChanged(new: Int) = updateEditing { it.copy(rating = new) }
     fun onContentChanged(new: String) = updateEditing { it.copy(content = new) }
     fun toggleLike(id: Long) = updateEditing {
-        it.copy(menus = it.menus.map { m -> if (m.menuId == id) m.copy(isLike = !m.isLike) else m })
+        it.copy(menuLikeInfos = it.menuLikeInfos.map { m -> if (m.menuId == id) m.copy(isLike = !m.isLike) else m })
     }
 
     private inline fun updateEditing(block: (ModifyState.Editing) -> ModifyState.Editing) {
@@ -55,7 +55,7 @@ class ModifyViewModel @Inject constructor(
             ModifyState.Modifying(
                 editing.rating,
                 editing.content,
-                editing.menus,
+                editing.menuLikeInfos,
                 editing.baseline
             )
         )
@@ -64,7 +64,7 @@ class ModifyViewModel @Inject constructor(
             try {
                 modifyReviewUseCase(
                     reviewId,
-                    ReviewModifyData(editing.rating, editing.content, editing.menus)
+                    ReviewModifyData(editing.rating, editing.content, editing.menuLikeInfos)
                 )
                 _uiEvent.emit(UiEvent.NavigateBack)
                 _uiEvent.emit(UiEvent.ShowToast("리뷰를 수정했습니다."))
@@ -83,19 +83,19 @@ sealed class ModifyState {
     data class Baseline(
         val rating: Int,
         val content: String,
-        val menus: List<Review.Menu>,
+        val menuLikeInfos: List<Review.MenuLikeInfo>,
     )
 
     data class Editing(
         val rating: Int = 0,
         val content: String = "",
-        val menus: List<Review.Menu> = emptyList(),
+        val menuLikeInfos: List<Review.MenuLikeInfo> = emptyList(),
         val baseline: Baseline, // 초기 스냅샷
     ) : ModifyState() {
         val hasChanges: Boolean
             get() = rating != baseline.rating ||
                     content != baseline.content ||
-                    menus != baseline.menus
+                    menuLikeInfos != baseline.menuLikeInfos
 
         val canSubmit: Boolean
             get() = rating > 0 && hasChanges
@@ -106,7 +106,7 @@ sealed class ModifyState {
     data class Modifying(
         val rating: Int,
         val content: String,
-        val menus: List<Review.Menu>,
+        val menuLikeInfos: List<Review.MenuLikeInfo>,
         val baseline: Baseline, // 유지
     ) : ModifyState()
 }

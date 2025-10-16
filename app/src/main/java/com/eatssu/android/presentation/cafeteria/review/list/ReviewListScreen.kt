@@ -257,7 +257,7 @@ internal fun ReviewListScreen(
                                         writeDate = item.writeDate,
                                         content = item.content,
                                         rating = item.rating,
-                                        menuList = item.menuList,
+                                        menuLikeInfoList = item.menuLikeInfoList,
                                         imgUrl = item.imgUrl,
                                         onMoreClick = {
                                             if (item.isWriter) {
@@ -474,12 +474,12 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 0,
-                            menuList = listOf(
-                                Review.Menu(
+                            menuLikeInfoList = listOf(
+                                Review.MenuLikeInfo(
                                     menuId = 1L,
                                     name = "소고기",
                                     isLike = true
-                                ), Review.Menu(
+                                ), Review.MenuLikeInfo(
                                     menuId = 2L,
                                     name = "닭고기",
                                     isLike = false
@@ -494,12 +494,12 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 1,
-                            menuList = listOf(
-                                Review.Menu(
+                            menuLikeInfoList = listOf(
+                                Review.MenuLikeInfo(
                                     menuId = 1L,
                                     name = "소고기",
                                     isLike = true
-                                ), Review.Menu(
+                                ), Review.MenuLikeInfo(
                                     menuId = 2L,
                                     name = "닭고기",
                                     isLike = false
@@ -514,12 +514,12 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 2,
-                            menuList = listOf(
-                                Review.Menu(
+                            menuLikeInfoList = listOf(
+                                Review.MenuLikeInfo(
                                     menuId = 1L,
                                     name = "소고기",
                                     isLike = true
-                                ), Review.Menu(
+                                ), Review.MenuLikeInfo(
                                     menuId = 2L,
                                     name = "닭고기",
                                     isLike = false
@@ -534,12 +534,12 @@ fun ReviewListPreview() {
                         Review(
                             isWriter = false,
                             reviewId = 2,
-                            menuList = listOf(
-                                Review.Menu(
+                            menuLikeInfoList = listOf(
+                                Review.MenuLikeInfo(
                                     menuId = 1L,
                                     name = "소고기",
                                     isLike = true
-                                ), Review.Menu(
+                                ), Review.MenuLikeInfo(
                                     menuId = 2L,
                                     name = "닭고기",
                                     isLike = false

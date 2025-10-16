@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 data class Review(
     val isWriter: Boolean,
     val reviewId: Long,
-    val menuList: List<Menu>,
+    val menuLikeInfoList: List<MenuLikeInfo>,
     val writerNickname: String,
     val rating: Int,
     val writeDate: String,
@@ -14,7 +14,7 @@ data class Review(
     val imgUrl: String?,
 ) {
     @Parcelize
-    data class Menu(
+    data class MenuLikeInfo(
         val menuId: Long,
         val name: String,
         val isLike: Boolean,

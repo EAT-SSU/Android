@@ -15,7 +15,7 @@ class ModifyReviewUseCase @Inject constructor(
         val request = ModifyReviewRequest(
             content = reviewData.content,
             rating = reviewData.rating,
-            menuLikes = reviewData.menuLikes.map {
+            menuLikes = reviewData.menuLikeInfoLikes.map {
                 ModifyReviewRequest.MenuLikes(
                     menuId = it.menuId,
                     isLike = it.isLike,

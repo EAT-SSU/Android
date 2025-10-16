@@ -34,8 +34,8 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: -1L,
             isWriter = data.isWriter ?: false,
-            menuList = data.menuList.map { menu ->
-                Review.Menu(
+            menuLikeInfoList = data.menuList.map { menu ->
+                Review.MenuLikeInfo(
                     menuId = menu.id ?: -1L,
                     name = menu.name ?: "",
                     isLike = menu.isLike ?: false

@@ -3,6 +3,7 @@ package com.eatssu.android.domain.repository
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import java.io.File
@@ -48,7 +49,7 @@ interface ReviewRepository {
 
     suspend fun getValidMenusByMealId(
         mealId: Long,
-    ): List<Pair<Long, String>>
+    ): List<MenuMini>
 
     suspend fun getMyReviews(): List<Review>
 

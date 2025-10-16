@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.eatssu.android.R
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
@@ -151,7 +152,7 @@ fun WriteReviewScreen(
 internal fun WriteReviewScreen(
     modifier: Modifier = Modifier,
     title: String,
-    menuList: List<Pair<Long, String>>,
+    menuList: List<MenuMini>,
     rating: Int,
     content: String,
     likedMenuIds: Set<Long>,
@@ -203,7 +204,7 @@ internal fun WriteReviewScreen(
                         .fillMaxWidth()
                         .weight(1f) // 본문 스크롤, 버튼 고정
                 ) {
-                    items(menuList, key = { it.first }) { (id, name) ->
+                    items(menuList, key = { it }) { (id, name) ->
                         MenuLikeButtonItem(
                             modifier = Modifier.fillMaxWidth(),
                             mealName = name,
@@ -317,7 +318,9 @@ private fun ReviewWritePreview() {
     EatssuTheme {
         WriteReviewScreen(
             title = "리뷰 작성하기",
-            menuList = listOf(1L to "맑은 미역국", 2L to "연탄불맛돈불고기"),
+            menuList = listOf(
+                MenuMini(1, "김치"), MenuMini(2, "계란말이"), MenuMini(3, "닭볶음탕")
+            ),
             rating = 3,
             content = "맛있었습니다!",
             likedMenuIds = setOf(1L),

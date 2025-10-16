@@ -4,25 +4,25 @@ import com.eatssu.android.domain.model.Review
 import com.google.gson.annotations.SerializedName
 
 data class MenuReviewListResponse(
-    @SerializedName("numberOfElements") var numberOfElements: Int? = null,
-    @SerializedName("hasNext") var hasNext: Boolean? = null,
-    @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf(),
+    @SerializedName("numberOfElements") val numberOfElements: Int? = null,
+    @SerializedName("hasNext") val hasNext: Boolean? = null,
+    @SerializedName("dataList") val dataList: ArrayList<DataList> = arrayListOf(),
 ) {
     data class DataList(
-        @SerializedName("reviewId") var reviewId: Long? = null,
-        @SerializedName("menu") var menu: Menu? = Menu(),
-        @SerializedName("writerId") var writerId: Long? = null,
-        @SerializedName("isWriter") var isWriter: Boolean? = null,
-        @SerializedName("writerNickname") var writerNickname: String? = null,
-        @SerializedName("rating") var rating: Int? = null,
-        @SerializedName("writtenAt") var writtenAt: String? = null,
-        @SerializedName("content") var content: String? = null,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
+        @SerializedName("reviewId") val reviewId: Long? = null,
+        @SerializedName("menu") val menu: Menu? = Menu(),
+        @SerializedName("writerId") val writerId: Long? = null,
+        @SerializedName("isWriter") val isWriter: Boolean? = null,
+        @SerializedName("writerNickname") val writerNickname: String? = null,
+        @SerializedName("rating") val rating: Int? = null,
+        @SerializedName("writtenAt") val writtenAt: String? = null,
+        @SerializedName("content") val content: String? = null,
+        @SerializedName("imageUrls") val imageUrls: ArrayList<String> = arrayListOf(),
     ) {
         data class Menu(
-            @SerializedName("id") var id: Long? = null,
-            @SerializedName("name") var name: String? = null,
-            @SerializedName("isLike") var isLike: Boolean? = null
+            @SerializedName("id") val id: Long? = null,
+            @SerializedName("name") val name: String? = null,
+            @SerializedName("isLike") val isLike: Boolean? = null
         )
     }
 }
@@ -32,14 +32,14 @@ fun MenuReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: -1L,
             isWriter = data.isWriter ?: false,
-            menuList = listOf(
-                Review.Menu(
+            menuLikeInfoList = listOf(
+                Review.MenuLikeInfo(
                     menuId = data.menu?.id ?: -1L,
                     name = data.menu?.name ?: "",
                     isLike = data.menu?.isLike ?: false
                 ),
             ),
-            writerNickname = data.writerNickname ?: "유저",
+            writerNickname = data.writerNickname ?: "",
             rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",

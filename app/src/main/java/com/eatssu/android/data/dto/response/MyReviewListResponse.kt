@@ -4,23 +4,23 @@ import com.eatssu.android.domain.model.Review
 import com.google.gson.annotations.SerializedName
 
 data class MyReviewListResponse(
-    @SerializedName("numberOfElements") var numberOfElements: Int? = null,
-    @SerializedName("hasNext") var hasNext: Boolean? = null,
-    @SerializedName("dataList") var dataList: ArrayList<DataList>? = arrayListOf()
+    @SerializedName("numberOfElements") val numberOfElements: Int? = null,
+    @SerializedName("hasNext") val hasNext: Boolean? = null,
+    @SerializedName("dataList") val dataList: ArrayList<DataList>? = arrayListOf()
 ) {
     data class DataList(
 
-        @SerializedName("reviewId") var reviewId: Long? = null,
-        @SerializedName("rating") var rating: Int? = null,
-        @SerializedName("writtenAt") var writtenAt: String? = null,
-        @SerializedName("content") var content: String? = null,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
-        @SerializedName("menuList") var menuList: ArrayList<MenuList> = arrayListOf()
+        @SerializedName("reviewId") val reviewId: Long? = null,
+        @SerializedName("rating") val rating: Int? = null,
+        @SerializedName("writtenAt") val writtenAt: String? = null,
+        @SerializedName("content") val content: String? = null,
+        @SerializedName("imageUrls") val imageUrls: ArrayList<String> = arrayListOf(),
+        @SerializedName("menuList") val menuList: ArrayList<MenuList> = arrayListOf()
     ) {
         data class MenuList(
-            @SerializedName("id") var id: Long? = null,
-            @SerializedName("name") var name: String? = null,
-            @SerializedName("isLike") var isLike: Boolean? = null
+            @SerializedName("id") val id: Long? = null,
+            @SerializedName("name") val name: String? = null,
+            @SerializedName("isLike") val isLike: Boolean? = null
         )
     }
 }
@@ -30,8 +30,8 @@ fun MyReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: -1L,
             isWriter = true,
-            menuList = data.menuList.map { menu ->
-                Review.Menu(
+            menuLikeInfoList = data.menuList.map { menu ->
+                Review.MenuLikeInfo(
                     menuId = menu.id ?: -1L,
                     name = menu.name ?: "",
                     isLike = menu.isLike ?: false
