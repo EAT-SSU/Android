@@ -61,7 +61,7 @@ class LoginViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                        context.getString(R.string.login_failed),
+                        context.getString(R.string.toast_login_failed),
                         ToastType.ERROR
                     )
                 )

@@ -86,7 +86,7 @@ class LoginActivity :
 
             else -> {
                 Timber.e(error, "Login failed")
-                showErrorToast(R.string.login_failed)
+                showErrorToast(R.string.toast_login_failed)
             }
         }
     }

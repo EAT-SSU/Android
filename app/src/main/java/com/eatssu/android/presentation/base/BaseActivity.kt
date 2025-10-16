@@ -122,14 +122,14 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun observeTokenExpiration() {
         lifecycleScope.launch {
             TokenEventBus.tokenExpired.collect {
-                showInfoToast(R.string.token_expired)
+                showInfoToast(R.string.toast_token_expired)
                 navigateToLogin()
             }
         }
 
         lifecycleScope.launch {
             TokenEventBus.tokenServerError.collect {
-                showInfoToast(R.string.token_server_error)
+                showInfoToast(R.string.toast_token_server_error)
                 navigateToLogin()
             }
         }

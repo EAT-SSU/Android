@@ -27,7 +27,7 @@ enum class ToastLocation(val gravity: Int, val xOffset: Int, val yOffset: Int) {
 fun Context.showToast(
     message: String,
     type: ToastType,
-    location: ToastLocation,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
     val toast = Toast(this)

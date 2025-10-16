@@ -81,7 +81,7 @@ class MainViewModel @Inject constructor(
             _uiState.value = UiState.Success(MainState.LoggedOut)
             _uiEvent.emit(
                 UiEvent.ShowToast(
-                    context.getString(R.string.logout_success),
+                    context.getString(R.string.toast_logout_success),
                     ToastType.SUCCESS
                 )
             )

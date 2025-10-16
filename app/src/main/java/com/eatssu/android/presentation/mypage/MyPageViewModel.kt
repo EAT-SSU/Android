@@ -77,7 +77,7 @@ class MyPageViewModel @Inject constructor(
                     _state.update { it.copy(nickname = null) }
                     _uiEvent.emit(
                         UiEvent.ShowToast(
-                            context.getString(R.string.require_nickname),
+                            context.getString(R.string.toast_require_nickname),
                             ToastType.INFO
                         )
                     )

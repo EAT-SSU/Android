@@ -54,7 +54,7 @@ class IntroActivity : AppCompatActivity() {
                 when (event) {
                     is UiEvent.ShowToast -> {
                         // 에러 메시지 표시
-                        showToast(event.message)
+                        showToast(event.message, event.type)
                     }
                 }
             }

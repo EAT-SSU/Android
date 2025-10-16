@@ -118,7 +118,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
-                showInfoToast(getString(R.string.notification_enable, formattedDate))
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
             } else {
                 showNotificationPermissionDialog()
                 // 권한 미허용이면 스위치 원복
@@ -130,7 +130,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             }
         } else {
             myPageViewModel.setNotificationOff()
-            showInfoToast(getString(R.string.notification_disable, formattedDate))
+            showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
         }
     }
 
@@ -225,7 +225,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         try {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
         } catch (e: Exception) {
-            showErrorToast(getString(R.string.oss_load_fail))
+            showErrorToast(getString(R.string.toast_oss_load_fail))
             Timber.e("Error opening OSS Licenses: ${e.message}")
         }
     }
