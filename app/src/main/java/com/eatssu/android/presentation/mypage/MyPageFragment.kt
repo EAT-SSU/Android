@@ -27,6 +27,7 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
@@ -207,15 +208,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun showLogoutDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("로그아웃")
-            .setMessage("로그아웃 하시겠습니까?")
-            .setPositiveButton("로그아웃") { _, _ ->
-                mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
-                startActivity(Intent(requireContext(), LoginActivity::class.java))
+        requireContext().run {
+            showDialog("로그아웃", "로그아웃 하시겠습니까?") {
+                isDestructive = true
+                onConfirm {
+                    mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                }
             }
-            .setNegativeButton("취소", null)
-            .show()
+        }
     }
 
     private fun moveToOss() {
