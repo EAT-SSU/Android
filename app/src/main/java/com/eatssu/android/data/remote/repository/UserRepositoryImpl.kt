@@ -18,8 +18,9 @@ import com.eatssu.android.domain.repository.UserRepository
 import timber.log.Timber
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(private val userService: UserService) :
-    UserRepository {
+class UserRepositoryImpl @Inject constructor(
+    private val userService: UserService
+) : UserRepository {
 
     override suspend fun updateUserName(body: ChangeNicknameRequest): Result<Unit> =
         when (val result = userService.changeNickname(body)) {

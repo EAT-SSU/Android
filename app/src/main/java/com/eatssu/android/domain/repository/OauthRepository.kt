@@ -1,7 +1,7 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.request.CheckValidTokenRequest
-import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
+import com.eatssu.android.data.remote.dto.request.CheckValidTokenRequest
+import com.eatssu.android.data.remote.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.domain.model.Token
 
 interface OauthRepository {
