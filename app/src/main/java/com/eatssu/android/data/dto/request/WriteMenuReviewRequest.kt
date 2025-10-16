@@ -8,10 +8,9 @@ data class WriteMenuReviewRequest(
     @SerializedName("menuLike") val menuLike: MenuLike?,
     @SerializedName("content") val content: String,
     @SerializedName("imageUrls") val imageUrls: List<String>,
-
 ) {
     data class MenuLike(
-        @SerializedName("menuId") val menuId: Long? = null,
-        @SerializedName("isLike") val isLike: Boolean? = null
+        @SerializedName("menuId") val menuId: Long,
+        @SerializedName("isLike") val isLike: Boolean
     )
 }

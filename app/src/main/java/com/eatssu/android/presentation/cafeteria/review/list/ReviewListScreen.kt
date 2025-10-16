@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewBottomSheet
+import com.eatssu.android.presentation.cafeteria.review.list.component.OthersReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
@@ -113,7 +116,7 @@ internal fun ReviewListScreen(
         OthersReviewBottomSheet(
             onDismiss = { showOthersBottomSheet = false; selectedReview = null },
             onReport = {
-                val intent = android.content.Intent(context, ReportActivity::class.java)
+                val intent = Intent(context, ReportActivity::class.java)
                 intent.putExtra("reviewId", selectedReview?.reviewId)
                 context.startActivity(intent)
                 showOthersBottomSheet = false

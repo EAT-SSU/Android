@@ -31,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.presentation.cafeteria.review.list.MyReviewBottomSheet
+import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent

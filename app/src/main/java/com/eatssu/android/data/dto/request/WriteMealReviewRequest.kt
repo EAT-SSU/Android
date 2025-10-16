@@ -11,7 +11,7 @@ data class WriteMealReviewRequest(
     @SerializedName("imageUrls") val imageUrls: ArrayList<String>
 ) {
     data class MenuLikes(
-        @SerializedName("menuId") val menuId: Long? = null,
-        @SerializedName("isLike") val isLike: Boolean? = null
+        @SerializedName("menuId") val menuId: Long,
+        @SerializedName("isLike") val isLike: Boolean
     )
 }

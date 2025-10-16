@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,25 +37,23 @@ class ReviewListViewModel @Inject constructor(
     private var lastItemId: Long? = null
 
     fun getReview(menuType: MenuType, itemId: Long) {
+        viewModelScope.launch {
+            loadReview(menuType, itemId)
+        }
+    }
+
+    private suspend fun loadReview(menuType: MenuType, itemId: Long) {
         lastMenuType = menuType
         lastItemId = itemId
         _uiState.value = UiState.Loading
 
-        viewModelScope.launch {
-            try {
-                val reviewInfo = getReviewInfoUseCase(menuType, itemId)
-                val reviewList = getReviewListUseCase(menuType, itemId)
-
-                _uiState.value = UiState.Success(
-                    ReviewListState(
-                        reviewInfo = reviewInfo,
-                        reviewList = reviewList
-                    )
-                )
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
-            }
+        try {
+            val reviewInfo = getReviewInfoUseCase(menuType, itemId)
+            val reviewList = getReviewListUseCase(menuType, itemId)
+            _uiState.value = UiState.Success(ReviewListState(reviewInfo, reviewList))
+        } catch (e: Exception) {
+            _uiState.value = UiState.Error
+            _uiEvent.emit(UiEvent.ShowToast("리뷰를 불러오지 못했습니다."))
         }
     }
 
@@ -65,15 +62,16 @@ class ReviewListViewModel @Inject constructor(
             try {
                 deleteReviewUseCase(reviewId)
                 _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
+
                 // 삭제 성공 시 목록 재조회
                 val type = lastMenuType
                 val id = lastItemId
                 if (type != null && id != null) {
-                    getReview(type, id)
+                    // 같은 코루틴 안에서 suspend로 연속 실행
+                    loadReview(type, id)
                 }
             } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
-                Timber.d("deleteReview: ${e.message}")
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 삭제 실패"))
             }
         }
     }

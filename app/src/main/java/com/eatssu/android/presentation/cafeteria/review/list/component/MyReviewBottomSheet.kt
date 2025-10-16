@@ -1,8 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
-package com.eatssu.android.presentation.cafeteria.review.list
+package com.eatssu.android.presentation.cafeteria.review.list.component
 
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -142,7 +141,7 @@ private fun ReviewActionsSheetPreview() {
 @Preview(
     showBackground = true,
     name = "Dark",
-    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 private fun ReviewActionsSheetDarkPreview() {
