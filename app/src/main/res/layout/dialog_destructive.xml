@@ -55,9 +55,22 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:background="@drawable/shape_dialog_button_confirm"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/shape_dialog_button_destructive"
                 android:textColor="@color/white" />
+
+        <!-- Cancel Button -->
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dialog_cancel_btn"
+                style="@style/Body1"
+                android:text="@string/cancel"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/shape_dialog_button_cancel"
+                android:textColor="@color/black" />
+
     </LinearLayout>
 
 </LinearLayout>
