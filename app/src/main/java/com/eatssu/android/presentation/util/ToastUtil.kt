@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import com.eatssu.android.R
 
 enum class ToastType(@DrawableRes val iconId: Int, @DrawableRes val shapeId: Int) {
@@ -44,6 +45,15 @@ fun Context.showToast(
     toast.show()
 }
 
+fun Fragment.showToast(
+    message: String,
+    type: ToastType,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showToast(message, type, location, root)
+}
+
 fun Context.showInfoToast(
     message: String,
     location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
@@ -58,6 +68,22 @@ fun Context.showInfoToast(
     root: ViewGroup? = null,
 ) {
     showToast(getString(messageId), ToastType.INFO, location, root)
+}
+
+fun Fragment.showInfoToast(
+    message: String,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showInfoToast(message, location, root)
+}
+
+fun Fragment.showInfoToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showInfoToast(messageId, location, root)
 }
 
 fun Context.showSuccessToast(
@@ -76,6 +102,22 @@ fun Context.showSuccessToast(
     showToast(getString(messageId), ToastType.SUCCESS, location, root)
 }
 
+fun Fragment.showSuccessToast(
+    message: String,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showSuccessToast(message, location, root)
+}
+
+fun Fragment.showSuccessToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showSuccessToast(messageId, location, root)
+}
+
 fun Context.showWarningToast(
     message: String,
     location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
@@ -92,6 +134,22 @@ fun Context.showWarningToast(
     showToast(getString(messageId), ToastType.WARNING, location, root)
 }
 
+fun Fragment.showWarningToast(
+    message: String,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showWarningToast(message, location, root)
+}
+
+fun Fragment.showWarningToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showWarningToast(messageId, location, root)
+}
+
 fun Context.showErrorToast(
     message: String,
     location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
@@ -106,4 +164,20 @@ fun Context.showErrorToast(
     root: ViewGroup? = null,
 ) {
     showToast(getString(messageId), ToastType.ERROR, location, root)
+}
+
+fun Fragment.showErrorToast(
+    message: String,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showErrorToast(message, location, root)
+}
+
+fun Fragment.showErrorToast(
+    @StringRes messageId: Int,
+    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
+    root: ViewGroup? = null,
+) {
+    requireContext().showErrorToast(messageId, location, root)
 }
