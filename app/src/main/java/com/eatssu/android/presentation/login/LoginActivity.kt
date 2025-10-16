@@ -115,7 +115,7 @@ class LoginActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.uiEvent.collect { event ->
                     when (event) {
-                        is UiEvent.ShowToast -> showToast(event.message)
+                        is UiEvent.ShowToast -> showToast(event.message, event.type)
                     }
                 }
             }

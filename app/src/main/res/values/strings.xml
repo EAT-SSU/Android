@@ -200,4 +200,7 @@
 
     <string name="toast_map_partnership_load_fail">제휴 정보를 불러오지 못했어요.</string>
     <string name="toast_map_departure_load_fail">내 제휴 정보를 불러오지 못했어요.</string>
+
+    <string name="toast_sign_out_success">회원탈퇴되었어요.</string>
+    <string name="toast_sign_out_fail">회원탈퇴에 실패했어요.</string>
 </resources>
