@@ -4,64 +4,84 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.view.Window
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.graphics.drawable.toDrawable
 import com.eatssu.android.R
 
-fun Context.openOkCancelDialog(
-    title: String,
-    description: String,
-    onConfirm: (dialog: Dialog) -> Unit = {},
-    onCancel: (dialog: Dialog) -> Unit = {},
-    cancellable: Boolean = true,
+class DialogBuilder(
+    private val context: Context,
+
+    // Dialog에 표시할 제목
+    private val title: String,
+
+    // Dialog에 표시할 설명
+    private val description: String
 ) {
-    val dialog = Dialog(this)
+    // 확인 버튼을 눌렀을 때 동작
+    private var onConfirm: (dialog: Dialog) -> Unit = { it.dismiss() }
 
-    // Dialog Radius 적용
-    dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    dialog.setContentView(R.layout.dialog_ok_cancel)
+    // 취소 버튼을 눌렀을 때 동작
+    private var onCancel: (dialog: Dialog) -> Unit = { it.dismiss() }
 
-    // UI 설정
-    dialog.findViewById<TextView>(R.id.dialog_title).text = title
-    dialog.findViewById<TextView>(R.id.dialog_description).text = description
+    // Dialog 바깥을 누르면 닫히는지 여부
+    var cancellable: Boolean = true
 
-    dialog.findViewById<TextView>(R.id.dialog_confirm_btn).setOnClickListener {
-        // 확인 버튼 클릭 시 동작
-        onConfirm(dialog)
+    // 확인 버튼 텍스트
+    var confirmText: String = "확인"
+
+    // 취소 버튼 텍스트
+    var cancelText: String = "취소"
+
+    // 취소 버튼 표시 여부
+    var showCancelButton: Boolean = true
+
+    fun onConfirm(action: (dialog: Dialog) -> Unit) = apply {
+        this.onConfirm = action
     }
 
-    dialog.findViewById<TextView>(R.id.dialog_cancel_btn).setOnClickListener {
-        // 취소 버튼 클릭 시 동작
-        onCancel(dialog)
+    fun onCancel(action: (dialog: Dialog) -> Unit) = apply {
+        this.onCancel = action
     }
 
-    dialog.setCancelable(cancellable)
-    dialog.show()
+    fun show() {
+        val dialog = Dialog(context)
+
+        // Dialog Radius 적용
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+
+        // UI 설정
+        dialog.findViewById<TextView>(R.id.dialog_title).text = title
+        dialog.findViewById<TextView>(R.id.dialog_description).text = description
+
+        val confirmButton = dialog.findViewById<Button>(R.id.dialog_confirm_btn)
+        val cancelButton = dialog.findViewById<Button>(R.id.dialog_cancel_btn)
+
+        confirmButton.text = confirmText
+        confirmButton.setOnClickListener {
+            onConfirm(dialog)
+        }
+
+        if (showCancelButton) {
+            cancelButton.text = cancelText
+            cancelButton.setOnClickListener {
+                onCancel(dialog)
+            }
+        } else {
+            cancelButton.visibility = android.view.View.GONE
+        }
+
+        dialog.setCancelable(cancellable)
+        dialog.show()
+    }
 }
 
-fun Context.openOkDialog(
+fun Context.showDialog(
     title: String,
     description: String,
-    onConfirm: (dialog: Dialog) -> Unit = {},
-    cancellable: Boolean = true,
+    builder: DialogBuilder.() -> Unit = {}
 ) {
-    val dialog = Dialog(this)
-
-    // Dialog Radius 적용
-    dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    dialog.setContentView(R.layout.dialog_ok)
-
-    // UI 설정
-    dialog.findViewById<TextView>(R.id.dialog_title).text = title
-    dialog.findViewById<TextView>(R.id.dialog_description).text = description
-
-    dialog.findViewById<TextView>(R.id.dialog_confirm_btn).setOnClickListener {
-        // 확인 버튼 클릭 시 동작
-        onConfirm(dialog)
-    }
-
-    dialog.setCancelable(cancellable)
-    dialog.show()
+    DialogBuilder(this, title, description).apply(builder).show()
 }
