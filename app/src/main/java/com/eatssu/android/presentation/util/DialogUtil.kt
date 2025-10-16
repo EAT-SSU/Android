@@ -12,7 +12,8 @@ fun Context.openOkCancelDialog(
     title: String,
     description: String,
     onConfirm: (dialog: Dialog) -> Unit = {},
-    onCancel: (dialog: Dialog) -> Unit = {}
+    onCancel: (dialog: Dialog) -> Unit = {},
+    cancellable: Boolean = true,
 ) {
     val dialog = Dialog(this)
 
@@ -35,13 +36,15 @@ fun Context.openOkCancelDialog(
         onCancel(dialog)
     }
 
+    dialog.setCancelable(cancellable)
     dialog.show()
 }
 
 fun Context.openOkDialog(
     title: String,
     description: String,
-    onConfirm: (dialog: Dialog) -> Unit = {}
+    onConfirm: (dialog: Dialog) -> Unit = {},
+    cancellable: Boolean = true,
 ) {
     val dialog = Dialog(this)
 
@@ -59,5 +62,6 @@ fun Context.openOkDialog(
         onConfirm(dialog)
     }
 
+    dialog.setCancelable(cancellable)
     dialog.show()
 }
