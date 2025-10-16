@@ -12,6 +12,7 @@ import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.android.presentation.util.showErrorToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.enums.ScreenId
@@ -85,7 +86,7 @@ class LoginActivity :
 
             else -> {
                 Timber.e(error, "Login failed")
-                showToast(getString(R.string.login_failed))
+                showErrorToast(R.string.login_failed)
             }
         }
     }

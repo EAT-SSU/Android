@@ -12,6 +12,7 @@ import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +59,12 @@ class LoginViewModel @Inject constructor(
 
             }.onFailure {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.login_failed),
+                        ToastType.ERROR
+                    )
+                )
             }
         }
     }
