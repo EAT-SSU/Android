@@ -1,22 +1,23 @@
 package com.eatssu.android.presentation.map
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
-import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,6 +37,7 @@ data class MapState(
 class MapViewModel @Inject constructor(
     private val partnershipRepository: PartnershipRepository,
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -44,7 +46,11 @@ class MapViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
+    val departmentId: Long = MySharedPreferences.getUserDepartmentId(context).toLong()
+    val collegeId: Long = MySharedPreferences.getUserCollegeId(context).toLong()
+
     init {
+        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartmentName(context)}")
         loadPartnerships()
     }
 
@@ -69,7 +75,6 @@ class MapViewModel @Inject constructor(
     fun loadUserCollegePartnerships() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-
             runCatching { partnershipRepository.getUserCollegePartnerships() }
                 .onSuccess { data ->
 
