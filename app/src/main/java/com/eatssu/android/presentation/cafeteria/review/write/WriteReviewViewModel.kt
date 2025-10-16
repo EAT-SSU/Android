@@ -127,7 +127,7 @@ class WriteReviewViewModel @Inject constructor(
                 val reviewData = ReviewWriteData(
                     rating = editing.rating,
                     content = editing.content,
-                    menuLikes = editing.likedMenuIds.toList(),
+                    likeMenuIdList = editing.likedMenuIds.toList(),
                     imageUrl = imageUrl
                 )
                 when (val result = writeReviewUseCase(menuType, itemId, reviewData)) {

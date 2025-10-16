@@ -43,10 +43,10 @@ const val MAX_TEXT_COUNT = 300
 
 @Composable
 fun ModifyReviewScreen(
+    reviewId: Long,
+    initialRating: Int,
     modifier: Modifier = Modifier,
     viewModel: ModifyViewModel = hiltViewModel(),
-    reviewId: Long,
-    initialRating: Int = 0,
     initialContent: String = "",
     menuLikeInfoList: List<Review.MenuLikeInfo> = emptyList(),
     onBack: () -> Unit = {},
@@ -109,7 +109,6 @@ fun ModifyReviewScreen(
             )
         }
 
-//        null, // UiState.Init
         else -> {
             // 에러나 초기 로딩 등: 최소 로딩 UI
             Surface(modifier = modifier.fillMaxSize()) {
@@ -129,11 +128,6 @@ fun ModifyReviewScreen(
     }
 }
 
-/**
- * 순수 UI: 상태를 받아 그림. 로컬 remember 상태 없음.
- * - 본문은 스크롤, 하단 버튼은 고정
- * - isSubmitting 동안 입력/버튼 비활성화
- */
 @Composable
 internal fun ModifyReviewScreen(
     modifier: Modifier = Modifier,
@@ -142,7 +136,7 @@ internal fun ModifyReviewScreen(
     content: String,
     menuLikeInfos: List<Review.MenuLikeInfo>,
     isSubmitting: Boolean,
-    canSubmit: Boolean,              // <- 추가
+    canSubmit: Boolean,
     onBack: () -> Unit,
     onRatingChanged: (Int) -> Unit,
     onContentChanged: (String) -> Unit,
@@ -214,7 +208,8 @@ internal fun ModifyReviewScreen(
                                 placeholder = {
                                     Text(
                                         "메뉴에 대한 상세한 리뷰를 작성해주세요",
-                                        style = EatssuTheme.typography.body2
+                                        style = EatssuTheme.typography.body2,
+                                        color = Gray400
                                     )
                                 },
                                 shape = RoundedCornerShape(10.dp),

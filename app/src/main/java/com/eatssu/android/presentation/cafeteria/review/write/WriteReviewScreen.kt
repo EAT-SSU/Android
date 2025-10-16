@@ -54,7 +54,6 @@ import com.eatssu.design_system.theme.Primary
 
 const val MAX_TEXT_COUNT = 300
 
-/** Route */
 @Composable
 fun WriteReviewScreen(
     modifier: Modifier = Modifier,
@@ -147,7 +146,6 @@ fun WriteReviewScreen(
     }
 }
 
-/** 순수 UI */
 @Composable
 internal fun WriteReviewScreen(
     modifier: Modifier = Modifier,
@@ -232,7 +230,8 @@ internal fun WriteReviewScreen(
                                 placeholder = {
                                     Text(
                                         "메뉴에 대한 상세한 리뷰를 작성해주세요",
-                                        style = EatssuTheme.typography.body2
+                                        style = EatssuTheme.typography.body2,
+                                        color = Gray400
                                     )
                                 },
                                 shape = RoundedCornerShape(10.dp),

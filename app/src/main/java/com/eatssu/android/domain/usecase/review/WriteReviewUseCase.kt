@@ -23,7 +23,7 @@ class WriteReviewUseCase @Inject constructor(
                         rating = reviewData.rating,
                         content = reviewData.content ?: "",
                         imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
-                        menuLike = reviewData.menuLikes?.let {
+                        menuLike = reviewData.likeMenuIdList?.let {
                             WriteMenuReviewRequest.MenuLike(
                                 menuId = it.first(),
                                 isLike = true,
@@ -40,7 +40,7 @@ class WriteReviewUseCase @Inject constructor(
                         rating = reviewData.rating,
                         content = reviewData.content ?: "",
                         imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
-                        menuLikes = reviewData.menuLikes?.map {
+                        menuLikes = reviewData.likeMenuIdList?.map {
                             WriteMealReviewRequest.MenuLikes(
                                 menuId = it,
                                 isLike = true,
