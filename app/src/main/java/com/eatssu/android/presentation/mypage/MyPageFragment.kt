@@ -28,6 +28,8 @@ import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showDialog
+import com.eatssu.android.presentation.util.showErrorToast
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
@@ -72,7 +74,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                             }
 
                             is UiState.Error -> {
-                                showToast(getString(R.string.not_found))
+                                showErrorToast(R.string.not_found)
                             }
                         }
                     }
@@ -80,7 +82,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 launch {
                     myPageViewModel.uiEvent.collectLatest { event ->
                         when (event) {
-                            is UiEvent.ShowToast -> showToast(event.message)
+                            is UiEvent.ShowToast -> showToast(event.message, event.type)
                             else -> Unit
                         }
                     }
@@ -116,7 +118,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
-                showToast("EAT-SSU 알림 수신을 동의하였습니다.\n$formattedDate")
+                showInfoToast(getString(R.string.notification_enable, formattedDate))
             } else {
                 showNotificationPermissionDialog()
                 // 권한 미허용이면 스위치 원복
@@ -128,7 +130,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             }
         } else {
             myPageViewModel.setNotificationOff()
-            showToast("EAT-SSU 알림 수신을 거부하였습니다.\n$formattedDate")
+            showInfoToast(getString(R.string.notification_disable, formattedDate))
         }
     }
 
@@ -223,7 +225,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         try {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
         } catch (e: Exception) {
-            showToast("오픈소스 라이브러리를 불러올 수 없습니다.")
+            showErrorToast(getString(R.string.oss_load_fail))
             Timber.e("Error opening OSS Licenses: ${e.message}")
         }
     }

@@ -191,4 +191,11 @@
 
     <string name="cancel">취소</string>
     <string name="confirm">확인</string>
+
+    <string name="require_nickname">닉네임을 설정해주세요.</string>
+
+    <string name="notification_enable">EAT-SSU 수신 동의 (%1$s)</string>
+    <string name="notification_disable">EAT-SSU 수신 거절 (%1$s)</string>
+
+    <string name="oss_load_fail">오픈소스 라이브러리를 불러올 수 없어요.</string>
 </resources>

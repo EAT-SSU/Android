@@ -1,15 +1,19 @@
 package com.eatssu.android.presentation.mypage
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.R
 import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
@@ -68,16 +73,26 @@ class MyPageViewModel @Inject constructor(
             runCatching {
                 withContext(Dispatchers.IO) { getUserNickNameUseCase() }
             }.onSuccess { nickname ->
-                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
+                if (nickname.isBlank()) {
                     _state.update { it.copy(nickname = null) }
-                    _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            context.getString(R.string.require_nickname),
+                            ToastType.INFO
+                        )
+                    )
                 } else {
                     _state.update { it.copy(nickname = nickname) }
                 }
             }.onFailure { e ->
                 // 에러 화면을 꼭 별도로 보여주고 싶다면 uiState를 에러로 전환하는 방식 선택
                 // 여기서는 '상태 유지 + 토스트'만 처리
-                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.not_found),
+                        ToastType.ERROR
+                    )
+                )
                 Timber.e(e)
             }
         }
