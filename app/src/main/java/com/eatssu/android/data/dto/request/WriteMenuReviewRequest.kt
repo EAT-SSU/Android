@@ -2,31 +2,16 @@ package com.eatssu.android.data.dto.request
 
 import com.google.gson.annotations.SerializedName
 
+//별점은 필수 값 나머지는 옵션
 data class WriteMenuReviewRequest(
-    @SerializedName("menuId") var menuId: Long? = null,
-    @SerializedName("mainRating") var mainRating: Int? = null,
-    @SerializedName("amountRating") var amountRating: Int? = null,
-    @SerializedName("tasteRating") var tasteRating: Int? = null,
-    @SerializedName("content") var content: String? = null,
-    @SerializedName("imageUrl") var imageUrl: String? = null,
-    @SerializedName("menuLike") var menuLike: MenuLike? = MenuLike()
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("menuLike") val menuLike: MenuLike? = MenuLike(),
+    @SerializedName("content") val content: String? = null,
+    @SerializedName("imageUrls") val imageUrls: List<String> = arrayListOf()
+
 ) {
     data class MenuLike(
-        @SerializedName("menuId") var menuId: Long? = null,
-        @SerializedName("isLike") var isLike: Boolean? = null
+        @SerializedName("menuId") val menuId: Long? = null,
+        @SerializedName("isLike") val isLike: Boolean? = null
     )
 }
-
-//todo api 수정되면 다시 살리기 (추석이후 api 수정 예정)
-//data class WriteMenuReviewRequest(
-//    @SerializedName("rating") var rating: Int? = null,
-//    @SerializedName("menuLikes") var menuLikes: List<MenuLikes> = arrayListOf(),
-//    @SerializedName("content") var content: String? = null,
-//    @SerializedName("imageUrls") var imageUrls: List<String> = arrayListOf()
-//
-//) {
-//    data class MenuLikes(
-//        @SerializedName("menuId") var menuId: Long? = null,
-//        @SerializedName("isLike") var isLike: Boolean? = null
-//    )
-//}

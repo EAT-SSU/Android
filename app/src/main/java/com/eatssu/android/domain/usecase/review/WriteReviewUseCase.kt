@@ -20,30 +20,16 @@ class WriteReviewUseCase @Inject constructor(
             when (menuType) {
                 MenuType.FIXED -> {
                     val request = WriteMenuReviewRequest(
-                        menuId = itemId,
-                        mainRating = reviewData.rating,
-                        amountRating = reviewData.rating,
-                        tasteRating = reviewData.rating,
+                        rating = reviewData.rating,
                         content = reviewData.content,
-                        imageUrl = reviewData.imageUrl,
-                        menuLike = if (reviewData.menuLikes?.isNotEmpty() == true) WriteMenuReviewRequest.MenuLike(
-                            menuId = reviewData.menuLikes.first(),
-                            isLike = true,
-                        ) else null
+                        imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
+                        menuLike = reviewData.menuLikes?.let {
+                            WriteMenuReviewRequest.MenuLike(
+                                menuId = it.first(),
+                                isLike = true,
+                            )
+                        }
                     )
-                    // todo api 수정되면 다시 살리기 (추석이후 api 수정 예정)
-//                    val request = WriteMealReviewRequest(
-//                        mealId = itemId.toInt(),
-//                        rating = reviewData.rating,
-//                        content = reviewData.content,
-//                        imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
-//                        menuLikes = reviewData.menuLikes.map {
-//                            WriteMealReviewRequest.MenuLikes(
-//                                menuId = it,
-//                                isLike = true,
-//                            )
-//                        }
-//                    )
                     reviewRepository.writeMenuReview(request)
                     Result.Success
                 }
