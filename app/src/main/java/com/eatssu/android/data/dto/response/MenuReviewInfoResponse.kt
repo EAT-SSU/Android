@@ -4,18 +4,18 @@ import com.eatssu.android.domain.model.ReviewInfo
 import com.google.gson.annotations.SerializedName
 
 data class MenuReviewInfoResponse(
-    @SerializedName("menuName") var menuName: String? = null,
-    @SerializedName("totalReviewCount") var totalReviewCount: Int? = null,
-    @SerializedName("rating") var rating: Double? = null,
-    @SerializedName("likeCount") var likeCount: Int? = null,
-    @SerializedName("reviewRatingCount") var reviewRatingCount: ReviewRatingCount? = ReviewRatingCount(),
+    @SerializedName("menuName") val menuName: String? = null,
+    @SerializedName("totalReviewCount") val totalReviewCount: Int? = null,
+    @SerializedName("rating") val rating: Double? = null,
+    @SerializedName("likeCount") val likeCount: Int? = null,
+    @SerializedName("reviewRatingCount") val reviewRatingCount: ReviewRatingCount? = ReviewRatingCount(),
 ) {
     data class ReviewRatingCount(
-        @SerializedName("oneStarCount") var oneStarCount: Int? = null,
-        @SerializedName("twoStarCount") var twoStarCount: Int? = null,
-        @SerializedName("threeStarCount") var threeStarCount: Int? = null,
-        @SerializedName("fourStarCount") var fourStarCount: Int? = null,
-        @SerializedName("fiveStarCount") var fiveStarCount: Int? = null,
+        @SerializedName("oneStarCount") val oneStarCount: Int? = null,
+        @SerializedName("twoStarCount") val twoStarCount: Int? = null,
+        @SerializedName("threeStarCount") val threeStarCount: Int? = null,
+        @SerializedName("fourStarCount") val fourStarCount: Int? = null,
+        @SerializedName("fiveStarCount") val fiveStarCount: Int? = null,
     )
 }
 

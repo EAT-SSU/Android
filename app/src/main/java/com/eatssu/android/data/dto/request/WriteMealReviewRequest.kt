@@ -2,16 +2,16 @@ package com.eatssu.android.data.dto.request
 
 import com.google.gson.annotations.SerializedName
 
-
+//별점은 필수 값 나머지는 옵션
 data class WriteMealReviewRequest(
-    @SerializedName("mealId") var mealId: Long,
-    @SerializedName("rating") var rating: Int,
-    @SerializedName("menuLikes") var menuLikes: List<MenuLikes>? = arrayListOf(),
-    @SerializedName("content") var content: String? = null,
-    @SerializedName("imageUrls") var imageUrls: ArrayList<String>? = arrayListOf()
+    @SerializedName("mealId") val mealId: Long,
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("menuLikes") val menuLikes: List<MenuLikes>?,
+    @SerializedName("content") val content: String,
+    @SerializedName("imageUrls") val imageUrls: ArrayList<String>
 ) {
     data class MenuLikes(
-        @SerializedName("menuId") var menuId: Long? = null,
-        @SerializedName("isLike") var isLike: Boolean? = null
+        @SerializedName("menuId") val menuId: Long? = null,
+        @SerializedName("isLike") val isLike: Boolean? = null
     )
 }

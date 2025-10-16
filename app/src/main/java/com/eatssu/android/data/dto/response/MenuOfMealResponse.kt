@@ -3,13 +3,13 @@ package com.eatssu.android.data.dto.response
 import com.google.gson.annotations.SerializedName
 
 data class MenuOfMealResponse(
-    @SerializedName("menuList") var menuList: ArrayList<MenuList> = arrayListOf()
+    @SerializedName("menuList") val menuList: ArrayList<MenuList> = arrayListOf()
 )
 
 data class MenuList(
 
-    @SerializedName("menuId") var menuId: Long? = null,
-    @SerializedName("name") var name: String? = null
+    @SerializedName("menuId") val menuId: Long? = null,
+    @SerializedName("name") val name: String? = null
 
 )
 

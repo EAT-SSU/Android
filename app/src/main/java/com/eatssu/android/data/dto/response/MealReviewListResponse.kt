@@ -4,25 +4,25 @@ import com.eatssu.android.domain.model.Review
 import com.google.gson.annotations.SerializedName
 
 data class MealReviewListResponse(
-    @SerializedName("numberOfElements") var numberOfElements: Int? = null,
-    @SerializedName("hasNext") var hasNext: Boolean? = null,
-    @SerializedName("dataList") var dataList: ArrayList<DataList> = arrayListOf()
+    @SerializedName("numberOfElements") val numberOfElements: Int? = null,
+    @SerializedName("hasNext") val hasNext: Boolean? = null,
+    @SerializedName("dataList") val dataList: ArrayList<DataList> = arrayListOf()
 ) {
     data class DataList(
-        @SerializedName("reviewId") var reviewId: Long? = null,
-        @SerializedName("menuList") var menuList: ArrayList<MenuList> = arrayListOf(),
-        @SerializedName("writerId") var writerId: Long? = null,
-        @SerializedName("isWriter") var isWriter: Boolean? = null,
-        @SerializedName("writerNickname") var writerNickname: String? = null,
-        @SerializedName("rating") var rating: Int? = null,
-        @SerializedName("writtenAt") var writtenAt: String? = null,
-        @SerializedName("content") var content: String? = null,
-        @SerializedName("imageUrls") var imageUrls: ArrayList<String> = arrayListOf(),
+        @SerializedName("reviewId") val reviewId: Long? = null,
+        @SerializedName("menuList") val menuList: ArrayList<MenuList> = arrayListOf(),
+        @SerializedName("writerId") val writerId: Long? = null,
+        @SerializedName("isWriter") val isWriter: Boolean? = null,
+        @SerializedName("writerNickname") val writerNickname: String? = null,
+        @SerializedName("rating") val rating: Int? = null,
+        @SerializedName("writtenAt") val writtenAt: String? = null,
+        @SerializedName("content") val content: String? = null,
+        @SerializedName("imageUrls") val imageUrls: ArrayList<String> = arrayListOf(),
     ) {
         data class MenuList(
-            @SerializedName("id") var id: Long? = null,
-            @SerializedName("name") var name: String? = null,
-            @SerializedName("isLike") var isLike: Boolean? = null,
+            @SerializedName("id") val id: Long? = null,
+            @SerializedName("name") val name: String? = null,
+            @SerializedName("isLike") val isLike: Boolean? = null,
         )
     }
 }

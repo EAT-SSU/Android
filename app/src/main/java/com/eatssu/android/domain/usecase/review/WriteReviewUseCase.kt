@@ -21,7 +21,7 @@ class WriteReviewUseCase @Inject constructor(
                 MenuType.FIXED -> {
                     val request = WriteMenuReviewRequest(
                         rating = reviewData.rating,
-                        content = reviewData.content,
+                        content = reviewData.content ?: "",
                         imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
                         menuLike = reviewData.menuLikes?.let {
                             WriteMenuReviewRequest.MenuLike(
@@ -38,7 +38,7 @@ class WriteReviewUseCase @Inject constructor(
                     val request = WriteMealReviewRequest(
                         mealId = itemId,
                         rating = reviewData.rating,
-                        content = reviewData.content,
+                        content = reviewData.content ?: "",
                         imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
                         menuLikes = reviewData.menuLikes?.map {
                             WriteMealReviewRequest.MenuLikes(
