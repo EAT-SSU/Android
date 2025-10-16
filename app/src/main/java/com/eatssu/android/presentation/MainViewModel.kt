@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
@@ -35,7 +36,11 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
+    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(
+        UiState.Success(
+            MainState.DepartmentState(MySharedPreferences.getUserDepartmentName(context))
+        )
+    )
     val uiState: StateFlow<UiState<MainState>> = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
@@ -69,7 +74,6 @@ class MainViewModel @Inject constructor(
                 }
 
                 // 2) 정상 닉네임
-                _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
                 _uiEvent.emit(
                     UiEvent.ShowToast(
                         String.format(
@@ -82,7 +86,7 @@ class MainViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                            context.getString(R.string.not_found)
+                        context.getString(R.string.not_found)
                     )
                 )
                 Timber.e(e)
@@ -138,7 +142,6 @@ class MainViewModel @Inject constructor(
 
 sealed class MainState {
     object NicknameNull : MainState()
-    data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
         val departmentName: String = "",
