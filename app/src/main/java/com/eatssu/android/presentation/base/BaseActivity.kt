@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -25,6 +24,7 @@ import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
@@ -60,7 +60,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
         toolbar = findViewById(R.id.toolbar)
         toolbarTitle = findViewById(R.id.toolbar_title)
-        backBtn =findViewById(R.id.mcv_setting)
+        backBtn = findViewById(R.id.mcv_setting)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false) // 툴바 기본 제목 비활성화
@@ -72,9 +72,12 @@ abstract class BaseActivity<B : ViewBinding>(
         networkCheck.register() // 네트워크 객체 등록
 
         firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
+        versionViewModel = ViewModelProvider(
+            this,
+            VersionViewModelFactory(firebaseRemoteConfigRepository)
+        )[VersionViewModel::class.java]
 
-        if(versionViewModel.checkForceUpdate()){
+        if (versionViewModel.checkForceUpdate()) {
             showForceUpdateDialog()
         }
 
@@ -119,17 +122,14 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun observeTokenExpiration() {
         lifecycleScope.launch {
             TokenEventBus.tokenExpired.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_expired), Toast.LENGTH_SHORT).show()
+                showInfoToast(R.string.token_expired)
                 navigateToLogin()
             }
         }
 
         lifecycleScope.launch {
             TokenEventBus.tokenServerError.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_server_error), Toast.LENGTH_SHORT)
-                    .show()
+                showInfoToast(R.string.token_server_error)
                 navigateToLogin()
             }
         }
