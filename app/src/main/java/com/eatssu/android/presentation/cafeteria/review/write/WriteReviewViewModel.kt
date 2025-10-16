@@ -14,6 +14,7 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -39,7 +40,7 @@ class WriteReviewViewModel @Inject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
 
-    fun loadMenus(menuType: MenuType, id: Long, menuName: String) {
+    fun loadMenuList(menuType: MenuType, id: Long, menuName: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             val menuList: List<MenuMini> = when (menuType) {
@@ -106,10 +107,21 @@ class WriteReviewViewModel @Inject constructor(
                 var imageUrl: String? = null
                 editing.selectedImageUri?.let { uri ->
                     try {
-                        val file = uriToFile(uri, context)
-                        if (file.exists()) {
-                            imageUrl = getImageUrlUseCase(file)
-                            _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+                        val originalFile = uriToFile(uri, context)
+                        if (originalFile.exists()) {
+                            // 이미지 압축
+                            val compressedFile = compressImage(context, originalFile)
+                            if (compressedFile != null && compressedFile.exists()) {
+                                imageUrl = getImageUrlUseCase(compressedFile)
+                                _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+
+                                // 원본 파일 삭제 (압축된 파일만 유지)
+                                originalFile.delete()
+                            } else {
+                                _uiState.value = UiState.Success(editing) // 되돌림
+                                _uiEvent.emit(UiEvent.ShowToast("이미지 압축에 실패하였습니다."))
+                                return@launch
+                            }
                         } else {
                             _uiState.value = UiState.Success(editing) // 되돌림
                             _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
@@ -159,6 +171,15 @@ class WriteReviewViewModel @Inject constructor(
         inputStream.use { input -> outputStream.use { output -> input.copyTo(output) } }
         return file
     }
+
+    private suspend fun compressImage(context: Context, originalFile: File): File? {
+        return try {
+            Compressor.compress(context, originalFile)
+        } catch (e: Exception) {
+            Timber.e(e, "이미지 압축 실패")
+            null
+        }
+    }
 }
 
 sealed class WriteReviewState {
@@ -180,5 +201,4 @@ sealed class WriteReviewState {
         val likedMenuIds: Set<Long>,
         val selectedImageUri: Uri?,
     ) : WriteReviewState()
-
 }

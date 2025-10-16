@@ -73,7 +73,7 @@ fun WriteReviewScreen(
 
     // 처음 진입 시, 메뉴 불러오기: 기본찬(김치, 단무지, 밥) 등을 거르기 위함
     LaunchedEffect(menuType, id, menuName) {
-        viewModel.loadMenus(menuType, id, menuName)
+        viewModel.loadMenuList(menuType, id, menuName)
     }
 
     LaunchedEffect(Unit) {
