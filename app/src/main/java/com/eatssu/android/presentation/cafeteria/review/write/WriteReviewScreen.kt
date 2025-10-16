@@ -202,7 +202,7 @@ internal fun WriteReviewScreen(
                         .fillMaxWidth()
                         .weight(1f) // 본문 스크롤, 버튼 고정
                 ) {
-                    items(menuList, key = { it }) { (id, name) ->
+                    items(menuList, key = { it.id }) { (id, name) ->
                         MenuLikeButtonItem(
                             modifier = Modifier.fillMaxWidth(),
                             mealName = name,
