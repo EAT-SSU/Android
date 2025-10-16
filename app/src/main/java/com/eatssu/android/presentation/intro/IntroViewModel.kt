@@ -80,15 +80,15 @@ class IntroViewModel @Inject constructor(
 
     private suspend fun checkVersionUpdate() {
         try {
-            val latestVersionCode = firebaseRemoteConfigRepository.getMinimumVersionCode()
+            val minimumVersionCode = firebaseRemoteConfigRepository.getMinimumVersionCode()
             val currentVersionCode = VERSION_CODE
 
             val result = when {
-                currentVersionCode < latestVersionCode -> VersionCheckResult.ForceUpdateRequired(
-                    latestVersionCode
+                currentVersionCode < minimumVersionCode -> VersionCheckResult.ForceUpdateRequired(
+                    minimumVersionCode
                 )
 
-                currentVersionCode >= latestVersionCode -> VersionCheckResult.UpdateNotRequired
+                currentVersionCode >= minimumVersionCode -> VersionCheckResult.UpdateNotRequired
                 else -> VersionCheckResult.UpdateNotRequired
             }
 
