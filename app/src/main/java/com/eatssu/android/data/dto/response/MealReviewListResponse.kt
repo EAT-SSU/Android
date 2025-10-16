@@ -41,7 +41,7 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
                     isLike = menu.isLike ?: false
                 )
             },
-            writerNickname = data.writerNickname ?: "유저",
+            writerNickname = data.writerNickname ?: "",
             rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",

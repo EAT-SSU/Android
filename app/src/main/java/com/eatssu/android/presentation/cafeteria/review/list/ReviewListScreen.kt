@@ -174,11 +174,11 @@ internal fun ReviewListScreen(
                         ReviewInfoContent(
                             menuName, ReviewInfo(
                                 reviewCnt = 0,
-                                five = 0,
-                                four = 0,
-                                three = 0,
-                                two = 0,
-                                one = 0,
+                                fiveStarCount = 0,
+                                fourStarCount = 0,
+                                threeStarCount = 0,
+                                twoStarCount = 0,
+                                oneStarCount = 0,
                                 rating = 0.0,
                             )
                         )
@@ -253,7 +253,6 @@ internal fun ReviewListScreen(
                                 reviewList.forEach { item ->
                                     ReviewItem(
                                         modifier = Modifier.padding(horizontal = 24.dp),
-                                        isWriter = item.isWriter,
                                         writeName = item.writerNickname,
                                         writeDate = item.writeDate,
                                         content = item.content,
@@ -281,11 +280,11 @@ internal fun ReviewListScreen(
                             menuName,
                             ReviewInfo(
                                 reviewCnt = 0,
-                                five = 0,
-                                four = 0,
-                                three = 0,
-                                two = 0,
-                                one = 0,
+                                fiveStarCount = 0,
+                                fourStarCount = 0,
+                                threeStarCount = 0,
+                                twoStarCount = 0,
+                                oneStarCount = 0,
                                 rating = 0.0,
                             )
                         )
@@ -410,11 +409,11 @@ fun ReviewInfoContent(
 
             ReviewProgressBar(
                 reviewCount = info?.reviewCnt ?: 0,
-                fiveRatingCount = info?.five ?: 0,
-                fourRatingCount = info?.four ?: 0,
-                threeRatingCount = info?.three ?: 0,
-                twoRatingCount = info?.two ?: 0,
-                oneRatingCount = info?.one ?: 0,
+                fiveRatingCount = info?.fiveStarCount ?: 0,
+                fourRatingCount = info?.fourStarCount ?: 0,
+                threeRatingCount = info?.threeStarCount ?: 0,
+                twoRatingCount = info?.twoStarCount ?: 0,
+                oneRatingCount = info?.oneStarCount ?: 0,
                 modifier = Modifier.width(150.dp)
             )
         }
@@ -464,11 +463,11 @@ fun ReviewListPreview() {
                 ReviewListState(
                     reviewInfo = ReviewInfo(
                         reviewCnt = 123,
-                        five = 80,
-                        four = 20,
-                        three = 10,
-                        two = 5,
-                        one = 8,
+                        fiveStarCount = 80,
+                        fourStarCount = 20,
+                        threeStarCount = 10,
+                        twoStarCount = 5,
+                        oneStarCount = 8,
                         rating = 4.5,
                     ),
                     reviewList = listOf(
@@ -586,11 +585,11 @@ fun ReviewListEmptyPreview() {
                 ReviewListState(
                     reviewInfo = ReviewInfo(
                         reviewCnt = 0,
-                        five = 0,
-                        four = 0,
-                        three = 0,
-                        two = 0,
-                        one = 0,
+                        fiveStarCount = 0,
+                        fourStarCount = 0,
+                        threeStarCount = 0,
+                        twoStarCount = 0,
+                        oneStarCount = 0,
                         rating = 0.0,
                     ),
                     reviewList = emptyList()

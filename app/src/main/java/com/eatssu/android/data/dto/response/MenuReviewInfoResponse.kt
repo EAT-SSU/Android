@@ -22,9 +22,9 @@ data class MenuReviewInfoResponse(
 fun MenuReviewInfoResponse.toDomain() = ReviewInfo(
     reviewCnt = totalReviewCount ?: 0,
     rating = rating ?: 0.0,
-    one = reviewRatingCount?.oneStarCount ?: 0,
-    two = reviewRatingCount?.twoStarCount ?: 0,
-    three = reviewRatingCount?.threeStarCount ?: 0,
-    four = reviewRatingCount?.fourStarCount ?: 0,
-    five = reviewRatingCount?.fiveStarCount ?: 0,
+    oneStarCount = reviewRatingCount?.oneStarCount ?: 0,
+    twoStarCount = reviewRatingCount?.twoStarCount ?: 0,
+    threeStarCount = reviewRatingCount?.threeStarCount ?: 0,
+    fourStarCount = reviewRatingCount?.fourStarCount ?: 0,
+    fiveStarCount = reviewRatingCount?.fiveStarCount ?: 0,
 )

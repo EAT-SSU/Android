@@ -3,9 +3,9 @@ package com.eatssu.android.domain.model
 data class ReviewInfo(
     var reviewCnt: Int,
     var rating: Double,
-    var one: Int,
-    var two: Int,
-    var three: Int,
-    var four: Int,
-    var five: Int,
+    var oneStarCount: Int,
+    var twoStarCount: Int,
+    var threeStarCount: Int,
+    var fourStarCount: Int,
+    var fiveStarCount: Int,
 )

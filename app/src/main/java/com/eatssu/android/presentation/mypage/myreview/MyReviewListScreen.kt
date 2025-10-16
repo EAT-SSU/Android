@@ -132,7 +132,6 @@ internal fun MyReviewListScreen(
                                     items(reviewList) { item ->
                                         ReviewItem(
                                             modifier = Modifier,
-                                            isWriter = item.isWriter,
                                             writeName = userNickname,
                                             writeDate = item.writeDate,
                                             content = item.content,

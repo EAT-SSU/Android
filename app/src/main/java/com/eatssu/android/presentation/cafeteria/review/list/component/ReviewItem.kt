@@ -1,6 +1,8 @@
 package com.eatssu.android.presentation.cafeteria.review.list.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,62 +31,14 @@ import com.eatssu.design_system.component.RatingBarSmall
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray400
 
-@Composable
-private fun SimpleFlowRow(
-    horizontalSpacing: androidx.compose.ui.unit.Dp,
-    verticalSpacing: androidx.compose.ui.unit.Dp,
-    content: @Composable () -> Unit
-) {
-    Layout(content = content) { measurables, constraints ->
-        val placeables = measurables.map { measurable ->
-            measurable.measure(constraints)
-        }
-
-        val maxWidth = constraints.maxWidth
-        var currentRowWidth = 0
-        var currentRowHeight = 0
-        var totalHeight = 0
-        val positions = mutableListOf<androidx.compose.ui.unit.IntOffset>()
-
-        var x = 0
-        var y = 0
-
-        placeables.forEach { placeable ->
-            val itemWidth = placeable.width
-            val itemHeight = placeable.height
-
-            if (x > 0 && x + itemWidth > maxWidth) {
-                // wrap to next line
-                y += currentRowHeight + verticalSpacing.roundToPx()
-                x = 0
-                currentRowHeight = 0
-            }
-
-            positions.add(androidx.compose.ui.unit.IntOffset(x, y))
-            x += itemWidth + horizontalSpacing.roundToPx()
-            currentRowHeight = maxOf(currentRowHeight, itemHeight)
-            currentRowWidth = maxOf(currentRowWidth, x)
-        }
-
-        totalHeight = y + currentRowHeight
-
-        layout(width = maxWidth, height = totalHeight) {
-            placeables.forEachIndexed { index, placeable ->
-                val pos = positions[index]
-                placeable.placeRelative(pos.x, pos.y)
-            }
-        }
-    }
-}
 
 @Composable
 fun ReviewItem(
-    isWriter: Boolean,
-    modifier: Modifier = Modifier,
     writeName: String,
     writeDate: String,
     content: String,
     rating: Int,
+    modifier: Modifier = Modifier,
     menuList: List<Review.Menu>? = null,
     imgUrl: String? = null,
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
@@ -143,9 +96,13 @@ fun ReviewItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (menuList?.isNotEmpty() == true || menuList != null) {
+        if (!menuList.isNullOrEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
-            SimpleFlowRow(horizontalSpacing = 4.dp, verticalSpacing = 2.dp) {
+            FlowRow(
+                modifier = Modifier.padding(horizontal = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
                 menuList.forEach {
                     Chip(
                         menuName = it.name,
@@ -183,7 +140,6 @@ fun ReviewItemPreview() {
     EatssuTheme {
         ReviewItem(
             modifier = Modifier,
-            isWriter = true,
             writeName = "숭실푸드파이터",
             writeDate = "2024-12-31",
             content = "맛있어요",
@@ -210,7 +166,6 @@ fun ReviewItemWithoutImagePreview() {
     EatssuTheme {
         ReviewItem(
             modifier = Modifier,
-            isWriter = true,
             writeName = "맛있는리뷰어",
             writeDate = "2024-12-30",
             content = "사진 없이 텍스트만 있는 리뷰입니다.",
