@@ -127,7 +127,7 @@ class MenuFragment : Fragment() {
         binding.rv.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = fragmentManager?.let { MenuAdapter(it, sectionList) }
+            adapter = MenuAdapter(getParentFragmentManager(), sectionList)
         }
     }
 
