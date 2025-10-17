@@ -3,10 +3,8 @@ package com.eatssu.android.presentation.intro
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
-import com.eatssu.android.domain.usecase.health.CheckServerHealthUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +15,12 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
-    private val checkServerHealthUseCase: CheckServerHealthUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -41,17 +37,6 @@ class IntroViewModel @Inject constructor(
     private fun autoLogin() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-
-            if (!checkServerHealthUseCase()) {
-                Timber.e("Network Error")
-                _uiEvent.emit(
-                    UiEvent.NavigateToServerError(
-                        context.getString(R.string.server_error_title),
-                        context.getString(R.string.server_error_message)
-                    )
-                )
-                return@launch
-            }
 
             val userAccessToken = getAccessTokenUseCase()
             if (userAccessToken.isEmpty()) {

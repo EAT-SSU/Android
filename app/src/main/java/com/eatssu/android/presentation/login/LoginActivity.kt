@@ -142,8 +142,4 @@ class LoginActivity :
         super.onBackPressed()
         finishAffinity() //로그인 화면에서 뒤로 가기 눌렀을 때에는 백스택 없어야 함 (앱 종료)
     }
-
-    override fun shouldCheckServerHealth(): Boolean {
-        return false
-    }
 }

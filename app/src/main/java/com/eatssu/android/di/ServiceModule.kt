@@ -1,6 +1,5 @@
 package com.eatssu.android.di
 
-import com.eatssu.android.data.service.HealthCheckService
 import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.data.service.OauthService
@@ -23,6 +22,7 @@ object ServiceModule {
     fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
         return noTokenRetrofit.create(OauthService::class.java)
     }
+
     @Provides
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
@@ -59,9 +59,4 @@ object ServiceModule {
         return retrofit.create(PartnershipService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideHealthCheckService(@NoToken noTokenRetrofit: Retrofit): HealthCheckService {
-        return noTokenRetrofit.create(HealthCheckService::class.java)
-    }
 }
