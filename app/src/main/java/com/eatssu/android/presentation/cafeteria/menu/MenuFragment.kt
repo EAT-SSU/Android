@@ -90,33 +90,27 @@ class MenuFragment : Fragment() {
         }
     }
 
-    private fun observeUiState() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.uiState.collect { state ->
-                    when (state) {
-                        is UiState.Success -> {
-                            val menuMap = state.data.menuMap
-                            Timber.d("Menu map received: $menuMap")
+    private fun observeUiState() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            menuViewModel.uiState.collect { state ->
+                if (state !is UiState.Success) return@collect
 
-                            val sectionList = menuMap
-                                .filter { (_, menuList) -> menuList.isNotEmpty() }
-                                .map { (restaurant, menuList) ->
-                                    Section(
-                                        restaurant.menuType,
-                                        restaurant,
-                                        menuList,
-                                        infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
-                                    )
-                                }
-                                .sortedBy { it.cafeteria.ordinal }
+                val menuMap = state.data.menuMap
+                Timber.d("Menu map received: $menuMap")
 
-                            setupRecyclerView(sectionList)
-                        }
-
-                        else -> Unit
+                val sectionList = menuMap
+                    .filter { (_, menuList) -> menuList.isNotEmpty() }
+                    .map { (restaurant, menuList) ->
+                        Section(
+                            restaurant.menuType,
+                            restaurant,
+                            menuList,
+                            infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
+                        )
                     }
-                }
+                    .sortedBy { it.cafeteria.ordinal }
+
+                setupRecyclerView(sectionList)
             }
         }
     }
