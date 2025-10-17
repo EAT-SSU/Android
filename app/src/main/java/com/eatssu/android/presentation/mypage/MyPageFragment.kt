@@ -154,11 +154,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
         binding.llSignout.setOnClickListener {
             // 현재 Success 상태에서 안전하게 닉네임 추출
-            val nickname = (myPageViewModel.uiState.value as? UiState.Success)?.data?.nickname
-            Intent(requireContext(), SignOutActivity::class.java).apply {
-                putExtra("nickname", nickname)
-                startActivity(this)
-            }
+            val nickname = (myPageViewModel.uiState.value as? UiState.Success)?.data?.nickname ?: ""
+            SignOutActivity.start(
+                requireContext(),
+                SignOutActivity.Args(nickname)
+            )
         }
 
         binding.llDeveloper.setOnClickListener {
@@ -246,11 +246,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun startWebView(url: String, title: String, screenId: ScreenId) {
-        val intent = Intent(requireContext(), WebViewActivity::class.java).apply {
-            putExtra("URL", url)
-            putExtra("TITLE", title)
-            putExtra("SCREEN_ID", screenId.name)
-        }
-        startActivity(intent)
+        WebViewActivity.start(
+            requireContext(),
+            WebViewActivity.Args(url, title, screenId)
+        )
     }
 }

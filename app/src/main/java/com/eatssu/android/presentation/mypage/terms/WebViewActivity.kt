@@ -1,11 +1,14 @@
 package com.eatssu.android.presentation.mypage.terms
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.webkit.WebViewClient
 import com.eatssu.android.databinding.ActivityWebviewBinding
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
+import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 
 
@@ -15,14 +18,17 @@ class WebViewActivity :
         ScreenId.EXTERNAL_INQUIRE // shouldLogScreenId가 false라 미사용
     ) {
 
+    @Parcelize
+    data class Args(
+        val url: String,
+        val title: String,
+        val screenId: ScreenId
+    ) : Parcelable
 
-    private var URL = ""
-    private var TITLE = ""
+    companion object : ActivityCompanionWithArgs<Args>(WebViewActivity::class, Args::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         binding.webview.apply {
             webViewClient = WebViewClient()
@@ -38,14 +44,14 @@ class WebViewActivity :
                 useWideViewPort = true // 화면 크기에 맞게 웹 페이지를 조정
             }
 
-            URL = intent.getStringExtra("URL") ?: "" //Todo 뷰모델 사용하도록 수정?
-            TITLE = intent.getStringExtra("TITLE") ?: ""
+            val title = intentOptions?.title ?: ""
+            val url = intentOptions?.url ?: ""
 
-            toolbarTitle.text = TITLE
-            Timber.d(URL + TITLE)
+            toolbarTitle.text = title
+            Timber.d("%s %s", url, title)
 
             if (savedInstanceState != null) restoreState(savedInstanceState)
-            else loadUrl(URL)
+            else loadUrl(url)
         }
     }
 
@@ -62,11 +68,9 @@ class WebViewActivity :
     override fun onResume() {
         super.onResume()
 
-        val screenIdString = intent.getStringExtra("SCREEN_ID") ?: return
-        val screenId = ScreenId.entries.find { it.name == screenIdString } ?: return
-
+        val screenId = intentOptions?.screenId ?: return
         EventLogger.screenView(screenId)
-        Timber.d("WebViewActivity screen view logging: $screenId")
+        Timber.d("WebViewActivity screen view logging: ${screenId}")
     }
 
     override fun shouldLogScreenId() = false
