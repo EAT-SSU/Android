@@ -3,15 +3,15 @@ package com.eatssu.android.presentation.base
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Parcelable
+import androidx.core.content.IntentCompat.getParcelableExtra
 import kotlin.reflect.KClass
 
 abstract class ActivityCompanion<IntentOptions>(
     private val activityClass: KClass<out Activity>,
     private val optionsClass: KClass<IntentOptions>
 ) where IntentOptions : Parcelable {
-    companion object {
+    private companion object {
         private const val INTENT_OPTIONS_KEY = "intent_options"
     }
 
@@ -30,10 +30,9 @@ abstract class ActivityCompanion<IntentOptions>(
     }
 
     val Activity.intentOptions: IntentOptions?
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            this.intent.getParcelableExtra<IntentOptions>(INTENT_OPTIONS_KEY, optionsClass.java)
-        } else {
-            @Suppress("DEPRECATION")
-            this.intent.getParcelableExtra<IntentOptions>(INTENT_OPTIONS_KEY)
-        }
+        get() = getParcelableExtra(
+            this.intent,
+            INTENT_OPTIONS_KEY,
+            optionsClass.java
+        )
 }
