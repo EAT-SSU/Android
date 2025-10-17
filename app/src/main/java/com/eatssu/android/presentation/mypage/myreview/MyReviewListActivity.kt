@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMyReviewListBinding
 import com.eatssu.android.domain.model.Review
+import com.eatssu.android.presentation.base.ActivityCompanion
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.common.MyReviewBottomSheetFragment
 import com.eatssu.common.enums.ScreenId
@@ -21,6 +22,8 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(
     ActivityMyReviewListBinding::inflate,
     ScreenId.MYPAGE_REVIEWS,
 ), MyReviewBottomSheetFragment.OnReviewDeletedListener {
+
+    companion object : ActivityCompanion(MyReviewListActivity::class)
 
     private val myReviewViewModel: MyReviewViewModel by viewModels()
 

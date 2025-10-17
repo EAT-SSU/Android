@@ -145,7 +145,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llMyReview.setOnClickListener {
-            startActivity(Intent(requireContext(), MyReviewListActivity::class.java))
+            MyReviewListActivity.start(requireContext())
         }
 
         binding.tvLogout.setOnClickListener {
