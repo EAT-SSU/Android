@@ -23,7 +23,7 @@ class UploadReviewViewModel @Inject constructor(
     private val getImageUrlUseCase: GetImageUrlUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<UploadReviewState>>(UiState.Init)
+    private val _uiState = MutableStateFlow<UiState<Unit>>(UiState.Init)
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -40,7 +40,7 @@ class UploadReviewViewModel @Inject constructor(
                 return@launch
             }
 
-            _uiState.value = UiState.Success()
+            _uiState.value = UiState.Success(Unit)
             _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
         }
     }
@@ -55,9 +55,7 @@ class UploadReviewViewModel @Inject constructor(
             return null
         }
 
-        _uiState.value = UiState.Success()
+        _uiState.value = UiState.Success(Unit)
         return url
     }
 }
-
-sealed class UploadReviewState
