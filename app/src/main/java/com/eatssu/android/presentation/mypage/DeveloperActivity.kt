@@ -1,11 +1,11 @@
 package com.eatssu.android.presentation.mypage
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityDeveloperBinding
+import com.eatssu.android.presentation.base.ActivityCompanion
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.common.enums.ScreenId
@@ -17,6 +17,8 @@ class DeveloperActivity :
         ActivityDeveloperBinding::inflate,
         ScreenId.MYPAGE_DEVELOPER
     ) {
+
+    companion object : ActivityCompanion(DeveloperActivity::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

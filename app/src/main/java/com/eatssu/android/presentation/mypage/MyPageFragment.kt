@@ -162,7 +162,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llDeveloper.setOnClickListener {
-            startActivity(Intent(requireContext(), DeveloperActivity::class.java))
+            DeveloperActivity.start(requireContext())
         }
 
         binding.llOss.setOnClickListener { moveToOss() }
