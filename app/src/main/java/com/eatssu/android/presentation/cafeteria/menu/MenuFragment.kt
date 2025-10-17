@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
@@ -60,9 +59,8 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // StateFlow 수집은 단 1번만 실행
+        // 메뉴 정보 수집
         collectMenuData()
-        collectUiState()
 
         // 날짜 바뀔 때마다 ViewModel API 호출
         observeViewModel()
@@ -141,32 +139,6 @@ class MenuFragment : Fragment() {
         if (requiredRestaurants.all { dataLoadedMap[it] == true }) {
             totalMenuList.sortBy { it.cafeteria.ordinal }
             setupTodayRecyclerView()
-        }
-    }
-
-    private fun collectUiState() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.uiState.collect { state ->
-                    when (state) {
-                        is UiState.Init -> {
-                            // init
-                        }
-
-                        is UiState.Loading -> {
-                            // Loading
-                        }
-
-                        is UiState.Success -> {
-                            // Success
-                        }
-
-                        is UiState.Error -> {
-                            // Error
-                        }
-                    }
-                }
-            }
         }
     }
 
