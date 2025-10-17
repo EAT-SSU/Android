@@ -1,13 +1,16 @@
 package com.eatssu.android.presentation.common
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.eatssu.android.databinding.FragmentBottomsheetOthersBinding
+import com.eatssu.android.presentation.base.FragmentCompanionWithArgs
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -15,8 +18,16 @@ class OthersBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentBottomsheetOthersBinding? = null
     private val binding get() = _binding!!
 
-    var reviewId = -1L
-    var menu = ""
+    @Parcelize
+    data class Args(
+        val reviewId: Long,
+        val menu: String
+    ) : Parcelable
+
+    companion object : FragmentCompanionWithArgs<Args>(
+        ::OthersBottomSheetFragment,
+        Args::class
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,18 +41,15 @@ class OthersBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            reviewId = it.getLong("reviewId")
-            menu = it.getString("menu").toString()
-        }
+        val args = fragmentOptions ?: return
 
-        Timber.d("넘겨받은 리뷰 정보: $reviewId $menu")
+        Timber.d("넘겨받은 리뷰 정보: ${args.reviewId} ${args.menu}")
 
         binding.llReport.setOnClickListener {
-            Timber.d("reviewId $reviewId")
+            Timber.d("reviewId ${args.reviewId}")
             ReportActivity.start(
                 requireContext(),
-                ReportActivity.Args(reviewId)
+                ReportActivity.Args(args.reviewId)
             )
             dismiss()
         }

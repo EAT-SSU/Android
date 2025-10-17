@@ -84,18 +84,18 @@ class MyReviewListActivity : BaseActivity<ActivityMyReviewListBinding>(
     }
 
     fun onMyReviewClicked(review: Review) {
+        val modalBottomSheet = MyReviewBottomSheetFragment.newInstance(
+            MyReviewBottomSheetFragment.Args(
+                reviewId = review.reviewId,
+                menu = review.menu,
+                content = review.content,
+                mainGrade = review.mainGrade,
+                amountGrade = review.amountGrade,
+                tasteGrade = review.tasteGrade
+            )
+        ) as MyReviewBottomSheetFragment
 
-        val modalBottomSheet = MyReviewBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putLong("reviewId", review.reviewId)
-                putString("menu", review.menu)
-                putString("content", review.content)
-                putInt("mainGrade", review.mainGrade)
-                putInt("amountGrade", review.amountGrade)
-                putInt("tasteGrade", review.tasteGrade)
-            }
-            onReviewDeletedListener = this@MyReviewListActivity
-        }
+        modalBottomSheet.onReviewDeletedListener = this@MyReviewListActivity
         modalBottomSheet.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.RoundCornerBottomSheetDialogTheme
