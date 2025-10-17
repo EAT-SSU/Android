@@ -1,17 +1,14 @@
 package com.eatssu.android.presentation.cafeteria.menu
 
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.cafeteria.review.list.ReviewActivity
 import com.eatssu.common.EventLogger
-import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
+import timber.log.Timber
 
 
 class MenuSubAdapter(
@@ -47,24 +44,17 @@ class MenuSubAdapter(
 
         //intent 사용
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ReviewActivity::class.java)
+            val menuType = restaurant.menuType.toString()
+            Timber.d("SubMenuAdapter - ${restaurant.menuType}메뉴${dataList[position].name}")
 
-            when (restaurant.menuType) {
-                MenuType.FIXED -> {
-                    Log.d("SubMenuAdapter", "고정메뉴${dataList[position].name}")
-                    intent.putExtra("itemId", dataList[position].id)
-                    intent.putExtra("itemName", dataList[position].name)
-                    intent.putExtra("menuType", MenuType.FIXED.toString())
-                }
-
-                MenuType.VARIABLE -> {
-                    Log.d("SubMenuAdapter", "변동메뉴${dataList[position].name}")
-                    intent.putExtra("itemId", dataList[position].id)
-                    intent.putExtra("itemName", dataList[position].name)
-                    intent.putExtra("menuType", MenuType.VARIABLE.toString())
-                }
-            }
-            ContextCompat.startActivity(holder.itemView.context, intent, null)
+            ReviewActivity.start(
+                holder.itemView.context,
+                ReviewActivity.Args(
+                    menuType = menuType,
+                    itemId = dataList[position].id,
+                    itemName = dataList[position].name
+                )
+            )
             EventLogger.clickMenu(restaurant)
         }
     }

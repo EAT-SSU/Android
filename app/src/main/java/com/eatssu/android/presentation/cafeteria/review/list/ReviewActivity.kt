@@ -1,7 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
-import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityReviewBinding
 import com.eatssu.android.domain.model.Review
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.cafeteria.review.write.ReviewWriteRateActivity
 import com.eatssu.android.presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity
@@ -21,26 +22,34 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import timber.log.Timber
-import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ReviewActivity :
     BaseActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate, ScreenId.REVIEW_V1_VIEW),
     MyReviewBottomSheetFragment.OnReviewDeletedListener {
 
+    @Parcelize
+    data class Args(
+        val menuType: String,
+        val itemId: Long,
+        val itemName: String
+    ) : Parcelable
+
+    companion object : ActivityCompanionWithArgs<Args>(ReviewActivity::class, Args::class)
+
     private val reviewViewModel: ReviewViewModel by viewModels()
 
-    private lateinit var menuType: String
-    private var itemId by Delegates.notNull<Long>()
-
-    private lateinit var itemName: String
+    private val menuType by lazy { intentOptions?.menuType ?: "" }
+    private val itemId by lazy { intentOptions?.itemId ?: 0 }
+    private val itemName by lazy { intentOptions?.itemName?.replace(Regex("[\\[\\]]"), "") ?: "" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "리뷰" // 툴바 제목 설정
 
-        getIndex()
+        Timber.d("메뉴는 $itemName $menuType $itemId")
         lodeData()
         bindData()
         setClickListener()
@@ -55,15 +64,6 @@ class ReviewActivity :
         bindData()
     }
 
-
-    private fun getIndex() {
-        //get menuId
-        menuType = intent.getStringExtra("menuType").toString()
-        itemId = intent.getLongExtra("itemId", 0)
-        itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
-
-        Timber.d("메뉴는 $itemName $menuType $itemId")
-    }
 
     private fun lodeData() {
         //Todo 여기서는 메뉴 타입이 뭔지 몰라도 됨. 추상화 해도 됨
@@ -150,21 +150,27 @@ class ReviewActivity :
         when (menuType) {
             MenuType.FIXED.name -> {
                 binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteRateActivity::class.java)
-                    intent.putExtra("itemId", itemId)
-                    intent.putExtra("itemName", itemName)
-                    intent.putExtra("menuType", menuType)
-                    startActivity(intent)
+                    ReviewWriteRateActivity.start(
+                        this,
+                        ReviewWriteRateActivity.Args(
+                            itemName = itemName,
+                            itemId = itemId,
+                            menuType = menuType
+                        )
+                    )
                     EventLogger.writeReview()
                 }
             }
 
             MenuType.VARIABLE.name -> {
                 binding.btnNextReview.setOnClickListener {
-                    val intent = Intent(this, ReviewWriteMenuActivity::class.java)
-                    intent.putExtra("itemId", itemId)
-                    intent.putExtra("menuType", menuType)
-                    startActivity(intent)
+                    ReviewWriteMenuActivity.start(
+                        this,
+                        ReviewWriteMenuActivity.Args(
+                            itemId = itemId,
+                            menuType = menuType
+                        )
+                    )
                     EventLogger.writeReview()
                 }
             }
