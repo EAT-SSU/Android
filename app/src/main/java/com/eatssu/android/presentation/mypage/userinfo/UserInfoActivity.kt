@@ -29,6 +29,11 @@ class UserInfoActivity :
         ScreenId.MYPAGE_USERINFO
     ) {
 
+    companion object {
+        private const val MIN_NICKNAME_LENGTH = 2
+        private const val MAX_NICKNAME_LENGTH = 16
+    }
+
     private val userInfoViewModel: UserInfoViewModel by viewModels()
 
     private var inputNickname: String = ""
@@ -50,6 +55,12 @@ class UserInfoActivity :
         binding.btnCheckNicknameDuplication.isEnabled = false
         binding.btnComplete.isEnabled = false
 
+        binding.tvNicknameStatus.text = getString(
+            R.string.set_nickname_length,
+            MIN_NICKNAME_LENGTH,
+            MAX_NICKNAME_LENGTH
+        )
+
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest { it ->
                 if (binding.etChNickname.text.toString() != it.nickname) {
@@ -65,18 +76,19 @@ class UserInfoActivity :
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 inputNickname = binding.etChNickname.text.trim().toString()
                 val nicknameLength = inputNickname.length
-                val isValidLength = nicknameLength in 2..8
-                val isNicknameChanged = inputNickname != userInfoViewModel.uiState.value.originalNickname
+                val isValidLength = nicknameLength in MIN_NICKNAME_LENGTH..MAX_NICKNAME_LENGTH
+                val isNicknameChanged =
+                    inputNickname != userInfoViewModel.uiState.value.originalNickname
 
                 binding.btnCheckNicknameDuplication.isEnabled = isValidLength && isNicknameChanged
                 binding.btnComplete.isEnabled = false
 
                 if (!isValidLength && inputNickname.isNotEmpty()) {
-                    binding.tvNickname28.setTextColor(getColor(R.color.error))
-                    binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
+                    binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
                     binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
                 } else {
-                    binding.tvNickname28.setTextColor(getColor(R.color.gray600))
+                    binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
                 }
             }
 
@@ -115,15 +127,15 @@ class UserInfoActivity :
                     if (it.isEnableName) {
                         binding.btnCheckNicknameDuplication.isEnabled = false // 중복확인 비활성화
                         binding.btnComplete.isEnabled = true // 저장하기 활성화
-                        binding.tvNickname28.text = getString(R.string.set_nickname_able)
+                        binding.tvNicknameStatus.text = getString(R.string.set_nickname_able)
                         binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
-                        binding.tvNickname28.setTextColor(getColor(R.color.gray600))
+                        binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
                         userInfoViewModel.updateNickname(inputNickname)
                     } else {
                         binding.btnComplete.isEnabled = false
                         binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-                        binding.tvNickname28.text = getString(R.string.set_nickname_unable)
-                        binding.tvNickname28.setTextColor(getColor(R.color.error))
+                        binding.tvNicknameStatus.text = getString(R.string.set_nickname_unable)
+                        binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
                     }
                 }
             }
@@ -156,7 +168,7 @@ class UserInfoActivity :
         }
     }
 
-    private fun collectUIState(){
+    private fun collectUIState() {
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest { state ->
                 if (state.success) {
@@ -184,7 +196,11 @@ class UserInfoActivity :
 
             if (state.collegeList.isNotEmpty()) {
                 val collegeNames = state.collegeList.map { it.collegeName }
-                showDropdownPopup(binding.tvCollege, collegeNames, selectedCollegeIndex) { selected, index ->
+                showDropdownPopup(
+                    binding.tvCollege,
+                    collegeNames,
+                    selectedCollegeIndex
+                ) { selected, index ->
                     selectedCollegeIndex = index
                     binding.tvCollege.text = selected
 
@@ -214,7 +230,11 @@ class UserInfoActivity :
 
             if (state.departmentList.isNotEmpty()) {
                 val departmentNames = state.departmentList.map { it.departmentName }
-                showDropdownPopup(binding.tvDepartment, departmentNames, selectedDepartmentIndex) { departmentName, departmentIndex ->
+                showDropdownPopup(
+                    binding.tvDepartment,
+                    departmentNames,
+                    selectedDepartmentIndex
+                ) { departmentName, departmentIndex ->
                     selectedDepartmentIndex = departmentIndex
                     binding.tvDepartment.text = departmentName
                     userInfoViewModel.updateInputDepartment(state.departmentList[departmentIndex])
@@ -268,14 +288,24 @@ class UserInfoActivity :
                 if (position == selectedIndex) {
                     holder.itemView.setBackgroundResource(R.drawable.bg_menu_selected_item)
                 } else {
-                    holder.itemView.setBackgroundColor(ContextCompat.getColor(this@UserInfoActivity, android.R.color.transparent))
+                    holder.itemView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this@UserInfoActivity,
+                            android.R.color.transparent
+                        )
+                    )
                 }
             }
         }
 
         popupWindow.elevation = 8f
         popupWindow.isOutsideTouchable = true
-        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.shape_text_field_small))
+        popupWindow.setBackgroundDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.shape_text_field_small
+            )
+        )
 
         popupWindow.showAsDropDown(anchor, -24, binding.tvDepartment.height + 8)
 
