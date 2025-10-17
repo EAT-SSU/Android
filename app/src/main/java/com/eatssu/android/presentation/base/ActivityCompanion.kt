@@ -58,4 +58,8 @@ abstract class ActivityCompanionWithArgsDefault<TArgs>(
         intentBuilder()
     }
 
+    fun start(context: Context, intentBuilder: Intent.() -> Unit = {}) {
+        context.startActivity(intent(context, intentBuilder))
+    }
+
 }
