@@ -1,16 +1,19 @@
 package com.eatssu.android.presentation.cafeteria.review.modify
 
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.databinding.ActivityFixMenuBinding
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -18,6 +21,18 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(
     ActivityFixMenuBinding::inflate,
     ScreenId.REVIEW_V1_MODIFY
 ) {
+
+    @Parcelize
+    data class Args(
+        val reviewId: Long,
+        val menu: String,
+        val content: String,
+        val mainGrade: Int,
+        val amountGrade: Int,
+        val tasteGrade: Int
+    ) : Parcelable
+
+    companion object : ActivityCompanionWithArgs<Args>(ModifyReviewActivity::class, Args::class)
 
     private val modifyViewModel: ModifyViewModel by viewModels()
 
@@ -48,14 +63,14 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(
 
 
     private fun getIndex() {
+        val args = intentOptions
+        reviewId = args?.reviewId ?: -1L
+        menu = args?.menu ?: ""
+        content = args?.content ?: ""
 
-        reviewId = intent.getLongExtra("reviewId", -1L)
-        menu = intent.getStringExtra("menu").toString()
-        content = intent.getStringExtra("content").toString()
-
-        main = intent.getIntExtra("mainGrade", 0)
-        amount = intent.getIntExtra("amountGrade", 0)
-        taste = intent.getIntExtra("tasteGrade", 0)
+        main = args?.mainGrade ?: 0
+        amount = args?.amountGrade ?: 0
+        taste = args?.tasteGrade ?: 0
 
         Timber.tag("ReviewFixedActivity")
             .d("reviewID: %s, menu: %s, content: %s", reviewId.toString(), menu, content)
@@ -65,8 +80,8 @@ class ModifyReviewActivity : BaseActivity<ActivityFixMenuBinding>(
         binding.menu.text = menu
         binding.etReview2Comment.setText(content)
         binding.rbMain.rating = main.toFloat()
-        binding.rbAmount.rating = intent.getIntExtra("amountGrade", 0).toFloat()
-        binding.rbTaste.rating = intent.getIntExtra("tasteGrade", 0).toFloat()
+        binding.rbAmount.rating = amount.toFloat()
+        binding.rbTaste.rating = taste.toFloat()
     }
 
     private fun postData(reviewId: Long) {

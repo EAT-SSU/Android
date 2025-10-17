@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.common
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentBottomsheetMyReviewBinding
-import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewActivity
+import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.util.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,18 +63,17 @@ class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
         Timber.d("넘겨받은 리뷰 정보: $reviewId $menu $content $reviewId")
 
         binding.llModify.setOnClickListener {
-            val intent = Intent(requireContext(), ModifyReviewActivity::class.java)
-
-            intent.let {
-                it.putExtra("reviewId", reviewId)
-                it.putExtra("menu", menu)
-                it.putExtra("content", content)
-                it.putExtra("mainGrade", mainGrade)
-                it.putExtra("amountGrade", amountGrade)
-                it.putExtra("tasteGrade", tasteGrade)
-            }
-
-            startActivity(intent)
+            ModifyReviewActivity.start(
+                requireContext(),
+                ModifyReviewActivity.Args(
+                    reviewId = reviewId,
+                    menu = menu,
+                    content = content,
+                    mainGrade = mainGrade,
+                    amountGrade = amountGrade,
+                    tasteGrade = tasteGrade
+                )
+            )
             dismiss()
         }
 
