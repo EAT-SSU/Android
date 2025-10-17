@@ -169,8 +169,7 @@ abstract class BaseActivity<B : ViewBinding>(
     }
 
     private fun showForceUpdateDialog() {
-        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
+        ForceUpdateDialogActivity.start(this)
     }
 
     override fun onResume() {

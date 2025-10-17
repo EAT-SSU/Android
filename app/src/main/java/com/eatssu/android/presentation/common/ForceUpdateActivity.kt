@@ -6,9 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.eatssu.android.presentation.base.ActivityCompanion
 
 
 class ForceUpdateDialogActivity : AppCompatActivity() {
+
+    companion object : ActivityCompanion(ForceUpdateDialogActivity::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
