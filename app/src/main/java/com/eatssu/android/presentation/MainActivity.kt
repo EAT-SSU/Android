@@ -154,7 +154,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                         }
 
                         is MainState.LoggedOut -> {
-                            startActivity<LoginActivity>()
+                            LoginActivity.start(this@MainActivity)
                             finishAffinity()
                         }
 

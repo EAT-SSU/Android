@@ -49,7 +49,7 @@ class IntroActivity : AppCompatActivity() {
 
                     is UiState.Error -> {
                         // 로그인 액티비티로 이동
-                        startActivity<LoginActivity>()
+                        LoginActivity.start(this@IntroActivity)
                         finish()
                     }
 

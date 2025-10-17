@@ -11,6 +11,7 @@ import com.eatssu.android.databinding.ActivityLoginBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.base.ActivityCompanion
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -29,6 +30,8 @@ class LoginActivity :
         ActivityLoginBinding::inflate,
         ScreenId.LOGIN_LOGIN
     ) {
+
+    companion object : ActivityCompanion(LoginActivity::class)
 
     private val loginViewModel: LoginViewModel by viewModels()
 
