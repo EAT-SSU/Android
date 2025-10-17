@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
@@ -44,32 +43,18 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = UiState.Loading
 
-            when (val result = loginUseCase(LoginWithKakaoRequest(email, providerID))) {
-                is ApiResult.Success -> {
-                    val token = result.data
-                    setAccessTokenUseCase(token.accessToken)
-                    setRefreshTokenUseCase(token.refreshToken)
-                    setUserEmailUseCase(email)
-
-                    _uiState.value = UiState.Success(LoginState.LoginSuccess)
-                    TokenStateManager.setTokenValid()
-                }
-
-                is ApiResult.NetworkError -> {
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(
-                        UiEvent.NavigateToServerError(
-                            context.getString(R.string.server_error_title),
-                            context.getString(R.string.server_error_message)
-                        )
-                    )
-                }
-
-                else -> {
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
-                }
+            val token = loginUseCase(LoginWithKakaoRequest(email, providerID)) ?: run {
+                _uiState.value = UiState.Error
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
+                return@launch
             }
+
+            setAccessTokenUseCase(token.accessToken)
+            setRefreshTokenUseCase(token.refreshToken)
+            setUserEmailUseCase(email)
+
+            _uiState.value = UiState.Success(LoginState.LoginSuccess)
+            TokenStateManager.setTokenValid()
         }
     }
 
