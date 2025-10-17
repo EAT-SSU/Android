@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.common
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,11 +38,11 @@ class OthersBottomSheetFragment : BottomSheetDialogFragment() {
         Timber.d("넘겨받은 리뷰 정보: $reviewId $menu")
 
         binding.llReport.setOnClickListener {
-
-            val intent = Intent(requireContext(), ReportActivity::class.java)
-            intent.putExtra("reviewId", reviewId)
             Timber.d("reviewId $reviewId")
-            startActivity(intent)
+            ReportActivity.start(
+                requireContext(),
+                ReportActivity.Args(reviewId)
+            )
             dismiss()
         }
     }

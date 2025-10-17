@@ -1,11 +1,13 @@
 package com.eatssu.android.presentation.cafeteria.review.report
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivityReportBinding
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ReportType
@@ -13,6 +15,7 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 
 @AndroidEntryPoint
@@ -20,6 +23,11 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(
     ActivityReportBinding::inflate,
     ScreenId.REVIEW_REPORT
 ) {
+    @Parcelize
+    data class Args(val reviewId: Long) : Parcelable
+
+    companion object : ActivityCompanionWithArgs<Args>(ReportActivity::class, Args::class)
+
     private val reportViewModel: ReportViewModel by viewModels()
 
     private var reviewId = -1L
@@ -34,7 +42,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "신고하기" // 툴바 제목 설정
 
-        reviewId = intent.getLongExtra("reviewId", -1L)
+        reviewId = intentOptions?.reviewId ?: -1L
 
         binding.etReportComment.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
