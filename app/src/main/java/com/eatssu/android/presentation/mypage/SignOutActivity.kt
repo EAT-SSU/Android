@@ -2,12 +2,14 @@ package com.eatssu.android.presentation.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivitySignOutBinding
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.showToast
@@ -15,6 +17,7 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
 class SignOutActivity :
@@ -24,6 +27,11 @@ class SignOutActivity :
     ) {
     //TODO 현재 dev서버 탈퇴하기 500
 
+    @Parcelize
+    data class Args(val nickname: String) : Parcelable
+
+    companion object : ActivityCompanionWithArgs<Args>(SignOutActivity::class, Args::class)
+
     private val signOutViewModel: SignOutViewModel by viewModels()
 
     private var inputNickname: String = ""
@@ -32,7 +40,7 @@ class SignOutActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "탈퇴하기" // 툴바 제목 설정
 
-        val nickname = intent.getStringExtra("nickname")?.trim() ?: ""
+        val nickname = intentOptions?.nickname?.trim() ?: ""
 
         binding.btnSignOut.isEnabled = false
 

@@ -133,7 +133,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
     private fun setOnClickListener() {
         binding.llMyInfo.setOnClickListener {
-            startActivity(Intent(requireContext(), UserInfoActivity::class.java))
+            UserInfoActivity.start(requireContext(), UserInfoActivity.Args())
         }
 
         binding.llInquire.setOnClickListener {
