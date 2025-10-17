@@ -60,7 +60,7 @@ class UserInfoActivity :
             MIN_NICKNAME_LENGTH,
             MAX_NICKNAME_LENGTH
         )
-        
+
         lifecycleScope.launch {
             userInfoViewModel.uiState.collectLatest { it ->
                 if (binding.etChNickname.text.toString() != it.nickname) {
@@ -88,6 +88,7 @@ class UserInfoActivity :
                     binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
                 } else {
                     binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
                 }
             }
 
