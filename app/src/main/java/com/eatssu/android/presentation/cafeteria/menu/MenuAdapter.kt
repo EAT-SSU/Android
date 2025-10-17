@@ -14,8 +14,7 @@ import com.eatssu.android.presentation.cafeteria.info.InfoBottomSheetFragment
 
 class MenuAdapter(
     private val fragmentManager: FragmentManager,
-    private val totalMenuList: ArrayList<Section>
-
+    private val sectionList: List<Section>
 ) : RecyclerView.Adapter<MenuAdapter.MyViewHolder>() {
 
     class MyViewHolder(
@@ -60,11 +59,11 @@ class MenuAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        totalMenuList[position].let { sectionModel ->
+        sectionList[position].let { sectionModel ->
             holder.bind(fragmentManager, sectionModel)
         }
     }
 
-    override fun getItemCount(): Int = totalMenuList.size
+    override fun getItemCount(): Int = sectionList.size
 
 }

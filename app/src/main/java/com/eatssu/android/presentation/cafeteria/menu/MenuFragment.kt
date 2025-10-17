@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
@@ -30,9 +32,6 @@ class MenuFragment : Fragment() {
     private val mainViewModel by activityViewModels<MainViewModel>()
     private val infoViewModel by activityViewModels<InfoViewModel>()
     private val menuViewModel by viewModels<MenuViewModel>()
-
-    private val dataLoadedMap = mutableMapOf<Restaurant, Boolean>()
-    private val totalMenuList = ArrayList<Section>()
 
     companion object {
         fun newInstance(time: Time): MenuFragment {
@@ -59,8 +58,8 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 메뉴 정보 수집
-        collectMenuData()
+        // UiState 관찰
+        observeUiState()
 
         // 날짜 바뀔 때마다 ViewModel API 호출
         observeViewModel()
@@ -72,73 +71,61 @@ class MenuFragment : Fragment() {
             val menuDate = dataReceived.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
             val dayOfWeek = dataReceived.dayOfWeek
 
-            if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
-                menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
-                menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
-            } else {
-                dataLoadedMap[Restaurant.FOOD_COURT] = true
-                dataLoadedMap[Restaurant.SNACK_CORNER] = true
-                checkDataLoaded()
+            // 로딩할 식당 목록 결정
+            val restaurantsToLoad = buildList {
+                // 변동 메뉴 식당
+                addAll(Restaurant.getVariableRestaurantList())
+
+                // 고정 메뉴 식당 (평일 점심만)
+                if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
+                    add(Restaurant.FOOD_COURT)
+                    add(Restaurant.SNACK_CORNER)
+                }
             }
 
-            if (time != Time.LUNCH) {
-                dataLoadedMap[Restaurant.FOOD_COURT] = true
-                dataLoadedMap[Restaurant.SNACK_CORNER] = true
-                checkDataLoaded()
-            }
+            Timber.d("Loading menus for date: $menuDate, time: $time, restaurants: $restaurantsToLoad")
 
-            // 고정 메뉴 식당 불러오기
-            for (restaurant in Restaurant.getVariableRestaurantList()) {
-                menuViewModel.loadTodayMeal(menuDate, restaurant, time)
-            }
+            // 메뉴 로딩
+            menuViewModel.loadMenus(restaurantsToLoad, menuDate, time)
         }
     }
 
-    private fun collectMenuData() {
+    private fun observeUiState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.menuData.collect { menuMap ->
-                    menuMap.forEach { (restaurant, menuList) ->
-                        totalMenuList.removeAll { it.cafeteria == restaurant }
-                        if (menuList.isNotEmpty()) {
-                            totalMenuList.add(
-                                Section(
-                                    restaurant.menuType,
-                                    restaurant,
-                                    menuList,
-                                    infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
-                                )
-                            )
+                menuViewModel.uiState.collect { state ->
+                    when (state) {
+                        is UiState.Success -> {
+                            val menuMap = state.data?.menuMap ?: return@collect
+                            Timber.d("Menu map received: $menuMap")
+
+                            val sectionList = menuMap
+                                .filter { (_, menuList) -> menuList.isNotEmpty() }
+                                .map { (restaurant, menuList) ->
+                                    Section(
+                                        restaurant.menuType,
+                                        restaurant,
+                                        menuList,
+                                        infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
+                                    )
+                                }
+                                .sortedBy { it.cafeteria.ordinal }
+
+                            setupRecyclerView(sectionList)
                         }
-                        dataLoadedMap[restaurant] = true
-                        checkDataLoaded()
+
+                        else -> Unit
                     }
                 }
             }
         }
     }
 
-    private fun setupTodayRecyclerView() {
+    private fun setupRecyclerView(sectionList: List<Section>) {
         binding.rv.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = fragmentManager?.let { MenuAdapter(it, totalMenuList) }
-        }
-    }
-
-    private fun checkDataLoaded() {
-        val requiredRestaurants = setOf(
-            Restaurant.FOOD_COURT,
-            Restaurant.SNACK_CORNER,
-            Restaurant.HAKSIK,
-            Restaurant.DODAM,
-            Restaurant.DORMITORY,
-            Restaurant.FACULTY,
-        )
-
-        if (requiredRestaurants.all { dataLoadedMap[it] == true }) {
-            totalMenuList.sortBy { it.cafeteria.ordinal }
-            setupTodayRecyclerView()
+            adapter = fragmentManager?.let { MenuAdapter(it, sectionList) }
         }
     }
 

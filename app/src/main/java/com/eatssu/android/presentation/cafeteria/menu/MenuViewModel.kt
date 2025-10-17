@@ -9,9 +9,12 @@ import com.eatssu.android.data.service.MealService
 import com.eatssu.android.data.service.MenuService
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.UiState
+import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,58 +28,55 @@ class MenuViewModel @Inject constructor(
     private val mealService: MealService,
 ) : ViewModel() {
 
-    private val _menuData = MutableStateFlow<Map<Restaurant, List<Menu>>>(emptyMap())
-    val menuData: StateFlow<Map<Restaurant, List<Menu>>> = _menuData.asStateFlow()
-
     private val _uiState: MutableStateFlow<UiState<MenuState>> = MutableStateFlow(UiState.Init)
     val uiState: StateFlow<UiState<MenuState>> = _uiState.asStateFlow()
 
-
-    fun loadTodayMeal(
-        menuDate: String,
-        restaurantType: Restaurant,
-        time: Time,
-    ) {
+    fun loadMenus(restaurants: List<Restaurant>, menuDate: String, time: Time) {
         _uiState.value = UiState.Loading
-        Timber.d("loadTodayMeal called with type: $restaurantType")
 
         viewModelScope.launch {
-            when (val result =
-                mealService.getTodayMeal(menuDate, restaurantType.toString(), time.toString())) {
-                is ApiResult.Success -> {
-                    val menuList = result.data.mapTodayMenuResponseToMenu()
-                    _menuData.value = _menuData.value + (restaurantType to menuList)
-                    _uiState.value = UiState.Success(MenuState())
-                }
+            val deferredMenus = restaurants.map { restaurant ->
+                async {
+                    when (restaurant.menuType) {
+                        MenuType.FIXED -> {
+                            when (val result = menuService.getFixMenu(restaurant.toString())) {
+                                is ApiResult.Success -> {
+                                    restaurant to result.data.mapFixedMenuResponseToMenu()
+                                }
 
-                else -> {
-                    _uiState.value = UiState.Error
+                                else -> {
+                                    Timber.e("Failed to load fixed menu for $restaurant")
+                                    restaurant to emptyList()
+                                }
+                            }
+                        }
+
+                        MenuType.VARIABLE -> {
+                            when (val result = mealService.getTodayMeal(
+                                menuDate,
+                                restaurant.toString(),
+                                time.toString()
+                            )) {
+                                is ApiResult.Success -> {
+                                    restaurant to result.data.mapTodayMenuResponseToMenu()
+                                }
+
+                                else -> {
+                                    Timber.e("Failed to load meal for $restaurant")
+                                    restaurant to emptyList()
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
 
-    fun loadFixedMenu(restaurantType: Restaurant) {
-        _uiState.value = UiState.Loading
-        Timber.d("loadFixedMenu called with type: $restaurantType")
-
-        viewModelScope.launch {
-            when (val result = menuService.getFixMenu(restaurantType.toString())) {
-                is ApiResult.Success -> {
-                    Timber.d("onResponse 성공: ${result.data}")
-                    val menuList = result.data.mapFixedMenuResponseToMenu()
-                    _menuData.value = _menuData.value + (restaurantType to menuList)
-                    _uiState.value = UiState.Success(MenuState())
-                }
-
-                else -> {
-                    _uiState.value = UiState.Error
-                }
-            }
+            val menuMap = deferredMenus.awaitAll().toMap()
+            _uiState.value = UiState.Success(MenuState(menuMap))
         }
     }
 }
 
 data class MenuState(
-    val message: String = ""
+    val menuMap: Map<Restaurant, List<Menu>> = emptyMap()
 )
