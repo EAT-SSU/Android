@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.write
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -18,6 +19,7 @@ import com.eatssu.android.data.dto.request.WriteReviewRequest
 import com.eatssu.android.databinding.ActivityReviewWriteRateBinding
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
@@ -25,6 +27,7 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import java.io.File
 
@@ -35,11 +38,21 @@ class ReviewWriteRateActivity :
         ScreenId.REVIEW_V1_WRITE_RATE
     ) {
 
+    @Parcelize
+    data class Args(
+        val itemName: String,
+        val itemId: Long,
+        val itemCount: Long = 1L,
+        val menuType: String? = null
+    ) : Parcelable
+
+    companion object : ActivityCompanionWithArgs<Args>(ReviewWriteRateActivity::class, Args::class)
+
     private val viewModel: UploadReviewViewModel by viewModels()
 
-    private var itemId: Long = 0
-    private lateinit var itemName: String
-    private var itemCount = 1L
+    private val itemId by lazy { intentOptions?.itemId ?: -1L }
+    private val itemName by lazy { intentOptions?.itemName ?: "" }
+    private val itemCount by lazy { intentOptions?.itemCount ?: 1L }
     private var comment: String? = ""
 
     private var imageFile: File? = null
@@ -49,11 +62,7 @@ class ReviewWriteRateActivity :
         toolbarTitle.text = "리뷰 남기기" // 툴바 제목 설정
         binding.viewModel = viewModel
 
-        itemName = intent.getStringExtra("itemName").toString()
         Timber.d("고정메뉴 $itemName")
-
-        itemId = intent.getLongExtra("itemId", -1)
-        itemCount = intent.getLongExtra("itemCount", 1)
 
         // 현재 메뉴명을 표시합니다.
         binding.menu.text = itemName
