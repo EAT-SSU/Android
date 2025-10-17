@@ -9,6 +9,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
 import com.eatssu.android.presentation.intro.IntroActivity
+import com.eatssu.common.enums.LaunchPath
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
@@ -39,14 +40,17 @@ class NotificationReceiver : BroadcastReceiver() {
         notificationManager.createNotificationChannel(channel)
 
 
-        val intent = Intent(context, IntroActivity::class.java).apply {
+        val intent = IntroActivity.intent(
+            context,
+            IntroActivity.IntentOptions(LaunchPath.LOCAL_NOTIFICATION)
+        ) {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
-            intent.putExtra("launch_path", "local_notification"),
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 

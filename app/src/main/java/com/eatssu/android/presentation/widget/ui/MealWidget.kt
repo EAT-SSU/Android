@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.widget.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,12 +43,13 @@ import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
+import com.eatssu.android.presentation.intro.IntroActivity
 import com.eatssu.android.presentation.widget.MealInfoStateDefinition
 import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
 import com.eatssu.android.presentation.widget.util.MealTime
 import com.eatssu.android.presentation.widget.util.WidgetDataDisplayManager
-import com.eatssu.android.presentation.widget.util.launchApp
+import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.Restaurant
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -255,7 +257,9 @@ class MealWidget : GlanceAppWidget() {
                 .cornerRadius(20.dp)
                 .clickable {
                     Timber.d("위젯 클릭")
-                    context.launchApp()
+                    IntroActivity.start(context, IntroActivity.IntentOptions(LaunchPath.WIDGET)) {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
                 },
         ) {
             Row(
