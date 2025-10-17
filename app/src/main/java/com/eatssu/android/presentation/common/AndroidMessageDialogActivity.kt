@@ -3,11 +3,20 @@ package com.eatssu.android.presentation.common
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
+import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
+import kotlinx.parcelize.Parcelize
+import timber.log.Timber
 
 
 class AndroidMessageDialogActivity : AppCompatActivity() {
+
+    @Parcelize
+    data class Args(val message: String) : Parcelable
+
+    companion object :
+        ActivityCompanionWithArgs<Args>(AndroidMessageDialogActivity::class, Args::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,9 +27,9 @@ class AndroidMessageDialogActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
 
         builder.setTitle("공지")
-        val message = intent.getStringExtra("message")
-        Log.d("message",message.toString())
-        builder.setMessage(intent.getStringExtra("message"))
+        val message = intentOptions?.message
+        Timber.tag("message").d(message.toString())
+        builder.setMessage(message)
 
         builder.setPositiveButton("확인") { dialog, which ->
             // Google Play Store의 앱 페이지로 이동하여 업데이트를 다운로드합니다.
