@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -240,8 +239,7 @@ fun MapFragmentComposeView(
                 onDismiss = { viewModel.toggleDepartmentBottomSheet() },
                 onInputClick = {
                     viewModel.toggleDepartmentBottomSheet()
-                    val intent = Intent(context, UserInfoActivity::class.java)
-                    context.startActivity(intent)
+                    UserInfoActivity.start(context)
                 },
                 sheetState = sheetState
             )

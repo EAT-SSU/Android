@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.mypage.userinfo
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -15,12 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgsDefault
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
 class UserInfoActivity :
@@ -29,7 +32,11 @@ class UserInfoActivity :
         ScreenId.MYPAGE_USERINFO
     ) {
 
-    companion object {
+    @Parcelize
+    data class Args(val force: Boolean = false) : Parcelable
+
+    companion object :
+        ActivityCompanionWithArgsDefault<Args>(UserInfoActivity::class, Args::class, { Args() }) {
         private const val MIN_NICKNAME_LENGTH = 2
         private const val MAX_NICKNAME_LENGTH = 16
     }
@@ -50,7 +57,7 @@ class UserInfoActivity :
         // 현재 설정된 유저 정보 가져오기
         userInfoViewModel.loadUserInfo()
 
-        force = intent.getBooleanExtra("force", false)
+        force = intentOptions?.force ?: false
 
         binding.btnCheckNicknameDuplication.isEnabled = false
         binding.btnComplete.isEnabled = false

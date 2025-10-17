@@ -22,7 +22,6 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -152,8 +151,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 if (state is UiState.Success) {
                     when (state.data) {
                         is MainState.NicknameNull -> {
-                            intent.putExtra("force", true)
-                            startActivity<UserInfoActivity>()
+                            UserInfoActivity.start(
+                                this@MainActivity,
+                                UserInfoActivity.Args(force = true)
+                            )
                         }
 
                         is MainState.LoggedOut -> {
