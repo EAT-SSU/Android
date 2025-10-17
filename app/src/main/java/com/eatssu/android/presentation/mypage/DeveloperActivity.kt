@@ -31,12 +31,14 @@ class DeveloperActivity :
 
     private fun clickRecruiting() {
         binding.imgRecruitingBanner.setOnClickListener {
-            val intent = Intent(this, WebViewActivity::class.java).apply {
-                putExtra("TITLE", "Who’s next?")
-                putExtra("URL", getString(R.string.recruiting_url))
-                putExtra("SCREEN_ID", ScreenId.EXTERNAL_RECRUIT.name)
-            }
-            startActivity(intent)
+            WebViewActivity.start(
+                this,
+                WebViewActivity.Args(
+                    url = getString(R.string.recruiting_url),
+                    title = "Who's next?",
+                    screenId = ScreenId.EXTERNAL_RECRUIT
+                )
+            )
         }
     }
 }
