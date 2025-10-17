@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.intro
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
@@ -8,7 +7,6 @@ import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,7 +19,6 @@ import javax.inject.Inject
 class IntroViewModel @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
