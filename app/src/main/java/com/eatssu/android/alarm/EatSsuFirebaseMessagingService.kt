@@ -45,7 +45,7 @@ class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
         }
         notificationManager.createNotificationChannel(channel)
 
-        val intent = IntroActivity.intent(this, IntroActivity.IntentOptions(REMOTE_NOTIFICATION)) {
+        val intent = IntroActivity.intent(this, IntroActivity.Args(REMOTE_NOTIFICATION)) {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 

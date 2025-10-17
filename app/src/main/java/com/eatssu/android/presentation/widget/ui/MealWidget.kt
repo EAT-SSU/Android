@@ -257,7 +257,7 @@ class MealWidget : GlanceAppWidget() {
                 .cornerRadius(20.dp)
                 .clickable {
                     Timber.d("위젯 클릭")
-                    IntroActivity.start(context, IntroActivity.IntentOptions(LaunchPath.WIDGET)) {
+                    IntroActivity.start(context, IntroActivity.Args(LaunchPath.WIDGET)) {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                 },

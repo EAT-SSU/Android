@@ -7,32 +7,49 @@ import android.os.Parcelable
 import androidx.core.content.IntentCompat.getParcelableExtra
 import kotlin.reflect.KClass
 
-abstract class ActivityCompanion<IntentOptions>(
+abstract class ActivityCompanion(
     private val activityClass: KClass<out Activity>,
-    private val optionsClass: KClass<IntentOptions>
-) where IntentOptions : Parcelable {
+) {
+    fun intent(
+        context: Context,
+        intentBuilder: Intent.() -> Unit = {}
+    ): Intent =
+        Intent(context, activityClass.java).apply {
+            intentBuilder()
+        }
+
+    fun start(context: Context, intentBuilder: Intent.() -> Unit = {}) {
+        context.startActivity(intent(context, intentBuilder))
+    }
+
+}
+
+abstract class ActivityCompanionWithArgs<TArgs>(
+    private val activityClass: KClass<out Activity>,
+    private val argsClass: KClass<TArgs>
+) where TArgs : Parcelable {
     private companion object {
-        private const val INTENT_OPTIONS_KEY = "intent_options"
+        private const val INTENT_ARGS_KEY = "intent_args"
     }
 
     fun intent(
         context: Context,
-        options: IntentOptions,
+        args: TArgs,
         intentBuilder: Intent.() -> Unit = {}
     ): Intent =
         Intent(context, activityClass.java).apply {
-            putExtra(INTENT_OPTIONS_KEY, options)
+            putExtra(INTENT_ARGS_KEY, args)
             intentBuilder()
         }
 
-    fun start(context: Context, options: IntentOptions, intentBuilder: Intent.() -> Unit = {}) {
-        context.startActivity(intent(context, options, intentBuilder))
+    fun start(context: Context, args: TArgs, intentBuilder: Intent.() -> Unit = {}) {
+        context.startActivity(intent(context, args, intentBuilder))
     }
 
-    val Activity.intentOptions: IntentOptions?
+    val Activity.intentOptions: TArgs?
         get() = getParcelableExtra(
             this.intent,
-            INTENT_OPTIONS_KEY,
-            optionsClass.java
+            INTENT_ARGS_KEY,
+            argsClass.java
         )
 }

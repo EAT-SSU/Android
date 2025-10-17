@@ -10,7 +10,7 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.base.ActivityCompanion
+import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -26,8 +26,8 @@ import kotlinx.parcelize.Parcelize
 class IntroActivity : AppCompatActivity() {
 
     @Parcelize
-    data class IntentOptions(val launchPath: LaunchPath) : Parcelable
-    companion object : ActivityCompanion<IntentOptions>(IntroActivity::class, IntentOptions::class)
+    data class Args(val launchPath: LaunchPath) : Parcelable
+    companion object : ActivityCompanionWithArgs<Args>(IntroActivity::class, Args::class)
 
     private val introViewModel: IntroViewModel by viewModels()
     private lateinit var binding: ActivityIntroBinding

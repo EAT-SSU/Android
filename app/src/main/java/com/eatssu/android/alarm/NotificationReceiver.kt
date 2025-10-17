@@ -42,7 +42,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val intent = IntroActivity.intent(
             context,
-            IntroActivity.IntentOptions(LaunchPath.LOCAL_NOTIFICATION)
+            IntroActivity.Args(LaunchPath.LOCAL_NOTIFICATION)
         ) {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
