@@ -8,18 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
-import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
-import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,13 +32,7 @@ class MenuFragment : Fragment() {
     private val infoViewModel by activityViewModels<InfoViewModel>()
     private val menuViewModel by viewModels<MenuViewModel>()
 
-    val foodCourtDataLoaded = MutableLiveData<Boolean>()
-    val snackCornerDataLoaded = MutableLiveData<Boolean>()
-    val haksikDataLoaded = MutableLiveData<Boolean>()
-    val dodamDataLoaded = MutableLiveData<Boolean>()
-    val dormitoryDataLoaded = MutableLiveData<Boolean>()
-    val facultyDataLoaded = MutableLiveData<Boolean>()
-
+    private val dataLoadedMap = mutableMapOf<Restaurant, Boolean>()
     private val totalMenuList = ArrayList<Section>()
 
     companion object {
@@ -71,8 +61,7 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // StateFlow 수집은 단 1번만 실행
-        collectMealData()
-        collectFixedMenuData()
+        collectMenuData()
         collectUiState()
 
         // 날짜 바뀔 때마다 ViewModel API 호출
@@ -89,140 +78,43 @@ class MenuFragment : Fragment() {
                 menuViewModel.loadFixedMenu(Restaurant.FOOD_COURT)
                 menuViewModel.loadFixedMenu(Restaurant.SNACK_CORNER)
             } else {
-                foodCourtDataLoaded.value = true
-                snackCornerDataLoaded.value = true
+                dataLoadedMap[Restaurant.FOOD_COURT] = true
+                dataLoadedMap[Restaurant.SNACK_CORNER] = true
                 checkDataLoaded()
             }
 
             if (time != Time.LUNCH) {
-                foodCourtDataLoaded.value = true
-                snackCornerDataLoaded.value = true
+                dataLoadedMap[Restaurant.FOOD_COURT] = true
+                dataLoadedMap[Restaurant.SNACK_CORNER] = true
                 checkDataLoaded()
             }
 
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.HAKSIK, time)
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.DODAM, time)
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.DORMITORY, time)
-            menuViewModel.loadTodayMeal(menuDate, Restaurant.FACULTY, time)
-        }
-    }
-
-    private fun collectMealData() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.todayMealDataHaksik.collect { result ->
-                    totalMenuList.removeAll { it.cafeteria == Restaurant.HAKSIK }
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.VARIABLE, Restaurant.HAKSIK,
-                                result.mapTodayMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.HAKSIK)?.location ?: ""
-                            )
-                        )
-                    }
-                    haksikDataLoaded.value = true
-                    checkDataLoaded()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.todayMealDataDodam.collect { result ->
-                    totalMenuList.removeAll { it.cafeteria == Restaurant.DODAM }
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.VARIABLE, Restaurant.DODAM,
-                                result.mapTodayMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.DODAM)?.location ?: ""
-                            )
-                        )
-                    }
-                    dodamDataLoaded.value = true
-                    checkDataLoaded()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.todayMealDataDormitory.collect { result ->
-                    totalMenuList.removeAll { it.cafeteria == Restaurant.DORMITORY }
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.VARIABLE,
-                                Restaurant.DORMITORY,
-                                result.mapTodayMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.DORMITORY)?.location ?: ""
-                            )
-                        )
-                    }
-                    dormitoryDataLoaded.value = true
-                    checkDataLoaded()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.todayMealDataFaculty.collect { result ->
-                    totalMenuList.removeAll { it.cafeteria == Restaurant.FACULTY }
-                    if (result.isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.VARIABLE, Restaurant.FACULTY,
-                                result.mapTodayMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.FACULTY)?.location ?: ""
-                            )
-                        )
-                    }
-                    facultyDataLoaded.value = true
-                    checkDataLoaded()
-                }
+            // 고정 메뉴 식당 불러오기
+            for (restaurant in Restaurant.getVariableRestaurantList()) {
+                menuViewModel.loadTodayMeal(menuDate, restaurant, time)
             }
         }
     }
 
-    private fun collectFixedMenuData() {
+    private fun collectMenuData() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.fixedMenuDataFood.collect { result ->
-                    totalMenuList.removeAll { it.cafeteria == Restaurant.FOOD_COURT }
-                    if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.FIXED,
-                                Restaurant.FOOD_COURT,
-                                result.mapFixedMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.FOOD_COURT)?.location ?: ""
+                menuViewModel.menuData.collect { menuMap ->
+                    menuMap.forEach { (restaurant, menuList) ->
+                        totalMenuList.removeAll { it.cafeteria == restaurant }
+                        if (menuList.isNotEmpty()) {
+                            totalMenuList.add(
+                                Section(
+                                    restaurant.menuType,
+                                    restaurant,
+                                    menuList,
+                                    infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
+                                )
                             )
-                        )
+                        }
+                        dataLoadedMap[restaurant] = true
+                        checkDataLoaded()
                     }
-                    foodCourtDataLoaded.value = true
-                    checkDataLoaded()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                menuViewModel.fixedMenuDataSnack.collect { result ->
-                    totalMenuList.removeAll { it.cafeteria == Restaurant.SNACK_CORNER }
-                    if (result.mapFixedMenuResponseToMenu().isNotEmpty()) {
-                        totalMenuList.add(
-                            Section(
-                                MenuType.FIXED,
-                                Restaurant.SNACK_CORNER,
-                                result.mapFixedMenuResponseToMenu(),
-                                infoViewModel.getRestaurantInfo(Restaurant.SNACK_CORNER)?.location ?: ""
-                            )
-                        )
-                    }
-                    snackCornerDataLoaded.value = true
-                    checkDataLoaded()
                 }
             }
         }
@@ -237,13 +129,16 @@ class MenuFragment : Fragment() {
     }
 
     private fun checkDataLoaded() {
-        if (foodCourtDataLoaded.value == true &&
-            snackCornerDataLoaded.value == true &&
-            haksikDataLoaded.value == true &&
-            dodamDataLoaded.value == true &&
-            dormitoryDataLoaded.value == true &&
-            facultyDataLoaded.value == true
-        ) {
+        val requiredRestaurants = setOf(
+            Restaurant.FOOD_COURT,
+            Restaurant.SNACK_CORNER,
+            Restaurant.HAKSIK,
+            Restaurant.DODAM,
+            Restaurant.DORMITORY,
+            Restaurant.FACULTY,
+        )
+
+        if (requiredRestaurants.all { dataLoadedMap[it] == true }) {
             totalMenuList.sortBy { it.cafeteria.ordinal }
             setupTodayRecyclerView()
         }
@@ -257,12 +152,15 @@ class MenuFragment : Fragment() {
                         is UiState.Init -> {
                             // init
                         }
+
                         is UiState.Loading -> {
                             // Loading
                         }
+
                         is UiState.Success -> {
                             // Success
                         }
+
                         is UiState.Error -> {
                             // Error
                         }
