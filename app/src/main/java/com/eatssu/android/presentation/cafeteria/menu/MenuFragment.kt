@@ -1,9 +1,11 @@
 package com.eatssu.android.presentation.cafeteria.menu
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -33,18 +35,24 @@ class MenuFragment : Fragment() {
     private val infoViewModel by activityViewModels<InfoViewModel>()
     private val menuViewModel by viewModels<MenuViewModel>()
 
-    companion object {
-        fun newInstance(time: Time): MenuFragment {
-            val fragment = MenuFragment()
-            val args = Bundle()
-            args.putSerializable("TIME", time)
-            fragment.arguments = args
-            return fragment
+    private val time: Time by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getSerializable(ARG_TIME, Time::class.java) ?: Time.LUNCH
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getSerializable(ARG_TIME) as? Time ?: Time.LUNCH
         }
     }
 
-    private val time: Time
-        get() = arguments?.getSerializable("TIME") as Time //Todo deprecated
+    companion object {
+        private const val ARG_TIME = "ARG_TIME"
+
+        fun newInstance(time: Time): MenuFragment {
+            return MenuFragment().apply {
+                arguments = bundleOf(ARG_TIME to time)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
