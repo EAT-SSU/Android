@@ -96,7 +96,7 @@ class MenuFragment : Fragment() {
                 menuViewModel.uiState.collect { state ->
                     when (state) {
                         is UiState.Success -> {
-                            val menuMap = state.data?.menuMap ?: return@collect
+                            val menuMap = state.data.menuMap
                             Timber.d("Menu map received: $menuMap")
 
                             val sectionList = menuMap

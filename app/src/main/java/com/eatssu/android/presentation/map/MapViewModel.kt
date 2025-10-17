@@ -6,7 +6,6 @@ import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
-import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -86,7 +84,7 @@ class MapViewModel @Inject constructor(
     fun selectPartnershipByStoreName(storeName: String, partnershipId: Int? = null) {
         val current = uiState.value
         if (current !is UiState.Success) return
-        val data = current.data ?: return
+        val data = current.data
 
         // 가게 단위의 Partnership 찾기
         val partnership = data.partnerships.firstOrNull { it.storeName == storeName } ?: return
@@ -119,7 +117,7 @@ class MapViewModel @Inject constructor(
     fun toggleDepartmentBottomSheet() {
         val current = uiState.value
         if (current is UiState.Success) {
-            current.data?.let { data ->
+            current.data.let { data ->
                 _uiState.value = UiState.Success(
                     data.copy(showDepartmentBottomSheet = !data.showDepartmentBottomSheet)
                 )
@@ -131,7 +129,7 @@ class MapViewModel @Inject constructor(
     fun togglePartnershipBottomSheet() {
         val current = uiState.value
         if (current is UiState.Success) {
-            current.data?.let { data ->
+            current.data.let { data ->
                 _uiState.value = UiState.Success(
                     data.copy(showPartnershipBottomSheet = !data.showPartnershipBottomSheet)
                 )

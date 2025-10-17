@@ -91,7 +91,7 @@ fun MapFragmentComposeView(
 
     // UiState에서 Success 상태인 실제 MapState 데이터만 추출
     val mapState: MapState = when (val s = uiState) {
-        is UiState.Success -> s.data ?: MapState()
+        is UiState.Success -> s.data
         else -> MapState()
     }
 

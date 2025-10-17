@@ -53,7 +53,7 @@ class SignOutActivity :
                     }
 
                     is UiState.Success -> {
-                        if (it.data?.isSignOuted == true) {
+                        if (it.data.isSignOuted) {
                             val intent = Intent(this@SignOutActivity, LoginActivity::class.java)
                             intent.flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
