@@ -14,7 +14,6 @@ import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.ActivityCompanion
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.enums.ScreenId
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -100,7 +99,7 @@ class LoginActivity :
                     when (state) {
                         is UiState.Loading -> showLoading(true)
                         is UiState.Success -> {
-                            startActivity<MainActivity>()
+                            MainActivity.start(this@LoginActivity)
                             finishAffinity()
                         }
                         else -> {

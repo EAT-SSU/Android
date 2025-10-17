@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.work.WorkManager
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.eatssu.android.presentation.base.ActivityCompanion
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
@@ -37,6 +38,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ActivityMainBinding::inflate,
     ScreenId.HOME_MAIN
 ) {
+
+    companion object : ActivityCompanion(MainActivity::class)
 
     @Inject
     lateinit var workManager: WorkManager

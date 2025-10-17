@@ -13,7 +13,6 @@ import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.ActivityCompanionWithArgs
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.ScreenId
@@ -43,7 +42,7 @@ class IntroActivity : AppCompatActivity() {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
                     is UiState.Success -> {
-                        startActivity<MainActivity>()
+                        MainActivity.start(this@IntroActivity)
                         finish()
                     }
 
