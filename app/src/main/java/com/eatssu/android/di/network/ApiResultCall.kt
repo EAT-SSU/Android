@@ -2,6 +2,7 @@ package com.eatssu.android.di.network
 
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.presentation.base.NetworkErrorEventBus
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -32,7 +33,11 @@ class ApiResultCall<T : Any>(
             override fun onFailure(call: Call<BaseResponse<T>>, error: Throwable) {
                 Timber.e(error, "ApiResultCall - onFailure called")
                 val response = when (error) {
-                    is IOException -> ApiResult.NetworkError(error)
+                    is IOException -> {
+                        // NetworkError 발생 시 전역 이벤트 발생
+                        NetworkErrorEventBus.notifyNetworkError()
+                        ApiResult.NetworkError(error)
+                    }
                     else -> ApiResult.UnknownError(error)
                 }
                 callback.onResponse(
