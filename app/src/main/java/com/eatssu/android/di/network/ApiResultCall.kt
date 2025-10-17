@@ -48,7 +48,7 @@ class ApiResultCall<T : Any>(
         })
     }
 
-    private fun Response<BaseResponse<T>>.toApiResult(): ApiResult<out T> {
+    private fun Response<BaseResponse<T>>.toApiResult(): ApiResult<T> {
         // HTTP Response code가 200 ~ 300대가 아닌 경우 (ex. 400, 500)
         if (!isSuccessful) {
             val responseCode = code()
