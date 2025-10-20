@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
+import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
+    private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
 ) : ViewModel() {
@@ -34,6 +36,12 @@ class IntroViewModel @Inject constructor(
     private fun autoLogin() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
+
+            // 서버와 통신 가능한지 먼저 확인
+            if (!healthCheckUseCase()) {
+                // 아무 State 처리 없이 Return해도 NetworkErrorEventBus로 인해 오류 페이지로 이동
+                return@launch
+            }
 
             val userAccessToken = getAccessTokenUseCase()
             if (userAccessToken.isEmpty()) {
