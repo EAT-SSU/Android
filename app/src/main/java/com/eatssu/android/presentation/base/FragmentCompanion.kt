@@ -96,3 +96,50 @@ abstract class FragmentCompanionWithArgs<TArgs>(
             BundleCompat.getParcelable(it, FRAGMENT_ARGS_KEY, argsClass.java)
         }
 }
+
+/**
+ * 커스텀 인자와 기본 인자가 필요한 Fragment를 위한 Companion 클래스
+ *
+ * FragmentCompanionWithArgs를 상속하여 기본 인자로 실행하는 오버로드를 추가로 제공합니다.
+ * - `newInstance()` - 기본 인자로 생성
+ * - `newInstance(customArgs)` - 커스텀 인자로 생성
+ *
+ * ## 사용 예시
+ * ```kotlin
+ * class SettingsFragment : Fragment() {
+ *     @Parcelize
+ *     data class Args(val section: String = "general") : Parcelable
+ *
+ *     companion object : FragmentCompanionWithArgsDefault<Args>(
+ *         ::SettingsFragment,
+ *         Args::class,
+ *         { Args() }
+ *     )
+ * }
+ *
+ * // 기본 인자로 생성: Args(section = "general")
+ * SettingsFragment.newInstance()
+ *
+ * // 커스텀 인자로 생성: Args(section = "privacy")
+ * SettingsFragment.newInstance(SettingsFragment.Args(section = "privacy"))
+ * ```
+ *
+ * @property defaultArgs 기본 인자를 생성하는 람다
+ * @param TArgs Parcelable을 구현한 인자 타입
+ */
+abstract class FragmentCompanionWithArgsDefault<TArgs>(
+    fragmentBuilder: () -> Fragment,
+    argsClass: KClass<TArgs>,
+    private val defaultArgs: () -> TArgs,
+) : FragmentCompanionWithArgs<TArgs>(fragmentBuilder, argsClass) where TArgs : Parcelable {
+
+    /**
+     * 기본 인자로 Fragment의 새 인스턴스를 생성합니다.
+     *
+     * @return 기본 인자가 포함된 Fragment 인스턴스
+     */
+    fun newInstance(): Fragment {
+        return newInstance(defaultArgs())
+    }
+
+}
