@@ -22,9 +22,11 @@ class PartnershipRepositoryImpl @Inject constructor(
             .map { list -> list.map { it.toDomain() } }
             .orEmptyList()
 
+    // 특정 식당 클릭 시 제휴 정보 조회
     override suspend fun getPartnershipById(partnershipId: Int): PartnershipRestaurant? =
         partnershipService.getPartnershipById(partnershipId).map { it.toDomain() }.orNull()
 
+    // 유저의 학과에 해당하는 제휴 정보 조회
     override suspend fun getUserCollegePartnerships(): List<Partnership> =
         userService.getUserDepartmentPartnerships().map { list -> list.map { it.toDomain() } }
             .orEmptyList()
