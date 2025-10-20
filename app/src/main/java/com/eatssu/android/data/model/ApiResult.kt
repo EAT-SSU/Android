@@ -49,7 +49,7 @@ fun <T> ApiResult<T>.orNull(): T? = when (this) {
     else -> null
 }
 
-// ApiResult가 Succes일 때 데이터를 변환
+// ApiResult가 Success일 때 데이터를 변환
 fun <T, R> ApiResult<T>.map(transform: (T) -> R): ApiResult<R> = when (this) {
     is Success<T> -> Success(transform(data))
     is Failure -> Failure(responseCode, message)
