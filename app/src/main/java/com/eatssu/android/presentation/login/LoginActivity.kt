@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.login
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -13,7 +12,6 @@ import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.error.ServerErrorActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.enums.ScreenId
@@ -118,15 +116,6 @@ class LoginActivity :
                 loginViewModel.uiEvent.collect { event ->
                     when (event) {
                         is UiEvent.ShowToast -> showToast(event.message)
-                        is UiEvent.NavigateToServerError -> {
-                            val intent =
-                                Intent(this@LoginActivity, ServerErrorActivity::class.java).apply {
-                                    putExtra(ServerErrorActivity.EXTRA_TITLE, event.title)
-                                    putExtra(ServerErrorActivity.EXTRA_MESSAGE, event.message)
-                                }
-                            startActivity(intent)
-                            finish()
-                        }
                     }
                 }
             }

@@ -7,5 +7,4 @@ package com.eatssu.android.presentation
  */
 interface UiEvent {
     data class ShowToast(val message: String) : UiEvent
-    data class NavigateToServerError(val title: String, val message: String) : UiEvent
 }

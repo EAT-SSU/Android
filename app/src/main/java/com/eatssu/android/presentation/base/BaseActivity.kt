@@ -24,8 +24,8 @@ import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
-import com.eatssu.android.presentation.error.ServerErrorActivity
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
@@ -142,14 +142,7 @@ abstract class BaseActivity<B : ViewBinding>(
             }
         }
 
-        lifecycleScope.launch {
-            NetworkErrorEventBus.networkError.collect {
-                navigateToServerError(
-                    getString(R.string.server_error_title),
-                    getString(R.string.server_error_message)
-                )
-            }
-        }
+        observeNetworkError()
     }
 
     private fun navigateToLogin() {
@@ -157,15 +150,6 @@ abstract class BaseActivity<B : ViewBinding>(
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         })
         finishAffinity()
-    }
-
-    private fun navigateToServerError(title: String, message: String) {
-        val intent = Intent(this, ServerErrorActivity::class.java).apply {
-            putExtra(ServerErrorActivity.EXTRA_TITLE, title)
-            putExtra(ServerErrorActivity.EXTRA_MESSAGE, message)
-        }
-        startActivity(intent)
-        finish()
     }
 
     override fun onDestroy() {

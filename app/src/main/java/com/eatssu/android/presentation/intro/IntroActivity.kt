@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.intro
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -10,8 +9,8 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.error.ServerErrorActivity
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
@@ -66,19 +65,11 @@ class IntroActivity : AppCompatActivity() {
                     is UiEvent.ShowToast -> {
                         showToast(event.message)
                     }
-
-                    is UiEvent.NavigateToServerError -> {
-                        val intent =
-                            Intent(this@IntroActivity, ServerErrorActivity::class.java).apply {
-                                putExtra(ServerErrorActivity.EXTRA_TITLE, event.title)
-                                putExtra(ServerErrorActivity.EXTRA_MESSAGE, event.message)
-                            }
-                        startActivity(intent)
-                        finish()
-                    }
                 }
             }
         }
+
+        observeNetworkError()
     }
 
     private fun log() {
