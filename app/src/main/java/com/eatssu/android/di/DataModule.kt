@@ -1,11 +1,13 @@
 package com.eatssu.android.di
 
 
+import com.eatssu.android.data.repository.HealthCheckRepositoryImpl
 import com.eatssu.android.data.repository.MealRepositoryImpl
 import com.eatssu.android.data.repository.OauthRepositoryImpl
 import com.eatssu.android.data.repository.PartnershipRepositoryImpl
 import com.eatssu.android.data.repository.ReportRepositoryImpl
 import com.eatssu.android.data.repository.UserRepositoryImpl
+import com.eatssu.android.domain.repository.HealthCheckRepository
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.OauthRepository
 import com.eatssu.android.domain.repository.PartnershipRepository
@@ -51,5 +53,10 @@ abstract class DataModule {
     internal abstract fun bindsPartnershipRepository(
         partnershipRepositoryImpl: PartnershipRepositoryImpl,
     ): PartnershipRepository
+
+    @Binds
+    internal abstract fun bindsHealthCheckRepository(
+        healthCheckRepositoryImpl: HealthCheckRepositoryImpl,
+    ): HealthCheckRepository
 
 }
