@@ -1,11 +1,15 @@
 package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.response.MenusInformation
+import com.eatssu.android.data.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.service.MealService
+import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.domain.repository.MealRepository
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 import javax.inject.Inject
 
 class MealRepositoryImpl @Inject constructor(
@@ -18,6 +22,16 @@ class MealRepositoryImpl @Inject constructor(
         time: String
     ): List<List<String>> {
         return mealService.getTodayMeal(date, restaurant, time).orEmptyList().toDomain()
+    }
+
+    override suspend fun getTodayMenuList(
+        date: String,
+        restaurant: Restaurant,
+        time: Time
+    ): List<Menu> {
+        return mealService.getTodayMeal(date, restaurant.toString(), time.toString())
+            .map { it.mapTodayMenuResponseToMenu() }
+            .orEmptyList()
     }
 
     override suspend fun getMenuInfoByMealId(mealId: Long): List<MenusInformation> =
