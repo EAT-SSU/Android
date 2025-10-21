@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 data class MapState(
@@ -51,15 +50,8 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
-            runCatching { partnershipRepository.getAllPartnerships() }
-                .onSuccess { data ->
-                    _uiState.value = UiState.Success(MapState(partnerships = data))
-                }
-                .onFailure {
-                    Timber.e(it, "제휴 정보 로딩 실패")
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("제휴 정보를 불러오지 못했습니다."))
-                }
+            val partnerships = partnershipRepository.getAllPartnerships()
+            _uiState.value = UiState.Success(MapState(partnerships = partnerships))
         }
     }
 
@@ -68,16 +60,8 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
-            runCatching { partnershipRepository.getUserCollegePartnerships() }
-                .onSuccess { data ->
-
-                    _uiState.value = UiState.Success(MapState(partnerships = data))
-                }
-                .onFailure {
-                    Timber.e(it, "사용자 단과대 제휴 정보 로딩 실패")
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(UiEvent.ShowToast("내 단과대 제휴 정보를 불러오지 못했습니다."))
-                }
+            val partnerships = partnershipRepository.getUserCollegePartnerships()
+            _uiState.value = UiState.Success(MapState(partnerships = partnerships))
         }
     }
 
