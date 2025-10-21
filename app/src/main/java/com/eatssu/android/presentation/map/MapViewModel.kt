@@ -38,7 +38,7 @@ data class MapState(
 class MapViewModel @Inject constructor(
     private val partnershipRepository: PartnershipRepository,
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
-    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
@@ -48,8 +48,9 @@ class MapViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
-    val departmentId: Long = getUserCollegeDepartmentUseCase().userDepartment.departmentId.toLong()
-    val collegeId: Long = getUserCollegeDepartmentUseCase().userCollege.collegeId.toLong()
+    private val userCollegeDepartment = getUserCollegeDepartmentUseCase()
+    val departmentId: Long = userCollegeDepartment.userDepartment.departmentId.toLong()
+    val collegeId: Long = userCollegeDepartment.userCollege.collegeId.toLong()
 
     init {
         Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartmentName(context)}")
