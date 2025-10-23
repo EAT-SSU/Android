@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -41,25 +40,21 @@ class LoginViewModel @Inject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
     fun getKakaoLogin(email: String, providerID: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = UiState.Loading
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    loginUseCase(LoginWithKakaoRequest(email, providerID))
-                }
-            }.onSuccess {
-                setAccessTokenUseCase(it.accessToken)
-                setRefreshTokenUseCase(it.refreshToken)
-                setUserEmailUseCase(email)
 
-                _uiState.value = UiState.Success(LoginState.LoginSuccess)
-
-                TokenStateManager.setTokenValid()
-
-            }.onFailure {
+            val token = loginUseCase(LoginWithKakaoRequest(email, providerID)) ?: run {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
+                return@launch
             }
+
+            setAccessTokenUseCase(token.accessToken)
+            setRefreshTokenUseCase(token.refreshToken)
+            setUserEmailUseCase(email)
+
+            _uiState.value = UiState.Success(LoginState.LoginSuccess)
+            TokenStateManager.setTokenValid()
         }
     }
 

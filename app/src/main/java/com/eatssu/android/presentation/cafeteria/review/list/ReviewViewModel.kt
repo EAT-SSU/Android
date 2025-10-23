@@ -2,8 +2,6 @@ package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.response.asReviewInfo
-import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
@@ -16,10 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -38,10 +32,7 @@ class ReviewViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<ReviewState> = MutableStateFlow(ReviewState())
     val uiState: StateFlow<ReviewState> = _uiState.asStateFlow()
 
-    fun loadReview(
-        menuType: String,
-        itemId: Long,
-    ) {
+    fun loadReview(menuType: String, itemId: Long) {
         when (menuType) {
             MenuType.FIXED.name -> {
                 callMenuReviewInfo(itemId)
@@ -63,193 +54,83 @@ class ReviewViewModel @Inject constructor(
 
     private fun callMenuReviewInfo(menuId: Long) {
         viewModelScope.launch {
-            getMenuReviewInfoUseCase(menuId).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        error = false,
-                    )
-                }
-                Timber.d(e.toString())
-            }.collectLatest { result ->
-                result.result?.apply {
-                    if (mainRating == null) {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                reviewInfo = asReviewInfo(),
-                                isEmpty = true
-                            )
-                        }
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                reviewInfo = asReviewInfo(),
-                                isEmpty = false
-                            )
-                        }
-                        Timber.d("리뷰 있다")
-                    }
-                }
+            _uiState.update { it.copy(loading = true) }
+
+            val menuReviewInfo = getMenuReviewInfoUseCase(menuId)
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    reviewInfo = menuReviewInfo,
+                    isEmpty = menuReviewInfo == null,
+                )
             }
         }
     }
 
-    private fun callMealReviewInfo(
-        mealId: Long,
-    ) {
+    private fun callMealReviewInfo(mealId: Long) {
         viewModelScope.launch {
-            getMealReviewInfoUseCase(mealId).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        error = false,
-                    )
-                }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                result.result?.apply {
-                    if (mainRating == null) {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                reviewInfo = asReviewInfo(),
-                                isEmpty = true
-                            )
-                        }
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                reviewInfo = asReviewInfo(),
-                                isEmpty = false
-                            )
-                        }
-                        Timber.d("리뷰 있다")
-                    }
-                }
+            _uiState.update { it.copy(loading = true) }
+
+            val mealReviewInfo = getMealReviewInfoUseCase(mealId)
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    reviewInfo = mealReviewInfo,
+                    isEmpty = mealReviewInfo == null,
+                )
             }
         }
     }
 
-    private fun callMenuReviewList(
-        itemId: Long,
-    ) {
+    private fun callMenuReviewList(itemId: Long) {
         viewModelScope.launch {
-            getMenuReviewListUseCase(itemId).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        error = true,
-                    )
-                }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                result.result?.apply {
-                    if (numberOfElements == 0) { //리뷰 없음
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                isEmpty = true
-                            )
-                        }
-                    } else { //리뷰 있음
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                reviewList = this.toReviewList(),
-                                isEmpty = false
-                            )
-                        }
-                    }
-                }
+            val menuReviewList = getMenuReviewListUseCase(itemId)
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    reviewList = menuReviewList,
+                    isEmpty = menuReviewList.isEmpty()
+                )
             }
         }
     }
 
-    private fun callMealReviewList(
-        itemId: Long,
-    ) {
+    private fun callMealReviewList(itemId: Long) {
         viewModelScope.launch {
-            getMealReviewListUseCase(itemId).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        error = false,
-                    )
-                }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                result.result?.apply {
-                    if (numberOfElements == 0) { //리뷰 없음
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                isEmpty = true
-                            )
-                        }
-                    } else { //리뷰 있음
-                        _uiState.update {
-                            it.copy(
-                                loading = false,
-                                error = false,
-                                reviewList = this.toReviewList(),
-                                isEmpty = false
-                            )
-                        }
-                    }
-                }
+            val reviewList = getMealReviewListUseCase(itemId)
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    reviewList = reviewList,
+                    isEmpty = reviewList.isEmpty()
+                )
             }
         }
     }
 
     fun deleteReview(reviewId: Long) {
         viewModelScope.launch {
-            deleteReviewUseCase(reviewId).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
+            _uiState.update { it.copy(loading = true) }
+
+            val success = deleteReviewUseCase(reviewId)
+            if (!success) {
                 _uiState.update {
                     it.copy(
                         error = true,
-//                        toastMessage = context.getString(R.string.delete_not)
                     )
                 }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
+                return@launch
+            }
 
-                _uiState.update {
-                    it.copy(
-//                        isDeleted = true,
-//                        toastMessage = context.getString(R.string.delete_done)
-                    )
-                }
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                )
             }
         }
     }

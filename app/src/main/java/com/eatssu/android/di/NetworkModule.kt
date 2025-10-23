@@ -3,6 +3,7 @@ package com.eatssu.android.di
 
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.BuildConfig.BASE_URL
+import com.eatssu.android.di.network.ApiResultCallAdapterFactory
 import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
@@ -17,6 +18,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -87,11 +89,19 @@ object NetworkModule {
         return builder.build()
     }
 
+    @Singleton
+    @Provides
+    fun provideCallAdapterFactory(): CallAdapter.Factory = ApiResultCallAdapterFactory()
+
     // 토큰이 필요한 retrofit
     @Singleton
     @Provides
-    fun provideAuthRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideAuthRetrofit(
+        okHttpClient: OkHttpClient,
+        callAdapterFactory: CallAdapter.Factory,
+    ): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
+            .addCallAdapterFactory(callAdapterFactory)
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
@@ -101,8 +111,12 @@ object NetworkModule {
     @Singleton
     @Provides
     @NoToken
-    fun provideNoAuthRetrofit(@NoToken okHttpClient: OkHttpClient): Retrofit {
+    fun provideNoAuthRetrofit(
+        @NoToken okHttpClient: OkHttpClient,
+        callAdapterFactory: CallAdapter.Factory,
+    ): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
+            .addCallAdapterFactory(callAdapterFactory)
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()

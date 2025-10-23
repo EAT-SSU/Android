@@ -1,9 +1,7 @@
 package com.eatssu.android.domain.usecase.review
 
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.domain.repository.ReviewRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ModifyReviewUseCase @Inject constructor(
@@ -12,6 +10,6 @@ class ModifyReviewUseCase @Inject constructor(
     suspend operator fun invoke(
         reviewId: Long,
         body: ModifyReviewRequest,
-    ): Flow<BaseResponse<Void>> =
+    ): Boolean =
         reviewRepository.modifyReview(reviewId, body)
 }

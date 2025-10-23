@@ -14,14 +14,12 @@ import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -63,34 +61,26 @@ class MainViewModel @Inject constructor(
     private fun fetchAndCheckNickname() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            runCatching {
-                withContext(Dispatchers.IO) { getUserNickNameUseCase() }
-            }.onSuccess { nickname ->
-                // 1) 닉네임 없음/기본 프리셋
-                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
-                    _uiState.value = UiState.Success(MainState.NicknameNull)
-                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
-                    return@launch // ← 아래 분기 실행 막기
-                }
 
-                // 2) 정상 닉네임
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        String.format(
-                            context.getString(R.string.hello_user),
-                            nickname
-                        )
-                    )
-                )
-            }.onFailure { e ->
-                _uiState.value = UiState.Error
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        context.getString(R.string.not_found)
-                    )
-                )
-                Timber.e(e)
+            val nickname = getUserNickNameUseCase()
+
+            // 1) 닉네임 없음/기본 프리셋
+            if (nickname.isBlank() || nickname.startsWith("user-")) {
+                _uiState.value = UiState.Success(MainState.NicknameNull)
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
+                return@launch
             }
+
+            // 2) 정상 닉네임
+            _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    String.format(
+                        context.getString(R.string.hello_user),
+                        nickname
+                    )
+                )
+            )
         }
     }
 
@@ -116,25 +106,21 @@ class MainViewModel @Inject constructor(
 
     private fun getUserDepartment() {
         viewModelScope.launch {
-            runCatching {
-                userRepository.getUserCollegeDepartment()
-            }.onSuccess { it ->
-                val college = it.first
-                val department = it.second
-                setUserCollegeDepartmentUseCase(college, department)
-
-                _uiState.value = UiState.Success(
-                    MainState.DepartmentState(
-                        departmentName = department.departmentName,
-                        showUserDepartmentBottomSheet =
-                            (college.collegeId == -1 || department.departmentId == -1)
-                    )
-                )
-            }.onFailure { e ->
-                Timber.e("getUserDepartment failed: ${e.message}")
+            val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                return@launch
             }
+
+            setUserCollegeDepartmentUseCase(college, department)
+
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = department.departmentName,
+                    showUserDepartmentBottomSheet =
+                        (college.collegeId == -1 || department.departmentId == -1)
+                )
+            )
         }
     }
 }
@@ -142,6 +128,7 @@ class MainViewModel @Inject constructor(
 
 sealed class MainState {
     object NicknameNull : MainState()
+    data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
         val departmentName: String = "",

@@ -13,10 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,7 +31,7 @@ class UserInfoViewModel @Inject constructor(
         MutableStateFlow(UserNameChangeState())
     val uiState: StateFlow<UserNameChangeState> = _uiState.asStateFlow()
 
-    init{
+    init {
         loadUserInfo()
         loadCollegeList()
         loadDepartmentList(_uiState.value.selectedCollege.collegeId)
@@ -60,33 +56,31 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun checkNickname(inputNickname: String) {
-        viewModelScope.launch {
-            validateUserNameUseCase(inputNickname).onStart {
-                _uiState.update { it.copy(loading = true, nickname = inputNickname) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "닉네임 중복 확인에 실패했습니다.") }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                if (result.result == true) {
-                    _uiState.update {
-                        it.copy(
-                            isEnableName = true,
-                            toastMessage = "사용가능한 닉네임 입니다.",
-                            isNicknameChecked = true,
-                        )
-                    }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            isEnableName = false,
-                            toastMessage = "이미 사용 중인 닉네임 입니다.",
-                        )
-                    }
-                }
+    fun checkNickname(inputNickname: String) = viewModelScope.launch {
+        _uiState.update { it.copy(loading = true, nickname = inputNickname) }
+
+        val valid = validateUserNameUseCase(inputNickname)
+
+        if (!valid) {
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    isEnableName = false,
+                    toastMessage = "이미 사용 중인 닉네임 입니다.",
+                )
             }
+            return@launch
+        }
+
+        _uiState.update {
+            it.copy(
+                loading = false,
+                error = false,
+                isEnableName = true,
+                toastMessage = "사용가능한 닉네임 입니다.",
+                isNicknameChecked = true,
+            )
         }
     }
 
@@ -95,17 +89,9 @@ class UserInfoViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true) }
-            try {
-                setUserNicknameUseCase(nickname)
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        isDone = true,
-                        toastMessage = "닉네임 변경에 성공했습니다."
-                    )
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "닉네임 변경 실패")
+
+            val success = setUserNicknameUseCase(nickname)
+            if (!success) {
                 _uiState.update {
                     it.copy(
                         loading = false,
@@ -113,27 +99,35 @@ class UserInfoViewModel @Inject constructor(
                         toastMessage = "닉네임 변경에 실패했습니다."
                     )
                 }
+                return@launch
+            }
+
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    isDone = true,
+                    toastMessage = "닉네임 변경에 성공했습니다."
+                )
             }
         }
     }
 
-    fun updateUserDepartment(){
+    fun updateUserDepartment() {
         viewModelScope.launch {
-            runCatching {
+            val success =
                 userRepository.setUserDepartment(_uiState.value.selectedDepartment.departmentId)
-            }.onSuccess {
-                Timber.d("학과 정보 업데이트 성공")
-                _uiState.update{ it.copy(success = true) }
 
-                val department = _uiState.value.selectedDepartment
-                val college = _uiState.value.selectedCollege
-
-                setUserCollegeDepartmentUseCase(college, department)
-
-            }.onFailure { e ->
-                Timber.e(e, "학과 정보 업데이트 실패")
+            if (!success) {
                 _uiState.update { it.copy(error = true, toastMessage = "학과 정보 업데이트에 실패했습니다.") }
+                return@launch
             }
+
+            _uiState.update { it.copy(success = true) }
+
+            val department = _uiState.value.selectedDepartment
+            val college = _uiState.value.selectedCollege
+
+            setUserCollegeDepartmentUseCase(college, department)
         }
     }
 
@@ -163,25 +157,15 @@ class UserInfoViewModel @Inject constructor(
 
     fun loadCollegeList() {
         viewModelScope.launch {
-            runCatching {
-                userRepository.getTotalColleges()
-            }.onSuccess { colleges ->
-                _uiState.update { it.copy(collegeList = colleges) }
-            }.onFailure { e ->
-                Timber.e(e, "단과대 불러오기 실패")
-            }
+            val colleges = userRepository.getTotalColleges()
+            _uiState.update { it.copy(collegeList = colleges) }
         }
     }
 
     fun loadDepartmentList(collegeId: Int) {
         viewModelScope.launch {
-            runCatching {
-                userRepository.getTotalDepartments(collegeId)
-            }.onSuccess { departments ->
-                _uiState.update { it.copy(departmentList = departments) }
-            }.onFailure { e ->
-                Timber.e(e, "학과 불러오기 실패")
-            }
+            val departments = userRepository.getTotalDepartments(collegeId)
+            _uiState.update { it.copy(departmentList = departments) }
         }
     }
 

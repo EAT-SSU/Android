@@ -10,13 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,30 +27,28 @@ class ModifyViewModel @Inject constructor(
         body: ModifyReviewRequest,
     ) {
         viewModelScope.launch {
-            modifyReviewUseCase(reviewId, body).onStart {
-                _uiState.update { it.copy(loading = true) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false, error = true) }
-            }.catch { e ->
+            _uiState.update { it.copy(loading = true) }
+
+            val success = modifyReviewUseCase(reviewId, body)
+            if (!success) {
                 _uiState.update {
                     it.copy(
                         loading = false,
-                        error = false,
-                        isDone = true,
+                        error = true,
+                        isDone = false,
                         toastMessage = App.appContext.getString(R.string.modify_not)
                     )
                 }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                Timber.d(result.toString())
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        error = false,
-                        isDone = true,
-                        toastMessage = App.appContext.getString(R.string.modify_done)
-                    )
-                }
+                return@launch
+            }
+
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    error = false,
+                    isDone = true,
+                    toastMessage = App.appContext.getString(R.string.modify_done)
+                )
             }
         }
     }

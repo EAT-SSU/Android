@@ -7,6 +7,6 @@ import javax.inject.Inject
 class ReissueTokenUseCase @Inject constructor(
     private val oauthRepository: OauthRepository,
 ) {
-    suspend operator fun invoke(refreshToken: String): Token =
+    suspend operator fun invoke(refreshToken: String): Token? =
         oauthRepository.reissueToken(refreshToken)
 }
