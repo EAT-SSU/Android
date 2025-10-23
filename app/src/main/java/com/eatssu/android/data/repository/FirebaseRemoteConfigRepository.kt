@@ -5,13 +5,16 @@ import com.eatssu.android.domain.model.RestaurantInfo
 import com.eatssu.common.enums.Restaurant
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONArray
 import timber.log.Timber
+import kotlin.coroutines.resume
 
 class FirebaseRemoteConfigRepository {
-    private val instance = FirebaseRemoteConfig.getInstance()
 
-    fun init() {
+    private val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+
+    init {
         /**
          * Firebase Remote Config 초기화 설정
          *
@@ -20,51 +23,34 @@ class FirebaseRemoteConfigRepository {
          * 변경 사유: 사용자가 앱에 머무는 시간이 되게 짦다.
          */
 
-
         val configSettings = FirebaseRemoteConfigSettings.Builder()
             .setMinimumFetchIntervalInSeconds(600)
             .build()
-        instance.setConfigSettingsAsync(configSettings)
-        instance.setDefaultsAsync(R.xml.firebase_remote_config)
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+        firebaseRemoteConfig.setDefaultsAsync(R.xml.firebase_remote_config)
+    }
 
-        instance.fetchAndActivate().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Timber.d("fetchAndActivate 성공")
-            } else {
-                // Handle error
-                Timber.d("fetchAndActivate error")
-                instance.setDefaultsAsync(R.xml.firebase_remote_config)
-//                throw RuntimeException("fetchAndActivate 실패")
-            }
+    suspend fun getVersionCode() = useFirebaseConfig {
+        getLong("android_version_code")
+    }
+
+    suspend fun getCafeteriaInfo() = useFirebaseConfig {
+        parsingJson(getString("cafeteria_information"))
+    }
+
+    private suspend fun <T> useFirebaseConfig(block: FirebaseRemoteConfig.() -> T): T {
+        fetchAndActivateSuspend()
+        // fetchAndActivate가 완료된 후에 새로운 값을 가져오도록 보장
+        return block(FirebaseRemoteConfig.getInstance())
+    }
+
+    private suspend fun fetchAndActivateSuspend() = suspendCancellableCoroutine { continuation ->
+        // fetchAndActivate는 minimumFetchIntervalInSeconds 보다 짧은 시간에 여러번 호출되어도
+        // 실제로는 minimumFetchIntervalInSeconds 이후에만 fetch가 수행된다.
+
+        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+            continuation.resume(Unit)
         }
-    }
-
-//    fun getAndroidMessage(): AndroidMessage {
-//
-//        // Gson을 사용하여 JSON 문자열을 DTO로 파싱
-//        val serverStatus: AndroidMessage = Gson().fromJson(instance.getString("android_message"), AndroidMessage::class.java)
-//
-//        // 파싱된 결과 확인
-//        println("Dialog: ${serverStatus.dialog}")
-//        println("Message: ${serverStatus.message}")
-//
-//        return serverStatus
-//    }
-
-//    fun getForceUpdate(): Boolean {
-//        return instance.getBoolean("force_update")
-//    }
-//
-//    fun getAppVersion(): String {
-//        return instance.getString("app_version")
-//    }
-
-    fun getVersionCode(): Long {
-        return instance.getLong("android_version_code")
-    }
-
-    fun getCafeteriaInfo(): ArrayList<RestaurantInfo> {
-        return parsingJson(instance.getString("cafeteria_information"))
     }
 
     private fun parsingJson(json: String): ArrayList<RestaurantInfo> {
@@ -75,7 +61,8 @@ class FirebaseRemoteConfigRepository {
             val jsonObject = jsonArray.getJSONObject(index)
 
             val enumString = jsonObject.optString("enum", "")
-            val enumValue = enumValues<Restaurant>().find { it.name == enumString } ?: Restaurant.HAKSIK
+            val enumValue =
+                enumValues<Restaurant>().find { it.name == enumString } ?: Restaurant.HAKSIK
             val name = jsonObject.optString("name", "")
             val location = jsonObject.optString("location", "")
             val photoUrl = jsonObject.optString("image", "")

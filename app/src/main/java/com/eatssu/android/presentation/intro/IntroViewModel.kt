@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
+import com.eatssu.android.domain.usecase.version.CheckForceUpdateRequiredUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,10 +15,12 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
+    private val checkForceUpdateRequiredUseCase: CheckForceUpdateRequiredUseCase,
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
@@ -30,7 +33,26 @@ class IntroViewModel @Inject constructor(
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
-        autoLogin()
+        checkForceUpdate()
+    }
+
+    private fun checkForceUpdate() {
+        viewModelScope.launch {
+            _uiState.value = UiState.Loading
+
+            // Firebase에서 강제 업데이트 필요 여부 확인
+            val isUpdateRequired = checkForceUpdateRequiredUseCase()
+
+            if (isUpdateRequired) {
+                Timber.d("강제 업데이트 필요")
+                _uiState.value = UiState.Success(IntroState.ForceUpdateRequired)
+                return@launch
+            }
+
+            // 업데이트가 필요 없으면 자동 로그인 진행
+            Timber.d("업데이트 필요 없음, 자동 로그인 진행")
+            autoLogin()
+        }
     }
 
     private fun autoLogin() {
@@ -59,11 +81,11 @@ class IntroViewModel @Inject constructor(
 
             // 토큰이 있고 유효함
             _uiState.value = UiState.Success(IntroState.ValidToken)
-
         }
     }
 }
 
 sealed class IntroState {
     object ValidToken : IntroState()
+    object ForceUpdateRequired : IntroState()
 }

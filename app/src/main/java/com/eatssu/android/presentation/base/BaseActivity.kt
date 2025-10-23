@@ -15,15 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
-import com.eatssu.android.presentation.common.VersionViewModel
-import com.eatssu.android.presentation.common.VersionViewModelFactory
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.common.EventLogger
@@ -44,9 +39,6 @@ abstract class BaseActivity<B : ViewBinding>(
     protected lateinit var toolbar: Toolbar
     protected lateinit var toolbarTitle: TextView
     private lateinit var backBtn: MaterialCardView
-
-    private lateinit var versionViewModel: VersionViewModel
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
     private val networkCheck: NetworkConnection by lazy {
         NetworkConnection(this)
@@ -71,16 +63,6 @@ abstract class BaseActivity<B : ViewBinding>(
         }
 
         networkCheck.register() // 네트워크 객체 등록
-
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        versionViewModel = ViewModelProvider(
-            this,
-            VersionViewModelFactory(firebaseRemoteConfigRepository)
-        )[VersionViewModel::class.java]
-
-        if (versionViewModel.checkForceUpdate()) {
-            showForceUpdateDialog()
-        }
 
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
 
@@ -176,11 +158,6 @@ abstract class BaseActivity<B : ViewBinding>(
             }
         }
         return super.dispatchTouchEvent(ev)
-    }
-
-    private fun showForceUpdateDialog() {
-        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
     }
 
     override fun onResume() {

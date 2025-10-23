@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.info
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.model.RestaurantInfo
 import com.eatssu.common.enums.Restaurant
@@ -8,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,10 +24,12 @@ class InfoViewModel @Inject constructor(
     private val restaurantInfoMap: MutableMap<Restaurant, RestaurantInfo> = mutableMapOf()
 
     init {
-        _infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
-        Timber.d(_infoList.value.toString())
-        _infoList.value.forEach { restaurantInfo ->
-            restaurantInfoMap[restaurantInfo.enum] = restaurantInfo
+        viewModelScope.launch {
+            _infoList.value = firebaseRemoteConfigRepository.getCafeteriaInfo()
+            Timber.d(_infoList.value.toString())
+            _infoList.value.forEach { restaurantInfo ->
+                restaurantInfoMap[restaurantInfo.enum] = restaurantInfo
+            }
         }
     }
 

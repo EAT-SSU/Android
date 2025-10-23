@@ -9,6 +9,7 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
@@ -42,8 +43,19 @@ class IntroActivity : AppCompatActivity() {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
                     is UiState.Success -> {
-                        startActivity<MainActivity>()
-                        finish()
+                        when (state.data) {
+                            is IntroState.ForceUpdateRequired -> {
+                                // 강제 업데이트 다이얼로그로 이동
+                                startActivity<ForceUpdateDialogActivity>()
+                                finish()
+                            }
+
+                            is IntroState.ValidToken -> {
+                                // 메인 액티비티로 이동
+                                startActivity<MainActivity>()
+                                finish()
+                            }
+                        }
                     }
 
                     is UiState.Error -> {
