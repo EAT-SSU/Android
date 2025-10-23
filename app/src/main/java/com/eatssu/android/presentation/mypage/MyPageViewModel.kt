@@ -10,7 +10,6 @@ import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,8 +20,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,21 +62,15 @@ class MyPageViewModel @Inject constructor(
 
     fun fetchMyInfo() {
         viewModelScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) { getUserNickNameUseCase() }
-            }.onSuccess { nickname ->
-                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
-                    _state.update { it.copy(nickname = null) }
-                    _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
-                } else {
-                    _state.update { it.copy(nickname = nickname) }
-                }
-            }.onFailure { e ->
-                // 에러 화면을 꼭 별도로 보여주고 싶다면 uiState를 에러로 전환하는 방식 선택
-                // 여기서는 '상태 유지 + 토스트'만 처리
-                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
-                Timber.e(e)
+            val nickname = getUserNickNameUseCase()
+
+            if (nickname.isBlank() || nickname.startsWith("user-")) {
+                _state.update { it.copy(nickname = null) }
+                _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
+                return@launch
             }
+
+            _state.update { it.copy(nickname = nickname) }
         }
     }
 

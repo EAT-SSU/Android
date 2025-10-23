@@ -2,15 +2,17 @@ package com.eatssu.android.data.repository
 
 import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
 import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetReviewListResponse
 import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.data.dto.response.toReviewList
+import com.eatssu.android.data.model.isSuccess
+import com.eatssu.android.data.model.map
+import com.eatssu.android.data.model.orEmptyList
+import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.ReviewRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -23,46 +25,37 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
     override suspend fun writeReview(
         menuId: Long,
         body: WriteReviewRequest,
-    ): Flow<BaseResponse<Void>> =
-        flow {
-            emit(reviewService.writeReview(menuId, body))
-        }
+    ): Boolean =
+        reviewService.writeReview(menuId, body).isSuccess()
 
-    override suspend fun deleteReview(reviewId: Long): Flow<BaseResponse<Void>> =
-        flow {
-            emit(reviewService.deleteReview(reviewId))
-        }
+
+    override suspend fun deleteReview(reviewId: Long): Boolean =
+        reviewService.deleteReview(reviewId).isSuccess()
 
     override suspend fun modifyReview(
         reviewId: Long,
         body: ModifyReviewRequest,
-    ): Flow<BaseResponse<Void>> =
-        flow {
-            emit(reviewService.modifyReview(reviewId, body))
-        }
+    ): Boolean =
+        reviewService.modifyReview(reviewId, body).isSuccess()
 
     override suspend fun getReviewList(
         menuType: String,
         mealId: Long?,
         menuId: Long?,
-    ): Flow<BaseResponse<GetReviewListResponse>> = flow {
-        emit(reviewService.getReviewList(menuType, mealId, menuId))
-    }
+    ): List<Review> =
+        reviewService.getReviewList(menuType, mealId, menuId).map { it.toReviewList() }
+            .orEmptyList()
 
-    override suspend fun getMenuReviewInfo(menuId: Long): Flow<BaseResponse<GetMenuReviewInfoResponse>> =
-        flow {
-            emit(reviewService.getMenuReviewInfo(menuId))
-        }
+    override suspend fun getMenuReviewInfo(menuId: Long): GetMenuReviewInfoResponse? =
+        reviewService.getMenuReviewInfo(menuId).orNull()
 
-    override suspend fun getMealReviewInfo(mealId: Long): Flow<BaseResponse<GetMealReviewInfoResponse>> =
-        flow {
-            emit(reviewService.getMealReviewInfo(mealId))
-        }
-    override suspend fun getImageString(file: File): Flow<BaseResponse<ImageResponse>> = flow {
+    override suspend fun getMealReviewInfo(mealId: Long): GetMealReviewInfoResponse? =
+        reviewService.getMealReviewInfo(mealId).orNull()
+
+    override suspend fun getImageString(file: File): ImageResponse? {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         val multipart = MultipartBody.Part.createFormData("image", file.name, requestFile)
-        val response = reviewService.uploadImage(multipart)
-        emit(response)
-    }
 
+        return reviewService.uploadImage(multipart).orNull()
+    }
 }

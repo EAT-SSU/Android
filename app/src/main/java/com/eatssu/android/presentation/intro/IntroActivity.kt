@@ -10,6 +10,7 @@ import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
@@ -32,6 +33,11 @@ class IntroActivity : AppCompatActivity() {
         setContentView(binding.root)
         log()
 
+        observeState()
+        observeEvents()
+    }
+
+    private fun observeState() {
         lifecycleScope.launch {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
@@ -49,16 +55,21 @@ class IntroActivity : AppCompatActivity() {
                     else -> Unit
                 }
             }
+        }
+    }
 
+    private fun observeEvents() {
+        lifecycleScope.launch {
             introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
                     is UiEvent.ShowToast -> {
-                        // 에러 메시지 표시
                         showToast(event.message)
                     }
                 }
             }
         }
+
+        observeNetworkError()
     }
 
     private fun log() {
