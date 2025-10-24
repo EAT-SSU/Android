@@ -21,13 +21,13 @@ class ApiResultCallAdapterFactory : CallAdapter.Factory() {
 
         if (getRawType(returnType) != Call::class.java) return null
         check(returnType is ParameterizedType) {
-            "Return 타입은 ApiResult<T> 형태여야 합니다."
+            "Return 타입은 ApiResult<T> 형태여야 합니다: $returnType"
         }
 
         val responseType = getParameterUpperBound(0, returnType)
         if (getRawType(responseType) != ApiResult::class.java) return null
         check(responseType is ParameterizedType) {
-            "Return 타입은 ApiResult<T> 형태여야 합니다."
+            "Return 타입은 ApiResult<T> 형태여야 합니다: $returnType"
         }
 
         val successType = getParameterUpperBound(0, responseType)
