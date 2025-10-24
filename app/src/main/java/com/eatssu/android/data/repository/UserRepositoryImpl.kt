@@ -4,6 +4,7 @@ import com.eatssu.android.data.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.dto.response.toDomain
 import com.eatssu.android.data.dto.response.toReviewList
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orElse
@@ -19,8 +20,12 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(private val userService: UserService) :
     UserRepository {
 
-    override suspend fun updateUserName(body: ChangeNicknameRequest): Boolean =
-        userService.changeNickname(body).isSuccess()
+    override suspend fun updateUserName(body: ChangeNicknameRequest): Result<Unit> =
+        when (val result = userService.changeNickname(body)) {
+            is ApiResult.Success -> Result.success(Unit)
+            is ApiResult.Failure -> Result.failure(Exception(result.message ?: "닉네임 변경에 실패했어요."))
+            else -> Result.failure(Exception("닉네임 변경에 실패했어요."))
+        }
 
     override suspend fun checkUserNameValidation(nickname: String): Boolean =
         userService.checkNickname(nickname).orElse(false)

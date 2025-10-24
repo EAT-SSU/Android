@@ -184,9 +184,10 @@ class UserInfoViewModel @Inject constructor(
 
             // 닉네임 변경이 있는 경우
             if (data.isNicknameChanged) {
-                val success = setUserNicknameUseCase(data.nickname)
-                if (!success) {
-                    _uiEvent.emit(UiEvent.ShowToast("닉네임 변경에 실패했습니다."))
+                val result = setUserNicknameUseCase(data.nickname)
+                result.onFailure { error ->
+                    val errorMessage = error.message ?: "닉네임 변경에 실패했어요."
+                    _uiEvent.emit(UiEvent.ShowToast(errorMessage))
                     _uiState.value = UiState.Error
                     return@launch
                 }
