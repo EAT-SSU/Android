@@ -43,6 +43,40 @@ class UserInfoViewModel @Inject constructor(
         initializeUserInfo()
     }
 
+    private fun initializeUserInfo() {
+        viewModelScope.launch {
+            _uiState.update { UiState.Loading }
+
+            val userInfo = getUserCollegeDepartmentUseCase()
+
+            // 단과대 목록과 학과 목록을 먼저 모두 가져옴
+            val colleges = userRepository.getTotalColleges()
+            val departments =
+                if (userInfo.userCollege.collegeId != -1)
+                    userRepository.getTotalDepartments(userInfo.userCollege.collegeId)
+                else
+                    emptyList()
+
+            // 모든 데이터를 한 번에 업데이트
+            _uiState.update {
+                UiState.Success(
+                    UserInfoData(
+                        nickname = userInfo.nickname,
+                        originalNickname = userInfo.nickname,
+                        selectedCollege = userInfo.userCollege,
+                        originalCollege = userInfo.userCollege,
+                        selectedDepartment = userInfo.userDepartment,
+                        originalDepartment = userInfo.userDepartment,
+                        collegeList = colleges,
+                        departmentList = departments
+                    )
+                )
+            }
+
+            Timber.d("초기 유저 정보: $userInfo, 단과대: ${colleges.size}개, 학과: ${departments.size}개")
+        }
+    }
+
     fun onNicknameChanged(nickname: String) {
         val currentState = _uiState.value as? UiState.Success ?: return
         val trimmedNickname = nickname.trim()
@@ -126,7 +160,7 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun loadDepartmentList(collegeId: Int) {
+    fun loadDepartmentList(collegeId: Int) = {
         viewModelScope.launch {
             val currentState = _uiState.value as? UiState.Success ?: return@launch
 
@@ -192,40 +226,6 @@ class UserInfoViewModel @Inject constructor(
             }
         }
     }
-
-    private fun initializeUserInfo() {
-        viewModelScope.launch {
-            _uiState.update { UiState.Loading }
-
-            val userInfo = getUserCollegeDepartmentUseCase()
-
-            // 단과대 목록과 학과 목록을 먼저 모두 가져옴
-            val colleges = userRepository.getTotalColleges()
-            val departments =
-                if (userInfo.userCollege.collegeId != -1)
-                    userRepository.getTotalDepartments(userInfo.userCollege.collegeId)
-                else
-                    emptyList()
-
-            // 모든 데이터를 한 번에 업데이트
-            _uiState.update {
-                UiState.Success(
-                    UserInfoData(
-                        nickname = userInfo.nickname,
-                        originalNickname = userInfo.nickname,
-                        selectedCollege = userInfo.userCollege,
-                        originalCollege = userInfo.userCollege,
-                        selectedDepartment = userInfo.userDepartment,
-                        originalDepartment = userInfo.userDepartment,
-                        collegeList = colleges,
-                        departmentList = departments
-                    )
-                )
-            }
-
-            Timber.d("초기 유저 정보: $userInfo, 단과대: ${colleges.size}개, 학과: ${departments.size}개")
-        }
-    }
 }
 
 // 화면에 표시할 실제 데이터
@@ -277,3 +277,4 @@ data class UserInfoData(
             }
         }
 }
+
