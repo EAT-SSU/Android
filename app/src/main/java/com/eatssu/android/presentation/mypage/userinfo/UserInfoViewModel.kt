@@ -7,6 +7,7 @@ import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.LocalRegexValidateUserNameUseCase
+import com.eatssu.android.domain.usecase.user.NicknameValidationResult
 import com.eatssu.android.domain.usecase.user.RemoteValidateUserNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
@@ -52,8 +53,8 @@ class UserInfoViewModel @Inject constructor(
         val localValidationResult = localRegexValidateUserNameUseCase(trimmedNickname)
 
         val errorMessage = when (localValidationResult) {
-            is LocalRegexValidateUserNameUseCase.ValidationResult.Invalid -> localValidationResult.message
-            is LocalRegexValidateUserNameUseCase.ValidationResult.Valid -> null
+            is NicknameValidationResult.Invalid -> localValidationResult.message
+            is NicknameValidationResult.Valid -> null
         }
 
         val isNicknameChanged = trimmedNickname != currentState.data.originalNickname
@@ -64,7 +65,7 @@ class UserInfoViewModel @Inject constructor(
                     nickname = trimmedNickname,
                     isNicknameChanged = isNicknameChanged,
                     localValidationError = errorMessage,
-                    isRemoteChecked = false // 닉네임이 바뀌면 중복 확인 초기화
+                    isRemoteChecked = false
                 )
             )
         }
@@ -84,7 +85,7 @@ class UserInfoViewModel @Inject constructor(
                 UiState.Success(
                     currentState.data.copy(
                         isRemoteChecked = true,
-                        isRemoteAvailable = isAvailable
+                        isRemoteAvailable = isAvailable,
                     )
                 )
             }
@@ -111,8 +112,6 @@ class UserInfoViewModel @Inject constructor(
                     selectedCollege = college,
                     isCollegeChanged = isCollegeChanged,
                     // 단과대가 변경되면 학과 초기화
-                    selectedDepartment = Department(departmentId = -1, departmentName = "학과"),
-                    departmentList = emptyList()
                 )
             )
         }
@@ -129,7 +128,7 @@ class UserInfoViewModel @Inject constructor(
             UiState.Success(
                 currentState.data.copy(
                     selectedDepartment = department,
-                    isDepartmentChanged = isDepartmentChanged
+                    isDepartmentChanged = isDepartmentChanged,
                 )
             )
         }
@@ -204,6 +203,13 @@ class UserInfoViewModel @Inject constructor(
             }
 
             _uiEvent.emit(UiEvent.ShowToast(message))
+            _uiState.update {
+                UiState.Success(
+                    data.copy(
+                        isDone = true
+                    )
+                )
+            }
         }
     }
 
@@ -220,7 +226,7 @@ class UserInfoViewModel @Inject constructor(
                         selectedCollege = userInfo.userCollege,
                         originalCollege = userInfo.userCollege,
                         selectedDepartment = userInfo.userDepartment,
-                        originalDepartment = userInfo.userDepartment
+                        originalDepartment = userInfo.userDepartment,
                     )
                 )
             }
@@ -257,11 +263,14 @@ data class UserInfoData(
     // 목록
     val collegeList: List<College> = emptyList(),
     val departmentList: List<Department> = emptyList(),
+
+    val isDone: Boolean = false,
 ) {
     // 중복 확인 버튼 활성화 조건
     val canCheckDuplication: Boolean
         get() = localValidationError == null &&
-                isNicknameChanged
+                isNicknameChanged &&
+                !isRemoteChecked // 이미 중복 확인 완료했으면 비활성화
 
     // 저장 버튼 활성화 조건
     val canSave: Boolean
