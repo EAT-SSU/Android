@@ -99,7 +99,6 @@ class UserInfoActivity :
             viewModel.uiEvent.collectLatest { event ->
                 when (event) {
                     is UiEvent.ShowToast -> showToast(event.message)
-//                    is UiEvent.NavigateBack -> finish()
                 }
             }
         }
@@ -109,6 +108,7 @@ class UserInfoActivity :
         renderNicknameState(data)
         renderCollegeDepartmentState(data)
         renderButtonsState(data)
+        checkDoneAndFinish(data)
     }
 
     private fun renderNicknameState(data: UserInfoData) {
@@ -294,4 +294,12 @@ class UserInfoActivity :
         // 현재 팝업 윈도우를 저장
         currentPopup = popupWindow
     }
+
+
+    private fun checkDoneAndFinish(data: UserInfoData) {
+        if (data.isDone) {
+            finish()
+        }
+    }
+
 }
