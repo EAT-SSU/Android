@@ -160,7 +160,7 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun loadDepartmentList(collegeId: Int) = {
+    fun loadDepartmentList(collegeId: Int) {
         viewModelScope.launch {
             val currentState = _uiState.value as? UiState.Success ?: return@launch
 
