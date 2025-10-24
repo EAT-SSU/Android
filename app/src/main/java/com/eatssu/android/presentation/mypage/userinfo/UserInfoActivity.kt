@@ -158,12 +158,7 @@ class UserInfoActivity :
         val state = viewModel.uiState.value as? UiState.Success ?: return
         val data = state.data
 
-        // 닉네임 변경 시 중복 확인 필요
-        if (data.isNicknameChanged && !data.isDuplicationChecked) {
-            showToast("닉네임 중복 확인을 완료해 주세요.")
-            return
-        }
-
+        // 단과대 목록이 비어있으면 로드
         if (data.collegeList.isEmpty()) {
             viewModel.loadCollegeList()
             return
@@ -186,12 +181,6 @@ class UserInfoActivity :
     private fun handleDepartmentClick() {
         val state = viewModel.uiState.value as? UiState.Success ?: return
         val data = state.data
-
-        // 닉네임 변경 시 중복 확인 필요
-        if (data.isNicknameChanged && !data.isDuplicationChecked) {
-            showToast("닉네임 중복 확인을 완료해 주세요.")
-            return
-        }
 
         // 단과대를 먼저 선택하도록 유도
         if (data.selectedCollege.collegeId == -1) {
