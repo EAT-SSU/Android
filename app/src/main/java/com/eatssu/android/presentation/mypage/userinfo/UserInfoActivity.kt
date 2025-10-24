@@ -118,37 +118,30 @@ class UserInfoActivity :
             binding.etChNickname.setSelection(data.nickname.length)
         }
 
-        // Local 검증 에러가 있는 경우
-        if (data.localValidationError != null) {
-            binding.tvNicknameStatus.text = data.localValidationError
+        // 에러가 있는 경우 (규칙 미통과 or 중복)
+        if (data.nicknameValidationError != null) {
+            binding.tvNicknameStatus.text = data.nicknameValidationError
             binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
             binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+            return
         }
 
-        // Remote 중복 확인 실패한 경우
-        else if (data.isRemoteChecked && !data.isRemoteAvailable) {
-            binding.tvNicknameStatus.text = getString(R.string.set_nickname_unable)
-            binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
-            binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-        }
-
-        // Remote 중복 확인 성공한 경우
-        else if (data.isRemoteChecked) {
+        // 중복 확인 성공한 경우
+        if (data.isDuplicationChecked) {
             binding.tvNicknameStatus.text = getString(R.string.set_nickname_able)
             binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
             binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
+            return
         }
 
         // 기본 상태
-        else {
-            binding.tvNicknameStatus.text = getString(
-                R.string.set_nickname_length,
-                MIN_NICKNAME_LENGTH,
-                MAX_NICKNAME_LENGTH
-            )
-            binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
-            binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
-        }
+        binding.tvNicknameStatus.text = getString(
+            R.string.set_nickname_length,
+            MIN_NICKNAME_LENGTH,
+            MAX_NICKNAME_LENGTH
+        )
+        binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
     }
 
     private fun renderCollegeDepartmentState(data: UserInfoData) {
@@ -166,7 +159,7 @@ class UserInfoActivity :
         val data = state.data
 
         // 닉네임 변경 시 중복 확인 필요
-        if (data.isNicknameChanged && !(data.isRemoteChecked && data.isRemoteAvailable)) {
+        if (data.isNicknameChanged && !data.isDuplicationChecked) {
             showToast("닉네임 중복 확인을 완료해 주세요.")
             return
         }
@@ -195,7 +188,7 @@ class UserInfoActivity :
         val data = state.data
 
         // 닉네임 변경 시 중복 확인 필요
-        if (data.isNicknameChanged && !(data.isRemoteChecked && data.isRemoteAvailable)) {
+        if (data.isNicknameChanged && !data.isDuplicationChecked) {
             showToast("닉네임 중복 확인을 완료해 주세요.")
             return
         }
