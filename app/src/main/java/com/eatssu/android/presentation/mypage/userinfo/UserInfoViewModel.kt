@@ -49,11 +49,11 @@ class UserInfoViewModel @Inject constructor(
         val currentState = _uiState.value as? UiState.Success ?: return
         val trimmedNickname = nickname.trim()
 
-        // Local Regex 검증
-        val localValidationResult = validateNicknameUseCase(trimmedNickname)
+        // Local 유효성 검증 (Regex)
+        val validationResult = validateNicknameUseCase(trimmedNickname)
 
-        val errorMessage = when (localValidationResult) {
-            is NicknameValidationResult.Invalid -> localValidationResult.message
+        val errorMessage = when (validationResult) {
+            is NicknameValidationResult.Invalid -> validationResult.message
             is NicknameValidationResult.Valid -> null
         }
 
@@ -64,8 +64,8 @@ class UserInfoViewModel @Inject constructor(
                 currentState.data.copy(
                     nickname = trimmedNickname,
                     isNicknameChanged = isNicknameChanged,
-                    localValidationError = errorMessage,
-                    isRemoteChecked = false
+                    nicknameValidationError = errorMessage,
+                    isDuplicationChecked = false // 닉네임 변경 시 중복 확인 초기화
                 )
             )
         }
@@ -78,27 +78,21 @@ class UserInfoViewModel @Inject constructor(
 
             _uiState.update { UiState.Loading }
 
-            // 닉네임 중복 확인
-            val isAvailable = checkDuplicateNicknameUseCase(currentNickname)
+            // 중복 확인
+            val isDuplicate = checkDuplicateNicknameUseCase(currentNickname)
+
+            val errorMessage = if (isDuplicate) "이미 사용 중인 닉네임입니다." else null
 
             _uiState.update {
                 UiState.Success(
                     currentState.data.copy(
-                        isRemoteChecked = true,
-                        isRemoteAvailable = isAvailable,
+                        isDuplicationChecked = true,
+                        nicknameValidationError = errorMessage
                     )
                 )
             }
 
-            // Toast 이벤트 발송
-            val message = if (isAvailable) {
-                "사용 가능한 닉네임입니다."
-            } else {
-                "이미 사용 중인 닉네임입니다."
-            }
-            _uiEvent.emit(UiEvent.ShowToast(message))
-
-            Timber.d("닉네임 중복 확인: $currentNickname, 사용 가능: $isAvailable")
+            Timber.d("닉네임 중복 확인: $currentNickname, 중복: $isDuplicate")
         }
     }
 
@@ -247,9 +241,8 @@ data class UserInfoData(
     val nickname: String = "",
     val originalNickname: String = "",
     val isNicknameChanged: Boolean = false,
-    val localValidationError: String? = null, // Local Regex 검증 에러
-    val isRemoteChecked: Boolean = false, // Remote 중복 확인 완료 여부
-    val isRemoteAvailable: Boolean = false, // Remote 중복 확인 결과
+    val nicknameValidationError: String? = null, // 닉네임 검증 에러 텍스트
+    val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
     // 단과대/학과
     val selectedCollege: College = College(collegeId = -1, collegeName = "단과대"),
@@ -268,12 +261,12 @@ data class UserInfoData(
 ) {
     // 중복 확인 버튼 활성화 조건
     val canCheckDuplication: Boolean
-        get() = localValidationError == null &&
-                isNicknameChanged &&
-                !isRemoteChecked // 이미 중복 확인 완료했으면 비활성화
+        get() = nicknameValidationError == null && // 유효성 검증 통과
+                isNicknameChanged && // 닉네임 변경됨
+                !isDuplicationChecked // 중복 확인 아직 안 함
 
     // 저장 버튼 활성화 조건
     val canSave: Boolean
-        get() = (isNicknameChanged && isRemoteChecked && isRemoteAvailable) ||
+        get() = (isNicknameChanged && isDuplicationChecked && nicknameValidationError == null) ||
                 (!isNicknameChanged && (isCollegeChanged || isDepartmentChanged))
 }
