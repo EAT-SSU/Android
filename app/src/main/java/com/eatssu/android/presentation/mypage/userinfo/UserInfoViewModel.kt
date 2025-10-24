@@ -6,9 +6,10 @@ import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.LocalRegexValidateUserNameUseCase
+import com.eatssu.android.domain.usecase.user.RemoteValidateUserNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
-import com.eatssu.android.domain.usecase.user.ValidateUserNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,8 @@ class UserInfoViewModel @Inject constructor(
     private val setUserNicknameUseCase: SetUserNicknameUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
-    private val validateUserNameUseCase: ValidateUserNameUseCase,
+    private val remoteValidateUserNameUseCase: RemoteValidateUserNameUseCase,
+    private val localRegexValidateUserNameUseCase: LocalRegexValidateUserNameUseCase,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
@@ -56,10 +58,10 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    fun checkNickname(inputNickname: String) = viewModelScope.launch {
+    fun checkNicknameRemote(inputNickname: String) = viewModelScope.launch {
         _uiState.update { it.copy(loading = true, nickname = inputNickname) }
 
-        val valid = validateUserNameUseCase(inputNickname)
+        val valid = remoteValidateUserNameUseCase(inputNickname)
 
         if (!valid) {
             _uiState.update {
@@ -131,6 +133,26 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
+    fun validateAndUpdateNickname(nickname: String) {
+        val validationResult = localRegexValidateUserNameUseCase(nickname)
+        Timber.d("$nickname 닉네임 검증 결과: $validationResult")
+
+        val errorMessage = when (validationResult) {
+            is LocalRegexValidateUserNameUseCase.ValidationResult.Invalid -> validationResult.message
+            is LocalRegexValidateUserNameUseCase.ValidationResult.Valid -> null
+        }
+
+        _uiState.update {
+            val changed = nickname != it.originalNickname
+            it.copy(
+                nickname = nickname,
+                isNicknameChanged = changed,
+                nicknameValidationError = errorMessage,
+                isNicknameChecked = false
+            )
+        }
+    }
+
     fun updateNickname(nickname: String) {
         _uiState.update {
             val changed = nickname != it.originalNickname
@@ -196,6 +218,8 @@ data class UserNameChangeState(
     var isNicknameChanged: Boolean = false,
     var isCollegeChanged: Boolean = false,
     var isDepartmentChanged: Boolean = false,
+
+    var nicknameValidationError: String? = null,
 
     var collegeList: List<College> = emptyList(),
     var departmentList: List<Department> = emptyList(),

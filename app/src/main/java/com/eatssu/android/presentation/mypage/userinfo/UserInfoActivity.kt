@@ -62,34 +62,45 @@ class UserInfoActivity :
         )
 
         lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest { it ->
-                if (binding.etChNickname.text.toString() != it.nickname) {
-                    binding.etChNickname.setText(it.nickname)
+            userInfoViewModel.uiState.collectLatest { state ->
+                if (binding.etChNickname.text.toString() != state.nickname) {
+                    binding.etChNickname.setText(state.nickname)
                     binding.etChNickname.setSelection(binding.etChNickname.text.length) // 커서 끝으로 이동
                 }
-                binding.tvCollege.text = it.selectedCollege.collegeName
-                binding.tvDepartment.text = it.selectedDepartment.departmentName
+                binding.tvCollege.text = state.selectedCollege.collegeName
+                binding.tvDepartment.text = state.selectedDepartment.departmentName
+
+                // 닉네임 검증 결과에 따른 UI 업데이트
+                val validationError = state.nicknameValidationError
+                val isValid = validationError == null
+
+                binding.btnCheckNicknameDuplication.isEnabled =
+                    isValid && state.isNicknameChanged && !state.loading
+
+                if (!state.isNicknameChanged) {
+                    binding.btnCheckNicknameDuplication.isEnabled = false
+                }
+
+                if (validationError != null) {
+                    binding.tvNicknameStatus.text = validationError
+                    binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
+                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+                } else if (state.nickname.isNotEmpty()) {
+                    binding.tvNicknameStatus.text = getString(
+                        R.string.set_nickname_length,
+                        MIN_NICKNAME_LENGTH,
+                        MAX_NICKNAME_LENGTH
+                    )
+                    binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
+                }
             }
         }
 
         binding.etChNickname.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 inputNickname = binding.etChNickname.text.trim().toString()
-                val nicknameLength = inputNickname.length
-                val isValidLength = nicknameLength in MIN_NICKNAME_LENGTH..MAX_NICKNAME_LENGTH
-                val isNicknameChanged =
-                    inputNickname != userInfoViewModel.uiState.value.originalNickname
-
-                binding.btnCheckNicknameDuplication.isEnabled = isValidLength && isNicknameChanged
-                binding.btnComplete.isEnabled = false
-
-                if (!isValidLength && inputNickname.isNotEmpty()) {
-                    binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
-                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-                } else {
-                    binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
-                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
-                }
+                userInfoViewModel.validateAndUpdateNickname(inputNickname)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -116,7 +127,7 @@ class UserInfoActivity :
 
     private fun setOnCheckNicknameDuplicationClickListener() {
         binding.btnCheckNicknameDuplication.setOnClickListener {
-            userInfoViewModel.checkNickname(inputNickname)
+            userInfoViewModel.checkNicknameRemote(inputNickname)
 
             // 닉네임 중복 확인 후 UI 상태 업데이트 로직
             // TODO 이 부분은 ViewModel에서 처리하는 것이 더 좋음
