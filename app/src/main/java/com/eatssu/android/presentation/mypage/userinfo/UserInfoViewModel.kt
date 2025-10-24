@@ -261,23 +261,19 @@ data class UserInfoData(
     // 저장 버튼 활성화 조건
     val canSave: Boolean
         get() {
-            // 닉네임만 변경한 경우
-            val nicknameOnlyChanged = isNicknameChanged &&
-                    isDuplicationChecked &&
-                    nicknameValidationError == null &&
-                    !isCollegeChanged &&
-                    !isDepartmentChanged
+            val hasNicknameChange = isNicknameChanged
+            val isNicknameValid = isDuplicationChecked && nicknameValidationError == null
 
-            // 학과/단과대만 변경한 경우 (둘 다 선택되어야 함)
-            val departmentOnlyChanged = !isNicknameChanged &&
-                    (isCollegeChanged || isDepartmentChanged)
+            val hasDepartmentChange = isCollegeChanged || isDepartmentChanged
+            val isDepartmentSelected = selectedDepartment.departmentId != -1
 
-            // 닉네임 + 학과/단과대 모두 변경한 경우
-            val bothChanged = isNicknameChanged &&
-                    isDuplicationChecked &&
-                    nicknameValidationError == null &&
-                    (isCollegeChanged || isDepartmentChanged)
-
-            return nicknameOnlyChanged || departmentOnlyChanged || bothChanged
+            return when {
+                // 닉네임 변경: 닉네임 유효성 필수
+                hasNicknameChange -> isNicknameValid
+                // 학과/단과대 변경: 유효한 학과 선택 필수
+                hasDepartmentChange -> isDepartmentSelected
+                // 변경사항 없음
+                else -> false
+            }
         }
 }
