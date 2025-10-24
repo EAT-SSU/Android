@@ -16,7 +16,6 @@ import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,14 +34,13 @@ class UserInfoViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<UserInfoData>>(UiState.Init)
-    val uiState: StateFlow<UiState<UserInfoData>> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
     init {
-        loadUserInfo()
-        loadCollegeList()
+        initializeUserInfo()
     }
 
     fun onNicknameChanged(nickname: String) {
@@ -76,8 +74,6 @@ class UserInfoViewModel @Inject constructor(
             val currentState = _uiState.value as? UiState.Success ?: return@launch
             val currentNickname = currentState.data.nickname
 
-            _uiState.update { UiState.Loading }
-
             // 중복 확인
             val isDuplicate = checkDuplicateNicknameUseCase(currentNickname)
 
@@ -106,6 +102,8 @@ class UserInfoViewModel @Inject constructor(
                     selectedCollege = college,
                     isCollegeChanged = isCollegeChanged,
                     // 단과대가 변경되면 학과 초기화
+                    selectedDepartment = Department(-1, "학과"),
+                    departmentList = emptyList()
                 )
             )
         }
@@ -125,18 +123,6 @@ class UserInfoViewModel @Inject constructor(
                     isDepartmentChanged = isDepartmentChanged,
                 )
             )
-        }
-    }
-
-    fun loadCollegeList() {
-        viewModelScope.launch {
-            val currentState = _uiState.value as? UiState.Success ?: return@launch
-
-            val colleges = userRepository.getTotalColleges()
-            _uiState.update {
-                UiState.Success(currentState.data.copy(collegeList = colleges))
-            }
-            Timber.d("단과대 목록 로드: ${colleges.size}개")
         }
     }
 
@@ -207,11 +193,21 @@ class UserInfoViewModel @Inject constructor(
         }
     }
 
-    private fun loadUserInfo() {
+    private fun initializeUserInfo() {
         viewModelScope.launch {
             _uiState.update { UiState.Loading }
 
             val userInfo = getUserCollegeDepartmentUseCase()
+
+            // 단과대 목록과 학과 목록을 먼저 모두 가져옴
+            val colleges = userRepository.getTotalColleges()
+            val departments =
+                if (userInfo.userCollege.collegeId != -1)
+                    userRepository.getTotalDepartments(userInfo.userCollege.collegeId)
+                else
+                    emptyList()
+
+            // 모든 데이터를 한 번에 업데이트
             _uiState.update {
                 UiState.Success(
                     UserInfoData(
@@ -221,16 +217,13 @@ class UserInfoViewModel @Inject constructor(
                         originalCollege = userInfo.userCollege,
                         selectedDepartment = userInfo.userDepartment,
                         originalDepartment = userInfo.userDepartment,
+                        collegeList = colleges,
+                        departmentList = departments
                     )
                 )
             }
 
-            // 초기 로드 시 해당 단과대의 학과 리스트도 불러옴
-            if (userInfo.userCollege.collegeId != -1) {
-                loadDepartmentList(userInfo.userCollege.collegeId)
-            }
-
-            Timber.d("초기 유저 정보: $userInfo")
+            Timber.d("초기 유저 정보: $userInfo, 단과대: ${colleges.size}개, 학과: ${departments.size}개")
         }
     }
 }
@@ -245,12 +238,12 @@ data class UserInfoData(
     val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
     // 단과대/학과
-    val selectedCollege: College = College(collegeId = -1, collegeName = "단과대"),
-    val originalCollege: College = College(collegeId = -1, collegeName = "단과대"),
+    val selectedCollege: College = College(-1, "단과대"),
+    val originalCollege: College = College(-1, "단과대"),
     val isCollegeChanged: Boolean = false,
 
-    val selectedDepartment: Department = Department(departmentId = -1, departmentName = "학과"),
-    val originalDepartment: Department = Department(departmentId = -1, departmentName = "학과"),
+    val selectedDepartment: Department = Department(-1, "학과"),
+    val originalDepartment: Department = Department(-1, "학과"),
     val isDepartmentChanged: Boolean = false,
 
     // 목록
@@ -267,6 +260,24 @@ data class UserInfoData(
 
     // 저장 버튼 활성화 조건
     val canSave: Boolean
-        get() = (isNicknameChanged && isDuplicationChecked && nicknameValidationError == null) ||
-                (!isNicknameChanged && (isCollegeChanged || isDepartmentChanged))
+        get() {
+            // 닉네임만 변경한 경우
+            val nicknameOnlyChanged = isNicknameChanged &&
+                    isDuplicationChecked &&
+                    nicknameValidationError == null &&
+                    !isCollegeChanged &&
+                    !isDepartmentChanged
+
+            // 학과/단과대만 변경한 경우 (둘 다 선택되어야 함)
+            val departmentOnlyChanged = !isNicknameChanged &&
+                    (isCollegeChanged || isDepartmentChanged)
+
+            // 닉네임 + 학과/단과대 모두 변경한 경우
+            val bothChanged = isNicknameChanged &&
+                    isDuplicationChecked &&
+                    nicknameValidationError == null &&
+                    (isCollegeChanged || isDepartmentChanged)
+
+            return nicknameOnlyChanged || departmentOnlyChanged || bothChanged
+        }
 }
