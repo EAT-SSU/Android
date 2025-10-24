@@ -158,12 +158,6 @@ class UserInfoActivity :
         val state = viewModel.uiState.value as? UiState.Success ?: return
         val data = state.data
 
-        // 단과대 목록이 비어있으면 로드
-        if (data.collegeList.isEmpty()) {
-            viewModel.loadCollegeList()
-            return
-        }
-
         val collegeNames = data.collegeList.map { it.collegeName }
         showDropdownPopup(
             anchor = binding.tvCollege,
