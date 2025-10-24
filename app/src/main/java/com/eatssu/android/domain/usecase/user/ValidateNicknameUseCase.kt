@@ -2,7 +2,7 @@ package com.eatssu.android.domain.usecase.user
 
 import javax.inject.Inject
 
-class LocalRegexValidateUserNameUseCase @Inject constructor() {
+class ValidateNicknameUseCase @Inject constructor() {
 
     companion object {
         private const val MIN_NICKNAME_LENGTH = 2

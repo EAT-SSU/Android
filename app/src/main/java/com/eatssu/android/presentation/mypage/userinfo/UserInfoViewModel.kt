@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
+import com.eatssu.android.domain.usecase.user.CheckDuplicateNicknameUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
-import com.eatssu.android.domain.usecase.user.LocalRegexValidateUserNameUseCase
 import com.eatssu.android.domain.usecase.user.NicknameValidationResult
-import com.eatssu.android.domain.usecase.user.RemoteValidateUserNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
+import com.eatssu.android.domain.usecase.user.ValidateNicknameUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +29,8 @@ class UserInfoViewModel @Inject constructor(
     private val setUserNicknameUseCase: SetUserNicknameUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
-    private val remoteValidateUserNameUseCase: RemoteValidateUserNameUseCase,
-    private val localRegexValidateUserNameUseCase: LocalRegexValidateUserNameUseCase,
+    private val checkDuplicateNicknameUseCase: CheckDuplicateNicknameUseCase,
+    private val validateNicknameUseCase: ValidateNicknameUseCase,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
@@ -50,7 +50,7 @@ class UserInfoViewModel @Inject constructor(
         val trimmedNickname = nickname.trim()
 
         // Local Regex 검증
-        val localValidationResult = localRegexValidateUserNameUseCase(trimmedNickname)
+        val localValidationResult = validateNicknameUseCase(trimmedNickname)
 
         val errorMessage = when (localValidationResult) {
             is NicknameValidationResult.Invalid -> localValidationResult.message
@@ -78,8 +78,8 @@ class UserInfoViewModel @Inject constructor(
 
             _uiState.update { UiState.Loading }
 
-            // Remote 중복 검증
-            val isAvailable = remoteValidateUserNameUseCase(currentNickname)
+            // 닉네임 중복 확인
+            val isAvailable = checkDuplicateNicknameUseCase(currentNickname)
 
             _uiState.update {
                 UiState.Success(
