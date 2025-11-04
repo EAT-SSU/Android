@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
+import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
@@ -29,11 +30,6 @@ class UserInfoActivity :
         ActivityUserInfoBinding::inflate,
         ScreenId.MYPAGE_USERINFO
     ) {
-
-    companion object {
-        private const val MIN_NICKNAME_LENGTH = 2
-        private const val MAX_NICKNAME_LENGTH = 16
-    }
 
     private val viewModel: UserInfoViewModel by viewModels()
 
@@ -79,17 +75,15 @@ class UserInfoActivity :
     private fun observeUiState() {
         lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                when (state) {
-                    is UiState.Loading -> {
-                        // 로딩 상태 처리 (필요시 ProgressBar 표시)
-                    }
+                if (state !is UiState.Success) return@collectLatest
+                val data = state.data
 
-                    is UiState.Success -> {
-                        renderSuccessState(state.data)
-                    }
+                updateNicknameUI(data)
+                updateCollegeDepartmentUI(data)
+                updateButtonsState(data)
 
-                    else -> Unit
-                }
+                // 저장 완료 시 닫기
+                if (data.isDone) finish()
             }
         }
     }
@@ -104,69 +98,52 @@ class UserInfoActivity :
         }
     }
 
-    private fun renderSuccessState(data: UserInfoData) {
-        renderNicknameState(data)
-        renderCollegeDepartmentState(data)
-        renderButtonsState(data)
-        checkDoneAndFinish(data)
-    }
-
-    private fun renderNicknameState(data: UserInfoData) {
+    private fun updateNicknameUI(data: UserInfoData) {
         // 닉네임 텍스트 동기화 (무한 루프 방지)
         if (binding.etChNickname.text.toString() != data.nickname) {
             binding.etChNickname.setText(data.nickname)
             binding.etChNickname.setSelection(data.nickname.length)
         }
 
-        // 에러가 있는 경우 (규칙 미통과 or 중복)
-        if (data.nicknameValidationError != null) {
-            binding.tvNicknameStatus.text = data.nicknameValidationError
-            binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
-            binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-            return
+        // 닉네임 상태에 따른 UI 업데이트
+        when {
+            data.nicknameValidationError != null -> {
+                binding.tvNicknameStatus.text = data.nicknameValidationError
+                binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
+            }
+            data.isDuplicationChecked -> {
+                binding.tvNicknameStatus.text = getString(R.string.set_nickname_able)
+                binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
+            }
+            else -> {
+                binding.tvNicknameStatus.text = getString(
+                    R.string.set_nickname_length,
+                    UserInfoViewModel.MIN_NICKNAME_LENGTH,
+                    UserInfoViewModel.MAX_NICKNAME_LENGTH
+                )
+                binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
+            }
         }
-
-        // 중복 확인 성공한 경우
-        if (data.isDuplicationChecked) {
-            binding.tvNicknameStatus.text = getString(R.string.set_nickname_able)
-            binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
-            binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
-            return
-        }
-
-        // 기본 상태
-        binding.tvNicknameStatus.text = getString(
-            R.string.set_nickname_length,
-            MIN_NICKNAME_LENGTH,
-            MAX_NICKNAME_LENGTH
-        )
-        binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
-        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
     }
 
-    private fun renderCollegeDepartmentState(data: UserInfoData) {
-        // 단과대 텍스트와 색상 설정
-        binding.tvCollege.text = data.selectedCollege.collegeName
-        binding.tvCollege.setTextColor(
-            if (data.selectedCollege.collegeId != -1) {
-                getColor(R.color.gray700)
-            } else {
-                getColor(R.color.gray400)
-            }
-        )
+    private fun updateCollegeDepartmentUI(data: UserInfoData) {
+        with(binding) {
+            tvCollege.text = data.selectedCollege.collegeName
+            tvCollege.setTextColor(getColor(
+                if (data.selectedCollege.collegeId != -1) R.color.gray700 else R.color.gray400
+            ))
 
-        // 학과 텍스트와 색상 설정
-        binding.tvDepartment.text = data.selectedDepartment.departmentName
-        binding.tvDepartment.setTextColor(
-            if (data.selectedDepartment.departmentId != -1) {
-                getColor(R.color.gray700)
-            } else {
-                getColor(R.color.gray400)
-            }
-        )
+            tvDepartment.text = data.selectedDepartment.departmentName
+            tvDepartment.setTextColor(getColor(
+                if (data.selectedDepartment.departmentId != -1) R.color.gray700 else R.color.gray400
+            ))
+        }
     }
 
-    private fun renderButtonsState(data: UserInfoData) {
+    private fun updateButtonsState(data: UserInfoData) {
         binding.btnCheckNicknameDuplication.isEnabled = data.canCheckDuplication
         binding.btnComplete.isEnabled = data.canSave
     }

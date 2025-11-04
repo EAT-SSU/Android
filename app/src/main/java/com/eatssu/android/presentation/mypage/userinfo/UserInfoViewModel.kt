@@ -33,6 +33,11 @@ class UserInfoViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
+    companion object {
+        const val MIN_NICKNAME_LENGTH = 2
+        const val MAX_NICKNAME_LENGTH = 16
+    }
+
     private val _uiState = MutableStateFlow<UiState<UserInfoData>>(UiState.Init)
     val uiState = _uiState.asStateFlow()
 
@@ -82,7 +87,11 @@ class UserInfoViewModel @Inject constructor(
         val trimmedNickname = nickname.trim()
 
         // Local 유효성 검증 (Regex)
-        val validationResult = validateNicknameLocalUseCase(trimmedNickname)
+        val validationResult = validateNicknameLocalUseCase(
+            trimmedNickname,
+            MIN_NICKNAME_LENGTH,
+            MAX_NICKNAME_LENGTH
+        )
 
         val errorMessage = when (validationResult) {
             is NicknameValidationResult.Invalid -> validationResult.message
