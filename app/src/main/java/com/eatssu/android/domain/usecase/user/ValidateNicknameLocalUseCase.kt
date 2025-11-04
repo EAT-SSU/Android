@@ -58,7 +58,6 @@ class ValidateNicknameLocalUseCase @Inject constructor() {
 
 }
 
-
 sealed class NicknameValidationResult {
     object Valid : NicknameValidationResult()
     data class Invalid(val message: String) : NicknameValidationResult()
