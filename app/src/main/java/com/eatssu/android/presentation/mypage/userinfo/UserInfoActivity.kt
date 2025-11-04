@@ -145,8 +145,25 @@ class UserInfoActivity :
     }
 
     private fun renderCollegeDepartmentState(data: UserInfoData) {
+        // 단과대 텍스트와 색상 설정
         binding.tvCollege.text = data.selectedCollege.collegeName
+        binding.tvCollege.setTextColor(
+            if (data.selectedCollege.collegeId != -1) {
+                getColor(R.color.gray700)
+            } else {
+                getColor(R.color.gray400)
+            }
+        )
+
+        // 학과 텍스트와 색상 설정
         binding.tvDepartment.text = data.selectedDepartment.departmentName
+        binding.tvDepartment.setTextColor(
+            if (data.selectedDepartment.departmentId != -1) {
+                getColor(R.color.gray700)
+            } else {
+                getColor(R.color.gray400)
+            }
+        )
     }
 
     private fun renderButtonsState(data: UserInfoData) {
