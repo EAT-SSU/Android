@@ -3,7 +3,8 @@ package com.eatssu.android.domain.usecase.user
 import com.eatssu.android.domain.usecase.user.NicknameValidationResult.Invalid
 import javax.inject.Inject
 
-class ValidateNicknameUseCase @Inject constructor() {
+// 정규식을 사용해 로컬에서 닉네임 검증
+class ValidateNicknameLocalUseCase @Inject constructor() {
 
     companion object {
         private const val MIN_NICKNAME_LENGTH = 2

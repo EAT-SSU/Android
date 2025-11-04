@@ -15,6 +15,7 @@ import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val userService: UserService) :
@@ -27,8 +28,22 @@ class UserRepositoryImpl @Inject constructor(private val userService: UserServic
             else -> Result.failure(Exception("닉네임 변경에 실패했어요."))
         }
 
-    override suspend fun checkUserNameValidation(nickname: String): Boolean =
-        userService.checkNickname(nickname).orElse(false)
+    override suspend fun checkUserNameValidation(nickname: String): Result<Unit> {
+        return when (val result = userService.checkNickname(nickname)) {
+            is ApiResult.Success -> {
+                if (result.data) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(
+                        Exception("올바르지 않은 닉네임이에요.")
+                    )
+                }
+            }
+
+            is ApiResult.Failure -> Result.failure(Exception(result.message ?: "올바르지 않은 닉네임이에요."))
+            else -> Result.failure(Exception("올바르지 않은 닉네임이에요."))
+        }
+    }
 
     override suspend fun getUserReviews(): List<Review> =
         userService.getMyReviews().map { it.toReviewList() }.orEmptyList()

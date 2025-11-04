@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.usecase.user.CheckDuplicateNicknameUseCase
+import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.NicknameValidationResult
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
-import com.eatssu.android.domain.usecase.user.ValidateNicknameUseCase
+import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +28,8 @@ class UserInfoViewModel @Inject constructor(
     private val setUserNicknameUseCase: SetUserNicknameUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
-    private val checkDuplicateNicknameUseCase: CheckDuplicateNicknameUseCase,
-    private val validateNicknameUseCase: ValidateNicknameUseCase,
+    private val validateNicknameServerUseCase: ValidateNicknameServerUseCase,
+    private val validateNicknameLocalUseCase: ValidateNicknameLocalUseCase,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
@@ -82,7 +82,7 @@ class UserInfoViewModel @Inject constructor(
         val trimmedNickname = nickname.trim()
 
         // Local 유효성 검증 (Regex)
-        val validationResult = validateNicknameUseCase(trimmedNickname)
+        val validationResult = validateNicknameLocalUseCase(trimmedNickname)
 
         val errorMessage = when (validationResult) {
             is NicknameValidationResult.Invalid -> validationResult.message
@@ -108,21 +108,31 @@ class UserInfoViewModel @Inject constructor(
             val currentState = _uiState.value as? UiState.Success ?: return@launch
             val currentNickname = currentState.data.nickname
 
-            // 중복 확인
-            val isDuplicate = checkDuplicateNicknameUseCase(currentNickname)
+            // 서버에서 사용 가능 여부 확인
+            val result = validateNicknameServerUseCase(currentNickname)
 
-            val errorMessage = if (isDuplicate) "이미 사용 중인 닉네임입니다." else null
+            result.onFailure { error ->
+                val errorMessage = error.message ?: "올바르지 않은 닉네임이에요."
+
+                _uiState.update {
+                    UiState.Success(
+                        currentState.data.copy(
+                            nicknameValidationError = errorMessage
+                        )
+                    )
+                }
+                return@launch
+            }
 
             _uiState.update {
                 UiState.Success(
                     currentState.data.copy(
                         isDuplicationChecked = true,
-                        nicknameValidationError = errorMessage
                     )
                 )
             }
 
-            Timber.d("닉네임 중복 확인: $currentNickname, 중복: $isDuplicate")
+            Timber.d("닉네임 중복 확인 성공: $currentNickname")
         }
     }
 

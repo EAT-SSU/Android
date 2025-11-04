@@ -13,7 +13,7 @@ interface UserRepository {
 
     suspend fun checkUserNameValidation(
         nickname: String,
-    ): Boolean
+    ): Result<Unit>
 
     suspend fun getUserReviews(): List<Review>
     suspend fun getUserNickName(): String
