@@ -23,7 +23,7 @@ class SetUserNicknameUseCase @Inject constructor(
     private val userRepository: UserRepository,
     @ApplicationContext private val context: Context
 ) {
-    suspend operator fun invoke(nickname: String): Boolean {
+    suspend operator fun invoke(nickname: String): Result<Unit> {
         // 로컬 저장
         MySharedPreferences.setUserName(context, nickname)
         return userRepository.updateUserName(ChangeNicknameRequest(nickname))

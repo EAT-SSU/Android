@@ -3,6 +3,8 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.dto.response.BaseResponse
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.presentation.base.NetworkErrorEventBus
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -17,6 +19,10 @@ class ApiResultCall<T : Any>(
     private val call: Call<BaseResponse<T>>,
     private val responseType: Type
 ) : Call<ApiResult<T>> {
+
+    companion object {
+        private val gson = Gson()
+    }
 
     override fun enqueue(callback: Callback<ApiResult<T>>) {
         call.enqueue(object : Callback<BaseResponse<T>> {
@@ -38,6 +44,7 @@ class ApiResultCall<T : Any>(
                         NetworkErrorEventBus.notifyNetworkError()
                         ApiResult.NetworkError(error)
                     }
+
                     else -> ApiResult.UnknownError(error)
                 }
                 callback.onResponse(
@@ -52,12 +59,37 @@ class ApiResultCall<T : Any>(
         // HTTP Response code가 200 ~ 300대가 아닌 경우 (ex. 400, 500)
         if (!isSuccessful) {
             val responseCode = code()
-            val errorMessage = errorBody()?.string()
+            val errorBodyString = errorBody()?.string()
 
-            Timber.d("ApiResultCall - HTTP Response is not successful: $responseCode - $errorMessage")
+            Timber.d("ApiResultCall - HTTP Response is not successful: $responseCode - $errorBodyString")
+
+            // errorBody를 JSON으로 파싱 시도
+            if (!errorBodyString.isNullOrEmpty()) {
+                try {
+                    val errorResponse = gson.fromJson(errorBodyString, BaseResponse::class.java)
+
+                    // BaseResponse 형태인지 확인 (isSuccess가 false이고 code와 message가 있는 경우)
+                    if (errorResponse?.isSuccess == false &&
+                        errorResponse.code != null &&
+                        errorResponse.message != null
+                    ) {
+
+                        Timber.d("ApiResultCall - Parsed error response: ${errorResponse.code} - ${errorResponse.message}")
+
+                        return ApiResult.Failure(
+                            errorResponse.code!!,
+                            errorResponse.message
+                        )
+                    }
+                } catch (e: Exception) {
+                    Timber.w(e, "ApiResultCall - Failed to parse errorBody as BaseResponse")
+                    // 파싱 실패 시 기존 방식으로 처리
+                }
+            }
+
             return ApiResult.Failure(
                 responseCode,
-                errorMessage
+                errorBodyString
             )
         }
 

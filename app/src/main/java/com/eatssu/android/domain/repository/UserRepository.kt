@@ -9,11 +9,11 @@ interface UserRepository {
 
     suspend fun updateUserName(
         body: ChangeNicknameRequest,
-    ): Boolean
+    ): Result<Unit>
 
     suspend fun checkUserNameValidation(
         nickname: String,
-    ): Boolean
+    ): Result<Unit>
 
     suspend fun getUserReviews(): List<Review>
     suspend fun getUserNickName(): String

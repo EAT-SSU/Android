@@ -64,8 +64,8 @@ class MainViewModel @Inject constructor(
 
             val nickname = getUserNickNameUseCase()
 
-            // 1) 닉네임 없음/기본 프리셋
-            if (nickname.isBlank() || nickname.startsWith("user-")) {
+            // 1) 닉네임 없음
+            if (nickname.isBlank()) {
                 _uiState.value = UiState.Success(MainState.NicknameNull)
                 _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
                 return@launch

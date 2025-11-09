@@ -13,7 +13,6 @@ import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -75,7 +74,7 @@ class MyPageViewModel @Inject constructor(
         viewModelScope.launch {
             val nickname = getUserNickNameUseCase()
 
-            if (nickname.isBlank() || nickname.startsWith("user-")) {
+            if (nickname.isBlank()) {
                 _state.update { it.copy(nickname = null) }
                 _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
                 return@launch
@@ -106,5 +105,5 @@ data class MyPageState(
     val isAlarmOn: Boolean = false,
     val appVersion: String = "0.0.0"
 ) {
-    val hasNickname: Boolean get() = !nickname.isNullOrBlank() && !nickname.startsWith("user-")
+    val hasNickname: Boolean get() = !nickname.isNullOrBlank()
 }
