@@ -63,19 +63,11 @@ class IntroViewModel @Inject constructor(
     }
 
     private suspend fun initializeRemoteConfig() {
-        try {
-            firebaseRemoteConfigRepository.init().fold(
-                onSuccess = {
-                    Timber.d("Firebase Remote Config 초기화 성공")
-                },
-                onFailure = { error ->
-                    Timber.e(error, "Firebase Remote Config 초기화 실패")
-                    // Remote Config 초기화 실패해도 앱은 계속 진행
-                }
-            )
-        } catch (e: Exception) {
-            Timber.e(e, "Firebase Remote Config 초기화 중 예외 발생")
-        }
+        firebaseRemoteConfigRepository.init()
+            .onSuccess { Timber.d("Firebase Remote Config 초기화 성공") }
+            .onFailure { error ->
+                Timber.e(error, "Firebase Remote Config 초기화 실패")
+            }
     }
 
     private suspend fun checkVersionUpdate() {
@@ -135,7 +127,6 @@ class IntroViewModel @Inject constructor(
 
             // 토큰이 있고 유효함
             _uiState.value = UiState.Success(IntroState.ValidToken)
-
         }
     }
 }

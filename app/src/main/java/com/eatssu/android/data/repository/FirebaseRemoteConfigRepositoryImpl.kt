@@ -4,10 +4,10 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.RestaurantInfo
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.common.enums.Restaurant
-import com.google.common.reflect.TypeToken
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import javax.inject.Inject
@@ -44,7 +44,7 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
         return getCafeteriaInfo().find { it.enum == restaurant }
     }
 
-    fun getCafeteriaInfo(): List<RestaurantInfo> {
+    private fun getCafeteriaInfo(): List<RestaurantInfo> {
         val json = instance.getString("cafeteria_information")
         return runCatching { parseCafeteriaJson(json) }
             .onFailure { Timber.e(it, "cafeteria_information JSON 파싱 실패") }
@@ -59,7 +59,7 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
 
             dtoList.map { dto ->
                 RestaurantInfo(
-                    enum = Restaurant.valueOf(dto.enum.toString()),
+                    enum = dto.enum,
                     name = dto.name,
                     location = dto.location,
                     image = dto.image,
