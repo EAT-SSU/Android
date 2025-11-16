@@ -2,14 +2,15 @@ package com.eatssu.android.di
 
 
 import com.eatssu.android.data.repository.FirebaseRemoteConfigRepositoryImpl
+import com.eatssu.android.data.repository.HealthCheckRepositoryImpl
 import com.eatssu.android.data.repository.MealRepositoryImpl
 import com.eatssu.android.data.repository.MenuRepositoryImpl
 import com.eatssu.android.data.repository.OauthRepositoryImpl
 import com.eatssu.android.data.repository.PartnershipRepositoryImpl
-import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.data.repository.ReportRepositoryImpl
 import com.eatssu.android.data.repository.UserRepositoryImpl
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
+import com.eatssu.android.domain.repository.HealthCheckRepository
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.MenuRepository
 import com.eatssu.android.domain.repository.OauthRepository
@@ -17,7 +18,6 @@ import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.repository.PartnershipRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -59,12 +59,17 @@ abstract class DataModule {
     ): PartnershipRepository
 
     @Binds
-    internal abstract fun bindsFirebaseRemoteConfigRepository(
-        firebaseRemoteConfigRepositoryImpl: FirebaseRemoteConfigRepositoryImpl,
-    ): FirebaseRemoteConfigRepository
+    internal abstract fun bindsHealthCheckRepository(
+        healthCheckRepositoryImpl: HealthCheckRepositoryImpl,
+    ): HealthCheckRepository
 
     @Binds
     internal abstract fun bindsMenuRepository(
         menuRepositoryImpl: MenuRepositoryImpl,
     ): MenuRepository
+
+    @Binds
+    internal abstract fun bindsFirebaseRemoteConfigRepository(
+        firebaseRemoteConfigRepositoryImpl: FirebaseRemoteConfigRepositoryImpl,
+    ): FirebaseRemoteConfigRepository
 }
