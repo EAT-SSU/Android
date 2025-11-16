@@ -2,9 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.modify
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.App
-import com.eatssu.android.R
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
+import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
 import com.eatssu.android.domain.usecase.review.ModifyReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +34,7 @@ class ModifyViewModel @Inject constructor(
                         loading = false,
                         error = true,
                         isDone = false,
-                        toastMessage = App.appContext.getString(R.string.modify_not)
+                        toastMessage = "리뷰 수정이 실패하였습니다."
                     )
                 }
                 return@launch
@@ -47,7 +45,7 @@ class ModifyViewModel @Inject constructor(
                     loading = false,
                     error = false,
                     isDone = true,
-                    toastMessage = App.appContext.getString(R.string.modify_done)
+                    toastMessage = "리뷰가 수정되었습니다."
                 )
             }
         }

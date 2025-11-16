@@ -1,12 +1,8 @@
 package com.eatssu.android.data.remote.service
 
-import com.eatssu.android.data.dto.response.GetMealResponse
-import com.eatssu.android.data.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.model.ApiResult
-import com.eatssu.android.data.remote.dto.response.BaseResponse
 import com.eatssu.android.data.remote.dto.response.GetMealResponse
 import com.eatssu.android.data.remote.dto.response.MenuOfMealResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

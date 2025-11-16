@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.response.MenusInformation
+import com.eatssu.android.data.remote.dto.response.MenusInformation
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time

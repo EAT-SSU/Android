@@ -1,9 +1,9 @@
-package com.eatssu.android.data.service
+package com.eatssu.android.data.remote.service
 
-import com.eatssu.android.data.dto.request.CheckValidTokenRequest
-import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.data.dto.response.TokenResponse
 import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.data.remote.dto.request.CheckValidTokenRequest
+import com.eatssu.android.data.remote.dto.request.LoginWithKakaoRequest
+import com.eatssu.android.data.remote.dto.response.TokenResponse
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST

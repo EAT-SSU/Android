@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.Review

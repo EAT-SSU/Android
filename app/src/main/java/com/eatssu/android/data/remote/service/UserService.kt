@@ -1,14 +1,14 @@
-package com.eatssu.android.data.service
+package com.eatssu.android.data.remote.service
 
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
-import com.eatssu.android.data.dto.request.UserDepartmentRequest
-import com.eatssu.android.data.dto.response.CollegeResponse
-import com.eatssu.android.data.dto.response.DepartmentResponse
-import com.eatssu.android.data.dto.response.MyNickNameResponse
-import com.eatssu.android.data.dto.response.MyReviewResponse
-import com.eatssu.android.data.dto.response.PartnershipResponse
-import com.eatssu.android.data.dto.response.UserCollegeDepartmentResponse
 import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
+import com.eatssu.android.data.remote.dto.response.CollegeResponse
+import com.eatssu.android.data.remote.dto.response.DepartmentResponse
+import com.eatssu.android.data.remote.dto.response.MyNickNameResponse
+import com.eatssu.android.data.remote.dto.response.MyReviewResponse
+import com.eatssu.android.data.remote.dto.response.PartnershipResponse
+import com.eatssu.android.data.remote.dto.response.UserCollegeDepartmentResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

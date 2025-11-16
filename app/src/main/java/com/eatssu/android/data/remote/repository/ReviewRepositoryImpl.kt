@@ -1,16 +1,16 @@
-package com.eatssu.android.data.repository
+package com.eatssu.android.data.remote.repository
 
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.dto.response.ImageResponse
-import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.model.orNull
-import com.eatssu.android.data.service.ReviewService
+import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
+import com.eatssu.android.data.remote.dto.response.GetMealReviewInfoResponse
+import com.eatssu.android.data.remote.dto.response.GetMenuReviewInfoResponse
+import com.eatssu.android.data.remote.dto.response.ImageResponse
+import com.eatssu.android.data.remote.dto.response.toReviewList
+import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.ReviewRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

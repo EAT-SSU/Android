@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.usecase.menu
 
-import com.eatssu.android.data.dto.response.MenusInformation
+import com.eatssu.android.data.remote.dto.response.MenusInformation
 import com.eatssu.android.domain.repository.MealRepository
 import javax.inject.Inject
 

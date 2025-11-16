@@ -346,7 +346,7 @@ fun MapFragmentComposeView(
                     selectedFilter = next
                 },
                 modifier = Modifier.padding(top = 12.dp),
-                departmentName = departmentName
+                departmentName = departmentName.toString()
             )
 
             // 찜 기능

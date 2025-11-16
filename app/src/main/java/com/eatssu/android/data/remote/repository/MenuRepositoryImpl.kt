@@ -1,9 +1,9 @@
-package com.eatssu.android.data.repository
+package com.eatssu.android.data.remote.repository
 
-import com.eatssu.android.data.dto.response.mapFixedMenuResponseToMenu
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
-import com.eatssu.android.data.service.MenuService
+import com.eatssu.android.data.remote.dto.response.mapFixedMenuResponseToMenu
+import com.eatssu.android.data.remote.service.MenuService
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.domain.repository.MenuRepository
 import com.eatssu.common.enums.Restaurant

@@ -1,7 +1,7 @@
-package com.eatssu.android.data.service
+package com.eatssu.android.data.remote.service
 
-import com.eatssu.android.data.dto.response.GetFixedMenuResponse
 import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.data.remote.dto.response.GetFixedMenuResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

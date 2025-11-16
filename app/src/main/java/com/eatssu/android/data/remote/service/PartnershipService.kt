@@ -1,6 +1,6 @@
 package com.eatssu.android.data.remote.service
 
-import com.eatssu.android.data.remote.dto.response.BaseResponse
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.PartnershipResponse
 import com.eatssu.android.data.remote.dto.response.PartnershipRestaurantResponse
 import retrofit2.http.GET

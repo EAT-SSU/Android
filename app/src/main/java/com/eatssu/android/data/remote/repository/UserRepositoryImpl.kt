@@ -1,21 +1,20 @@
-package com.eatssu.android.data.repository
+package com.eatssu.android.data.remote.repository
 
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
-import com.eatssu.android.data.dto.request.UserDepartmentRequest
-import com.eatssu.android.data.dto.response.toDomain
-import com.eatssu.android.data.dto.response.toReviewList
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orElse
 import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.model.orNull
-import com.eatssu.android.data.service.UserService
+import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
+import com.eatssu.android.data.remote.dto.response.toDomain
+import com.eatssu.android.data.remote.dto.response.toReviewList
+import com.eatssu.android.data.remote.service.UserService
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(

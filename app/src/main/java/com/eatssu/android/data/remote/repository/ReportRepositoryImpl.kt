@@ -1,9 +1,8 @@
 package com.eatssu.android.data.remote.repository
 
+import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.remote.dto.request.ReportRequest
 import com.eatssu.android.data.remote.service.ReportService
-import com.eatssu.android.data.model.isSuccess
-import com.eatssu.android.data.service.ReportService
 import com.eatssu.android.domain.repository.ReportRepository
 import javax.inject.Inject
 

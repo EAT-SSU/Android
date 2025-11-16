@@ -1,5 +1,8 @@
 package com.eatssu.android.data.remote.repository
 
+import com.eatssu.android.data.model.map
+import com.eatssu.android.data.model.orEmptyList
+import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.PartnershipService
 import com.eatssu.android.data.remote.service.UserService
