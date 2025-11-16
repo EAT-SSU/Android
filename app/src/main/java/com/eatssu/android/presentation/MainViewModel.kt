@@ -54,7 +54,7 @@ class MainViewModel @Inject constructor(
             val userInfo = getUserCollegeDepartmentUseCase()
             _uiState.value = UiState.Success(
                 MainState.DepartmentState(
-                    departmentName = userInfo.userDepartment?.departmentName
+                    departmentName = userInfo.userDepartment.departmentName
                 )
             )
         }
