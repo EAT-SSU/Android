@@ -39,7 +39,7 @@ class IntroViewModel @Inject constructor(
 
             // 서버와 통신 가능한지 먼저 확인
             if (!healthCheckUseCase()) {
-                // 아무 State 처리 없이 Return해도 NetworkErrorEventBus로 인해 오류 페이지로 이동
+                _uiState.value = UiState.Success(IntroState.ServerError)
                 return@launch
             }
 
@@ -64,6 +64,7 @@ class IntroViewModel @Inject constructor(
     }
 }
 
-sealed class IntroState {
-    object ValidToken : IntroState()
+sealed interface IntroState {
+    data object ValidToken : IntroState
+    data object ServerError : IntroState
 }

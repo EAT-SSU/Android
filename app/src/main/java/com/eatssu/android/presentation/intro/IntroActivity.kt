@@ -9,8 +9,8 @@ import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.error.ServerErrorActivity
 import com.eatssu.android.presentation.login.LoginActivity
-import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
@@ -42,8 +42,17 @@ class IntroActivity : AppCompatActivity() {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
                     is UiState.Success -> {
-                        startActivity<MainActivity>()
-                        finish()
+                        when (state.data) {
+                            IntroState.ValidToken -> {
+                                startActivity<MainActivity>()
+                                finish()
+                            }
+
+                            IntroState.ServerError -> {
+                                startActivity<ServerErrorActivity>()
+                                finish()
+                            }
+                        }
                     }
 
                     is UiState.Error -> {
@@ -68,8 +77,6 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
         }
-
-        observeNetworkError()
     }
 
     private fun log() {
