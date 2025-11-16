@@ -45,13 +45,10 @@ class IntroViewModel @Inject constructor(
             _uiState.value = UiState.Loading
 
             try {
-                // 1. Firebase Remote Config 초기화
-                initializeRemoteConfig()
-
-                // 2. 버전 체크
+                // 1. 버전 체크 (Firebase Remote Config는 자동으로 초기화됨)
                 checkVersionUpdate()
 
-                // 3. 자동 로그인 체크
+                // 2. 자동 로그인 체크
                 autoLogin()
 
             } catch (e: Exception) {
@@ -60,14 +57,6 @@ class IntroViewModel @Inject constructor(
                 _uiEvent.emit(UiEvent.ShowToast("앱 초기화 중 오류가 발생했습니다"))
             }
         }
-    }
-
-    private suspend fun initializeRemoteConfig() {
-        firebaseRemoteConfigRepository.init()
-            .onSuccess { Timber.d("Firebase Remote Config 초기화 성공") }
-            .onFailure { error ->
-                Timber.e(error, "Firebase Remote Config 초기화 실패")
-            }
     }
 
     private suspend fun checkVersionUpdate() {

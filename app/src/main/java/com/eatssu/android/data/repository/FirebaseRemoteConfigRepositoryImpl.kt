@@ -19,28 +19,34 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
 
     private val instance = FirebaseRemoteConfig.getInstance()
 
-    override suspend fun init(): Result<Unit> {
-        return try {
-            val configSettings = FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(600)
-                .build()
-            instance.setConfigSettingsAsync(configSettings)
-            instance.setDefaultsAsync(R.xml.firebase_remote_config)
-            instance.fetchAndActivate().await()
-
-            Timber.d("RemoteConfig fetchAndActivate 성공")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Timber.e(e, "RemoteConfig fetchAndActivate 실패")
-            instance.setDefaultsAsync(R.xml.firebase_remote_config)
-            Result.failure(e)
-        }
+    init {
+        // Remote Config 설정 초기화 (fetchAndActivate는 각 값 가져오기 전에 호출)
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(600)
+            .build()
+        instance.setConfigSettingsAsync(configSettings)
+        instance.setDefaultsAsync(R.xml.firebase_remote_config)
     }
 
-    override fun getMinimumVersionCode(): Long =
-        instance.getLong("android_version_code")
+    override suspend fun getMinimumVersionCode(): Long {
+        // 값을 가져오기 전에 fetchAndActivate 호출
+        // min fetch interval이 지나지 않았으면 로컬 캐시를 사용하고, 지났으면 서버에서 가져옵니다.
+        try {
+            instance.fetchAndActivate().await()
+        } catch (e: Exception) {
+            Timber.e(e, "RemoteConfig fetchAndActivate 실패")
+        }
+        return instance.getLong("android_version_code")
+    }
 
-    override fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
+    override suspend fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
+        // 값을 가져오기 전에 fetchAndActivate 호출
+        // min fetch interval이 지나지 않았으면 로컬 캐시를 사용하고, 지났으면 서버에서 가져옵니다.
+        try {
+            instance.fetchAndActivate().await()
+        } catch (e: Exception) {
+            Timber.e(e, "RemoteConfig fetchAndActivate 실패")
+        }
         return getCafeteriaInfo().find { it.enum == restaurant }
     }
 

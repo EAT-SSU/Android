@@ -16,8 +16,9 @@ class InfoViewModel @Inject constructor(
     /**
      * 특정 식당 정보를 가져옵니다.
      * 필요할 때만 호출하여 메모리 효율성을 높입니다.
+     * 값을 가져오기 전에 fetchAndActivate를 호출하여 최신 값을 가져옵니다.
      */
-    fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
+    suspend fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
         return try {
             val restaurantInfo = firebaseRemoteConfigRepository.getRestaurantInfo(restaurant)
             Timber.d("Loaded restaurant info for $restaurant: $restaurantInfo")
