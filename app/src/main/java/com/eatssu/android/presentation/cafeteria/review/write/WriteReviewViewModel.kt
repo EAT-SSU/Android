@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.MenuMini
-import com.eatssu.android.domain.model.ReviewWriteData
 import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
@@ -135,18 +134,23 @@ class WriteReviewViewModel @Inject constructor(
             }
 
             // 2) 리뷰 작성
-            val reviewData = ReviewWriteData(
+            val success = writeReviewUseCase(
+                menuType = menuType,
+                itemId = itemId,
                 rating = editing.rating,
                 content = editing.content,
+                imageUrl = imageUrl,
                 likeMenuIdList = editing.likedMenuIds.toList(),
-                imageUrl = imageUrl
             )
-            val success = writeReviewUseCase(menuType, itemId, reviewData)
+
             if (!success) {
                 _uiState.value = UiState.Success(editing) // 되돌림
                 _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
                 return@launch
             }
+
+            _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
+            _uiEvent.emit(UiEvent.NavigateBack)
         }
     }
 }
@@ -191,4 +195,7 @@ sealed class WriteReviewState {
         val likedMenuIds: Set<Long>,
         val selectedImageUri: Uri?,
     ) : WriteReviewState()
+
+    // 성공시 상태는 정의하지 않음.
+    // 성공시 네비게이트 이벤트 발생
 }
