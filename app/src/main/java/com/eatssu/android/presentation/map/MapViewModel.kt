@@ -26,7 +26,6 @@ data class MapState(
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
-    var partnershipToggleText: String = "내 제휴",
     val currentCollegeName: String = "",
     val currentDepartmentName: String = "",
 )

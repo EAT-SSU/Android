@@ -186,16 +186,13 @@ fun MapFragmentComposeView(
             }
             FilterType.Mine -> {
                 viewModel.loadUserCollegePartnerships()
-
                 EventLogger.clickMapMine(collegeId, departmentId)
             }
         }
     }
 
-
     // Screen View 기록
     TrackScreenViewEvent(ScreenId.MAP_MAIN)
-
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
