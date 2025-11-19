@@ -33,17 +33,14 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(
-        UiState.Success(
-            MainState.DepartmentState(MySharedPreferences.getUserDepartmentName(context))
-        )
-    )
+    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
     val uiState: StateFlow<UiState<MainState>> = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
+        loadStoredUserDepartment()
         getUserDepartment()
         fetchAndCheckNickname()
     }
@@ -103,6 +100,19 @@ class MainViewModel @Inject constructor(
 
     fun getData(): LiveData<LocalDate> {
         return data
+    }
+
+    private fun loadStoredUserDepartment() {
+        viewModelScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = userInfo.userDepartment.departmentName,
+                    showUserDepartmentBottomSheet =
+                        (userInfo.userCollege.collegeId == -1 || userInfo.userDepartment.departmentId == -1)
+                )
+            )
+        }
     }
 
     private fun getUserDepartment() {
