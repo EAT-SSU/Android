@@ -45,14 +45,14 @@ fun PartnershipFilterToggle(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PartnershipToggleItem(
+            text = if (departmentName == "학과" || departmentName.isEmpty()) "내 제휴" else departmentName,
+            isSelected = selected == FilterType.Mine,
+            onClick = { onSelectedChange(FilterType.Mine) },
+        )
+        PartnershipToggleItem(
             text = "전체",
             isSelected = selected == FilterType.All,
             onClick = { onSelectedChange(FilterType.All) }
-        )
-        PartnershipToggleItem(
-            text = if(departmentName == "학과" || departmentName.isEmpty()) "내 제휴" else departmentName,
-            isSelected = selected == FilterType.Mine,
-            onClick = { onSelectedChange(FilterType.Mine) },
         )
     }
 }
