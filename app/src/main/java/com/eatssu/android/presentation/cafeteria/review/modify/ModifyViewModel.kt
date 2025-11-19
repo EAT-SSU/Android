@@ -3,7 +3,6 @@ package com.eatssu.android.presentation.cafeteria.review.modify
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Review
-import com.eatssu.android.domain.model.ReviewModifyData
 import com.eatssu.android.domain.usecase.review.ModifyReviewUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
@@ -62,8 +61,7 @@ class ModifyViewModel @Inject constructor(
 
         viewModelScope.launch {
             val success = modifyReviewUseCase(
-                reviewId,
-                ReviewModifyData(editing.rating, editing.content, editing.menuLikeInfos)
+                reviewId, editing.rating, editing.content, editing.menuLikeInfos
             )
             if (!success) {
                 _uiState.value = UiState.Success(editing)

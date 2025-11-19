@@ -22,22 +22,71 @@ import javax.inject.Inject
 class ReviewRepositoryImpl @Inject constructor(private val reviewService: ReviewService) :
     ReviewRepository {
 
-    override suspend fun writeMealReview(body: WriteMealReviewRequest): Boolean =
-        reviewService.writeMealReview(body).isSuccess()
+    override suspend fun writeMealReview(
+        mealId: Long,
+        rating: Int,
+        content: String,
+        imageUrls: List<String>,
+        likeMenuIdList: List<Long>?,
+    ): Boolean {
+        val request = WriteMealReviewRequest(
+            mealId = mealId,
+            rating = rating,
+            content = content,
+            imageUrls = imageUrls,
+            menuLikes = likeMenuIdList?.map {
+                WriteMealReviewRequest.MenuLikes(
+                    menuId = it,
+                    isLike = true,
+                )
+            },
+        )
+        return reviewService.writeMealReview(request).isSuccess()
+    }
 
+    override suspend fun writeMenuReview(
+        rating: Int,
+        content: String,
+        imageUrls: List<String>,
+        likeMenuIdList: List<Long>?,
+    ): Boolean {
 
-    override suspend fun writeMenuReview(body: WriteMenuReviewRequest): Boolean =
-        reviewService.writeMenuReview(body).isSuccess()
-
+        val request = WriteMenuReviewRequest(
+            rating = rating,
+            content = content,
+            imageUrls = imageUrls,
+            menuLike = likeMenuIdList?.let {
+                WriteMenuReviewRequest.MenuLike(
+                    menuId = it.first(),
+                    isLike = true,
+                )
+            }
+        )
+        return reviewService.writeMenuReview(request).isSuccess()
+    }
 
     override suspend fun deleteReview(reviewId: Long): Boolean =
         reviewService.deleteReview(reviewId).isSuccess()
 
     override suspend fun modifyReview(
         reviewId: Long,
-        body: ModifyReviewRequest,
-    ): Boolean =
-        reviewService.modifyReview(reviewId, body).isSuccess()
+        rating: Int,
+        content: String,
+        menuLikeInfoList: List<Review.MenuLikeInfo>,
+    ): Boolean {
+
+        val request = ModifyReviewRequest(
+            rating = rating,
+            content = content,
+            menuLikes = menuLikeInfoList.map {
+                ModifyReviewRequest.MenuLikes(
+                    menuId = it.menuId,
+                    isLike = it.isLike,
+                )
+            },
+        )
+        return reviewService.modifyReview(reviewId, request).isSuccess()
+    }
 
     override suspend fun getMealReviewList(mealId: Long?): List<Review> {
         return reviewService.getMealReviewList(mealId).map { it.toDomain() }.orEmptyList()

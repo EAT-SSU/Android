@@ -1,7 +1,5 @@
 package com.eatssu.android.domain.usecase.review
 
-import com.eatssu.android.data.remote.dto.request.WriteMealReviewRequest
-import com.eatssu.android.data.remote.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.domain.model.ReviewWriteData
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.common.enums.MenuType
@@ -16,35 +14,23 @@ class WriteReviewUseCase @Inject constructor(
         reviewData: ReviewWriteData
     ): Boolean {
         when (menuType) {
-            MenuType.FIXED -> {
-                val request = WriteMenuReviewRequest(
-                    rating = reviewData.rating,
-                    content = reviewData.content ?: "",
-                    imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
-                    menuLike = reviewData.likeMenuIdList?.let {
-                        WriteMenuReviewRequest.MenuLike(
-                            menuId = it.first(),
-                            isLike = true,
-                        )
-                    }
+            MenuType.VARIABLE -> {
+                return reviewRepository.writeMealReview(
+                    itemId,
+                    reviewData.rating,
+                    reviewData.content ?: "",
+                    if (reviewData.imageUrl != null) listOf(reviewData.imageUrl) else emptyList(),
+                    reviewData.likeMenuIdList,
                 )
-                return reviewRepository.writeMenuReview(request)
             }
 
-            MenuType.VARIABLE -> {
-                val request = WriteMealReviewRequest(
-                    mealId = itemId,
-                    rating = reviewData.rating,
-                    content = reviewData.content ?: "",
-                    imageUrls = if (reviewData.imageUrl != null) arrayListOf(reviewData.imageUrl) else arrayListOf(),
-                    menuLikes = reviewData.likeMenuIdList?.map {
-                        WriteMealReviewRequest.MenuLikes(
-                            menuId = it,
-                            isLike = true,
-                        )
-                    },
+            MenuType.FIXED -> {
+                return reviewRepository.writeMenuReview(
+                    reviewData.rating,
+                    reviewData.content ?: "",
+                    if (reviewData.imageUrl != null) listOf(reviewData.imageUrl) else emptyList(),
+                    reviewData.likeMenuIdList,
                 )
-                return reviewRepository.writeMealReview(request)
             }
         }
     }

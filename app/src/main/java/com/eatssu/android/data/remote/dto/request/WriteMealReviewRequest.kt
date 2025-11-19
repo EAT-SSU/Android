@@ -8,7 +8,7 @@ data class WriteMealReviewRequest(
     @SerializedName("rating") val rating: Int,
     @SerializedName("menuLikes") val menuLikes: List<MenuLikes>?,
     @SerializedName("content") val content: String,
-    @SerializedName("imageUrls") val imageUrls: ArrayList<String>
+    @SerializedName("imageUrls") val imageUrls: List<String>
 ) {
     data class MenuLikes(
         @SerializedName("menuId") val menuId: Long,
