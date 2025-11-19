@@ -100,7 +100,7 @@ fun MapFragmentComposeView(
     val activity = remember(context) { context.findActivityOrNull() }
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
     val scope = rememberCoroutineScope()
-    var selectedFilter by remember { mutableStateOf(FilterType.All) }
+    var selectedFilter by remember { mutableStateOf(FilterType.Mine) }
 
     val departmentId = viewModel.departmentId
     val collegeId = viewModel.collegeId
