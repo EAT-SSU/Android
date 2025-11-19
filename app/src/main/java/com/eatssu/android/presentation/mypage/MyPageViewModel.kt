@@ -1,18 +1,15 @@
 package com.eatssu.android.presentation.mypage
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -30,8 +27,7 @@ class MyPageViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
-    private val preferencesRepository: PreferencesRepository,
-    @ApplicationContext private val context: Context
+    private val settingDataStore: SettingDataStore,
 ) : ViewModel() {
 
     // 내부는 항상 "값 그 자체"만 들고 있고,
@@ -40,9 +36,6 @@ class MyPageViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         MyPageState(
             appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-            nickname = MySharedPreferences.getUserName(context).takeIf {
-                it.isNotBlank()
-            }
         )
     )
     val uiState: StateFlow<UiState<MyPageState>> =
@@ -64,7 +57,7 @@ class MyPageViewModel @Inject constructor(
 
     private fun observeNotificationStatus() {
         viewModelScope.launch {
-            preferencesRepository.dailyNotificationStatus.collectLatest { isOn ->
+            settingDataStore.dailyNotificationStatus.collectLatest { isOn ->
                 _state.update { it.copy(isAlarmOn = isOn) }
             }
         }

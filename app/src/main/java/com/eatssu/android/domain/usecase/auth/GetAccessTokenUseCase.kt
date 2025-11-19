@@ -1,14 +1,12 @@
 package com.eatssu.android.domain.usecase.auth
 
-import android.content.Context
-import com.eatssu.android.data.MySharedPreferences
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.eatssu.android.data.local.TokenStore
 import javax.inject.Inject
 
 class GetAccessTokenUseCase @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val tokenStore: TokenStore,
 ) {
-    suspend operator fun invoke(): String {
-        return MySharedPreferences.getAccessToken(context)
+    operator fun invoke(): String {
+        return tokenStore.accessToken
     }
 }

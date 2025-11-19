@@ -1,13 +1,13 @@
 package com.eatssu.android.domain.usecase.alarm
 
-import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.local.SettingDataStore
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetDailyNotificationStatusUseCase @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val settingDataStore: SettingDataStore
 ) {
     operator fun invoke(): Flow<Boolean> {
-        return preferencesRepository.dailyNotificationStatus
+        return settingDataStore.dailyNotificationStatus
     }
 }

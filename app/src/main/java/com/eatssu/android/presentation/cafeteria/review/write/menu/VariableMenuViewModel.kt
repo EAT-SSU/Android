@@ -3,7 +3,7 @@ package com.eatssu.android.presentation.cafeteria.review.write.menu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.response.toMenuMini
+import com.eatssu.android.data.remote.dto.response.toMenuMini
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.usecase.menu.GetMenuNameListOfMealUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

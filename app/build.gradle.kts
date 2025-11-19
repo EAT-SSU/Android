@@ -214,6 +214,9 @@ dependencies {
     //data store (with flow)
     implementation(libs.androidx.datastore.preferences)
 
+    // EncryptedSharedPreferences
+    implementation(libs.androidx.security.crypto)
+
     // naver maps
     implementation (libs.map.sdk)
 

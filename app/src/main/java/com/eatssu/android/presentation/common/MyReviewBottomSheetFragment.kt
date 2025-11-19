@@ -8,11 +8,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.eatssu.android.App
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentBottomsheetMyReviewBinding
-import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewActivity
+import com.eatssu.android.presentation.mypage.myreview.MyReviewViewModel
 import com.eatssu.android.presentation.util.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,7 +83,7 @@ class MyReviewBottomSheetFragment : BottomSheetDialogFragment() {
                 setTitle(R.string.delete)
                 setMessage(R.string.delete_description)
                 setNegativeButton("취소") { _, _ ->
-                    activity?.showToast(App.appContext.getString(R.string.delete_undo))
+                    activity?.showToast("리뷰 삭제를 취소하시겠습니까?")
                 }
                 setPositiveButton("삭제") { _, _ ->
                     viewModel.deleteReview(reviewId)

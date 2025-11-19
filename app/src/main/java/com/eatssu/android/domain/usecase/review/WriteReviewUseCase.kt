@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.usecase.review
 
-import com.eatssu.android.data.dto.request.WriteReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
 import com.eatssu.android.domain.repository.ReviewRepository
 import javax.inject.Inject
 

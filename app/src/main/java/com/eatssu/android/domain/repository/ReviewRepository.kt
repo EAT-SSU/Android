@@ -1,10 +1,10 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.dto.response.ImageResponse
+import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
+import com.eatssu.android.data.remote.dto.response.GetMealReviewInfoResponse
+import com.eatssu.android.data.remote.dto.response.GetMenuReviewInfoResponse
+import com.eatssu.android.data.remote.dto.response.ImageResponse
 import com.eatssu.android.domain.model.Review
 import java.io.File
 
