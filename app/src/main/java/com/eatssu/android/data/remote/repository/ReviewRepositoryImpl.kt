@@ -22,13 +22,13 @@ import javax.inject.Inject
 class ReviewRepositoryImpl @Inject constructor(private val reviewService: ReviewService) :
     ReviewRepository {
 
-    override suspend fun writeMealReview(body: WriteMealReviewRequest) {
+    override suspend fun writeMealReview(body: WriteMealReviewRequest): Boolean =
         reviewService.writeMealReview(body).isSuccess()
-    }
 
-    override suspend fun writeMenuReview(body: WriteMenuReviewRequest) {
+
+    override suspend fun writeMenuReview(body: WriteMenuReviewRequest): Boolean =
         reviewService.writeMenuReview(body).isSuccess()
-    }
+
 
     override suspend fun deleteReview(reviewId: Long): Boolean =
         reviewService.deleteReview(reviewId).isSuccess()
@@ -44,7 +44,7 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
     }
 
     override suspend fun getMenuReviewList(menuId: Long?): List<Review> {
-        return reviewService.getMealReviewList(menuId).map { it.toDomain() }.orEmptyList()
+        return reviewService.getMenuReviewList(menuId).map { it.toDomain() }.orEmptyList()
     }
 
     override suspend fun getMealReviewInfo(mealId: Long): ReviewInfo? =

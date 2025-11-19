@@ -4,7 +4,6 @@ import com.eatssu.android.domain.model.Menu
 import com.google.gson.annotations.SerializedName
 
 data class GetMealResponse(
-
     @SerializedName("mealId") var mealId: Long? = null,
     @SerializedName("price") var price: Int? = null,
     @SerializedName("rating") var rating: Double? = null,
@@ -12,11 +11,9 @@ data class GetMealResponse(
 )
 
 data class MenusInformationList(
-
     @SerializedName("menuId") var menuId: Long? = null,
     @SerializedName("name") var name: String? = null,
-
-    )
+)
 
 fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
     val menuList = mutableListOf<Menu>()

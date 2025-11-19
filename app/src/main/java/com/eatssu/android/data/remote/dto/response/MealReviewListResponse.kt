@@ -6,18 +6,18 @@ import com.google.gson.annotations.SerializedName
 data class MealReviewListResponse(
     @SerializedName("numberOfElements") val numberOfElements: Int? = null,
     @SerializedName("hasNext") val hasNext: Boolean? = null,
-    @SerializedName("dataList") val dataList: ArrayList<DataList> = arrayListOf()
+    @SerializedName("dataList") val dataList: List<DataList> = arrayListOf()
 ) {
     data class DataList(
         @SerializedName("reviewId") val reviewId: Long? = null,
-        @SerializedName("menuList") val menuList: ArrayList<MenuList> = arrayListOf(),
+        @SerializedName("menuList") val menuList: List<MenuList> = arrayListOf(),
         @SerializedName("writerId") val writerId: Long? = null,
         @SerializedName("isWriter") val isWriter: Boolean? = null,
         @SerializedName("writerNickname") val writerNickname: String? = null,
         @SerializedName("rating") val rating: Int? = null,
         @SerializedName("writtenAt") val writtenAt: String? = null,
         @SerializedName("content") val content: String? = null,
-        @SerializedName("imageUrls") val imageUrls: ArrayList<String> = arrayListOf(),
+        @SerializedName("imageUrls") val imageUrls: List<String> = arrayListOf(),
     ) {
         data class MenuList(
             @SerializedName("id") val id: Long? = null,

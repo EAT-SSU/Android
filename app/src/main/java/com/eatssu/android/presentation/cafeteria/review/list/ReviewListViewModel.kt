@@ -59,19 +59,21 @@ class ReviewListViewModel @Inject constructor(
 
     fun deleteReview(reviewId: Long) {
         viewModelScope.launch {
-            try {
-                deleteReviewUseCase(reviewId)
-                _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
 
-                // 삭제 성공 시 목록 재조회
-                val type = lastMenuType
-                val id = lastItemId
-                if (type != null && id != null) {
-                    // 같은 코루틴 안에서 suspend로 연속 실행
-                    loadReview(type, id)
-                }
-            } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 삭제 실패"))
+            val success = deleteReviewUseCase(reviewId)
+
+            if (!success) {
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 삭제에 실패했습니다."))
+                return@launch
+            }
+
+            // 삭제 성공 시
+            _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다."))
+            val type = lastMenuType
+            val id = lastItemId
+            if (type != null && id != null) {
+                // 같은 코루틴 안에서 suspend로 연속 실행
+                loadReview(type, id)
             }
         }
     }

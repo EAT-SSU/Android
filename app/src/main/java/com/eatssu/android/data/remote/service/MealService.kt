@@ -2,9 +2,7 @@ package com.eatssu.android.data.remote.service
 
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.GetMealResponse
-import com.eatssu.android.data.remote.dto.response.MenuOfMealResponse
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MealService {
@@ -17,13 +15,5 @@ interface MealService {
         @Query("restaurant") restaurant: String,
         @Query("time") time: String,
     ): ApiResult<List<GetMealResponse>>
-
-    /**
-     * 메뉴 정보 리스트 조회
-     */
-    @GET("meals/{mealId}/menus-info")
-    suspend fun getMenuInfoByMealId(
-        @Path("mealId") mealId: Long,
-    ): ApiResult<MenuOfMealResponse>
 
 }

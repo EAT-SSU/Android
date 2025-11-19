@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.MenuMini
-import com.eatssu.android.domain.model.Result
 import com.eatssu.android.domain.model.ReviewWriteData
 import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
@@ -50,6 +49,7 @@ class WriteReviewViewModel @Inject constructor(
                         name = menuName
                     )
                 )
+
                 MenuType.VARIABLE -> getValidMenusOfMealUseCase(id)
             }
             _uiState.value = UiState.Success(
@@ -102,85 +102,75 @@ class WriteReviewViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            try {
-                // 1) 이미지 업로드(있으면)
-                var imageUrl: String? = null
-                editing.selectedImageUri?.let { uri ->
-                    try {
-                        val originalFile = uriToFile(uri, context)
-                        if (originalFile.exists()) {
-                            // 이미지 압축
-                            val compressedFile = compressImage(context, originalFile)
-                            if (compressedFile != null && compressedFile.exists()) {
-                                imageUrl = getImageUrlUseCase(compressedFile)
-                                _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+            // 1) 이미지 업로드(있으면)
+            var imageUrl: String? = null
+            editing.selectedImageUri?.let { uri ->
+                try {
+                    val originalFile = uriToFile(uri, context)
+                    if (originalFile.exists()) {
+                        // 이미지 압축
+                        val compressedFile = compressImage(context, originalFile)
+                        if (compressedFile != null && compressedFile.exists()) {
+                            imageUrl = getImageUrlUseCase(compressedFile)
+                            _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
 
-                                // 원본 파일 삭제 (압축된 파일만 유지)
-                                originalFile.delete()
-                            } else {
-                                _uiState.value = UiState.Success(editing) // 되돌림
-                                _uiEvent.emit(UiEvent.ShowToast("이미지 압축에 실패하였습니다."))
-                                return@launch
-                            }
+                            // 원본 파일 삭제 (압축된 파일만 유지)
+                            originalFile.delete()
                         } else {
                             _uiState.value = UiState.Success(editing) // 되돌림
-                            _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
+                            _uiEvent.emit(UiEvent.ShowToast("이미지 압축에 실패하였습니다."))
                             return@launch
                         }
-                    } catch (e: Exception) {
-                        Timber.e(e, "이미지 업로드 실패")
+                    } else {
                         _uiState.value = UiState.Success(editing) // 되돌림
-                        _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+                        _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
                         return@launch
                     }
+                } catch (e: Exception) {
+                    Timber.e(e, "이미지 업로드 실패")
+                    _uiState.value = UiState.Success(editing) // 되돌림
+                    _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+                    return@launch
                 }
+            }
 
-                // 2) 리뷰 작성
-                val reviewData = ReviewWriteData(
-                    rating = editing.rating,
-                    content = editing.content,
-                    likeMenuIdList = editing.likedMenuIds.toList(),
-                    imageUrl = imageUrl
-                )
-                when (val result = writeReviewUseCase(menuType, itemId, reviewData)) {
-                    is Result.Success -> {
-                        _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
-                        _uiEvent.emit(UiEvent.NavigateBack)
-                    }
-
-                    is Result.Failure -> {
-                        _uiState.value = UiState.Success(editing) // 되돌림
-                        _uiEvent.emit(UiEvent.ShowToast(result.message))
-                    }
-                }
-            } catch (e: Exception) {
-                Timber.e(e)
+            // 2) 리뷰 작성
+            val reviewData = ReviewWriteData(
+                rating = editing.rating,
+                content = editing.content,
+                likeMenuIdList = editing.likedMenuIds.toList(),
+                imageUrl = imageUrl
+            )
+            val success = writeReviewUseCase(menuType, itemId, reviewData)
+            if (!success) {
                 _uiState.value = UiState.Success(editing) // 되돌림
                 _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+                return@launch
             }
         }
     }
+}
 
-    private fun uriToFile(uri: Uri, context: Context): File {
-        val inputStream: InputStream = context.contentResolver.openInputStream(uri)
-            ?: throw IllegalArgumentException("Cannot open input stream for URI: $uri")
+private fun uriToFile(uri: Uri, context: Context): File {
+    val inputStream: InputStream = context.contentResolver.openInputStream(uri)
+        ?: throw IllegalArgumentException("Cannot open input stream for URI: $uri")
 
-        val file = File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
-        val outputStream = FileOutputStream(file)
+    val file = File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+    val outputStream = FileOutputStream(file)
 
-        inputStream.use { input -> outputStream.use { output -> input.copyTo(output) } }
-        return file
-    }
+    inputStream.use { input -> outputStream.use { output -> input.copyTo(output) } }
+    return file
+}
 
-    private suspend fun compressImage(context: Context, originalFile: File): File? {
-        return try {
-            Compressor.compress(context, originalFile)
-        } catch (e: Exception) {
-            Timber.e(e, "이미지 압축 실패")
-            null
-        }
+private suspend fun compressImage(context: Context, originalFile: File): File? {
+    return try {
+        Compressor.compress(context, originalFile)
+    } catch (e: Exception) {
+        Timber.e(e, "이미지 압축 실패")
+        null
     }
 }
+
 
 sealed class WriteReviewState {
     data class Editing(

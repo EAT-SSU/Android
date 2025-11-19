@@ -12,11 +12,11 @@ interface ReviewRepository {
 
     suspend fun writeMenuReview(
         body: WriteMenuReviewRequest,
-    )
+    ): Boolean
 
     suspend fun writeMealReview(
         body: WriteMealReviewRequest,
-    )
+    ): Boolean
 
     suspend fun deleteReview(
         reviewId: Long,
