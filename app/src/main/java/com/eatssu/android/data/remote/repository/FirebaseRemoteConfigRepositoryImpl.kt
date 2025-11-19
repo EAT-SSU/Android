@@ -1,4 +1,4 @@
-package com.eatssu.android.data.repository
+package com.eatssu.android.data.remote.repository
 
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.RestaurantInfo

@@ -1,6 +1,7 @@
 package com.eatssu.android.di
 
 
+import com.eatssu.android.data.remote.repository.FirebaseRemoteConfigRepositoryImpl
 import com.eatssu.android.data.remote.repository.HealthCheckRepositoryImpl
 import com.eatssu.android.data.remote.repository.MealRepositoryImpl
 import com.eatssu.android.data.remote.repository.MenuRepositoryImpl
@@ -9,6 +10,7 @@ import com.eatssu.android.data.remote.repository.PartnershipRepositoryImpl
 import com.eatssu.android.data.remote.repository.ReportRepositoryImpl
 import com.eatssu.android.data.remote.repository.ReviewRepositoryImpl
 import com.eatssu.android.data.remote.repository.UserRepositoryImpl
+import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.repository.HealthCheckRepository
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.MenuRepository
