@@ -67,7 +67,7 @@ class ModifyViewModel @Inject constructor(
             )
             if (!success) {
                 _uiState.value = UiState.Success(editing)
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 수정 실패: ${e.message}"))
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 수정이 실패했습니다."))
             }
 
             _uiEvent.emit(UiEvent.NavigateBack)

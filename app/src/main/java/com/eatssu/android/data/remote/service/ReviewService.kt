@@ -3,16 +3,15 @@ package com.eatssu.android.data.remote.service
 
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteMealReviewRequest
+import com.eatssu.android.data.remote.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.data.remote.dto.response.ImageResponse
-import com.eatssu.android.data.dto.request.WriteMealReviewRequest
-import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
-import com.eatssu.android.data.dto.response.MealReviewListResponse
-import com.eatssu.android.data.dto.response.MenuReviewListResponse
-import com.eatssu.android.data.dto.response.MyReviewListResponse
 import com.eatssu.android.data.remote.dto.response.MealReviewInfoResponse
+import com.eatssu.android.data.remote.dto.response.MealReviewListResponse
 import com.eatssu.android.data.remote.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.remote.dto.response.MenuReviewInfoResponse
+import com.eatssu.android.data.remote.dto.response.MenuReviewListResponse
+import com.eatssu.android.data.remote.dto.response.MyReviewListResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE

@@ -2,7 +2,6 @@ package com.eatssu.android.data.remote.repository
 
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
-import com.eatssu.android.data.remote.dto.response.MenusInformation
 import com.eatssu.android.data.remote.dto.response.mapTodayMenuResponseToMenu
 import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.MealService
@@ -34,6 +33,4 @@ class MealRepositoryImpl @Inject constructor(
             .orEmptyList()
     }
 
-    override suspend fun getMenuInfoByMealId(mealId: Long): List<MenusInformation> =
-        mealService.getMenuInfoByMealId(mealId).map { it.briefMenus }.orEmptyList()
 }

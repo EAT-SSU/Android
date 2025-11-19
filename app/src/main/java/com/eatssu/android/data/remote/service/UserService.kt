@@ -6,7 +6,6 @@ import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.remote.dto.response.CollegeResponse
 import com.eatssu.android.data.remote.dto.response.DepartmentResponse
 import com.eatssu.android.data.remote.dto.response.MyNickNameResponse
-import com.eatssu.android.data.remote.dto.response.MyReviewResponse
 import com.eatssu.android.data.remote.dto.response.PartnershipResponse
 import com.eatssu.android.data.remote.dto.response.UserCollegeDepartmentResponse
 import retrofit2.http.Body
@@ -27,9 +26,6 @@ interface UserService {
     suspend fun checkNickname(
         @Query("nickname") nickname: String,
     ): ApiResult<Boolean>
-
-    @GET("users/reviews") //내가 쓴 리뷰 모아보기
-    suspend fun getMyReviews(): ApiResult<MyReviewResponse>
 
     @GET("users/mypage") //내 정보 모아보기
     suspend fun getMyInfo(): ApiResult<MyNickNameResponse>

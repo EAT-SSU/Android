@@ -4,7 +4,6 @@ import com.eatssu.android.data.remote.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.remote.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.domain.model.Result
 import com.eatssu.android.domain.model.ReviewWriteData
-import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.common.enums.MenuType
 import javax.inject.Inject

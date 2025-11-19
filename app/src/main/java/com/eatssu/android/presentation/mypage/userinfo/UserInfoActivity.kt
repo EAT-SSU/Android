@@ -14,11 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
-import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
