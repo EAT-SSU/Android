@@ -1,8 +1,6 @@
 package com.eatssu.android.presentation.mypage.userinfo
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +8,15 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
+import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ScreenId
@@ -29,11 +31,7 @@ class UserInfoActivity :
         ScreenId.MYPAGE_USERINFO
     ) {
 
-    private val userInfoViewModel: UserInfoViewModel by viewModels()
-
-    private var inputNickname: String = ""
-
-    private var force: Boolean = false
+    private val viewModel: UserInfoViewModel by viewModels()
 
     private var selectedCollegeIndex = 0
     private var selectedDepartmentIndex = 0
@@ -42,184 +40,164 @@ class UserInfoActivity :
         super.onCreate(savedInstanceState)
         toolbarTitle.text = "내 정보"
 
-        // 현재 설정된 유저 정보 가져오기
-        userInfoViewModel.loadUserInfo()
-
-        force = intent.getBooleanExtra("force", false)
-
-        binding.btnCheckNicknameDuplication.isEnabled = false
-        binding.btnComplete.isEnabled = false
-
-        lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest { it ->
-                if (binding.etChNickname.text.toString() != it.nickname) {
-                    binding.etChNickname.setText(it.nickname)
-                    binding.etChNickname.setSelection(it.nickname.length) // 커서 끝으로 이동
-                }
-                binding.tvCollege.text = it.selectedCollege.collegeName
-                binding.tvDepartment.text = it.selectedDepartment.departmentName
-            }
-        }
-
-        binding.etChNickname.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                inputNickname = binding.etChNickname.text.trim().toString()
-                val nicknameLength = inputNickname.length
-                val isValidLength = nicknameLength in 2..8
-                val isNicknameChanged = inputNickname != userInfoViewModel.uiState.value.originalNickname
-
-                binding.btnCheckNicknameDuplication.isEnabled = isValidLength && isNicknameChanged
-                binding.btnComplete.isEnabled = false
-
-                if (!isValidLength && inputNickname.isNotEmpty()) {
-                    binding.tvNickname28.setTextColor(getColor(R.color.error))
-                    binding.tvNickname28.text = getString(R.string.set_nickname_2_8)
-                    binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-                } else {
-                    binding.tvNickname28.setTextColor(getColor(R.color.gray600))
-                }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-
-        setOnCheckNicknameDuplicationClickListener()
-        setCollegeDepartmentClickListener()
-        collectButtonEnableState()
-        collectUIState()
+        setupListeners()
+        observeUiState()
+        observeUiEvent()
     }
 
-    private fun collectButtonEnableState() {
-        lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest { state ->
-                binding.btnComplete.isEnabled =
-                        // 닉네임이 바뀌었으면 중복 확인까지 통과해야만 활성화
-                    (state.isNicknameChecked && state.isNicknameChanged && state.isEnableName) ||
-                            // 닉네임이 안 바뀌었을 때는 학과/단과대만 바뀌면 활성화
-                            (!state.isNicknameChanged && state.isDepartmentChanged)
-            }
+    private fun setupListeners() {
+        // 닉네임 입력
+        binding.etChNickname.addTextChangedListener { text ->
+            viewModel.onNicknameChanged(text.toString())
         }
-    }
 
-    private fun setOnCheckNicknameDuplicationClickListener() {
+        // 중복 확인 버튼
         binding.btnCheckNicknameDuplication.setOnClickListener {
-            userInfoViewModel.checkNickname(inputNickname)
-
-            // 닉네임 중복 확인 후 UI 상태 업데이트 로직
-            // TODO 이 부분은 ViewModel에서 처리하는 것이 더 좋음
-            // 입력 변화 이벤트(TextWatcher) 시점에서 ViewModel로 값을 보내고,
-            // 검증 결과를 StateFlow로 내려주게 수정하자
-            lifecycleScope.launch {
-                userInfoViewModel.uiState.collectLatest {
-                    if (it.isEnableName) {
-                        binding.btnCheckNicknameDuplication.isEnabled = false // 중복확인 비활성화
-                        binding.btnComplete.isEnabled = true // 저장하기 활성화
-                        binding.tvNickname28.text = getString(R.string.set_nickname_able)
-                        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
-                        binding.tvNickname28.setTextColor(getColor(R.color.gray600))
-                        userInfoViewModel.updateNickname(inputNickname)
-                    } else {
-                        binding.btnComplete.isEnabled = false
-                        binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
-                        binding.tvNickname28.text = getString(R.string.set_nickname_unable)
-                        binding.tvNickname28.setTextColor(getColor(R.color.error))
-                    }
-                }
-            }
+            viewModel.checkNicknameDuplication()
         }
 
+        // 저장 버튼
         binding.btnComplete.setOnClickListener {
-            val currentState = userInfoViewModel.uiState.value
-
-            if (currentState.isNicknameChanged) {
-                // 닉네임 변경 → 닉네임 저장 + 완료 시 학과 저장도 호출
-                userInfoViewModel.changeUserNickname()
-
-                lifecycleScope.launch {
-                    userInfoViewModel.uiState.collectLatest {
-                        if (it.isDone) {
-                            // 닉네임 저장 성공 후 학과 변경도 필요하다면 호출
-                            if (it.isCollegeChanged || it.isDepartmentChanged) {
-                                userInfoViewModel.updateUserDepartment()
-                            } else {
-                                showToast(it.toastMessage)
-                                finish()
-                            }
-                        }
-                    }
-                }
-            } else {
-                // 닉네임 변경 없음 → 학과만 변경
-                userInfoViewModel.updateUserDepartment()
-            }
+            viewModel.saveUserInfo()
         }
-    }
 
-    private fun collectUIState(){
-        lifecycleScope.launch {
-            userInfoViewModel.uiState.collectLatest { state ->
-                if (state.success) {
-                    showToast("정보가 업데이트 되었습니다.")
-                    finish()
-                }
-            }
-        }
-    }
-
-    private fun setCollegeDepartmentClickListener() {
+        // 단과대 선택
         binding.flCollege.setOnClickListener {
+            handleCollegeClick()
+        }
 
-            // 최신 state 사용
-            val state = userInfoViewModel.uiState.value
+        // 학과 선택
+        binding.flDepartment.setOnClickListener {
+            handleDepartmentClick()
+        }
+    }
 
-            // 닉네임이 변경되었고 + 아직 중복확인을 안 했다면 막기
-            if (state.isNicknameChanged && !state.isNicknameChecked) {
-                showToast("닉네임 중복 확인을 완료해 주세요.")
-                return@setOnClickListener
+    private fun observeUiState() {
+        lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                if (state !is UiState.Success) return@collectLatest
+                val data = state.data
+
+                updateNicknameUI(data)
+                updateCollegeDepartmentUI(data)
+                updateButtonsState(data)
+
+                // 저장 완료 시 닫기
+                if (data.isDone) finish()
             }
+        }
+    }
 
-            // 단과대 목록 요청
-            userInfoViewModel.loadCollegeList()
-
-            if (state.collegeList.isNotEmpty()) {
-                val collegeNames = state.collegeList.map { it.collegeName }
-                showDropdownPopup(binding.tvCollege, collegeNames, selectedCollegeIndex) { selected, index ->
-                    selectedCollegeIndex = index
-                    binding.tvCollege.text = selected
-
-                    selectedDepartmentIndex = 0
-                    binding.tvDepartment.text = "학과"
-
-                    val selectedCollege = state.collegeList[index]
-                    userInfoViewModel.updateInputCollege(selectedCollege)
-                    userInfoViewModel.loadDepartmentList(selectedCollege.collegeId)
+    private fun observeUiEvent() {
+        lifecycleScope.launch {
+            viewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    is UiEvent.ShowToast -> showToast(event.message)
                 }
             }
         }
+    }
 
-        binding.flDepartment.setOnClickListener {
-            val state = userInfoViewModel.uiState.value
+    private fun updateNicknameUI(data: UserInfoData) {
+        // 닉네임 텍스트 동기화 (무한 루프 방지)
+        if (binding.etChNickname.text.toString() != data.nickname) {
+            binding.etChNickname.setText(data.nickname)
+            binding.etChNickname.setSelection(data.nickname.length)
+        }
 
-            // 닉네임이 변경되었고 + 아직 중복확인을 안 했다면 막기
-            if (state.isNicknameChanged && !state.isNicknameChecked) {
-                showToast("닉네임 중복 확인을 완료해 주세요.")
-                return@setOnClickListener
+        // 닉네임 상태에 따른 UI 업데이트
+        when {
+            data.nicknameValidationError != null -> {
+                binding.tvNicknameStatus.text = data.nicknameValidationError
+                binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
             }
 
-            // 학과 리스트가 비어있다면 현재 단과대 기준으로 다시 로드
-            if (state.departmentList.isEmpty() && state.selectedCollege.collegeId != -1) {
-                userInfoViewModel.loadDepartmentList(state.selectedCollege.collegeId)
+            data.isDuplicationChecked -> {
+                binding.tvNicknameStatus.text = getString(R.string.set_nickname_able)
+                binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
             }
 
-            if (state.departmentList.isNotEmpty()) {
-                val departmentNames = state.departmentList.map { it.departmentName }
-                showDropdownPopup(binding.tvDepartment, departmentNames, selectedDepartmentIndex) { departmentName, departmentIndex ->
-                    selectedDepartmentIndex = departmentIndex
-                    binding.tvDepartment.text = departmentName
-                    userInfoViewModel.updateInputDepartment(state.departmentList[departmentIndex])
-                }
+            else -> {
+                binding.tvNicknameStatus.text = getString(
+                    R.string.set_nickname_length,
+                    UserInfoViewModel.MIN_NICKNAME_LENGTH,
+                    UserInfoViewModel.MAX_NICKNAME_LENGTH
+                )
+                binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
+                binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
             }
+        }
+    }
+
+    private fun updateCollegeDepartmentUI(data: UserInfoData) {
+        with(binding) {
+            tvCollege.text = data.selectedCollege.collegeName
+            tvCollege.setTextColor(
+                getColor(
+                    if (data.selectedCollege.collegeId != -1) R.color.gray700 else R.color.gray400
+                )
+            )
+
+            tvDepartment.text = data.selectedDepartment.departmentName
+            tvDepartment.setTextColor(
+                getColor(
+                    if (data.selectedDepartment.departmentId != -1) R.color.gray700 else R.color.gray400
+                )
+            )
+        }
+    }
+
+    private fun updateButtonsState(data: UserInfoData) {
+        binding.btnCheckNicknameDuplication.isEnabled = data.canCheckDuplication
+        binding.btnComplete.isEnabled = data.canSave
+    }
+
+    private fun handleCollegeClick() {
+        val state = viewModel.uiState.value as? UiState.Success ?: return
+        val data = state.data
+
+        val collegeNames = data.collegeList.map { it.collegeName }
+        showDropdownPopup(
+            anchor = binding.tvCollege,
+            items = collegeNames,
+            selectedIndex = selectedCollegeIndex
+        ) { _, index ->
+            selectedCollegeIndex = index
+            selectedDepartmentIndex = 0
+
+            val selectedCollege = data.collegeList[index]
+            viewModel.selectCollege(selectedCollege)
+        }
+    }
+
+    private fun handleDepartmentClick() {
+        val state = viewModel.uiState.value as? UiState.Success ?: return
+        val data = state.data
+
+        // 단과대를 먼저 선택하도록 유도
+        if (data.selectedCollege.collegeId == -1) {
+            showToast("단과대를 먼저 선택해 주세요.")
+            return
+        }
+
+        // 학과 목록이 비어있으면 로드
+        if (data.departmentList.isEmpty()) {
+            viewModel.loadDepartmentList(data.selectedCollege.collegeId)
+            return
+        }
+
+        val departmentNames = data.departmentList.map { it.departmentName }
+        showDropdownPopup(
+            anchor = binding.tvDepartment,
+            items = departmentNames,
+            selectedIndex = selectedDepartmentIndex
+        ) { _, index ->
+            selectedDepartmentIndex = index
+
+            val selectedDepartment = data.departmentList[index]
+            viewModel.selectDepartment(selectedDepartment)
         }
     }
 
@@ -268,18 +246,36 @@ class UserInfoActivity :
                 if (position == selectedIndex) {
                     holder.itemView.setBackgroundResource(R.drawable.bg_menu_selected_item)
                 } else {
-                    holder.itemView.setBackgroundColor(ContextCompat.getColor(this@UserInfoActivity, android.R.color.transparent))
+                    holder.itemView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this@UserInfoActivity,
+                            android.R.color.transparent
+                        )
+                    )
                 }
             }
         }
 
         popupWindow.elevation = 8f
         popupWindow.isOutsideTouchable = true
-        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.shape_text_field_small))
+        popupWindow.setBackgroundDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.shape_text_field_small
+            )
+        )
 
         popupWindow.showAsDropDown(anchor, -24, binding.tvDepartment.height + 8)
 
         // 현재 팝업 윈도우를 저장
         currentPopup = popupWindow
     }
+
+
+    private fun checkDoneAndFinish(data: UserInfoData) {
+        if (data.isDone) {
+            finish()
+        }
+    }
+
 }

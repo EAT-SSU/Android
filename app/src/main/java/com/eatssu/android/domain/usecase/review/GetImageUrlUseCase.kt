@@ -9,6 +9,6 @@ class GetImageUrlUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         file: File
-    ): String =
-        reviewRepository.getImageString(file)
+    ): String? =
+        reviewRepository.getImageString(file)?.url
 }

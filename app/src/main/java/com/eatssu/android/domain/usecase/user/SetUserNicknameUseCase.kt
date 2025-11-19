@@ -1,10 +1,8 @@
 package com.eatssu.android.domain.usecase.user
 
-import android.content.Context
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.local.AccountDataStore
+import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.repository.UserRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 //class SetUserNameUseCase @Inject constructor(
@@ -21,11 +19,11 @@ import javax.inject.Inject
 
 class SetUserNicknameUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    @ApplicationContext private val context: Context
+    private val accountDataStore: AccountDataStore
 ) {
-    suspend operator fun invoke(nickname: String) {
+    suspend operator fun invoke(nickname: String): Result<Unit> {
         // 로컬 저장
-        MySharedPreferences.setUserName(context, nickname)
-        userRepository.updateUserName(ChangeNicknameRequest(nickname))
+        accountDataStore.setName(nickname)
+        return userRepository.updateUserName(ChangeNicknameRequest(nickname))
     }
 }

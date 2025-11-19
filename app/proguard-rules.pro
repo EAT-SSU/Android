@@ -33,6 +33,9 @@
 -keep class com.eatssu.android.data.enums.** {
   *;
 }
+-keep class com.eatssu.android.data.model.** {
+  *;
+}
 
 # https://github.com/square/okhttp/pull/6792
 -dontwarn org.bouncycastle.jsse.**

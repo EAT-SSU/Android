@@ -1,12 +1,13 @@
 package com.eatssu.android.di
 
-import com.eatssu.android.data.service.MealService
-import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.OauthService
-import com.eatssu.android.data.service.PartnershipService
-import com.eatssu.android.data.service.ReportService
-import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.data.service.UserService
+import com.eatssu.android.data.remote.service.HealthCheckService
+import com.eatssu.android.data.remote.service.MealService
+import com.eatssu.android.data.remote.service.MenuService
+import com.eatssu.android.data.remote.service.OauthService
+import com.eatssu.android.data.remote.service.PartnershipService
+import com.eatssu.android.data.remote.service.ReportService
+import com.eatssu.android.data.remote.service.ReviewService
+import com.eatssu.android.data.remote.service.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +60,11 @@ object ServiceModule {
     fun providePartnershipService(retrofit: Retrofit): PartnershipService {
         return retrofit.create(PartnershipService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideHealthCheckService(@NoToken noTokenRetrofit: Retrofit): HealthCheckService {
+        return noTokenRetrofit.create(HealthCheckService::class.java)
+    }
+
 }

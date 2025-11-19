@@ -43,18 +43,16 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         binding.tvName.text = restaurantType.korean
 
         CoroutineScope(Dispatchers.Main).launch {
-            infoViewModel.infoList.collect {
-                val restaurantInfo = infoViewModel.getRestaurantInfo(restaurantType)
+            val restaurantInfo = infoViewModel.getRestaurantInfo(restaurantType)
 
-                restaurantInfo?.let {
-                    binding.tvLocation.text = it.location
-                    binding.tvTime.text = it.time
-                    binding.tvEtc.text = it.etc
+            restaurantInfo?.let {
+                binding.tvLocation.text = it.location
+                binding.tvTime.text = it.time
+                binding.tvEtc.text = it.etc
 
-                    Glide.with(this@InfoBottomSheetFragment)
-                        .load(it.photoUrl)
-                        .into(binding.ivCafeteriaPhoto)
-                }
+                Glide.with(this@InfoBottomSheetFragment)
+                    .load(it.image)
+                    .into(binding.ivCafeteriaPhoto)
             }
         }
     }

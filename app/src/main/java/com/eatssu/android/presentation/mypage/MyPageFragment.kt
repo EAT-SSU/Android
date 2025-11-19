@@ -68,7 +68,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                         when (ui) {
                             is UiState.Init, UiState.Loading -> Unit // 닉네임만 불러옴으로 로딩 인디케이터 없음
                             is UiState.Success -> {
-                                ui.data?.let { render(it) }
+                                render(ui.data)
                             }
 
                             is UiState.Error -> {

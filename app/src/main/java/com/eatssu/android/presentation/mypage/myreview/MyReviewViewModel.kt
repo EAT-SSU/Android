@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +34,10 @@ class MyReviewViewModel @Inject constructor(
     private val _nickname = MutableStateFlow<String>("")
     val nickname: StateFlow<String> = _nickname
 
+    init {
+        getMyReviewList()
+    }
+
     fun loadUserNickname() {
         viewModelScope.launch {
             _nickname.value = getUserNickNameUseCase()
@@ -44,20 +48,24 @@ class MyReviewViewModel @Inject constructor(
         _uiState.value = UiState.Loading
 
         viewModelScope.launch {
-            try {
-                val myReviewList = getMyReviewsUseCase()
-                _uiState.value = UiState.Success(
-                    if (myReviewList.isEmpty()) {
-                        MyReviewState.NoReview
-                    } else {
-                        MyReviewState.ReviewExists(myReviews = myReviewList)
-                    }
-                )
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
-                Timber.d("getMyReviewList: ${e.message}")
-            }
+            val myReviewList = getMyReviewsUseCase()
+            _uiState.value = UiState.Success(
+                if (myReviewList.isEmpty()) {
+                    MyReviewState.NoReview
+                } else {
+                    MyReviewState.ReviewExists(myReviews = myReviewList)
+                }
+            )
+
+
+//            try {
+//                val myReviewList = getMyReviewsUseCase()
+//
+//            } catch (e: Exception) {
+//                _uiState.value = UiState.Error
+//                _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
+//                Timber.d("getMyReviewList: ${e.message}")
+//            }
         }
     }
 
@@ -72,6 +80,27 @@ class MyReviewViewModel @Inject constructor(
                 _uiEvent.emit(UiEvent.ShowToast("Error: $e"))
                 Timber.d("deleteReview: ${e.message}")
             }
+
+//            val success = deleteReviewUseCase(reviewId)
+//            if (!success) {
+//                _uiState.update {
+//                    it.copy(
+//                        loading = false,
+//                        error = true,
+//                        toastMessage = context.getString(R.string.delete_not)
+//                    )
+//                }
+//                return@launch
+//            }
+//
+//            _uiState.update {
+//                it.copy(
+//                    loading = false,
+//                    error = false,
+//                    isDeleted = true,
+//                    toastMessage = context.getString(R.string.delete_done)
+//                )
+//            }
         }
     }
 }

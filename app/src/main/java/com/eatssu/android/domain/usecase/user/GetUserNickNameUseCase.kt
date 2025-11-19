@@ -1,18 +1,19 @@
 package com.eatssu.android.domain.usecase.user
 
-import android.content.Context
-import com.eatssu.android.data.MySharedPreferences
+import com.eatssu.android.data.local.AccountDataStore
 import com.eatssu.android.domain.repository.UserRepository
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class GetUserNickNameUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    private val context: Context // SharedPreferences 접근용
+    private val accountDataStore: AccountDataStore
 ) {
     suspend operator fun invoke(): String {
-        return MySharedPreferences.getUserName(context).ifEmpty {
+        val localName = accountDataStore.name.first() // Flow에서 첫 값 가져오기
+        return localName.ifEmpty {
             val remoteNickname = userRepository.getUserNickName()
-            MySharedPreferences.setUserName(context, remoteNickname)
+            accountDataStore.setName(remoteNickname)
             remoteNickname
         }
     }

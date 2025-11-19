@@ -1,11 +1,11 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
 import com.eatssu.android.data.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
 import java.io.File
 
 interface ReviewRepository {
@@ -20,12 +20,12 @@ interface ReviewRepository {
 
     suspend fun deleteReview(
         reviewId: Long,
-    )
+    ): Boolean
 
     suspend fun modifyReview(
         reviewId: Long,
         body: ModifyReviewRequest,
-    )
+    ): Boolean
 
     suspend fun getMenuReviewList(
         menuId: Long?,

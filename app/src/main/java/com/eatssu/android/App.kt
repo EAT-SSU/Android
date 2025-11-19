@@ -1,7 +1,6 @@
 package com.eatssu.android
 
 import android.app.Application
-import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.eatssu.android.domain.model.TokenState
@@ -23,9 +22,6 @@ import javax.inject.Inject
 /** App: 앱이 살아있는 동안 공통 리소스 관리를 위한 클래스 */
 @HiltAndroidApp
 class App : Application(), Configuration.Provider {
-    companion object{
-        lateinit var appContext: Context //todo 이거 빼기
-    }
 
     /** 앱 전체에서 사용할 수 있는 CoroutineScope(독립적인 공간을 만들어 안정성 높임)
      *  자식 CoroutineScope가 취소되더라도 부모 CoroutineScope는 취소되지 않음
@@ -39,7 +35,6 @@ class App : Application(), Configuration.Provider {
         super.onCreate()
         FirebaseApp.initializeApp(this)
 
-        appContext = this
         KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)
 
         if (BuildConfig.DEBUG) {

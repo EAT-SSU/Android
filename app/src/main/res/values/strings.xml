@@ -99,7 +99,7 @@
 
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
-    <string name="set_nickname_2_8">2~8글자를 입력해주세요.</string>
+    <string name="set_nickname_length">%1$d~%2$d글자를 입력해주세요.</string>
     <string name="set_nickname_able">사용 가능한 닉네임입니다!</string>
     <string name="set_nickname_unable">이미 사용 중인 닉네임입니다.</string>
 
@@ -174,7 +174,7 @@
     <string name="mypage">마이</string>
     <string name="mypage_full">마이페이지</string>
 
-    <string name="login_failed">로그인이 실패했습니다.\n</string>
+    <string name="login_failed">로그인이 실패했습니다.</string>
     <string name="token_expired">세션이 만료되었습니다. 다시 로그인 해주세요.</string>
     <string name="token_server_error">시스템 오류로 다시 로그인해주세요.</string>
 
@@ -189,4 +189,8 @@
 
     <string name="eatssu_instagram">eatssu.official</string>
     <string name="recruiting_url">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
+
+    <string name="server_error_title">통신 오류</string>
+    <string name="server_error_message">서버와 통신할 수 없습니다.\n잠시 후 다시 시도해주세요.</string>
+    <string name="confirm">확인</string>
 </resources>

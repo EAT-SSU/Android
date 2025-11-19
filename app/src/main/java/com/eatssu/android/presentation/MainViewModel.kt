@@ -15,14 +15,12 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -44,51 +42,45 @@ class MainViewModel @Inject constructor(
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
+        loadStoredUserDepartment()
         getUserDepartment()
         fetchAndCheckNickname()
     }
 
     fun refreshUserDepartment() {
-        val userInfo = getUserCollegeDepartmentUseCase()
-        _uiState.value = UiState.Success(
-            MainState.DepartmentState(
-                departmentName = userInfo.userDepartment.departmentName
+        viewModelScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = userInfo.userDepartment.departmentName
+                )
             )
-        )
+        }
     }
 
     private fun fetchAndCheckNickname() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            runCatching {
-                withContext(Dispatchers.IO) { getUserNickNameUseCase() }
-            }.onSuccess { nickname ->
-                // 1) 닉네임 없음/기본 프리셋
-                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
-                    _uiState.value = UiState.Success(MainState.NicknameNull)
-                    _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
-                    return@launch // ← 아래 분기 실행 막기
-                }
 
-                // 2) 정상 닉네임
-                _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        String.format(
-                            context.getString(R.string.hello_user),
-                            nickname
-                        )
-                    )
-                )
-            }.onFailure { e ->
-                _uiState.value = UiState.Error
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                            context.getString(R.string.not_found)
-                    )
-                )
-                Timber.e(e)
+            val nickname = getUserNickNameUseCase()
+
+            // 1) 닉네임 없음
+            if (nickname.isBlank()) {
+                _uiState.value = UiState.Success(MainState.NicknameNull)
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
+                return@launch
             }
+
+            // 2) 정상 닉네임
+            _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    String.format(
+                        context.getString(R.string.hello_user),
+                        nickname
+                    )
+                )
+            )
         }
     }
 
@@ -105,34 +97,43 @@ class MainViewModel @Inject constructor(
     fun setData(dataToSend: LocalDate) {
         data.value = dataToSend
 
-        Timber.d("setdata", dataToSend.toString())
+        Timber.d("setdata $dataToSend")
     }
 
     fun getData(): LiveData<LocalDate> {
         return data
     }
 
+    private fun loadStoredUserDepartment() {
+        viewModelScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = userInfo.userDepartment.departmentName,
+                    showUserDepartmentBottomSheet =
+                        (userInfo.userCollege.collegeId == -1 || userInfo.userDepartment.departmentId == -1)
+                )
+            )
+        }
+    }
+
     private fun getUserDepartment() {
         viewModelScope.launch {
-            runCatching {
-                userRepository.getUserCollegeDepartment()
-            }.onSuccess { it ->
-                val college = it.first
-                val department = it.second
-                setUserCollegeDepartmentUseCase(college, department)
-
-                _uiState.value = UiState.Success(
-                    MainState.DepartmentState(
-                        departmentName = department.departmentName,
-                        showUserDepartmentBottomSheet =
-                            (college.collegeId == -1 || department.departmentId == -1)
-                    )
-                )
-            }.onFailure { e ->
-                Timber.e("getUserDepartment failed: ${e.message}")
+            val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                return@launch
             }
+
+            setUserCollegeDepartmentUseCase(college, department)
+
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = department.departmentName,
+                    showUserDepartmentBottomSheet =
+                        (college.collegeId == -1 || department.departmentId == -1)
+                )
+            )
         }
     }
 }
@@ -143,7 +144,7 @@ sealed class MainState {
     data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
-        val departmentName: String = "",
+        val departmentName: String? = "",
         val showUserDepartmentBottomSheet: Boolean = false
     ) : MainState()
 }

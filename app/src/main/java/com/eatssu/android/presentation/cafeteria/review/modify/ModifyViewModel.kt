@@ -61,19 +61,17 @@ class ModifyViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            try {
-                modifyReviewUseCase(
-                    reviewId,
-                    ReviewModifyData(editing.rating, editing.content, editing.menuLikeInfos)
-                )
-                _uiEvent.emit(UiEvent.NavigateBack)
-                _uiEvent.emit(UiEvent.ShowToast("리뷰를 수정했습니다."))
-
-            } catch (e: Exception) {
-                // 실패 시 다시 Editing 상태로 되돌림
+            val success = modifyReviewUseCase(
+                reviewId,
+                ReviewModifyData(editing.rating, editing.content, editing.menuLikeInfos)
+            )
+            if (!success) {
                 _uiState.value = UiState.Success(editing)
                 _uiEvent.emit(UiEvent.ShowToast("리뷰 수정 실패: ${e.message}"))
             }
+
+            _uiEvent.emit(UiEvent.NavigateBack)
+            _uiEvent.emit(UiEvent.ShowToast("리뷰를 수정했습니다."))
         }
     }
 }

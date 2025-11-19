@@ -1,14 +1,12 @@
 package com.eatssu.android.domain.usecase.user
 
-import android.content.Context
-import com.eatssu.android.data.MySharedPreferences
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.eatssu.android.data.local.AccountDataStore
 import javax.inject.Inject
 
 class SetUserEmailUseCase @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val accountDataStore: AccountDataStore,
 ) {
     suspend operator fun invoke(email: String) {
-        MySharedPreferences.setUserEmail(context, email)
+        accountDataStore.setEmail(email)
     }
 }

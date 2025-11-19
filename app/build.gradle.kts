@@ -30,8 +30,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 28
         targetSdk = 35
-        versionCode = 39
-        versionName = "3.1.1"
+        versionCode = 43
+        versionName = "3.1.5"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -225,6 +225,9 @@ dependencies {
 
     //data store (with flow)
     implementation(libs.androidx.datastore.preferences)
+
+    // EncryptedSharedPreferences
+    implementation(libs.androidx.security.crypto)
 
     // naver maps
     implementation (libs.map.sdk)
