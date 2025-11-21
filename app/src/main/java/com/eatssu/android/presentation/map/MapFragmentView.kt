@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalNaverMapApi::class)
+
 package com.eatssu.android.presentation.map
 
 import android.Manifest
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -61,6 +64,7 @@ import com.eatssu.design_system.theme.EatssuTheme
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.Align
+import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
@@ -80,7 +84,6 @@ private const val DEFAULT_LONGITUDE = 126.95661313346206
 private const val DEFAULT_ZOOM = 17.5
 private const val PERMISSION_REQUEST_CODE = 1001
 
-@OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapFragmentComposeView(
     viewModel: MapViewModel = viewModel(),
@@ -205,6 +208,50 @@ fun MapFragmentComposeView(
         }
     }
 
+    MapScreen(
+        mapState = mapState,
+        viewModel = viewModel,
+        cameraPositionState = cameraPositionState,
+        locationSource = locationSource,
+        sheetState = sheetState,
+        showToast = { message ->
+            scope.launch {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        },
+        navigateToUserInfo = {
+            val intent = Intent(context, UserInfoActivity::class.java)
+            context.startActivity(intent)
+        },
+        onShowSheet = {
+            scope.launch { sheetState.show() }
+        },
+        onSelectedFilterChange = {
+            selectedFilter = it
+        },
+        departmentId = departmentId,
+        collegeId = collegeId,
+        departmentName = departmentName,
+        selectedFilter = selectedFilter
+    )
+}
+
+@Composable
+private fun MapScreen(
+    mapState: MapState,
+    viewModel: MapViewModel,
+    cameraPositionState: CameraPositionState,
+    locationSource: FusedLocationSource,
+    sheetState: SheetState,
+    showToast: (String) -> Unit,
+    navigateToUserInfo: () -> Unit,
+    onShowSheet: () -> Unit,
+    onSelectedFilterChange: (FilterType) -> Unit,
+    departmentId: Long,
+    collegeId: Long,
+    departmentName: String?,
+    selectedFilter: FilterType,
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -230,8 +277,7 @@ fun MapFragmentComposeView(
                 onDismiss = { viewModel.toggleDepartmentBottomSheet() },
                 onInputClick = {
                     viewModel.toggleDepartmentBottomSheet()
-                    val intent = Intent(context, UserInfoActivity::class.java)
-                    context.startActivity(intent)
+                    navigateToUserInfo()
                 },
                 sheetState = sheetState
             )
@@ -252,7 +298,6 @@ fun MapFragmentComposeView(
                         RestaurantType.CAFE -> PlaceType.CAFE
                         RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
                         RestaurantType.PUB -> PlaceType.PUB
-                        else -> PlaceType.RESTAURANT
                     },
                     mapRestaurantList = mapState.restaurantInfoList,
                     onDismiss = { viewModel.togglePartnershipBottomSheet() }
@@ -269,7 +314,10 @@ fun MapFragmentComposeView(
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(isZoomControlEnabled = false, isLocationButtonEnabled = true),
+                uiSettings = MapUiSettings(
+                    isZoomControlEnabled = false,
+                    isLocationButtonEnabled = true
+                ),
                 locationSource = locationSource,
                 contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
@@ -277,7 +325,12 @@ fun MapFragmentComposeView(
                 ),
             ) {
                 mapState.partnerships.forEach { partnership ->
-                    val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
+                    val markerState = rememberMarkerState(
+                        position = LatLng(
+                            partnership.latitude,
+                            partnership.longitude
+                        )
+                    )
 
                     Marker(
                         icon = OverlayImage.fromResource(
@@ -296,8 +349,7 @@ fun MapFragmentComposeView(
                         captionTextSize = 10.sp,
                         onClick = {
                             if (partnership.partnershipInfos.isEmpty()) {
-                                // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-                                Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                                showToast("제휴 정보가 없습니다.")
                                 true
                             } else {
                                 // 제휴 정보가 있을 때만 바텀시트 띄움
@@ -317,20 +369,17 @@ fun MapFragmentComposeView(
                 onSelectedChange = { next ->
                     if (mapState.showPartnershipBottomSheet) return@PartnershipFilterToggle
 
-                    val hasDepartment = !departmentName.equals("학과")
+                    val emptyDepartment = departmentName.isNullOrBlank() && departmentName == "학과"
 
-                    if (next == FilterType.Mine && !hasDepartment) {
+                    if (next == FilterType.Mine && emptyDepartment) {
                         // 전환 막기: selectedFilter는 그대로 (All 유지)
                         // 학과 입력 바텀시트 띄우기
-                        scope.launch {
-                            // suspend 함수이므로 코루틴 내에서 실행
-                            sheetState.show()
-                        }
+                        onShowSheet()
                         return@PartnershipFilterToggle
                     }
 
                     // 학과 정보가 있거나 All 선택은 정상 전환
-                    selectedFilter = next
+                    onSelectedFilterChange(next)
                 },
                 modifier = Modifier.padding(top = 12.dp),
                 departmentName = departmentName.toString()
