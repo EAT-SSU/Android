@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
+import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.util.ToastType
@@ -22,8 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class IntroViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-    private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase
+    private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
@@ -38,35 +40,16 @@ class IntroViewModel @Inject constructor(
 
     private fun autoLogin() {
         viewModelScope.launch {
-            val userAccessToken = getAccessTokenUseCase()
-
             _uiState.value = UiState.Loading
-            try {
-                // 토큰 존재 여부 확인
-                if (userAccessToken.isEmpty()) {
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            context.getString(R.string.toast_token_invalid),
-                            ToastType.INFO
-                        )
-                    )
-                    return@launch
-                }
 
-                checkValid(userAccessToken)
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다: ${e.message}", ToastType.ERROR))
+            // 서버와 통신 가능한지 먼저 확인
+            if (!healthCheckUseCase()) {
+                // 아무 State 처리 없이 Return해도 NetworkErrorEventBus로 인해 오류 페이지로 이동
+                return@launch
             }
-        }
-    }
 
-    private fun checkValid(userAccessToken: String) {
-        viewModelScope.launch {
-            if (getIsAccessTokenValidUseCase(userAccessToken)) { //토큰이 있고 유효함
-                _uiState.value = UiState.Success(IntroState.ValidToken)
-            } else { //토큰이 있어도 유효하지 않음
+            val userAccessToken = getAccessTokenUseCase()
+            if (userAccessToken.isEmpty()) {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
@@ -74,7 +57,22 @@ class IntroViewModel @Inject constructor(
                         ToastType.INFO
                     )
                 )
+                return@launch
             }
+
+            // 토큰이 있어도 유효하지 않음
+            if (!getIsAccessTokenValidUseCase(userAccessToken)) {
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_token_invalid),
+                        ToastType.INFO
+                    )
+                )
+                return@launch
+            }
+
+            // 토큰이 있고 유효함
+            _uiState.value = UiState.Success(IntroState.ValidToken)
         }
     }
 }

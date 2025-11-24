@@ -5,18 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
+import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.NicknameValidationResult
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
-import com.eatssu.android.domain.usecase.user.ValidateUserNameUseCase
+import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
+import com.eatssu.android.presentation.UiEvent
+import com.eatssu.android.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -27,192 +28,273 @@ class UserInfoViewModel @Inject constructor(
     private val setUserNicknameUseCase: SetUserNicknameUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
-    private val validateUserNameUseCase: ValidateUserNameUseCase,
+    private val validateNicknameServerUseCase: ValidateNicknameServerUseCase,
+    private val validateNicknameLocalUseCase: ValidateNicknameLocalUseCase,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UserNameChangeState> =
-        MutableStateFlow(UserNameChangeState())
-    val uiState: StateFlow<UserNameChangeState> = _uiState.asStateFlow()
-
-    init{
-        loadUserInfo()
-        loadCollegeList()
-        loadDepartmentList(_uiState.value.selectedCollege.collegeId)
+    companion object {
+        const val MIN_NICKNAME_LENGTH = 2
+        const val MAX_NICKNAME_LENGTH = 16
     }
 
-    fun loadUserInfo() {
+    private val _uiState = MutableStateFlow<UiState<UserInfoData>>(UiState.Init)
+    val uiState = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    init {
+        initializeUserInfo()
+    }
+
+    private fun initializeUserInfo() {
         viewModelScope.launch {
+            _uiState.update { UiState.Loading }
+
             val userInfo = getUserCollegeDepartmentUseCase()
+
+            // 단과대 목록과 학과 목록을 먼저 모두 가져옴
+            val colleges = userRepository.getTotalColleges()
+            val departments =
+                if (userInfo.userCollege.collegeId != -1)
+                    userRepository.getTotalDepartments(userInfo.userCollege.collegeId)
+                else
+                    emptyList()
+
+            // 모든 데이터를 한 번에 업데이트
             _uiState.update {
-                it.copy(
-                    nickname = userInfo.nickname,
-                    originalNickname = userInfo.nickname,
-                    selectedCollege = userInfo.userCollege,
-                    originalCollege = userInfo.userCollege,
-                    selectedDepartment = userInfo.userDepartment,
-                    originalDepartment = userInfo.userDepartment,
-                    isEnableName = true,
-                    loading = false
+                UiState.Success(
+                    UserInfoData(
+                        nickname = userInfo.nickname,
+                        originalNickname = userInfo.nickname,
+                        selectedCollege = userInfo.userCollege,
+                        originalCollege = userInfo.userCollege,
+                        selectedDepartment = userInfo.userDepartment,
+                        originalDepartment = userInfo.userDepartment,
+                        collegeList = colleges,
+                        departmentList = departments
+                    )
                 )
             }
-            Timber.d("초기 유저 정보: $userInfo")
+
+            Timber.d("초기 유저 정보: $userInfo, 단과대: ${colleges.size}개, 학과: ${departments.size}개")
         }
     }
 
-    fun checkNickname(inputNickname: String) {
-        viewModelScope.launch {
-            validateUserNameUseCase(inputNickname).onStart {
-                _uiState.update { it.copy(loading = true, nickname = inputNickname) }
-            }.onCompletion {
-                _uiState.update { it.copy(loading = false) }
-            }.catch { e ->
-                _uiState.update { it.copy(error = true, toastMessage = "닉네임 중복 확인에 실패했습니다.") }
-                Timber.e(e.toString())
-            }.collectLatest { result ->
-                if (result.result == true) {
-                    _uiState.update {
-                        it.copy(
-                            isEnableName = true,
-                            toastMessage = "사용가능한 닉네임 입니다.",
-                            isNicknameChecked = true,
-                        )
-                    }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            isEnableName = false,
-                            toastMessage = "이미 사용 중인 닉네임 입니다.",
-                        )
-                    }
-                }
-            }
+    fun onNicknameChanged(nickname: String) {
+        val currentState = _uiState.value as? UiState.Success ?: return
+        val trimmedNickname = nickname.trim()
+
+        // Local 유효성 검증 (Regex)
+        val validationResult = validateNicknameLocalUseCase(
+            trimmedNickname,
+            MIN_NICKNAME_LENGTH,
+            MAX_NICKNAME_LENGTH
+        )
+
+        val errorMessage = when (validationResult) {
+            is NicknameValidationResult.Invalid -> validationResult.message
+            is NicknameValidationResult.Valid -> null
+        }
+
+        val isNicknameChanged = trimmedNickname != currentState.data.originalNickname
+
+        _uiState.update {
+            UiState.Success(
+                currentState.data.copy(
+                    nickname = trimmedNickname,
+                    isNicknameChanged = isNicknameChanged,
+                    nicknameValidationError = errorMessage,
+                    isDuplicationChecked = false // 닉네임 변경 시 중복 확인 초기화
+                )
+            )
         }
     }
 
-    fun changeUserNickname() {
-        val nickname = _uiState.value.nickname
-
+    fun checkNicknameDuplication() {
         viewModelScope.launch {
-            _uiState.update { it.copy(loading = true) }
-            try {
-                setUserNicknameUseCase(nickname)
+            val currentState = _uiState.value as? UiState.Success ?: return@launch
+            val currentNickname = currentState.data.nickname
+
+            // 서버에서 사용 가능 여부 확인
+            val result = validateNicknameServerUseCase(currentNickname)
+
+            result.onFailure { error ->
+                val errorMessage = error.message ?: "올바르지 않은 닉네임이에요."
+
                 _uiState.update {
-                    it.copy(
-                        loading = false,
-                        isDone = true,
-                        toastMessage = "닉네임 변경에 성공했습니다."
+                    UiState.Success(
+                        currentState.data.copy(
+                            nicknameValidationError = errorMessage
+                        )
                     )
                 }
-            } catch (e: Exception) {
-                Timber.e(e, "닉네임 변경 실패")
-                _uiState.update {
-                    it.copy(
-                        loading = false,
-                        error = true,
-                        toastMessage = "닉네임 변경에 실패했습니다."
+                return@launch
+            }
+
+            _uiState.update {
+                UiState.Success(
+                    currentState.data.copy(
+                        isDuplicationChecked = true,
                     )
-                }
+                )
             }
+
+            Timber.d("닉네임 중복 확인 성공: $currentNickname")
         }
     }
 
-    fun updateUserDepartment(){
-        viewModelScope.launch {
-            runCatching {
-                userRepository.setUserDepartment(_uiState.value.selectedDepartment.departmentId)
-            }.onSuccess {
-                Timber.d("학과 정보 업데이트 성공")
-                _uiState.update{ it.copy(success = true) }
+    fun selectCollege(college: College) {
+        val currentState = _uiState.value as? UiState.Success ?: return
+        val isCollegeChanged = college != currentState.data.originalCollege
 
-                val department = _uiState.value.selectedDepartment
-                val college = _uiState.value.selectedCollege
-
-                setUserCollegeDepartmentUseCase(college, department)
-
-            }.onFailure { e ->
-                Timber.e(e, "학과 정보 업데이트 실패")
-                _uiState.update { it.copy(error = true, toastMessage = "학과 정보 업데이트에 실패했습니다.") }
-            }
-        }
-    }
-
-    fun updateNickname(nickname: String) {
         _uiState.update {
-            val changed = nickname != it.originalNickname
-
-            it.copy(nickname = nickname, isNicknameChanged = changed)
+            UiState.Success(
+                currentState.data.copy(
+                    selectedCollege = college,
+                    isCollegeChanged = isCollegeChanged,
+                    // 단과대가 변경되면 학과 초기화
+                    selectedDepartment = Department(-1, "학과"),
+                    departmentList = emptyList()
+                )
+            )
         }
+
+        // 선택된 단과대의 학과 목록 로드
+        loadDepartmentList(college.collegeId)
     }
 
-    fun updateInputCollege(college: College) {
+    fun selectDepartment(department: Department) {
+        val currentState = _uiState.value as? UiState.Success ?: return
+        val isDepartmentChanged = department != currentState.data.originalDepartment
+
         _uiState.update {
-            val changed = college != it.originalCollege
-
-            it.copy(selectedCollege = college, isCollegeChanged = changed)
-        }
-    }
-
-    fun updateInputDepartment(department: Department) {
-        _uiState.update {
-            val changed = department != it.originalDepartment
-
-            it.copy(selectedDepartment = department, isDepartmentChanged = changed)
-        }
-    }
-
-    fun loadCollegeList() {
-        viewModelScope.launch {
-            runCatching {
-                userRepository.getTotalColleges()
-            }.onSuccess { colleges ->
-                _uiState.update { it.copy(collegeList = colleges) }
-            }.onFailure { e ->
-                Timber.e(e, "단과대 불러오기 실패")
-            }
+            UiState.Success(
+                currentState.data.copy(
+                    selectedDepartment = department,
+                    isDepartmentChanged = isDepartmentChanged,
+                )
+            )
         }
     }
 
     fun loadDepartmentList(collegeId: Int) {
         viewModelScope.launch {
-            runCatching {
-                userRepository.getTotalDepartments(collegeId)
-            }.onSuccess { departments ->
-                _uiState.update { it.copy(departmentList = departments) }
-            }.onFailure { e ->
-                Timber.e(e, "학과 불러오기 실패")
+            val currentState = _uiState.value as? UiState.Success ?: return@launch
+
+            val departments = userRepository.getTotalDepartments(collegeId)
+            _uiState.update {
+                UiState.Success(currentState.data.copy(departmentList = departments))
             }
+            Timber.d("학과 목록 로드: ${departments.size}개 (단과대 ID: $collegeId)")
         }
     }
 
-    companion object {
-        val TAG = "UserNameChangeViewModel"
+    fun saveUserInfo() {
+        viewModelScope.launch {
+            val currentState = _uiState.value as? UiState.Success ?: return@launch
+
+            _uiState.update { UiState.Loading }
+
+            val data = currentState.data
+            var nicknameUpdated = false
+            var departmentUpdated = false
+
+            // 닉네임 변경이 있는 경우
+            if (data.isNicknameChanged) {
+                val result = setUserNicknameUseCase(data.nickname)
+                result.onFailure { error ->
+                    val errorMessage = error.message ?: "닉네임 변경에 실패했어요."
+                    _uiEvent.emit(UiEvent.ShowToast(errorMessage))
+                    _uiState.value = UiState.Error
+                    return@launch
+                }
+                nicknameUpdated = true
+            }
+
+            // 학과/단과대 변경이 있는 경우
+            if (data.isCollegeChanged || data.isDepartmentChanged) {
+                val success = userRepository.setUserDepartment(data.selectedDepartment.departmentId)
+                if (!success) {
+                    _uiState.value = UiState.Error
+                    return@launch
+                }
+
+                setUserCollegeDepartmentUseCase(
+                    data.selectedCollege,
+                    data.selectedDepartment
+                )
+                departmentUpdated = true
+            }
+
+            // 성공 메시지
+            val message = when {
+                nicknameUpdated && departmentUpdated -> "정보가 업데이트되었습니다."
+                nicknameUpdated -> "닉네임이 변경되었습니다."
+                departmentUpdated -> "학과 정보가 업데이트되었습니다."
+                else -> "변경사항이 없습니다."
+            }
+
+            _uiEvent.emit(UiEvent.ShowToast(message))
+            _uiState.update {
+                UiState.Success(
+                    data.copy(
+                        isDone = true
+                    )
+                )
+            }
+        }
     }
 }
 
-data class UserNameChangeState(
-    var success: Boolean = false,
-    var loading: Boolean = true,
-    var error: Boolean = false,
+// 화면에 표시할 실제 데이터
+data class UserInfoData(
+    // 닉네임
+    val nickname: String = "",
+    val originalNickname: String = "",
+    val isNicknameChanged: Boolean = false,
+    val nicknameValidationError: String? = null, // 닉네임 검증 에러 텍스트
+    val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
-    var toastMessage: String = "",
+    // 단과대/학과
+    val selectedCollege: College = College(-1, "단과대"),
+    val originalCollege: College = College(-1, "단과대"),
+    val isCollegeChanged: Boolean = false,
 
-    var nickname: String = "",
-    var selectedCollege: College = College(collegeId = -1, collegeName = "단과대"),
-    var selectedDepartment: Department = Department(departmentId = -1, departmentName = "학과"),
+    val selectedDepartment: Department = Department(-1, "학과"),
+    val originalDepartment: Department = Department(-1, "학과"),
+    val isDepartmentChanged: Boolean = false,
 
-    var isEnableName: Boolean = false,
-    var isDone: Boolean = false,
+    // 목록
+    val collegeList: List<College> = emptyList(),
+    val departmentList: List<Department> = emptyList(),
 
-    var originalNickname: String = "",
-    var originalCollege: College = College(collegeId = -1, collegeName = "단과대"),
-    var originalDepartment: Department = Department(departmentId = -1, departmentName = "학과"),
+    val isDone: Boolean = false,
+) {
+    // 중복 확인 버튼 활성화 조건
+    val canCheckDuplication: Boolean
+        get() = nicknameValidationError == null && // 유효성 검증 통과
+                isNicknameChanged && // 닉네임 변경됨
+                !isDuplicationChecked // 중복 확인 아직 안 함
 
-    var isNicknameChecked: Boolean = false,
-    var isNicknameChanged: Boolean = false,
-    var isCollegeChanged: Boolean = false,
-    var isDepartmentChanged: Boolean = false,
+    // 저장 버튼 활성화 조건
+    val canSave: Boolean
+        get() {
+            val hasNicknameChange = isNicknameChanged
+            val isNicknameValid = isDuplicationChecked && nicknameValidationError == null
 
-    var collegeList: List<College> = emptyList(),
-    var departmentList: List<Department> = emptyList(),
-)
+            val hasDepartmentChange = isCollegeChanged || isDepartmentChanged
+            val isDepartmentSelected = selectedDepartment.departmentId != -1
+
+            return when {
+                // 닉네임 변경: 닉네임 유효성 필수
+                hasNicknameChange -> isNicknameValid
+                // 학과/단과대 변경: 유효한 학과 선택 필수
+                hasDepartmentChange -> isDepartmentSelected
+                // 변경사항 없음
+                else -> false
+            }
+        }
+}
+

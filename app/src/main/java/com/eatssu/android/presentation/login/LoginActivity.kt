@@ -71,6 +71,7 @@ class LoginActivity :
                     } ?: Timber.e(error, "User info fetch failed")
                 }
             } catch (error: Throwable) {
+                Timber.e(error, "Kakao login failed")
                 handleKakaoLoginError(error)
             }
         }

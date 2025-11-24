@@ -42,7 +42,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
@@ -91,7 +90,7 @@ fun MapFragmentComposeView(
 
     // UiState에서 Success 상태인 실제 MapState 데이터만 추출
     val mapState: MapState = when (val s = uiState) {
-        is UiState.Success -> s.data ?: MapState()
+        is UiState.Success -> s.data
         else -> MapState()
     }
 
@@ -103,8 +102,8 @@ fun MapFragmentComposeView(
     val scope = rememberCoroutineScope()
     var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
-    val departmentId = MySharedPreferences.getUserDepartmentId(context).toLong()
-    val collegeId = MySharedPreferences.getUserCollegeId(context).toLong()
+    val departmentId = viewModel.departmentId
+    val collegeId = viewModel.collegeId
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition(
@@ -128,15 +127,16 @@ fun MapFragmentComposeView(
         }
     }
 
-    // MainState
+    // MainState에서 학과 정보 가져오기
     val (departmentName, showUserDepartmentBottomSheet) = when (val state = mainUiState) {
         is UiState.Success -> {
             when (val data = state.data) {
                 is MainState.DepartmentState -> data.departmentName to data.showUserDepartmentBottomSheet
-                else -> "" to false
+                else -> "학과" to false
             }
         }
-        else -> "" to false
+
+        else -> "학과" to false
     }
 
     LaunchedEffect(Unit) {
@@ -230,7 +230,6 @@ fun MapFragmentComposeView(
             )
         },
     ) { innerPadding ->
-        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartmentName(context)}")
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
         if (sheetState.isVisible) {

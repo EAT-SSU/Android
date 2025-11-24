@@ -1,10 +1,8 @@
 package com.eatssu.android.domain.usecase.review
 
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.GetReviewListResponse
+import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.common.enums.MenuType
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetMenuReviewListUseCase @Inject constructor(
@@ -12,6 +10,6 @@ class GetMenuReviewListUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         menuId: Long?,
-    ): Flow<BaseResponse<GetReviewListResponse>> =
+    ): List<Review> =
         reviewRepository.getReviewList(MenuType.FIXED.toString(), 0, menuId)
 }

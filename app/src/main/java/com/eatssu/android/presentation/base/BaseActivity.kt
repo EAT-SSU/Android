@@ -24,6 +24,7 @@ import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.common.VersionViewModel
 import com.eatssu.android.presentation.common.VersionViewModelFactory
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
@@ -133,6 +134,8 @@ abstract class BaseActivity<B : ViewBinding>(
                 navigateToLogin()
             }
         }
+
+        observeNetworkError()
     }
 
     private fun navigateToLogin() {
@@ -182,7 +185,5 @@ abstract class BaseActivity<B : ViewBinding>(
         }
     }
 
-    open fun shouldLogScreenId(): Boolean {
-        return true
-    }
+    open fun shouldLogScreenId(): Boolean = true
 }

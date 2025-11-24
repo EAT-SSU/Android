@@ -35,30 +35,18 @@ class SignOutViewModel @Inject constructor(
     fun signOut() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            try {
-                val isSignOut = signOutUseCase()
-                if (isSignOut) {
-                    _uiState.value = UiState.Success(SignOutState(isSignOuted = true))
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            context.getString(R.string.toast_sign_out_success),
-                            ToastType.SUCCESS
-                        )
-                    )
-                    logoutUseCase() // 자동 로그인 정보 삭제
-                } else {
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            context.getString(R.string.toast_sign_out_success),
-                            ToastType.ERROR
-                        )
-                    )
-                }
-            } catch (e: Exception) {
+
+            val success = signOutUseCase()
+            if (!success) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("오류가 발생했습니다. $e", ToastType.ERROR))
+                _uiEvent.emit(UiEvent.ShowToast("탈퇴에 실패했습니다.", ToastType.ERROR))
+                return@launch
             }
+
+            _uiState.value = UiState.Success(SignOutState(isSignOuted = true))
+            _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.toast_sign_out_success),
+                            ToastType.SUCCESS))
+            logoutUseCase() // 자동 로그인 정보 삭제
         }
     }
 }

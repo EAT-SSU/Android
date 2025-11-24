@@ -3,15 +3,15 @@ package com.eatssu.android.presentation.map
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.R
+import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
-import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,9 +36,10 @@ data class MapState(
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val partnershipRepository: PartnershipRepository,
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
+    getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -47,7 +48,12 @@ class MapViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
+    private val userCollegeDepartment = getUserCollegeDepartmentUseCase()
+    val departmentId: Long = userCollegeDepartment.userDepartment.departmentId.toLong()
+    val collegeId: Long = userCollegeDepartment.userCollege.collegeId.toLong()
+
     init {
+        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartmentName(context)}")
         loadPartnerships()
     }
 
@@ -56,20 +62,8 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
-            runCatching { partnershipRepository.getAllPartnerships() }
-                .onSuccess { data ->
-                    _uiState.value = UiState.Success(MapState(partnerships = data))
-                }
-                .onFailure {
-                    Timber.e(it, "제휴 정보 로딩 실패")
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            context.getString(R.string.toast_map_partnership_load_fail),
-                            ToastType.ERROR
-                        )
-                    )
-                }
+            val partnerships = partnershipRepository.getAllPartnerships()
+            _uiState.value = UiState.Success(MapState(partnerships = partnerships))
         }
     }
 
@@ -78,28 +72,15 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
-            runCatching { partnershipRepository.getUserCollegePartnerships() }
-                .onSuccess { data ->
-
-                    _uiState.value = UiState.Success(MapState(partnerships = data))
-                }
-                .onFailure {
-                    Timber.e(it, "사용자 단과대 제휴 정보 로딩 실패")
-                    _uiState.value = UiState.Error
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            context.getString(R.string.toast_map_departure_load_fail),
-                            ToastType.ERROR
-                        )
-                    )
-                }
+            val partnerships = partnershipRepository.getUserCollegePartnerships()
+            _uiState.value = UiState.Success(MapState(partnerships = partnerships))
         }
     }
 
     fun selectPartnershipByStoreName(storeName: String, partnershipId: Int? = null) {
         val current = uiState.value
         if (current !is UiState.Success) return
-        val data = current.data ?: return
+        val data = current.data
 
         // 가게 단위의 Partnership 찾기
         val partnership = data.partnerships.firstOrNull { it.storeName == storeName } ?: return
@@ -132,7 +113,7 @@ class MapViewModel @Inject constructor(
     fun toggleDepartmentBottomSheet() {
         val current = uiState.value
         if (current is UiState.Success) {
-            current.data?.let { data ->
+            current.data.let { data ->
                 _uiState.value = UiState.Success(
                     data.copy(showDepartmentBottomSheet = !data.showDepartmentBottomSheet)
                 )
@@ -144,7 +125,7 @@ class MapViewModel @Inject constructor(
     fun togglePartnershipBottomSheet() {
         val current = uiState.value
         if (current is UiState.Success) {
-            current.data?.let { data ->
+            current.data.let { data ->
                 _uiState.value = UiState.Success(
                     data.copy(showPartnershipBottomSheet = !data.showPartnershipBottomSheet)
                 )
