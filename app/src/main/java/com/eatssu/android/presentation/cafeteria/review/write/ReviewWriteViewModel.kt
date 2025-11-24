@@ -55,7 +55,7 @@ class UploadReviewViewModel @Inject constructor(
             return null
         }
 
-        _uiState.value = UiState.Success(Unit)
+        // Success에 대한 정의는 한 곳에서만 관리
         return url
     }
 }
