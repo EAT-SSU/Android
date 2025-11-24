@@ -38,8 +38,8 @@ enum class FilterType {
 fun PartnershipFilterToggle(
     selected: FilterType,
     onSelectedChange: (FilterType) -> Unit,
-    modifier: Modifier = Modifier,
     departmentName: String,
+    modifier: Modifier = Modifier,
 ) {
     Timber.d("departmentName = $departmentName")
     val items = FilterType.entries.map {
