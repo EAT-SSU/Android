@@ -9,11 +9,9 @@ import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.remote.dto.response.toDomain
-import com.eatssu.android.data.remote.dto.response.toReviewList
 import com.eatssu.android.data.remote.service.UserService
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
-import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.UserRepository
 import javax.inject.Inject
 
@@ -44,9 +42,6 @@ class UserRepositoryImpl @Inject constructor(
             else -> Result.failure(Exception("올바르지 않은 닉네임이에요."))
         }
     }
-
-    override suspend fun getUserReviews(): List<Review> =
-        userService.getMyReviews().map { it.toReviewList() }.orEmptyList()
 
     override suspend fun getUserNickName(): String =
         userService.getMyInfo().map { it.nickname }.orNull() ?: ""

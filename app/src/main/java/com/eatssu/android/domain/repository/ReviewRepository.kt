@@ -1,18 +1,25 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.remote.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.remote.dto.request.WriteReviewRequest
-import com.eatssu.android.data.remote.dto.response.GetMealReviewInfoResponse
-import com.eatssu.android.data.remote.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.remote.dto.response.ImageResponse
+import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
+import com.eatssu.android.domain.model.ReviewInfo
 import java.io.File
 
 interface ReviewRepository {
 
-    suspend fun writeReview(
-        menuId: Long,
-        body: WriteReviewRequest,
+    suspend fun writeMealReview(
+        mealId: Long,
+        rating: Int,
+        content: String,
+        imageUrls: List<String>,
+        likeMenuIdList: List<Long>?,
+    ): Boolean
+
+    suspend fun writeMenuReview(
+        rating: Int,
+        content: String,
+        imageUrls: List<String>,
+        likeMenuIdList: List<Long>?,
     ): Boolean
 
     suspend fun deleteReview(
@@ -21,25 +28,35 @@ interface ReviewRepository {
 
     suspend fun modifyReview(
         reviewId: Long,
-        body: ModifyReviewRequest,
+        rating: Int,
+        content: String,
+        menuLikeInfoList: List<Review.MenuLikeInfo>,
     ): Boolean
 
-    suspend fun getReviewList(
-        menuType: String,
-        mealId: Long?,
+    suspend fun getMenuReviewList(
         menuId: Long?,
+    ): List<Review>
+
+    suspend fun getMealReviewList(
+        mealId: Long?,
     ): List<Review>
 
     suspend fun getMenuReviewInfo(
         menuId: Long,
-    ): GetMenuReviewInfoResponse?
-
+    ): ReviewInfo?
 
     suspend fun getMealReviewInfo(
         mealId: Long,
-    ): GetMealReviewInfoResponse?
+    ): ReviewInfo?
 
     suspend fun getImageString(
         file: File
-    ): ImageResponse?
+    ): String?
+
+    suspend fun getValidMenusByMealId(
+        mealId: Long,
+    ): List<MenuMini>
+
+    suspend fun getMyReviews(): List<Review>
+
 }

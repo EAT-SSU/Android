@@ -100,7 +100,7 @@ fun eatssuTypography(): EatssuTypography {
             lineHeight = 22.sp
         ),
         body1 = EatssuTextStyle(
-            fontFamily = pretendardRegular,
+            fontFamily = pretendardMedium,
             fontSize = 16.sp,
             lineHeight = 24.sp
         ),

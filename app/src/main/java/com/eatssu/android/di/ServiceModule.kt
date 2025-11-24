@@ -18,6 +18,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
+
     @Provides
     @Singleton
     fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
@@ -44,8 +45,8 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideMealService(@NoToken noTokenRetrofit: Retrofit): MealService {
-        return noTokenRetrofit.create(MealService::class.java)
+    fun provideMealService(retrofit: Retrofit): MealService {
+        return retrofit.create(MealService::class.java)
     }
 
     @Provides

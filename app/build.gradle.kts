@@ -17,8 +17,15 @@ android {
     namespace = "com.eatssu.android"
     compileSdk = 35
 
-    // S8: API 28
-    // S21: API 33
+    /**
+     * 현재 팀 내 안드로이드 OS 버전
+     * 진 S8: 9 (sdk 28)
+     * 진 S21: 14 (sdk 33)
+     * 윤소: 9
+     * 유리: 10
+     * 제훈: 14
+     */
+
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 28
@@ -124,6 +131,27 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
 
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.lifecycle.viewmodel)
+    implementation(libs.androidx.compose.lifecycle.runtime)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.compose.theme.adapter)
+    implementation(libs.accompanist.appcompat.theme)
+    androidTestImplementation(libs.androidx.compose.bom)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // navigation
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.compose)
+
     //glance
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.preview)
@@ -151,6 +179,9 @@ dependencies {
     implementation(libs.glide)
     kapt(libs.glide.compiler)
 
+    //coil: 이미지 로딩
+    implementation(libs.coil.compose)
+
     //compressor: 이미지 압축
     implementation(libs.compressor)
 
@@ -168,6 +199,7 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
+    implementation(libs.hilt.navigation.compose)
 
     // ViewModel and LiveData
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -187,26 +219,6 @@ dependencies {
 
     // OSS
     implementation(libs.oss.licenses)
-
-    // Compose
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.animation)
-    implementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.compose.lifecycle.viewmodel)
-    implementation(libs.androidx.compose.lifecycle.runtime)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.compose.theme.adapter)
-    implementation(libs.accompanist.appcompat.theme)
-    androidTestImplementation(libs.androidx.compose.bom)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // navigation
-    implementation(libs.androidx.navigation.fragment)
-    implementation(libs.androidx.navigation.ui)
 
     // worker (Kotlin + coroutines)
     implementation(libs.androidx.work.runtime.ktx)

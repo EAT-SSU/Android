@@ -5,7 +5,7 @@ import com.eatssu.android.data.remote.dto.response.PartnershipResponse
 import com.eatssu.android.data.remote.dto.response.PartnershipRestaurantResponse
 import retrofit2.http.GET
 
-interface PartnershipService{
+interface PartnershipService {
 
     // 전체 제휴 조회
     @GET("partnerships")

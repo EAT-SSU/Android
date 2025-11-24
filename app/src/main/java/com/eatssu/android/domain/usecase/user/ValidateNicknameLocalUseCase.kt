@@ -5,7 +5,11 @@ import javax.inject.Inject
 
 // 정규식을 사용해 로컬에서 닉네임 검증
 class ValidateNicknameLocalUseCase @Inject constructor() {
-    operator fun invoke(nickname: String, minLength: Int, maxLength: Int): NicknameValidationResult {
+    operator fun invoke(
+        nickname: String,
+        minLength: Int,
+        maxLength: Int
+    ): NicknameValidationResult {
         // 길이 제한
         if (nickname.length !in minLength..maxLength) {
             return Invalid("${minLength}~${maxLength}글자를 입력해 주세요.")

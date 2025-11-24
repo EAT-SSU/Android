@@ -16,8 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
+import com.eatssu.common.UiState
+import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint

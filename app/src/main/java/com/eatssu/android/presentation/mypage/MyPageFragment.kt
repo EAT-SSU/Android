@@ -20,14 +20,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.login.LoginActivity
-import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
+import com.eatssu.android.presentation.mypage.myreview.MyReviewListComposeActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,6 +49,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.tvSignout.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         setupObservers()
         setOnClickListener()
@@ -145,7 +146,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llMyReview.setOnClickListener {
-            startActivity(Intent(requireContext(), MyReviewListActivity::class.java))
+            startActivity(Intent(requireContext(), MyReviewListComposeActivity::class.java))
         }
 
         binding.tvLogout.setOnClickListener {

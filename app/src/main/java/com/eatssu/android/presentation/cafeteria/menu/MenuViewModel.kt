@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.domain.usecase.menu.GetMenuListUseCase
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel

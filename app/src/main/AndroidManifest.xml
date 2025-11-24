@@ -156,15 +156,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.cafeteria.review.write.ReviewWriteRateActivity"
+            android:name=".presentation.cafeteria.review.ReviewComposeActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.write.menu.ReviewWriteMenuActivity"
-            android:exported="false" />
         <activity
             android:name=".presentation.login.LoginActivity"
             android:exported="true">
@@ -187,8 +184,8 @@
                 android:value="" />
         </activity>
         <activity
-                android:name=".presentation.error.ServerErrorActivity"
-                android:exported="false" />
+            android:name=".presentation.error.ServerErrorActivity"
+            android:exported="false" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -212,14 +209,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.mypage.myreview.MyReviewListActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.list.ReviewActivity"
+            android:name=".presentation.mypage.myreview.MyReviewListComposeActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -235,13 +225,6 @@
         </activity>
         <activity
             android:name=".presentation.cafeteria.review.report.ReportActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.modify.ModifyReviewActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
