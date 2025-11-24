@@ -74,15 +74,6 @@ class MainViewModel @Inject constructor(
 
             // 2) 정상 닉네임
             _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
-            _uiEvent.emit(
-                UiEvent.ShowToast(
-                    String.format(
-                        context.getString(R.string.hello_user),
-                        nickname
-                    ),
-                     ToastType.ERROR
-                )
-            )
         }
     }
 
@@ -92,8 +83,7 @@ class MainViewModel @Inject constructor(
             _uiState.value = UiState.Success(MainState.LoggedOut)
             _uiEvent.emit(
                 UiEvent.ShowToast(
-                    context.getString(R.string.toast_logout_success),
-                    ToastType.SUCCESS
+                    context.getString(R.string.toast_logout_success), ToastType.SUCCESS
                 )
             )
         }
@@ -115,7 +105,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.not_found), ToastType.ERROR))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.not_found),
+                        ToastType.ERROR
+                    )
+                )
                 return@launch
             }
 
