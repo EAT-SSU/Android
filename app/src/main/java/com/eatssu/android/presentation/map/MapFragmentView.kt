@@ -174,6 +174,15 @@ fun MapFragmentComposeView(
         }
     }
 
+    // 초기 필터 설정
+    LaunchedEffect(Unit) {
+        if (departmentId == -1L) {
+            selectedFilter = FilterType.All
+        } else {
+            selectedFilter = FilterType.Mine
+        }
+    }
+
     // 제휴 정보 토글 event
     LaunchedEffect(selectedFilter) {
         when (selectedFilter) {
@@ -369,7 +378,7 @@ private fun MapScreen(
                 onSelectedChange = { next ->
                     if (mapState.showPartnershipBottomSheet) return@PartnershipFilterToggle
 
-                    val emptyDepartment = departmentName.isNullOrBlank() && departmentName == "학과"
+                    val emptyDepartment = departmentId == -1L
 
                     if (next == FilterType.Mine && emptyDepartment) {
                         // 전환 막기: selectedFilter는 그대로 (All 유지)

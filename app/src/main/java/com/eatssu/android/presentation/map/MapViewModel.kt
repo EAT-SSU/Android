@@ -26,8 +26,6 @@ data class MapState(
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
-    val currentCollegeName: String = "",
-    val currentDepartmentName: String = "",
 )
 
 @HiltViewModel
@@ -119,9 +117,16 @@ class MapViewModel @Inject constructor(
         val current = uiState.value
         if (current is UiState.Success) {
             current.data.let { data ->
-                _uiState.value = UiState.Success(
-                    data.copy(showDepartmentBottomSheet = !data.showDepartmentBottomSheet)
-                )
+                if (departmentId == -1L) {
+                    // 학과 정보가 없는 경우 학과 입력 바텀시트 무조건 보여주기
+                    _uiState.value = UiState.Success(
+                        data.copy(showDepartmentBottomSheet = true)
+                    )
+                } else {
+                    _uiState.value = UiState.Success(
+                        data.copy(showDepartmentBottomSheet = !data.showDepartmentBottomSheet)
+                    )
+                }
             }
         }
     }
