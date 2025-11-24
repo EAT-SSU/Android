@@ -38,36 +38,36 @@ import com.eatssu.design_system.theme.Warning
 import com.eatssu.design_system.theme.WarningBg
 import com.eatssu.design_system.theme.WarningBr
 
-enum class EatSsuToastType {
+enum class EatSsuSnackbarType {
     Success, Danger, Info, Warning
 }
 
-private data class EatSsuToastColor(
+private data class EatSsuSnackbarColor(
     val container: Color,
     val stroke: Color,
     val action: Color
 )
 
-private fun EatSsuToastType.colors(): EatSsuToastColor = when (this) {
-    EatSsuToastType.Success -> EatSsuToastColor(
+private fun EatSsuSnackbarType.colors(): EatSsuSnackbarColor = when (this) {
+    EatSsuSnackbarType.Success -> EatSsuSnackbarColor(
         container = SuccessBg,
         stroke = SuccessBr,
         action = Success
     )
 
-    EatSsuToastType.Danger -> EatSsuToastColor(
+    EatSsuSnackbarType.Danger -> EatSsuSnackbarColor(
         container = DangerBg,
         stroke = DangerBr,
         action = Danger
     )
 
-    EatSsuToastType.Info -> EatSsuToastColor(
+    EatSsuSnackbarType.Info -> EatSsuSnackbarColor(
         container = InfoBg,
         stroke = InfoBr,
         action = Info
     )
 
-    EatSsuToastType.Warning -> EatSsuToastColor(
+    EatSsuSnackbarType.Warning -> EatSsuSnackbarColor(
         container = WarningBg,
         stroke = WarningBr,
         action = Warning
@@ -79,7 +79,7 @@ fun EatSsuSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     icon: Painter? = null,
-    type: EatSsuToastType = EatSsuToastType.Info,
+    type: EatSsuSnackbarType = EatSsuSnackbarType.Info,
 ) {
     SnackbarHost(
         hostState = hostState,
@@ -98,14 +98,14 @@ fun EatSsuSnackbar(
     snackbarData: SnackbarData,
     modifier: Modifier = Modifier,
     icon: Painter? = null,
-    type: EatSsuToastType = EatSsuToastType.Info,
+    type: EatSsuSnackbarType = EatSsuSnackbarType.Info,
 ) {
     val colors = type.colors()
 
     Surface(
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, colors.stroke),
-        color = Color.Transparent,    // Snackbar 자체의 containerColor를 쓰기 위해 투명 처리
+        color = Color.Transparent,
         modifier = modifier.padding(vertical = 14.dp, horizontal = 16.dp)
     ) {
         Snackbar(
@@ -131,7 +131,6 @@ fun EatSsuSnackbar(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (icon != null) {
-                    //todo 제훈 pr에 리소스 있음
                     androidx.compose.material3.Icon(
                         painter = icon,
                         contentDescription = null,
@@ -150,7 +149,6 @@ fun EatSsuSnackbar(
         }
     }
 }
-
 
 private class PreviewSnackbarData(
     message: String,
@@ -180,7 +178,8 @@ private fun EatSsuSnackbarPreview() {
                 actionLabel = "취소"
             ),
             modifier = Modifier.padding(16.dp),
-            type = EatSsuToastType.Success
+            type = EatSsuSnackbarType.Success
         )
     }
 }
+
