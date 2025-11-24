@@ -82,8 +82,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 launch {
                     myPageViewModel.uiEvent.collectLatest { event ->
                         when (event) {
-                            is UiEvent.ShowToast -> showToast(event.message, event.type)
-                            else -> Unit
+                            is UiEvent.ShowToast -> showToast(event)
                         }
                     }
                 }

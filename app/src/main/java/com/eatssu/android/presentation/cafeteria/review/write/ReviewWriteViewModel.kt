@@ -7,6 +7,7 @@ import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
 import com.eatssu.android.presentation.UiEvent
 import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,12 +37,12 @@ class UploadReviewViewModel @Inject constructor(
 
             if (!success) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다.", ToastType.ERROR))
                 return@launch
             }
 
             _uiState.value = UiState.Success(Unit)
-            _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
+            _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다.", ToastType.INFO))
         }
     }
 
@@ -51,7 +52,7 @@ class UploadReviewViewModel @Inject constructor(
 
         if (url == null) {
             _uiState.value = UiState.Error
-            _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+            _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다.", ToastType.ERROR))
             return null
         }
 

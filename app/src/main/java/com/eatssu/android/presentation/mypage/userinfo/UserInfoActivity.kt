@@ -92,7 +92,7 @@ class UserInfoActivity :
         lifecycleScope.launch {
             viewModel.uiEvent.collectLatest { event ->
                 when (event) {
-                    is UiEvent.ShowToast -> showToast(event.message)
+                    is UiEvent.ShowToast -> showToast(event)
                 }
             }
         }

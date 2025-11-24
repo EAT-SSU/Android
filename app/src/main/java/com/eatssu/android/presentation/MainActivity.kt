@@ -169,8 +169,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     private fun collectUiEvents() {
         lifecycleScope.launch {
             mainViewModel.uiEvent.collectLatest { event ->
-                if (event is UiEvent.ShowToast) {
-                    showToast(event.message)
+                when (event) {
+                    is UiEvent.ShowToast -> showToast(event)
                 }
             }
         }

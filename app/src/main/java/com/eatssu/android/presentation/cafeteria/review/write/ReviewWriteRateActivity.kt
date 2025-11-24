@@ -122,7 +122,7 @@ class ReviewWriteRateActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
-                        is UiEvent.ShowToast -> showToast(event.message)
+                        is UiEvent.ShowToast -> showToast(event)
                     }
                 }
             }

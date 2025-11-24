@@ -72,9 +72,7 @@ class SignOutActivity :
         lifecycleScope.launch {
             signOutViewModel.uiEvent.collectLatest { event ->
                 when (event) {
-                    is UiEvent.ShowToast -> {
-                        showToast(event.message)
-                    }
+                    is UiEvent.ShowToast -> showToast(event)
                 }
             }
         }

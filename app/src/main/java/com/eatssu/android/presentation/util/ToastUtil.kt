@@ -12,6 +12,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.eatssu.android.R
+import com.eatssu.android.presentation.UiEvent
 
 enum class ToastType(@DrawableRes val iconId: Int, @DrawableRes val shapeId: Int) {
     INFO(R.drawable.ic_toast_info, R.drawable.shape_toast_info),
@@ -23,6 +24,9 @@ enum class ToastType(@DrawableRes val iconId: Int, @DrawableRes val shapeId: Int
 enum class ToastLocation(val gravity: Int, val xOffset: Int, val yOffset: Int) {
     BOTTOM_NAVIGATION(Gravity.BOTTOM, 0, 200),
 }
+
+fun Context.showToast(event: UiEvent.ShowToast) =
+    showToast(event.message, event.type, event.location)
 
 fun Context.showToast(
     message: String,
@@ -44,6 +48,9 @@ fun Context.showToast(
     toast.view = layout
     toast.show()
 }
+
+fun Fragment.showToast(event: UiEvent.ShowToast) =
+    showToast(event.message, event.type, event.location)
 
 fun Fragment.showToast(
     message: String,

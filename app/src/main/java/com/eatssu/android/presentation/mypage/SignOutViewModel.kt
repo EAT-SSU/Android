@@ -44,8 +44,12 @@ class SignOutViewModel @Inject constructor(
             }
 
             _uiState.value = UiState.Success(SignOutState(isSignOuted = true))
-            _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.toast_sign_out_success),
-                            ToastType.SUCCESS))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    context.getString(R.string.toast_sign_out_success),
+                    ToastType.SUCCESS
+                )
+            )
             logoutUseCase() // 자동 로그인 정보 삭제
         }
     }
