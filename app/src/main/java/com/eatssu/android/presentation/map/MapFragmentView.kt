@@ -27,10 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -104,10 +102,9 @@ fun MapFragmentComposeView(
     val activity = remember(context) { context.findActivityOrNull() }
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
     val scope = rememberCoroutineScope()
-    var selectedFilter by remember { mutableStateOf(FilterType.Mine) }
 
-    val departmentId = viewModel.departmentId
-    val collegeId = viewModel.collegeId
+    val departmentId by viewModel.departmentId.collectAsStateWithLifecycle()
+    val collegeId by viewModel.collegeId.collectAsStateWithLifecycle()
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition(
@@ -175,26 +172,10 @@ fun MapFragmentComposeView(
         }
     }
 
-    // 초기 필터 설정 (departmentId가 변경될 때마다 재설정)
-    LaunchedEffect(departmentId) {
-        if (departmentId == -1L) {
-            selectedFilter = FilterType.All
-        } else {
-            selectedFilter = FilterType.Mine
-        }
-    }
-
-    // 제휴 정보 토글 event
-    LaunchedEffect(selectedFilter) {
-        when (selectedFilter) {
-            FilterType.All -> {
-                viewModel.loadPartnerships()
-                EventLogger.clickMap()
-            }
-            FilterType.Mine -> {
-                viewModel.loadUserCollegePartnerships()
-                EventLogger.clickMapMine(collegeId, departmentId)
-            }
+    // 필터 변경 결과에 따라 학과 입력 BottomSheet 표시
+    LaunchedEffect(mapState.filterChangeResult) {
+        if (mapState.filterChangeResult is MapState.FilterChangeResult.RequiresDepartment) {
+            departmentSheetState.show()
         }
     }
 
@@ -244,13 +225,13 @@ fun MapFragmentComposeView(
         onShowDepartmentSheet = {
             scope.launch { departmentSheetState.show() }
         },
-        onSelectedFilterChange = {
-            selectedFilter = it
+        onSelectedFilterChange = { filter ->
+            viewModel.setFilter(filter)
         },
         departmentId = departmentId,
         collegeId = collegeId,
         departmentName = departmentName,
-        selectedFilter = selectedFilter,
+        selectedFilter = mapState.selectedFilter,
         scope = scope
     )
 }
@@ -308,7 +289,7 @@ private fun MapScreen(
 
         // 특정 식당에 대한 제휴 정보 BottomSheet
         if (partnershipSheetState.isVisible && mapState.restaurantPartnershipInfo != null) {
-            mapState.restaurantPartnershipInfo?.let { info ->
+            mapState.restaurantPartnershipInfo.let { info ->
                 EventLogger.clickPartnerRestaurant(
                     college = collegeId,
                     major = departmentId,
@@ -392,17 +373,6 @@ private fun MapScreen(
                 selected = selectedFilter,
                 onSelectedChange = { next ->
                     if (partnershipSheetState.isVisible) return@PartnershipFilterToggle
-
-                    val emptyDepartment = departmentId == -1L
-
-                    if (next == FilterType.Mine && emptyDepartment) {
-                        // 전환 막기: selectedFilter는 그대로 (All 유지)
-                        // 학과 입력 바텀시트 띄우기
-                        onShowDepartmentSheet()
-                        return@PartnershipFilterToggle
-                    }
-
-                    // 학과 정보가 있거나 All 선택은 정상 전환
                     onSelectedFilterChange(next)
                 },
                 modifier = Modifier.padding(top = 12.dp),
