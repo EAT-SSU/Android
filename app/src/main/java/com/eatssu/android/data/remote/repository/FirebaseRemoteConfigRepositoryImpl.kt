@@ -60,8 +60,7 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
     private fun parseCafeteriaJson(json: String): List<RestaurantInfo> {
         return try {
             val gson = Gson()
-            val listType = object : TypeToken<List<RestaurantInfo>>() {}.type
-            val dtoList: List<RestaurantInfo> = gson.fromJson(json, listType)
+            val dtoList = gson.fromJson(json, Array<RestaurantInfo>::class.java)
 
             dtoList.map { dto ->
                 RestaurantInfo(
