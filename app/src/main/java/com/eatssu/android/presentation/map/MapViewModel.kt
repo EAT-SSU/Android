@@ -48,7 +48,6 @@ class MapViewModel @Inject constructor(
 
     init {
         fetchUserCollegeDepartment()
-        loadPartnerships()
     }
 
     private fun fetchUserCollegeDepartment() {
