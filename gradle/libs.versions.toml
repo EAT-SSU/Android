@@ -12,7 +12,6 @@ composeThemeAdapter = "1.2.1"
 lifecycleRuntimeKtx = "2.5.2"
 lifecycleViewmodelCompose = "2.8.7"
 mapSdk = "3.21.0"
-material = "1.8.0"
 constraintlayout = "2.1.4"
 naverMapCompose = "1.8.2"
 naverMapLocation = "21.0.2"
@@ -142,7 +141,6 @@ play-services-base = { group = "com.google.android.gms", name = "play-services-b
 # etc
 accompanist-appcompat-theme = { group = "com.google.accompanist", name = "accompanist-appcompat-theme", version.ref = "accompanistAppcompatTheme" }
 compose-theme-adapter = { group = "com.google.android.material", name = "compose-theme-adapter", version.ref = "composeThemeAdapter" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
 material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "material-calendarview" }
 transport-runtime = { group = "com.google.android.datatransport", name = "transport-runtime", version.ref = "transport-runtime" }
