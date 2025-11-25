@@ -122,7 +122,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.threetenabp)
     implementation(libs.material.calendarview)

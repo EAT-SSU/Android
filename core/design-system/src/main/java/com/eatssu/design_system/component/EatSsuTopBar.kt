@@ -3,8 +3,6 @@ package com.eatssu.design_system.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -69,7 +67,7 @@ fun CloseTopBar(
         actions = {
             IconButton(onClick = onClose) {
                 Icon(
-                    imageVector = Icons.Filled.Close,
+                    painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = "닫기",
                     tint = Gray500
                 )
