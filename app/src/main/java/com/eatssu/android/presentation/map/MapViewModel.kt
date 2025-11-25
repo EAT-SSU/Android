@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
+import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
@@ -24,6 +26,7 @@ data class MapState(
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
+    val placeType: PlaceType? = null,
 )
 
 @HiltViewModel
@@ -100,10 +103,18 @@ class MapViewModel @Inject constructor(
             )
         }
 
+        // Domain 모델(RestaurantType)을 UI 모델(PlaceType)로 변환
+        val placeType = when (representative.restaurantType) {
+            RestaurantType.CAFE -> PlaceType.CAFE
+            RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
+            RestaurantType.PUB -> PlaceType.PUB
+        }
+
         _uiState.value = UiState.Success(
             data.copy(
                 restaurantPartnershipInfo = representative,
-                restaurantInfoList = restaurantInfoList
+                restaurantInfoList = restaurantInfoList,
+                placeType = placeType
             )
         )
     }

@@ -52,7 +52,6 @@ import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
-import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.EventLogger
@@ -316,18 +315,16 @@ private fun MapScreen(
                     partnerRestaurantId = info.id.toLong()
                 )
 
-                MapRestaurantBottomSheet(
-                    storeName = info.storeName,
-                    placeType = when (info.restaurantType) {
-                        RestaurantType.CAFE -> PlaceType.CAFE
-                        RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
-                        RestaurantType.PUB -> PlaceType.PUB
-                    },
-                    mapRestaurantList = mapState.restaurantInfoList,
-                    onDismiss = {
-                        scope.launch { partnershipSheetState.hide() }
-                    }
-                )
+                mapState.placeType?.let { placeType ->
+                    MapRestaurantBottomSheet(
+                        storeName = info.storeName,
+                        placeType = placeType,
+                        mapRestaurantList = mapState.restaurantInfoList,
+                        onDismiss = {
+                            scope.launch { partnershipSheetState.hide() }
+                        }
+                    )
+                }
             }
         }
 
