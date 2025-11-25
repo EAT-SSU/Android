@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.mypage.myreview
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
 import timber.log.Timber
 
@@ -114,8 +116,7 @@ internal fun MyReviewListScreen(
         Surface(modifier = modifier.padding(innerPadding)) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
@@ -127,7 +128,9 @@ internal fun MyReviewListScreen(
                                 val reviewList = dataState.myReviews ?: emptyList()
 
                                 LazyColumn(
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 24.dp),
                                 ) {
                                     items(reviewList) { item ->
                                         ReviewItem(
@@ -150,7 +153,9 @@ internal fun MyReviewListScreen(
                             is MyReviewState.NoReview -> {
                                 Timber.d("리뷰 없음")
                                 Column(
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Gray100),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
