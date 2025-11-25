@@ -7,7 +7,6 @@ import com.eatssu.common.enums.Restaurant
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import javax.inject.Inject
@@ -60,8 +59,7 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
     private fun parseCafeteriaJson(json: String): List<RestaurantInfo> {
         return try {
             val gson = Gson()
-            val listType = object : TypeToken<List<RestaurantInfo>>() {}.type
-            val dtoList: List<RestaurantInfo> = gson.fromJson(json, listType)
+            val dtoList = gson.fromJson(json, Array<RestaurantInfo>::class.java) ?: emptyArray()
 
             dtoList.map { dto ->
                 RestaurantInfo(

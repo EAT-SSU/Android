@@ -27,10 +27,7 @@
 # https://firebase.google.com/docs/database/android/start?hl=ko
 -keepattributes Signature
 
--keep class com.eatssu.android.data.dto.** {
-  *;
-}
--keep class com.eatssu.android.data.enums.** {
+-keep class com.eatssu.android.data.remote.dto.** {
   *;
 }
 -keep class com.eatssu.android.data.model.** {
