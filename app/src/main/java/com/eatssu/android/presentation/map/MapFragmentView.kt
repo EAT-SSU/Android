@@ -75,6 +75,7 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberMarkerState
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -98,7 +99,8 @@ fun MapFragmentComposeView(
     }
 
     val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val departmentSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val partnershipSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
     val activity = remember(context) { context.findActivityOrNull() }
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
@@ -168,9 +170,9 @@ fun MapFragmentComposeView(
     // 상태 변화 감지해서 show/hide -> Scrim 잔존 문제 해결
     LaunchedEffect(showUserDepartmentBottomSheet) {
         if (showUserDepartmentBottomSheet) {
-            sheetState.show()
+            departmentSheetState.show()
         } else {
-            sheetState.hide()
+            departmentSheetState.hide()
         }
     }
 
@@ -194,6 +196,13 @@ fun MapFragmentComposeView(
                 viewModel.loadUserCollegePartnerships()
                 EventLogger.clickMapMine(collegeId, departmentId)
             }
+        }
+    }
+
+    // 제휴 정보가 선택되면 BottomSheet 표시
+    LaunchedEffect(mapState.restaurantPartnershipInfo) {
+        if (mapState.restaurantPartnershipInfo != null) {
+            partnershipSheetState.show()
         }
     }
 
@@ -222,7 +231,8 @@ fun MapFragmentComposeView(
         viewModel = viewModel,
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
-        sheetState = sheetState,
+        departmentSheetState = departmentSheetState,
+        partnershipSheetState = partnershipSheetState,
         showToast = { message ->
             scope.launch {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -232,8 +242,8 @@ fun MapFragmentComposeView(
             val intent = Intent(context, UserInfoActivity::class.java)
             context.startActivity(intent)
         },
-        onShowSheet = {
-            scope.launch { sheetState.show() }
+        onShowDepartmentSheet = {
+            scope.launch { departmentSheetState.show() }
         },
         onSelectedFilterChange = {
             selectedFilter = it
@@ -241,7 +251,8 @@ fun MapFragmentComposeView(
         departmentId = departmentId,
         collegeId = collegeId,
         departmentName = departmentName,
-        selectedFilter = selectedFilter
+        selectedFilter = selectedFilter,
+        scope = scope
     )
 }
 
@@ -251,15 +262,17 @@ private fun MapScreen(
     viewModel: MapViewModel,
     cameraPositionState: CameraPositionState,
     locationSource: FusedLocationSource,
-    sheetState: SheetState,
+    departmentSheetState: SheetState,
+    partnershipSheetState: SheetState,
     showToast: (String) -> Unit,
     navigateToUserInfo: () -> Unit,
-    onShowSheet: () -> Unit,
+    onShowDepartmentSheet: () -> Unit,
     onSelectedFilterChange: (FilterType) -> Unit,
     departmentId: Long,
     collegeId: Long,
     departmentName: String?,
     selectedFilter: FilterType,
+    scope: CoroutineScope,
 ) {
     Scaffold(
         topBar = {
@@ -279,21 +292,23 @@ private fun MapScreen(
     ) { innerPadding ->
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
-        if (sheetState.isVisible) {
+        if (departmentSheetState.isVisible) {
             Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
 
             DepartmentBottomSheet(
-                onDismiss = { viewModel.toggleDepartmentBottomSheet() },
+                onDismiss = {
+                    scope.launch { departmentSheetState.hide() }
+                },
                 onInputClick = {
-                    viewModel.toggleDepartmentBottomSheet()
+                    scope.launch { departmentSheetState.hide() }
                     navigateToUserInfo()
                 },
-                sheetState = sheetState
+                sheetState = departmentSheetState
             )
         }
 
         // 특정 식당에 대한 제휴 정보 BottomSheet
-        if (mapState.showPartnershipBottomSheet) {
+        if (partnershipSheetState.isVisible && mapState.restaurantPartnershipInfo != null) {
             mapState.restaurantPartnershipInfo?.let { info ->
                 EventLogger.clickPartnerRestaurant(
                     college = collegeId,
@@ -309,7 +324,9 @@ private fun MapScreen(
                         RestaurantType.PUB -> PlaceType.PUB
                     },
                     mapRestaurantList = mapState.restaurantInfoList,
-                    onDismiss = { viewModel.togglePartnershipBottomSheet() }
+                    onDismiss = {
+                        scope.launch { partnershipSheetState.hide() }
+                    }
                 )
             }
         }
@@ -362,6 +379,7 @@ private fun MapScreen(
                                 true
                             } else {
                                 // 제휴 정보가 있을 때만 바텀시트 띄움
+                                // LaunchedEffect에서 자동으로 표시됨
                                 viewModel.selectPartnershipByStoreName(partnership.storeName)
                                 true
                             }
@@ -376,14 +394,14 @@ private fun MapScreen(
             PartnershipFilterToggle(
                 selected = selectedFilter,
                 onSelectedChange = { next ->
-                    if (mapState.showPartnershipBottomSheet) return@PartnershipFilterToggle
+                    if (partnershipSheetState.isVisible) return@PartnershipFilterToggle
 
                     val emptyDepartment = departmentId == -1L
 
                     if (next == FilterType.Mine && emptyDepartment) {
                         // 전환 막기: selectedFilter는 그대로 (All 유지)
                         // 학과 입력 바텀시트 띄우기
-                        onShowSheet()
+                        onShowDepartmentSheet()
                         return@PartnershipFilterToggle
                     }
 

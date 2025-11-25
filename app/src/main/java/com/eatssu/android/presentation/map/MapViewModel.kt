@@ -21,8 +21,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 data class MapState(
-    val showDepartmentBottomSheet: Boolean = false,
-    val showPartnershipBottomSheet: Boolean = false,
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
@@ -104,41 +102,9 @@ class MapViewModel @Inject constructor(
 
         _uiState.value = UiState.Success(
             data.copy(
-                showPartnershipBottomSheet = true,
                 restaurantPartnershipInfo = representative,
                 restaurantInfoList = restaurantInfoList
             )
         )
-    }
-
-    // 학과 정보 입력 bottomSheet 보여주기 toggle
-    fun toggleDepartmentBottomSheet() {
-        val current = uiState.value
-        if (current is UiState.Success) {
-            current.data.let { data ->
-                if (departmentId == -1L) {
-                    // 학과 정보가 없는 경우 학과 입력 바텀시트 무조건 보여주기
-                    _uiState.value = UiState.Success(
-                        data.copy(showDepartmentBottomSheet = true)
-                    )
-                } else {
-                    _uiState.value = UiState.Success(
-                        data.copy(showDepartmentBottomSheet = !data.showDepartmentBottomSheet)
-                    )
-                }
-            }
-        }
-    }
-
-    // 식당별 제휴 정보 bottomSheet 보여주기 toggle
-    fun togglePartnershipBottomSheet() {
-        val current = uiState.value
-        if (current is UiState.Success) {
-            current.data.let { data ->
-                _uiState.value = UiState.Success(
-                    data.copy(showPartnershipBottomSheet = !data.showPartnershipBottomSheet)
-                )
-            }
-        }
     }
 }
