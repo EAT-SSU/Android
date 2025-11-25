@@ -174,8 +174,8 @@ fun MapFragmentComposeView(
         }
     }
 
-    // 초기 필터 설정
-    LaunchedEffect(Unit) {
+    // 초기 필터 설정 (departmentId가 변경될 때마다 재설정)
+    LaunchedEffect(departmentId) {
         if (departmentId == -1L) {
             selectedFilter = FilterType.All
         } else {
