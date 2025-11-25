@@ -184,9 +184,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.error.ServerErrorActivity"
-            android:exported="false" />
-        <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
