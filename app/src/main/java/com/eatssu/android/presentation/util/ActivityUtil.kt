@@ -21,12 +21,18 @@ fun AppCompatActivity.observeNetworkError(
     errorTitle: String? = null,
     errorMessage: String? = null
 ) {
+    var networkErrorDialog: AlertDialog? = null
+
     lifecycleScope.launch {
         NetworkErrorEventBus.networkError.collect {
+            if (networkErrorDialog?.isShowing == true) {
+                return@collect
+            }
+
             val title = errorTitle ?: getString(R.string.server_error_title)
             val message = errorMessage ?: getString(R.string.server_error_message)
 
-            AlertDialog.Builder(this@observeNetworkError)
+            networkErrorDialog = AlertDialog.Builder(this@observeNetworkError)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.confirm)) { dialog, _ ->
@@ -34,7 +40,12 @@ fun AppCompatActivity.observeNetworkError(
                 }
                 .setCancelable(true)
                 .create()
-                .show()
+                .also { dialog ->
+                    dialog.setOnDismissListener {
+                        networkErrorDialog = null
+                    }
+                    dialog.show()
+                }
         }
     }
 }
