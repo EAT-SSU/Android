@@ -239,7 +239,7 @@ fun MapRoute(
 }
 
 @Composable
-private fun MapScreen(
+internal fun MapScreen(
     mapState: MapState,
     viewModel: MapViewModel,
     cameraPositionState: CameraPositionState,
