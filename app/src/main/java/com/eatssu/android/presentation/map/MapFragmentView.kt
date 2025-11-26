@@ -72,7 +72,6 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberMarkerState
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -83,7 +82,7 @@ private const val DEFAULT_ZOOM = 17.5
 private const val PERMISSION_REQUEST_CODE = 1001
 
 @Composable
-fun MapFragmentComposeView(
+fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel()
 ) {
@@ -184,6 +183,7 @@ fun MapFragmentComposeView(
         if (mapState.restaurantPartnershipInfo != null) {
             partnershipSheetState.show()
         }
+        Timber.d("선택된 식당 제휴 정보: ${mapState.restaurantPartnershipInfo}")
     }
 
     // Screen View 기록
@@ -222,8 +222,11 @@ fun MapFragmentComposeView(
             val intent = Intent(context, UserInfoActivity::class.java)
             context.startActivity(intent)
         },
-        onShowDepartmentSheet = {
-            scope.launch { departmentSheetState.show() }
+        onHideDepartmentSheet = {
+            scope.launch { departmentSheetState.hide() }
+        },
+        onHidePartnershipSheet = {
+            scope.launch { partnershipSheetState.hide() }
         },
         onSelectedFilterChange = { filter ->
             viewModel.setFilter(filter)
@@ -232,7 +235,6 @@ fun MapFragmentComposeView(
         collegeId = collegeId,
         departmentName = departmentName,
         selectedFilter = mapState.selectedFilter,
-        scope = scope
     )
 }
 
@@ -246,13 +248,13 @@ private fun MapScreen(
     partnershipSheetState: SheetState,
     showToast: (String) -> Unit,
     navigateToUserInfo: () -> Unit,
-    onShowDepartmentSheet: () -> Unit,
+    onHideDepartmentSheet: () -> Unit = {},
+    onHidePartnershipSheet: () -> Unit = {},
     onSelectedFilterChange: (FilterType) -> Unit,
     departmentId: Long,
     collegeId: Long,
     departmentName: String?,
     selectedFilter: FilterType,
-    scope: CoroutineScope,
 ) {
     Scaffold(
         topBar = {
@@ -277,10 +279,10 @@ private fun MapScreen(
 
             DepartmentBottomSheet(
                 onDismiss = {
-                    scope.launch { departmentSheetState.hide() }
+                    onHideDepartmentSheet()
                 },
                 onInputClick = {
-                    scope.launch { departmentSheetState.hide() }
+                    onHideDepartmentSheet()
                     navigateToUserInfo()
                 },
                 sheetState = departmentSheetState
@@ -288,21 +290,23 @@ private fun MapScreen(
         }
 
         // 특정 식당에 대한 제휴 정보 BottomSheet
-        if (partnershipSheetState.isVisible && mapState.restaurantPartnershipInfo != null) {
-            mapState.restaurantPartnershipInfo.let { info ->
-                EventLogger.clickPartnerRestaurant(
-                    college = collegeId,
-                    major = departmentId,
-                    partnerRestaurantId = info.id.toLong()
-                )
+        if (partnershipSheetState.isVisible) {
+            mapState.restaurantPartnershipInfo?.let { info ->
 
                 mapState.placeType?.let { placeType ->
+
+                    EventLogger.clickPartnerRestaurant(
+                        college = collegeId,
+                        major = departmentId,
+                        partnerRestaurantId = info.id.toLong()
+                    )
+
                     MapRestaurantBottomSheet(
                         storeName = info.storeName,
                         placeType = placeType,
                         mapRestaurantList = mapState.restaurantInfoList,
                         onDismiss = {
-                            scope.launch { partnershipSheetState.hide() }
+                            onHidePartnershipSheet()
                         }
                     )
                 }
@@ -412,6 +416,6 @@ fun Context.findActivityOrNull(): Activity? = when (this) {
 @Composable
 fun MapFragmentComposeViewPreview() {
     EatssuTheme {
-        MapFragmentComposeView()
+        MapRoute()
     }
 }

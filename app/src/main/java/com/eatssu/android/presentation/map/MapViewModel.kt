@@ -76,7 +76,7 @@ class MapViewModel @Inject constructor(
             val initialFilter = if (newDepartmentId == -1L) FilterType.All else FilterType.Mine
 
             _uiState.value = UiState.Success(
-                currentData.copy(selectedFilter = initialFilter)
+                MapState(selectedFilter = initialFilter)
             )
 
             // 초기 필터에 따라 데이터 로드

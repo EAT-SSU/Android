@@ -54,7 +54,7 @@ fun PartnershipFilterToggle(
         verticalAlignment = Alignment.CenterVertically
     ) {
         items.forEach { (type, label) ->
-            ToggleChip(
+            PartnershipToggleItem(
                 label = label,
                 selected = selected == type,
                 onClick = { onSelectedChange(type) }
@@ -64,7 +64,7 @@ fun PartnershipFilterToggle(
 }
 
 @Composable
-fun ToggleChip(
+fun PartnershipToggleItem(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
