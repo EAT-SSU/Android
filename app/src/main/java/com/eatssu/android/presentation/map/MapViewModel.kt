@@ -107,8 +107,9 @@ class MapViewModel @Inject constructor(
 
         // 필터 변경 성공
         val updatedData = currentData.copy(
+            restaurantPartnershipInfo = null,
             selectedFilter = filter,
-            filterChangeResult = null
+            filterChangeResult = null,
         )
         _uiState.value = UiState.Success(updatedData)
 
