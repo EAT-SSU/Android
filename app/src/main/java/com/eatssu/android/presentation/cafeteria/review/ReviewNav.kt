@@ -75,6 +75,9 @@ fun ReviewNav(
             val menuLikeInfoNames =
                 prev?.get<ArrayList<Review.MenuLikeInfo>>("menuList") ?: arrayListOf()
 
+            //todo 밀이 아니라 메뉴일때 처리해야함
+            // java.lang.ClassCastException: java.util.Collections$SingletonList cannot be cast to java.util.ArrayList
+
             ModifyReviewScreen(
                 reviewId = reviewId,
                 initialRating = initialRating,
