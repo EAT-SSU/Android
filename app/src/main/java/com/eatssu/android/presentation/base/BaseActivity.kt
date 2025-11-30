@@ -69,6 +69,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
         // refreshtoken 관리
         observeTokenExpiration()
+        observeNetworkError()
 
         setContainerInset()
 
@@ -120,8 +121,6 @@ abstract class BaseActivity<B : ViewBinding>(
                 navigateToLogin()
             }
         }
-
-        observeNetworkError()
     }
 
     private fun navigateToLogin() {
