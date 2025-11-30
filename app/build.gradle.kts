@@ -1,3 +1,4 @@
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import java.util.Properties
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.app.distribution)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
@@ -43,7 +45,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
 
@@ -69,7 +71,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
 
-        debug {
+        getByName("debug") {
             applicationIdSuffix = ".debug"
 //            isDebuggable = false
 
@@ -94,6 +96,16 @@ android {
             buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
 
             isMinifyEnabled = false
+
+            firebaseAppDistribution {
+                serviceCredentialsFile = "$rootDir/serviceAccountKey.json"
+                artifactType = "APK"
+                groups = "eat-ssu-android-qa"
+                releaseNotes = """
+                    Debug 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
+                    내부 테스트용 빌드입니다.
+                """.trimIndent()
+            }
         }
     }
 
