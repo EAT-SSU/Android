@@ -37,6 +37,7 @@ class IntroActivity : AppCompatActivity() {
 
         observeState()
         observeEvents()
+        observeNetworkError()
 
         lifecycleScope.launch {
             // 버전 체크 결과 관찰
@@ -88,8 +89,6 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
         }
-
-        observeNetworkError()
     }
 
     private fun log() {
