@@ -62,9 +62,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+      env:
+        FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
 
     - name: Upload to Firebase App Distribution (Release)
       run: ./gradlew appDistributionUploadRelease
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
-
