@@ -72,11 +72,11 @@ android {
 
             firebaseAppDistribution {
                 serviceCredentialsFile = "$rootDir/serviceAccountKey.json"
-                artifactType = "AAB" // release는 AAB 파일 전송
+                artifactType = "APK"
                 groups = "eat-ssu-android-qa"
                 releaseNotes = """
             Release 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
-            프로덕션 테스트 빌드입니다.
+            프로덕션 테스트(APK) 빌드입니다.
         """.trimIndent()
             }
         }
