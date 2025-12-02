@@ -77,7 +77,9 @@ android {
 
                 if (credentials != null) {
                     // CI/CD용 임시 파일 생성
-                    val tempFile = File("$buildDir/intermediates/firebase/serviceAccountKey.json")
+                    val tempFile =
+                        layout.buildDirectory.file("intermediates/firebase/serviceAccountKey.json")
+                            .get().asFile
                     tempFile.parentFile.mkdirs()
                     tempFile.writeText(credentials)
 
@@ -94,8 +96,6 @@ android {
         프로덕션 테스트 빌드입니다.
     """.trimIndent()
             }
-
-
         }
 
         getByName("debug") {
