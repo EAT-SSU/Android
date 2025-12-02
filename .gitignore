@@ -99,3 +99,8 @@ lint/tmp/
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+# Firebase service account
+serviceAccountKey.json
+app/serviceAccountKey.json
+**/serviceAccountKey.json
