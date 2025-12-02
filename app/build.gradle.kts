@@ -69,6 +69,16 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            firebaseAppDistribution {
+                serviceCredentialsFile = "$rootDir/serviceAccountKey.json"
+                artifactType = "AAB" // release는 AAB 파일 전송
+                groups = "eat-ssu-android-qa"
+                releaseNotes = """
+            Release 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
+            프로덕션 테스트 빌드입니다.
+        """.trimIndent()
+            }
         }
 
         getByName("debug") {
@@ -96,16 +106,6 @@ android {
             buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
 
             isMinifyEnabled = false
-
-            firebaseAppDistribution {
-                serviceCredentialsFile = "$rootDir/serviceAccountKey.json"
-                artifactType = "APK"
-                groups = "eat-ssu-android-qa"
-                releaseNotes = """
-                    Debug 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
-                    내부 테스트용 빌드입니다.
-                """.trimIndent()
-            }
         }
     }
 
