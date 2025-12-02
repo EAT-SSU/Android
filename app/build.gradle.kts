@@ -71,14 +71,31 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
             firebaseAppDistribution {
-                serviceCredentialsFile = "$rootDir/serviceAccountKey.json"
+
+                val credentials = System.getenv("FIREBASE_CREDENTIALS")
+                    ?: p.getProperty("FIREBASE_CREDENTIALS")
+
+                if (credentials != null) {
+                    // CI/CD용 임시 파일 생성
+                    val tempFile = File("$buildDir/intermediates/firebase/serviceAccountKey.json")
+                    tempFile.parentFile.mkdirs()
+                    tempFile.writeText(credentials)
+
+                    // Firebase에 전달
+                    serviceCredentialsFile = tempFile.absolutePath
+                } else {
+                    throw GradleException("FIREBASE_CREDENTIALS is not set.")
+                }
+
                 artifactType = "APK"
                 groups = "eat-ssu-android-qa"
                 releaseNotes = """
-            Release 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
-            프로덕션 테스트(APK) 빌드입니다.
-        """.trimIndent()
+        Release 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
+        프로덕션 테스트 빌드입니다.
+    """.trimIndent()
             }
+
+
         }
 
         getByName("debug") {
