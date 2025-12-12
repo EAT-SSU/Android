@@ -1,18 +1,23 @@
 package com.eatssu.android.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 data class Review(
     val isWriter: Boolean,
     val reviewId: Long,
-
-    val menu: String,
+    val menuLikeInfoList: List<MenuLikeInfo>,
     val writerNickname: String,
-
-    val mainGrade: Int,
-    val amountGrade: Int,
-    val tasteGrade: Int,
-
+    val rating: Int,
     val writeDate: String,
-
     val content: String,
-    val imgUrl: ArrayList<String>?,
-)
+    val imgUrl: String?,
+) {
+    @Parcelize
+    data class MenuLikeInfo(
+        val menuId: Long,
+        val name: String,
+        val isLike: Boolean,
+    ) : Parcelable
+
+}

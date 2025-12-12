@@ -6,12 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,28 +36,27 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(
-        UiState.Success(
-            MainState.DepartmentState(MySharedPreferences.getUserDepartmentName(context))
-        )
-    )
+    private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
     val uiState: StateFlow<UiState<MainState>> = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
+        loadStoredUserDepartment()
         getUserDepartment()
         fetchAndCheckNickname()
     }
 
     fun refreshUserDepartment() {
-        val userInfo = getUserCollegeDepartmentUseCase()
-        _uiState.value = UiState.Success(
-            MainState.DepartmentState(
-                departmentName = userInfo.userDepartment.departmentName
+        viewModelScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = userInfo.userDepartment.departmentName
+                )
             )
-        )
+        }
     }
 
     private fun fetchAndCheckNickname() {
@@ -94,11 +94,24 @@ class MainViewModel @Inject constructor(
     fun setData(dataToSend: LocalDate) {
         data.value = dataToSend
 
-        Timber.d("setdata", dataToSend.toString())
+        Timber.d("setdata $dataToSend")
     }
 
     fun getData(): LiveData<LocalDate> {
         return data
+    }
+
+    private fun loadStoredUserDepartment() {
+        viewModelScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            _uiState.value = UiState.Success(
+                MainState.DepartmentState(
+                    departmentName = userInfo.userDepartment.departmentName,
+                    showUserDepartmentBottomSheet =
+                        (userInfo.userCollege.collegeId == -1 || userInfo.userDepartment.departmentId == -1)
+                )
+            )
+        }
     }
 
     private fun getUserDepartment() {
@@ -133,7 +146,7 @@ sealed class MainState {
     data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
-        val departmentName: String = "",
+        val departmentName: String? = "",
         val showUserDepartmentBottomSheet: Boolean = false
     ) : MainState()
 }

@@ -6,11 +6,11 @@ import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivitySignOutBinding
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

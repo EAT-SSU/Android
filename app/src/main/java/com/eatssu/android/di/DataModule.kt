@@ -1,13 +1,16 @@
 package com.eatssu.android.di
 
 
-import com.eatssu.android.data.repository.HealthCheckRepositoryImpl
-import com.eatssu.android.data.repository.MealRepositoryImpl
-import com.eatssu.android.data.repository.MenuRepositoryImpl
-import com.eatssu.android.data.repository.OauthRepositoryImpl
-import com.eatssu.android.data.repository.PartnershipRepositoryImpl
-import com.eatssu.android.data.repository.ReportRepositoryImpl
-import com.eatssu.android.data.repository.UserRepositoryImpl
+import com.eatssu.android.data.remote.repository.FirebaseRemoteConfigRepositoryImpl
+import com.eatssu.android.data.remote.repository.HealthCheckRepositoryImpl
+import com.eatssu.android.data.remote.repository.MealRepositoryImpl
+import com.eatssu.android.data.remote.repository.MenuRepositoryImpl
+import com.eatssu.android.data.remote.repository.OauthRepositoryImpl
+import com.eatssu.android.data.remote.repository.PartnershipRepositoryImpl
+import com.eatssu.android.data.remote.repository.ReportRepositoryImpl
+import com.eatssu.android.data.remote.repository.ReviewRepositoryImpl
+import com.eatssu.android.data.remote.repository.UserRepositoryImpl
+import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.repository.HealthCheckRepository
 import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.MenuRepository
@@ -20,7 +23,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.eatssu.android.data.repository.ReviewRepositoryImpl as ReviewRepositoryImpl1
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -43,7 +45,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindsReviewRepository(
-        reviewRepositoryImpl: ReviewRepositoryImpl1,
+        reviewRepositoryImpl: ReviewRepositoryImpl,
     ): ReviewRepository
 
     @Binds
@@ -66,4 +68,8 @@ abstract class DataModule {
         menuRepositoryImpl: MenuRepositoryImpl,
     ): MenuRepository
 
+    @Binds
+    internal abstract fun bindsFirebaseRemoteConfigRepository(
+        firebaseRemoteConfigRepositoryImpl: FirebaseRemoteConfigRepositoryImpl,
+    ): FirebaseRemoteConfigRepository
 }

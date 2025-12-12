@@ -1,13 +1,13 @@
 package com.eatssu.android.di
 
-import com.eatssu.android.data.service.HealthCheckService
-import com.eatssu.android.data.service.MealService
-import com.eatssu.android.data.service.MenuService
-import com.eatssu.android.data.service.OauthService
-import com.eatssu.android.data.service.PartnershipService
-import com.eatssu.android.data.service.ReportService
-import com.eatssu.android.data.service.ReviewService
-import com.eatssu.android.data.service.UserService
+import com.eatssu.android.data.remote.service.HealthCheckService
+import com.eatssu.android.data.remote.service.MealService
+import com.eatssu.android.data.remote.service.MenuService
+import com.eatssu.android.data.remote.service.OauthService
+import com.eatssu.android.data.remote.service.PartnershipService
+import com.eatssu.android.data.remote.service.ReportService
+import com.eatssu.android.data.remote.service.ReviewService
+import com.eatssu.android.data.remote.service.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +18,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
+
     @Provides
     @Singleton
     fun provideOauthService(@NoToken noTokenRetrofit: Retrofit): OauthService {
@@ -44,8 +45,8 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideMealService(@NoToken noTokenRetrofit: Retrofit): MealService {
-        return noTokenRetrofit.create(MealService::class.java)
+    fun provideMealService(retrofit: Retrofit): MealService {
+        return retrofit.create(MealService::class.java)
     }
 
     @Provides

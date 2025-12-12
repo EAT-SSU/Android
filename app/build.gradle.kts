@@ -17,14 +17,21 @@ android {
     namespace = "com.eatssu.android"
     compileSdk = 35
 
-    // S8: API 28
-    // S21: API 33
+    /**
+     * 현재 팀 내 안드로이드 OS 버전
+     * 진 S8: 9 (sdk 28)
+     * 진 S21: 14 (sdk 33)
+     * 윤소: 9
+     * 유리: 10
+     * 제훈: 14
+     */
+
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 28
         targetSdk = 35
-        versionCode = 43
-        versionName = "3.1.5"
+        versionCode = 46
+        versionName = "3.1.8"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -115,7 +122,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.threetenabp)
     implementation(libs.material.calendarview)
@@ -123,6 +129,27 @@ dependencies {
     implementation(libs.transport.runtime)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
+
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.lifecycle.viewmodel)
+    implementation(libs.androidx.compose.lifecycle.runtime)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.compose.theme.adapter)
+    implementation(libs.accompanist.appcompat.theme)
+    androidTestImplementation(libs.androidx.compose.bom)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // navigation
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.compose)
 
     //glance
     implementation(libs.androidx.glance)
@@ -151,6 +178,9 @@ dependencies {
     implementation(libs.glide)
     kapt(libs.glide.compiler)
 
+    //coil: 이미지 로딩
+    implementation(libs.coil.compose)
+
     //compressor: 이미지 압축
     implementation(libs.compressor)
 
@@ -168,6 +198,7 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
+    implementation(libs.hilt.navigation.compose)
 
     // ViewModel and LiveData
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -188,31 +219,14 @@ dependencies {
     // OSS
     implementation(libs.oss.licenses)
 
-    // Compose
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.animation)
-    implementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.compose.lifecycle.viewmodel)
-    implementation(libs.androidx.compose.lifecycle.runtime)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.compose.theme.adapter)
-    implementation(libs.accompanist.appcompat.theme)
-    androidTestImplementation(libs.androidx.compose.bom)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // navigation
-    implementation(libs.androidx.navigation.fragment)
-    implementation(libs.androidx.navigation.ui)
-
     // worker (Kotlin + coroutines)
     implementation(libs.androidx.work.runtime.ktx)
 
     //data store (with flow)
     implementation(libs.androidx.datastore.preferences)
+
+    // EncryptedSharedPreferences
+    implementation(libs.androidx.security.crypto)
 
     // naver maps
     implementation (libs.map.sdk)

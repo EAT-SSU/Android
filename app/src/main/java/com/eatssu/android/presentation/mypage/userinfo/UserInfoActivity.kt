@@ -14,11 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityUserInfoBinding
-import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -112,11 +111,13 @@ class UserInfoActivity :
                 binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
                 binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
             }
+
             data.isDuplicationChecked -> {
                 binding.tvNicknameStatus.text = getString(R.string.set_nickname_able)
                 binding.tvNicknameStatus.setTextColor(getColor(R.color.gray600))
                 binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small)
             }
+
             else -> {
                 binding.tvNicknameStatus.text = getString(
                     R.string.set_nickname_length,
@@ -132,14 +133,18 @@ class UserInfoActivity :
     private fun updateCollegeDepartmentUI(data: UserInfoData) {
         with(binding) {
             tvCollege.text = data.selectedCollege.collegeName
-            tvCollege.setTextColor(getColor(
-                if (data.selectedCollege.collegeId != -1) R.color.gray700 else R.color.gray400
-            ))
+            tvCollege.setTextColor(
+                getColor(
+                    if (data.selectedCollege.collegeId != -1) R.color.gray700 else R.color.gray400
+                )
+            )
 
             tvDepartment.text = data.selectedDepartment.departmentName
-            tvDepartment.setTextColor(getColor(
-                if (data.selectedDepartment.departmentId != -1) R.color.gray700 else R.color.gray400
-            ))
+            tvDepartment.setTextColor(
+                getColor(
+                    if (data.selectedDepartment.departmentId != -1) R.color.gray700 else R.color.gray400
+                )
+            )
         }
     }
 

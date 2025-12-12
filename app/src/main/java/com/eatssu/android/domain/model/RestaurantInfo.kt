@@ -6,7 +6,7 @@ data class RestaurantInfo(
     val enum: Restaurant,
     val name: String,
     val location: String,
-    val photoUrl: String,
+    val image: String,
     val time: String,
     val etc: String,
 )

@@ -2,7 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.report
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.dto.request.ReportRequest
+import com.eatssu.android.data.remote.dto.request.ReportRequest
 import com.eatssu.android.domain.usecase.review.PostReportUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

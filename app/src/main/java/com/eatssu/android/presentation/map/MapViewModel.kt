@@ -1,19 +1,16 @@
 package com.eatssu.android.presentation.map
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.model.RestaurantInfo
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -38,8 +35,7 @@ data class MapState(
 class MapViewModel @Inject constructor(
     private val partnershipRepository: PartnershipRepository,
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
-    getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
-    @ApplicationContext private val context: Context,
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -48,13 +44,23 @@ class MapViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
-    private val userCollegeDepartment = getUserCollegeDepartmentUseCase()
-    val departmentId: Long = userCollegeDepartment.userDepartment.departmentId.toLong()
-    val collegeId: Long = userCollegeDepartment.userCollege.collegeId.toLong()
+    var departmentId: Long = -1
+        private set
+    var collegeId: Long = -1
+        private set
 
     init {
-        Timber.d("학과 정보 : ${MySharedPreferences.getUserDepartmentName(context)}")
+        fetchUserCollegeDepartment()
         loadPartnerships()
+    }
+
+    private fun fetchUserCollegeDepartment() {
+        viewModelScope.launch {
+            val userCollegeDepartment = getUserCollegeDepartmentUseCase()
+            departmentId = userCollegeDepartment.userDepartment.departmentId.toLong()
+            collegeId = userCollegeDepartment.userCollege.collegeId.toLong()
+            Timber.d("학과 정보 : ${userCollegeDepartment.userDepartment.departmentName}")
+        }
     }
 
     // 제휴 정보 로딩

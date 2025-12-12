@@ -1,13 +1,13 @@
 package com.eatssu.android.domain.usecase.alarm
 
-import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.data.local.SettingDataStore
 import javax.inject.Inject
 
 
 class SetDailyNotificationStatusUseCase @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val settingDataStore: SettingDataStore
 ) {
     suspend operator fun invoke(status: Boolean) {
-        preferencesRepository.setDailyNotificationStatus(status)
+        settingDataStore.setDailyNotificationStatus(status)
     }
 }

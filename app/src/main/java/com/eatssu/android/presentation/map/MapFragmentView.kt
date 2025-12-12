@@ -45,8 +45,6 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
@@ -55,6 +53,8 @@ import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.EventLogger
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
@@ -346,7 +346,7 @@ fun MapFragmentComposeView(
                     selectedFilter = next
                 },
                 modifier = Modifier.padding(top = 12.dp),
-                departmentName = departmentName
+                departmentName = departmentName.toString()
             )
 
             // 찜 기능

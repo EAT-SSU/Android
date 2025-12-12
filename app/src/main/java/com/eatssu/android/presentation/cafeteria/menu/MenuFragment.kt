@@ -16,8 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
+import com.eatssu.common.UiState
+import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,17 +107,22 @@ class MenuFragment : Fragment() {
                 val menuMap = state.data.menuMap
                 Timber.d("Menu map received: $menuMap")
 
-                val sectionList = menuMap
-                    .filter { (_, menuList) -> menuList.isNotEmpty() }
-                    .map { (restaurant, menuList) ->
-                        Section(
-                            restaurant.menuType,
-                            restaurant,
-                            menuList,
-                            infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
-                        )
-                    }
-                    .sortedBy { it.cafeteria.ordinal }
+                val sectionList = buildList {
+                    menuMap
+                        .filter { (_, menuList) -> menuList.isNotEmpty() }
+                        .forEach { (restaurant, menuList) ->
+                            val location =
+                                infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
+                            add(
+                                Section(
+                                    restaurant.menuType,
+                                    restaurant,
+                                    menuList,
+                                    location
+                                )
+                            )
+                        }
+                }.sortedBy { it.cafeteria.ordinal }
 
                 setupRecyclerView(sectionList)
             }

@@ -1,22 +1,25 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
-import com.eatssu.android.domain.model.Review
 
 interface UserRepository {
 
+    // 닉네임 변경
     suspend fun updateUserName(
         body: ChangeNicknameRequest,
     ): Result<Unit>
 
+    // 유저 닉네임 중복 검사
     suspend fun checkUserNameValidation(
         nickname: String,
     ): Result<Unit>
 
-    suspend fun getUserReviews(): List<Review>
+    // 유저 닉네임 조회
     suspend fun getUserNickName(): String
+
+    // 회원 탈퇴
     suspend fun signOut(): Boolean
 
     // 모든 단과대 조회
@@ -33,4 +36,3 @@ interface UserRepository {
         departmentId: Int,
     ): Boolean
 }
-

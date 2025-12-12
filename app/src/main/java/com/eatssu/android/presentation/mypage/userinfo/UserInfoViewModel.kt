@@ -5,14 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
-import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.NicknameValidationResult
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.android.presentation.util.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
