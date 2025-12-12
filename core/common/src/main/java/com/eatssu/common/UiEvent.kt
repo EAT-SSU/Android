@@ -1,8 +1,6 @@
 package com.eatssu.common
 
-import com.eatssu.android.presentation.util.ToastLocation
-import com.eatssu.android.presentation.util.ToastType
-
+import com.eatssu.common.enums.ToastType
 
 /**
  * 각 Screen에 공통적인 이벤트 타입입니다.
@@ -11,8 +9,7 @@ import com.eatssu.android.presentation.util.ToastType
 interface UiEvent {
     data class ShowToast(
         val message: String,
-        val type: ToastType,
-        val location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION
+        val type: ToastType
     ) : UiEvent
     object NavigateBack : UiEvent
 }

@@ -8,34 +8,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.eatssu.android.R
-import com.eatssu.android.presentation.UiEvent
-
-enum class ToastType(@DrawableRes val iconId: Int, @DrawableRes val shapeId: Int) {
-    INFO(R.drawable.ic_toast_info, R.drawable.shape_toast_info),
-    SUCCESS(R.drawable.ic_toast_success, R.drawable.shape_toast_success),
-    WARNING(R.drawable.ic_toast_warning, R.drawable.shape_toast_warning),
-    ERROR(R.drawable.ic_toast_error, R.drawable.shape_toast_error)
-}
-
-enum class ToastLocation(val gravity: Int, val xOffset: Int, val yOffset: Int) {
-    BOTTOM_NAVIGATION(Gravity.BOTTOM, 0, 200),
-}
-
-fun Context.showToast(event: UiEvent.ShowToast) =
-    showToast(event.message, event.type, event.location)
+import com.eatssu.common.UiEvent
+import com.eatssu.common.enums.ToastType
 
 fun Context.showToast(
     message: String,
     type: ToastType,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
     val toast = Toast(this)
-    toast.setGravity(location.gravity, location.xOffset, location.yOffset)
+    toast.setGravity(Gravity.BOTTOM, 0, 200)
     toast.duration = Toast.LENGTH_SHORT
 
     val inflater = LayoutInflater.from(this)
@@ -49,142 +34,128 @@ fun Context.showToast(
     toast.show()
 }
 
+fun Context.showToast(event: UiEvent.ShowToast) =
+    showToast(event.message, event.type)
+
 fun Fragment.showToast(event: UiEvent.ShowToast) =
-    showToast(event.message, event.type, event.location)
+    showToast(event.message, event.type)
 
 fun Fragment.showToast(
     message: String,
     type: ToastType,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showToast(message, type, location, root)
+    requireContext().showToast(message, type, root)
 }
 
 fun Context.showInfoToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(message, ToastType.INFO, location, root)
+    showToast(message, ToastType.INFO, root)
 }
 
 fun Context.showInfoToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(getString(messageId), ToastType.INFO, location, root)
+    showToast(getString(messageId), ToastType.INFO, root)
 }
 
 fun Fragment.showInfoToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showInfoToast(message, location, root)
+    requireContext().showInfoToast(message, root)
 }
 
 fun Fragment.showInfoToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showInfoToast(messageId, location, root)
+    requireContext().showInfoToast(messageId, root)
 }
 
 fun Context.showSuccessToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(message, ToastType.SUCCESS, location, root)
+    showToast(message, ToastType.SUCCESS, root)
 }
 
 fun Context.showSuccessToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(getString(messageId), ToastType.SUCCESS, location, root)
+    showToast(getString(messageId), ToastType.SUCCESS, root)
 }
 
 fun Fragment.showSuccessToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showSuccessToast(message, location, root)
+    requireContext().showSuccessToast(message, root)
 }
 
 fun Fragment.showSuccessToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showSuccessToast(messageId, location, root)
+    requireContext().showSuccessToast(messageId, root)
 }
 
 fun Context.showWarningToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(message, ToastType.WARNING, location, root)
+    showToast(message, ToastType.WARNING, root)
 }
 
 fun Context.showWarningToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(getString(messageId), ToastType.WARNING, location, root)
+    showToast(getString(messageId), ToastType.WARNING, root)
 }
 
 fun Fragment.showWarningToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showWarningToast(message, location, root)
+    requireContext().showWarningToast(message, root)
 }
 
 fun Fragment.showWarningToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showWarningToast(messageId, location, root)
+    requireContext().showWarningToast(messageId, root)
 }
 
 fun Context.showErrorToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(message, ToastType.ERROR, location, root)
+    showToast(message, ToastType.ERROR, root)
 }
 
 fun Context.showErrorToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    showToast(getString(messageId), ToastType.ERROR, location, root)
+    showToast(getString(messageId), ToastType.ERROR, root)
 }
 
 fun Fragment.showErrorToast(
     message: String,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showErrorToast(message, location, root)
+    requireContext().showErrorToast(message, root)
 }
 
 fun Fragment.showErrorToast(
     @StringRes messageId: Int,
-    location: ToastLocation = ToastLocation.BOTTOM_NAVIGATION,
     root: ViewGroup? = null,
 ) {
-    requireContext().showErrorToast(messageId, location, root)
+    requireContext().showErrorToast(messageId, root)
 }
