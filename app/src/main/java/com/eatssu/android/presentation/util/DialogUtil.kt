@@ -25,6 +25,9 @@ class DialogBuilder(
     // 취소 버튼을 눌렀을 때 동작
     private var onCancel: (dialog: Dialog) -> Unit = { it.dismiss() }
 
+    // Dialog가 닫힐 때 동작
+    private var onDismiss: () -> Unit = {}
+
     // Dialog 바깥을 누르면 닫히는지 여부
     var cancellable: Boolean = true
 
@@ -49,6 +52,10 @@ class DialogBuilder(
 
     fun onCancel(action: (dialog: Dialog) -> Unit) = apply {
         this.onCancel = action
+    }
+
+    fun onDismiss(action: () -> Unit) = apply {
+        this.onDismiss = action
     }
 
     fun show(): Dialog {
@@ -81,6 +88,9 @@ class DialogBuilder(
         }
 
         dialog.setCancelable(cancellable)
+        dialog.setOnDismissListener {
+            onDismiss()
+        }
 
         if (showWhenStart)
             dialog.show()
