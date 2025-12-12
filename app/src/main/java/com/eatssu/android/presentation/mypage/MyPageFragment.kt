@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
@@ -190,14 +189,19 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun showNotificationPermissionDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("알림 권한 필요")
-            .setMessage("알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?")
-            .setPositiveButton("설정으로 이동") { _, _ ->
-                openAppNotificationSettings(requireContext())
+        requireContext().run {
+            showDialog(
+                title = "알림 권한 필요",
+                description = "알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?"
+            ) {
+                confirmText = "설정으로 이동"
+                cancelText = "취소"
+                onConfirm { dialog ->
+                    openAppNotificationSettings(this@run)
+                    dialog.dismiss()
+                }
             }
-            .setNegativeButton("취소", null)
-            .show()
+        }
     }
 
     private fun checkNotificationPermission(context: Context): Boolean {
@@ -215,7 +219,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 isDestructive = true
                 onConfirm {
                     mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
-                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                    startActivity(Intent(this@run, LoginActivity::class.java))
                 }
             }
         }
