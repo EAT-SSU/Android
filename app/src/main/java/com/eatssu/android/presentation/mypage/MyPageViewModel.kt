@@ -1,20 +1,17 @@
 package com.eatssu.android.presentation.mypage
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.R
-import com.eatssu.android.data.MySharedPreferences
-import com.eatssu.android.data.repository.PreferencesRepository
 import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.util.ToastType
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -36,7 +33,6 @@ class MyPageViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
-    private val preferencesRepository: PreferencesRepository,
     private val settingDataStore: SettingDataStore,
 ) : ViewModel() {
 

@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.SignOutUseCase
-import com.eatssu.android.presentation.util.ToastType
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow

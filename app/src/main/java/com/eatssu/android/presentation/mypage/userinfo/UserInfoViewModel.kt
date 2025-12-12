@@ -13,7 +13,7 @@ import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
-import com.eatssu.android.presentation.util.ToastType
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -12,7 +12,7 @@ import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
-import com.eatssu.android.presentation.util.ToastType
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

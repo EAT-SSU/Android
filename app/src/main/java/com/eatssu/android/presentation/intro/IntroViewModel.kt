@@ -9,11 +9,9 @@ import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
-import com.eatssu.android.presentation.util.ToastType
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -61,7 +59,7 @@ class IntroViewModel @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e, "앱 초기화 중 오류 발생")
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("앱 초기화 중 오류가 발생했습니다", ToastType.Error))
+                _uiEvent.emit(UiEvent.ShowToast("앱 초기화 중 오류가 발생했습니다", ToastType.ERROR))
             }
         }
     }
@@ -85,7 +83,7 @@ class IntroViewModel @Inject constructor(
             when (result) {
                 is VersionCheckResult.ForceUpdateRequired -> {
                     Timber.d("강제 업데이트 필요: 최신 버전 ${result.minimumVersionCode}")
-                    _uiEvent.emit(UiEvent.ShowToast("앱을 업데이트해주세요"))
+                    _uiEvent.emit(UiEvent.ShowToast("앱을 업데이트해주세요", ToastType.INFO))
                 }
 
                 VersionCheckResult.UpdateNotRequired -> {
