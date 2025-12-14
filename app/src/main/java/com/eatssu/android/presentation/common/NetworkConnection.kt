@@ -34,6 +34,7 @@ class NetworkConnection(private val context: Context) :
                         .apply {
                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         })
+                dialog.dismiss()
             }
         }
     }
