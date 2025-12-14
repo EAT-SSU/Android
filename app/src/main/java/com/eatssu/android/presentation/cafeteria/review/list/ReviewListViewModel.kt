@@ -69,7 +69,7 @@ class ReviewListViewModel @Inject constructor(
             }
 
             // 삭제 성공 시
-            _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다.", ToastType.INFO))
+            _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다.", ToastType.SUCCESS))
             val type = lastMenuType
             val id = lastItemId
             if (type != null && id != null) {
