@@ -189,8 +189,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    // Kakao login SDK
+    // Kakao SDK
     implementation(libs.kakao.login)
+    implementation(libs.kakao.talk)
 
     // Hilt for Dependency Injection
     implementation(libs.hilt.android)
