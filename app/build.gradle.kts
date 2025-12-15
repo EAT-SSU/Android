@@ -59,6 +59,12 @@ android {
             buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
             manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
 
+            val postHogApiKey: String = p.getProperty("POSTHOG_API_KEY")
+            buildConfigField("String", "POSTHOG_API_KEY", "\"$postHogApiKey\"")
+
+            val postHogHost: String = p.getProperty("POSTHOG_HOST")
+            buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
+
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -81,6 +87,12 @@ android {
             val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
             buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
             manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
+
+            val postHogApiKey: String = p.getProperty("POSTHOG_API_KEY")
+            buildConfigField("String", "POSTHOG_API_KEY", "\"$postHogApiKey\"")
+
+            val postHogHost: String = p.getProperty("POSTHOG_HOST")
+            buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
 
             isMinifyEnabled = false
         }
