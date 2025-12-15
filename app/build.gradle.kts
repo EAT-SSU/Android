@@ -238,6 +238,9 @@ dependencies {
     // 현재 위치 정보
     implementation(libs.play.services.location)
 
+    // PostHog
+    implementation(libs.posthog.android)
+
 }
 
 kapt {

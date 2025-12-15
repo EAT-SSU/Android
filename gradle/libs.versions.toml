@@ -59,6 +59,7 @@ ossLicensesPlugin = "0.10.6"
 glanceAppwidget = "1.1.1"
 glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
+posthog = "3.+"
 
 [libraries]
 
@@ -155,6 +156,7 @@ map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "mapSdk" }
 naver-map-compose = { module = "io.github.fornewid:naver-map-compose", version.ref = "naverMapCompose" }
 naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "naverMapLocation" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+posthog-android = { group = "com.posthog", name = "posthog-android", version.ref = "posthog" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
