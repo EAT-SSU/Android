@@ -27,9 +27,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.RatingBarMedium
@@ -53,6 +55,9 @@ fun ModifyReviewScreen(
 ) {
     val context = LocalContext.current
     val ui by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Screen View 로깅
+    TrackScreenViewEvent(ScreenId.REVIEW_V2_MODIFY)
 
     // 최초 1회 초기화
     LaunchedEffect(Unit) {

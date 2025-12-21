@@ -45,10 +45,12 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.OthersRev
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -74,6 +76,9 @@ fun ReviewListScreen(
     LaunchedEffect(key1 = menuType, key2 = id) {
         viewModel.getReview(menuType, id)
     }
+
+    // Screen View 로깅
+    TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
