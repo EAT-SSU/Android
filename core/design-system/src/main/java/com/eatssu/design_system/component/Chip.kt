@@ -47,7 +47,7 @@ fun Chip(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_thumb_up),
                     contentDescription = "thumb up Image",
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(12.dp),
                     tint = Primary
                 )
                 Spacer(modifier = Modifier.width(4.dp))
