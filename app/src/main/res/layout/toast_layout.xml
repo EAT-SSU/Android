@@ -3,7 +3,7 @@
         android:id="@+id/toast_layout"
         android:orientation="horizontal"
         android:background="@drawable/shape_toast_info"
-        android:layout_width="342dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="60dp"
         android:padding="16dp"
