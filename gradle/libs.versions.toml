@@ -49,7 +49,6 @@ androidxHilt = "1.2.0"
 play-services-base = "18.0.1"
 firebase-bom = "32.6.0"
 firebase-crashlytics = "2.9.9"
-firebase-app-distribution = "5.2.0"
 google-services = "4.4.2"
 timber = "5.0.1"
 kotlin-android = "2.0.21"
@@ -166,5 +165,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-app-distribution" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

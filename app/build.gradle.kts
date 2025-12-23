@@ -1,4 +1,3 @@
-import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import java.util.Properties
 
 plugins {
@@ -7,7 +6,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
-    alias(libs.plugins.firebase.app.distribution)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
@@ -70,35 +68,6 @@ android {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
-            firebaseAppDistribution {
-                // Firebase App Distribution 서비스 계정 JSON을 -Pcredentials 또는 환경변수(FIREBASE_CREDENTIALS) 로 주입받기 위한 설정
-                val firebaseCredentials: String? =
-                    (project.findProperty("credentials") as String?)
-                        ?: System.getenv("FIREBASE_CREDENTIALS")
-
-                val credentials = firebaseCredentials
-
-                if (!credentials.isNullOrBlank()) {
-                    // CI/CD용 임시 파일 생성 (GitHub Secrets 등으로 전달된 JSON 문자열 사용)
-                    val tempFile =
-                        layout.buildDirectory.file("intermediates/firebase/serviceAccountKey.json")
-                            .get().asFile
-                    tempFile.parentFile.mkdirs()
-                    tempFile.writeText(credentials)
-
-                    // Firebase에 전달
-                    serviceCredentialsFile = tempFile.absolutePath
-                } else {
-                    println("Firebase App Distribution credentials not provided. Skipping serviceCredentialsFile configuration.")
-                }
-
-                artifactType = "APK"
-                groups = "eat-ssu-android-qa"
-                releaseNotes = """
-        Release 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
-        프로덕션 테스트 빌드입니다.
-    """.trimIndent()
-            }
         }
 
         getByName("debug") {
@@ -126,36 +95,6 @@ android {
             buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
 
             isMinifyEnabled = false
-
-            firebaseAppDistribution {
-                // Firebase App Distribution 서비스 계정 JSON을 -Pcredentials 또는 환경변수(FIREBASE_CREDENTIALS) 로 주입받기 위한 설정
-                val firebaseCredentials: String? =
-                    (project.findProperty("credentials") as String?)
-                        ?: System.getenv("FIREBASE_CREDENTIALS")
-
-                val credentials = firebaseCredentials
-
-                if (!credentials.isNullOrBlank()) {
-                    // CI/CD용 임시 파일 생성 (GitHub Secrets 등으로 전달된 JSON 문자열 사용)
-                    val tempFile =
-                        layout.buildDirectory.file("intermediates/firebase/serviceAccountKey_debug.json")
-                            .get().asFile
-                    tempFile.parentFile.mkdirs()
-                    tempFile.writeText(credentials)
-
-                    // Firebase에 전달
-                    serviceCredentialsFile = tempFile.absolutePath
-                } else {
-                    println("Firebase App Distribution credentials not provided for debug.")
-                }
-
-                artifactType = "APK"
-                groups = "eat-ssu-android-qa"
-                releaseNotes = """
-        Debug 빌드 - 버전 ${defaultConfig.versionName} (${defaultConfig.versionCode})
-        디버그 테스트 빌드입니다.
-    """.trimIndent()
-            }
         }
     }
 

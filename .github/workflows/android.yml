@@ -2,13 +2,21 @@ name: Android CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches:
+      - develop
   pull_request:
-    branches: [ "develop" ]
+    branches:
+      - develop
 
 jobs:
   build:
-
+    # develop push는 허용, develop으로의 PR 중 release/* 브랜치에서 온 PR만 허용
+    if: >
+      github.event_name == 'push' ||
+      (
+        github.event_name == 'pull_request' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      )
     runs-on: ubuntu-latest
 
     steps:
@@ -60,12 +68,22 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
-      env:
-        FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
 
-    - name: Upload to Firebase App Distribution (Release)
-      run: ./gradlew appDistributionUploadRelease
-      env:
-        FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+    - name: Assemble Debug APK
+      run: ./gradlew assembleDebug
+
+    - name: Assemble Release APK
+      run: ./gradlew assembleRelease
+
+    - name: Upload Debug APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-apk
+        path: app/build/outputs/apk/debug/*.apk
+
+    - name: Upload Release APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release/*.apk
+
