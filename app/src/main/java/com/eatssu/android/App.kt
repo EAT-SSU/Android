@@ -72,9 +72,11 @@ class App : Application(), Configuration.Provider {
             host = BuildConfig.POSTHOG_HOST,
         ).apply {
             sessionReplay = true
-            sessionReplayConfig.maskAllTextInputs = false
-            sessionReplayConfig.maskAllImages = false
             sessionReplayConfig.screenshot = true
+            if (BuildConfig.DEBUG) {
+                sessionReplayConfig.maskAllTextInputs = false
+                sessionReplayConfig.maskAllImages = false
+            }
         }
 
 
