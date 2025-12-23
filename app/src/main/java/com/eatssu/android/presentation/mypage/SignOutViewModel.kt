@@ -39,7 +39,12 @@ class SignOutViewModel @Inject constructor(
             val success = signOutUseCase()
             if (!success) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("탈퇴에 실패했습니다.", ToastType.ERROR))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_sign_out_fail),
+                        ToastType.ERROR
+                    )
+                )
                 return@launch
             }
 
