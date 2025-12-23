@@ -36,10 +36,10 @@ fun Context.showToast(
     val inflater = LayoutInflater.from(this)
     val snackbarBinding = inflater.inflate(R.layout.toast_layout, viewGroup, false)
 
-    snackbarBinding.findViewById<ImageView>(R.id.ic_toast).setImageResource(type.iconId)
+    snackbarBinding.findViewById<ImageView>(R.id.iv_toast).setImageResource(type.iconId)
     snackbarBinding.findViewById<LinearLayout>(R.id.toast_layout)
         .setBackgroundResource(type.shapeId)
-    snackbarBinding.findViewById<TextView>(R.id.toast_text).text = message
+    snackbarBinding.findViewById<TextView>(R.id.tv_toast_text).text = message
 
     val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
     with(snackbarLayout) {
