@@ -32,7 +32,6 @@ fun AppCompatActivity.observeNetworkError(
             val message = errorMessage ?: getString(R.string.server_error_message)
 
             showDialog(title, message) {
-                confirmText = getString(R.string.confirm)
                 showCancelButton = false
                 onConfirm { it.dismiss() }
                 onDismiss {
