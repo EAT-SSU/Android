@@ -1,11 +1,14 @@
 package com.eatssu.android.presentation.common
 
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.provider.Settings
+import com.eatssu.android.presentation.util.showDialog
 
 // 네트워크 연결 확인을 위해 네트워크 변경 시 알람에 사용하는 클래스 NetworkCallback 을 커스터마이징
 class NetworkConnection(private val context: Context) :
@@ -19,11 +22,21 @@ class NetworkConnection(private val context: Context) :
         .build()
 
     // 네트워크 연결 안 되어있을 때 보여줄 다이얼로그
-    private val dialog: AlertDialog by lazy {
-        AlertDialog.Builder(context)
-            .setTitle("네트워크 연결 안 됨")
-            .setMessage("와이파이 또는 모바일 데이터를 확인해주세요")
-            .create()
+    private val dialog: Dialog by lazy {
+        context.showDialog("네트워크 연결 안 됨", "Wi-Fi, 모바일 데이터를 확인해주세요") {
+            cancellable = false
+            showCancelButton = false
+            showWhenStart = false
+
+            onConfirm {
+                context.startActivity(
+                    Intent(Settings.ACTION_WIRELESS_SETTINGS)
+                        .apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        })
+                it.dismiss()
+            }
+        }
     }
 
     // NetworkCallback 등록

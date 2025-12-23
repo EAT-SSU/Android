@@ -13,6 +13,7 @@ import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -67,20 +68,12 @@ class MainViewModel @Inject constructor(
             // 1) 닉네임 없음
             if (nickname.isBlank()) {
                 _uiState.value = UiState.Success(MainState.NicknameNull)
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname)))
+                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname), ToastType.ERROR))
                 return@launch
             }
 
             // 2) 정상 닉네임
             _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
-            _uiEvent.emit(
-                UiEvent.ShowToast(
-                    String.format(
-                        context.getString(R.string.hello_user),
-                        nickname
-                    )
-                )
-            )
         }
     }
 
@@ -88,7 +81,11 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             logoutUseCase()
             _uiState.value = UiState.Success(MainState.LoggedOut)
-            _uiEvent.emit(UiEvent.ShowToast("로그아웃 되었습니다."))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    context.getString(R.string.toast_logout_success), ToastType.SUCCESS
+                )
+            )
         }
     }
 
@@ -121,7 +118,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.not_found),
+                        ToastType.ERROR
+                    )
+                )
                 return@launch
             }
 

@@ -1,15 +1,19 @@
 package com.eatssu.android.presentation.mypage
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.R
 import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,6 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
@@ -69,7 +74,12 @@ class MyPageViewModel @Inject constructor(
 
             if (nickname.isBlank()) {
                 _state.update { it.copy(nickname = null) }
-                _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_require_nickname),
+                        ToastType.INFO
+                    )
+                )
                 return@launch
             }
 

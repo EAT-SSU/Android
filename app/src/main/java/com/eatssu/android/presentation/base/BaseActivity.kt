@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -21,6 +20,7 @@ import com.eatssu.android.R
 import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.observeNetworkError
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
@@ -107,17 +107,14 @@ abstract class BaseActivity<B : ViewBinding>(
     private fun observeTokenExpiration() {
         lifecycleScope.launch {
             TokenEventBus.tokenExpired.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_expired), Toast.LENGTH_SHORT).show()
+                showInfoToast(R.string.toast_token_expired)
                 navigateToLogin()
             }
         }
 
         lifecycleScope.launch {
             TokenEventBus.tokenServerError.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_server_error), Toast.LENGTH_SHORT)
-                    .show()
+                showInfoToast(R.string.toast_token_server_error)
                 navigateToLogin()
             }
         }

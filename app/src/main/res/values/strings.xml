@@ -94,8 +94,7 @@
     <string name="login_done">환영합니다!</string>
     <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
 
-    <string name="not_found">정보를 불러올 수 없습니다.</string>
-    <string name="hello_user">"%1$s님 반갑습니다!</string>
+    <string name="not_found">정보를 불러올 수 없어요.</string>
 
     <string name="nickname">닉네임</string>
     <string name="set_nickname">닉네임을 설정해주세요</string>
@@ -148,7 +147,6 @@
     <string name="inquiry_send_done">문의 전송이 완료되었습니다. 답변은 영업일 기준 2~3일 소요됩니다.</string>
     <string name="inquiry_send_not">문의 전송이 실패하였습니다. 다시 시도 해주세요.</string>
 
-    <string name="logout_description">로그아웃 되었습니다.</string>
     <string name="policy">개인정보 처리방침</string>
     <string name="terms">서비스 이용약관</string>
     <string name="contact">문의하기</string>
@@ -174,10 +172,6 @@
     <string name="mypage">마이</string>
     <string name="mypage_full">마이페이지</string>
 
-    <string name="login_failed">로그인이 실패했습니다.</string>
-    <string name="token_expired">세션이 만료되었습니다. 다시 로그인 해주세요.</string>
-    <string name="token_server_error">시스템 오류로 다시 로그인해주세요.</string>
-
     <string name="my_info">내 정보</string>
     <string name="save">저장하기</string>
     <string name="inpur_department">학과 입력하기</string>
@@ -190,7 +184,26 @@
     <string name="eatssu_instagram">eatssu.official</string>
     <string name="recruiting_url">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
 
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+
+    <string name="toast_login_failed">로그인에 실패했어요.</string>
+    <string name="toast_token_invalid">다시 로그인해주세요.</string>
+    <string name="toast_token_expired">세션이 만료되어 다시 로그인해주세요.</string>
+    <string name="toast_token_server_error">시스템 오류로 다시 로그인해주세요.</string>
+    <string name="toast_logout_success">로그아웃했어요.</string>
+
+    <string name="toast_require_nickname">닉네임을 설정해주세요.</string>
+    <string name="toast_notification_enable">EAT-SSU 수신 동의 (%1$s)</string>
+    <string name="toast_notification_disable">EAT-SSU 수신 거절 (%1$s)</string>
+    <string name="toast_oss_load_fail">오픈소스 라이브러리를 불러올 수 없어요.</string>
+
+    <string name="toast_map_partnership_load_fail">제휴 정보를 불러오지 못했어요.</string>
+    <string name="toast_map_departure_load_fail">내 제휴 정보를 불러오지 못했어요.</string>
+
+    <string name="toast_sign_out_success">회원탈퇴되었어요.</string>
+    <string name="toast_sign_out_fail">회원탈퇴에 실패했어요.</string>
+
     <string name="server_error_title">통신 오류</string>
     <string name="server_error_message">서버와 통신할 수 없습니다.\n잠시 후 다시 시도해주세요.</string>
-    <string name="confirm">확인</string>
 </resources>

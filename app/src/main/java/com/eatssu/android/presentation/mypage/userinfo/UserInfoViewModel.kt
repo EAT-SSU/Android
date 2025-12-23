@@ -13,6 +13,7 @@ import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -206,7 +207,7 @@ class UserInfoViewModel @Inject constructor(
                 val result = setUserNicknameUseCase(data.nickname)
                 result.onFailure { error ->
                     val errorMessage = error.message ?: "닉네임 변경에 실패했어요."
-                    _uiEvent.emit(UiEvent.ShowToast(errorMessage))
+                    _uiEvent.emit(UiEvent.ShowToast(errorMessage, ToastType.ERROR))
                     _uiState.value = UiState.Error
                     return@launch
                 }
@@ -236,7 +237,7 @@ class UserInfoViewModel @Inject constructor(
                 else -> "변경사항이 없습니다."
             }
 
-            _uiEvent.emit(UiEvent.ShowToast(message))
+            _uiEvent.emit(UiEvent.ShowToast(message, ToastType.INFO))
             _uiState.update {
                 UiState.Success(
                     data.copy(

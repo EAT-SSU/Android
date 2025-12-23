@@ -63,7 +63,7 @@ fun MyReviewListScreen(
 
     when (uiEvent) {
         is UiEvent.ShowToast -> {
-            context.showToast((uiEvent as UiEvent.ShowToast).message)
+            context.showToast(uiEvent as UiEvent.ShowToast)
         }
     }
 
