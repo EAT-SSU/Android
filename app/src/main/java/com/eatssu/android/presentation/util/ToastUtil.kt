@@ -6,13 +6,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.eatssu.android.R
+import com.eatssu.android.databinding.ToastLayoutBinding
 import com.eatssu.android.presentation.map.findActivityOrNull
 import com.eatssu.common.UiEvent
 import com.eatssu.common.enums.ToastType
@@ -32,15 +29,13 @@ fun Context.showToast(
         return
     }
 
+    val binding = ToastLayoutBinding.inflate(LayoutInflater.from(this), viewGroup, false).apply {
+        ivToast.setImageResource(type.iconId)
+        toastLayout.setBackgroundResource(type.shapeId)
+        tvToastText.text = message
+    }
+
     val snackbar = Snackbar.make(viewGroup, "", 5000)
-    val inflater = LayoutInflater.from(this)
-    val snackbarBinding = inflater.inflate(R.layout.toast_layout, viewGroup, false)
-
-    snackbarBinding.findViewById<ImageView>(R.id.iv_toast).setImageResource(type.iconId)
-    snackbarBinding.findViewById<LinearLayout>(R.id.toast_layout)
-        .setBackgroundResource(type.shapeId)
-    snackbarBinding.findViewById<TextView>(R.id.tv_toast_text).text = message
-
     val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
     with(snackbarLayout) {
         removeAllViews()
@@ -57,7 +52,7 @@ fun Context.showToast(
             setMargins(horizontalMargin, 0, horizontalMargin, bottomMargin)
         }
 
-        addView(snackbarBinding.rootView)
+        addView(binding.root)
     }
 
     snackbar.show()
