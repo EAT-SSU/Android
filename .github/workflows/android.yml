@@ -40,12 +40,16 @@ jobs:
         PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
         KAKAO_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
         NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
+        POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+        POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
 
       run: |
         echo DEV_BASE_URL=\"$DEV_BASE_URL\" >> local.properties
         echo PROD_BASE_URL=\"$PROD_BASE_URL\" >> local.properties
         echo KAKAO_NATIVE_APP_KEY=$KAKAO_NATIVE_APP_KEY >> local.properties
         echo NAVER_MAPS_CLIENT_ID=$NAVER_MAPS_CLIENT_ID >> local.properties
+        echo POSTHOG_API_KEY=$POSTHOG_API_KEY >> local.properties
+        echo POSTHOG_HOST=$POSTHOG_HOST >> local.properties
   
     - name: Generate google-services.json
       run: |
