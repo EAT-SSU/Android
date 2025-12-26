@@ -7,6 +7,8 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import com.eatssu.android.presentation.util.showDialog
 
@@ -20,6 +22,9 @@ class NetworkConnection(private val context: Context) :
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR) // 데이터 사용 관련 감지
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI) // 와이파이 사용 관련 감지
         .build()
+
+    // NetworkCallback은 백그라운드 스레드에서 호출되므로 Dialog 등 UI 작업은 메인 스레드에서 실행해야 함
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     // 네트워크 연결 안 되어있을 때 보여줄 다이얼로그
     private val dialog: Dialog by lazy {
@@ -59,18 +64,23 @@ class NetworkConnection(private val context: Context) :
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
 
-        if (getConnectivityStatus() == null) {
-            // 네트워크 연결 안 되어 있을 때
-            dialog.show()
-        } else {
-            // 네트워크 연결 되어 있을 때
-            dialog.dismiss()
+        mainHandler.post {
+            if (getConnectivityStatus() == null) {
+                // 네트워크 연결 안 되어 있을 때
+                dialog.show()
+            } else {
+                // 네트워크 연결 되어 있을 때
+                dialog.dismiss()
+            }
         }
     }
 
     // 네트워크 끊겼을 때 실행되는 메소드
     override fun onLost(network: Network) {
         super.onLost(network)
-        dialog.show()
+
+        mainHandler.post {
+            dialog.show()
+        }
     }
 }
