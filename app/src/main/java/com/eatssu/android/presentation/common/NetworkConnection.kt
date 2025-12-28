@@ -7,14 +7,16 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
+import androidx.lifecycle.LifecycleCoroutineScope
+import kotlinx.coroutines.launch
 import com.eatssu.android.presentation.util.showDialog
 
 // 네트워크 연결 확인을 위해 네트워크 변경 시 알람에 사용하는 클래스 NetworkCallback 을 커스터마이징
-class NetworkConnection(private val context: Context) :
-    ConnectivityManager.NetworkCallback() {
+class NetworkConnection(
+    private val context: Context,
+    private val lifecycleScope: LifecycleCoroutineScope
+) : ConnectivityManager.NetworkCallback() {
 
     private val connectivityManager: ConnectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -22,9 +24,6 @@ class NetworkConnection(private val context: Context) :
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR) // 데이터 사용 관련 감지
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI) // 와이파이 사용 관련 감지
         .build()
-
-    // NetworkCallback은 백그라운드 스레드에서 호출되므로 Dialog 등 UI 작업은 메인 스레드에서 실행해야 함
-    private val mainHandler = Handler(Looper.getMainLooper())
 
     // 네트워크 연결 안 되어있을 때 보여줄 다이얼로그
     private val dialog: Dialog by lazy {
@@ -64,7 +63,7 @@ class NetworkConnection(private val context: Context) :
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
 
-        mainHandler.post {
+        lifecycleScope.launch {
             if (getConnectivityStatus() == null) {
                 // 네트워크 연결 안 되어 있을 때
                 dialog.show()
@@ -79,8 +78,12 @@ class NetworkConnection(private val context: Context) :
     override fun onLost(network: Network) {
         super.onLost(network)
 
-        mainHandler.post {
-            dialog.show()
+        // Wi-Fi와 모바일 데이터가 모두 연결된 상태에서 Wi-Fi만 끊겨도 onLost가 호출될 수 있으므로,
+        // 현재 활성화 네트워크 여부 검증 필요
+        if (getConnectivityStatus() == null) {
+            lifecycleScope.launch {
+                dialog.show()
+            }
         }
     }
 }

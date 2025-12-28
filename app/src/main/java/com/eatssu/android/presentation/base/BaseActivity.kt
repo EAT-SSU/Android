@@ -42,7 +42,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
 
     private val networkCheck: NetworkConnection by lazy {
-        NetworkConnection(this)
+        NetworkConnection(this, lifecycleScope)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
