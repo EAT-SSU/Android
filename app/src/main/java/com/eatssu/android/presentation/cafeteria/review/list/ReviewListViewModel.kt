@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
@@ -9,6 +10,7 @@ import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,7 +56,12 @@ class ReviewListViewModel @Inject constructor(
             _uiState.value = UiState.Success(ReviewListState(reviewInfo, reviewList))
         } catch (e: Exception) {
             _uiState.value = UiState.Error
-            _uiEvent.emit(UiEvent.ShowToast("리뷰를 불러오지 못했습니다.", ToastType.ERROR))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    UiText.StringResource(R.string.toast_review_load_failed),
+                    ToastType.ERROR
+                )
+            )
         }
     }
 
@@ -64,12 +71,22 @@ class ReviewListViewModel @Inject constructor(
             val success = deleteReviewUseCase(reviewId)
 
             if (!success) {
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 삭제에 실패했습니다.", ToastType.ERROR))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_review_delete_failed),
+                        ToastType.ERROR
+                    )
+                )
                 return@launch
             }
 
             // 삭제 성공 시
-            _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다.", ToastType.SUCCESS))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    UiText.StringResource(R.string.toast_review_delete_success),
+                    ToastType.SUCCESS
+                )
+            )
             val type = lastMenuType
             val id = lastItemId
             if (type != null && id != null) {

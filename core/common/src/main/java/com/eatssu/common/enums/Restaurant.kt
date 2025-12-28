@@ -1,26 +1,34 @@
 package com.eatssu.common.enums
 
+import androidx.annotation.StringRes
+import com.eatssu.common.R
+import com.eatssu.common.UiText
 
-enum class Restaurant(val value: String, val korean: String, val menuType: MenuType) {
-    HAKSIK("haksik", "학생 식당", MenuType.VARIABLE),
-    DODAM("dodam", "도담 식당", MenuType.VARIABLE),
-    DORMITORY("dormitory", "기숙사 식당", MenuType.VARIABLE),
-    FACULTY("faculty", "FACULTY (교직원 전용)", MenuType.VARIABLE),
-    FOOD_COURT("food_court", "푸드 코트", MenuType.FIXED),
-    SNACK_CORNER("snack_corner", "스낵 코너", MenuType.FIXED),
-    THE_KITCHEN("the_kitchen", "더 키친", MenuType.FIXED);
+enum class Restaurant(
+    val value: String,
+    @field:StringRes val displayNameResId: Int,
+    val menuType: MenuType
+) {
+    HAKSIK("haksik", R.string.restaurant_haksik, MenuType.VARIABLE),
+    DODAM("dodam", R.string.restaurant_dodam, MenuType.VARIABLE),
+    DORMITORY("dormitory", R.string.restaurant_dormitory, MenuType.VARIABLE),
+    FACULTY("faculty", R.string.restaurant_faculty, MenuType.VARIABLE),
+    FOOD_COURT("food_court", R.string.restaurant_food_court, MenuType.FIXED),
+    SNACK_CORNER("snack_corner", R.string.restaurant_snack_corner, MenuType.FIXED),
+    THE_KITCHEN("the_kitchen", R.string.restaurant_the_kitchen, MenuType.FIXED);
+
+    /** ViewModel에서 Context 없이 사용하기 위한 UiText 변환 */
+    fun toUiText(): UiText = UiText.StringResource(displayNameResId)
 
     companion object {
 
         fun getVariableRestaurantList(): List<Restaurant> {
             return entries.filter { it.menuType == MenuType.VARIABLE }
         }
-      
-      fun fromRestaurantEnumName(enumName: String): String {
-          return entries.find { it.name == enumName }?.korean ?: ""
-        }
 
-        fun fromKorean(name: String): Restaurant =
-            entries.find { it.korean == name } ?: error("Unknown display name: $name")
+        @Deprecated("다국어 지원을 위해 displayNameResId 사용", ReplaceWith("entries.find { it.name == enumName }?.displayNameResId"))
+        fun fromRestaurantEnumName(enumName: String): String {
+            return ""
+        }
     }
 }

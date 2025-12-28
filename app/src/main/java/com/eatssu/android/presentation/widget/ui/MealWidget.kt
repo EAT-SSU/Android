@@ -42,6 +42,7 @@ import androidx.glance.text.TextStyle
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
+import com.eatssu.android.presentation.util.asString
 import com.eatssu.android.presentation.widget.MealInfoStateDefinition
 import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.android.presentation.widget.theme.EATSSUWidgetColorScheme
@@ -116,13 +117,13 @@ class MealWidget : GlanceAppWidget() {
                                 MealWidgetContent(
                                     mealTime = mealTime,
                                     mealList = mealList,
-                                    restaurant = restaurant?.korean ?: "",
+                                    restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
                                     glanceId = id,
                                 )
                             } else {
                                 MealWidgetError(
                                     mealTime = mealTime,
-                                    restaurant = restaurant?.korean ?: "",
+                                    restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
                                     text = "오늘의 메뉴가 없습니다.",
                                     glanceId = id,
                                 )
@@ -132,7 +133,7 @@ class MealWidget : GlanceAppWidget() {
                         is WidgetMealInfo.Loading -> {
                             // Loading 상태일 때도 저장된 식당 정보 표시
                             MealWidgetError(
-                                restaurant = restaurant?.korean ?: "",
+                                restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
                                 mealTime = "점심",
                                 text = "로딩 중",
                                 glanceId = id,
@@ -141,7 +142,7 @@ class MealWidget : GlanceAppWidget() {
 
                         is WidgetMealInfo.Unavailable -> {
                             MealWidgetError(
-                                restaurant = restaurant?.korean ?: "",
+                                restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
                                 mealTime = "점심",
                                 text = "네트워크 연결 상태를 확인해주세요.",
                                 glanceId = id,
@@ -296,13 +297,18 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreview() {
-        MealWidgetContent("저녁", listOf(listOf("밥", "국", "반찬", "음료")), Restaurant.DODAM.korean)
+        MealWidgetContent(
+            "저녁",
+            listOf(listOf("밥", "국", "반찬", "음료")),
+            Restaurant.DODAM.toUiText().asString()
+        )
     }
 
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview
     @Composable
     fun MealWidgetPreviewError() {
-        MealWidgetError("저녁", Restaurant.DODAM.korean, "에러임")
+        val context = LocalContext.current
+        MealWidgetError("저녁", context.getString(Restaurant.DODAM.displayNameResId), "에러임")
     }
 }

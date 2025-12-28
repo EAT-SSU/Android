@@ -1,0 +1,22 @@
+<resources>
+    <!-- Restaurant Names -->
+    <string name="restaurant_haksik">학생 식당</string>
+    <string name="restaurant_dodam">도담 식당</string>
+    <string name="restaurant_dormitory">기숙사 식당</string>
+    <string name="restaurant_faculty">FACULTY (교직원 전용)</string>
+    <string name="restaurant_food_court">푸드 코트</string>
+    <string name="restaurant_snack_corner">스낵 코너</string>
+    <string name="restaurant_the_kitchen">더 키친</string>
+
+    <!-- Report Types -->
+    <string name="report_type_no_associate_content">메뉴와 관련없는 내용</string>
+    <string name="report_type_improper_content">음란성, 욕설 등 부적절한 내용</string>
+    <string name="report_type_improper_advertisement">부적절한 홍보 또는 광고</string>
+    <string name="report_type_copy">리뷰 작성 취지에 맞지 않은 내용 (복사글 등)</string>
+    <string name="report_type_copyright">저작권 도용 의심 (사진 등)</string>
+    <string name="report_type_extra">기타 (하단 내용 작성)</string>
+
+    <!-- Common placeholders for UserInfo -->
+    <string name="college_placeholder">단과대</string>
+    <string name="department_placeholder">학과</string>
+</resources>

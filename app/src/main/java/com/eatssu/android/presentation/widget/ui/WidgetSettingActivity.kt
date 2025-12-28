@@ -36,7 +36,7 @@ class WidgetSettingActivity : ComponentActivity() {
             EatssuTheme {
 
                 val restaurantOptions = Restaurant.getVariableRestaurantList().map {
-                    it.korean
+                    getString(it.displayNameResId)
                 } // 변동 식당만 불러옵니다. 하드코딩 x
 
                 var selectedRestaurant by rememberSaveable { mutableStateOf(restaurantOptions[0]) }

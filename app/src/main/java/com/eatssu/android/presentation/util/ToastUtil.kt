@@ -59,10 +59,10 @@ fun Context.showToast(
 }
 
 fun Context.showToast(event: UiEvent.ShowToast) =
-    showToast(event.message, event.type)
+    showToast(event.message.asString(this), event.type)
 
 fun Fragment.showToast(event: UiEvent.ShowToast) =
-    requireContext().showToast(event.message, event.type)
+    requireContext().showToast(event.message.asString(requireContext()), event.type)
 
 fun Fragment.showToast(message: String, type: ToastType) =
     requireContext().showToast(message, type)

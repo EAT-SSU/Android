@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,9 +12,9 @@ import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,8 +31,7 @@ class MainViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val userRepository: UserRepository,
-    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
-    @ApplicationContext private val context: Context
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
@@ -68,7 +66,7 @@ class MainViewModel @Inject constructor(
             // 1) 닉네임 없음
             if (nickname.isBlank()) {
                 _uiState.value = UiState.Success(MainState.NicknameNull)
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.set_nickname), ToastType.ERROR))
+                _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.set_nickname), ToastType.ERROR))
                 return@launch
             }
 
@@ -83,7 +81,7 @@ class MainViewModel @Inject constructor(
             _uiState.value = UiState.Success(MainState.LoggedOut)
             _uiEvent.emit(
                 UiEvent.ShowToast(
-                    context.getString(R.string.toast_logout_success), ToastType.SUCCESS
+                    UiText.StringResource(R.string.toast_logout_success), ToastType.SUCCESS
                 )
             )
         }
@@ -120,7 +118,7 @@ class MainViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                        context.getString(R.string.not_found),
+                        UiText.StringResource(R.string.not_found),
                         ToastType.ERROR
                     )
                 )

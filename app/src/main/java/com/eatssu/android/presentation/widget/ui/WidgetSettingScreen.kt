@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.presentation.util.asString
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.Restaurant
-import com.eatssu.common.enums.Restaurant.Companion.fromKorean
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuRadioButtonGroup
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -29,8 +29,12 @@ fun WidgetSettingScreen(
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
     onConfirm: (Restaurant) -> Unit = {},
-    onBack: () -> Unit = {} // 뒤로가기 동작을 위한 람다 추가
+    onBack: () -> Unit = {}
 ) {
+    // onClick 람다에서 LocalContext 접근이 불가하므로 Composable 레벨에서 미리 매핑 생성
+    val restaurantDisplayNameMap = Restaurant.getVariableRestaurantList()
+        .associateBy { it.toUiText().asString() }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -64,10 +68,11 @@ fun WidgetSettingScreen(
                     modifier = Modifier.padding(bottom = 74.dp),
                     text = "선택하기",
                     onClick = {
-                        onConfirm(
-                            fromKorean(selectedRestaurant)
-                        )
-                        EventLogger.addWidget(Restaurant.fromKorean(selectedRestaurant))
+                        val selectedRestaurantEnum = restaurantDisplayNameMap[selectedRestaurant]
+                            ?: Restaurant.HAKSIK
+
+                        onConfirm(selectedRestaurantEnum)
+                        EventLogger.addWidget(selectedRestaurantEnum)
                     }
                 )
             }
