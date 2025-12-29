@@ -9,6 +9,7 @@ import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.OauthService
 import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.repository.OauthRepository
+import com.eatssu.common.enums.DeviceType
 import javax.inject.Inject
 
 class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthService) :
@@ -16,8 +17,18 @@ class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthSer
     override suspend fun reissueToken(refreshToken: String): Token? =
         oauthService.getNewToken(refreshToken).map { it.toDomain() }.orNull()
 
-    override suspend fun login(body: LoginWithKakaoRequest): Token? =
-        oauthService.loginWithKakao(body).map { it.toDomain() }.orNull()
+    override suspend fun login(
+        email: String,
+        providerId: String,
+        deviceType: DeviceType,
+    ): Token? =
+        oauthService.loginWithKakao(
+            LoginWithKakaoRequest(
+                email = email,
+                providerId = providerId,
+                deviceType = deviceType,
+            )
+        ).map { it.toDomain() }.orNull()
 
     override suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean =
         oauthService.checkValidToken(body).orElse(false)
