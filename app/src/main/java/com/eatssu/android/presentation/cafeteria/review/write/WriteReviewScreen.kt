@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -91,7 +92,7 @@ fun WriteReviewScreen(
         is WriteReviewState.Editing -> {
             WriteReviewScreen(
                 modifier = modifier,
-                title = "리뷰 작성하기",
+                title = stringResource(R.string.title_review_write),
                 menuList = data.menuList,
                 rating = data.rating,
                 content = data.content,
@@ -113,7 +114,7 @@ fun WriteReviewScreen(
         is WriteReviewState.Posting -> {
             WriteReviewScreen(
                 modifier = modifier,
-                title = "리뷰 작성하기",
+                title = stringResource(R.string.title_review_write),
                 menuList = data.menuList,
                 rating = data.rating,
                 content = data.content,
@@ -139,7 +140,7 @@ fun WriteReviewScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(Modifier.height(24.dp))
-                    Text("화면을 준비하는 중입니다.", style = EatssuTheme.typography.body2)
+                    Text(stringResource(R.string.review_preparing), style = EatssuTheme.typography.body2)
                 }
             }
         }
@@ -168,7 +169,7 @@ internal fun WriteReviewScreen(
         topBar = { CloseTopBar(title, onClose = onBack) },
         bottomBar = {
             EatSsuButton(
-                text = if (isPosting) "작성 중..." else "완료하기",
+                text = if (isPosting) stringResource(R.string.review_posting) else stringResource(R.string.button_complete),
                 enabled = rating > 0 && !isPosting,
                 onClick = onSubmit,
                 modifier = Modifier.padding(24.dp)
@@ -186,7 +187,7 @@ internal fun WriteReviewScreen(
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("오늘의 식사는 어땠나요?", style = EatssuTheme.typography.subtitle1)
+                Text(stringResource(R.string.review_how_was_meal), style = EatssuTheme.typography.subtitle1)
 
                 RatingBarMedium(
                     modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
@@ -194,7 +195,7 @@ internal fun WriteReviewScreen(
                     onRatingChanged = { if (!isPosting) onRatingChanged(it) }
                 )
 
-                Text("추천하고 싶은 메뉴가 있나요?", style = EatssuTheme.typography.subtitle1)
+                Text(stringResource(R.string.review_recommend_menu), style = EatssuTheme.typography.subtitle1)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 LazyColumn(
@@ -229,7 +230,7 @@ internal fun WriteReviewScreen(
                                 },
                                 placeholder = {
                                     Text(
-                                        "메뉴에 대한 상세한 리뷰를 작성해주세요",
+                                        stringResource(R.string.review_placeholder),
                                         style = EatssuTheme.typography.body2,
                                         color = Gray400
                                     )
@@ -276,7 +277,7 @@ internal fun WriteReviewScreen(
                                 }
                                 Text(
                                     modifier = Modifier.padding(top = 8.dp),
-                                    text = "사진 클릭 시, 삭제됩니다.",
+                                    text = stringResource(R.string.review_photo_delete_hint),
                                     color = Gray500,
                                     style = EatssuTheme.typography.caption3
                                 )
@@ -297,7 +298,7 @@ internal fun WriteReviewScreen(
                                         tint = Gray300
                                     )
                                     Text(
-                                        "사진 0/1",
+                                        stringResource(R.string.review_photo_count, 0, 1),
                                         color = Gray400,
                                         style = EatssuTheme.typography.caption3
                                     )

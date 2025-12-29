@@ -68,7 +68,7 @@ fun DepartmentBottomSheet(
             Spacer(modifier = Modifier.height(36.dp))
 
             Text(
-                text = stringResource(R.string.Input_string_description),
+                text = stringResource(R.string.input_string_description),
                 style = EatssuTheme.typography.h2,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(start = 28.dp)
@@ -86,7 +86,7 @@ fun DepartmentBottomSheet(
                     .height(52.dp)
 
             ) {
-                Text(stringResource(R.string.inpur_department), color = White, style = EatssuTheme.typography.button1)
+                Text(stringResource(R.string.input_department), color = White, style = EatssuTheme.typography.button1)
             }
         }
     }

@@ -12,8 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.R
 import com.eatssu.android.presentation.util.asString
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.Restaurant
@@ -39,7 +41,7 @@ fun WidgetSettingScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             EatSsuTopBar(
-                title = "위젯 설정",
+                title = stringResource(R.string.title_widget_setting),
                 onBack = onBack
             )
         },
@@ -51,7 +53,7 @@ fun WidgetSettingScreen(
                     .padding(horizontal = 24.dp) // 이후에 추가적인 패딩 적용
             ) {
                 Text(
-                    text = "확인하고 싶은 식당을 선택하세요.",
+                    text = stringResource(R.string.widget_select_restaurant),
                     style = EatssuTheme.typography.body2,
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
@@ -66,7 +68,7 @@ fun WidgetSettingScreen(
 
                 EatSsuButton(
                     modifier = Modifier.padding(bottom = 74.dp),
-                    text = "선택하기",
+                    text = stringResource(R.string.widget_select),
                     onClick = {
                         val selectedRestaurantEnum = restaurantDisplayNameMap[selectedRestaurant]
                             ?: Restaurant.HAKSIK

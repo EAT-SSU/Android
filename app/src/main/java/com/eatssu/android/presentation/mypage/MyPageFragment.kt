@@ -99,7 +99,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             binding.tvNickname.text = state.nickname
         } else {
             // 필요 시 미설정 안내 문구
-            binding.tvNickname.text = "닉네임을 설정해주세요"
+            binding.tvNickname.text = getString(R.string.set_nickname)
         }
 
         // 알람 스위치 (리스너 잠시 해제 후 값 반영)
@@ -191,11 +191,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     private fun showNotificationPermissionDialog() {
         requireContext().run {
             showDialog(
-                title = "알림 권한 필요",
-                description = "알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?"
+                title = getString(R.string.dialog_notification_permission_title),
+                description = getString(R.string.dialog_notification_permission_description)
             ) {
-                confirmText = "설정으로 이동"
-                cancelText = "취소"
+                confirmText = getString(R.string.dialog_settings)
+                cancelText = getString(R.string.button_cancel)
                 onConfirm { dialog ->
                     openAppNotificationSettings(this@run)
                     dialog.dismiss()
@@ -215,7 +215,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
     private fun showLogoutDialog() {
         requireContext().run {
-            showDialog("로그아웃", "로그아웃 하시겠습니까?") {
+            showDialog(getString(R.string.dialog_logout_title), getString(R.string.dialog_logout_message)) {
                 isDestructive = true
                 onConfirm {
                     mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정

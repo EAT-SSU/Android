@@ -8,6 +8,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.provider.Settings
+import com.eatssu.android.R
 import com.eatssu.android.presentation.util.showDialog
 
 // 네트워크 연결 확인을 위해 네트워크 변경 시 알람에 사용하는 클래스 NetworkCallback 을 커스터마이징
@@ -23,7 +24,7 @@ class NetworkConnection(private val context: Context) :
 
     // 네트워크 연결 안 되어있을 때 보여줄 다이얼로그
     private val dialog: Dialog by lazy {
-        context.showDialog("네트워크 연결 안 됨", "Wi-Fi, 모바일 데이터를 확인해주세요") {
+        context.showDialog(context.getString(R.string.dialog_network_error_title), context.getString(R.string.dialog_network_error_message)) {
             cancellable = false
             showCancelButton = false
             showWhenStart = false

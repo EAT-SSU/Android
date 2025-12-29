@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/selector_report"
                     android:button="@null"
-                    android:text="@string/report1"
+                    android:text="@string/report_type_no_associate_content"
                     android:textColor="@color/black" />
 
                 <RadioButton
@@ -70,7 +70,7 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/selector_report"
                     android:button="@null"
-                    android:text="@string/report2"
+                    android:text="@string/report_type_improper_content"
                     android:textColor="@color/black" />
 
                 <RadioButton
@@ -81,7 +81,7 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/selector_report"
                     android:button="@null"
-                    android:text="@string/report3"
+                    android:text="@string/report_type_improper_advertisement"
                     android:textColor="@color/black" />
 
                 <RadioButton
@@ -92,7 +92,7 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/selector_report"
                     android:button="@null"
-                    android:text="@string/report4"
+                    android:text="@string/report_type_copy"
                     android:textColor="@color/black" />
 
                 <RadioButton
@@ -103,7 +103,7 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/selector_report"
                     android:button="@null"
-                    android:text="@string/report5"
+                    android:text="@string/report_type_copyright"
                     android:textColor="@color/black" />
 
                 <RadioButton
@@ -114,7 +114,7 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/selector_report"
                     android:button="@null"
-                    android:text="@string/report6"
+                    android:text="@string/report_type_extra"
                     android:textColor="@color/black" />
 
             </RadioGroup>

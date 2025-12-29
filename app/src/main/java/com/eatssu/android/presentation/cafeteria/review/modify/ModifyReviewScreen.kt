@@ -21,10 +21,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.android.presentation.util.showToast
@@ -75,7 +77,7 @@ fun ModifyReviewScreen(
         is ModifyState.Editing -> {
             ModifyReviewScreen(
                 modifier = modifier,
-                title = "리뷰 수정하기",
+                title = stringResource(R.string.title_review_modify),
                 rating = data.rating,
                 content = data.content,
                 menuLikeInfos = data.menuLikeInfos,
@@ -95,7 +97,7 @@ fun ModifyReviewScreen(
             // 통신 중에도 폼은 유지, 버튼/입력 제한만
             ModifyReviewScreen(
                 modifier = modifier,
-                title = "리뷰 수정하기",
+                title = stringResource(R.string.title_review_modify),
                 rating = data.rating,
                 content = data.content,
                 menuLikeInfos = data.menuLikeInfos,
@@ -121,7 +123,7 @@ fun ModifyReviewScreen(
                     Spacer(Modifier.height(24.dp))
                     CircularProgressIndicator()
                     Spacer(Modifier.height(8.dp))
-                    Text("화면을 준비하는 중입니다.", style = EatssuTheme.typography.body2)
+                    Text(stringResource(R.string.review_preparing), style = EatssuTheme.typography.body2)
                 }
             }
         }
@@ -147,7 +149,7 @@ internal fun ModifyReviewScreen(
         topBar = { CloseTopBar(title, onClose = onBack) },
         bottomBar = {
             EatSsuButton(
-                text = if (isSubmitting) "수정 중..." else "완료하기",
+                text = if (isSubmitting) stringResource(R.string.review_modifying) else stringResource(R.string.button_complete),
                 enabled = canSubmit && rating > 0 && !isSubmitting,
                 onClick = onSubmit,
                 modifier = Modifier.padding(24.dp)
@@ -165,7 +167,7 @@ internal fun ModifyReviewScreen(
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("오늘의 식사는 어땠나요?", style = EatssuTheme.typography.subtitle1)
+                Text(stringResource(R.string.review_how_was_meal), style = EatssuTheme.typography.subtitle1)
 
                 RatingBarMedium(
                     modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
@@ -173,7 +175,7 @@ internal fun ModifyReviewScreen(
                     onRatingChanged = { if (!isSubmitting) onRatingChanged(it) }
                 )
 
-                Text("추천하고 싶은 메뉴가 있나요?", style = EatssuTheme.typography.subtitle1)
+                Text(stringResource(R.string.review_recommend_menu), style = EatssuTheme.typography.subtitle1)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 LazyColumn(
@@ -207,7 +209,7 @@ internal fun ModifyReviewScreen(
                                 },
                                 placeholder = {
                                     Text(
-                                        "메뉴에 대한 상세한 리뷰를 작성해주세요",
+                                        stringResource(R.string.review_placeholder),
                                         style = EatssuTheme.typography.body2,
                                         color = Gray400
                                     )

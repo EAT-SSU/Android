@@ -24,7 +24,7 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:text="제목을 입력해주세요" />
+                android:text="@string/dialog_placeholder_title" />
 
         <!-- Description -->
         <TextView
@@ -35,7 +35,7 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/gray600"
                 android:gravity="center"
-                android:text="본문을 입력해주세요" />
+                android:text="@string/dialog_placeholder_body" />
 
     </LinearLayout>
 
@@ -51,7 +51,7 @@
         <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dialog_confirm_btn"
                 style="@style/Body1"
-                android:text="@string/confirm"
+                android:text="@string/button_confirm"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
@@ -63,7 +63,7 @@
         <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dialog_cancel_btn"
                 style="@style/Body1"
-                android:text="@string/cancel"
+                android:text="@string/button_cancel"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"

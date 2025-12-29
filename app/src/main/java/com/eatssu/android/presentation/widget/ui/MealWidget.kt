@@ -108,9 +108,9 @@ class MealWidget : GlanceAppWidget() {
                             val currentMealTime = WidgetDataDisplayManager.getCurrentMealTime()
                             val (mealTime, mealList) = when (currentMealTime) {
 
-                                MealTime.Morning -> "아침" to state.breakfast
-                                MealTime.Lunch -> "점심" to state.lunch
-                                MealTime.Dinner -> "저녁" to state.dinner
+                                MealTime.Morning -> context.getString(R.string.widget_morning) to state.breakfast
+                                MealTime.Lunch -> context.getString(R.string.widget_lunch) to state.lunch
+                                MealTime.Dinner -> context.getString(R.string.widget_dinner) to state.dinner
                             }
 
                             if (mealList.isNotEmpty()) {
@@ -124,7 +124,7 @@ class MealWidget : GlanceAppWidget() {
                                 MealWidgetError(
                                     mealTime = mealTime,
                                     restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
-                                    text = "오늘의 메뉴가 없습니다.",
+                                    text = context.getString(R.string.widget_no_menu),
                                     glanceId = id,
                                 )
                             }
@@ -134,8 +134,8 @@ class MealWidget : GlanceAppWidget() {
                             // Loading 상태일 때도 저장된 식당 정보 표시
                             MealWidgetError(
                                 restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
-                                mealTime = "점심",
-                                text = "로딩 중",
+                                mealTime = context.getString(R.string.widget_lunch),
+                                text = context.getString(R.string.widget_loading),
                                 glanceId = id,
                             )
                         }
@@ -143,8 +143,8 @@ class MealWidget : GlanceAppWidget() {
                         is WidgetMealInfo.Unavailable -> {
                             MealWidgetError(
                                 restaurant = restaurant?.let { context.getString(it.displayNameResId) } ?: "",
-                                mealTime = "점심",
-                                text = "네트워크 연결 상태를 확인해주세요.",
+                                mealTime = context.getString(R.string.widget_lunch),
+                                text = context.getString(R.string.widget_network_error),
                                 glanceId = id,
                             )
                         }
@@ -152,9 +152,9 @@ class MealWidget : GlanceAppWidget() {
                 } else {
                     // 저장된 식당 정보가 없으면 설정 필요 메시지 표시
                     MealWidgetError(
-                        restaurant = "설정 필요",
-                        mealTime = "점심",
-                        text = "위젯 설정에서 식당을 선택해주세요.",
+                        restaurant = context.getString(R.string.widget_setup_required),
+                        mealTime = context.getString(R.string.widget_lunch),
+                        text = context.getString(R.string.widget_select_prompt),
                         glanceId = id,
                     )
                 }

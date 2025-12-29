@@ -160,7 +160,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/shape_text_field_small"
         android:gravity="top"
-        android:hint="@string/write_text_review"
+        android:hint="@string/review_write_text"
         android:inputType="textMultiLine"
         android:lines="10"
         android:maxLength="300"
@@ -186,7 +186,7 @@
         style="@style/Caption3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pic_not_patch"
+        android:text="@string/review_pic_not_patch"
         android:textColor="@color/gray500"
         app:layout_constraintStart_toStartOf="@+id/et_review2_comment"
         app:layout_constraintTop_toBottomOf="@+id/et_review2_comment" />
@@ -200,7 +200,7 @@
         android:layout_marginBottom="30dp"
         android:background="@drawable/shape_button_duplicate"
         android:includeFontPadding="false"
-        android:text="@string/review_patch_done"
+        android:text="@string/button_modify"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
