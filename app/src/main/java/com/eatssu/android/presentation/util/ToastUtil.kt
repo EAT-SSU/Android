@@ -58,6 +58,9 @@ fun Context.showToast(
     snackbar.show()
 }
 
+fun Context.showToast(@StringRes messageId: Int, type: ToastType) =
+    showToast(getString(messageId), type)
+
 fun Context.showToast(event: UiEvent.ShowToast) =
     showToast(event.message.asString(this), event.type)
 

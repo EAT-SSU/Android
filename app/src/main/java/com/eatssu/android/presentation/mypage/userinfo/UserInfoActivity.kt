@@ -178,7 +178,7 @@ class UserInfoActivity :
 
         // 단과대를 먼저 선택하도록 유도
         if (data.selectedCollege.collegeId == -1) {
-            showToast("단과대를 먼저 선택해 주세요.", ToastType.ERROR)
+            showToast(R.string.toast_college_required, ToastType.ERROR)
             return
         }
 
