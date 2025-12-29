@@ -308,7 +308,6 @@ class MealWidget : GlanceAppWidget() {
     @Preview
     @Composable
     fun MealWidgetPreviewError() {
-        val context = LocalContext.current
-        MealWidgetError("저녁", context.getString(Restaurant.DODAM.displayNameResId), "에러임")
+        MealWidgetError("저녁", Restaurant.DODAM.toUiText().asString(), "에러임")
     }
 }
