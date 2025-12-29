@@ -1,4 +1,28 @@
 <resources>
-    <!-- Japanese translations for core/common will be added here -->
-    <!-- TODO: Translate all strings from core/common/values/strings.xml -->
+    <!-- ========================== -->
+    <!-- Restaurant Names -->
+    <!-- ========================== -->
+    <string name="restaurant_haksik">学生食堂</string>
+    <string name="restaurant_dodam">ドダム食堂</string>
+    <string name="restaurant_dormitory">寮食堂</string>
+    <string name="restaurant_faculty">FACULTY (教職員専用)</string>
+    <string name="restaurant_food_court">フードコート</string>
+    <string name="restaurant_snack_corner">スナックコーナー</string>
+    <string name="restaurant_the_kitchen">ザ・キッチン</string>
+
+    <!-- ========================== -->
+    <!-- Report Types -->
+    <!-- ========================== -->
+    <string name="report_type_no_associate_content">メニューに関係のない内容</string>
+    <string name="report_type_improper_content">わいせつ、罵倒等の不適切な内容</string>
+    <string name="report_type_improper_advertisement">不適切な宣伝または広告</string>
+    <string name="report_type_copy">レビュー目的に合わない内容（コピー文等）</string>
+    <string name="report_type_copyright">著作権侵害の疑い（写真等）</string>
+    <string name="report_type_extra">その他（下記に記載）</string>
+
+    <!-- ========================== -->
+    <!-- Common Placeholders -->
+    <!-- ========================== -->
+    <string name="college_placeholder">学部</string>
+    <string name="department_placeholder">学科</string>
 </resources>

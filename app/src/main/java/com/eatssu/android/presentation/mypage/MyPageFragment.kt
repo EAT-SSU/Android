@@ -24,6 +24,7 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.myreview.MyReviewListComposeActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.mypage.language.LanguageSelectorActivity
 import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showErrorToast
 import com.eatssu.android.presentation.util.showInfoToast
@@ -148,6 +149,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
         binding.llMyReview.setOnClickListener {
             startActivity(Intent(requireContext(), MyReviewListComposeActivity::class.java))
+        }
+
+        binding.llLanguage.setOnClickListener {
+            startActivity(Intent(requireContext(), LanguageSelectorActivity::class.java))
         }
 
         binding.tvLogout.setOnClickListener {

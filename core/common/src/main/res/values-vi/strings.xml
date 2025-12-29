@@ -1,4 +1,28 @@
 <resources>
-    <!-- Vietnamese translations for core/common will be added here -->
-    <!-- TODO: Translate all strings from core/common/values/strings.xml -->
+    <!-- ========================== -->
+    <!-- Restaurant Names -->
+    <!-- ========================== -->
+    <string name="restaurant_haksik">Căng tin sinh viên</string>
+    <string name="restaurant_dodam">Căng tin Dodam</string>
+    <string name="restaurant_dormitory">Căng tin ký túc xá</string>
+    <string name="restaurant_faculty">FACULTY (Chỉ dành cho nhân viên)</string>
+    <string name="restaurant_food_court">Khu ẩm thực</string>
+    <string name="restaurant_snack_corner">Góc ăn vặt</string>
+    <string name="restaurant_the_kitchen">Bếp</string>
+
+    <!-- ========================== -->
+    <!-- Report Types -->
+    <!-- ========================== -->
+    <string name="report_type_no_associate_content">Nội dung không liên quan đến menu</string>
+    <string name="report_type_improper_content">Nội dung khiêu dâm, thô tục hoặc không phù hợp</string>
+    <string name="report_type_improper_advertisement">Quảng cáo hoặc khuyến mãi không phù hợp</string>
+    <string name="report_type_copy">Nội dung không phù hợp với mục đích đánh giá (ví dụ: văn bản sao chép)</string>
+    <string name="report_type_copyright">Nghi ngờ vi phạm bản quyền (ví dụ: hình ảnh)</string>
+    <string name="report_type_extra">Khác (vui lòng mô tả bên dưới)</string>
+
+    <!-- ========================== -->
+    <!-- Common Placeholders -->
+    <!-- ========================== -->
+    <string name="college_placeholder">Trường</string>
+    <string name="department_placeholder">Khoa</string>
 </resources>

@@ -135,6 +135,9 @@
             android:name=".presentation.mypage.terms.WebViewActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.mypage.language.LanguageSelectorActivity"
+            android:exported="false" />
+        <activity
                 android:name=".presentation.intro.IntroActivity"
             android:exported="true">
             <!-- 기본 런처 필터 -->

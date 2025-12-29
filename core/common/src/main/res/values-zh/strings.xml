@@ -1,4 +1,28 @@
 <resources>
-    <!-- Chinese (Simplified) translations for core/common will be added here -->
-    <!-- TODO: Translate all strings from core/common/values/strings.xml -->
+    <!-- ========================== -->
+    <!-- Restaurant Names -->
+    <!-- ========================== -->
+    <string name="restaurant_haksik">学生食堂</string>
+    <string name="restaurant_dodam">道担食堂</string>
+    <string name="restaurant_dormitory">宿舍食堂</string>
+    <string name="restaurant_faculty">FACULTY (教职工专用)</string>
+    <string name="restaurant_food_court">美食广场</string>
+    <string name="restaurant_snack_corner">小吃角</string>
+    <string name="restaurant_the_kitchen">厨房</string>
+
+    <!-- ========================== -->
+    <!-- Report Types -->
+    <!-- ========================== -->
+    <string name="report_type_no_associate_content">与菜单无关的内容</string>
+    <string name="report_type_improper_content">淫秽、粗俗或不当内容</string>
+    <string name="report_type_improper_advertisement">不当推广或广告</string>
+    <string name="report_type_copy">与评价目的不符的内容（如复制文本）</string>
+    <string name="report_type_copyright">疑似侵犯版权（如照片）</string>
+    <string name="report_type_extra">其他（请在下方说明）</string>
+
+    <!-- ========================== -->
+    <!-- Common Placeholders -->
+    <!-- ========================== -->
+    <string name="college_placeholder">学院</string>
+    <string name="department_placeholder">院系</string>
 </resources>
