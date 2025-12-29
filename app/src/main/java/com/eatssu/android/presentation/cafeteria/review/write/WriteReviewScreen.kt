@@ -111,9 +111,7 @@ fun WriteReviewScreen(
                 onToggleLike = viewModel::toggleLike,
                 onImageSelect = { galleryLauncher.launch("image/*") },
                 onImageDelete = { viewModel.setSelectedImage(null) },
-                onSubmit = {
-                    viewModel.postReview(menuType, id, context)
-                }
+                onSubmit = { viewModel.postReview(menuType, id, context) }
             )
         }
 
