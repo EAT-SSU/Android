@@ -158,7 +158,7 @@ class UserInfoViewModel @Inject constructor(
                     selectedCollege = college,
                     isCollegeChanged = isCollegeChanged,
                     // 단과대가 변경되면 학과 초기화
-                    // TODO: Consider resolving from com.eatssu.common.R.string.department_placeholder at UI layer
+                    // TODO: 기본값 대신에 Department? 로 변경
                     selectedDepartment = Department(-1, "학과"),
                     departmentList = emptyList()
                 )
@@ -266,8 +266,7 @@ data class UserInfoData(
     val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
     // 단과대/학과
-    // Note: Placeholder strings correspond to com.eatssu.common.R.string.college_placeholder
-    // and com.eatssu.common.R.string.department_placeholder
+    // TODO: 기본값 대신에 Department?, College? 로 변경
     val selectedCollege: College = College(-1, "단과대"),
     val originalCollege: College = College(-1, "단과대"),
     val isCollegeChanged: Boolean = false,
