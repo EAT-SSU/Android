@@ -23,7 +23,6 @@
     <string name="title_review_write">撰写评价</string>
     <string name="title_review_modify">修改评价</string>
     <string name="title_sign_out">注销账户</string>
-    <string name="title_my_info">我的信息</string>
     <string name="title_report">举报</string>
     <string name="title_widget_setting">小组件设置</string>
     <string name="title_partnership_map">合作地图</string>
@@ -43,12 +42,10 @@
     <string name="button_complete">完成</string>
     <string name="button_modify">修改</string>
     <string name="button_delete">删除评价</string>
-    <string name="button_delete_action">删除</string>
     <string name="button_save">保存</string>
+    <string name="button_report">举报</string>
     <string name="button_cancel">取消</string>
     <string name="button_confirm">确认</string>
-    <string name="button_send">发送</string>
-    <string name="button_next_step">下一步</string>
     <string name="button_update">更新</string>
     <string name="button_check_duplicate">检查</string>
 
@@ -58,20 +55,14 @@
     <string name="dialog_logout_title">退出登录</string>
     <string name="dialog_logout_message">确定要退出登录吗？</string>
     <string name="dialog_force_update_message">需要安装新版本的应用程序。</string>
-    <string name="dialog_force_update_new_version">新版本已发布，需要更新。</string>
     <string name="dialog_location_permission_description">请允许位置权限以查找附近的合作餐厅。</string>
     <string name="dialog_notification_permission_title">需要通知权限</string>
     <string name="dialog_notification_permission_description">要接收通知，需要启用通知权限。\n请在设置中启用。</string>
     <string name="dialog_settings">前往设置</string>
-    <string name="dialog_modify_review">要修改这条评价吗？</string>
-    <string name="dialog_delete_review">要删除这条评价吗？</string>
-    <string name="dialog_modify_undo">要取消修改吗？</string>
-    <string name="dialog_delete_undo">要取消删除吗？</string>
     <string name="dialog_placeholder_title">请输入标题</string>
     <string name="dialog_placeholder_body">请输入内容</string>
     <string name="dialog_network_error_title">网络连接失败</string>
     <string name="dialog_network_error_message">请检查Wi-Fi或移动数据</string>
-    <string name="dialog_announcement">公告</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - Review -->
@@ -101,13 +92,11 @@
     <!-- ========================== -->
     <!-- Toast Messages - User Info -->
     <!-- ========================== -->
-    <string name="toast_nickname_invalid">昵称无效。</string>
     <string name="toast_nickname_change_failed">更改昵称失败。</string>
     <string name="toast_info_updated">信息已更新。</string>
     <string name="toast_nickname_changed">昵称已更改。</string>
     <string name="toast_department_updated">院系信息已更新。</string>
     <string name="toast_no_changes">没有更改。</string>
-    <string name="toast_select_college_first">请先选择学院。</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - App -->
@@ -124,8 +113,6 @@
     <string name="toast_notification_enable">EAT-SSU通知已启用 (%1$s)</string>
     <string name="toast_notification_disable">EAT-SSU通知已禁用 (%1$s)</string>
     <string name="toast_oss_load_fail">无法加载开源库。</string>
-    <string name="toast_map_partnership_load_fail">无法加载合作信息。</string>
-    <string name="toast_map_departure_load_fail">无法加载您的合作信息。</string>
     <string name="toast_sign_out_success">账户已成功删除。</string>
     <string name="toast_sign_out_fail">删除账户失败。</string>
 
@@ -143,22 +130,16 @@
     <string name="review_settings">评价设置</string>
     <string name="review_error_occurred">发生错误。</string>
     <string name="review_write">撰写评价</string>
-    <string name="review_fix">修改评价</string>
     <string name="review_done">发布评价</string>
     <string name="review_patch_done">更新评价</string>
     <string name="review_write_text">写一句简短评价</string>
     <string name="review_pic_not_patch">发布后无法修改照片</string>
-    <string name="review_eat_good">用餐愉快吗？</string>
-    <string name="review_eat_what">这是关于哪道菜的评价？</string>
-    <string name="review_detail_placeholder">请写一份详细的菜品评价</string>
-    <string name="review_recommend_question">\' - 您会推荐吗？</string>
 
     <!-- ========================== -->
     <!-- Review List -->
     <!-- ========================== -->
     <string name="review">评价</string>
     <string name="my_review">我的评价</string>
-    <string name="my_written_review">我的评价</string>
     <string name="none_review">还没有评价</string>
     <string name="none_review_my">写下您的第一条评价！</string>
     <string name="none_review_list">成为第一个写评价的人</string>
@@ -180,11 +161,6 @@
     <string name="taste">口味</string>
     <string name="amount">分量</string>
     <string name="student_cafeteria">学生食堂</string>
-    <string name="snack_corner">小吃角</string>
-    <string name="food_court">美食广场</string>
-    <string name="the_kitchen">THE KITCHEN</string>
-    <string name="dodam">道担食堂</string>
-    <string name="dormitory">宿舍食堂</string>
 
     <!-- ========================== -->
     <!-- Widget -->
@@ -205,12 +181,9 @@
     <!-- ========================== -->
     <string name="mypage">我的页面</string>
     <string name="my_info">我的信息</string>
-    <string name="change_pw">更改密码</string>
-    <string name="announce">公告</string>
     <string name="logout">退出登录</string>
     <string name="signout">注销账户</string>
     <string name="app_version">应用版本</string>
-    <string name="store_app_version">商店应用版本</string>
     <string name="mypage_push_notification_title">推送通知设置</string>
     <string name="mypage_push_notification_description">我们每天上午11点发送通知</string>
 
@@ -218,15 +191,10 @@
     <string name="language_setting">语言设置</string>
     <string name="language_select_description">选择您要使用的语言。</string>
     <string name="language_system_default">系统语言 (默认)</string>
-    <string name="toast_language_changed">语言已更改。</string>
 
     <!-- ========================== -->
     <!-- Login -->
     <!-- ========================== -->
-    <string name="login_done">欢迎！</string>
-    <string name="login_for_service">请登录使用服务</string>
-    <string name="login_slogan_prefix">在崇实</string>
-    <string name="login_slogan_suffix">用餐！</string>
     <string name="kakao">Kakao</string>
     <string name="connect_account">已连接的账户</string>
 
@@ -237,14 +205,6 @@
     <string name="set_nickname">请设置您的昵称</string>
     <string name="set_nickname_length">请输入%1$d到%2$d个字符。</string>
     <string name="set_nickname_able">此昵称可用！</string>
-    <string name="set_nickname_unable">此昵称已被使用。</string>
-    <string name="nickname_error_whitespace">不允许使用空白字符（空格除外）。</string>
-    <string name="nickname_error_consecutive_spaces">不允许连续空格。</string>
-    <string name="nickname_error_invalid_chars">只允许使用韩文、英文和数字。</string>
-    <string name="nickname_error_consecutive_special">不允许连续特殊字符。</string>
-    <string name="nickname_error_only_numbers">昵称不能只由数字组成。</string>
-    <string name="nickname_error_special_boundary">昵称不能以特殊字符开头或结尾。</string>
-    <string name="nickname_error_profanity">不允许包含不当言论的昵称。</string>
 
     <!-- ========================== -->
     <!-- User Info -->
@@ -258,35 +218,19 @@
     <string name="not_found">无法加载信息。</string>
     <string name="server_error_title">连接错误</string>
     <string name="server_error_message">无法连接到服务器。\n请稍后再试。</string>
-    <string name="error_unknown">未知错误</string>
 
     <!-- ========================== -->
     <!-- Report -->
     <!-- ========================== -->
     <string name="report">举报</string>
-    <string name="report_btn">发送给 EAT SSU</string>
     <string name="report_title">请选择举报此评价的原因。</string>
     <string name="report_sub">24小时内只能举报一条评价一次。</string>
     <string name="report_write_hint">请写明举报原因</string>
 
     <!-- ========================== -->
-    <!-- Input Validation -->
-    <!-- ========================== -->
-    <string name="max_300">最多300字符</string>
-    <string name="max_150">最多150</string>
-    <string name="max_500">最多500字符</string>
-    <string name="pw_rules">请输入至少8个字符，包括字母和数字。</string>
-
-    <!-- ========================== -->
-    <!-- EAT SSU Branding -->
-    <!-- ========================== -->
-    <string name="eat_ssu">EAT SSU</string>
-    <string name="e_at_ssu">在崇实用餐！</string>
-    <string name="team_eatssu">TEAM EAT\-SSU</string>
-
-    <!-- ========================== -->
     <!-- Links & External -->
     <!-- ========================== -->
+    <string name="max_150">最多150个字</string>
     <string name="inquire">联系我们</string>
     <string name="service_rule">服务条款</string>
     <string name="private_information">隐私政策</string>
@@ -295,16 +239,6 @@
     <string name="contact">联系我们</string>
     <string name="developer">关于我们</string>
     <string name="oss_licenses">开源库</string>
-
-    <!-- ========================== -->
-    <!-- Inquiry -->
-    <!-- ========================== -->
-    <string name="leave_inquiry">请留下您的问题。</string>
-    <string name="email">电子邮件</string>
-    <string name="leave_email">请输入您的电子邮件以接收回复。</string>
-    <string name="inquire_content">问题内容</string>
-    <string name="inquiry_send_done">您的问题已发送。回复需要2-3个工作日。</string>
-    <string name="inquiry_send_not">发送问题失败，请重试。</string>
 
     <!-- ========================== -->
     <!-- Sign Out -->
@@ -318,8 +252,6 @@
     <!-- ========================== -->
     <string name="notification_context_title">🤔 今天吃什么？</string>
     <string name="notification_context_text">查看今天的食堂菜单！</string>
-    <string name="notification_consent_enable">您已同意接收EAT-SSU通知。</string>
-    <string name="notification_consent_disable">您已拒绝接收EAT-SSU通知。</string>
     <string name="notification_channel_lunch_name">午餐前通知</string>
     <string name="notification_channel_lunch_description">在午餐时间前发送推送通知。</string>
     <string name="notification_channel_server_name">服务器通知</string>
@@ -339,7 +271,4 @@
     <string name="etc">备注</string>
     <string name="time">营业时间</string>
     <string name="favorite_partnership">收藏的合作</string>
-    <string name="cafe">咖啡厅</string>
-    <string name="restaurant_type">餐厅</string>
-    <string name="pub">酒吧</string>
 </resources>

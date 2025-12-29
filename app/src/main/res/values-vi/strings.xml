@@ -23,7 +23,6 @@
     <string name="title_review_write">Viết đánh giá</string>
     <string name="title_review_modify">Sửa đánh giá</string>
     <string name="title_sign_out">Xóa tài khoản</string>
-    <string name="title_my_info">Thông tin của tôi</string>
     <string name="title_report">Báo cáo</string>
     <string name="title_widget_setting">Cài đặt Widget</string>
     <string name="title_partnership_map">Bản đồ đối tác</string>
@@ -43,12 +42,10 @@
     <string name="button_complete">Hoàn thành</string>
     <string name="button_modify">Chỉnh sửa</string>
     <string name="button_delete">Xóa đánh giá</string>
-    <string name="button_delete_action">Xoá đi</string>
     <string name="button_save">Lưu</string>
+    <string name="button_report">Báo cáo</string>
     <string name="button_cancel">Hủy</string>
     <string name="button_confirm">Xác nhận</string>
-    <string name="button_send">Gửi</string>
-    <string name="button_next_step">Tiếp theo</string>
     <string name="button_update">Cập nhật</string>
     <string name="button_check_duplicate">Kiểm tra</string>
 
@@ -58,20 +55,14 @@
     <string name="dialog_logout_title">Đăng xuất</string>
     <string name="dialog_logout_message">Bạn có chắc muốn đăng xuất không?</string>
     <string name="dialog_force_update_message">Bạn cần cài đặt phiên bản mới của ứng dụng.</string>
-    <string name="dialog_force_update_new_version">Phiên bản mới đã được phát hành. Cần cập nhật.</string>
     <string name="dialog_location_permission_description">Vui lòng cho phép quyền vị trí để tìm nhà hàng đối tác gần đây.</string>
     <string name="dialog_notification_permission_title">Cần quyền thông báo</string>
     <string name="dialog_notification_permission_description">Để nhận thông báo, bạn cần bật quyền thông báo.\nVui lòng bật trong Cài đặt.</string>
     <string name="dialog_settings">Đi đến Cài đặt</string>
-    <string name="dialog_modify_review">Bạn có muốn sửa đánh giá này không?</string>
-    <string name="dialog_delete_review">Bạn có muốn xóa đánh giá này không?</string>
-    <string name="dialog_modify_undo">Bạn có muốn hủy chỉnh sửa không?</string>
-    <string name="dialog_delete_undo">Bạn có muốn hủy xóa không?</string>
     <string name="dialog_placeholder_title">Nhập tiêu đề</string>
     <string name="dialog_placeholder_body">Nhập nội dung</string>
     <string name="dialog_network_error_title">Không có kết nối mạng</string>
     <string name="dialog_network_error_message">Vui lòng kiểm tra Wi-Fi hoặc dữ liệu di động</string>
-    <string name="dialog_announcement">Thông báo</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - Review -->
@@ -101,13 +92,11 @@
     <!-- ========================== -->
     <!-- Toast Messages - User Info -->
     <!-- ========================== -->
-    <string name="toast_nickname_invalid">Biệt danh không hợp lệ.</string>
     <string name="toast_nickname_change_failed">Không thể đổi biệt danh.</string>
     <string name="toast_info_updated">Thông tin đã được cập nhật.</string>
     <string name="toast_nickname_changed">Biệt danh đã được thay đổi.</string>
     <string name="toast_department_updated">Thông tin khoa đã được cập nhật.</string>
     <string name="toast_no_changes">Không có thay đổi.</string>
-    <string name="toast_select_college_first">Vui lòng chọn trường trước.</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - App -->
@@ -124,8 +113,6 @@
     <string name="toast_notification_enable">Thông báo EAT-SSU đã được bật (%1$s)</string>
     <string name="toast_notification_disable">Thông báo EAT-SSU đã bị tắt (%1$s)</string>
     <string name="toast_oss_load_fail">Không thể tải thư viện mã nguồn mở.</string>
-    <string name="toast_map_partnership_load_fail">Không thể tải thông tin đối tác.</string>
-    <string name="toast_map_departure_load_fail">Không thể tải thông tin đối tác của bạn.</string>
     <string name="toast_sign_out_success">Tài khoản đã được xóa thành công.</string>
     <string name="toast_sign_out_fail">Không thể xóa tài khoản.</string>
 
@@ -143,22 +130,16 @@
     <string name="review_settings">Cài đặt đánh giá</string>
     <string name="review_error_occurred">Đã xảy ra lỗi.</string>
     <string name="review_write">Viết đánh giá</string>
-    <string name="review_fix">Sửa đánh giá</string>
     <string name="review_done">Đăng đánh giá</string>
     <string name="review_patch_done">Cập nhật đánh giá</string>
     <string name="review_write_text">Viết đánh giá ngắn</string>
     <string name="review_pic_not_patch">Không thể chỉnh sửa ảnh sau khi đăng</string>
-    <string name="review_eat_good">Bạn có thích bữa ăn không?</string>
-    <string name="review_eat_what">Đánh giá này về món ăn nào?</string>
-    <string name="review_detail_placeholder">Viết đánh giá chi tiết về món ăn này</string>
-    <string name="review_recommend_question">\' - Bạn có muốn giới thiệu không?</string>
 
     <!-- ========================== -->
     <!-- Review List -->
     <!-- ========================== -->
     <string name="review">Đánh giá</string>
     <string name="my_review">Đánh giá của tôi</string>
-    <string name="my_written_review">Đánh giá của tôi</string>
     <string name="none_review">Chưa có đánh giá</string>
     <string name="none_review_my">Viết đánh giá đầu tiên của bạn!</string>
     <string name="none_review_list">Hãy là người đầu tiên viết đánh giá</string>
@@ -180,11 +161,6 @@
     <string name="taste">Hương vị</string>
     <string name="amount">Khẩu phần</string>
     <string name="student_cafeteria">Căng tin sinh viên</string>
-    <string name="snack_corner">Góc ăn vặt</string>
-    <string name="food_court">Khu ẩm thực</string>
-    <string name="the_kitchen">THE KITCHEN</string>
-    <string name="dodam">Căng tin Dodam</string>
-    <string name="dormitory">Căng tin ký túc xá</string>
 
     <!-- ========================== -->
     <!-- Widget -->
@@ -205,12 +181,9 @@
     <!-- ========================== -->
     <string name="mypage">Trang của tôi</string>
     <string name="my_info">Thông tin của tôi</string>
-    <string name="change_pw">Đổi mật khẩu</string>
-    <string name="announce">Thông báo</string>
     <string name="logout">Đăng xuất</string>
     <string name="signout">Xóa tài khoản</string>
     <string name="app_version">Phiên bản ứng dụng</string>
-    <string name="store_app_version">Phiên bản trên cửa hàng</string>
     <string name="mypage_push_notification_title">Cài đặt thông báo đẩy</string>
     <string name="mypage_push_notification_description">Chúng tôi sẽ gửi thông báo mỗi ngày lúc 11 giờ sáng</string>
 
@@ -218,15 +191,10 @@
     <string name="language_setting">Cài đặt ngôn ngữ</string>
     <string name="language_select_description">Chọn ngôn ngữ bạn muốn sử dụng.</string>
     <string name="language_system_default">Ngôn ngữ hệ thống (Mặc định)</string>
-    <string name="toast_language_changed">Ngôn ngữ đã được thay đổi.</string>
 
     <!-- ========================== -->
     <!-- Login -->
     <!-- ========================== -->
-    <string name="login_done">Chào mừng!</string>
-    <string name="login_for_service">Vui lòng đăng nhập để sử dụng dịch vụ</string>
-    <string name="login_slogan_prefix">Ăn tại </string>
-    <string name="login_slogan_suffix">SSU!</string>
     <string name="kakao">Kakao</string>
     <string name="connect_account">Tài khoản đã kết nối</string>
 
@@ -237,14 +205,6 @@
     <string name="set_nickname">Vui lòng đặt biệt danh</string>
     <string name="set_nickname_length">Vui lòng nhập từ %1$d đến %2$d ký tự.</string>
     <string name="set_nickname_able">Biệt danh này có thể sử dụng!</string>
-    <string name="set_nickname_unable">Biệt danh này đã được sử dụng.</string>
-    <string name="nickname_error_whitespace">Không được sử dụng ký tự khoảng trắng (trừ dấu cách).</string>
-    <string name="nickname_error_consecutive_spaces">Không được sử dụng dấu cách liên tiếp.</string>
-    <string name="nickname_error_invalid_chars">Chỉ được sử dụng tiếng Hàn, tiếng Anh và số.</string>
-    <string name="nickname_error_consecutive_special">Không được sử dụng ký tự đặc biệt liên tiếp.</string>
-    <string name="nickname_error_only_numbers">Biệt danh không thể chỉ bao gồm số.</string>
-    <string name="nickname_error_special_boundary">Biệt danh không thể bắt đầu hoặc kết thúc bằng ký tự đặc biệt.</string>
-    <string name="nickname_error_profanity">Không được sử dụng biệt danh chứa ngôn từ thô tục.</string>
 
     <!-- ========================== -->
     <!-- User Info -->
@@ -258,13 +218,11 @@
     <string name="not_found">Không thể tải thông tin.</string>
     <string name="server_error_title">Lỗi kết nối</string>
     <string name="server_error_message">Không thể kết nối với máy chủ.\nVui lòng thử lại sau.</string>
-    <string name="error_unknown">Lỗi không xác định</string>
 
     <!-- ========================== -->
     <!-- Report -->
     <!-- ========================== -->
     <string name="report">Báo cáo</string>
-    <string name="report_btn">Gửi đến EAT SSU</string>
     <string name="report_title">Vui lòng chọn lý do báo cáo đánh giá này.</string>
     <string name="report_sub">Bạn chỉ có thể báo cáo một đánh giá một lần trong vòng 24 giờ.</string>
     <string name="report_write_hint">Vui lòng viết lý do báo cáo</string>
@@ -272,17 +230,11 @@
     <!-- ========================== -->
     <!-- Input Validation -->
     <!-- ========================== -->
-    <string name="max_300">Tối đa 300 ký tự</string>
     <string name="max_150">Tối đa 150</string>
-    <string name="max_500">Tối đa 500 ký tự</string>
-    <string name="pw_rules">Vui lòng nhập ít nhất 8 ký tự bao gồm chữ cái và số.</string>
 
     <!-- ========================== -->
     <!-- EAT SSU Branding -->
     <!-- ========================== -->
-    <string name="eat_ssu">EAT SSU</string>
-    <string name="e_at_ssu">Ăn tại Soongsil!</string>
-    <string name="team_eatssu">TEAM EAT\-SSU</string>
 
     <!-- ========================== -->
     <!-- Links & External -->
@@ -299,12 +251,6 @@
     <!-- ========================== -->
     <!-- Inquiry -->
     <!-- ========================== -->
-    <string name="leave_inquiry">Vui lòng để lại câu hỏi.</string>
-    <string name="email">Email</string>
-    <string name="leave_email">Vui lòng nhập email để nhận phản hồi.</string>
-    <string name="inquire_content">Nội dung câu hỏi</string>
-    <string name="inquiry_send_done">Câu hỏi đã được gửi. Phản hồi sẽ mất 2-3 ngày làm việc.</string>
-    <string name="inquiry_send_not">Không thể gửi câu hỏi. Vui lòng thử lại.</string>
 
     <!-- ========================== -->
     <!-- Sign Out -->
@@ -318,8 +264,6 @@
     <!-- ========================== -->
     <string name="notification_context_title">🤔 Hôm nay ăn gì?</string>
     <string name="notification_context_text">Xem menu căng tin hôm nay!</string>
-    <string name="notification_consent_enable">Bạn đã đồng ý nhận thông báo EAT-SSU.</string>
-    <string name="notification_consent_disable">Bạn đã từ chối nhận thông báo EAT-SSU.</string>
     <string name="notification_channel_lunch_name">Thông báo trước bữa trưa</string>
     <string name="notification_channel_lunch_description">Gửi thông báo đẩy trước giờ ăn trưa.</string>
     <string name="notification_channel_server_name">Thông báo từ máy chủ</string>
@@ -339,7 +283,4 @@
     <string name="etc">Ghi chú</string>
     <string name="time">Giờ mở cửa</string>
     <string name="favorite_partnership">Đối tác yêu thích</string>
-    <string name="cafe">Quán cà phê</string>
-    <string name="restaurant_type">Nhà hàng</string>
-    <string name="pub">Quán bar</string>
 </resources>

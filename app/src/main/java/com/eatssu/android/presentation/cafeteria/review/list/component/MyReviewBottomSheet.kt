@@ -120,7 +120,7 @@ fun MyReviewBottomSheet(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = stringResource(R.string.button_delete_action),
+                    text = stringResource(R.string.button_delete),
                     style = EatssuTheme.typography.body2,
                     color = Black
                 )

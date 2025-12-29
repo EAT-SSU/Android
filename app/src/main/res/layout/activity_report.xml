@@ -160,7 +160,7 @@
                 android:background="@drawable/shape_button_duplicate"
                 android:includeFontPadding="false"
                 android:stateListAnimator="@null"
-                android:text="@string/report_btn"
+                android:text="@string/button_report"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

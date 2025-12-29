@@ -23,7 +23,6 @@
     <string name="title_review_write">Write Review</string>
     <string name="title_review_modify">Edit Review</string>
     <string name="title_sign_out">Delete Account</string>
-    <string name="title_my_info">My Info</string>
     <string name="title_report">Report</string>
     <string name="title_widget_setting">Widget Settings</string>
     <string name="title_partnership_map">Partnership Map</string>
@@ -43,12 +42,10 @@
     <string name="button_complete">Complete</string>
     <string name="button_modify">Edit</string>
     <string name="button_delete">Delete Review</string>
-    <string name="button_delete_action">Delete</string>
     <string name="button_save">Save</string>
+    <string name="button_report">Report</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
-    <string name="button_send">Send</string>
-    <string name="button_next_step">Next</string>
     <string name="button_update">Update</string>
     <string name="button_check_duplicate">Check</string>
 
@@ -58,20 +55,14 @@
     <string name="dialog_logout_title">Logout</string>
     <string name="dialog_logout_message">Are you sure you want to logout?</string>
     <string name="dialog_force_update_message">You need to install a new version of the app.</string>
-    <string name="dialog_force_update_new_version">A new version is available. Update is required.</string>
     <string name="dialog_location_permission_description">Please allow location permission to find nearby partner restaurants.</string>
     <string name="dialog_notification_permission_title">Notification Permission Required</string>
     <string name="dialog_notification_permission_description">To receive notifications, you need to enable notification permissions.\nPlease enable it in Settings.</string>
     <string name="dialog_settings">Go to Settings</string>
-    <string name="dialog_modify_review">Do you want to edit this review?</string>
-    <string name="dialog_delete_review">Do you want to delete this review?</string>
-    <string name="dialog_modify_undo">Do you want to cancel editing?</string>
-    <string name="dialog_delete_undo">Do you want to cancel deletion?</string>
     <string name="dialog_placeholder_title">Enter title</string>
     <string name="dialog_placeholder_body">Enter content</string>
     <string name="dialog_network_error_title">No Network Connection</string>
     <string name="dialog_network_error_message">Please check your Wi-Fi or mobile data</string>
-    <string name="dialog_announcement">Notice</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - Review -->
@@ -101,13 +92,11 @@
     <!-- ========================== -->
     <!-- Toast Messages - User Info -->
     <!-- ========================== -->
-    <string name="toast_nickname_invalid">Invalid nickname.</string>
     <string name="toast_nickname_change_failed">Failed to change nickname.</string>
     <string name="toast_info_updated">Information has been updated.</string>
     <string name="toast_nickname_changed">Nickname has been changed.</string>
     <string name="toast_department_updated">Department information has been updated.</string>
     <string name="toast_no_changes">No changes made.</string>
-    <string name="toast_select_college_first">Please select a college first.</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - App -->
@@ -124,8 +113,6 @@
     <string name="toast_notification_enable">EAT-SSU notifications enabled (%1$s)</string>
     <string name="toast_notification_disable">EAT-SSU notifications disabled (%1$s)</string>
     <string name="toast_oss_load_fail">Failed to load open source libraries.</string>
-    <string name="toast_map_partnership_load_fail">Failed to load partnership information.</string>
-    <string name="toast_map_departure_load_fail">Failed to load your partnership information.</string>
     <string name="toast_sign_out_success">Account deleted successfully.</string>
     <string name="toast_sign_out_fail">Failed to delete account.</string>
 
@@ -143,22 +130,16 @@
     <string name="review_settings">Review Settings</string>
     <string name="review_error_occurred">An error occurred.</string>
     <string name="review_write">Write Review</string>
-    <string name="review_fix">Edit Review</string>
     <string name="review_done">Post Review</string>
     <string name="review_patch_done">Update Review</string>
     <string name="review_write_text">Write a short review</string>
     <string name="review_pic_not_patch">Photos cannot be edited after posting</string>
-    <string name="review_eat_good">Did you enjoy your meal?</string>
-    <string name="review_eat_what">Which food is this review about?</string>
-    <string name="review_detail_placeholder">Write a detailed review about this menu</string>
-    <string name="review_recommend_question">\' - Would you recommend it?</string>
 
     <!-- ========================== -->
     <!-- Review List -->
     <!-- ========================== -->
     <string name="review">Review</string>
     <string name="my_review">My Reviews</string>
-    <string name="my_written_review">My Reviews</string>
     <string name="none_review">No reviews yet</string>
     <string name="none_review_my">Write your first review!</string>
     <string name="none_review_list">Be the first to write a review</string>
@@ -180,11 +161,6 @@
     <string name="taste">Taste</string>
     <string name="amount">Portion</string>
     <string name="student_cafeteria">Student Cafeteria</string>
-    <string name="snack_corner">Snack Corner</string>
-    <string name="food_court">Food Court</string>
-    <string name="the_kitchen">THE KITCHEN</string>
-    <string name="dodam">Dodam Cafeteria</string>
-    <string name="dormitory">Dormitory Cafeteria</string>
 
     <!-- ========================== -->
     <!-- Widget -->
@@ -205,12 +181,9 @@
     <!-- ========================== -->
     <string name="mypage">My Page</string>
     <string name="my_info">My Info</string>
-    <string name="change_pw">Change Password</string>
-    <string name="announce">Announcements</string>
     <string name="logout">Logout</string>
     <string name="signout">Delete Account</string>
     <string name="app_version">App Version</string>
-    <string name="store_app_version">Store App Version</string>
     <string name="mypage_push_notification_title">Push Notification Settings</string>
     <string name="mypage_push_notification_description">We\'ll send notifications every day at 11 AM</string>
 
@@ -218,15 +191,10 @@
     <string name="language_setting">Language Settings</string>
     <string name="language_select_description">Select your preferred language.</string>
     <string name="language_system_default">System Language (Default)</string>
-    <string name="toast_language_changed">Language has been changed.</string>
 
     <!-- ========================== -->
     <!-- Login -->
     <!-- ========================== -->
-    <string name="login_done">Welcome!</string>
-    <string name="login_for_service">Please login to use the service</string>
-    <string name="login_slogan_prefix">Eat at </string>
-    <string name="login_slogan_suffix">SSU!</string>
     <string name="kakao">Kakao</string>
     <string name="connect_account">Connected Account</string>
 
@@ -237,14 +205,6 @@
     <string name="set_nickname">Please set your nickname</string>
     <string name="set_nickname_length">Please enter %1$d to %2$d characters.</string>
     <string name="set_nickname_able">This nickname is available!</string>
-    <string name="set_nickname_unable">This nickname is already in use.</string>
-    <string name="nickname_error_whitespace">Whitespace characters (except spaces) are not allowed.</string>
-    <string name="nickname_error_consecutive_spaces">Consecutive spaces are not allowed.</string>
-    <string name="nickname_error_invalid_chars">Only Korean, English, and numbers are allowed.</string>
-    <string name="nickname_error_consecutive_special">Consecutive special characters are not allowed.</string>
-    <string name="nickname_error_only_numbers">Nickname cannot consist of only numbers.</string>
-    <string name="nickname_error_special_boundary">Nickname cannot start or end with special characters.</string>
-    <string name="nickname_error_profanity">Nicknames containing profanity are not allowed.</string>
 
     <!-- ========================== -->
     <!-- User Info -->
@@ -258,35 +218,19 @@
     <string name="not_found">Could not load information.</string>
     <string name="server_error_title">Connection Error</string>
     <string name="server_error_message">Unable to connect to server.\nPlease try again later.</string>
-    <string name="error_unknown">Unknown error</string>
 
     <!-- ========================== -->
     <!-- Report -->
     <!-- ========================== -->
     <string name="report">Report</string>
-    <string name="report_btn">Send to EAT SSU</string>
     <string name="report_title">Please select a reason for reporting this review.</string>
     <string name="report_sub">You can only report a review once within 24 hours.</string>
     <string name="report_write_hint">Please write the reason for the report</string>
 
     <!-- ========================== -->
-    <!-- Input Validation -->
-    <!-- ========================== -->
-    <string name="max_300">Max 300 characters</string>
-    <string name="max_150">Max 150</string>
-    <string name="max_500">Max 500 characters</string>
-    <string name="pw_rules">Please enter at least 8 characters including letters and numbers.</string>
-
-    <!-- ========================== -->
-    <!-- EAT SSU Branding -->
-    <!-- ========================== -->
-    <string name="eat_ssu">EAT SSU</string>
-    <string name="e_at_ssu">Eat at Soongsil!</string>
-    <string name="team_eatssu">TEAM EAT\-SSU</string>
-
-    <!-- ========================== -->
     <!-- Links & External -->
     <!-- ========================== -->
+    <string name="max_150">Up to 150 characters</string>
     <string name="inquire">Contact Us</string>
     <string name="service_rule">Terms of Service</string>
     <string name="private_information">Privacy Policy</string>
@@ -295,16 +239,6 @@
     <string name="contact">Contact Us</string>
     <string name="developer">About Us</string>
     <string name="oss_licenses">Open Source Libraries</string>
-
-    <!-- ========================== -->
-    <!-- Inquiry -->
-    <!-- ========================== -->
-    <string name="leave_inquiry">Please leave your inquiry.</string>
-    <string name="email">Email</string>
-    <string name="leave_email">Please enter your email to receive a response.</string>
-    <string name="inquire_content">Inquiry Content</string>
-    <string name="inquiry_send_done">Your inquiry has been sent. Response will take 2–3 business days.</string>
-    <string name="inquiry_send_not">Failed to send inquiry. Please try again.</string>
 
     <!-- ========================== -->
     <!-- Sign Out -->
@@ -318,8 +252,6 @@
     <!-- ========================== -->
     <string name="notification_context_title">🤔 What should I eat today?</string>
     <string name="notification_context_text">Check out today\'s cafeteria menu!</string>
-    <string name="notification_consent_enable">You have agreed to receive EAT-SSU notifications.</string>
-    <string name="notification_consent_disable">You have declined to receive EAT-SSU notifications.</string>
     <string name="notification_channel_lunch_name">Pre-lunch Notification</string>
     <string name="notification_channel_lunch_description">Sends push notifications before lunchtime.</string>
     <string name="notification_channel_server_name">Server Notifications</string>
@@ -339,7 +271,4 @@
     <string name="etc">Note</string>
     <string name="time">Hours</string>
     <string name="favorite_partnership">Favorite Partnerships</string>
-    <string name="cafe">Cafe</string>
-    <string name="restaurant_type">Restaurant</string>
-    <string name="pub">Bar</string>
 </resources>

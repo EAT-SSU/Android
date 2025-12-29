@@ -17,46 +17,12 @@
         <item>일</item>
     </string-array>
 
-    <string-array name="custom_months">
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-        <item>04</item>
-        <item>05</item>
-        <item>06</item>
-        <item>07</item>
-        <item>08</item>
-        <item>09</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-    </string-array>
-
-    <string-array name="restaurant">
-        <item>HAKSIK</item>
-        <item>DODAM</item>
-        <item>DOMITORY</item>
-        <item>THE_KITCHEN</item>
-        <item>FOOD_COURT</item>
-        <item>SNACK_CORNER</item>
-    </string-array>
-
-    <string-array name="rv_restaurant">
-        <item>rvBreakfastHaksik</item>
-        <item>rvBreakfastDodam</item>
-        <item>rvBreakfastGisik</item>
-        <item>rvBreakfastKitchen</item>
-        <item>rvBreakfastFood</item>
-        <item>rvBreakfastSnack</item>
-    </string-array>
-
     <!-- ========================== -->
     <!-- Screen Titles -->
     <!-- ========================== -->
     <string name="title_review_write">리뷰 작성하기</string>
     <string name="title_review_modify">리뷰 수정하기</string>
     <string name="title_sign_out">탈퇴하기</string>
-    <string name="title_my_info">내 정보</string>
     <string name="title_report">신고하기</string>
     <string name="title_widget_setting">위젯 설정</string>
     <string name="title_partnership_map">제휴 지도</string>
@@ -75,13 +41,11 @@
     <!-- ========================== -->
     <string name="button_complete">완료하기</string>
     <string name="button_modify">수정하기</string>
-    <string name="button_delete">리뷰삭제</string>
-    <string name="button_delete_action">삭제하기</string>
+    <string name="button_delete">삭제하기</string>
     <string name="button_save">저장하기</string>
+    <string name="button_report">신고하기</string>
     <string name="button_cancel">취소</string>
     <string name="button_confirm">확인</string>
-    <string name="button_send">전송하기</string>
-    <string name="button_next_step">다음 단계로</string>
     <string name="button_update">업데이트</string>
     <string name="button_check_duplicate">중복확인</string>
 
@@ -91,20 +55,14 @@
     <string name="dialog_logout_title">로그아웃</string>
     <string name="dialog_logout_message">로그아웃 하시겠습니까?</string>
     <string name="dialog_force_update_message">새 버전의 앱을 설치해야 합니다.</string>
-    <string name="dialog_force_update_new_version">새 버전이 출시되었습니다. 업데이트가 필요합니다.</string>
     <string name="dialog_location_permission_description">내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.</string>
     <string name="dialog_notification_permission_title">알림 권한 필요</string>
     <string name="dialog_notification_permission_description">알림을 받으려면 알림 권한을 활성화해야 합니다.\n설정에서 알림 권한을 허용해주세요.</string>
     <string name="dialog_settings">설정으로 이동</string>
-    <string name="dialog_modify_review">리뷰를 수정하시겠습니까?</string>
-    <string name="dialog_delete_review">리뷰를 삭제하시겠습니까?</string>
-    <string name="dialog_modify_undo">리뷰 수정을 취소하시겠습니까?</string>
-    <string name="dialog_delete_undo">리뷰 삭제를 취소하시겠습니까?</string>
     <string name="dialog_placeholder_title">제목을 입력해주세요</string>
     <string name="dialog_placeholder_body">본문을 입력해주세요</string>
     <string name="dialog_network_error_title">네트워크 연결 안 됨</string>
     <string name="dialog_network_error_message">Wi-Fi, 모바일 데이터를 확인해주세요</string>
-    <string name="dialog_announcement">공지</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - Review -->
@@ -134,13 +92,11 @@
     <!-- ========================== -->
     <!-- Toast Messages - User Info -->
     <!-- ========================== -->
-    <string name="toast_nickname_invalid">올바르지 않은 닉네임이에요.</string>
     <string name="toast_nickname_change_failed">닉네임 변경에 실패했어요.</string>
     <string name="toast_info_updated">정보가 업데이트되었습니다.</string>
     <string name="toast_nickname_changed">닉네임이 변경되었습니다.</string>
     <string name="toast_department_updated">학과 정보가 업데이트되었습니다.</string>
     <string name="toast_no_changes">변경사항이 없습니다.</string>
-    <string name="toast_select_college_first">단과대를 먼저 선택해 주세요.</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - App -->
@@ -157,8 +113,6 @@
     <string name="toast_notification_enable">EAT-SSU 수신 동의 (%1$s)</string>
     <string name="toast_notification_disable">EAT-SSU 수신 거절 (%1$s)</string>
     <string name="toast_oss_load_fail">오픈소스 라이브러리를 불러올 수 없어요.</string>
-    <string name="toast_map_partnership_load_fail">제휴 정보를 불러오지 못했어요.</string>
-    <string name="toast_map_departure_load_fail">내 제휴 정보를 불러오지 못했어요.</string>
     <string name="toast_sign_out_success">회원탈퇴되었어요.</string>
     <string name="toast_sign_out_fail">회원탈퇴에 실패했어요.</string>
 
@@ -176,22 +130,16 @@
     <string name="review_settings">리뷰 설정</string>
     <string name="review_error_occurred">에러가 발생했습니다.</string>
     <string name="review_write">리뷰 작성하기</string>
-    <string name="review_fix">리뷰 수정하기</string>
     <string name="review_done">리뷰 등록하기</string>
     <string name="review_patch_done">리뷰 수정하기</string>
     <string name="review_write_text">한 줄 평 작성하기</string>
     <string name="review_pic_not_patch">리뷰 등록 후, 사진은 수정할 수 없습니다</string>
-    <string name="review_eat_good">식사는 맛있게 하셨나요?</string>
-    <string name="review_eat_what">어떤 음식에 대한 리뷰인가요?</string>
-    <string name="review_detail_placeholder">해당 메뉴에 대한 상세한 평가를 남겨주세요</string>
-    <string name="review_recommend_question">\'를 추천하시겠어요?</string>
 
     <!-- ========================== -->
     <!-- Review List -->
     <!-- ========================== -->
     <string name="review">리뷰</string>
     <string name="my_review">내 리뷰</string>
-    <string name="my_written_review">작성한 리뷰</string>
     <string name="none_review">아직 작성한 리뷰가 없어요</string>
     <string name="none_review_my">첫 리뷰를 남겨 주세요!</string>
     <string name="none_review_list">가장 먼저 리뷰를 남겨 주세요</string>
@@ -213,11 +161,6 @@
     <string name="taste">맛</string>
     <string name="amount">양</string>
     <string name="student_cafeteria">학생식당</string>
-    <string name="snack_corner">스낵코너</string>
-    <string name="food_court">푸드코트</string>
-    <string name="the_kitchen">THE KITCHEN</string>
-    <string name="dodam">도담식당</string>
-    <string name="dormitory">기숙사 식당</string>
 
     <!-- ========================== -->
     <!-- Widget -->
@@ -238,12 +181,9 @@
     <!-- ========================== -->
     <string name="mypage">마이페이지</string>
     <string name="my_info">내 정보</string>
-    <string name="change_pw">비밀번호 변경</string>
-    <string name="announce">공지사항</string>
     <string name="logout">로그아웃</string>
     <string name="signout">회원탈퇴</string>
     <string name="app_version">앱 버전</string>
-    <string name="store_app_version">스토어 앱 버전</string>
     <string name="mypage_push_notification_title">푸시 알림 설정</string>
     <string name="mypage_push_notification_description">매일 오전 11시에 알림을 보내드려요</string>
 
@@ -251,15 +191,10 @@
     <string name="language_setting">언어 설정</string>
     <string name="language_select_description">사용할 언어를 선택하세요.</string>
     <string name="language_system_default">시스템 언어 (기본값)</string>
-    <string name="toast_language_changed">언어가 변경되었습니다.</string>
 
     <!-- ========================== -->
     <!-- Login -->
     <!-- ========================== -->
-    <string name="login_done">환영합니다!</string>
-    <string name="login_for_service">서비스 이용을 위해 로그인 해주세요</string>
-    <string name="login_slogan_prefix">숭실대에서 </string>
-    <string name="login_slogan_suffix">먹자</string>
     <string name="kakao">카카오</string>
     <string name="connect_account">연결된 계정</string>
 
@@ -270,14 +205,6 @@
     <string name="set_nickname">닉네임을 설정해주세요</string>
     <string name="set_nickname_length">%1$d~%2$d글자를 입력해주세요.</string>
     <string name="set_nickname_able">사용 가능한 닉네임입니다!</string>
-    <string name="set_nickname_unable">이미 사용 중인 닉네임입니다.</string>
-    <string name="nickname_error_whitespace">띄어쓰기를 제외한 공백 문자는 사용할 수 없어요.</string>
-    <string name="nickname_error_consecutive_spaces">연속된 띄어쓰기는 사용할 수 없어요.</string>
-    <string name="nickname_error_invalid_chars">허용 문자(한글/영문/숫자)만 사용할 수 있어요.</string>
-    <string name="nickname_error_consecutive_special">연속된 특수문자(--, __)는 사용할 수 없어요.</string>
-    <string name="nickname_error_only_numbers">숫자만으로 된 닉네임은 사용할 수 없어요.</string>
-    <string name="nickname_error_special_boundary">특수문자로 시작/끝나는 닉네임은 사용할 수 없어요.</string>
-    <string name="nickname_error_profanity">욕설, 비속어 등의 표현이 포함된 닉네임은 사용할 수 없어요.</string>
 
     <!-- ========================== -->
     <!-- User Info -->
@@ -291,13 +218,11 @@
     <string name="not_found">정보를 불러올 수 없어요.</string>
     <string name="server_error_title">통신 오류</string>
     <string name="server_error_message">서버와 통신할 수 없습니다.\n잠시 후 다시 시도해주세요.</string>
-    <string name="error_unknown">알 수 없는 에러</string>
 
     <!-- ========================== -->
     <!-- Report -->
     <!-- ========================== -->
     <string name="report">신고</string>
-    <string name="report_btn">EAT SSU에게 보내기</string>
     <string name="report_title">리뷰를 신고하는 이유를 선택해주세요.</string>
     <string name="report_sub">하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.</string>
     <string name="report_write_hint">리뷰 신고 사유를 작성해 주세요</string>
@@ -305,17 +230,7 @@
     <!-- ========================== -->
     <!-- Input Validation -->
     <!-- ========================== -->
-    <string name="max_300">최대 300자</string>
-    <string name="max_150">최대 150</string>
-    <string name="max_500">최대 500자</string>
-    <string name="pw_rules">영문자과 숫자를 포함하여 8자 이상을 입력해주세요.</string>
-
-    <!-- ========================== -->
-    <!-- EAT SSU Branding -->
-    <!-- ========================== -->
-    <string name="eat_ssu">EAT SSU</string>
-    <string name="e_at_ssu">숭실대에서 먹자!</string>
-    <string name="team_eatssu">TEAM EAT\-SSU</string>
+    <string name="max_150">최대 150자</string>
 
     <!-- ========================== -->
     <!-- Links & External -->
@@ -330,16 +245,6 @@
     <string name="oss_licenses">오픈소스 라이브러리</string>
 
     <!-- ========================== -->
-    <!-- Inquiry -->
-    <!-- ========================== -->
-    <string name="leave_inquiry">문의할 내용을 남겨주세요.</string>
-    <string name="email">이메일</string>
-    <string name="leave_email">답변받을 이메일 주소를 남겨주세요.</string>
-    <string name="inquire_content">문의 내용</string>
-    <string name="inquiry_send_done">문의 전송이 완료되었습니다. 답변은 영업일 기준 2~3일 소요됩니다.</string>
-    <string name="inquiry_send_not">문의 전송이 실패하였습니다. 다시 시도 해주세요.</string>
-
-    <!-- ========================== -->
     <!-- Sign Out -->
     <!-- ========================== -->
     <string name="signout_question">정말 탈퇴하시겠습니까?</string>
@@ -351,8 +256,6 @@
     <!-- ========================== -->
     <string name="notification_context_title">🤔 오늘 밥 뭐 먹지</string>
     <string name="notification_context_text">오늘의 학식을 확인해보세요!</string>
-    <string name="notification_consent_enable">EAT-SSU 알림 수신을 동의하였습니다.</string>
-    <string name="notification_consent_disable">EAT-SSU 알림 수신을 거부하였습니다.</string>
     <string name="notification_channel_lunch_name">점심시간 전 알림</string>
     <string name="notification_channel_lunch_description">점심시간 전, 푸시알림을 발송합니다.</string>
     <string name="notification_channel_server_name">서버가 보낸 알림</string>
@@ -372,9 +275,6 @@
     <string name="etc">비고</string>
     <string name="time">영업 시간</string>
     <string name="favorite_partnership">찜한 제휴</string>
-    <string name="cafe">카페</string>
-    <string name="restaurant_type">음식점</string>
-    <string name="pub">주점</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->
