@@ -43,6 +43,7 @@
     <string name="button_complete">Hoàn thành</string>
     <string name="button_modify">Chỉnh sửa</string>
     <string name="button_delete">Xóa đánh giá</string>
+    <string name="button_delete_action">Xoá đi</string>
     <string name="button_save">Lưu</string>
     <string name="button_cancel">Hủy</string>
     <string name="button_confirm">Xác nhận</string>
@@ -161,6 +162,7 @@
     <string name="none_review">Chưa có đánh giá</string>
     <string name="none_review_my">Viết đánh giá đầu tiên của bạn!</string>
     <string name="none_review_list">Hãy là người đầu tiên viết đánh giá</string>
+    <string name="none_review_list_detail">Hãy để lại review đầu tiên trên menu nhé!</string>
     <string name="total_review_num">Tổng số đánh giá</string>
 
     <!-- ========================== -->
