@@ -10,7 +10,8 @@ data class CollegeResponse(
     val collegeName: String?
 )
 
-fun CollegeResponse.toDomain() = College(
-    collegeId = this.collegeId ?: -1,
-    collegeName = this.collegeName ?: "단과대",
-)
+fun CollegeResponse.toDomain(): College? {
+    val id = collegeId ?: return null
+    val name = collegeName ?: return null
+    return College(collegeId = id, collegeName = name)
+}

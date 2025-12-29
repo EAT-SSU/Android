@@ -10,7 +10,8 @@ data class DepartmentResponse(
     val departmentName: String?,
 )
 
-fun DepartmentResponse.toDomain() = Department(
-    departmentId = this.departmentId ?: -1,
-    departmentName = this.departmentName ?: "학과",
-)
+fun DepartmentResponse.toDomain(): Department? {
+    val id = departmentId ?: return null
+    val name = departmentName ?: return null
+    return Department(departmentId = id, departmentName = name)
+}
