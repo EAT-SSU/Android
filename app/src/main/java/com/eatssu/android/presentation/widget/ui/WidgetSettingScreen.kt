@@ -31,7 +31,7 @@ fun WidgetSettingScreen(
     selectedRestaurant: String,
     onSelectRestaurant: (String) -> Unit,
     onConfirm: (Restaurant) -> Unit = {},
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {}  // 뒤로가기 동작을 위한 람다 추가
 ) {
     // onClick 람다에서 LocalContext 접근이 불가하므로 Composable 레벨에서 미리 매핑 생성
     val restaurantDisplayNameMap = Restaurant.getVariableRestaurantList()
