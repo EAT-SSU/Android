@@ -47,6 +47,7 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewPro
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
@@ -158,6 +159,7 @@ internal fun ReviewListScreen(
                 text = "리뷰 작성하기",
                 onClick = {
                     onReviewWriteButtonClick()
+                    EventLogger.writeReviewV2() //작성 하러가기가 이벤트임
                 },
                 modifier = Modifier
                     .padding(24.dp)

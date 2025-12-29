@@ -39,7 +39,6 @@ import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
@@ -113,7 +112,6 @@ fun WriteReviewScreen(
                 onImageSelect = { galleryLauncher.launch("image/*") },
                 onImageDelete = { viewModel.setSelectedImage(null) },
                 onSubmit = {
-                    EventLogger.writeReviewV2()
                     viewModel.postReview(menuType, id, context)
                 }
             )
