@@ -11,6 +11,8 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.common.KakaoSdk
+import com.posthog.android.PostHogAndroid
+import com.posthog.android.PostHogAndroidConfig
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +37,7 @@ class App : Application(), Configuration.Provider {
         super.onCreate()
         FirebaseApp.initializeApp(this)
 
-        KakaoSdk.init(this,BuildConfig.KAKAO_NATIVE_APP_KEY)
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -47,19 +49,39 @@ class App : Application(), Configuration.Provider {
         }
 
         collectTokenState()
+        setupPostHog()
     }
 
     /** 토큰 상태를 application에서 감지하여 TokenEventBus에 전달 */
-    private fun collectTokenState(){
+    private fun collectTokenState() {
         appScope.launch {
             TokenStateManager.state.collect { state ->
                 if (state == TokenState.EXPIRED) {
                     TokenEventBus.notifyTokenExpired()
-                } else if(state == TokenState.ERROR) {
+                } else if (state == TokenState.ERROR) {
                     TokenEventBus.notifyServerError()
                 }
             }
         }
+    }
+
+    private fun setupPostHog() {
+        // Create a PostHog Config with the given API key and host
+        val config = PostHogAndroidConfig(
+            apiKey = BuildConfig.POSTHOG_API_KEY,
+            host = BuildConfig.POSTHOG_HOST,
+        ).apply {
+            sessionReplay = true
+            sessionReplayConfig.screenshot = true
+            if (BuildConfig.DEBUG) {
+                sessionReplayConfig.maskAllTextInputs = false
+                sessionReplayConfig.maskAllImages = false
+            }
+        }
+
+
+        // Setup PostHog with the given Context and Config
+        PostHogAndroid.setup(this, config)
     }
 
     override val workManagerConfiguration: Configuration
