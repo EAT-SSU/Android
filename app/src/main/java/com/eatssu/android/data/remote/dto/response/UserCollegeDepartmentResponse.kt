@@ -15,6 +15,7 @@ data class UserCollegeDepartmentResponse(
     val collegeName: String?,
 )
 
+// 이 함수가 null을 반환하는 경우, 이 함수를 호출하는 UserRepositoryImpl에서 mapNotNull로 걸러짐
 fun UserCollegeDepartmentResponse.toDomain(): Pair<College, Department>? {
     val colId = collegeId ?: return null
     val colName = collegeName ?: return null

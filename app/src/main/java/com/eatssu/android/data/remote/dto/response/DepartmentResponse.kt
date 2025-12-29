@@ -10,6 +10,7 @@ data class DepartmentResponse(
     val departmentName: String?,
 )
 
+// 이 함수가 null을 반환하는 경우, 이 함수를 호출하는 UserRepositoryImpl에서 mapNotNull로 걸러짐
 fun DepartmentResponse.toDomain(): Department? {
     val id = departmentId ?: return null
     val name = departmentName ?: return null
