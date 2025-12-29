@@ -86,7 +86,7 @@ fun ReviewListScreen(
 
     when (uiEvent) {
         is UiEvent.ShowToast -> {
-            context.showToast((uiEvent as UiEvent.ShowToast).message)
+            context.showToast(uiEvent as UiEvent.ShowToast)
         }
     }
 
@@ -361,10 +361,12 @@ fun ReviewInfoContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_cafeteria_menu_selected),
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(18.dp),
                         tint = Primary,
                         contentDescription = "map restaurant icon"
                     )

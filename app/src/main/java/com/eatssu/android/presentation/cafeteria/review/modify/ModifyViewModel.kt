@@ -6,6 +6,7 @@ import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.ModifyReviewUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,11 +66,11 @@ class ModifyViewModel @Inject constructor(
             )
             if (!success) {
                 _uiState.value = UiState.Success(editing)
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 수정이 실패했습니다."))
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 수정이 실패했습니다.", ToastType.ERROR))
             }
 
             _uiEvent.emit(UiEvent.NavigateBack)
-            _uiEvent.emit(UiEvent.ShowToast("리뷰를 수정했습니다."))
+            _uiEvent.emit(UiEvent.ShowToast("리뷰를 수정했습니다.", ToastType.SUCCESS))
         }
     }
 }

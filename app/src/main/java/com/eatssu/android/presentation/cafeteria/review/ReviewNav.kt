@@ -72,8 +72,8 @@ fun ReviewNav(
             val reviewId = prev?.get<Long>("reviewId") ?: 0L
             val initialRating = prev?.get<Int>("initialRating") ?: 0
             val initialContent = prev?.get<String>("initialContent") ?: ""
-            val menuLikeInfoNames =
-                prev?.get<ArrayList<Review.MenuLikeInfo>>("menuList") ?: arrayListOf()
+            val menuLikeInfoNames = prev?.get<List<Review.MenuLikeInfo>>("menuList")
+                ?.let { ArrayList(it) } ?: arrayListOf()
 
             ModifyReviewScreen(
                 reviewId = reviewId,

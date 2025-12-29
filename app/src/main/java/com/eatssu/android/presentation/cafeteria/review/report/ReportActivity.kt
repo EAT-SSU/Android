@@ -10,6 +10,7 @@ import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.enums.ReportType
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -68,7 +69,10 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(
 
             lifecycleScope.launch {
                 reportViewModel.uiState.collectLatest {
-                    showToast(it.toastMessage)
+                    showToast(
+                        it.toastMessage,
+                        if (it.isDone) ToastType.SUCCESS else ToastType.ERROR
+                    )
                     if (it.isDone) {
                         finish()
                     }

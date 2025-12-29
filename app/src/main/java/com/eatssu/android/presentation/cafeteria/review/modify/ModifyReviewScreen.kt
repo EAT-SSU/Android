@@ -70,7 +70,7 @@ fun ModifyReviewScreen(
             when (event) {
                 is UiEvent.NavigateBack -> onBack()
                 is UiEvent.ShowToast -> {
-                    context.showToast(event.message)
+                    context.showToast(event)
                 }
             }
         }

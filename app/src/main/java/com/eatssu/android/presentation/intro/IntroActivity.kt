@@ -37,6 +37,7 @@ class IntroActivity : AppCompatActivity() {
 
         observeState()
         observeEvents()
+        observeNetworkError()
 
         lifecycleScope.launch {
             // 버전 체크 결과 관찰
@@ -83,13 +84,11 @@ class IntroActivity : AppCompatActivity() {
                 when (event) {
                     is UiEvent.ShowToast -> {
                         // 에러 메시지 표시
-                        showToast(event.message)
+                        showToast(event)
                     }
                 }
             }
         }
-
-        observeNetworkError()
     }
 
     private fun log() {

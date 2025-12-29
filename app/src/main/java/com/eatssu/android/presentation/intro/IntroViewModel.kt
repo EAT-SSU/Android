@@ -1,7 +1,9 @@
 package com.eatssu.android.presentation.intro
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.BuildConfig.VERSION_CODE
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
@@ -9,7 +11,9 @@ import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,6 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
@@ -54,7 +59,7 @@ class IntroViewModel @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e, "앱 초기화 중 오류 발생")
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("앱 초기화 중 오류가 발생했습니다"))
+                _uiEvent.emit(UiEvent.ShowToast("앱 초기화 중 오류가 발생했습니다", ToastType.ERROR))
             }
         }
     }
@@ -78,7 +83,7 @@ class IntroViewModel @Inject constructor(
             when (result) {
                 is VersionCheckResult.ForceUpdateRequired -> {
                     Timber.d("강제 업데이트 필요: 최신 버전 ${result.minimumVersionCode}")
-                    _uiEvent.emit(UiEvent.ShowToast("앱을 업데이트해주세요"))
+                    _uiEvent.emit(UiEvent.ShowToast("앱을 업데이트해주세요", ToastType.INFO))
                 }
 
                 VersionCheckResult.UpdateNotRequired -> {
@@ -103,14 +108,24 @@ class IntroViewModel @Inject constructor(
             val userAccessToken = getAccessTokenUseCase()
             if (userAccessToken.isEmpty()) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("로그인이 필요합니다"))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_token_invalid),
+                        ToastType.INFO
+                    )
+                )
                 return@launch
             }
 
             // 토큰이 있어도 유효하지 않음
             if (!getIsAccessTokenValidUseCase(userAccessToken)) {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("로그인이 필요합니다"))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_token_invalid),
+                        ToastType.INFO
+                    )
+                )
                 return@launch
             }
 

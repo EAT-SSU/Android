@@ -2,6 +2,7 @@ package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.ReviewInfo
 import com.google.gson.annotations.SerializedName
+import kotlin.math.round
 
 data class MenuReviewInfoResponse(
     @SerializedName("menuName") val menuName: String? = null,
@@ -21,7 +22,7 @@ data class MenuReviewInfoResponse(
 
 fun MenuReviewInfoResponse.toDomain() = ReviewInfo(
     reviewCnt = totalReviewCount ?: 0,
-    rating = rating ?: 0.0,
+    rating = (round((rating ?: 0.0) * 10) / 10),
     oneStarCount = reviewRatingCount?.oneStarCount ?: 0,
     twoStarCount = reviewRatingCount?.twoStarCount ?: 0,
     threeStarCount = reviewRatingCount?.threeStarCount ?: 0,

@@ -20,6 +20,7 @@ import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
@@ -114,11 +115,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         if (requestCode == 1000) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 승인됨
-                showToast("EAT-SSU 알림 수신을 동의하였습니다.")
+                showInfoToast("EAT-SSU 알림 수신을 동의하였습니다.")
                 myPageViewModel.setNotificationOn() //바로 알림 받도록 설정
             } else {
                 // 권한이 거부됨
-                showToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
+                showInfoToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
                 myPageViewModel.setNotificationOff() //바로 알림 받도록 설정
             }
         }
@@ -171,8 +172,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     private fun collectUiEvents() {
         lifecycleScope.launch {
             mainViewModel.uiEvent.collectLatest { event ->
-                if (event is UiEvent.ShowToast) {
-                    showToast(event.message)
+                when (event) {
+                    is UiEvent.ShowToast -> showToast(event)
                 }
             }
         }

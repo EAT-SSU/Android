@@ -19,6 +19,7 @@ import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -91,7 +92,7 @@ class UserInfoActivity :
         lifecycleScope.launch {
             viewModel.uiEvent.collectLatest { event ->
                 when (event) {
-                    is UiEvent.ShowToast -> showToast(event.message)
+                    is UiEvent.ShowToast -> showToast(event)
                 }
             }
         }
@@ -177,7 +178,7 @@ class UserInfoActivity :
 
         // 단과대를 먼저 선택하도록 유도
         if (data.selectedCollege.collegeId == -1) {
-            showToast("단과대를 먼저 선택해 주세요.")
+            showToast("단과대를 먼저 선택해 주세요.", ToastType.ERROR)
             return
         }
 

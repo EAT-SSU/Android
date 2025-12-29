@@ -12,6 +12,7 @@ import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -112,24 +113,24 @@ class WriteReviewViewModel @Inject constructor(
                         val compressedFile = compressImage(context, originalFile)
                         if (compressedFile != null && compressedFile.exists()) {
                             imageUrl = getImageUrlUseCase(compressedFile)
-                            _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다."))
+                            _uiEvent.emit(UiEvent.ShowToast("이미지가 업로드되었습니다.", ToastType.SUCCESS))
 
                             // 원본 파일 삭제 (압축된 파일만 유지)
                             originalFile.delete()
                         } else {
                             _uiState.value = UiState.Success(editing) // 되돌림
-                            _uiEvent.emit(UiEvent.ShowToast("이미지 압축에 실패하였습니다."))
+                            _uiEvent.emit(UiEvent.ShowToast("이미지 압축에 실패하였습니다.", ToastType.ERROR))
                             return@launch
                         }
                     } else {
                         _uiState.value = UiState.Success(editing) // 되돌림
-                        _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다."))
+                        _uiEvent.emit(UiEvent.ShowToast("이미지 파일을 찾을 수 없습니다.", ToastType.ERROR))
                         return@launch
                     }
                 } catch (e: Exception) {
                     Timber.e(e, "이미지 업로드 실패")
                     _uiState.value = UiState.Success(editing) // 되돌림
-                    _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다."))
+                    _uiEvent.emit(UiEvent.ShowToast("이미지 업로드에 실패하였습니다.", ToastType.ERROR))
                     return@launch
                 }
             }
@@ -146,7 +147,7 @@ class WriteReviewViewModel @Inject constructor(
 
             if (!success) {
                 _uiState.value = UiState.Success(editing) // 되돌림
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다."))
+                _uiEvent.emit(UiEvent.ShowToast("리뷰 작성에 실패하였습니다.", ToastType.ERROR))
                 return@launch
             }
 
@@ -157,7 +158,7 @@ class WriteReviewViewModel @Inject constructor(
                 photoAttached = editing.selectedImageUri != null
             )
 
-            _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다."))
+            _uiEvent.emit(UiEvent.ShowToast("리뷰가 작성되었습니다.", ToastType.SUCCESS))
             _uiEvent.emit(UiEvent.NavigateBack)
         }
     }

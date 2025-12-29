@@ -12,6 +12,7 @@ import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,12 @@ class LoginViewModel @Inject constructor(
 
             val token = loginUseCase(LoginWithKakaoRequest(email, providerID)) ?: run {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_login_failed),
+                        ToastType.ERROR
+                    )
+                )
                 return@launch
             }
 

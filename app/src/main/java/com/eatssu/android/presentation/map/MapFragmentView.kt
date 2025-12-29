@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalNaverMapApi::class)
+
 package com.eatssu.android.presentation.map
 
 import android.Manifest
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -24,10 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,7 +50,6 @@ import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
-import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.EventLogger
@@ -61,6 +61,7 @@ import com.eatssu.design_system.theme.EatssuTheme
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.Align
+import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
@@ -80,9 +81,8 @@ private const val DEFAULT_LONGITUDE = 126.95661313346206
 private const val DEFAULT_ZOOM = 17.5
 private const val PERMISSION_REQUEST_CODE = 1001
 
-@OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MapFragmentComposeView(
+fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel()
 ) {
@@ -95,15 +95,15 @@ fun MapFragmentComposeView(
     }
 
     val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val departmentSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val partnershipSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
     val activity = remember(context) { context.findActivityOrNull() }
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
     val scope = rememberCoroutineScope()
-    var selectedFilter by remember { mutableStateOf(FilterType.All) }
 
-    val departmentId = viewModel.departmentId
-    val collegeId = viewModel.collegeId
+    val departmentId by viewModel.departmentId.collectAsStateWithLifecycle()
+    val collegeId by viewModel.collegeId.collectAsStateWithLifecycle()
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition(
@@ -165,37 +165,29 @@ fun MapFragmentComposeView(
     // 상태 변화 감지해서 show/hide -> Scrim 잔존 문제 해결
     LaunchedEffect(showUserDepartmentBottomSheet) {
         if (showUserDepartmentBottomSheet) {
-            sheetState.show()
+            departmentSheetState.show()
         } else {
-            sheetState.hide()
+            departmentSheetState.hide()
         }
     }
 
-    var hasLocationPermission by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        )
-    }
-
-    // 제휴 정보 토글 event
-    LaunchedEffect(selectedFilter) {
-        when (selectedFilter) {
-            FilterType.All -> {
-                viewModel.loadPartnerships()
-                EventLogger.clickMap()
-            }
-            FilterType.Mine -> {
-                viewModel.loadUserCollegePartnerships()
-
-                EventLogger.clickMapMine(collegeId, departmentId)
-            }
+    // 필터 변경 결과에 따라 학과 입력 BottomSheet 표시
+    LaunchedEffect(mapState.filterChangeResult) {
+        if (mapState.filterChangeResult is MapState.FilterChangeResult.RequiresDepartment) {
+            departmentSheetState.show()
         }
     }
 
+    // 제휴 정보가 선택되면 BottomSheet 표시
+    LaunchedEffect(mapState.restaurantPartnershipInfo) {
+        if (mapState.restaurantPartnershipInfo != null) {
+            partnershipSheetState.show()
+        }
+        Timber.d("선택된 식당 제휴 정보: ${mapState.restaurantPartnershipInfo}")
+    }
 
     // Screen View 기록
     TrackScreenViewEvent(ScreenId.MAP_MAIN)
-
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -214,6 +206,56 @@ fun MapFragmentComposeView(
         }
     }
 
+    MapScreen(
+        mapState = mapState,
+        viewModel = viewModel,
+        cameraPositionState = cameraPositionState,
+        locationSource = locationSource,
+        departmentSheetState = departmentSheetState,
+        partnershipSheetState = partnershipSheetState,
+        showToast = { message ->
+            scope.launch {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        },
+        navigateToUserInfo = {
+            val intent = Intent(context, UserInfoActivity::class.java)
+            context.startActivity(intent)
+        },
+        onHideDepartmentSheet = {
+            scope.launch { departmentSheetState.hide() }
+        },
+        onHidePartnershipSheet = {
+            scope.launch { partnershipSheetState.hide() }
+        },
+        onSelectedFilterChange = { filter ->
+            viewModel.setFilter(filter)
+        },
+        departmentId = departmentId,
+        collegeId = collegeId,
+        departmentName = departmentName,
+        selectedFilter = mapState.selectedFilter,
+    )
+}
+
+@Composable
+internal fun MapScreen(
+    mapState: MapState,
+    viewModel: MapViewModel,
+    cameraPositionState: CameraPositionState,
+    locationSource: FusedLocationSource,
+    departmentSheetState: SheetState,
+    partnershipSheetState: SheetState,
+    showToast: (String) -> Unit,
+    navigateToUserInfo: () -> Unit,
+    onHideDepartmentSheet: () -> Unit = {},
+    onHidePartnershipSheet: () -> Unit = {},
+    onSelectedFilterChange: (FilterType) -> Unit,
+    departmentId: Long,
+    collegeId: Long,
+    departmentName: String?,
+    selectedFilter: FilterType,
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -232,40 +274,42 @@ fun MapFragmentComposeView(
     ) { innerPadding ->
 
         // 학과 정보가 없을 때 보여줄 BottomSheet
-        if (sheetState.isVisible) {
+        if (departmentSheetState.isVisible) {
             Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
 
             DepartmentBottomSheet(
-                onDismiss = { viewModel.toggleDepartmentBottomSheet() },
-                onInputClick = {
-                    viewModel.toggleDepartmentBottomSheet()
-                    val intent = Intent(context, UserInfoActivity::class.java)
-                    context.startActivity(intent)
+                onDismiss = {
+                    onHideDepartmentSheet()
                 },
-                sheetState = sheetState
+                onInputClick = {
+                    onHideDepartmentSheet()
+                    navigateToUserInfo()
+                },
+                sheetState = departmentSheetState
             )
         }
 
         // 특정 식당에 대한 제휴 정보 BottomSheet
-        if (mapState.showPartnershipBottomSheet) {
+        if (partnershipSheetState.isVisible) {
             mapState.restaurantPartnershipInfo?.let { info ->
-                EventLogger.clickPartnerRestaurant(
-                    college = collegeId,
-                    major = departmentId,
-                    partnerRestaurantId = info.id.toLong()
-                )
 
-                MapRestaurantBottomSheet(
-                    storeName = info.storeName,
-                    placeType = when (info.restaurantType) {
-                        RestaurantType.CAFE -> PlaceType.CAFE
-                        RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
-                        RestaurantType.PUB -> PlaceType.PUB
-                        else -> PlaceType.RESTAURANT
-                    },
-                    mapRestaurantList = mapState.restaurantInfoList,
-                    onDismiss = { viewModel.togglePartnershipBottomSheet() }
-                )
+                mapState.placeType?.let { placeType ->
+
+                    EventLogger.clickPartnerRestaurant(
+                        college = collegeId,
+                        major = departmentId,
+                        partnerRestaurantId = info.id.toLong()
+                    )
+
+                    MapRestaurantBottomSheet(
+                        storeName = info.storeName,
+                        placeType = placeType,
+                        mapRestaurantList = mapState.restaurantInfoList,
+                        onDismiss = {
+                            onHidePartnershipSheet()
+                        }
+                    )
+                }
             }
         }
 
@@ -278,19 +322,23 @@ fun MapFragmentComposeView(
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(isZoomControlEnabled = false, isLocationButtonEnabled = true),
+                uiSettings = MapUiSettings(
+                    isZoomControlEnabled = false,
+                    isLocationButtonEnabled = true
+                ),
                 locationSource = locationSource,
                 contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
                     locationTrackingMode = LocationTrackingMode.Follow,
                 ),
-                onLocationChange = { location ->
-                    // 위치가 업데이트되면 위치 권한 있다고 간주
-                    hasLocationPermission = true
-                },
             ) {
                 mapState.partnerships.forEach { partnership ->
-                    val markerState = rememberMarkerState(position = LatLng(partnership.latitude, partnership.longitude))
+                    val markerState = rememberMarkerState(
+                        position = LatLng(
+                            partnership.latitude,
+                            partnership.longitude
+                        )
+                    )
 
                     Marker(
                         icon = OverlayImage.fromResource(
@@ -309,11 +357,11 @@ fun MapFragmentComposeView(
                         captionTextSize = 10.sp,
                         onClick = {
                             if (partnership.partnershipInfos.isEmpty()) {
-                                // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-                                Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                                showToast("제휴 정보가 없습니다.")
                                 true
                             } else {
                                 // 제휴 정보가 있을 때만 바텀시트 띄움
+                                // LaunchedEffect에서 자동으로 표시됨
                                 viewModel.selectPartnershipByStoreName(partnership.storeName)
                                 true
                             }
@@ -328,22 +376,8 @@ fun MapFragmentComposeView(
             PartnershipFilterToggle(
                 selected = selectedFilter,
                 onSelectedChange = { next ->
-                    if (mapState.showPartnershipBottomSheet) return@PartnershipFilterToggle
-
-                    val hasDepartment = !departmentName.equals("학과")
-
-                    if (next == FilterType.Mine && !hasDepartment) {
-                        // 전환 막기: selectedFilter는 그대로 (All 유지)
-                        // 학과 입력 바텀시트 띄우기
-                        scope.launch {
-                            // suspend 함수이므로 코루틴 내에서 실행
-                            sheetState.show()
-                        }
-                        return@PartnershipFilterToggle
-                    }
-
-                    // 학과 정보가 있거나 All 선택은 정상 전환
-                    selectedFilter = next
+                    if (partnershipSheetState.isVisible) return@PartnershipFilterToggle
+                    onSelectedFilterChange(next)
                 },
                 modifier = Modifier.padding(top = 12.dp),
                 departmentName = departmentName.toString()
@@ -382,6 +416,6 @@ fun Context.findActivityOrNull(): Activity? = when (this) {
 @Composable
 fun MapFragmentComposeViewPreview() {
     EatssuTheme {
-        MapFragmentComposeView()
+        MapRoute()
     }
 }

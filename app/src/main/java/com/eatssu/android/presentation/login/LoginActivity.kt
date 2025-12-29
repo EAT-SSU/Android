@@ -10,6 +10,7 @@ import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityLoginBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.android.presentation.util.showErrorToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
@@ -86,7 +87,7 @@ class LoginActivity :
 
             else -> {
                 Timber.e(error, "Login failed")
-                showToast(getString(R.string.login_failed))
+                showErrorToast(R.string.toast_login_failed)
             }
         }
     }
@@ -115,7 +116,7 @@ class LoginActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.uiEvent.collect { event ->
                     when (event) {
-                        is UiEvent.ShowToast -> showToast(event.message)
+                        is UiEvent.ShowToast -> showToast(event)
                     }
                 }
             }
