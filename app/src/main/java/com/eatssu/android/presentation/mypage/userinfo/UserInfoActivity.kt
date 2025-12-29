@@ -38,7 +38,7 @@ class UserInfoActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = "내 정보"
+        toolbarTitle.text = getString(R.string.my_info)
 
         setupListeners()
         observeUiState()
