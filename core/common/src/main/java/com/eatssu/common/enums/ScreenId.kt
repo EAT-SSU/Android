@@ -9,15 +9,19 @@ enum class ScreenId(val value: String) {
     HOME_MAIN("MNU_001000"),
     HOME_INFO("MNU_002000"),
 
-    REVIEW_V2_VIEW("REV_001001_V2"),
-    REVIEW_V3_VIEW("REV_001000_V3"), // todo 사진 모아보기가 있는 v3 버전
+//    REVIEW_V1_VIEW("REV_001000_V1"),
+//    REVIEW_V1_WRITE("REV_001001_V1"),
+//    REVIEW_V1_WRITE_RATE("REV_001002_V1"),
+//    REVIEW_V1_LOGIN_REQUIRED("REV_001003_V1"), // TODO: 필수 로그인이라 사용하지 않음
+//    REVIEW_V1_MODIFY("REV_001004_V1"), // TODO: Figma에 존재하지 않음
 
+    REVIEW_V2_VIEW("REV_001000_V2"),
     REVIEW_V2_WRITE("REV_001001_V2"),
+    REVIEW_V2_MODIFY("REV_003000_V2"),
 
-    REVIEW_V2_MODIFY("REV_001002_V2"),
-
-    REVIEW_V3_PHOTO("REV_003000"), //todo 포토리뷰
-    REVIEW_V3_PHOTO_DETAIL("REV_003001"), //todo 포토리뷰
+//    REVIEW_V3_VIEW("REV_001000_V3"), // todo 사진 모아보기가 있는 v3 버전
+//    REVIEW_V3_PHOTO("REV_003000"), //todo 포토리뷰
+//    REVIEW_V3_PHOTO_DETAIL("REV_003001"), //todo 포토리뷰
 
     REVIEW_REPORT("REV_002000"), // V1과 V2가 같음
 

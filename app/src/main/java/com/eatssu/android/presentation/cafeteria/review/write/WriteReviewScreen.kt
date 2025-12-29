@@ -113,7 +113,7 @@ fun WriteReviewScreen(
                 onImageSelect = { galleryLauncher.launch("image/*") },
                 onImageDelete = { viewModel.setSelectedImage(null) },
                 onSubmit = {
-                    EventLogger.writeReview()
+                    EventLogger.writeReviewV2()
                     viewModel.postReview(menuType, id, context)
                 }
             )

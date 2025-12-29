@@ -64,8 +64,12 @@ object EventLogger {
         }
     }
 
-    fun writeReview() { //todo v2로 바꿀시 v1 제거
+    fun writeReviewV1() { //todo v2로 바꿀시 v1 제거
         logEvent(EventType.WRITE_REVIEW_V1)
+    }
+
+    fun writeReviewV2() { //todo v2로 바꿀시 v1 제거
+        logEvent(EventType.WRITE_REVIEW_V2)
     }
 
     fun completeReviewV1(
