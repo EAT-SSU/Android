@@ -159,7 +159,7 @@ internal fun ReviewListScreen(
                 text = "리뷰 작성하기",
                 onClick = {
                     onReviewWriteButtonClick()
-                    EventLogger.writeReviewV2() //작성 하러가기가 이벤트임
+                    EventLogger.writeReview() //작성 하러가기가 이벤트임
                 },
                 modifier = Modifier
                     .padding(24.dp)

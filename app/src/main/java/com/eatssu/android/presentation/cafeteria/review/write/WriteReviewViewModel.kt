@@ -152,7 +152,7 @@ class WriteReviewViewModel @Inject constructor(
             }
 
             // 리뷰 작성 완료 로깅
-            EventLogger.completeReviewV2(
+            EventLogger.completeReview(
                 rating = editing.rating.toLong(),
                 likes = editing.likedMenuIds.size.toLong(),
                 photoAttached = editing.selectedImageUri != null

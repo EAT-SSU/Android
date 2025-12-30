@@ -64,27 +64,11 @@ object EventLogger {
         }
     }
 
-    fun writeReviewV1() {
-        logEvent(EventType.WRITE_REVIEW_V1)
-    }
-
-    fun writeReviewV2() {
+    fun writeReview() {
         logEvent(EventType.WRITE_REVIEW_V2)
     }
 
-    fun completeReviewV1(
-        rating: Long,
-        selection: Long,
-        photoAttached: Boolean,
-    ) {
-        logEvent(EventType.COMPLETE_REVIEW_V1) {
-            param("rating", rating)
-            param("selection", selection)
-            param("photo_attached", if (photoAttached) 1 else 0)
-        }
-    }
-
-    fun completeReviewV2(
+    fun completeReview(
         rating: Long,
         likes: Long,
         photoAttached: Boolean,
@@ -95,7 +79,6 @@ object EventLogger {
             param("photo_attached", if (photoAttached) 1 else 0)
         }
     }
-
 
     fun clickMap() {
         logEvent(EventType.CLICK_MAP)
