@@ -66,6 +66,43 @@
 - minSDK : 28
 - targetSDK : 35
 
-## 🐚 Convertion
+## 🐚 Convention
 - [Android Convention Docs](https://github.com/EAT-SSU/Android/wiki/Android-convention)  
 - [Git Convention Docs](https://github.com/EAT-SSU/Android/wiki/Git-convention)
+
+## 🚀 CI/CD with Fastlane
+
+이 프로젝트는 fastlane을 사용하여 자동화된 빌드 및 배포를 지원합니다.
+
+**📖 상세한 가이드는 다음 문서를 참조하세요:**
+👉 **[Fastlane을 이용한 배포 총 정리](.github/FASTLANE_DEPLOYMENT_GUIDE.md)**
+
+### 빠른 시작
+
+#### 로컬에서 사용
+
+```bash
+# 의존성 설치
+bundle install
+
+# QA APK 빌드
+bundle exec fastlane build_qa_apk
+
+# Release AAB 빌드
+bundle exec fastlane build_release_aab environment:production
+```
+
+#### GitHub Actions에서 사용
+
+1. **Actions** 탭 → **Fastlane CI/CD** 워크플로우 선택
+2. **Run workflow** 클릭하여 수동 빌드
+3. 또는 `develop` 브랜치에 push하면 자동 CI 빌드
+
+#### Release 배포
+
+`release/3.2.0` 브랜치를 `develop`에 머지하면 자동으로:
+
+- AAB 빌드
+- Play Store 배포
+- GitHub Release 생성 (자동 릴리즈 노트)
+- Git 태그 생성

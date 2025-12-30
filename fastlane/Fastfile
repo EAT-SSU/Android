@@ -1,0 +1,272 @@
+# Fastfile for Android CI/CD
+# 자동화된 빌드 및 배포 설정
+
+default_platform(:android)
+
+platform :android do
+  desc "빌드 환경 설정 (local.properties 생성)"
+  lane :setup_environment do |options|
+    environment = options[:environment] || "qa"
+    
+    # 기존 local.properties 파일 삭제 (있다면)
+    File.delete("local.properties") if File.exist?("local.properties")
+    
+    # local.properties 파일 생성
+    sh("touch local.properties")
+    
+    # 환경 변수에서 값 읽어오기 (GitHub Actions에서 설정됨)
+    dev_base_url = ENV["DEV_BASE_URL"] || ""
+    prod_base_url = ENV["PROD_BASE_URL"] || ""
+    kakao_key = ENV["KAKAO_NATIVE_APP_KEY"] || ""
+    naver_maps_id = ENV["NAVER_MAPS_CLIENT_ID"] || ""
+    posthog_api_key = ENV["POSTHOG_API_KEY"] || ""
+    posthog_host = ENV["POSTHOG_HOST"] || ""
+    
+    base_url = environment == "production" ? prod_base_url : dev_base_url
+    
+    # local.properties에 값 추가
+    File.open("local.properties", "a") do |f|
+      f.puts("DEV_BASE_URL=\"#{dev_base_url}\"")
+      f.puts("PROD_BASE_URL=\"#{prod_base_url}\"")
+      f.puts("KAKAO_NATIVE_APP_KEY=#{kakao_key}")
+      f.puts("NAVER_MAPS_CLIENT_ID=#{naver_maps_id}")
+      f.puts("POSTHOG_API_KEY=#{posthog_api_key}")
+      f.puts("POSTHOG_HOST=#{posthog_host}")
+    end
+    
+    UI.success("✅ Environment setup completed for #{environment}")
+  end
+
+  desc "google-services.json 생성"
+  lane :setup_google_services do
+    google_service = ENV["GOOGLE_SERVICE"]
+    if google_service.nil? || google_service.empty?
+      UI.important("⚠️ GOOGLE_SERVICE 환경 변수가 설정되지 않았습니다.")
+      return
+    end
+    
+    sh("echo '#{google_service}' > app/google-services.json.b64")
+    sh("base64 -d -i app/google-services.json.b64 > app/google-services.json")
+    sh("rm app/google-services.json.b64")
+    
+    UI.success("✅ google-services.json 생성 완료")
+  end
+
+  desc "Debug APK 빌드"
+  lane :build_debug do |options|
+    environment = options[:environment] || "qa"
+    
+    setup_environment(environment: environment)
+    setup_google_services
+    
+    sh("./gradlew assembleDebug --stacktrace")
+    
+    UI.success("✅ Debug APK 빌드 완료")
+  end
+
+  desc "Release APK 빌드"
+  lane :build_release_apk do |options|
+    environment = options[:environment] || "production"
+    
+    setup_environment(environment: environment)
+    setup_google_services
+    
+    sh("./gradlew assembleRelease --stacktrace")
+    
+    UI.success("✅ Release APK 빌드 완료")
+  end
+
+  desc "Release AAB 빌드 (Play Store용)"
+  lane :build_release_aab do |options|
+    environment = options[:environment] || "production"
+    
+    setup_environment(environment: environment)
+    setup_google_services
+    
+    sh("./gradlew bundleRelease --stacktrace")
+    
+    UI.success("✅ Release AAB 빌드 완료")
+  end
+
+  desc "QA APK 빌드 및 아티팩트 업로드"
+  lane :build_qa_apk do |options|
+    build_debug(environment: "qa")
+    
+    # APK 경로
+    apk_path = "app/build/outputs/apk/debug/app-debug.apk"
+    
+    if File.exist?(apk_path)
+      UI.success("✅ QA APK 빌드 완료: #{apk_path}")
+    else
+      UI.user_error!("❌ APK 파일을 찾을 수 없습니다: #{apk_path}")
+    end
+  end
+
+  desc "Release AAB 빌드 및 Play Store 내부 테스트 트랙 배포"
+  lane :deploy_internal_test do |options|
+    environment = options[:environment] || "production"
+    track = options[:track] || "internal" # internal, alpha, beta, production
+    
+    build_release_aab(environment: environment)
+    
+    # AAB 경로
+    aab_path = "app/build/outputs/bundle/release/app-release.aab"
+    
+    unless File.exist?(aab_path)
+      UI.user_error!("❌ AAB 파일을 찾을 수 없습니다: #{aab_path}")
+    end
+    
+    # Google Play Store 배포 (선택사항 - 서비스 계정 키 필요)
+    if ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
+      # 서비스 계정 JSON을 파일로 저장
+      service_account_path = "/tmp/google-play-service-account.json"
+      File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
+      
+      upload_to_play_store(
+        track: track,
+        aab: aab_path,
+        json_key: service_account_path,
+        skip_upload_apk: true,
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true
+      )
+      
+      # 임시 파일 삭제
+      File.delete(service_account_path) if File.exist?(service_account_path)
+      
+      UI.success("✅ Play Store #{track} 트랙에 배포 완료")
+    else
+      UI.important("⚠️ GOOGLE_PLAY_SERVICE_ACCOUNT_JSON이 설정되지 않아 Play Store 배포를 건너뜁니다.")
+      UI.success("✅ AAB 빌드 완료: #{aab_path}")
+    end
+  end
+
+  desc "전체 빌드 및 테스트"
+  lane :test do
+    setup_environment(environment: "qa")
+    setup_google_services
+    
+    sh("./gradlew test --stacktrace")
+    
+    UI.success("✅ 테스트 완료")
+  end
+
+  desc "CI 빌드 (develop 브랜치용)"
+  lane :ci_build do
+    setup_environment(environment: "qa")
+    setup_google_services
+    
+    sh("./gradlew build --stacktrace")
+    
+    UI.success("✅ CI 빌드 완료")
+  end
+
+  desc "버전 정보 출력"
+  lane :version_info do
+    # build.gradle.kts에서 버전 정보 읽기
+    version_name = sh("grep 'versionName' app/build.gradle.kts | head -1 | sed 's/.*versionName = \"\\(.*\\)\".*/\\1/'", log: false).strip
+    version_code = sh("grep 'versionCode' app/build.gradle.kts | head -1 | sed 's/.*versionCode = \\([0-9]*\\).*/\\1/'", log: false).strip
+    
+    UI.message("📱 App Version: #{version_name} (#{version_code})")
+    
+    {
+      version_name: version_name,
+      version_code: version_code
+    }
+  end
+
+  desc "Release 배포 (태그 기반) - AAB 빌드 및 Play Store 배포"
+  lane :release do |options|
+    version = options[:version] || ENV["VERSION"]
+    track = options[:track] || "internal" # internal, alpha, beta, production
+    deploy_to_play_store = options[:deploy] != false
+    
+    if version.nil? || version.empty?
+      UI.user_error!("❌ 버전 정보가 필요합니다. version 파라미터를 제공하거나 VERSION 환경 변수를 설정하세요.")
+    end
+    
+    UI.message("🚀 Release 배포 시작: #{version}")
+    
+    # Production 환경으로 빌드
+    build_release_aab(environment: "production")
+    
+    # AAB 경로
+    aab_path = "app/build/outputs/bundle/release/app-release.aab"
+    
+    unless File.exist?(aab_path)
+      UI.user_error!("❌ AAB 파일을 찾을 수 없습니다: #{aab_path}")
+    end
+    
+    UI.success("✅ AAB 빌드 완료: #{aab_path}")
+    
+    # Play Store 배포
+    if deploy_to_play_store && ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
+      UI.message("📤 Play Store #{track} 트랙에 배포 중...")
+      
+      # 서비스 계정 JSON을 파일로 저장
+      service_account_path = "/tmp/google-play-service-account.json"
+      File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
+      
+      # 릴리즈 노트 파일 찾기 (프로젝트 루트의 RELEASE_NOTES.txt)
+      release_notes_path = "RELEASE_NOTES.txt"
+      
+      unless File.exist?(release_notes_path)
+        UI.important("⚠️ RELEASE_NOTES.txt 파일을 찾을 수 없습니다.")
+        UI.important("⚠️ Play Store 릴리즈 노트 없이 배포됩니다.")
+        release_notes_path = nil
+      else
+        release_notes_content = File.read(release_notes_path).strip
+        if release_notes_content.empty?
+          UI.important("⚠️ RELEASE_NOTES.txt 파일이 비어있습니다.")
+          release_notes_path = nil
+        else
+          UI.message("📝 Play Store 릴리즈 노트 파일 발견: #{release_notes_path}")
+          UI.message("📄 릴리즈 노트 내용:")
+          UI.message(release_notes_content)
+        end
+      end
+      
+      begin
+        upload_params = {
+          track: track,
+          aab: aab_path,
+          json_key: service_account_path,
+          skip_upload_apk: true,
+          skip_upload_metadata: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true
+        }
+        
+        # 릴리즈 노트 파일이 있으면 추가
+        if release_notes_path && File.exist?(release_notes_path)
+          upload_params[:release_notes_file] = release_notes_path
+        end
+        
+        upload_to_play_store(upload_params)
+        
+        UI.success("✅ Play Store #{track} 트랙에 배포 완료")
+        if release_notes_path
+          UI.success("✅ Play Store 릴리즈 노트 업데이트 완료")
+        end
+      rescue => ex
+        UI.important("⚠️ Play Store 배포 중 오류 발생: #{ex.message}")
+        raise
+      ensure
+        # 임시 파일 삭제
+        File.delete(service_account_path) if File.exist?(service_account_path)
+      end
+    elsif deploy_to_play_store
+      UI.important("⚠️ GOOGLE_PLAY_SERVICE_ACCOUNT_JSON이 설정되지 않아 Play Store 배포를 건너뜁니다.")
+    end
+    
+    UI.success("🎉 Release 배포 완료: #{version}")
+    
+    {
+      version: version,
+      aab_path: aab_path,
+      track: track
+    }
+  end
+end
+
