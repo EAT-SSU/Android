@@ -22,16 +22,10 @@ on:
         options:
           - qa
           - production
-  push:
-    branches:
-      - develop
-      - main
-      - master
-  pull_request:
-    branches:
-      - develop
-      - main
-      - master
+  # 일반 develop push는 android.yml에서 처리하므로 제거
+  # push:
+  #   branches:
+  #     - develop
 
 jobs:
   fastlane:
@@ -95,11 +89,8 @@ jobs:
           GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }}
-          else
-            bundle exec fastlane ci_build
-          fi
+          # workflow_dispatch만 지원 (수동 실행)
+          bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }}
 
       - name: Upload APK artifact
         if: |

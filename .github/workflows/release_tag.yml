@@ -26,7 +26,7 @@ on:
         description: 'Play Store 배포 트랙'
         required: true
         type: choice
-        default: 'internal'
+        default: 'production'
         options:
           - internal
           - alpha
@@ -60,7 +60,7 @@ jobs:
           else
             # PR 머지 시 브랜치명에서 버전 추출
             VERSION=$(echo "${{ github.event.pull_request.head.ref }}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-            TRACK="internal"
+            TRACK="production"  # release 브랜치 머지 시 프로덕션 트랙에 배포
           
             # GitHub Release 노트는 GitHub의 자동 생성 기능 사용
             # Play Store용 릴리즈 노트는 별도로 생성
