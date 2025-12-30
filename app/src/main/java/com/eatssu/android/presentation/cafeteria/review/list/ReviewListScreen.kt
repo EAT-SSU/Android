@@ -45,10 +45,13 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.OthersRev
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -74,6 +77,9 @@ fun ReviewListScreen(
     LaunchedEffect(key1 = menuType, key2 = id) {
         viewModel.getReview(menuType, id)
     }
+
+    // Screen View 로깅
+    TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
@@ -153,6 +159,7 @@ internal fun ReviewListScreen(
                 text = "리뷰 작성하기",
                 onClick = {
                     onReviewWriteButtonClick()
+                    EventLogger.writeReview() //작성 하러가기가 이벤트임
                 },
                 modifier = Modifier
                     .padding(24.dp)
