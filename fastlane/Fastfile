@@ -45,6 +45,12 @@ platform :android do
       return
     end
     
+    # app 디렉토리가 없으면 생성
+    unless Dir.exist?("app")
+      UI.message("📁 app 디렉토리 생성 중...")
+      Dir.mkdir("app")
+    end
+    
     sh("echo '#{google_service}' > app/google-services.json.b64")
     sh("base64 -d -i app/google-services.json.b64 > app/google-services.json")
     sh("rm app/google-services.json.b64")
