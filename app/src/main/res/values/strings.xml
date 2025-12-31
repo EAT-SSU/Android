@@ -234,6 +234,14 @@
     <string name="max_150">최대 150자</string>
 
     <!-- ========================== -->
+    <!-- App Slogan -->
+    <!-- ========================== -->
+    <string name="app_slogan">숭실대에서 <b>먹자!</b></string>
+    <string name="app_slogan_part1">숭실대에서 </string>
+    <string name="app_slogan_part2">먹자</string>
+    <string name="app_slogan_part3" translatable="false"></string>
+
+    <!-- ========================== -->
     <!-- Links & External -->
     <!-- ========================== -->
     <string name="inquire">문의하기</string>

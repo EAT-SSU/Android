@@ -228,9 +228,21 @@
     <string name="report_write_hint">Please write the reason for the report</string>
 
     <!-- ========================== -->
-    <!-- Links & External -->
+    <!-- Input Validation -->
     <!-- ========================== -->
     <string name="max_150">Up to 150 characters</string>
+
+    <!-- ========================== -->
+    <!-- App Slogan -->
+    <!-- ========================== -->
+    <string name="app_slogan">Let\'s <b>Eat</b> at Soongsil!</string>
+    <string name="app_slogan_part1">Let\'s </string>
+    <string name="app_slogan_part2">Eat</string>
+    <string name="app_slogan_part3"> at Soongsil!</string>
+
+    <!-- ========================== -->
+    <!-- Links & External -->
+    <!-- ========================== -->
     <string name="inquire">Contact Us</string>
     <string name="service_rule">Terms of Service</string>
     <string name="private_information">Privacy Policy</string>

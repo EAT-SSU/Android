@@ -233,6 +233,14 @@
     <string name="max_150">Tối đa 150</string>
 
     <!-- ========================== -->
+    <!-- App Slogan -->
+    <!-- ========================== -->
+    <string name="app_slogan">Hãy <b>Ăn</b> tại Soongsil!</string>
+    <string name="app_slogan_part1">Hãy </string>
+    <string name="app_slogan_part2">Ăn</string>
+    <string name="app_slogan_part3"> tại Soongsil!</string>
+
+    <!-- ========================== -->
     <!-- EAT SSU Branding -->
     <!-- ========================== -->
 

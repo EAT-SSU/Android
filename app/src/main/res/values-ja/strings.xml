@@ -233,6 +233,14 @@
     <string name="max_150">最大150</string>
 
     <!-- ========================== -->
+    <!-- App Slogan -->
+    <!-- ========================== -->
+    <string name="app_slogan">崇実大学で<b>食べよう!</b></string>
+    <string name="app_slogan_part1">崇実大学で</string>
+    <string name="app_slogan_part2">食べよう!</string>
+    <string name="app_slogan_part3"></string>
+
+    <!-- ========================== -->
     <!-- EAT SSU Branding -->
     <!-- ========================== -->
 

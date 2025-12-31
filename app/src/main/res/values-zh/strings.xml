@@ -228,9 +228,21 @@
     <string name="report_write_hint">请写明举报原因</string>
 
     <!-- ========================== -->
-    <!-- Links & External -->
+    <!-- Input Validation -->
     <!-- ========================== -->
     <string name="max_150">最多150个字</string>
+
+    <!-- ========================== -->
+    <!-- App Slogan -->
+    <!-- ========================== -->
+    <string name="app_slogan">在崇实大学<b>吃吧!</b></string>
+    <string name="app_slogan_part1">在崇实大学</string>
+    <string name="app_slogan_part2">吃吧!</string>
+    <string name="app_slogan_part3"></string>
+
+    <!-- ========================== -->
+    <!-- Links & External -->
+    <!-- ========================== -->
     <string name="inquire">联系我们</string>
     <string name="service_rule">服务条款</string>
     <string name="private_information">隐私政策</string>
