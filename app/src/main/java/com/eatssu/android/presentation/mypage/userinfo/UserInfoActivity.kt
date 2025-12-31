@@ -133,17 +133,17 @@ class UserInfoActivity :
 
     private fun updateCollegeDepartmentUI(data: UserInfoData) {
         with(binding) {
-            tvCollege.text = data.selectedCollege.collegeName
+            tvCollege.text = data.selectedCollege?.collegeName ?: "단과대"
             tvCollege.setTextColor(
                 getColor(
-                    if (data.selectedCollege.collegeId != -1) R.color.gray700 else R.color.gray400
+                    if (data.selectedCollege != null) R.color.gray700 else R.color.gray400
                 )
             )
 
-            tvDepartment.text = data.selectedDepartment.departmentName
+            tvDepartment.text = data.selectedDepartment?.departmentName ?: "학과"
             tvDepartment.setTextColor(
                 getColor(
-                    if (data.selectedDepartment.departmentId != -1) R.color.gray700 else R.color.gray400
+                    if (data.selectedDepartment != null) R.color.gray700 else R.color.gray400
                 )
             )
         }
@@ -177,7 +177,7 @@ class UserInfoActivity :
         val data = state.data
 
         // 단과대를 먼저 선택하도록 유도
-        if (data.selectedCollege.collegeId == -1) {
+        if (data.selectedCollege == null) {
             showToast(R.string.toast_college_required, ToastType.ERROR)
             return
         }
