@@ -20,7 +20,7 @@ fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
 
     this.forEach { mealResponse ->
         val menuNames =
-            mealResponse.briefMenus.joinToString(separator = " + ") { it.name ?: "" }
+            mealResponse.briefMenus.joinToString(separator = ", ") { it.name ?: "" }
         val mealId = mealResponse.mealId ?: -1
         val price = mealResponse.price ?: 0
         val mainRating = mealResponse.rating ?: 0.0
