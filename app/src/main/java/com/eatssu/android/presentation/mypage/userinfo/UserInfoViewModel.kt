@@ -158,8 +158,7 @@ class UserInfoViewModel @Inject constructor(
                     selectedCollege = college,
                     isCollegeChanged = isCollegeChanged,
                     // 단과대가 변경되면 학과 초기화
-                    // TODO: 기본값 대신에 Department? 로 변경
-                    selectedDepartment = Department(-1, "학과"),
+                    selectedDepartment = null,
                     departmentList = emptyList()
                 )
             )
@@ -223,16 +222,16 @@ class UserInfoViewModel @Inject constructor(
 
             // 학과/단과대 변경이 있는 경우
             if (data.isCollegeChanged || data.isDepartmentChanged) {
-                val success = userRepository.setUserDepartment(data.selectedDepartment.departmentId)
+                val department = data.selectedDepartment ?: return@launch
+                val college = data.selectedCollege ?: return@launch
+
+                val success = userRepository.setUserDepartment(department.departmentId)
                 if (!success) {
                     _uiState.value = UiState.Error
                     return@launch
                 }
 
-                setUserCollegeDepartmentUseCase(
-                    data.selectedCollege,
-                    data.selectedDepartment
-                )
+                setUserCollegeDepartmentUseCase(college, department)
                 departmentUpdated = true
             }
 
@@ -266,13 +265,12 @@ data class UserInfoData(
     val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
     // 단과대/학과
-    // TODO: 기본값 대신에 Department?, College? 로 변경
-    val selectedCollege: College = College(-1, "단과대"),
-    val originalCollege: College = College(-1, "단과대"),
+    val selectedCollege: College? = null,
+    val originalCollege: College? = null,
     val isCollegeChanged: Boolean = false,
 
-    val selectedDepartment: Department = Department(-1, "학과"),
-    val originalDepartment: Department = Department(-1, "학과"),
+    val selectedDepartment: Department? = null,
+    val originalDepartment: Department? = null,
     val isDepartmentChanged: Boolean = false,
 
     // 목록
@@ -294,7 +292,7 @@ data class UserInfoData(
             val isNicknameValid = isDuplicationChecked && nicknameValidationError == null
 
             val hasDepartmentChange = isCollegeChanged || isDepartmentChanged
-            val isDepartmentSelected = selectedDepartment.departmentId != -1
+            val isDepartmentSelected = selectedDepartment != null
 
             return when {
                 // 닉네임 변경: 닉네임 유효성 필수
