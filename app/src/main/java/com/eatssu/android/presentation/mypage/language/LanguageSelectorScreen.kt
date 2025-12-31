@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
-import com.eatssu.android.domain.model.AppLanguage
+import com.eatssu.common.enums.AppLanguage
 import com.eatssu.design_system.component.EatSsuRadioButtonGroup
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme

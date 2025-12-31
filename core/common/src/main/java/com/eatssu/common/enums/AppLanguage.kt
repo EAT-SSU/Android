@@ -1,4 +1,4 @@
-package com.eatssu.android.domain.model
+package com.eatssu.common.enums
 
 import java.util.Locale
 
