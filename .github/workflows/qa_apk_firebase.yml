@@ -5,7 +5,8 @@ on:
   workflow_run:
     workflows:
       - Android CI
-    branches: [ "release" ]
+    branches:
+      - release
     types:
       - completed
 
