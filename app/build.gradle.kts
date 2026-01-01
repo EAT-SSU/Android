@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    id("kotlin-android")
     id("com.google.android.gms.oss-licenses-plugin")
 }
 
@@ -105,10 +104,6 @@ android {
 
     kotlin {
         jvmToolchain(17)
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     splits {
