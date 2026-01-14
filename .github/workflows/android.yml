@@ -16,11 +16,7 @@ jobs:
   build:
     # develop push는 허용, develop으로의 PR 중 release/* 브랜치에서 온 PR만 허용
     if: >
-      github.event_name == 'push' ||
-      (
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
-      )
+      github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
