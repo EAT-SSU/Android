@@ -43,7 +43,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
 
@@ -67,9 +67,10 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
         }
 
-        debug {
+        getByName("debug") {
             applicationIdSuffix = ".debug"
 //            isDebuggable = false
 

@@ -2,13 +2,21 @@ name: Android CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches:
+      - develop
   pull_request:
-    branches: [ "develop" ]
+    branches:
+      - develop
 
 jobs:
   build:
-
+    # develop push는 허용, develop으로의 PR 중 release/* 브랜치에서 온 PR만 허용
+    if: >
+      github.event_name == 'push' ||
+      (
+        github.event_name == 'pull_request' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      )
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +31,7 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-    
+
     - name: set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -38,7 +46,7 @@ jobs:
       env:
         DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
         PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
-        KAKAO_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
         NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
         POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
         POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
@@ -60,5 +68,58 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+
+    - name: Assemble Debug APK
+      run: ./gradlew assembleDebug
+
+    - name: Assemble Release APK
+      run: ./gradlew assembleRelease
+
+    - name: Upload Debug APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-apk
+        path: app/build/outputs/apk/debug/*.apk
+
+    - name: Upload Release APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release/*.apk
+    - name: Install Firebase CLI
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      run: |
+        npm i -g firebase-tools
+
+    - name: Distribute Debug APK to Firebase App Distribution
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      run: |
+        firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
+          --app "$FIREBASE_APP_ID" \
+          --groups "eat-ssu-android-qa" \
+          --release-notes "Debug | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+          --token "$FIREBASE_TOKEN"
+
+    - name: Distribute Release APK to Firebase App Distribution
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      run: |
+        firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+          --app "$FIREBASE_APP_ID" \
+          --groups "eat-ssu-android-qa" \
+          --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+          --token "$FIREBASE_TOKEN"
