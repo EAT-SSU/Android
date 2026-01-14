@@ -15,7 +15,7 @@ jobs:
       github.event_name == 'push' ||
       (
         github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       )
     runs-on: ubuntu-latest
 
@@ -73,21 +73,21 @@ jobs:
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       run: ./gradlew assembleDebug
 
     - name: Assemble Release APK
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       run: ./gradlew assembleRelease
 
     - name: Upload Debug APK artifact
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
@@ -97,7 +97,7 @@ jobs:
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       uses: actions/upload-artifact@v4
       with:
         name: release-apk
@@ -107,7 +107,7 @@ jobs:
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       run: |
         npm i -g firebase-tools
 
@@ -115,7 +115,7 @@ jobs:
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
@@ -130,7 +130,7 @@ jobs:
       if: >
         github.event_name == 'pull_request' &&
         github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
+        startsWith(github.event.pull_request.head.ref, 'feat/')
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
