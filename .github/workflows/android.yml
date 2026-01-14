@@ -31,7 +31,7 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-    
+
     - name: set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -86,4 +86,40 @@ jobs:
       with:
         name: release-apk
         path: app/build/outputs/apk/release/*.apk
+    - name: Install Firebase CLI
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      run: |
+        npm i -g firebase-tools
 
+    - name: Distribute Debug APK to Firebase App Distribution
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      run: |
+        firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
+          --app "$FIREBASE_APP_ID" \
+          --groups "eat-ssu-android-qa" \
+          --release-notes "Debug | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+          --token "$FIREBASE_TOKEN"
+
+    - name: Distribute Release APK to Firebase App Distribution
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      run: |
+        firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+          --app "$FIREBASE_APP_ID" \
+          --groups "eat-ssu-android-qa" \
+          --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+          --token "$FIREBASE_TOKEN"
