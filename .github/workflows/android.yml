@@ -70,22 +70,39 @@ jobs:
       run: chmod +x gradlew
 
     - name: Assemble Debug APK
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
       run: ./gradlew assembleDebug
 
     - name: Assemble Release APK
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
       run: ./gradlew assembleRelease
 
     - name: Upload Debug APK artifact
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
         path: app/build/outputs/apk/debug/*.apk
 
     - name: Upload Release APK artifact
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'opened' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
       uses: actions/upload-artifact@v4
       with:
         name: release-apk
         path: app/build/outputs/apk/release/*.apk
+
     - name: Install Firebase CLI
       if: >
         github.event_name == 'pull_request' &&
