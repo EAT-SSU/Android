@@ -72,21 +72,21 @@ jobs:
     - name: Assemble Debug APK
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
         startsWith(github.event.pull_request.head.ref, 'feat/')
       run: ./gradlew assembleDebug
 
     - name: Assemble Release APK
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
         startsWith(github.event.pull_request.head.ref, 'feat/')
       run: ./gradlew assembleRelease
 
     - name: Upload Debug APK artifact
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
         startsWith(github.event.pull_request.head.ref, 'feat/')
       uses: actions/upload-artifact@v4
       with:
@@ -96,7 +96,7 @@ jobs:
     - name: Upload Release APK artifact
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
         startsWith(github.event.pull_request.head.ref, 'feat/')
       uses: actions/upload-artifact@v4
       with:
@@ -106,7 +106,7 @@ jobs:
     - name: Install Firebase CLI
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
         startsWith(github.event.pull_request.head.ref, 'feat/')
       run: |
         npm i -g firebase-tools
@@ -114,8 +114,7 @@ jobs:
     - name: Distribute Debug APK to Firebase App Distribution
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
-        startsWith(github.event.pull_request.head.ref, 'feat/')
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
@@ -129,7 +128,7 @@ jobs:
     - name: Distribute Release APK to Firebase App Distribution
       if: >
         github.event_name == 'pull_request' &&
-        github.event.action == 'opened' &&
+        github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'        startsWith(github.event.pull_request.head.ref, 'feat/')
         startsWith(github.event.pull_request.head.ref, 'feat/')
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
