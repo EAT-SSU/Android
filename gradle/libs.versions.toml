@@ -51,8 +51,8 @@ firebase-bom = "32.6.0"
 firebase-crashlytics = "2.9.9"
 google-services = "4.4.2"
 timber = "5.0.1"
-kotlin-android = "1.9.25"
-ksp = "1.9.0-1.0.13"
+kotlin-android = "2.0.21"
+ksp = "2.0.21-1.0.28"
 ossLicenses = "17.3.0"
 ossLicensesPlugin = "0.10.6"
 glanceAppwidget = "1.1.1"
@@ -161,6 +161,8 @@ posthog-android = { group = "com.posthog", name = "posthog-android", version.ref
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -3,14 +3,13 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    id("kotlin-android")
     id("com.google.android.gms.oss-licenses-plugin")
-    id("kotlin-kapt")
-
 }
 
 android {
@@ -103,16 +102,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-
     kotlin {
         jvmToolchain(17)
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     splits {
@@ -188,7 +179,7 @@ dependencies {
 
     //glide: 사진 업로드
     implementation(libs.glide)
-    kapt(libs.glide.compiler)
+    ksp(libs.glide.compiler)
 
     //coil: 이미지 로딩
     implementation(libs.coil.compose)
@@ -206,8 +197,8 @@ dependencies {
 
     // Hilt for Dependency Injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.navigation.compose)
@@ -253,8 +244,4 @@ dependencies {
     // PostHog
     implementation(libs.posthog.android)
 
-}
-
-kapt {
-    correctErrorTypes = true
 }
