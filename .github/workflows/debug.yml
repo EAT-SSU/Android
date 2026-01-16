@@ -82,7 +82,7 @@ jobs:
 
     - name: Decode Keystore for Release Signing
       if: >
-        github.event_name == 'pull_request' &&
+        github.event_name == 'pull_request'
       env:
         KEYSTORE_CONTENT: ${{ secrets.KEYSTORE_CONTENT }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
