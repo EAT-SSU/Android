@@ -58,7 +58,7 @@ jobs:
     - name: Generate google-services.json
       run: |
         echo "$GOOGLE_SERVICE" > app/google-services.json.b64
-        base64 -d -i app/google-services.json.b64 > app/google-services.json
+        base64 -d app/google-services.json.b64 > app/google-services.json
       env:
         GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
 
@@ -83,12 +83,38 @@ jobs:
     #     path: app/build/outputs/apk/debug/*.apk
     #     retention-days: 1
 
+    - name: Decode Keystore for Release Signing
+      if: >
+        github.event_name == 'pull_request' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      env:
+        KEYSTORE_CONTENT: ${{ secrets.KEYSTORE_CONTENT }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        echo "$KEYSTORE_CONTENT" | base64 -d > $GITHUB_WORKSPACE/release.keystore
+        echo "KEYSTORE_FILE=$GITHUB_WORKSPACE/release.keystore" >> $GITHUB_ENV
+        echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
+        echo "KEY_ALIAS=$KEY_ALIAS" >> $GITHUB_ENV
+        echo "KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
+
     - name: Assemble Release APK
       if: >
         github.event_name == 'pull_request' &&
         startsWith(github.event.pull_request.head.ref, 'release/') && 
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleRelease
+
+      # Release APK 서명 여부 검증
+    - name: Verify Release APK signature
+      if: >
+        github.event_name == 'pull_request' &&
+        startsWith(github.event.pull_request.head.ref, 'release/') && 
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      run: |
+        BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
+        "$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/apksigner" verify --print-certs app/build/outputs/apk/release/*.apk
 
     - name: Upload Release APK artifact
       if: >
