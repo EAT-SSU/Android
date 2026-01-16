@@ -65,23 +65,22 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # - name: Assemble Debug APK
-    #   if: >
-    #     github.event_name == 'pull_request' &&
-    #     startsWith(github.event.pull_request.head.ref, 'release/') && 
-    #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-    #   run: ./gradlew assembleDebug
+    - name: Assemble Debug APK
+      if: >
+        github.event_name == 'pull_request' &&
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      run: ./gradlew assembleDebug
 
-    # - name: Upload Debug APK artifact
-    #   if: >
-    #     github.event_name == 'pull_request' &&
-    #     startsWith(github.event.pull_request.head.ref, 'release/') && 
-    #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: debug-apk
-    #     path: app/build/outputs/apk/debug/*.apk
-    #     retention-days: 1
+    - name: Upload Debug APK artifact
+      if: >
+        github.event_name == 'pull_request' &&
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-apk
+        path: app/build/outputs/apk/debug/*.apk
 
     - name: Decode Keystore for Release Signing
       if: >
@@ -102,7 +101,7 @@ jobs:
     - name: Assemble Release APK
       if: >
         github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleRelease
 
@@ -110,7 +109,7 @@ jobs:
     - name: Verify Release APK signature
       if: >
         github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: |
         BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
@@ -119,7 +118,7 @@ jobs:
     - name: Upload Release APK artifact
       if: >
         github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       uses: actions/upload-artifact@v4
       with:
@@ -146,9 +145,17 @@ jobs:
 
     # Release만 Firebase 배포
     - name: Install Firebase CLI
+      if: >
+        github.event_name == 'pull_request' &&
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: npm i -g firebase-tools
 
     - name: Distribute Release APK to Firebase App Distribution
+      if: >
+        github.event_name == 'pull_request' &&
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
@@ -159,8 +166,12 @@ jobs:
           --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
           --token "$FIREBASE_TOKEN"
       
-    # PR 코멘트
-    - name: Comment PR
+      # Debug는 Artifact로만 공유 + PR 코멘트
+    - name: Comment PR with artifact download 안내
+      if: >
+        github.event_name == 'pull_request' &&
+        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       uses: actions/github-script@v7
       with:
         script: |
