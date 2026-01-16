@@ -68,14 +68,12 @@ jobs:
     - name: Assemble Debug APK
       if: >
         github.event_name == 'pull_request' &&
-        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleDebug
 
     - name: Upload Debug APK artifact
       if: >
         github.event_name == 'pull_request' &&
-        #        startsWith(github.event.pull_request.head.ref, 'release/') &&
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       uses: actions/upload-artifact@v4
       with:
@@ -85,7 +83,6 @@ jobs:
     - name: Decode Keystore for Release Signing
       if: >
         github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
       env:
         KEYSTORE_CONTENT: ${{ secrets.KEYSTORE_CONTENT }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
