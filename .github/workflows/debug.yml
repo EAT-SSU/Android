@@ -105,6 +105,22 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleRelease
 
+    - name: Verify Naver Maps meta-data in release APK (apkanalyzer)
+      run: |
+        APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)
+        echo "APK=$APK"
+        
+        BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
+        APKA="$ANDROID_SDK_ROOT/tools/bin/apkanalyzer"
+        
+        if [ ! -f "$APKA" ]; then
+          echo "apkanalyzer not found at $APKA"
+          echo "Try installing cmdline-tools or use the aapt method."
+          exit 1
+        fi
+        
+        "$APKA" manifest print "$APK" | grep -n "com.naver.maps.map.NCP_KEY_ID" -A 3 || true
+
       # Release APK 서명 여부 검증
     - name: Verify Release APK signature
       if: >
