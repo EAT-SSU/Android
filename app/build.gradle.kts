@@ -55,7 +55,7 @@ android {
         }
 
         // CI 환경에서 사용하는 서명 설정
-        create("ciRelease") {
+        create("ci") {
             val keystoreFile = System.getenv("KEYSTORE_FILE")
             if (!keystoreFile.isNullOrBlank()) {
                 storeFile = file(keystoreFile)
@@ -97,7 +97,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
             if (!System.getenv("KEYSTORE_FILE").isNullOrBlank()) {
-                signingConfig = signingConfigs.getByName("ciRelease")
+                signingConfig = signingConfigs.getByName("ci")
             }
         }
 
@@ -126,6 +126,10 @@ android {
             buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
 
             isMinifyEnabled = false
+
+            if (!System.getenv("KEYSTORE_FILE").isNullOrBlank()) {
+                signingConfig = signingConfigs.getByName("ci")
+            }
         }
     }
 
