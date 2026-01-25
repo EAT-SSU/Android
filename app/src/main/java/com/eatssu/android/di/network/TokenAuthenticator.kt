@@ -1,6 +1,8 @@
 package com.eatssu.android.di.network
 
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.TokenStateManager
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
@@ -21,11 +23,16 @@ import javax.inject.Inject
  * */
 class TokenAuthenticator @Inject constructor(
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val reissueTokenUseCase: ReissueTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
 ) : Authenticator {
+
+    private companion object {
+        val lock = Any()
+    }
 
     /**
      * 401 Unauthorized 응답을 받았을 때 호출되는 메서드
@@ -41,31 +48,74 @@ class TokenAuthenticator @Inject constructor(
         }
 
         return runBlocking {
-            Timber.d("TokenAuthenticator → refreshToken으로 재발급 시도")
+            synchronized(lock) {
+                val currentAccessToken = getAccessTokenUseCase()
+                val requestAuthHeader = response.request.header("Authorization")
 
-            val expiredRefreshToken = getRefreshTokenUseCase()
-            val newToken = reissueTokenUseCase(expiredRefreshToken)
+                // 이미 다른 요청이 토큰을 재발급/저장한 경우, 저장된 토큰으로만 재시도
+                if (!requestAuthHeader.isNullOrBlank() && requestAuthHeader != "Bearer $currentAccessToken") {
+                    Timber.d("TokenAuthenticator → token already refreshed by another call; retrying with stored token")
+                    return@synchronized response.request.newBuilder()
+                        .header("Authorization", "Bearer $currentAccessToken")
+                        .build()
+                }
 
-            val newAccessToken = newToken?.accessToken
-            val newRefreshToken = newToken?.refreshToken
+                val refreshToken = getRefreshTokenUseCase()
+                if (refreshToken.isBlank()) {
+                    Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
+                    logoutUseCase()
+                    TokenStateManager.setTokenExpired()
+                    return@synchronized null
+                }
 
-            if (newAccessToken.isNullOrEmpty() ||
-                newRefreshToken.isNullOrEmpty()
-            ) {
-                Timber.e("TokenAuthenticator → 새 토큰 발급 실패")
-                logoutUseCase() // 로그아웃 처리
-                TokenStateManager.setTokenError()
-                return@runBlocking null
+                Timber.d("TokenAuthenticator → attempting token reissue with refreshToken")
+                when (val result = reissueTokenUseCase(refreshToken)) {
+                    is ApiResult.Success -> {
+                        val newAccessToken = result.data.accessToken
+                        val newRefreshToken = result.data.refreshToken
+
+                        if (newAccessToken.isBlank() || newRefreshToken.isBlank()) {
+                            Timber.e("TokenAuthenticator → reissue returned blank tokens")
+                            logoutUseCase()
+                            TokenStateManager.setTokenExpired()
+                            return@synchronized null
+                        }
+
+                        setAccessTokenUseCase(newAccessToken)
+                        setRefreshTokenUseCase(newRefreshToken)
+
+                        Timber.d("TokenAuthenticator → token reissue success; retrying original request")
+                        response.request.newBuilder()
+                            .header("Authorization", "Bearer $newAccessToken")
+                            .build()
+                    }
+
+                    is ApiResult.Failure -> {
+                        Timber.e(
+                            "TokenAuthenticator → reissue failed: code=${result.responseCode}, message=${result.message}"
+                        )
+
+                        // Refresh token invalid/expired: force logout
+                        if (result.responseCode == 401 || result.responseCode == 403) {
+                            logoutUseCase()
+                            TokenStateManager.setTokenExpired()
+                        }
+
+                        // Transient failure: don't clear local tokens; return null to propagate 401
+                        null
+                    }
+
+                    is ApiResult.NetworkError -> {
+                        Timber.w(result.exception, "TokenAuthenticator → reissue network error; keeping tokens")
+                        null
+                    }
+
+                    is ApiResult.UnknownError -> {
+                        Timber.e(result.exception, "TokenAuthenticator → reissue unknown error; keeping tokens")
+                        null
+                    }
+                }
             }
-
-            Timber.d("TokenAuthenticator → 새 토큰 발급 성공")
-            setAccessTokenUseCase(newAccessToken)
-            setRefreshTokenUseCase(newRefreshToken)
-
-            Timber.d("TokenAuthenticator → 새 토큰 저장 및 기존 API 재요청")
-            response.request.newBuilder()
-                .header("Authorization", "Bearer $newAccessToken")
-                .build()
         }
     }
 

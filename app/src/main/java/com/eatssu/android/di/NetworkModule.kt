@@ -6,6 +6,7 @@ import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.di.network.ApiResultCallAdapterFactory
 import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
@@ -126,6 +127,7 @@ object NetworkModule {
     @Singleton
     fun provideTokenAuthenticator(
         getRefreshTokenUseCase: GetRefreshTokenUseCase,
+        getAccessTokenUseCase: GetAccessTokenUseCase,
         setAccessTokenUseCase: SetAccessTokenUseCase,
         setRefreshTokenUseCase: SetRefreshTokenUseCase,
         reissueTokenUseCase: ReissueTokenUseCase,
@@ -133,6 +135,7 @@ object NetworkModule {
     ): TokenAuthenticator {
         return TokenAuthenticator(
             getRefreshTokenUseCase,
+            getAccessTokenUseCase,
             setAccessTokenUseCase,
             setRefreshTokenUseCase,
             reissueTokenUseCase,
