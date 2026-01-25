@@ -8,6 +8,8 @@ import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -31,7 +33,7 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     private companion object {
-        val lock = Any()
+        val mutex = Mutex()
     }
 
     /**
@@ -48,14 +50,14 @@ class TokenAuthenticator @Inject constructor(
         }
 
         return runBlocking {
-            synchronized(lock) {
+            mutex.withLock {
                 val currentAccessToken = getAccessTokenUseCase()
                 val requestAuthHeader = response.request.header("Authorization")
 
                 // 이미 다른 요청이 토큰을 재발급/저장한 경우, 저장된 토큰으로만 재시도
                 if (!requestAuthHeader.isNullOrBlank() && requestAuthHeader != "Bearer $currentAccessToken") {
                     Timber.d("TokenAuthenticator → token already refreshed by another call; retrying with stored token")
-                    return@synchronized response.request.newBuilder()
+                    return@withLock response.request.newBuilder()
                         .header("Authorization", "Bearer $currentAccessToken")
                         .build()
                 }
@@ -65,7 +67,7 @@ class TokenAuthenticator @Inject constructor(
                     Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
                     logoutUseCase()
                     TokenStateManager.setTokenExpired()
-                    return@synchronized null
+                    return@withLock null
                 }
 
                 Timber.d("TokenAuthenticator → attempting token reissue with refreshToken")
@@ -78,7 +80,7 @@ class TokenAuthenticator @Inject constructor(
                             Timber.e("TokenAuthenticator → reissue returned blank tokens")
                             logoutUseCase()
                             TokenStateManager.setTokenExpired()
-                            return@synchronized null
+                            return@withLock null
                         }
 
                         setAccessTokenUseCase(newAccessToken)
