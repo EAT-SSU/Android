@@ -5,9 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.BuildConfig.VERSION_CODE
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
+import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.LogoutUseCase
+import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
@@ -29,6 +35,11 @@ class IntroViewModel @Inject constructor(
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
+    private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
+    private val reissueTokenUseCase: ReissueTokenUseCase,
+    private val setAccessTokenUseCase: SetAccessTokenUseCase,
+    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
+    private val logoutUseCase: LogoutUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : ViewModel() {
 
@@ -119,6 +130,45 @@ class IntroViewModel @Inject constructor(
 
             // 토큰이 있어도 유효하지 않음
             if (!getIsAccessTokenValidUseCase(userAccessToken)) {
+                val refreshToken = getRefreshTokenUseCase()
+                if (refreshToken.isBlank()) {
+                    _uiState.value = UiState.Error
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            context.getString(R.string.toast_token_invalid),
+                            ToastType.INFO
+                        )
+                    )
+                    return@launch
+                }
+
+                Timber.d("AccessToken invalid; attempting reissue via RefreshToken")
+                when (val result = reissueTokenUseCase(refreshToken)) {
+                    is ApiResult.Success -> {
+                        setAccessTokenUseCase(result.data.accessToken)
+                        setRefreshTokenUseCase(result.data.refreshToken)
+                        _uiState.value = UiState.Success(IntroState.ValidToken)
+                        return@launch
+                    }
+
+                    is ApiResult.Failure -> {
+                        Timber.e(
+                            "Token reissue failed during autoLogin: code=${result.responseCode}, message=${result.message}"
+                        )
+                        if (result.responseCode == 401 || result.responseCode == 403) {
+                            logoutUseCase()
+                        }
+                    }
+
+                    is ApiResult.NetworkError -> {
+                        Timber.w(result.exception, "Token reissue network error during autoLogin")
+                    }
+
+                    is ApiResult.UnknownError -> {
+                        Timber.e(result.exception, "Token reissue unknown error during autoLogin")
+                    }
+                }
+
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
