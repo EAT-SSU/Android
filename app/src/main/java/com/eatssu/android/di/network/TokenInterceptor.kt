@@ -23,11 +23,13 @@ class TokenInterceptor @Inject constructor(
         val accessToken = runBlocking { getAccessTokenUseCase() }
         val originalRequest = chain.request()
 
-        val request = originalRequest.newBuilder()
-            .addHeader(HEADER_CONTENT_TYPE, "application/json")
-            .addHeader(HEADER_AUTHORIZATION, "Bearer $accessToken")
-            .build()
+        val requestBuilder = originalRequest.newBuilder()
+            .header(HEADER_CONTENT_TYPE, "application/json")
 
-        return chain.proceed(request)
+        if (accessToken.isNotBlank()) {
+            requestBuilder.header(HEADER_AUTHORIZATION, "Bearer $accessToken")
+        }
+
+        return chain.proceed(requestBuilder.build())
     }
 }
