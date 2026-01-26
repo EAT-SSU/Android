@@ -111,13 +111,6 @@ abstract class BaseActivity<B : ViewBinding>(
                 navigateToLogin()
             }
         }
-
-        lifecycleScope.launch {
-            TokenEventBus.tokenServerError.collect {
-                showInfoToast(R.string.toast_token_server_error)
-                navigateToLogin()
-            }
-        }
     }
 
     private fun navigateToLogin() {

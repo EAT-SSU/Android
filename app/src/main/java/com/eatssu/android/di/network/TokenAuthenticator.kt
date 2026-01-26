@@ -1,7 +1,7 @@
 package com.eatssu.android.di.network
 
 import com.eatssu.android.data.model.ApiResult
-import com.eatssu.android.domain.model.TokenStateManager
+import com.eatssu.android.presentation.base.TokenEventBus
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
@@ -66,7 +66,7 @@ class TokenAuthenticator @Inject constructor(
                 if (refreshToken.isBlank()) {
                     Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
                     logoutUseCase()
-                    TokenStateManager.setTokenExpired()
+                    TokenEventBus.notifyTokenExpired()
                     return@withLock null
                 }
 
@@ -79,7 +79,7 @@ class TokenAuthenticator @Inject constructor(
                         if (newAccessToken.isBlank() || newRefreshToken.isBlank()) {
                             Timber.e("TokenAuthenticator → reissue returned blank tokens")
                             logoutUseCase()
-                            TokenStateManager.setTokenExpired()
+                            TokenEventBus.notifyTokenExpired()
                             return@withLock null
                         }
 
@@ -100,7 +100,7 @@ class TokenAuthenticator @Inject constructor(
                         // Refresh token invalid/expired: force logout
                         if (result.responseCode == 401 || result.responseCode == 403) {
                             logoutUseCase()
-                            TokenStateManager.setTokenExpired()
+                            TokenEventBus.notifyTokenExpired()
                         }
 
                         // Transient failure: don't clear local tokens; return null to propagate 401

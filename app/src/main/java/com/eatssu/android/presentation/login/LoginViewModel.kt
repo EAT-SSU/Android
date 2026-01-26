@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
@@ -60,7 +59,6 @@ class LoginViewModel @Inject constructor(
             setUserEmailUseCase(email)
 
             _uiState.value = UiState.Success(LoginState.LoginSuccess)
-            TokenStateManager.setTokenValid()
         }
     }
 
