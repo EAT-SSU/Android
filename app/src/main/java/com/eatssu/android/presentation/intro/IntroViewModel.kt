@@ -7,17 +7,12 @@ import com.eatssu.android.R
 import com.eatssu.android.BuildConfig.VERSION_CODE
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
-import com.eatssu.android.domain.usecase.auth.LogoutUseCase
-import com.eatssu.android.domain.usecase.auth.ReissueAndStoreResult
-import com.eatssu.android.domain.usecase.auth.ReissueAndStoreTokenUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,18 +27,8 @@ class IntroViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-    private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
-    private val reissueAndStoreTokenUseCase: ReissueAndStoreTokenUseCase,
-    private val logoutUseCase: LogoutUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : ViewModel() {
-
-    private var reissueRetryCount = 0
-
-    private companion object {
-        const val MAX_REISSUE_RETRIES = 2
-        const val REISSUE_RETRY_DELAY_MS = 1500L
-    }
 
     private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
     val uiState: StateFlow<UiState<IntroState>> = _uiState.asStateFlow()
@@ -130,63 +115,7 @@ class IntroViewModel @Inject constructor(
                 return@launch
             }
 
-            // 토큰이 있어도 유효하지 않음
-            if (!getIsAccessTokenValidUseCase(userAccessToken)) {
-                Timber.d("AccessToken invalid; attempting reissue")
-                when (val result = reissueAndStoreTokenUseCase()) {
-                    is ReissueAndStoreResult.Success -> {
-                        reissueRetryCount = 0
-                        _uiState.value = UiState.Success(IntroState.ValidToken)
-                        return@launch
-                    }
-
-                    is ReissueAndStoreResult.MissingRefreshToken,
-                    is ReissueAndStoreResult.RefreshInvalid -> {
-                        reissueRetryCount = 0
-                        logoutUseCase()
-                    }
-
-                    is ReissueAndStoreResult.TransientFailure -> {
-                        Timber.w(
-                            result.throwable,
-                            "Token reissue transient failure during autoLogin: code=${result.responseCode}, message=${result.message}"
-                        )
-
-                        // A 정책: 네트워크/일시적 오류에서는 로그인 화면으로 보내지 않음.
-                        // Splash에 머무르며 잠시 후 재시도.
-                        if (reissueRetryCount < MAX_REISSUE_RETRIES) {
-                            reissueRetryCount++
-                            _uiEvent.emit(
-                                UiEvent.ShowToast(
-                                    context.getString(R.string.server_error_message),
-                                    ToastType.INFO
-                                )
-                            )
-                            delay(REISSUE_RETRY_DELAY_MS)
-                            autoLogin()
-                        } else {
-                            _uiEvent.emit(
-                                UiEvent.ShowToast(
-                                    context.getString(R.string.server_error_message),
-                                    ToastType.INFO
-                                )
-                            )
-                        }
-                        return@launch
-                    }
-                }
-
-                _uiState.value = UiState.Error
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        context.getString(R.string.toast_token_invalid),
-                        ToastType.INFO
-                    )
-                )
-                return@launch
-            }
-
-            // 토큰이 있고 유효함
+            // 스플래시에서는 헬스체크만 수행. 토큰 유효성/재발급은 실제 API 요청에서 Authenticator가 처리.
             _uiState.value = UiState.Success(IntroState.ValidToken)
         }
     }
