@@ -118,3 +118,18 @@ fastlane/.env.*
 
 # Appfile
 # fastlane/Appfile (주석 해제하면 Appfile도 gitignore에 포함)
+
+# Version control
+vcs.xml
+
+# lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+# lint/reports/
+
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
