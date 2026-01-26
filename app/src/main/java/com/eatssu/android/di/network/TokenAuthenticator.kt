@@ -1,6 +1,5 @@
 package com.eatssu.android.di.network
 
-import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.presentation.base.TokenEventBus
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
