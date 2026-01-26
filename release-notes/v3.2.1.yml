@@ -1,0 +1,10 @@
+ko: |
+  - CI/CD 다국어 릴리즈 노트 관리 시스템 도입
+  - Fastlane 워크플로우 자동화 개선
+  - YAML 기반 버전별 릴리즈 노트 지원 (한국어/영어)
+  - Play Store 내부 테스트 배포 자동화
+en: |
+  - Introduced multilingual release notes management system for CI/CD
+  - Improved Fastlane workflow automation
+  - Added YAML-based version-specific release notes support (Korean/English)
+  - Automated Play Store internal testing deployment
