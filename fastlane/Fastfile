@@ -45,15 +45,27 @@ platform :android do
       return
     end
     
-    # app 디렉토리가 없으면 생성
+    # app 디렉토리가 없으면 생성 (부모 디렉토리 포함)
     unless Dir.exist?("app")
       UI.message("📁 app 디렉토리 생성 중...")
-      Dir.mkdir("app")
+      require 'fileutils'
+      FileUtils.mkdir_p("app")
     end
     
-    sh("echo '#{google_service}' > app/google-services.json.b64")
-    sh("base64 -d -i app/google-services.json.b64 > app/google-services.json")
-    sh("rm app/google-services.json.b64")
+    # Base64 형식 검증 후 디코딩
+    unless google_service.match?(/\A[A-Za-z0-9+\/]+=*\z/)
+      UI.error("❌ GOOGLE_SERVICE가 유효한 Base64 형식이 아닙니다.")
+      return
+    end
+    
+    require 'base64'
+    begin
+      decoded_content = Base64.strict_decode64(google_service)
+      File.write("app/google-services.json", decoded_content)
+    rescue => e
+      UI.error("❌ Base64 디코딩 실패: #{e.message}")
+      return
+    end
     
     UI.success("✅ google-services.json 생성 완료")
   end
@@ -124,9 +136,10 @@ platform :android do
     
     # Google Play Store 배포 (선택사항 - 서비스 계정 키 필요)
     if ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
-      # 서비스 계정 JSON을 파일로 저장
+      # 서비스 계정 JSON을 파일로 저장 (보안 권한 설정)
       service_account_path = "/tmp/google-play-service-account.json"
       File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
+      File.chmod(0600, service_account_path)
       
       upload_to_play_store(
         track: track,
@@ -210,9 +223,10 @@ platform :android do
     if deploy_to_play_store && ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
       UI.message("📤 Play Store #{track} 트랙에 배포 중...")
       
-      # 서비스 계정 JSON을 파일로 저장
+      # 서비스 계정 JSON을 파일로 저장 (보안 권한 설정)
       service_account_path = "/tmp/google-play-service-account.json"
       File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
+      File.chmod(0600, service_account_path)
       
       # 릴리즈 노트 파일 찾기 (프로젝트 루트의 RELEASE_NOTES.txt)
       release_notes_path = "RELEASE_NOTES.txt"
