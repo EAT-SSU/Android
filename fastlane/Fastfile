@@ -238,7 +238,10 @@ platform :android do
       else
         release_notes_content = File.read(release_notes_path).strip
         if release_notes_content.empty?
-          UI.important("⚠️ RELEASE_NOTES.txt 파일이 비어있습니다.")
+          UI.error("❌ RELEASE_NOTES.txt 파일이 비어있습니다. Play Store 정책에 따라 배포가 거절될 수 있습니다.")
+          release_notes_path = nil
+        elsif release_notes_content.length < 10
+          UI.error("❌ RELEASE_NOTES.txt 내용이 너무 짧습니다. 최소 10자 이상 필요합니다.")
           release_notes_path = nil
         else
           UI.message("📝 Play Store 릴리즈 노트 파일 발견: #{release_notes_path}")
