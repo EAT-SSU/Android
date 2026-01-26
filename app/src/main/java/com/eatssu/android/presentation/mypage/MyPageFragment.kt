@@ -63,6 +63,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     override fun onResume() {
         super.onResume()
         myPageViewModel.fetchMyInfo() // 닉네임 변경 등으로부터 복귀 시 정보 갱신
+        checkNotificationPermissionChange() // 설정 화면에서 돌아왔을 때 권한 상태 확인
     }
 
     private fun setupObservers() {
@@ -105,6 +106,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             binding.tvNickname.text = "닉네임을 설정해주세요"
         }
 
+        // 초기 권한 상태 저장 (처음 로드될 때만)
+        if (lastNotificationPermissionState == null) {
+            lastNotificationPermissionState = checkNotificationPermission(requireContext())
+        }
+
         // 알람 스위치 (리스너 잠시 해제 후 값 반영)
         binding.alarmSwitch.setOnCheckedChangeListener(null)
         binding.alarmSwitch.isChecked = state.isAlarmOn
@@ -114,13 +120,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun handleAlarmSwitchChange(isChecked: Boolean) {
-        val nowDatetime = LocalDateTime.now()
-        val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
-                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
             } else {
                 showNotificationPermissionDialog()
                 // 권한 미허용이면 스위치 원복
@@ -132,7 +134,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             }
         } else {
             myPageViewModel.setNotificationOff()
-            showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
         }
     }
 
@@ -218,6 +219,28 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 android.Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         } else true
+    }
+
+    private var lastNotificationPermissionState: Boolean? = null
+
+    private fun checkNotificationPermissionChange() {
+        val currentPermissionState = checkNotificationPermission(requireContext())
+        
+        // 이전 권한 상태가 저장되어 있고, 현재 상태와 다른 경우에만 토스트 표시
+        if (lastNotificationPermissionState != null && lastNotificationPermissionState != currentPermissionState) {
+            val nowDatetime = LocalDateTime.now()
+            val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+            
+            if (currentPermissionState) {
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                myPageViewModel.setNotificationOn()
+            } else {
+                showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                myPageViewModel.setNotificationOff()
+            }
+        }
+        
+        lastNotificationPermissionState = currentPermissionState
     }
 
     private fun showLogoutDialog() {
