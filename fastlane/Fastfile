@@ -291,5 +291,113 @@ platform :android do
       track: track
     }
   end
+
+  desc "수동 Release 배포 (YAML 릴리즈 노트 사용)"
+  lane :deploy_release do |options|
+    version = options[:version]
+    track = options[:track] || "internal"
+    environment = options[:environment] || "production"
+    
+    if version.nil? || version.empty?
+      UI.user_error!("❌ 버전 정보가 필요합니다. version 파라미터를 제공하세요.")
+    end
+    
+    # 릴리즈 노트 YAML 파일 찾기
+    yaml_file = "release-notes/v#{version}.yml"
+    unless File.exist?(yaml_file)
+      UI.user_error!("❌ 릴리즈 노트 파일을 찾을 수 없습니다: #{yaml_file}")
+    end
+    
+    UI.message("📝 YAML 릴리즈 노트 파일 발견: #{yaml_file}")
+    
+    # YAML 파싱
+    require 'yaml'
+    begin
+      release_notes_data = YAML.load_file(yaml_file)
+      ko_notes = release_notes_data['ko']
+      en_notes = release_notes_data['en']
+      
+      if ko_notes.nil? || ko_notes.strip.empty?
+        UI.error("❌ 한국어 릴리즈 노트가 비어있습니다.")
+        ko_notes = "버그 수정 및 성능 개선"
+      end
+      
+      if en_notes.nil? || en_notes.strip.empty?
+        UI.error("❌ 영어 릴리즈 노트가 비어있습니다.")
+        en_notes = "Bug fixes and performance improvements"
+      end
+      
+    rescue => e
+      UI.error("❌ YAML 파일 파싱 실패: #{e.message}")
+      ko_notes = "버그 수정 및 성능 개선"
+      en_notes = "Bug fixes and performance improvements"
+    end
+    
+    # Production 환경으로 빌드
+    build_release_aab(environment: environment)
+    
+    # AAB 경로
+    aab_path = "app/build/outputs/bundle/release/app-release.aab"
+    unless File.exist?(aab_path)
+      UI.user_error!("❌ AAB 파일을 찾을 수 없습니다: #{aab_path}")
+    end
+    
+    UI.success("✅ AAB 빌드 완료: #{aab_path}")
+    
+    # Play Store 배포
+    if ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
+      UI.message("📤 Play Store #{track} 트랙에 배포 중...")
+      
+      # 서비스 계정 JSON을 파일로 저장 (보안 권한 설정)
+      service_account_path = "/tmp/google-play-service-account.json"
+      File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
+      File.chmod(0600, service_account_path)
+      
+      # 다국어 릴리즈 노트를 임시 파일에 저장
+      temp_ko_notes = "/tmp/release_notes_ko.txt"
+      temp_en_notes = "/tmp/release_notes_en.txt"
+      
+      File.write(temp_ko_notes, ko_notes.strip)
+      File.write(temp_en_notes, en_notes.strip)
+      
+      begin
+        upload_to_play_store(
+          track: track,
+          aab: aab_path,
+          json_key: service_account_path,
+          skip_upload_apk: true,
+          skip_upload_metadata: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true,
+          release_notes: {
+            'ko-KR' => ko_notes.strip,
+            'en-US' => en_notes.strip
+          }
+        )
+        
+        UI.success("✅ Play Store #{track} 트랙에 배포 완료")
+        UI.success("✅ 한국어/영어 릴리즈 노트 업데이트 완료")
+      rescue => ex
+        UI.important("⚠️ Play Store 배포 중 오류 발생: #{ex.message}")
+        raise
+      ensure
+        # 임시 파일 삭제
+        File.delete(service_account_path) if File.exist?(service_account_path)
+        File.delete(temp_ko_notes) if File.exist?(temp_ko_notes)
+        File.delete(temp_en_notes) if File.exist?(temp_en_notes)
+      end
+    else
+      UI.important("⚠️ GOOGLE_PLAY_SERVICE_ACCOUNT_JSON이 설정되지 않아 Play Store 배포를 건너뜁니다.")
+    end
+    
+    UI.success("🎉 Release 배포 완료: #{version}")
+    
+    {
+      version: version,
+      aab_path: aab_path,
+      track: track,
+      yaml_file: yaml_file
+    }
+  end
 end
 

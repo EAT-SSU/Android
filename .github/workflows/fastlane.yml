@@ -13,6 +13,7 @@ on:
           - build_release_apk
           - build_release_aab
           - deploy_internal_test
+          - deploy_release
           - ci_build
       environment:
         description: 'Build environment'
@@ -21,6 +22,20 @@ on:
         type: choice
         options:
           - qa
+          - production
+      version:
+        description: 'Release version (예: 3.2.0)'
+        required: false
+        type: string
+      track:
+        description: 'Play Store 배포 트랙'
+        required: false
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - alpha
+          - beta
           - production
   # 일반 develop push는 android.yml에서 처리하므로 제거
   # push:
@@ -77,7 +92,13 @@ jobs:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
           # workflow_dispatch만 지원 (수동 실행)
-          bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }}
+          if [ "${{ github.event.inputs.lane }}" == "deploy_release" ]; then
+            # Release 배포 시 추가 파라미터 전달
+            bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }} version:${{ github.event.inputs.version }} track:${{ github.event.inputs.track }}
+          else
+            # 일반 빌드
+            bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }}
+          fi
 
       - name: Upload APK artifact
         if: |
@@ -93,10 +114,10 @@ jobs:
       - name: Upload AAB artifact
         if: |
           github.event_name == 'workflow_dispatch' &&
-          (contains(github.event.inputs.lane, 'aab') || github.event.inputs.lane == 'build_release_aab' || github.event.inputs.lane == 'deploy_internal_test')
+          (contains(github.event.inputs.lane, 'aab') || github.event.inputs.lane == 'build_release_aab' || github.event.inputs.lane == 'deploy_internal_test' || github.event.inputs.lane == 'deploy_release')
         uses: actions/upload-artifact@v4
         with:
-          name: app-aab
+          name: app-aab-${{ github.event.inputs.version || 'latest' }}
           path: |
             app/build/outputs/bundle/release/app-release.aab
           retention-days: 30
