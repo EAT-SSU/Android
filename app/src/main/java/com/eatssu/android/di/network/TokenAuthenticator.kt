@@ -3,11 +3,9 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.presentation.base.TokenEventBus
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
-import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.ReissueAndStoreResult
+import com.eatssu.android.domain.usecase.auth.ReissueAndStoreTokenUseCase
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.runBlocking
@@ -24,11 +22,8 @@ import javax.inject.Inject
  * 원래 요청을 새 토큰으로 다시 보내주는 클래스  - 백그라운드 스레드에서 실행
  * */
 class TokenAuthenticator @Inject constructor(
-    private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-    private val setAccessTokenUseCase: SetAccessTokenUseCase,
-    private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
-    private val reissueTokenUseCase: ReissueTokenUseCase,
+    private val reissueAndStoreTokenUseCase: ReissueAndStoreTokenUseCase,
     private val logoutUseCase: LogoutUseCase,
 ) : Authenticator {
 
@@ -62,58 +57,33 @@ class TokenAuthenticator @Inject constructor(
                         .build()
                 }
 
-                val refreshToken = getRefreshTokenUseCase()
-                if (refreshToken.isBlank()) {
-                    Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
-                    logoutUseCase()
-                    TokenEventBus.notifyTokenExpired()
-                    return@withLock null
-                }
+                Timber.d("TokenAuthenticator → attempting token reissue")
+                when (val result = reissueAndStoreTokenUseCase()) {
+                    is ReissueAndStoreResult.Success -> response.request.newBuilder()
+                        .header("Authorization", "Bearer ${result.accessToken}")
+                        .build()
 
-                Timber.d("TokenAuthenticator → attempting token reissue with refreshToken")
-                when (val result = reissueTokenUseCase(refreshToken)) {
-                    is ApiResult.Success -> {
-                        val newAccessToken = result.data.accessToken
-                        val newRefreshToken = result.data.refreshToken
-
-                        if (newAccessToken.isBlank() || newRefreshToken.isBlank()) {
-                            Timber.e("TokenAuthenticator → reissue returned blank tokens")
-                            logoutUseCase()
-                            TokenEventBus.notifyTokenExpired()
-                            return@withLock null
-                        }
-
-                        setAccessTokenUseCase(newAccessToken)
-                        setRefreshTokenUseCase(newRefreshToken)
-
-                        Timber.d("TokenAuthenticator → token reissue success; retrying original request")
-                        response.request.newBuilder()
-                            .header("Authorization", "Bearer $newAccessToken")
-                            .build()
+                    is ReissueAndStoreResult.MissingRefreshToken -> {
+                        Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
+                        logoutUseCase()
+                        TokenEventBus.notifyTokenExpired()
+                        null
                     }
 
-                    is ApiResult.Failure -> {
+                    is ReissueAndStoreResult.RefreshInvalid -> {
                         Timber.e(
-                            "TokenAuthenticator → reissue failed: code=${result.responseCode}, message=${result.message}"
+                            "TokenAuthenticator → refresh invalid: code=${result.responseCode}, message=${result.message}"
                         )
-
-                        // Refresh token invalid/expired: force logout
-                        if (result.responseCode == 401 || result.responseCode == 403) {
-                            logoutUseCase()
-                            TokenEventBus.notifyTokenExpired()
-                        }
-
-                        // Transient failure: don't clear local tokens; return null to propagate 401
+                        logoutUseCase()
+                        TokenEventBus.notifyTokenExpired()
                         null
                     }
 
-                    is ApiResult.NetworkError -> {
-                        Timber.w(result.exception, "TokenAuthenticator → reissue network error; keeping tokens")
-                        null
-                    }
-
-                    is ApiResult.UnknownError -> {
-                        Timber.e(result.exception, "TokenAuthenticator → reissue unknown error; keeping tokens")
+                    is ReissueAndStoreResult.TransientFailure -> {
+                        Timber.w(
+                            result.throwable,
+                            "TokenAuthenticator → transient reissue failure: code=${result.responseCode}, message=${result.message}"
+                        )
                         null
                     }
                 }
