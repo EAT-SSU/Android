@@ -220,23 +220,44 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           VERSION: ${{ steps.extract_info.outputs.version }}
         run: |
-          # GitHub Release가 생성된 후 노트를 가져오기 위해 잠시 대기
-          sleep 3
-          
-          # GitHub API로 릴리즈 노트 가져오기
+          # GitHub Release 생성 확인을 위한 폴링
           RELEASE_TAG="v$VERSION"
-          RELEASE_RESPONSE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG")
+          MAX_ATTEMPTS=30
+          ATTEMPT=1
+          
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            RELEASE_RESPONSE=$(curl -s --show-error -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG")
+            
+            if echo "$RELEASE_RESPONSE" | jq -e '.message' >/dev/null 2>&1; then
+              echo "⏳ Release 아직 생성되지 않음 ($ATTEMPT/$MAX_ATTEMPTS)..."
+              sleep 2
+              ATTEMPT=$((ATTEMPT + 1))
+            else
+              echo "✅ Release 생성 확인 완료"
+              break
+            fi
+          done
+          
+          if [ $ATTEMPT -gt $MAX_ATTEMPTS ]; then
+            echo "❌ Release 생성 시간 초과"
+            exit 1
+          fi
           
           # 릴리즈 노트 본문 추출 (자동 생성된 부분만)
-          GITHUB_NOTES=$(echo "$RELEASE_RESPONSE" | jq -r '.body // ""' | \
-            grep -A 100 "## What'"'"'s Changed" | \
-            grep -v "^---" | \
-            grep -v "^### 빌드 정보" | \
-            head -30 | \
-            sed 's/^\*\s*/- /' | \
-            sed 's/^##\s*//' | \
-            sed '/^$/d')
+          if ! command -v jq &> /dev/null; then
+            echo "❌ jq가 설치되지 않음"
+            GITHUB_NOTES="- [Fix] 릴리즈 노트를 가져올 수 없습니다."
+          else
+            GITHUB_NOTES=$(echo "$RELEASE_RESPONSE" | jq -r '.body // ""' | \
+              grep -A 100 "## What'"'"'s Changed" | \
+              grep -v "^---" | \
+              grep -v "^### 빌드 정보" | \
+              head -30 | \
+              sed 's/^\*\s*/- /' | \
+              sed 's/^##\s*//' | \
+              sed '/^$/d')
+          fi
           
           if [ -z "$GITHUB_NOTES" ] || [ "$GITHUB_NOTES" = "null" ] || [ -z "$(echo "$GITHUB_NOTES" | tr -d '\n')" ]; then
             GITHUB_NOTES="- [Fix] 릴리즈 노트를 가져올 수 없습니다."
