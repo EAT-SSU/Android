@@ -110,17 +110,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-
         if (requestCode == 1000) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 승인됨
-                showInfoToast("EAT-SSU 알림 수신을 동의하였습니다.")
-                myPageViewModel.setNotificationOn() //바로 알림 받도록 설정
+                myPageViewModel.setNotificationOn()
             } else {
                 // 권한이 거부됨
-                showInfoToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
-                myPageViewModel.setNotificationOff() //바로 알림 받도록 설정
+                myPageViewModel.setNotificationOff()
             }
         }
     }
