@@ -2,16 +2,20 @@ package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
-import com.eatssu.android.domain.usecase.review.GetReviewListUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewListViewModel @Inject constructor(
     private val getReviewInfoUseCase: GetReviewInfoUseCase,
-    private val getReviewListUseCase: GetReviewListUseCase,
+    private val getReviewListPagedUseCase: GetReviewListPagedUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
 
@@ -32,6 +36,9 @@ class ReviewListViewModel @Inject constructor(
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
+
+    private val _reviewPagingData = MutableStateFlow<Flow<PagingData<Review>>?>(null)
+    val reviewPagingData: StateFlow<Flow<PagingData<Review>>?> = _reviewPagingData.asStateFlow()
 
     // 마지막 조회 파라미터 저장하여 삭제 후 재조회에 사용
     private var lastMenuType: MenuType? = null
@@ -50,8 +57,11 @@ class ReviewListViewModel @Inject constructor(
 
         try {
             val reviewInfo = getReviewInfoUseCase(menuType, itemId)
-            val reviewList = getReviewListUseCase(menuType, itemId)
-            _uiState.value = UiState.Success(ReviewListState(reviewInfo, reviewList))
+            val reviewPagingFlow = getReviewListPagedUseCase(menuType, itemId)
+                .cachedIn(viewModelScope)
+            
+            _reviewPagingData.value = reviewPagingFlow
+            _uiState.value = UiState.Success(ReviewListState(reviewInfo, emptyList()))
         } catch (e: Exception) {
             _uiState.value = UiState.Error
             _uiEvent.emit(UiEvent.ShowToast("리뷰를 불러오지 못했습니다.", ToastType.ERROR))
