@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,6 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
@@ -53,6 +57,7 @@ import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.DelayedLoadingIndicator
+import androidx.paging.compose.LazyPagingItems
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
@@ -82,6 +87,8 @@ fun ReviewListScreen(
     TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
+    val reviewPagingFlow by viewModel.reviewPagingData.collectAsStateWithLifecycle()
+    val reviewPagingItems = reviewPagingFlow?.collectAsLazyPagingItems()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
     when (uiEvent) {
@@ -92,6 +99,7 @@ fun ReviewListScreen(
 
     ReviewListScreen(
         uiState = reviewListState,
+        reviewPagingItems = reviewPagingItems,
         modifier = modifier,
         menuName = menuName,
         onBack = onBack,
@@ -104,6 +112,7 @@ fun ReviewListScreen(
 @Composable
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
+    reviewPagingItems: LazyPagingItems<Review>?,
     modifier: Modifier = Modifier,
     menuName: String,
     onBack: () -> Unit = {},
@@ -172,9 +181,7 @@ internal fun ReviewListScreen(
                 .fillMaxSize()
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
@@ -253,32 +260,42 @@ internal fun ReviewListScreen(
                                 )
                             }
 
-                            if (uiState.data?.reviewList?.size == 0) {
+                            if (reviewPagingItems?.itemCount == 0) {
                                 EmptyReviewContent(
                                     modifier = Modifier
                                         .fillMaxHeight()
                                         .padding(top = 100.dp),
                                 )
                             } else {
-                                reviewList.forEach { item ->
-                                    ReviewItem(
-                                        modifier = Modifier.padding(horizontal = 24.dp),
-                                        writeName = item.writerNickname,
-                                        writeDate = item.writeDate,
-                                        content = item.content,
-                                        rating = item.rating,
-                                        menuLikeInfoList = item.menuLikeInfoList,
-                                        imgUrl = item.imgUrl,
-                                        onMoreClick = {
-                                            if (item.isWriter) {
-                                                showMyBottomSheet = true
-                                                selectedReview = item
-                                            } else {
-                                                showOthersBottomSheet = true
-                                                selectedReview = item
-                                            }
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    items(
+                                        count = reviewPagingItems?.itemCount ?: 0,
+                                        key = reviewPagingItems?.itemKey { it.reviewId }
+                                    ) { index ->
+                                        val item = reviewPagingItems?.get(index)
+                                        item?.let {
+                                            ReviewItem(
+                                                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                                                writeName = it.writerNickname,
+                                                writeDate = it.writeDate,
+                                                content = it.content,
+                                                rating = it.rating,
+                                                menuLikeInfoList = it.menuLikeInfoList,
+                                                imgUrl = it.imgUrl,
+                                                onMoreClick = {
+                                                    if (it.isWriter) {
+                                                        showMyBottomSheet = true
+                                                        selectedReview = it
+                                                    } else {
+                                                        showOthersBottomSheet = true
+                                                        selectedReview = it
+                                                    }
+                                                }
+                                            )
                                         }
-                                    )
+                                    }
                                 }
                             }
                         }
