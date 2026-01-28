@@ -94,13 +94,7 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
         return reviewService.modifyReview(reviewId, request).isSuccess()
     }
 
-    override suspend fun getMealReviewList(mealId: Long?): List<Review> {
-        return reviewService.getMealReviewList(mealId).map { it.toDomain() }.orEmptyList()
-    }
 
-    override suspend fun getMenuReviewList(menuId: Long?): List<Review> {
-        return reviewService.getMenuReviewList(menuId).map { it.toDomain() }.orEmptyList()
-    }
 
     override suspend fun getMealReviewInfo(mealId: Long): ReviewInfo? =
         reviewService.getMealReviewInfo(mealId).map { it.toDomain() }.orNull()

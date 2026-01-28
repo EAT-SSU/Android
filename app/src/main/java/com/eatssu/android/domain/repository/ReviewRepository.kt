@@ -35,13 +35,7 @@ interface ReviewRepository {
         menuLikeInfoList: List<Review.MenuLikeInfo>,
     ): Boolean
 
-    suspend fun getMenuReviewList(
-        menuId: Long?,
-    ): List<Review>
 
-    suspend fun getMealReviewList(
-        mealId: Long?,
-    ): List<Review>
 
     suspend fun getMenuReviewInfo(
         menuId: Long,

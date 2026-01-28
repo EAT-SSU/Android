@@ -50,15 +50,17 @@ interface ReviewService {
     @GET("/v2/reviews/list/meal") //리뷰 리스트 조회
     suspend fun getMealReviewList(
         @Query("mealId") mealId: Long?,
+        @Query("page") page: Int? = 0,
+        @Query("size") size: Int? = 20,
+        @Query("sort") sort: List<String>? = arrayListOf("date", "DESC"),
     ): ApiResult<MealReviewListResponse>
 
     @GET("/v2/reviews/list/menu") //리뷰 리스트 조회
     suspend fun getMenuReviewList(
         @Query("menuId") menuId: Long?,
-////        @Query("lastReviewId") lastReviewId: Long?,
-//        @Query("page") page: Int? = 0,
-//        @Query("size") size: Int? = 20,
-//        @Query("sort") sort: List<String>? = arrayListOf("date", "DESC"),
+        @Query("page") page: Int? = 0,
+        @Query("size") size: Int? = 20,
+        @Query("sort") sort: List<String>? = arrayListOf("date", "DESC"),
     ): ApiResult<MenuReviewListResponse>
 
     @GET("/v2/reviews/statistics/menus/{menuId}") //고정 메뉴 리뷰 정보 조회(메뉴명, 평점 등등)
