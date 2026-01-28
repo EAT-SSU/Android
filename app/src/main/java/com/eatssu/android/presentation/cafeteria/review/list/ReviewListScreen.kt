@@ -242,7 +242,7 @@ internal fun ReviewListScreen(
 
                         ReviewInfoContent(menuName, info)
 
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
                             Spacer(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
