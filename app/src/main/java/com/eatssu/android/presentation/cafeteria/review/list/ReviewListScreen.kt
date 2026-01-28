@@ -302,7 +302,7 @@ internal fun ReviewListScreen(
                                 )
                             } else {
                                 LazyColumn(
-                                    modifier = Modifier.fillMaxSize()
+                                    modifier = Modifier.fillMaxWidth().weight(1f)
                                 ) {
                                     items(
                                         count = reviewPagingItems.itemCount,
