@@ -5,8 +5,6 @@ import androidx.paging.PagingState
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
-import retrofit2.HttpException
-import java.io.IOException
 
 abstract class BaseReviewPagingSource<T : Any>(
     protected val reviewService: ReviewService,
@@ -16,10 +14,8 @@ abstract class BaseReviewPagingSource<T : Any>(
         return try {
             val page = params.key ?: 0
             val pageSize = params.loadSize
-            
-            val response = executeRequest(page, pageSize)
 
-            when (response) {
+            when (val response = executeRequest(page, pageSize)) {
                 is ApiResult.Success -> {
                     val reviews = response.data.toReviewList()
                     val hasNext = response.data.hasMorePages()

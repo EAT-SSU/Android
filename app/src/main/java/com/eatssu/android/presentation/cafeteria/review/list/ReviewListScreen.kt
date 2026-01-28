@@ -242,7 +242,9 @@ internal fun ReviewListScreen(
 
                         ReviewInfoContent(menuName, info)
 
-                        Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)) {
                             Spacer(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
@@ -266,7 +268,7 @@ internal fun ReviewListScreen(
 
                             val loadState = reviewPagingItems.loadState
                             val isInitialLoading = loadState.refresh is LoadState.Loading
-                            val isError = loadState.refresh is androidx.paging.LoadState.Error
+                            val isError = loadState.refresh is LoadState.Error
 
                             if (isInitialLoading) {
                                 Box(
@@ -302,7 +304,9 @@ internal fun ReviewListScreen(
                                 )
                             } else {
                                 LazyColumn(
-                                    modifier = Modifier.fillMaxWidth().weight(1f)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f)
                                 ) {
                                     items(
                                         count = reviewPagingItems.itemCount,

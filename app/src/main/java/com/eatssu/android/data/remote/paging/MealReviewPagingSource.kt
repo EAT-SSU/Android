@@ -1,9 +1,8 @@
 package com.eatssu.android.data.remote.paging
 
-import com.eatssu.android.data.remote.service.ReviewService
-
 import com.eatssu.android.data.remote.dto.response.MealReviewListResponse
 import com.eatssu.android.data.remote.dto.response.toDomain
+import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 
 class MealReviewPagingSource(
