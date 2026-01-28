@@ -163,15 +163,19 @@ platform :android do
         File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
         File.chmod(0600, service_account_path)
         
-        upload_to_play_store(
-          track: track,
-          aab: aab_path,
-          json_key: service_account_path,
-          skip_upload_apk: true,
-          skip_upload_metadata: true,
-          skip_upload_images: true,
           skip_upload_screenshots: true
-        )
+        }
+        
+        # 릴리즈 노트 파일이 있으면 추가 (RELEASE_NOTES.txt)
+        if File.exist?(RELEASE_NOTES_FILE)
+          release_notes_content = File.read(RELEASE_NOTES_FILE).strip
+          if !release_notes_content.empty? && release_notes_content.length >= 10
+            upload_params[:release_notes_file] = RELEASE_NOTES_FILE
+            UI.message("📝 릴리즈 노트 파일 포함: #{RELEASE_NOTES_FILE}")
+          end
+        end
+        
+        upload_to_play_store(upload_params)
         
         UI.success("✅ Play Store #{track} 트랙에 배포 완료")
       ensure
