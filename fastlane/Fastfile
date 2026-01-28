@@ -168,7 +168,7 @@ platform :android do
           aab: aab_path,
           json_key: service_account_path,
           skip_upload_apk: true,
-          skip_upload_metadata: false,
+          skip_upload_metadata: true,
           skip_upload_images: true,
           skip_upload_screenshots: true
         }
@@ -457,7 +457,7 @@ platform :android do
           aab: aab_path,
           json_key: service_account_path,
           skip_upload_apk: true,
-          skip_upload_metadata: false,
+          skip_upload_metadata: true,
           metadata_path: metadata_dir,
           skip_upload_images: true,
           skip_upload_screenshots: true
