@@ -4,7 +4,7 @@ ko: |
   - 안쓰는 이미지 파일을 지워서 앱을 가볍게 만들었어요
   - 식단 속 메뉴의 구분자를 변경해 가시성을 올렸어요
 en: |
-  - I corrected an error that I can't access to Kakao Talk inquiry
-  - I corrected the error message of the duplicate nickname
-  - I deleted the image file that I don't use, so I made the app light
-  - I increased visibility by changing the separator of the menu in my diet
+  - Fixed an issue preventing access to KakaoTalk inquiries
+  - Clarified the error message for duplicate nicknames
+  - Optimized app size by removing unused images
+  - Enhanced menu readability by adjusting separators in meal plans
