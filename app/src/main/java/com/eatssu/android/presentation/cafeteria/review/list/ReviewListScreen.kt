@@ -540,6 +540,16 @@ fun EmptyReviewContent(modifier: Modifier) {
 }
 
 
+@Composable
+fun <T : Any> rememberPreviewPagingItems(
+    pagingData: androidx.paging.PagingData<T>
+): androidx.paging.compose.LazyPagingItems<T> {
+    val flow = remember {
+        kotlinx.coroutines.flow.flowOf(pagingData)
+    }
+    return androidx.paging.compose.collectAsLazyPagingItems(flow)
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ReviewListPreview() {
@@ -584,7 +594,7 @@ fun ReviewListPreview() {
                     ),
                 )
             ),
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
@@ -619,7 +629,7 @@ fun ReviewListLoadingPreview() {
                     ),
                 )
             ),
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
@@ -654,7 +664,7 @@ fun ReviewListEmptyPreview() {
                     ),
                 )
             ),
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
@@ -677,7 +687,7 @@ fun ReviewListErrorPreview() {
             onModifyClick = {},
             onDeleteClick = {},
             uiState = UiState.Error,
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
