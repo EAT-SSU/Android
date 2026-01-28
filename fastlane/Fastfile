@@ -159,7 +159,7 @@ platform :android do
       # 서비스 계정 JSON을 파일로 저장 (보안 권한 설정)
       service_account_path = "/tmp/google-play-service-account.json"
       
-      begin
+
         File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
         File.chmod(0600, service_account_path)
         
