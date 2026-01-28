@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -37,6 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.eatssu.android.R
@@ -54,9 +57,8 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
-import com.eatssu.design_system.component.DelayedLoadingIndicator
-import androidx.paging.compose.LazyPagingItems
 import com.eatssu.common.enums.ToastType
+import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
@@ -64,6 +66,7 @@ import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Star
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ReviewListScreen(
@@ -333,7 +336,9 @@ internal fun ReviewListScreen(
                                         is androidx.paging.LoadState.Loading -> {
                                             item {
                                                 Box(
-                                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(16.dp),
                                                     contentAlignment = Alignment.Center
                                                 ) {
                                                     DelayedLoadingIndicator(modifier = Modifier)
@@ -343,7 +348,9 @@ internal fun ReviewListScreen(
                                         is androidx.paging.LoadState.Error -> {
                                             item {
                                                 Column(
-                                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(16.dp),
                                                     horizontalAlignment = Alignment.CenterHorizontally
                                                 ) {
                                                     Text("추가 데이터를 불러오지 못했습니다.")
@@ -539,16 +546,16 @@ fun EmptyReviewContent(modifier: Modifier) {
     }
 }
 
-
 @Composable
 fun <T : Any> rememberPreviewPagingItems(
-    pagingData: androidx.paging.PagingData<T>
-): androidx.paging.compose.LazyPagingItems<T> {
+    pagingData: PagingData<T>
+): LazyPagingItems<T> {
     val flow = remember {
-        kotlinx.coroutines.flow.flowOf(pagingData)
+        flowOf(pagingData)
     }
-    return androidx.paging.compose.collectAsLazyPagingItems(flow)
+    return flow.collectAsLazyPagingItems()
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -566,12 +573,12 @@ fun ReviewListPreview() {
         )
     }
 
-    val pagingData = androidx.paging.PagingData.from(
+    val pagingData = PagingData.from(
         reviewList,
-        sourceLoadStates = androidx.paging.LoadStates(
-            refresh = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
-            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
-            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false)
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.NotLoading(endOfPaginationReached = false),
+            prepend = LoadState.NotLoading(endOfPaginationReached = false),
+            append = LoadState.NotLoading(endOfPaginationReached = false)
         )
     )
 
@@ -602,11 +609,11 @@ fun ReviewListPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListLoadingPreview() {
-    val pagingData = androidx.paging.PagingData.empty<Review>(
-        sourceLoadStates = androidx.paging.LoadStates(
-            refresh = androidx.paging.LoadState.Loading,
-            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
-            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false)
+    val pagingData = PagingData.empty<Review>(
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.Loading,
+            prepend = LoadState.NotLoading(endOfPaginationReached = false),
+            append = LoadState.NotLoading(endOfPaginationReached = false)
         )
     )
 
@@ -637,11 +644,11 @@ fun ReviewListLoadingPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListEmptyPreview() {
-    val pagingData = androidx.paging.PagingData.empty<Review>(
-        sourceLoadStates = androidx.paging.LoadStates(
-            refresh = androidx.paging.LoadState.NotLoading(endOfPaginationReached = true),
-            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = true),
-            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = true)
+    val pagingData = PagingData.empty<Review>(
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.NotLoading(endOfPaginationReached = true),
+            prepend = LoadState.NotLoading(endOfPaginationReached = true),
+            append = LoadState.NotLoading(endOfPaginationReached = true)
         )
     )
 
@@ -672,11 +679,11 @@ fun ReviewListEmptyPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListErrorPreview() {
-    val pagingData = androidx.paging.PagingData.empty<Review>(
-        sourceLoadStates = androidx.paging.LoadStates(
-            refresh = androidx.paging.LoadState.Error(Exception("Error")),
-            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
-            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false)
+    val pagingData = PagingData.empty<Review>(
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.Error(Exception("Error")),
+            prepend = LoadState.NotLoading(endOfPaginationReached = false),
+            append = LoadState.NotLoading(endOfPaginationReached = false)
         )
     )
 
