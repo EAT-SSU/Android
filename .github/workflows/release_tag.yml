@@ -109,6 +109,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > keystore.jks
+
       - name: Setup environment variables
         env:
           DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
@@ -166,7 +170,12 @@ jobs:
           POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
           POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
           GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
+          GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           VERSION: ${{ steps.extract_info.outputs.version }}
         run: |
           # fastlane release lane 실행
