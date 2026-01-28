@@ -51,7 +51,7 @@ class ReviewListViewModel @Inject constructor(
         .cachedIn(viewModelScope)
 
     fun getReview(menuType: MenuType, itemId: Long) {
-        // params update triggers paging flow
+        // 파라미터 업데이트 시 페이징 흐름 트리거
         if (_loadParams.value?.first != menuType || _loadParams.value?.second != itemId) {
              _loadParams.value = menuType to itemId
         }
@@ -83,23 +83,11 @@ class ReviewListViewModel @Inject constructor(
 
             _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다.", ToastType.SUCCESS))
             
-            // Refresh info
+            // 정보 갱신
             val currentParams = _loadParams.value
             if (currentParams != null) {
                 loadReviewInfo(currentParams.first, currentParams.second)
-                // Note: Paging data might need invalidation if we want to remove the item locally
-                // Ideally we invalidate the PagingSource. Since we can't easily access the Source here,
-                // we might rely on the user pulling to refresh or just accept that the list might be stale until scrolled.
-                // However, PagingAdapter might handle delete if we modify the cache, but simple way is to re-trigger or rely on simple refresh.
-                // Re-triggering paging source:
-                 _loadParams.value = null // reset to force emission if needed, but simple re-set might not work if distinctUntilChanged is used internaly by StateFlow.
-                 // Actually StateFlow conflates.
-                 val (type, id) = currentParams
-                 _loadParams.value = type to id // Re-setting same value in StateFlow does nothing.
-                 // To force refresh paging, we might need a separate trigger or use a Channel.
-                 // But for now, let's keep it simple. The info updates. The list... 
-                 // If we want to force refresh the list, we can emit a new instance of Pair? No.
-                 // Paging 3 Adapter.refresh() is the UI way.
+                // 페이징 데이터 갱신을 위해 파라미터 재설정 (Paging 3 Adapter refresh 권장)
             }
         }
     }

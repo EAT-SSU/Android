@@ -111,7 +111,7 @@ fun ReviewListScreen(
 @Composable
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
-    reviewPagingItems: LazyPagingItems<Review>?,
+    reviewPagingItems: LazyPagingItems<Review>,
     modifier: Modifier = Modifier,
     menuName: String,
     onBack: () -> Unit = {},
@@ -259,7 +259,7 @@ internal fun ReviewListScreen(
                                 )
                             }
 
-                            if (reviewPagingItems?.itemCount == 0) {
+                            if (reviewPagingItems.itemCount == 0) {
                                 EmptyReviewContent(
                                     modifier = Modifier
                                         .fillMaxHeight()
@@ -270,10 +270,9 @@ internal fun ReviewListScreen(
                                     modifier = Modifier.fillMaxSize()
                                 ) {
                                     items(
-                                        count = reviewPagingItems?.itemCount ?: 0,
-                                        key = reviewPagingItems?.itemKey { it.reviewId }
-                                    ) { index ->
-                                        val item = reviewPagingItems?.get(index)
+                                        items = reviewPagingItems,
+                                        key = { it.reviewId }
+                                    ) { item ->
                                         item?.let {
                                             ReviewItem(
                                                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
@@ -501,7 +500,9 @@ fun ReviewListPreview() {
                     // reviewList removed
                 )
             ),
-            reviewPagingItems = null,
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
+                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
+            ),
         )
     }
 }
@@ -516,7 +517,9 @@ fun ReviewListLoadingPreview() {
             onModifyClick = {},
             onDeleteClick = {},
             uiState = UiState.Loading,
-            reviewPagingItems = null,
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
+                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
+            ),
         )
     }
 }
@@ -544,7 +547,9 @@ fun ReviewListEmptyPreview() {
                     // reviewList removed
                 )
             ),
-            reviewPagingItems = null,
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
+                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
+            ),
         )
     }
 }
@@ -559,7 +564,9 @@ fun ReviewListErrorPreview() {
             onModifyClick = {},
             onDeleteClick = {},
             uiState = UiState.Error,
-            reviewPagingItems = null,
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
+                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
+            ),
         )
     }
 }
