@@ -41,6 +41,9 @@ on:
   # push:
   #   branches:
   #     - develop
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   fastlane:
@@ -99,13 +102,25 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          # workflow_dispatch만 지원 (수동 실행)
-          if [ "${{ github.event.inputs.lane }}" == "deploy_release" ]; then
-            # Release 배포 시 추가 파라미터 전달
-            bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }} version:${{ github.event.inputs.version }} track:${{ github.event.inputs.track }}
-          else
-            # 일반 빌드
-            bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }}
+        run: |
+          if [[ "${{ github.ref }}" =~ ^refs/tags/v ]]; then
+            # Tag Push 감지 (예: v1.0.0 -> 1.0.0)
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            VERSION=${TAG_NAME#v}
+            echo "🚀 Tag Push detected: $TAG_NAME (Version: $VERSION)"
+            
+            # 태그 배포는 기본적으로 internal 트랙으로 배포 (필요시 수정 가능)
+            bundle exec fastlane deploy_release version:$VERSION track:internal environment:production
+            
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # workflow_dispatch만 지원 (수동 실행)
+            if [ "${{ github.event.inputs.lane }}" == "deploy_release" ]; then
+              # Release 배포 시 추가 파라미터 전달
+              bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }} version:${{ github.event.inputs.version }} track:${{ github.event.inputs.track }}
+            else
+              # 일반 빌드
+              bundle exec fastlane ${{ github.event.inputs.lane }} environment:${{ github.event.inputs.environment }}
+            fi
           fi
 
       - name: Upload APK artifact
@@ -121,8 +136,9 @@ jobs:
 
       - name: Upload AAB artifact
         if: |
-          github.event_name == 'workflow_dispatch' &&
-          (contains(github.event.inputs.lane, 'aab') || github.event.inputs.lane == 'build_release_aab' || github.event.inputs.lane == 'deploy_internal_test' || github.event.inputs.lane == 'deploy_release')
+          startsWith(github.ref, 'refs/tags/v') ||
+          (github.event_name == 'workflow_dispatch' &&
+          (contains(github.event.inputs.lane, 'aab') || github.event.inputs.lane == 'build_release_aab' || github.event.inputs.lane == 'deploy_internal_test' || github.event.inputs.lane == 'deploy_release'))
         uses: actions/upload-artifact@v4
         with:
           name: app-aab-${{ github.event.inputs.version || 'latest' }}
