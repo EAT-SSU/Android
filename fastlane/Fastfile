@@ -163,6 +163,15 @@ platform :android do
         File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
         File.chmod(0600, service_account_path)
         
+        upload_params = {
+          track: track,
+          aab: aab_path,
+          json_key: service_account_path,
+          skip_upload_apk: true,
+          skip_upload_metadata: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true
+        }
         
         # 릴리즈 노트 처리 (YAML 기반)
         # 버전 정보가 없으면 build.gradle.kts에서 추출 시도
@@ -175,6 +184,7 @@ platform :android do
           # 임시 파일 생성
           temp_ko_notes = "/tmp/release_notes_ko.txt"
           temp_en_notes = "/tmp/release_notes_en.txt"
+          
           
           File.write(temp_ko_notes, release_notes['ko-KR'])
           File.write(temp_en_notes, release_notes['en-US'])
