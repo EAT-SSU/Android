@@ -240,134 +240,140 @@ internal fun ReviewListScreen(
                     is UiState.Success -> {
                         val info = uiState.data?.reviewInfo
 
-                        ReviewInfoContent(menuName, info)
+                        val loadState = reviewPagingItems.loadState
+                        val isInitialLoading = loadState.refresh is LoadState.Loading
+                        val isError = loadState.refresh is LoadState.Error
 
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)) {
-                            Spacer(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .fillMaxWidth()   // 가로 전체 차지
-                                    .height(16.dp)
-                                    .background(Gray100) // 배경색 적용
-                            )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            item {
+                                ReviewInfoContent(menuName, info)
+                            }
 
-                            Row(Modifier.padding(horizontal = 24.dp)) {
-                                Text(
-                                    "리뷰",
-                                    style = EatssuTheme.typography.h2,
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "${info?.reviewCnt}",
-                                    color = Primary,
-                                    style = EatssuTheme.typography.h2,
+                            item {
+                                Spacer(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .fillMaxWidth()
+                                        .height(16.dp)
+                                        .background(Gray100)
                                 )
                             }
 
-                            val loadState = reviewPagingItems.loadState
-                            val isInitialLoading = loadState.refresh is LoadState.Loading
-                            val isError = loadState.refresh is LoadState.Error
+                            item {
+                                Row(Modifier.padding(horizontal = 24.dp)) {
+                                    Text(
+                                        "리뷰",
+                                        style = EatssuTheme.typography.h2,
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "${info?.reviewCnt}",
+                                        color = Primary,
+                                        style = EatssuTheme.typography.h2,
+                                    )
+                                }
+                            }
 
                             if (isInitialLoading) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .weight(1f),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    DelayedLoadingIndicator(modifier = Modifier)
-                                }
-                            } else if (isError) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .weight(1f),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text("리뷰를 불러오지 못했습니다.", style = EatssuTheme.typography.body1)
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                        EatSsuButton(
-                                            text = "재시도",
-                                            onClick = { reviewPagingItems.retry() },
-                                            modifier = Modifier.width(100.dp)
-                                        )
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 100.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        DelayedLoadingIndicator(modifier = Modifier)
                                     }
                                 }
-                            } else if (reviewPagingItems.itemCount == 0) {
-                                EmptyReviewContent(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(top = 100.dp),
-                                )
-                            } else {
-                                LazyColumn(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .weight(1f)
-                                ) {
-                                    items(
-                                        count = reviewPagingItems.itemCount,
-                                        key = reviewPagingItems.itemKey { it.reviewId }
-                                    ) { index ->
-                                        val item = reviewPagingItems.get(index)
-                                        item?.let {
-                                            ReviewItem(
-                                                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                                                writeName = it.writerNickname,
-                                                writeDate = it.writeDate,
-                                                content = it.content,
-                                                rating = it.rating,
-                                                menuLikeInfoList = it.menuLikeInfoList,
-                                                imgUrl = it.imgUrl,
-                                                onMoreClick = {
-                                                    if (it.isWriter) {
-                                                        showMyBottomSheet = true
-                                                        selectedReview = it
-                                                    } else {
-                                                        showOthersBottomSheet = true
-                                                        selectedReview = it
-                                                    }
-                                                }
+                            } else if (isError) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 100.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text("리뷰를 불러오지 못했습니다.", style = EatssuTheme.typography.body1)
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            EatSsuButton(
+                                                text = "재시도",
+                                                onClick = { reviewPagingItems.retry() },
+                                                modifier = Modifier.width(100.dp)
                                             )
                                         }
                                     }
-                                    
-                                    // Append Loading / Error
-                                    when (val appendState = loadState.append) {
-                                        is androidx.paging.LoadState.Loading -> {
-                                            item {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(16.dp),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    DelayedLoadingIndicator(modifier = Modifier)
+                                }
+                            } else if (reviewPagingItems.itemCount == 0) {
+                                item {
+                                    EmptyReviewContent(
+                                        modifier = Modifier
+                                            .fillParentMaxHeight(0.7f) // 적절한 높이 설정
+                                            .fillMaxWidth(),
+                                    )
+                                }
+                            } else {
+                                items(
+                                    count = reviewPagingItems.itemCount,
+                                    key = reviewPagingItems.itemKey { it.reviewId }
+                                ) { index ->
+                                    val item = reviewPagingItems.get(index)
+                                    item?.let {
+                                        ReviewItem(
+                                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                                            writeName = it.writerNickname,
+                                            writeDate = it.writeDate,
+                                            content = it.content,
+                                            rating = it.rating,
+                                            menuLikeInfoList = it.menuLikeInfoList,
+                                            imgUrl = it.imgUrl,
+                                            onMoreClick = {
+                                                if (it.isWriter) {
+                                                    showMyBottomSheet = true
+                                                    selectedReview = it
+                                                } else {
+                                                    showOthersBottomSheet = true
+                                                    selectedReview = it
                                                 }
                                             }
-                                        }
-                                        is androidx.paging.LoadState.Error -> {
-                                            item {
-                                                Column(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(16.dp),
-                                                    horizontalAlignment = Alignment.CenterHorizontally
-                                                ) {
-                                                    Text("추가 데이터를 불러오지 못했습니다.")
-                                                    EatSsuButton(
-                                                        text = "재시도",
-                                                        onClick = { reviewPagingItems.retry() },
-                                                        modifier = Modifier.width(100.dp)
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        else -> {}
+                                        )
                                     }
+                                }
+
+                                // Append Loading / Error
+                                when (val appendState = loadState.append) {
+                                    is LoadState.Loading -> {
+                                        item {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(16.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                DelayedLoadingIndicator(modifier = Modifier)
+                                            }
+                                        }
+                                    }
+                                    is LoadState.Error -> {
+                                        item {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Text("추가 데이터를 불러오지 못했습니다.")
+                                                EatSsuButton(
+                                                    text = "재시도",
+                                                    onClick = { reviewPagingItems.retry() },
+                                                    modifier = Modifier.width(100.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                    else -> {}
                                 }
                             }
                         }
