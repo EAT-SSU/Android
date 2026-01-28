@@ -80,6 +80,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > keystore.jks
+
       - name: Run fastlane
         env:
           DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
@@ -90,6 +94,10 @@ jobs:
           POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
           GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           # workflow_dispatch만 지원 (수동 실행)
           if [ "${{ github.event.inputs.lane }}" == "deploy_release" ]; then
