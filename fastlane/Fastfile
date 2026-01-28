@@ -163,24 +163,36 @@ platform :android do
         File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
         File.chmod(0600, service_account_path)
         
-          skip_upload_screenshots: true
-        }
         
-        # 릴리즈 노트 파일이 있으면 추가 (RELEASE_NOTES.txt)
-        if File.exist?(RELEASE_NOTES_FILE)
-          release_notes_content = File.read(RELEASE_NOTES_FILE).strip
-          if !release_notes_content.empty? && release_notes_content.length >= 10
-            upload_params[:release_notes_file] = RELEASE_NOTES_FILE
-            UI.message("📝 릴리즈 노트 파일 포함: #{RELEASE_NOTES_FILE}")
-          end
+        # 릴리즈 노트 처리 (YAML 기반)
+        # 버전 정보가 없으면 build.gradle.kts에서 추출 시도
+        version_info_data = version_info
+        version_name = version_info_data[:version_name]
+        
+        release_notes = load_release_notes(version_name)
+        
+        if release_notes
+          # 임시 파일 생성
+          temp_ko_notes = "/tmp/release_notes_ko.txt"
+          temp_en_notes = "/tmp/release_notes_en.txt"
+          
+          File.write(temp_ko_notes, release_notes['ko-KR'])
+          File.write(temp_en_notes, release_notes['en-US'])
+          
+          upload_params[:release_notes] = release_notes
         end
-        
+
         upload_to_play_store(upload_params)
         
         UI.success("✅ Play Store #{track} 트랙에 배포 완료")
+        if release_notes
+          UI.success("✅ 한국어/영어 릴리즈 노트 업데이트 완료")
+        end
       ensure
         # 임시 파일 삭제
         File.delete(service_account_path) if File.exist?(service_account_path)
+        File.delete(temp_ko_notes) if defined?(temp_ko_notes) && File.exist?(temp_ko_notes)
+        File.delete(temp_en_notes) if defined?(temp_en_notes) && File.exist?(temp_en_notes)
       end
     else
       UI.important("⚠️ GOOGLE_PLAY_SERVICE_ACCOUNT_JSON이 설정되지 않아 Play Store 배포를 건너뜁니다.")
@@ -227,6 +239,47 @@ platform :android do
       version_name: version_name,
       version_code: version_code
     }
+  end
+
+  # 릴리즈 노트 로드 헬퍼 함수
+  def load_release_notes(version)
+    if version.nil? || version.empty?
+      UI.important("⚠️ 버전 정보가 없어 릴리즈 노트를 로드할 수 없습니다.")
+      return nil
+    end
+
+    yaml_file = File.join(PROJECT_ROOT, 'release-notes', "v#{version}.yml")
+    unless File.exist?(yaml_file)
+      UI.important("⚠️ 릴리즈 노트 파일을 찾을 수 없습니다: #{yaml_file}")
+      return nil
+    end
+
+    UI.message("📝 YAML 릴리즈 노트 파일 발견: #{yaml_file}")
+
+    require 'yaml'
+    begin
+      release_notes_data = YAML.load_file(yaml_file)
+      ko_notes = release_notes_data['ko']
+      en_notes = release_notes_data['en']
+
+      if ko_notes.nil? || ko_notes.strip.empty?
+        UI.error("❌ 한국어 릴리즈 노트가 비어있습니다.")
+        ko_notes = "버그 수정 및 성능 개선"
+      end
+
+      if en_notes.nil? || en_notes.strip.empty?
+        UI.error("❌ 영어 릴리즈 노트가 비어있습니다.")
+        en_notes = "Bug fixes and performance improvements"
+      end
+
+      return {
+        'ko-KR' => ko_notes.strip,
+        'en-US' => en_notes.strip
+      }
+    rescue => e
+      UI.error("❌ YAML 파일 파싱 실패: #{e.message}")
+      return nil
+    end
   end
 
   desc "Release 배포 (태그 기반) - AAB 빌드 및 Play Store 배포"
@@ -336,36 +389,15 @@ platform :android do
       UI.user_error!("❌ 버전 정보가 필요합니다. version 파라미터를 제공하세요.")
     end
     
-    # 릴리즈 노트 YAML 파일 찾기
-    # 릴리즈 노트 YAML 파일 찾기
-    yaml_file = File.join(PROJECT_ROOT, 'release-notes', "v#{version}.yml")
-    unless File.exist?(yaml_file)
-      UI.user_error!("❌ 릴리즈 노트 파일을 찾을 수 없습니다: #{yaml_file}")
-    end
+    # 릴리즈 노트 로드 (헬퍼 사용)
+    release_notes = load_release_notes(version)
     
-    UI.message("📝 YAML 릴리즈 노트 파일 발견: #{yaml_file}")
-    
-    # YAML 파싱
-    require 'yaml'
-    begin
-      release_notes_data = YAML.load_file(yaml_file)
-      ko_notes = release_notes_data['ko']
-      en_notes = release_notes_data['en']
-      
-      if ko_notes.nil? || ko_notes.strip.empty?
-        UI.error("❌ 한국어 릴리즈 노트가 비어있습니다.")
-        ko_notes = "버그 수정 및 성능 개선"
-      end
-      
-      if en_notes.nil? || en_notes.strip.empty?
-        UI.error("❌ 영어 릴리즈 노트가 비어있습니다.")
-        en_notes = "Bug fixes and performance improvements"
-      end
-      
-    rescue => e
-      UI.error("❌ YAML 파일 파싱 실패: #{e.message}")
-      ko_notes = "버그 수정 및 성능 개선"
-      en_notes = "Bug fixes and performance improvements"
+    unless release_notes
+      # 릴리즈 노트가 없거나 파싱 실패 시 기본값 사용
+      release_notes = {
+        'ko-KR' => "버그 수정 및 성능 개선",
+        'en-US' => "Bug fixes and performance improvements"
+      }
     end
     
     # Production 환경으로 빌드
@@ -392,8 +424,8 @@ platform :android do
       temp_ko_notes = "/tmp/release_notes_ko.txt"
       temp_en_notes = "/tmp/release_notes_en.txt"
       
-      File.write(temp_ko_notes, ko_notes.strip)
-      File.write(temp_en_notes, en_notes.strip)
+      File.write(temp_ko_notes, release_notes['ko-KR'])
+      File.write(temp_en_notes, release_notes['en-US'])
       
       begin
         upload_to_play_store(
@@ -404,10 +436,7 @@ platform :android do
           skip_upload_metadata: true,
           skip_upload_images: true,
           skip_upload_screenshots: true,
-          release_notes: {
-            'ko-KR' => ko_notes.strip,
-            'en-US' => en_notes.strip
-          }
+          release_notes: release_notes
         )
         
         UI.success("✅ Play Store #{track} 트랙에 배포 완료")
