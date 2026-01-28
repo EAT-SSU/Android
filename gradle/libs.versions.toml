@@ -60,7 +60,7 @@ glanceAppwidget = "1.1.1"
 glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
 posthog = "3.+"
-paging = "3.3.5"
+paging = "3.3.6"
 
 [libraries]
 
