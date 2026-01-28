@@ -3,14 +3,12 @@ package com.eatssu.android.data.remote.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.eatssu.android.data.model.ApiResult
-import com.eatssu.android.data.remote.dto.response.ReviewListResponse
-import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 import retrofit2.HttpException
 import java.io.IOException
 
-abstract class BaseReviewPagingSource(
+abstract class BaseReviewPagingSource<T : Any>(
     protected val reviewService: ReviewService,
 ) : PagingSource<Int, Review>() {
 
@@ -23,8 +21,8 @@ abstract class BaseReviewPagingSource(
 
             when (response) {
                 is ApiResult.Success -> {
-                    val reviews = response.data.toDomain()
-                    val hasNext = response.data.hasNext
+                    val reviews = response.data.toReviewList()
+                    val hasNext = response.data.hasMorePages()
                     
                     LoadResult.Page(
                         data = reviews,
@@ -54,5 +52,7 @@ abstract class BaseReviewPagingSource(
         }
     }
 
-    protected abstract suspend fun executeRequest(page: Int, size: Int): ApiResult<ReviewListResponse>
+    protected abstract suspend fun executeRequest(page: Int, size: Int): ApiResult<T>
+    protected abstract fun T.toReviewList(): List<Review>
+    protected abstract fun T.hasMorePages(): Boolean
 }

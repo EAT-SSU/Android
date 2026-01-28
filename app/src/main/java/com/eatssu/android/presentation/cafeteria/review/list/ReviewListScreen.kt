@@ -90,9 +90,13 @@ fun ReviewListScreen(
     val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
-    when (uiEvent) {
-        is UiEvent.ShowToast -> {
-            context.showToast(uiEvent as UiEvent.ShowToast)
+    LaunchedEffect(uiEvent) {
+        val event = uiEvent
+        if (event is UiEvent.ShowToast) {
+            context.showToast(event)
+            if (event.type == ToastType.SUCCESS && event.message.contains("삭제")) {
+                reviewPagingItems.refresh()
+            }
         }
     }
 
@@ -233,7 +237,6 @@ internal fun ReviewListScreen(
 
                     is UiState.Success -> {
                         val info = uiState.data?.reviewInfo
-                        // val reviewList was removed
 
                         ReviewInfoContent(menuName, info)
 
@@ -259,7 +262,37 @@ internal fun ReviewListScreen(
                                 )
                             }
 
-                            if (reviewPagingItems.itemCount == 0) {
+                            val loadState = reviewPagingItems.loadState
+                            val isInitialLoading = loadState.refresh is androidx.paging.LoadState.Loading
+                            val isError = loadState.refresh is androidx.paging.LoadState.Error
+
+                            if (isInitialLoading) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    DelayedLoadingIndicator(modifier = Modifier)
+                                }
+                            } else if (isError) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("리뷰를 불러오지 못했습니다.", style = EatssuTheme.typography.body1)
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        EatSsuButton(
+                                            text = "재시도",
+                                            onClick = { reviewPagingItems.retry() },
+                                            modifier = Modifier.width(100.dp)
+                                        )
+                                    }
+                                }
+                            } else if (reviewPagingItems.itemCount == 0) {
                                 EmptyReviewContent(
                                     modifier = Modifier
                                         .fillMaxHeight()
@@ -293,6 +326,36 @@ internal fun ReviewListScreen(
                                                 }
                                             )
                                         }
+                                    }
+                                    
+                                    // Append Loading / Error
+                                    when (val appendState = loadState.append) {
+                                        is androidx.paging.LoadState.Loading -> {
+                                            item {
+                                                Box(
+                                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    DelayedLoadingIndicator(modifier = Modifier)
+                                                }
+                                            }
+                                        }
+                                        is androidx.paging.LoadState.Error -> {
+                                            item {
+                                                Column(
+                                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                                    horizontalAlignment = Alignment.CenterHorizontally
+                                                ) {
+                                                    Text("추가 데이터를 불러오지 못했습니다.")
+                                                    EatSsuButton(
+                                                        text = "재시도",
+                                                        onClick = { reviewPagingItems.retry() },
+                                                        modifier = Modifier.width(100.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        else -> {}
                                     }
                                 }
                             }
