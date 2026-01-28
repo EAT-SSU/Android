@@ -65,7 +65,7 @@ class TokenAuthenticator @Inject constructor(
                     is ReissueAndStoreResult.MissingRefreshToken -> {
                         Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
                         logoutUseCase()
-                        TokenEventBus.notifyTokenExpired()
+                        TokenEventBus.notifyTokenExpired(com.eatssu.android.presentation.base.LogoutReason.MISSING_REFRESH_TOKEN)
                         null
                     }
 
@@ -74,7 +74,7 @@ class TokenAuthenticator @Inject constructor(
                             "TokenAuthenticator → refresh invalid: code=${result.responseCode}, message=${result.message}"
                         )
                         logoutUseCase()
-                        TokenEventBus.notifyTokenExpired()
+                        TokenEventBus.notifyTokenExpired(com.eatssu.android.presentation.base.LogoutReason.REFRESH_TOKEN_EXPIRED)
                         null
                     }
 
