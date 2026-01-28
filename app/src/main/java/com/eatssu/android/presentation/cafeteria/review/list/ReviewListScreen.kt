@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.paging.compose.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -304,9 +302,10 @@ internal fun ReviewListScreen(
                                     modifier = Modifier.fillMaxSize()
                                 ) {
                                     items(
-                                        items = reviewPagingItems,
-                                        key = { it.reviewId }
-                                    ) { item ->
+                                        count = reviewPagingItems.itemCount,
+                                        key = reviewPagingItems.itemKey { it.reviewId }
+                                    ) { index ->
+                                        val item = reviewPagingItems.get(index)
                                         item?.let {
                                             ReviewItem(
                                                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
@@ -544,6 +543,28 @@ fun EmptyReviewContent(modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListPreview() {
+    val reviewList = List(5) { id ->
+        Review(
+            reviewId = id.toLong(),
+            isWriter = false,
+            menuLikeInfoList = emptyList(),
+            writerNickname = "작성자 $id",
+            rating = 5,
+            writeDate = "2024.10.10",
+            content = "맛있어요 $id",
+            imgUrl = null
+        )
+    }
+
+    val pagingData = androidx.paging.PagingData.from(
+        reviewList,
+        sourceLoadStates = androidx.paging.LoadStates(
+            refresh = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
+            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
+            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
@@ -553,20 +574,17 @@ fun ReviewListPreview() {
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
-                        reviewCnt = 123,
-                        fiveStarCount = 80,
-                        fourStarCount = 20,
-                        threeStarCount = 10,
-                        twoStarCount = 5,
-                        oneStarCount = 8,
-                        rating = 4.5,
+                        reviewCnt = 5,
+                        fiveStarCount = 5,
+                        fourStarCount = 0,
+                        threeStarCount = 0,
+                        twoStarCount = 0,
+                        oneStarCount = 0,
+                        rating = 5.0,
                     ),
-                    // reviewList removed
                 )
             ),
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
-                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
-            ),
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
         )
     }
 }
@@ -574,16 +592,34 @@ fun ReviewListPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListLoadingPreview() {
+    val pagingData = androidx.paging.PagingData.empty<Review>(
+        sourceLoadStates = androidx.paging.LoadStates(
+            refresh = androidx.paging.LoadState.Loading,
+            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
+            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Loading,
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
-                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
+            uiState = UiState.Success(
+                ReviewListState(
+                    reviewInfo = ReviewInfo(
+                        reviewCnt = 0,
+                        fiveStarCount = 0,
+                        fourStarCount = 0,
+                        threeStarCount = 0,
+                        twoStarCount = 0,
+                        oneStarCount = 0,
+                        rating = 0.0,
+                    ),
+                )
             ),
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
         )
     }
 }
@@ -591,6 +627,14 @@ fun ReviewListLoadingPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListEmptyPreview() {
+    val pagingData = androidx.paging.PagingData.empty<Review>(
+        sourceLoadStates = androidx.paging.LoadStates(
+            refresh = androidx.paging.LoadState.NotLoading(endOfPaginationReached = true),
+            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = true),
+            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = true)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기+닭고기+돼지고기+양고기",
@@ -608,12 +652,9 @@ fun ReviewListEmptyPreview() {
                         oneStarCount = 0,
                         rating = 0.0,
                     ),
-                    // reviewList removed
                 )
             ),
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
-                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
-            ),
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
         )
     }
 }
@@ -621,6 +662,14 @@ fun ReviewListEmptyPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListErrorPreview() {
+    val pagingData = androidx.paging.PagingData.empty<Review>(
+        sourceLoadStates = androidx.paging.LoadStates(
+            refresh = androidx.paging.LoadState.Error(Exception("Error")),
+            prepend = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false),
+            append = androidx.paging.LoadState.NotLoading(endOfPaginationReached = false)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
@@ -628,9 +677,7 @@ fun ReviewListErrorPreview() {
             onModifyClick = {},
             onDeleteClick = {},
             uiState = UiState.Error,
-            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(
-                kotlinx.coroutines.flow.flowOf(androidx.paging.PagingData.empty())
-            ),
+            reviewPagingItems = androidx.paging.compose.collectAsLazyPagingItems(kotlinx.coroutines.flow.flowOf(pagingData)),
         )
     }
 }
