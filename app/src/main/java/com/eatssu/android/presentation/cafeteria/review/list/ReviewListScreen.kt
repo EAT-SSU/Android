@@ -265,7 +265,7 @@ internal fun ReviewListScreen(
                             }
 
                             val loadState = reviewPagingItems.loadState
-                            val isInitialLoading = loadState.refresh is androidx.paging.LoadState.Loading
+                            val isInitialLoading = loadState.refresh is LoadState.Loading
                             val isError = loadState.refresh is androidx.paging.LoadState.Error
 
                             if (isInitialLoading) {
@@ -432,7 +432,7 @@ fun ReviewInfoContent(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
         Box(
