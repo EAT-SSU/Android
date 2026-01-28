@@ -87,8 +87,7 @@ fun ReviewListScreen(
     TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
-    val reviewPagingFlow by viewModel.reviewPagingData.collectAsStateWithLifecycle()
-    val reviewPagingItems = reviewPagingFlow?.collectAsLazyPagingItems()
+    val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
     when (uiEvent) {
@@ -234,7 +233,7 @@ internal fun ReviewListScreen(
 
                     is UiState.Success -> {
                         val info = uiState.data?.reviewInfo
-                        val reviewList = uiState.data?.reviewList ?: emptyList()
+                        // val reviewList was removed
 
                         ReviewInfoContent(menuName, info)
 
@@ -499,90 +498,10 @@ fun ReviewListPreview() {
                         oneStarCount = 8,
                         rating = 4.5,
                     ),
-                    reviewList = listOf(
-                        Review(
-                            isWriter = false,
-                            reviewId = 0,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "숭실푸드파이터",
-                            writeDate = "2024-12-31",
-                            rating = 4,
-                            content = "맛있어요",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 1,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "맛있는리뷰어",
-                            writeDate = "2024-12-30",
-                            rating = 5,
-                            content = "정말 맛있어요! 다음에도 먹고 싶어요.",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 2,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "음식평론가",
-                            writeDate = "2024-12-29",
-                            rating = 3,
-                            content = "그럭저럭 괜찮아요",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 2,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "음식평론가",
-                            writeDate = "2024-12-29",
-                            rating = 3,
-                            content = "그럭저럭 괜찮아요",
-                            imgUrl = "https://picsum.photos/400/301", // 실제 이미지 URL 사용
-                        )
-                    )
+                    // reviewList removed
                 )
             ),
+            reviewPagingItems = null,
         )
     }
 }
@@ -596,7 +515,8 @@ fun ReviewListLoadingPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Loading
+            uiState = UiState.Loading,
+            reviewPagingItems = null,
         )
     }
 }
@@ -621,9 +541,10 @@ fun ReviewListEmptyPreview() {
                         oneStarCount = 0,
                         rating = 0.0,
                     ),
-                    reviewList = emptyList()
+                    // reviewList removed
                 )
             ),
+            reviewPagingItems = null,
         )
     }
 }
@@ -637,7 +558,8 @@ fun ReviewListErrorPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Error
+            uiState = UiState.Error,
+            reviewPagingItems = null,
         )
     }
 }
