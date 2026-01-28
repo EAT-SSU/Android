@@ -100,7 +100,7 @@ bundle exec fastlane build_release_aab environment:production
 
 #### Release 배포
 
-`release/3.2.0` 브랜치를 `develop`에 머지하면 자동으로:
+`release/<version>` 브랜치를 `develop`에 머지하면 자동으로:
 
 - AAB 빌드
 - Play Store 배포

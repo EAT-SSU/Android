@@ -34,14 +34,16 @@ platform :android do
     base_url = environment == "production" ? prod_base_url : dev_base_url
     
     # local.properties에 값 추가
-    File.open(LOCAL_PROPS, "a") do |f|
-      f.puts("DEV_BASE_URL=\"#{dev_base_url}\"")
-      f.puts("PROD_BASE_URL=\"#{prod_base_url}\"")
-      f.puts("KAKAO_NATIVE_APP_KEY=#{kakao_key}")
-      f.puts("NAVER_MAPS_CLIENT_ID=#{naver_maps_id}")
-      f.puts("POSTHOG_API_KEY=#{posthog_api_key}")
-      f.puts("POSTHOG_HOST=#{posthog_host}")
-    end
+    # local.properties에 값 추가
+    properties = [
+      "DEV_BASE_URL=\"#{dev_base_url}\"",
+      "PROD_BASE_URL=\"#{prod_base_url}\"",
+      "KAKAO_NATIVE_APP_KEY=#{kakao_key}",
+      "NAVER_MAPS_CLIENT_ID=#{naver_maps_id}",
+      "POSTHOG_API_KEY=#{posthog_api_key}",
+      "POSTHOG_HOST=#{posthog_host}"
+    ]
+    File.write(LOCAL_PROPS, properties.join("\n") + "\n", mode: 'a')
     
     UI.success("✅ Environment setup completed for #{environment}")
   end
@@ -156,23 +158,26 @@ platform :android do
     if ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
       # 서비스 계정 JSON을 파일로 저장 (보안 권한 설정)
       service_account_path = "/tmp/google-play-service-account.json"
-      File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
-      File.chmod(0600, service_account_path)
       
-      upload_to_play_store(
-        track: track,
-        aab: aab_path,
-        json_key: service_account_path,
-        skip_upload_apk: true,
-        skip_upload_metadata: true,
-        skip_upload_images: true,
-        skip_upload_screenshots: true
-      )
-      
-      # 임시 파일 삭제
-      File.delete(service_account_path) if File.exist?(service_account_path)
-      
-      UI.success("✅ Play Store #{track} 트랙에 배포 완료")
+      begin
+        File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
+        File.chmod(0600, service_account_path)
+        
+        upload_to_play_store(
+          track: track,
+          aab: aab_path,
+          json_key: service_account_path,
+          skip_upload_apk: true,
+          skip_upload_metadata: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true
+        )
+        
+        UI.success("✅ Play Store #{track} 트랙에 배포 완료")
+      ensure
+        # 임시 파일 삭제
+        File.delete(service_account_path) if File.exist?(service_account_path)
+      end
     else
       UI.important("⚠️ GOOGLE_PLAY_SERVICE_ACCOUNT_JSON이 설정되지 않아 Play Store 배포를 건너뜁니다.")
       UI.success("✅ AAB 빌드 완료: #{aab_path}")
