@@ -189,8 +189,7 @@ jobs:
           VERSION: ${{ steps.extract_info.outputs.version }}
         run: |
           # fastlane release lane 실행
-          # RELEASE_NOTES.txt 파일이 있으면 자동으로 사용됨
-          bundle exec fastlane release version:${{ steps.extract_info.outputs.version }} track:${{ steps.extract_info.outputs.track }} deploy:false
+          bundle exec fastlane release version:${{ steps.extract_info.outputs.version }} track:${{ steps.extract_info.outputs.track }} deploy:true
 
       - name: Create GitHub Release with auto-generated notes
         if: success()
