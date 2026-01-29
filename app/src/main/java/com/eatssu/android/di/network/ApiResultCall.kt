@@ -65,7 +65,9 @@ class ApiResultCall<T : Any>(
             // errorBody를 JSON으로 파싱 시도
             if (!errorBodyString.isNullOrEmpty()) {
                 try {
-                    val errorResponse = gson.fromJson(errorBodyString, BaseResponse::class.java)
+                    val reader = com.google.gson.stream.JsonReader(java.io.StringReader(errorBodyString))
+                    reader.isLenient = true
+                    val errorResponse = gson.fromJson<BaseResponse<*>>(reader, BaseResponse::class.java)
 
                     // BaseResponse 형태인지 확인 (isSuccess가 false이고 code와 message가 있는 경우)
                     if (errorResponse?.isSuccess == false &&

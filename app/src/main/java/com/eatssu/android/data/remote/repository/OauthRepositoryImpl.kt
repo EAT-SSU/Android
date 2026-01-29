@@ -1,5 +1,7 @@
 package com.eatssu.android.data.remote.repository
 
+import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.domain.model.ReissueTokenResult
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orElse
 import com.eatssu.android.data.model.orNull
@@ -14,8 +16,19 @@ import javax.inject.Inject
 
 class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthService) :
     OauthRepository {
-    override suspend fun reissueToken(refreshToken: String): Token? =
-        oauthService.getNewToken(refreshToken).map { it.toDomain() }.orNull()
+    override suspend fun reissueToken(refreshToken: String): ReissueTokenResult {
+        val headerValue = refreshToken.asAuthorizationHeaderValue()
+        return when (val result = oauthService.getNewToken(headerValue)) {
+            is ApiResult.Success -> ReissueTokenResult.Success(result.data.toDomain())
+            is ApiResult.Failure -> ReissueTokenResult.Failure(
+                responseCode = result.responseCode,
+                message = result.message
+            )
+
+            is ApiResult.NetworkError -> ReissueTokenResult.Failure(throwable = result.exception)
+            is ApiResult.UnknownError -> ReissueTokenResult.Failure(throwable = result.exception)
+        }
+    }
 
     override suspend fun login(
         email: String,
@@ -33,3 +46,6 @@ class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthSer
     override suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean =
         oauthService.checkValidToken(body).orElse(false)
 }
+
+private fun String.asAuthorizationHeaderValue(): String =
+    if (startsWith("Bearer ")) this else "Bearer $this"

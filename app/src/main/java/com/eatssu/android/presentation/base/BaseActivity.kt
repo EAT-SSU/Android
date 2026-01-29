@@ -106,15 +106,9 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private fun observeTokenExpiration() {
         lifecycleScope.launch {
-            TokenEventBus.tokenExpired.collect {
+            TokenEventBus.tokenExpired.collect { reason ->
+                Timber.i("Logged out due to: $reason")
                 showInfoToast(R.string.toast_token_expired)
-                navigateToLogin()
-            }
-        }
-
-        lifecycleScope.launch {
-            TokenEventBus.tokenServerError.collect {
-                showInfoToast(R.string.toast_token_server_error)
                 navigateToLogin()
             }
         }
