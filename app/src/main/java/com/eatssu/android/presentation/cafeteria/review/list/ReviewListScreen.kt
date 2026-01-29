@@ -93,12 +93,14 @@ fun ReviewListScreen(
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
     LaunchedEffect(uiEvent) {
-        val event = uiEvent
-        if (event is UiEvent.ShowToast) {
-            context.showToast(event)
-            if (event.type == ToastType.SUCCESS && event.message.contains("삭제")) {
+        when (val event = uiEvent) {
+            is UiEvent.ShowToast -> context.showToast(event.message, event.type)
+            is ReviewListEvent.ReviewDeleted -> {
+                context.showToast("리뷰를 삭제했습니다.", ToastType.SUCCESS)
                 reviewPagingItems.refresh()
             }
+
+            else -> {}
         }
     }
 
@@ -238,7 +240,7 @@ internal fun ReviewListScreen(
 
 
                     is UiState.Success -> {
-                        val info = uiState.data?.reviewInfo
+                        val info = uiState.data.reviewInfo
 
                         val loadState = reviewPagingItems.loadState
                         val isInitialLoading = loadState.refresh is LoadState.Loading
@@ -296,7 +298,10 @@ internal fun ReviewListScreen(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                            Text("리뷰를 불러오지 못했습니다.", style = EatssuTheme.typography.body1)
+                                            Text(
+                                                "리뷰를 불러오지 못했습니다.",
+                                                style = EatssuTheme.typography.body1
+                                            )
                                             Spacer(modifier = Modifier.height(8.dp))
                                             EatSsuButton(
                                                 text = "재시도",
@@ -308,11 +313,17 @@ internal fun ReviewListScreen(
                                 }
                             } else if (reviewPagingItems.itemCount == 0) {
                                 item {
-                                    EmptyReviewContent(
+                                    Box(
                                         modifier = Modifier
-                                            .fillParentMaxHeight(0.7f) // 적절한 높이 설정
-                                            .fillMaxWidth(),
-                                    )
+                                            .align(Alignment.CenterHorizontally)
+                                            .fillMaxHeight(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        EmptyReviewContent(
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                        )
+                                    }
                                 }
                             } else {
                                 items(
@@ -322,7 +333,10 @@ internal fun ReviewListScreen(
                                     val item = reviewPagingItems.get(index)
                                     item?.let {
                                         ReviewItem(
-                                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                                            modifier = Modifier.padding(
+                                                horizontal = 24.dp,
+                                                vertical = 8.dp
+                                            ),
                                             writeName = it.writerNickname,
                                             writeDate = it.writeDate,
                                             content = it.content,
@@ -356,6 +370,7 @@ internal fun ReviewListScreen(
                                             }
                                         }
                                     }
+
                                     is LoadState.Error -> {
                                         item {
                                             Column(
@@ -373,6 +388,7 @@ internal fun ReviewListScreen(
                                             }
                                         }
                                     }
+
                                     else -> {}
                                 }
                             }
@@ -418,8 +434,8 @@ internal fun ReviewListScreen(
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .fillMaxHeight()
-                                    .padding(top = 100.dp)
+                                    .fillMaxHeight(),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     "에러가 발생했습니다.",

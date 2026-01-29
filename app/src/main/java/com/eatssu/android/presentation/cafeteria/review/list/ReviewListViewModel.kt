@@ -81,13 +81,12 @@ class ReviewListViewModel @Inject constructor(
                 return@launch
             }
 
-            _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다.", ToastType.SUCCESS))
+            _uiEvent.emit(ReviewListEvent.ReviewDeleted)
             
             // 정보 갱신
             val currentParams = _loadParams.value
             if (currentParams != null) {
                 loadReviewInfo(currentParams.first, currentParams.second)
-                // 페이징 데이터 갱신을 위해 파라미터 재설정 (Paging 3 Adapter refresh 권장)
             }
         }
     }
@@ -96,3 +95,8 @@ class ReviewListViewModel @Inject constructor(
 data class ReviewListState(
     val reviewInfo: ReviewInfo? = null,
 )
+
+
+sealed interface ReviewListEvent : UiEvent {
+    object ReviewDeleted : ReviewListEvent
+}
