@@ -3,12 +3,9 @@ package com.eatssu.android.data.remote.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.eatssu.android.data.model.ApiResult
-import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 
-abstract class BaseReviewPagingSource<T : Any>(
-    protected val reviewService: ReviewService,
-) : PagingSource<Int, Review>() {
+abstract class BaseReviewPagingSource<T : Any> : PagingSource<Int, Review>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Review> {
         return try {

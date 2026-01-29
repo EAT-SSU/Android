@@ -6,9 +6,9 @@ import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 
 class MealReviewPagingSource(
-    reviewService: ReviewService,
+    private val reviewService: ReviewService,
     private val mealId: Long?
-) : BaseReviewPagingSource<MealReviewListResponse>(reviewService) {
+) : BaseReviewPagingSource<MealReviewListResponse>() {
 
     override suspend fun executeRequest(page: Int, size: Int) =
         reviewService.getMealReviewList(
