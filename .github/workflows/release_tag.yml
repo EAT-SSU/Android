@@ -144,18 +144,28 @@ jobs:
       - name: Check Play Store release notes file
         id: check_release_notes
         run: |
-          if [ -f "RELEASE_NOTES.txt" ]; then
-            echo "✅ RELEASE_NOTES.txt 파일 발견"
+          RELEASE_NOTE_FILE="release-notes/v${{ steps.extract_info.outputs.version }}.yml"
+          
+          if [ -f "$RELEASE_NOTE_FILE" ]; then
+            echo "✅ $RELEASE_NOTE_FILE 파일 발견"
             echo "exists=true" >> $GITHUB_OUTPUT
-            # 릴리즈 노트 내용을 output에 저장
-            RELEASE_NOTES_CONTENT=$(cat RELEASE_NOTES.txt)
-            echo "release_notes<<EOF" >> $GITHUB_OUTPUT
-            echo "$RELEASE_NOTES_CONTENT" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-            echo "📄 릴리즈 노트 내용:"
-            head -10 RELEASE_NOTES.txt
+            
+            # Ruby를 사용하여 YAML 파싱 (안전함)
+            # YAML 파일에서 'ko' 키의 값을 추출
+            RELEASE_NOTES_CONTENT=$(ruby -e "require 'yaml'; begin; puts YAML.load_file('$RELEASE_NOTE_FILE')['ko']; rescue; end")
+            
+            if [ -z "$RELEASE_NOTES_CONTENT" ]; then
+               echo "⚠️ YAML 파일에서 'ko' 항목을 찾을 수 없거나 비어있습니다."
+               echo "release_notes=" >> $GITHUB_OUTPUT
+            else
+               echo "release_notes<<EOF" >> $GITHUB_OUTPUT
+               echo "$RELEASE_NOTES_CONTENT" >> $GITHUB_OUTPUT
+               echo "EOF" >> $GITHUB_OUTPUT
+               echo "📄 릴리즈 노트 내용:"
+               echo "$RELEASE_NOTES_CONTENT"
+            fi
           else
-            echo "⚠️ RELEASE_NOTES.txt 파일을 찾을 수 없습니다."
+            echo "⚠️ $RELEASE_NOTE_FILE 파일을 찾을 수 없습니다."
             echo "⚠️ Play Store 릴리즈 노트 없이 배포됩니다."
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "release_notes=" >> $GITHUB_OUTPUT
