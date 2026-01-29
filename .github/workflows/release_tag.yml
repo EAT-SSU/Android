@@ -259,7 +259,7 @@ jobs:
             GITHUB_NOTES="- [Fix] 릴리즈 노트를 가져올 수 없습니다."
           else
             GITHUB_NOTES=$(echo "$RELEASE_RESPONSE" | jq -r '.body // ""' | \
-              grep -A 100 "## What'"'"'s Changed" | \
+              grep -A 100 "## What's Changed" | \
               grep -v "^---" | \
               grep -v "^### 빌드 정보" | \
               head -30 | \
