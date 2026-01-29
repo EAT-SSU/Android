@@ -308,7 +308,7 @@ platform :android do
   lane :release do |options|
     version = options[:version] || ENV["VERSION"]
     track = options[:track] || "internal" # internal, alpha, beta, production
-    deploy_to_play_store = options[:deploy] != false
+    deploy_to_play_store = options[:deploy].to_s != "false" && options[:deploy] != false
     
     if version.nil? || version.empty?
       UI.user_error!("❌ 버전 정보가 필요합니다. version 파라미터를 제공하거나 VERSION 환경 변수를 설정하세요.")

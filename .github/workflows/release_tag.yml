@@ -130,7 +130,7 @@ jobs:
         id: previous_tag
         run: |
           # 가장 최근 태그 찾기 (vX.Y.Z 형식)
-          PREVIOUS_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | grep -E '^(v)?[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
           
           if [ -z "$PREVIOUS_TAG" ]; then
             echo "⚠️ 이전 태그를 찾을 수 없습니다. GitHub가 자동으로 첫 번째 릴리스 노트를 생성합니다."
@@ -180,13 +180,13 @@ jobs:
         run: |
           # fastlane release lane 실행
           # RELEASE_NOTES.txt 파일이 있으면 자동으로 사용됨
-          bundle exec fastlane release version:${{ steps.extract_info.outputs.version }} track:${{ steps.extract_info.outputs.track }}
+          bundle exec fastlane release version:${{ steps.extract_info.outputs.version }} track:${{ steps.extract_info.outputs.track }} deploy:false
 
       - name: Create GitHub Release with auto-generated notes
         if: success()
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "v${{ steps.extract_info.outputs.version }}"
+          tag_name: "${{ steps.extract_info.outputs.version }}"
           name: "Release ${{ steps.extract_info.outputs.version }}"
           target_commitish: ${{ github.event_name == 'pull_request' && github.event.pull_request.merge_commit_sha || github.sha }}
           generate_release_notes: true
@@ -230,7 +230,7 @@ jobs:
           VERSION: ${{ steps.extract_info.outputs.version }}
         run: |
           # GitHub Release 생성 확인을 위한 폴링
-          RELEASE_TAG="v$VERSION"
+          RELEASE_TAG="$VERSION"
           MAX_ATTEMPTS=30
           ATTEMPT=1
           
