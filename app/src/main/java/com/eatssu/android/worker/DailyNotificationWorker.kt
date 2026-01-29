@@ -1,25 +1,29 @@
-package com.eatssu.android.alarm
+package com.eatssu.android.worker
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
 import com.eatssu.android.R
 import com.eatssu.android.presentation.intro.IntroActivity
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
-class NotificationReceiver : BroadcastReceiver() {
+class DailyNotificationWorker(
+    private val context: Context,
+    workerParams: WorkerParameters
+) : CoroutineWorker(context, workerParams) {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        // 현재 요일이 평일인 경우에만 알림을 발송
+    override suspend fun doWork(): Result {
         val currentDay = LocalDateTime.now().dayOfWeek
         if (currentDay != DayOfWeek.SATURDAY && currentDay != DayOfWeek.SUNDAY) {
             showNotification(context)
         }
+        return Result.success()
     }
 
     private fun showNotification(context: Context) {
@@ -28,16 +32,15 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val channel = NotificationChannel(
             CHANNEL_ID,
-            context.getString(R.string.notification_channel_lunch_name),
-            NotificationManager.IMPORTANCE_HIGH // 중요도를 높게 설정
+            "점심시간 전 알림",
+            NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = context.getString(R.string.notification_channel_lunch_description)
+            description = "점심시간 전, 푸시알림을 발송합니다."
             enableLights(true)
-            enableVibration(true)  // 진동도 활성화
-            lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC // 잠금 화면에서도 표시
+            enableVibration(true)
+            lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
         }
         notificationManager.createNotificationChannel(channel)
-
 
         val intent = Intent(context, IntroActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
