@@ -10,7 +10,7 @@ GRADLEW      = File.join(PROJECT_ROOT, 'gradlew')
 LOCAL_PROPS  = File.join(PROJECT_ROOT, 'local.properties')
 AAB_PATH     = File.join(APP_DIR, 'build', 'outputs', 'bundle', 'release', 'app-release.aab')
 APK_PATH     = File.join(APP_DIR, 'build', 'outputs', 'apk', 'debug', 'app-debug.apk')
-RELEASE_NOTES_FILE = File.join(PROJECT_ROOT, 'RELEASE_NOTES.txt')
+
 
 platform :android do
   desc "빌드 환경 설정 (local.properties 생성)"
@@ -337,26 +337,24 @@ platform :android do
       File.write(service_account_path, ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"])
       File.chmod(0600, service_account_path)
       
-      # 릴리즈 노트 파일 찾기 (프로젝트 루트의 RELEASE_NOTES.txt)
-      release_notes_path = RELEASE_NOTES_FILE
+      # 릴리즈 노트 로드 (헬퍼 사용)
+      release_notes = load_release_notes(version)
       
-      unless File.exist?(release_notes_path)
-        UI.important("⚠️ RELEASE_NOTES.txt 파일을 찾을 수 없습니다.")
-        UI.important("⚠️ Play Store 릴리즈 노트 없이 배포됩니다.")
-        release_notes_path = nil
-      else
-        release_notes_content = File.read(release_notes_path).strip
-        if release_notes_content.empty?
-          UI.error("❌ RELEASE_NOTES.txt 파일이 비어있습니다. Play Store 정책에 따라 배포가 거절될 수 있습니다.")
-          release_notes_path = nil
-        elsif release_notes_content.length < 10
-          UI.error("❌ RELEASE_NOTES.txt 내용이 너무 짧습니다. 최소 10자 이상 필요합니다.")
-          release_notes_path = nil
-        else
-          UI.message("📝 Play Store 릴리즈 노트 파일 발견: #{release_notes_path}")
-          UI.message("📄 릴리즈 노트 내용:")
-          UI.message(release_notes_content)
+      # 메타데이터 임시 디렉토리 생성
+      require 'tmpdir'
+      require 'fileutils'
+      metadata_dir = Dir.mktmpdir("fastlane_metadata")
+
+      if release_notes
+        release_notes.each do |locale, text|
+           # 디렉토리 생성: metadata/locale/changelogs
+           changelog_dir = File.join(metadata_dir, locale, "changelogs")
+           FileUtils.mkdir_p(changelog_dir)
+           
+           # default.txt 작성
+           File.write(File.join(changelog_dir, "default.txt"), text)
         end
+        UI.message("📝 메타데이터(릴리즈 노트) 생성 완료: #{metadata_dir}")
       end
       
       begin
@@ -366,27 +364,25 @@ platform :android do
           json_key: service_account_path,
           skip_upload_apk: true,
           skip_upload_metadata: true,
+          # 메타데이터 경로 지정 (릴리즈 노트 포함)
+          metadata_path: metadata_dir,
           skip_upload_images: true,
           skip_upload_screenshots: true
         }
         
-        # 릴리즈 노트 파일이 있으면 추가
-        if release_notes_path && File.exist?(release_notes_path)
-          upload_params[:release_notes_file] = release_notes_path
-        end
-        
         upload_to_play_store(upload_params)
         
         UI.success("✅ Play Store #{track} 트랙에 배포 완료")
-        if release_notes_path
+        if release_notes
           UI.success("✅ Play Store 릴리즈 노트 업데이트 완료")
         end
       rescue => ex
         UI.important("⚠️ Play Store 배포 중 오류 발생: #{ex.message}")
         raise
       ensure
-        # 임시 파일 삭제
+        # 임시 파일 및 디렉토리 삭제
         File.delete(service_account_path) if File.exist?(service_account_path)
+        FileUtils.remove_entry(metadata_dir) if File.exist?(metadata_dir)
       end
     elsif deploy_to_play_store
       UI.important("⚠️ GOOGLE_PLAY_SERVICE_ACCOUNT_JSON이 설정되지 않아 Play Store 배포를 건너뜁니다.")
