@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.cafeteria.review.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
@@ -13,8 +14,6 @@ import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -52,9 +51,8 @@ class ReviewListViewModel @Inject constructor(
 
     fun getReview(menuType: MenuType, itemId: Long) {
         // 파라미터 업데이트 시 페이징 흐름 트리거
-        if (_loadParams.value?.first != menuType || _loadParams.value?.second != itemId) {
-             _loadParams.value = menuType to itemId
-        }
+        // StateFlow는 동일한 값으로 설정되어도 업데이트되지 않으므로 별도의 체크 불필요
+        _loadParams.value = menuType to itemId
         
         viewModelScope.launch {
             loadReviewInfo(menuType, itemId)
