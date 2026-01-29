@@ -262,4 +262,8 @@ dependencies {
     // PostHog
     implementation(libs.posthog.android)
 
+    // Paging3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
 }

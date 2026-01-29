@@ -1,5 +1,8 @@
 package com.eatssu.android.data.remote.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.eatssu.android.data.model.isSuccess
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orEmptyList
@@ -9,6 +12,8 @@ import com.eatssu.android.data.remote.dto.request.WriteMealReviewRequest
 import com.eatssu.android.data.remote.dto.request.WriteMenuReviewRequest
 import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.ReviewService
+import com.eatssu.android.data.remote.paging.MealReviewPagingSource
+import com.eatssu.android.data.remote.paging.MenuReviewPagingSource
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
@@ -17,6 +22,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ReviewRepositoryImpl @Inject constructor(private val reviewService: ReviewService) :
@@ -88,13 +94,7 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
         return reviewService.modifyReview(reviewId, request).isSuccess()
     }
 
-    override suspend fun getMealReviewList(mealId: Long?): List<Review> {
-        return reviewService.getMealReviewList(mealId).map { it.toDomain() }.orEmptyList()
-    }
 
-    override suspend fun getMenuReviewList(menuId: Long?): List<Review> {
-        return reviewService.getMenuReviewList(menuId).map { it.toDomain() }.orEmptyList()
-    }
 
     override suspend fun getMealReviewInfo(mealId: Long): ReviewInfo? =
         reviewService.getMealReviewInfo(mealId).map { it.toDomain() }.orNull()
@@ -114,5 +114,19 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
 
     override suspend fun getMyReviews(): List<Review> {
         return reviewService.getMyReviews().map { it.toDomain() }.orEmptyList()
+    }
+
+    override fun getMenuReviewListPaged(menuId: Long?): Flow<PagingData<Review>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { MenuReviewPagingSource(reviewService, menuId) }
+        ).flow
+    }
+
+    override fun getMealReviewListPaged(mealId: Long?): Flow<PagingData<Review>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { MealReviewPagingSource(reviewService, mealId) }
+        ).flow
     }
 }

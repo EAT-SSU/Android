@@ -1,9 +1,11 @@
 package com.eatssu.android.domain.repository
 
+import androidx.paging.PagingData
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import java.io.File
+import kotlinx.coroutines.flow.Flow
 
 interface ReviewRepository {
 
@@ -33,13 +35,7 @@ interface ReviewRepository {
         menuLikeInfoList: List<Review.MenuLikeInfo>,
     ): Boolean
 
-    suspend fun getMenuReviewList(
-        menuId: Long?,
-    ): List<Review>
 
-    suspend fun getMealReviewList(
-        mealId: Long?,
-    ): List<Review>
 
     suspend fun getMenuReviewInfo(
         menuId: Long,
@@ -58,5 +54,9 @@ interface ReviewRepository {
     ): List<MenuMini>
 
     suspend fun getMyReviews(): List<Review>
+
+    fun getMenuReviewListPaged(menuId: Long?): Flow<PagingData<Review>>
+
+    fun getMealReviewListPaged(mealId: Long?): Flow<PagingData<Review>>
 
 }

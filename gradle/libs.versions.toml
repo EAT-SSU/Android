@@ -60,6 +60,7 @@ glanceAppwidget = "1.1.1"
 glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
 posthog = "3.+"
+paging = "3.3.6"
 
 [libraries]
 
@@ -158,6 +159,10 @@ naver-map-compose = { module = "io.github.fornewid:naver-map-compose", version.r
 naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "naverMapLocation" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 posthog-android = { group = "com.posthog", name = "posthog-android", version.ref = "posthog" }
+
+# paging
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
