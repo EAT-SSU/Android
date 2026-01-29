@@ -76,15 +76,6 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleDebug
 
-    - name: Upload Debug APK artifact
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-apk
-        path: app/build/outputs/apk/debug/*.apk
 
     - name: Assemble Release APK
       if: >
@@ -93,15 +84,6 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleRelease
 
-    - name: Upload Release APK artifact
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-apk
-        path: app/build/outputs/apk/release/*.apk
 
       # Release만 Firebase 배포
     - name: Install Firebase CLI
@@ -141,7 +123,6 @@ jobs:
             [
               `✅ CI 완료`,
               ``,
-              `- Debug APK: GitHub Actions Artifacts에서 다운로드 (run 링크: ${runUrl})`,
               `- Release APK: Firebase App Distribution으로 배포됨 (그룹: eat-ssu-android-qa)`,
             ].join('\n');
           
