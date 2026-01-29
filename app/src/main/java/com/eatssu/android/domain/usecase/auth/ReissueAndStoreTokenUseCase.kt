@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.usecase.auth
 
-import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.domain.model.ReissueTokenResult
 import javax.inject.Inject
 
 sealed interface ReissueAndStoreResult {
@@ -33,9 +33,9 @@ class ReissueAndStoreTokenUseCase @Inject constructor(
         if (refreshToken.isBlank()) return ReissueAndStoreResult.MissingRefreshToken
 
         return when (val result = reissueTokenUseCase(refreshToken)) {
-            is ApiResult.Success -> {
-                val newAccessToken = result.data.accessToken
-                val newRefreshToken = result.data.refreshToken
+            is ReissueTokenResult.Success -> {
+                val newAccessToken = result.token.accessToken
+                val newRefreshToken = result.token.refreshToken
 
                 if (newAccessToken.isBlank() || newRefreshToken.isBlank()) {
                     ReissueAndStoreResult.TransientFailure(message = "reissue returned blank tokens")
@@ -46,19 +46,18 @@ class ReissueAndStoreTokenUseCase @Inject constructor(
                 }
             }
 
-            is ApiResult.Failure -> {
-                if (result.responseCode == 401 || result.responseCode == 403) {
-                    ReissueAndStoreResult.RefreshInvalid(result.responseCode, result.message)
+            is ReissueTokenResult.Failure -> {
+                val code = result.responseCode
+                if (code == 401 || code == 403) {
+                    ReissueAndStoreResult.RefreshInvalid(code, result.message)
                 } else {
                     ReissueAndStoreResult.TransientFailure(
                         responseCode = result.responseCode,
                         message = result.message,
+                        throwable = result.throwable
                     )
                 }
             }
-
-            is ApiResult.NetworkError -> ReissueAndStoreResult.TransientFailure(throwable = result.exception)
-            is ApiResult.UnknownError -> ReissueAndStoreResult.TransientFailure(throwable = result.exception)
         }
     }
 }

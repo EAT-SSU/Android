@@ -1,6 +1,6 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.domain.model.ReissueTokenResult
 import com.eatssu.android.data.remote.dto.request.CheckValidTokenRequest
 import com.eatssu.android.domain.model.Token
 import com.eatssu.common.enums.DeviceType
@@ -8,7 +8,7 @@ import com.eatssu.common.enums.DeviceType
 interface OauthRepository {
     suspend fun reissueToken(
         refreshToken: String,
-    ): ApiResult<Token>
+    ): ReissueTokenResult
 
     suspend fun login(
         email: String,
