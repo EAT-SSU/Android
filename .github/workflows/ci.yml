@@ -1,4 +1,4 @@
-name: Android CI
+name: Build & Firebase App Tester
 
 on:
   push:
@@ -14,11 +14,8 @@ permissions:
 
 jobs:
   build:
-    # develop push는 허용, develop으로의 PR 중 release/* 브랜치에서 온 PR만 허용
-    if: >
-      github.event_name == 'push' || github.event_name == 'pull_request'
+    name: Build Debug & Release APK
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
 
@@ -50,7 +47,6 @@ jobs:
         NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
         POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
         POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
-
       run: |
         echo DEV_BASE_URL=\"$DEV_BASE_URL\" >> local.properties
         echo PROD_BASE_URL=\"$PROD_BASE_URL\" >> local.properties
@@ -69,13 +65,23 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Assemble Debug APK
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      run: ./gradlew assembleDebug
+    # - name: Assemble Debug APK
+    #   if: >
+    #     github.event_name == 'pull_request' &&
+    #     startsWith(github.event.pull_request.head.ref, 'release/') && 
+    #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    #   run: ./gradlew assembleDebug
 
+    # - name: Upload Debug APK artifact
+    #   if: >
+    #     github.event_name == 'pull_request' &&
+    #     startsWith(github.event.pull_request.head.ref, 'release/') && 
+    #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: debug-apk
+    #     path: app/build/outputs/apk/debug/*.apk
+    #     retention-days: 1
 
     - name: Assemble Release APK
       if: >
@@ -84,20 +90,39 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       run: ./gradlew assembleRelease
 
-
-      # Release만 Firebase 배포
-    - name: Install Firebase CLI
+    - name: Upload Release APK artifact
       if: >
         github.event_name == 'pull_request' &&
         startsWith(github.event.pull_request.head.ref, 'release/') && 
         (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release/*.apk
+        retention-days: 1
+
+  deploy-firebase:
+    needs: build
+    name: Deploy to Firebase
+    if: >
+      github.event_name == 'pull_request' &&
+      startsWith(github.event.pull_request.head.ref, 'release/') && 
+      (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Download Release APK artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release
+
+    # Release만 Firebase 배포
+    - name: Install Firebase CLI
       run: npm i -g firebase-tools
 
     - name: Distribute Release APK to Firebase App Distribution
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
@@ -108,22 +133,14 @@ jobs:
           --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
           --token "$FIREBASE_TOKEN"
       
-
-      # Debug는 Artifact로만 공유 + PR 코멘트
-    - name: Comment PR with artifact download 안내
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    # PR 코멘트
+    - name: Comment PR
       uses: actions/github-script@v7
       with:
         script: |
-          const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
           const body =
             [
-              `✅ CI 완료`,
-              ``,
-              `- Release APK: Firebase App Distribution으로 배포됨 (그룹: eat-ssu-android-qa)`,
+              `✅ Firebase App Distribution으로 Release APK 배포됨 (그룹: eat-ssu-android-qa)`,
             ].join('\n');
           
           await github.rest.issues.createComment({
