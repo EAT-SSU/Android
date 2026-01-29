@@ -213,7 +213,6 @@ jobs:
             
             ### 다운로드
             - AAB 파일은 아래에서 다운로드할 수 있습니다.
-            - GitHub Actions Artifacts에서도 다운로드 가능합니다.
           files: |
             app/build/outputs/bundle/release/app-release.aab
           draft: false
@@ -221,14 +220,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload AAB artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-aab-${{ steps.extract_info.outputs.version }}
-          path: |
-            app/build/outputs/bundle/release/app-release.aab
-          retention-days: 90
 
       - name: Get GitHub Release notes
         id: github_release_notes

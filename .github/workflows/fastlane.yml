@@ -123,28 +123,6 @@ jobs:
             fi
           fi
 
-      - name: Upload APK artifact
-        if: |
-          github.event_name == 'workflow_dispatch' &&
-          (contains(github.event.inputs.lane, 'apk') || github.event.inputs.lane == 'build_qa_apk')
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-apk
-          path: |
-            app/build/outputs/apk/**/*.apk
-          retention-days: 7
-
-      - name: Upload AAB artifact
-        if: |
-          startsWith(github.ref, 'refs/tags/') ||
-          (github.event_name == 'workflow_dispatch' &&
-          (contains(github.event.inputs.lane, 'aab') || github.event.inputs.lane == 'build_release_aab' || github.event.inputs.lane == 'deploy_internal_test' || github.event.inputs.lane == 'deploy_release'))
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-aab-${{ github.event.inputs.version || 'latest' }}
-          path: |
-            app/build/outputs/bundle/release/app-release.aab
-          retention-days: 30
 
       - name: Slack notification
         if: always()
