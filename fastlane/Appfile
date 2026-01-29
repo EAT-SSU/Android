@@ -1,0 +1,6 @@
+# Appfile for fastlane
+# 앱 정보 설정
+
+json_key_file("") # Google Play Service Account JSON 키 경로 (선택사항)
+package_name("com.eatssu.android")
+
