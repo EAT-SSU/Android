@@ -1,13 +1,14 @@
 package com.eatssu.android.di.network
 
-import com.eatssu.android.presentation.base.TokenEventBus
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.ReissueAndStoreResult
 import com.eatssu.android.domain.usecase.auth.ReissueAndStoreTokenUseCase
+import com.eatssu.android.presentation.base.LogoutReason
+import com.eatssu.android.presentation.base.TokenEventBus
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -65,7 +66,7 @@ class TokenAuthenticator @Inject constructor(
                     is ReissueAndStoreResult.MissingRefreshToken -> {
                         Timber.e("TokenAuthenticator → refreshToken is blank; forcing logout")
                         logoutUseCase()
-                        TokenEventBus.notifyTokenExpired(com.eatssu.android.presentation.base.LogoutReason.MISSING_REFRESH_TOKEN)
+                        TokenEventBus.notifyTokenExpired(LogoutReason.MISSING_REFRESH_TOKEN)
                         null
                     }
 
@@ -74,7 +75,7 @@ class TokenAuthenticator @Inject constructor(
                             "TokenAuthenticator → refresh invalid: code=${result.responseCode}, message=${result.message}"
                         )
                         logoutUseCase()
-                        TokenEventBus.notifyTokenExpired(com.eatssu.android.presentation.base.LogoutReason.REFRESH_TOKEN_EXPIRED)
+                        TokenEventBus.notifyTokenExpired(LogoutReason.REFRESH_TOKEN_EXPIRED)
                         null
                     }
 
