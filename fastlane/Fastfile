@@ -316,8 +316,12 @@ platform :android do
     
     UI.message("🚀 Release 배포 시작: #{version}")
     
-    # Production 환경으로 빌드
-    build_release_aab(environment: "production")
+    # Production 환경으로 빌드 (skip_build 옵션이 없을 때만)
+    unless options[:skip_build]
+      build_release_aab(environment: "production")
+    else
+      UI.message("⏩ Build skipped (skip_build: true)")
+    end
     
     # AAB 경로
     aab_path = AAB_PATH
