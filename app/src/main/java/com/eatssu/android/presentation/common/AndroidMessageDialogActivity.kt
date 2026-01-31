@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.common
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.eatssu.android.R
 import com.eatssu.android.presentation.util.showDialog
 
 class AndroidMessageDialogActivity : AppCompatActivity() {
@@ -17,10 +18,10 @@ class AndroidMessageDialogActivity : AppCompatActivity() {
         Log.d("message", message.toString())
 
         showDialog(
-            title = "공지",
+            title = getString(R.string.dialog_notice_title),
             description = message ?: ""
         ) {
-            confirmText = "확인"
+            confirmText = getString(R.string.button_confirm)
             showCancelButton = false
             cancellable = false
             onConfirm { dialog ->

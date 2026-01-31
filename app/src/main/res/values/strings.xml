@@ -63,6 +63,7 @@
     <string name="dialog_placeholder_body">본문을 입력해주세요</string>
     <string name="dialog_network_error_title">네트워크 연결 안 됨</string>
     <string name="dialog_network_error_message">Wi-Fi, 모바일 데이터를 확인해주세요</string>
+    <string name="dialog_notice_title">공지</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - Review -->
@@ -98,6 +99,19 @@
     <string name="toast_nickname_changed">닉네임이 변경되었습니다.</string>
     <string name="toast_department_updated">학과 정보가 업데이트되었습니다.</string>
     <string name="toast_no_changes">변경사항이 없습니다.</string>
+
+    <!-- ========================== -->
+    <!-- Nickname Validation Errors -->
+    <!-- ========================== -->
+    <string name="nickname_error_length">%1$d~%2$d글자를 입력해 주세요.</string>
+    <string name="nickname_error_whitespace">띄어쓰기를 제외한 공백 문자는 사용할 수 없어요.</string>
+    <string name="nickname_error_consecutive_space">연속된 띄어쓰기는 사용할 수 없어요.</string>
+    <string name="nickname_error_allowed_chars">허용 문자(한글/영문/숫자)만 사용할 수 있어요.</string>
+    <string name="nickname_error_consecutive_special">연속된 특수문자(--, __)는 사용할 수 없어요.</string>
+    <string name="nickname_error_only_numbers">숫자만으로 된 닉네임은 사용할 수 없어요.</string>
+    <string name="nickname_error_special_position">특수문자로 시작/끝나는 닉네임은 사용할 수 없어요.</string>
+    <string name="nickname_error_profanity">욕설, 비속어 등의 표현이 포함된 닉네임은 사용할 수 없어요.</string>
+    <string name="nickname_error_invalid">올바르지 않은 닉네임이에요.</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - App -->
@@ -275,6 +289,9 @@
     <string name="etc">비고</string>
     <string name="time">영업 시간</string>
     <string name="favorite_partnership">찜한 제휴</string>
+    <string name="partnership_filter_mine">내 제휴</string>
+    <string name="partnership_filter_all">전체</string>
+    <string name="partnership_filter_department_placeholder">학과</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->

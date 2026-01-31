@@ -108,7 +108,7 @@ class UserInfoActivity :
         // 닉네임 상태에 따른 UI 업데이트
         when {
             data.nicknameValidationError != null -> {
-                binding.tvNicknameStatus.text = data.nicknameValidationError
+                binding.tvNicknameStatus.text = data.nicknameValidationError.asString(this)
                 binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
                 binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
             }

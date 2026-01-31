@@ -124,7 +124,8 @@ class UserInfoViewModel @Inject constructor(
             val result = validateNicknameServerUseCase(currentNickname)
 
             result.onFailure { error ->
-                val errorMessage = error.message ?: "올바르지 않은 닉네임이에요."
+                val errorMessage = error.message?.let { UiText.DynamicString(it) }
+                    ?: UiText.StringResource(R.string.nickname_error_invalid)
 
                 _uiState.update {
                     UiState.Success(
@@ -261,7 +262,7 @@ data class UserInfoData(
     val nickname: String = "",
     val originalNickname: String = "",
     val isNicknameChanged: Boolean = false,
-    val nicknameValidationError: String? = null, // 닉네임 검증 에러 텍스트
+    val nicknameValidationError: UiText? = null, // 닉네임 검증 에러 텍스트
     val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
     // 단과대/학과

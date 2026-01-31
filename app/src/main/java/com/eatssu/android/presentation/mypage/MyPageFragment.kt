@@ -158,10 +158,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             startActivity(Intent(requireContext(), MyReviewListComposeActivity::class.java))
         }
 
-        binding.llLanguage.setOnClickListener {
-            startActivity(Intent(requireContext(), LanguageSelectorActivity::class.java))
-        }
-
         binding.tvLogout.setOnClickListener {
             showLogoutDialog()
         }

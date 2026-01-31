@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.map.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,7 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray600
@@ -23,14 +26,23 @@ import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.White
 import timber.log.Timber
 
-enum class FilterType {
-    Mine, All; // 해당 부분에 쓰는 enum 순서대로 UI 토글 순서에 반영됩니다
+enum class FilterType(@StringRes val labelResId: Int) {
+    Mine(R.string.partnership_filter_mine),
+    All(R.string.partnership_filter_all)
+}
 
-    fun label(departmentName: String): String {
-        return when (this) {
-            Mine -> if (departmentName.isBlank() || departmentName == "학과") "내 제휴" else departmentName
-            All -> "전체"
+@Composable
+fun FilterType.getLabel(departmentName: String): String {
+    val placeholderDepartment = stringResource(R.string.partnership_filter_department_placeholder)
+    return when (this) {
+        FilterType.Mine -> {
+            if (departmentName.isBlank() || departmentName == placeholderDepartment) {
+                stringResource(labelResId)
+            } else {
+                departmentName
+            }
         }
+        FilterType.All -> stringResource(labelResId)
     }
 }
 
@@ -43,7 +55,7 @@ fun PartnershipFilterToggle(
 ) {
     Timber.d("departmentName = $departmentName")
     val items = FilterType.entries.map {
-        it to it.label(departmentName)
+        it to it.getLabel(departmentName)
     }
     Row(
         modifier = modifier
