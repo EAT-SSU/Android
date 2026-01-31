@@ -52,7 +52,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
-import com.eatssu.android.data.MySharedPreferences
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainState
@@ -74,9 +73,8 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.clustering.ClusteringKey
-import com.naver.maps.map.compose.Clustering
-import com.naver.maps.map.compose.Align
 import com.naver.maps.map.compose.CameraPositionState
+import com.naver.maps.map.compose.Clustering
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
@@ -135,7 +133,11 @@ fun MapRoute(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(context, "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -162,8 +164,10 @@ fun MapRoute(
 
     // 최초 실행 시 위치 권한 요청
     LaunchedEffect(Unit) {
-        val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-        val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val fine =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+        val coarse =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (fine != PackageManager.PERMISSION_GRANTED || coarse != PackageManager.PERMISSION_GRANTED) {
             permissionLauncher.launch(
@@ -241,6 +245,18 @@ fun MapRoute(
         onHidePartnershipSheet = {
             scope.launch { partnershipSheetState.hide() }
         },
+        animateCameraPositionTo = { position, currentZoom ->
+            scope.launch {
+                cameraPositionState.animate(
+                    CameraUpdate.toCameraPosition(
+                        CameraPosition(
+                            position,
+                            currentZoom + 2.0
+                        )
+                    )
+                )
+            }
+        },
         onSelectedFilterChange = { filter ->
             viewModel.setFilter(filter)
         },
@@ -263,6 +279,7 @@ internal fun MapScreen(
     navigateToUserInfo: () -> Unit,
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
+    animateCameraPositionTo: (LatLng, Double) -> Unit,
     onSelectedFilterChange: (FilterType) -> Unit,
     departmentId: Long,
     collegeId: Long,
@@ -342,16 +359,10 @@ internal fun MapScreen(
                 locationSource = locationSource,
                 contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
+                    // 현재 다른 위치에 있는 경우에도 숭실대입구를 보여주어야 함
                     locationTrackingMode = LocationTrackingMode.NoFollow,
                 ),
             ) {
-                mapState.partnerships.forEach { partnership ->
-                    val markerState = rememberMarkerState(
-                        position = LatLng(
-                            partnership.latitude,
-                            partnership.longitude
-                        )
-                    )
                 val clusterItems = mapState.partnerships.associateBy {
                     ItemKey(
                         it.storeName,
@@ -386,7 +397,12 @@ internal fun MapScreen(
                             modifier = Modifier
                                 .background(Color.White, RoundedCornerShape(13.dp))
                                 .border(1.dp, Gray300, RoundedCornerShape(13.dp))
-                                .padding(start = 3.dp, end = 7.dp, top = 2.5.dp, bottom = 2.5.dp),
+                                .padding(
+                                    start = 3.dp,
+                                    end = 7.dp,
+                                    top = 2.5.dp,
+                                    bottom = 2.5.dp
+                                ),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = spacedBy(
                                 3.dp
@@ -412,16 +428,7 @@ internal fun MapScreen(
                         }
                     },
                     onClickCluster = { info, _ ->
-                        scope.launch {
-                            cameraPositionState.animate(
-                                CameraUpdate.toCameraPosition(
-                                    CameraPosition(
-                                        info.position,
-                                        cameraPositionState.position.zoom + 2.0
-                                    )
-                                )
-                            )
-                        }
+                        animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
                         true
                     },
                     onClickLeaf = { info, _ ->
@@ -429,57 +436,15 @@ internal fun MapScreen(
 
                         if (partnership.partnershipInfos.isEmpty()) {
                             // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-                            Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
-                            true
+                            showToast("제휴 정보가 없습니다.")
                         } else {
                             // 제휴 정보가 있을 때만 바텀시트 띄움
                             viewModel.selectPartnershipByStoreName(partnership.storeName)
-                            true
                         }
                         true
                     }
 
                 )
-//                mapState.partnerships.forEach { partnership ->
-//                    val markerState = rememberSaveable(saver = MarkerState.Saver) {
-//                        MarkerState(
-//                            position = LatLng(
-//                                partnership.latitude,
-//                                partnership.longitude
-//                            )
-//                        )
-//                    }
-//
-//                    Marker(
-//                        icon = OverlayImage.fromResource(
-//                            when (partnership.restaurantType) {
-//                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
-//                                RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
-//                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
-//                            }
-//                        ),
-//                        width = 20.dp,
-//                        height = 20.dp,
-//                        captionAligns = arrayOf(Align.Bottom),
-//                        state = markerState,
-//                        captionText = partnership.storeName,
-//                        captionColor = Black,
-//                        captionTextSize = 10.sp,
-//
-//                        onClick = {
-//                            if (partnership.partnershipInfos.isEmpty()) {
-//                                // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-//                                Toast.makeText(context, "제휴 정보가 없습니다.", Toast.LENGTH_SHORT).show()
-//                                true
-//                            } else {
-//                                // 제휴 정보가 있을 때만 바텀시트 띄움
-//                                viewModel.selectPartnershipByStoreName(partnership.storeName)
-//                                true
-//                            }
-//                        }
-//                    )
-//
-//                }
             }
 
             // 학과 정보를 입력하지 않은 상태에서 제휴 필터를 변경하려고 할 때 BottomSheet 표시
@@ -493,25 +458,6 @@ internal fun MapScreen(
                 modifier = Modifier.padding(top = 12.dp),
                 departmentName = departmentName.toString()
             )
-
-            // 찜 기능
-//            FloatingActionButton(
-//                onClick = { /* TODO */ },
-//                containerColor = White,
-//                elevation = FloatingActionButtonDefaults.elevation(4.dp),
-//                shape = CircleShape,
-//                modifier = Modifier
-//                    .padding(top = 12.dp, end = 16.dp)
-//                    .border(width = 1.dp, color = Gray300, shape = CircleShape)
-//                    .size(40.dp)
-//                    .align(Alignment.TopEnd)
-//            ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.ic_like),
-//                    contentDescription = "좋아요",
-//                    modifier = Modifier.size(20.dp)
-//                )
-//            }
         }
     }
 }
