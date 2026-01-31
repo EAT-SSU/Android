@@ -62,6 +62,7 @@ glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
 posthog = "3.+"
 paging = "3.3.6"
+app-update = "2.1.0"
 
 [libraries]
 
@@ -141,6 +142,8 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
+app-update = { group = "com.google.android.play", name = "app-update", version.ref = "app-update" }
+app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "app-update" }
 
 # etc
 accompanist-appcompat-theme = { group = "com.google.accompanist", name = "accompanist-appcompat-theme", version.ref = "accompanistAppcompatTheme" }

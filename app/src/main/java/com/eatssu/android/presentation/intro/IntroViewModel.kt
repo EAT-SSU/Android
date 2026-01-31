@@ -37,11 +37,11 @@ class IntroViewModel @Inject constructor(
     private val _versionCheckResult = MutableStateFlow<VersionCheckResult?>(null)
     val versionCheckResult: StateFlow<VersionCheckResult?> = _versionCheckResult.asStateFlow()
 
-    init {
-        initializeApp()
-    }
+    // init {
+    //    initializeApp()
+    // }
 
-    private fun initializeApp() {
+    fun startAppChecks() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 

@@ -16,8 +16,14 @@ import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.ToastType
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,6 +33,8 @@ class IntroActivity : AppCompatActivity() {
 
     private val introViewModel: IntroViewModel by viewModels()
     private lateinit var binding: ActivityIntroBinding
+    private lateinit var appUpdateManager: AppUpdateManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +42,8 @@ class IntroActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
         log()
+
+        checkAppUpdate()
 
         observeState()
         observeEvents()
@@ -105,10 +115,64 @@ class IntroActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventLogger.screenView(ScreenId.LOGIN_SPLASH)
+
+        if (::appUpdateManager.isInitialized) {
+            appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    // If an in-app update is already in progress, resume the update.
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        this,
+                        UPDATE_REQUEST_CODE
+                    )
+                }
+            }
+        }
     }
 
     private fun showForceUpdateDialog() {
         val intent = Intent(this, ForceUpdateDialogActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun checkAppUpdate() {
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+            ) {
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    this,
+                    UPDATE_REQUEST_CODE
+                )
+            } else {
+                introViewModel.startAppChecks()
+            }
+        }.addOnFailureListener {
+            introViewModel.startAppChecks()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == UPDATE_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                showToast(UiEvent.ShowToast("업데이트가 취소되었습니다.", ToastType.INFO))
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+                introViewModel.startAppChecks()
+            }
+        }
+    }
+
+    companion object {
+        const val UPDATE_REQUEST_CODE = 500
     }
 }

@@ -226,6 +226,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
     implementation(libs.play.services.base)
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

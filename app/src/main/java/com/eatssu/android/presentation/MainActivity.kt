@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation
 
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -47,6 +48,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
 
+
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,40 +56,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         setupNoToolbar()
         setNavigation()
 
+
         checkAlarmPermission()
         collectState()
         collectUiEvents()
     }
 
-    private fun setNavigation() {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        binding.bottomNaviBar.itemIconTintList = null
 
-        binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.cafeteria_menu -> {
-                    navController.navigate(R.id.cafeteria_menu)
-                    true
-                }
-
-                R.id.map_menu -> {
-                    navController.navigate(R.id.mapFragment)
-                    true
-                }
-
-                R.id.mypage_menu -> {
-                    navController.navigate(R.id.myPageFragment)
-                    true
-                }
-
-                else -> {
-                    false
-                }
-            }
-        }
-    }
 
     // set UI --
     private fun setupNoToolbar() {
@@ -197,6 +172,36 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         }
     }
 
+
+    private fun setNavigation() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding.bottomNaviBar.itemIconTintList = null
+
+        binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.cafeteria_menu -> {
+                    navController.navigate(R.id.cafeteria_menu)
+                    true
+                }
+
+                R.id.map_menu -> {
+                    navController.navigate(R.id.mapFragment)
+                    true
+                }
+
+                R.id.mypage_menu -> {
+                    navController.navigate(R.id.myPageFragment)
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+        }
+    }
 
     override fun shouldLogScreenId() = false
 }
