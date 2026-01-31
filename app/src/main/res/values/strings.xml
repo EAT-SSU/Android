@@ -109,7 +109,6 @@
     <string name="toast_logout_success">로그아웃했어요.</string>
     <string name="toast_token_invalid">다시 로그인해주세요.</string>
     <string name="toast_token_expired">세션이 만료되어 다시 로그인해주세요.</string>
-    <string name="toast_token_server_error">시스템 오류로 다시 로그인해주세요.</string>
     <string name="toast_require_nickname">닉네임을 설정해주세요.</string>
     <string name="toast_notification_enable">EAT-SSU 수신 동의 (%1$s)</string>
     <string name="toast_notification_disable">EAT-SSU 수신 거절 (%1$s)</string>
@@ -131,10 +130,6 @@
     <string name="review_settings">리뷰 설정</string>
     <string name="review_error_occurred">에러가 발생했습니다.</string>
     <string name="review_write">리뷰 작성하기</string>
-    <string name="review_done">리뷰 등록하기</string>
-    <string name="review_patch_done">리뷰 수정하기</string>
-    <string name="review_write_text">한 줄 평 작성하기</string>
-    <string name="review_pic_not_patch">리뷰 등록 후, 사진은 수정할 수 없습니다</string>
 
     <!-- ========================== -->
     <!-- Review List -->
@@ -143,9 +138,7 @@
     <string name="my_review">내 리뷰</string>
     <string name="none_review">아직 작성한 리뷰가 없어요</string>
     <string name="none_review_my">첫 리뷰를 남겨 주세요!</string>
-    <string name="none_review_list">가장 먼저 리뷰를 남겨 주세요</string>
     <string name="none_review_list_detail">메뉴에 가장 먼저 리뷰를 남겨주세요!</string>
-    <string name="total_review_num">총 리뷰 수</string>
 
     <!-- ========================== -->
     <!-- Rating (Parameterized) -->
@@ -156,11 +149,8 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">오늘의 메뉴</string>
-    <string name="menu">메뉴</string>
     <string name="price">가격</string>
     <string name="rate">평점</string>
-    <string name="taste">맛</string>
-    <string name="amount">양</string>
     <string name="student_cafeteria">학생식당</string>
 
     <!-- ========================== -->
@@ -223,11 +213,9 @@
     <!-- ========================== -->
     <!-- Report -->
     <!-- ========================== -->
-    <string name="report">신고</string>
     <string name="report_title">리뷰를 신고하는 이유를 선택해주세요.</string>
     <string name="report_sub">하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.</string>
     <string name="report_write_hint">리뷰 신고 사유를 작성해 주세요</string>
-    <string name="report_btn">EAT SSU에게 보내기</string>
 
     <!-- ========================== -->
     <!-- Input Validation -->
@@ -237,15 +225,10 @@
     <!-- ========================== -->
     <!-- Common Strings -->
     <!-- ========================== -->
-    <string name="back_btn">back</string>
-    <string name="cancel">취소</string>
-    <string name="confirm">확인</string>
-    <string name="save">저장하기</string>
 
     <!-- ========================== -->
     <!-- App Slogan -->
     <!-- ========================== -->
-    <string name="app_slogan">숭실대에서 <b>먹자!</b></string>
     <string name="app_slogan_part1">숭실대에서 </string>
     <string name="app_slogan_part2">먹자</string>
     <string name="app_slogan_part3" translatable="false"></string>
@@ -258,7 +241,6 @@
     <string name="private_information">개인정보 처리방침</string>
     <string name="policy">개인정보 처리방침</string>
     <string name="terms">서비스 이용약관</string>
-    <string name="contact">문의하기</string>
     <string name="developer">만든 사람들</string>
     <string name="oss_licenses">오픈소스 라이브러리</string>
 
@@ -299,7 +281,6 @@
     <!-- ========================== -->
     <string name="policy_url" translatable="false">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8</string>
     <string name="terms_url" translatable="false">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80</string>
-    <string name="kakao_talk_channel_url" translatable="false">http://pf.kakao.com/_ZlVAn</string>
     <string name="eatssu_instagram" translatable="false">eatssu.official</string>
     <string name="recruiting_url" translatable="false">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
 </resources>
