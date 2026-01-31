@@ -250,7 +250,7 @@ dependencies {
     implementation(libs.androidx.security.crypto)
 
     // naver maps
-    implementation (libs.map.sdk)
+    implementation(libs.map.sdk)
 
     // naver maps to compose
     implementation(libs.naver.map.compose)
@@ -269,8 +269,4 @@ dependencies {
 
 configurations.all {
     exclude(group = "io.github.fornewid", module = "naver-map-location")
-}
-
-kapt {
-    correctErrorTypes = true
 }

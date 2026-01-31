@@ -156,7 +156,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "mapSdk" }
-naver-map-compose = { module = "com.github.ho8278:naver-map-compose", version.ref = "naverMapCompose" }
+naver-map-compose = { module = "com.github.EAT-SSU:naver-map-compose", version.ref = "naverMapCompose" }
 naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "naverMapLocation" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 posthog-android = { group = "com.posthog", name = "posthog-android", version.ref = "posthog" }
