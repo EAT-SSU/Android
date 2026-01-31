@@ -43,16 +43,10 @@ fun LanguageSelectorContent(
     onBack: () -> Unit = {}
 ) {
     val languageOptions = AppLanguage.entries.map { language ->
-        when (language) {
-            AppLanguage.SYSTEM -> stringResource(R.string.language_system_default)
-            else -> language.nativeDisplayName
-        }
+        language.nativeDisplayName
     }
 
-    val selectedOption = when (selectedLanguage) {
-        AppLanguage.SYSTEM -> stringResource(R.string.language_system_default)
-        else -> selectedLanguage.nativeDisplayName
-    }
+    val selectedOption = selectedLanguage.nativeDisplayName
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -80,12 +74,8 @@ fun LanguageSelectorContent(
                 selectedOption = selectedOption,
                 onOptionSelected = { selected ->
                     val language = AppLanguage.entries.find { lang ->
-                        if (lang == AppLanguage.SYSTEM) {
-                            selected == languageOptions.first()
-                        } else {
-                            lang.nativeDisplayName == selected
-                        }
-                    } ?: AppLanguage.SYSTEM
+                        lang.nativeDisplayName == selected
+                    } ?: AppLanguage.KOREAN
                     onLanguageSelected(language)
                 }
             )

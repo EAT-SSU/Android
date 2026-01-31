@@ -188,7 +188,8 @@
                         app:tint="@color/gray300" />
                 </LinearLayout>
 
-                <!-- 언어 설정 -->
+                <!--
+                언어 설정은 제대로 디자인 나오기 전까지 제외
                 <LinearLayout
                     android:id="@+id/ll_language"
                     android:layout_width="match_parent"
@@ -221,6 +222,7 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray300" />
                 </LinearLayout>
+                -->
 
                 <!-- 문의하기 -->
                 <LinearLayout

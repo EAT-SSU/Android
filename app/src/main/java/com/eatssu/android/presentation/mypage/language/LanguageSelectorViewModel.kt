@@ -18,7 +18,7 @@ class LanguageSelectorViewModel @Inject constructor(
     private val settingDataStore: SettingDataStore
 ) : ViewModel() {
 
-    private val _selectedLanguage = MutableStateFlow(AppLanguage.SYSTEM)
+    private val _selectedLanguage = MutableStateFlow(AppLanguage.KOREAN)
     val selectedLanguage: StateFlow<AppLanguage> = _selectedLanguage.asStateFlow()
 
     init {
@@ -38,11 +38,7 @@ class LanguageSelectorViewModel @Inject constructor(
     }
 
     private fun applyLanguage(language: AppLanguage) {
-        val localeList = if (language == AppLanguage.SYSTEM) {
-            LocaleListCompat.getEmptyLocaleList()
-        } else {
-            LocaleListCompat.forLanguageTags(language.code)
-        }
+        val localeList = LocaleListCompat.forLanguageTags(language.code)
         AppCompatDelegate.setApplicationLocales(localeList)
     }
 }
