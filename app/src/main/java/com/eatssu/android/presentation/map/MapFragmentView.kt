@@ -372,7 +372,8 @@ internal fun MapScreen(
 
                 Clustering(
                     items = clusterItems,
-                    thresholdStrategy = { zoom ->
+                    thresholdStrategy = {
+                        // 줌 레벨에 상관 없이 임의의 값 사용
                         25.0
                     },
 
