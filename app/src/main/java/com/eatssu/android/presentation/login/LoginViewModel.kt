@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
+import com.eatssu.common.enums.DeviceType
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -41,25 +40,25 @@ class LoginViewModel @Inject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
     fun getKakaoLogin(email: String, providerID: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = UiState.Loading
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    loginUseCase(LoginWithKakaoRequest(email, providerID))
-                }
-            }.onSuccess {
-                setAccessTokenUseCase(it.accessToken)
-                setRefreshTokenUseCase(it.refreshToken)
-                setUserEmailUseCase(email)
 
-                _uiState.value = UiState.Success(LoginState.LoginSuccess)
-
-                TokenStateManager.setTokenValid()
-
-            }.onFailure {
+            val token = loginUseCase(email, providerID, DeviceType.ANDROID) ?: run {
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast(context.getString(R.string.login_failed)))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_login_failed),
+                        ToastType.ERROR
+                    )
+                )
+                return@launch
             }
+
+            setAccessTokenUseCase(token.accessToken)
+            setRefreshTokenUseCase(token.refreshToken)
+            setUserEmailUseCase(email)
+
+            _uiState.value = UiState.Success(LoginState.LoginSuccess)
         }
     }
 

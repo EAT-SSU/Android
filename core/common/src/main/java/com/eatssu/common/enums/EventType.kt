@@ -9,6 +9,7 @@ enum class EventType(val value: String) {
     CLICK_DAY("click_day"),
     CLICK_MENU("click_menu"),
     WRITE_REVIEW_V1("write_review_v1"),
+    WRITE_REVIEW_V2("write_review_v2"),
     COMPLETE_REVIEW_V1("complete_review_v1"),
     COMPLETE_REVIEW_V2("complete_review_v2"),
     CLICK_MAP("click_map"),

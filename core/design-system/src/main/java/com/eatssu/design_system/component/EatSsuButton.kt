@@ -19,22 +19,25 @@ fun EatSsuButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
+        enabled = enabled,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = Color.White
+            contentColor = Color.White,
+            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+            disabledContentColor = Color.White
         ),
     ) {
         Text(
             text = text,
             modifier = Modifier,
-//                .padding(vertical = 13.dp),
             style = EatssuTheme.typography.button1,
         )
     }
@@ -43,8 +46,15 @@ fun EatSsuButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewRoundedSelectButton() {
-
     EatssuTheme {
         EatSsuButton(text = "선택하기", onClick = { /* Button Clicked */ })
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRoundedSelectButtonDisabled() {
+    EatssuTheme {
+        EatSsuButton(text = "선택하기", onClick = { /* Button Clicked */ }, enabled = false)
     }
 }

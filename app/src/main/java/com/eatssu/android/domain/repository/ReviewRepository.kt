@@ -1,47 +1,62 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.dto.request.ModifyReviewRequest
-import com.eatssu.android.data.dto.request.WriteReviewRequest
-import com.eatssu.android.data.dto.response.BaseResponse
-import com.eatssu.android.data.dto.response.GetMealReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetMenuReviewInfoResponse
-import com.eatssu.android.data.dto.response.GetReviewListResponse
-import com.eatssu.android.data.dto.response.ImageResponse
-import kotlinx.coroutines.flow.Flow
+import androidx.paging.PagingData
+import com.eatssu.android.domain.model.MenuMini
+import com.eatssu.android.domain.model.Review
+import com.eatssu.android.domain.model.ReviewInfo
 import java.io.File
+import kotlinx.coroutines.flow.Flow
 
 interface ReviewRepository {
 
-    suspend fun writeReview(
-        menuId: Long,
-        body: WriteReviewRequest,
-    ): Flow<BaseResponse<Void>>
+    suspend fun writeMealReview(
+        mealId: Long,
+        rating: Int,
+        content: String,
+        imageUrls: List<String>,
+        likeMenuIdList: List<Long>?,
+    ): Boolean
+
+    suspend fun writeMenuReview(
+        rating: Int,
+        content: String,
+        imageUrls: List<String>,
+        likeMenuIdList: List<Long>?,
+    ): Boolean
 
     suspend fun deleteReview(
         reviewId: Long,
-    ): Flow<BaseResponse<Void>>
+    ): Boolean
 
     suspend fun modifyReview(
         reviewId: Long,
-        body: ModifyReviewRequest,
-    ): Flow<BaseResponse<Void>>
+        rating: Int,
+        content: String,
+        menuLikeInfoList: List<Review.MenuLikeInfo>,
+    ): Boolean
 
-    suspend fun getReviewList(
-        menuType: String,
-        mealId: Long?,
-        menuId: Long?,
-    ): Flow<BaseResponse<GetReviewListResponse>>
+
 
     suspend fun getMenuReviewInfo(
         menuId: Long,
-    ): Flow<BaseResponse<GetMenuReviewInfoResponse>>
-
+    ): ReviewInfo?
 
     suspend fun getMealReviewInfo(
         mealId: Long,
-    ): Flow<BaseResponse<GetMealReviewInfoResponse>>
+    ): ReviewInfo?
 
     suspend fun getImageString(
         file: File
-    ): Flow<BaseResponse<ImageResponse>>
+    ): String?
+
+    suspend fun getValidMenusByMealId(
+        mealId: Long,
+    ): List<MenuMini>
+
+    suspend fun getMyReviews(): List<Review>
+
+    fun getMenuReviewListPaged(menuId: Long?): Flow<PagingData<Review>>
+
+    fun getMealReviewListPaged(mealId: Long?): Flow<PagingData<Review>>
+
 }

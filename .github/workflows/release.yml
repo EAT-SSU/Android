@@ -1,0 +1,329 @@
+name: Production Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop # develop 브랜치로의 PR만 대상, 나중에 master나 prodution으로 바꾸는게 좋을듯
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (예: 3.2.0)'
+        required: true
+        type: string
+      release_notes:
+        description: 'Release notes (마크다운 지원)'
+        required: false
+        type: string
+        default: |
+          ## 주요 변경사항
+          
+          - 버그 수정 및 성능 개선
+          
+          ## 다운로드
+          - AAB 파일은 아래에서 다운로드할 수 있습니다.
+      track:
+        description: 'Play Store 배포 트랙'
+        required: true
+        type: choice
+        default: 'production'
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+
+jobs:
+  build-release:
+    name: Build Release Subscription
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: extract_info
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            TRACK="${{ github.event.inputs.track }}"
+          else
+            VERSION=$(echo "${{ github.event.pull_request.head.ref }}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+            TRACK="production"
+          fi
+          
+          if [ -z "$VERSION" ]; then
+            echo "❌ 버전 정보를 찾을 수 없습니다."
+            exit 1
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "track=$TRACK" >> $GITHUB_OUTPUT
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > keystore.jks
+
+      - name: Setup environment variables
+        env:
+          DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+          GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: echo "Environment variables set"
+
+      - name: Build with Fastlane
+        env:
+          DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+          GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          VERSION: ${{ steps.extract_info.outputs.version }}
+        run: |
+          # 빌드만 실행 (deploy:false)
+          bundle exec fastlane release version:${{ steps.extract_info.outputs.version }} track:${{ steps.extract_info.outputs.track }} deploy:false
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          retention-days: 1
+
+  deploy-playstore:
+    needs: build-release
+    name: Deploy to Play Store & GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: extract_info
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            TRACK="${{ github.event.inputs.track }}"
+            RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
+          else
+            VERSION=$(echo "${{ github.event.pull_request.head.ref }}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+            TRACK="production"
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "track=$TRACK" >> $GITHUB_OUTPUT
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-aab
+          path: app/build/outputs/bundle/release
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Check Play Store release notes file
+        id: check_release_notes
+        run: |
+          RELEASE_NOTE_FILE="release-notes/v${{ steps.extract_info.outputs.version }}.yml"
+          
+          if [ -f "$RELEASE_NOTE_FILE" ]; then
+            echo "✅ $RELEASE_NOTE_FILE 파일 발견"
+            echo "exists=true" >> $GITHUB_OUTPUT
+            
+            RELEASE_NOTES_CONTENT=$(ruby -e "require 'yaml'; begin; puts YAML.load_file('$RELEASE_NOTE_FILE')['ko']; rescue; end")
+            
+            if [ -z "$RELEASE_NOTES_CONTENT" ]; then
+               echo "⚠️ YAML 파일에서 'ko' 항목을 찾을 수 없거나 비어있습니다."
+               echo "release_notes=" >> $GITHUB_OUTPUT
+            else
+               echo "release_notes<<EOF" >> $GITHUB_OUTPUT
+               echo "$RELEASE_NOTES_CONTENT" >> $GITHUB_OUTPUT
+               echo "EOF" >> $GITHUB_OUTPUT
+               echo "📄 릴리즈 노트 내용:"
+               echo "$RELEASE_NOTES_CONTENT"
+            fi
+          else
+            echo "⚠️ $RELEASE_NOTE_FILE 파일을 찾을 수 없습니다."
+            echo "release_notes=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Find previous tag for release notes
+        id: previous_tag
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | grep -E '^(v)?[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          if [ -z "$PREVIOUS_TAG" ]; then
+             PREVIOUS_TAG=""
+          fi
+          echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy with Fastlane
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          VERSION: ${{ steps.extract_info.outputs.version }}
+        run: |
+          # 배포만 실행 (deploy:true, skip_build:true)
+          bundle exec fastlane release version:${{ steps.extract_info.outputs.version }} track:${{ steps.extract_info.outputs.track }} deploy:true skip_build:true
+
+      - name: Create GitHub Release with auto-generated notes
+        if: success()
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "${{ steps.extract_info.outputs.version }}"
+          name: "${{ steps.extract_info.outputs.version }}"
+          target_commitish: ${{ github.event_name == 'pull_request' && github.event.pull_request.merge_commit_sha || github.sha }}
+          generate_release_notes: true
+          previous_tag: ${{ steps.previous_tag.outputs.previous_tag != '' && steps.previous_tag.outputs.previous_tag || 'Auto' }}
+          body: |
+            <!-- GitHub가 자동으로 생성한 릴리즈 노트가 위에 표시됩니다 -->
+            ---
+            
+            ### 빌드 정보
+            - **버전**: ${{ steps.extract_info.outputs.version }}
+            - **배포 트랙**: ${{ steps.extract_info.outputs.track }}
+            ${{ github.event_name == 'pull_request' && format('- **빌드 시간**: {0}', github.event.pull_request.merged_at) || '' }}
+            ${{ github.event_name == 'pull_request' && format('- **커밋**: {0}', github.event.pull_request.merge_commit_sha) || format('- **커밋**: {0}', github.sha) }}
+            ${{ github.event_name == 'pull_request' && format('- **PR**: #{0}', github.event.pull_request.number) || '' }}
+            
+            ### 다운로드
+            - AAB 파일은 아래에서 다운로드할 수 있습니다.
+          files: |
+            app/build/outputs/bundle/release/app-release.aab
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get GitHub Release notes
+        id: github_release_notes
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          VERSION: ${{ steps.extract_info.outputs.version }}
+        run: |
+          RELEASE_TAG="$VERSION"
+          MAX_ATTEMPTS=30
+          ATTEMPT=1
+          
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            RELEASE_RESPONSE=$(curl -s --show-error -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG")
+            
+            if echo "$RELEASE_RESPONSE" | jq -e '.message' >/dev/null 2>&1; then
+              echo "⏳ Release 아직 생성되지 않음 ($ATTEMPT/$MAX_ATTEMPTS)..."
+              sleep 5
+              ATTEMPT=$((ATTEMPT + 1))
+            else
+              echo "✅ Release 생성 확인 완료"
+              break
+            fi
+          done
+          
+          if [ $ATTEMPT -gt $MAX_ATTEMPTS ]; then
+            echo "❌ Release 생성 시간 초과"
+            exit 1
+          fi
+          
+          if ! command -v jq &> /dev/null; then
+            echo "❌ jq가 설치되지 않음"
+            GITHUB_NOTES="- [Fix] 릴리즈 노트를 가져올 수 없습니다."
+          else
+            GITHUB_NOTES=$(echo "$RELEASE_RESPONSE" | jq -r '.body // ""' | \
+              sed -n '/## What/,$p' | \
+              grep -v "## What" | \
+              grep -v "^---" | \
+              grep -v "^### 빌드 정보" | \
+              grep -v "^### 다운로드" | \
+              head -30 | \
+              sed 's/^\*\s*/- /')
+          fi
+          
+          if [ -z "$GITHUB_NOTES" ] || [ "$GITHUB_NOTES" = "null" ] || [ -z "$(echo "$GITHUB_NOTES" | tr -d '\n')" ]; then
+            GITHUB_NOTES="- [Fix] 릴리즈 노트를 가져올 수 없습니다."
+          fi
+          
+          echo "github_notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$GITHUB_NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Slack notification
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            [Android 업데이트 올렸습니다!]
+            
+            버전명: ${{ steps.extract_info.outputs.version }}
+            
+            PlayStore 릴리즈 노트
+            
+            ${{ steps.check_release_notes.outputs.release_notes != '' && steps.check_release_notes.outputs.release_notes || '릴리즈 노트가 없습니다.' }}
+            
+            GitHub 릴리즈노트
+            
+            ${{ steps.github_release_notes.outputs.github_notes != '' && steps.github_release_notes.outputs.github_notes || '- [Fix] 릴리즈 노트를 가져올 수 없습니다.' }}
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : 'danger',
+                text: '[Android 업데이트 올렸습니다!]\n\n버전명: ${{ steps.extract_info.outputs.version }}\n\nPlayStore 릴리즈 노트\n\n${{ steps.check_release_notes.outputs.release_notes != '' && steps.check_release_notes.outputs.release_notes || '릴리즈 노트가 없습니다.' }}\n\nGitHub 릴리즈노트\n\n${{ steps.github_release_notes.outputs.github_notes != '' && steps.github_release_notes.outputs.github_notes || '- [Fix] 릴리즈 노트를 가져올 수 없습니다.' }}'
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

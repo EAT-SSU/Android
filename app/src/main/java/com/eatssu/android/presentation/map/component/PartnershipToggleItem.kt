@@ -7,7 +7,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,61 +24,69 @@ import com.eatssu.design_system.theme.White
 import timber.log.Timber
 
 enum class FilterType {
-    All, Mine
+    Mine, All; // 해당 부분에 쓰는 enum 순서대로 UI 토글 순서에 반영됩니다
+
+    fun label(departmentName: String): String {
+        return when (this) {
+            Mine -> if (departmentName.isBlank() || departmentName == "학과") "내 제휴" else departmentName
+            All -> "전체"
+        }
+    }
 }
 
 @Composable
 fun PartnershipFilterToggle(
     selected: FilterType,
     onSelectedChange: (FilterType) -> Unit,
-    modifier: Modifier = Modifier,
     departmentName: String,
+    modifier: Modifier = Modifier,
 ) {
     Timber.d("departmentName = $departmentName")
+    val items = FilterType.entries.map {
+        it to it.label(departmentName)
+    }
     Row(
         modifier = modifier
-            .border(1.dp, Gray300, shape = CircleShape)
+            .border(1.dp, Gray300, CircleShape)
             .clip(CircleShape)
             .background(White)
-            .padding(6.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        PartnershipToggleItem(
-            text = "전체",
-            isSelected = selected == FilterType.All,
-            onClick = { onSelectedChange(FilterType.All) }
-        )
-        PartnershipToggleItem(
-            text = if(departmentName == "학과" || departmentName.isEmpty()) "내 제휴" else departmentName,
-            isSelected = selected == FilterType.Mine,
-            onClick = { onSelectedChange(FilterType.Mine) },
-        )
+        items.forEach { (type, label) ->
+            PartnershipToggleItem(
+                label = label,
+                selected = selected == type,
+                onClick = { onSelectedChange(type) }
+            )
+        }
     }
 }
 
 @Composable
 fun PartnershipToggleItem(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = if (isSelected) Primary else Color.Transparent
-    val textColor = if (isSelected) Color.White else Gray600
+    val backgroundColor = if (selected) Primary else Color.Transparent
+    val textColor = if (selected) White else Gray600
 
     Box(
-        modifier = Modifier
-            .wrapContentWidth()
+        modifier = modifier
             .clip(CircleShape)
             .background(backgroundColor)
             .padding(horizontal = 20.dp, vertical = 6.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) { onClick() },
+                indication = null,
+                onClick = onClick
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = text,
+            text = label,
             color = textColor,
             style = EatssuTheme.typography.body2
         )

@@ -1,16 +1,19 @@
 package com.eatssu.android.presentation.mypage
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.BuildConfig
-import com.eatssu.android.data.repository.PreferencesRepository
+import com.eatssu.android.R
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
+import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,22 +24,24 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setNotificationStatusUseCase: SetDailyNotificationStatusUseCase,
     private val alarmUseCase: AlarmUseCase,
-    private val preferencesRepository: PreferencesRepository
+    private val settingDataStore: SettingDataStore,
 ) : ViewModel() {
 
     // 내부는 항상 "값 그 자체"만 들고 있고,
     // 화면엔 UiState로 감싸서 노출
+    // 로컬 저장소에서 닉네임을 먼저 읽어서 초기 상태 설정
     private val _state = MutableStateFlow(
-        MyPageState(appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+        MyPageState(
+            appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+        )
     )
     val uiState: StateFlow<UiState<MyPageState>> =
         _state
@@ -57,7 +62,7 @@ class MyPageViewModel @Inject constructor(
 
     private fun observeNotificationStatus() {
         viewModelScope.launch {
-            preferencesRepository.dailyNotificationStatus.collectLatest { isOn ->
+            settingDataStore.dailyNotificationStatus.collectLatest { isOn ->
                 _state.update { it.copy(isAlarmOn = isOn) }
             }
         }
@@ -65,21 +70,20 @@ class MyPageViewModel @Inject constructor(
 
     fun fetchMyInfo() {
         viewModelScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) { getUserNickNameUseCase() }
-            }.onSuccess { nickname ->
-                if (nickname.isNullOrBlank() || nickname.startsWith("user-")) {
-                    _state.update { it.copy(nickname = null) }
-                    _uiEvent.emit(UiEvent.ShowToast("닉네임을 설정해주세요."))
-                } else {
-                    _state.update { it.copy(nickname = nickname) }
-                }
-            }.onFailure { e ->
-                // 에러 화면을 꼭 별도로 보여주고 싶다면 uiState를 에러로 전환하는 방식 선택
-                // 여기서는 '상태 유지 + 토스트'만 처리
-                _uiEvent.emit(UiEvent.ShowToast("정보를 불러올 수 없습니다."))
-                Timber.e(e)
+            val nickname = getUserNickNameUseCase()
+
+            if (nickname.isBlank()) {
+                _state.update { it.copy(nickname = null) }
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        context.getString(R.string.toast_require_nickname),
+                        ToastType.INFO
+                    )
+                )
+                return@launch
             }
+
+            _state.update { it.copy(nickname = nickname) }
         }
     }
 
@@ -104,5 +108,5 @@ data class MyPageState(
     val isAlarmOn: Boolean = false,
     val appVersion: String = "0.0.0"
 ) {
-    val hasNickname: Boolean get() = !nickname.isNullOrBlank() && !nickname.startsWith("user-")
+    val hasNickname: Boolean get() = !nickname.isNullOrBlank()
 }

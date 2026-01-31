@@ -1,6 +1,8 @@
 package com.eatssu.android.presentation.mypage.terms
 
 import android.os.Bundle
+import android.webkit.RenderProcessGoneDetail
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
@@ -8,13 +10,11 @@ import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import timber.log.Timber
 
-
 class WebViewActivity :
     BaseActivity<ActivityWebviewBinding>(
         ActivityWebviewBinding::inflate,
         ScreenId.EXTERNAL_INQUIRE // shouldLogScreenId가 false라 미사용
     ) {
-
 
     private var URL = ""
     private var TITLE = ""
@@ -22,13 +22,28 @@ class WebViewActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         binding.webview.apply {
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
 
-            // localStorage 사용 시
-            // webView.settings.domStorageEnabled = true
+                // 렌더러 충돌 시 호출되는 콜백 (Android 8.0 이상)
+                override fun onRenderProcessGone(
+                    view: WebView?,
+                    detail: RenderProcessGoneDetail
+                ): Boolean {
+                    Timber.e("⚠WebView renderer crashed! Did renderer die: ${detail.didCrash()}")
+
+                    // view가 null이거나 이미 죽은 상태이므로 안전하게 정리
+                    try {
+                        view?.destroy()
+                    } catch (e: Exception) {
+                        Timber.e(e, "Error while destroying crashed WebView")
+                    }
+
+                    // WebView를 재생성하거나 오류 안내 UI를 표시
+                    recreate() // Activity 재시작으로 복구
+                    return true // 앱 강제 종료 방지
+                }
+            }
 
             // 웹 페이지에서 새 창을 열 수 있도록 설정
             // Notion 페이지 = DOM Storage(domStorageEnabled) 없으면 동작 불가
@@ -67,6 +82,15 @@ class WebViewActivity :
 
         EventLogger.screenView(screenId)
         Timber.d("WebViewActivity screen view logging: $screenId")
+    }
+
+    override fun onDestroy() {
+        binding.webview.apply {
+            stopLoading()
+            webChromeClient = null
+            destroy()
+        }
+        super.onDestroy()
     }
 
     override fun shouldLogScreenId() = false

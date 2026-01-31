@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.intro
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -7,12 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
+import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +35,29 @@ class IntroActivity : AppCompatActivity() {
         setContentView(binding.root)
         log()
 
+        observeState()
+        observeEvents()
+        observeNetworkError()
+
+        lifecycleScope.launch {
+            // 버전 체크 결과 관찰
+            introViewModel.versionCheckResult.collectLatest { result ->
+                result?.let {
+                    when (it) {
+                        is VersionCheckResult.ForceUpdateRequired -> {
+                            showForceUpdateDialog()
+                        }
+
+                        VersionCheckResult.UpdateNotRequired -> {
+                            // 업데이트 불필요 - 정상 진행
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeState() {
         lifecycleScope.launch {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
@@ -49,12 +75,16 @@ class IntroActivity : AppCompatActivity() {
                     else -> Unit
                 }
             }
+        }
+    }
 
+    private fun observeEvents() {
+        lifecycleScope.launch {
             introViewModel.uiEvent.collectLatest { event ->
                 when (event) {
                     is UiEvent.ShowToast -> {
                         // 에러 메시지 표시
-                        showToast(event.message)
+                        showToast(event)
                     }
                 }
             }
@@ -75,5 +105,10 @@ class IntroActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventLogger.screenView(ScreenId.LOGIN_SPLASH)
+    }
+
+    private fun showForceUpdateDialog() {
+        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
+        startActivity(intent)
     }
 }

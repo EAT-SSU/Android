@@ -1,0 +1,43 @@
+package com.eatssu.android.data.remote.dto.response
+
+import com.eatssu.android.domain.model.Menu
+import com.google.gson.annotations.SerializedName
+
+private const val MENU_SEPARATOR = ", "
+
+data class GetMealResponse(
+    @SerializedName("mealId") var mealId: Long? = null,
+    @SerializedName("price") var price: Int? = null,
+    @SerializedName("rating") var rating: Double? = null,
+    @SerializedName("briefMenus") var briefMenus: List<MenusInformationList> = emptyList(),
+)
+
+data class MenusInformationList(
+    @SerializedName("menuId") var menuId: Long? = null,
+    @SerializedName("name") var name: String? = null,
+)
+
+fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
+    val menuList = mutableListOf<Menu>()
+
+    this.forEach { mealResponse ->
+        val menuNames =
+            mealResponse.briefMenus.mapNotNull { it.name }.joinToString(separator = MENU_SEPARATOR)
+        val mealId = mealResponse.mealId ?: -1
+        val price = mealResponse.price ?: 0
+        val mainRating = mealResponse.rating ?: 0.0
+
+        val menu = Menu(mealId, menuNames, price, mainRating)
+
+        menuList.add(menu)
+    }
+
+    return menuList
+}
+
+
+fun List<GetMealResponse>.toDomain(): List<List<String>> {
+    return this.map { meal ->
+        meal.briefMenus.mapNotNull { it.name }
+    }
+}

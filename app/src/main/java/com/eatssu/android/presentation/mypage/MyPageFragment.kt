@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
@@ -20,16 +19,22 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentMyPageBinding
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.UiEvent
-import com.eatssu.android.presentation.UiState
 import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.login.LoginActivity
-import com.eatssu.android.presentation.mypage.myreview.MyReviewListActivity
+import com.eatssu.android.presentation.mypage.myreview.MyReviewListComposeActivity
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.showDialog
+import com.eatssu.android.presentation.util.showErrorToast
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.EventLogger
+import com.eatssu.common.UiEvent
+import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.talk.TalkApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -49,6 +54,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.tvSignout.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         setupObservers()
         setOnClickListener()
@@ -67,11 +73,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                         when (ui) {
                             is UiState.Init, UiState.Loading -> Unit // 닉네임만 불러옴으로 로딩 인디케이터 없음
                             is UiState.Success -> {
-                                ui.data?.let { render(it) }
+                                render(ui.data)
                             }
 
                             is UiState.Error -> {
-                                showToast(getString(R.string.not_found))
+                                showErrorToast(R.string.not_found)
                             }
                         }
                     }
@@ -79,8 +85,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 launch {
                     myPageViewModel.uiEvent.collectLatest { event ->
                         when (event) {
-                            is UiEvent.ShowToast -> showToast(event.message)
-                            else -> Unit
+                            is UiEvent.ShowToast -> showToast(event)
                         }
                     }
                 }
@@ -115,7 +120,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
-                showToast("EAT-SSU 알림 수신을 동의하였습니다.\n$formattedDate")
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
             } else {
                 showNotificationPermissionDialog()
                 // 권한 미허용이면 스위치 원복
@@ -127,7 +132,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             }
         } else {
             myPageViewModel.setNotificationOff()
-            showToast("EAT-SSU 알림 수신을 거부하였습니다.\n$formattedDate")
+            showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
         }
     }
 
@@ -137,15 +142,19 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llInquire.setOnClickListener {
-            startWebView(
-                getString(R.string.kakao_talk_channel_url),
-                getString(R.string.contact),
-                ScreenId.EXTERNAL_INQUIRE
-            )
+            val context = requireContext()
+            val channelPublicId = "_ZlVAn"
+
+            TalkApiClient.instance.chatChannel(context, channelPublicId) {
+                val url = TalkApiClient.instance.chatChannelUrl(channelPublicId)
+                KakaoCustomTabsClient.openWithDefault(context, url)
+            }
+
+            EventLogger.screenView(ScreenId.EXTERNAL_INQUIRE)
         }
 
         binding.llMyReview.setOnClickListener {
-            startActivity(Intent(requireContext(), MyReviewListActivity::class.java))
+            startActivity(Intent(requireContext(), MyReviewListComposeActivity::class.java))
         }
 
         binding.tvLogout.setOnClickListener {
@@ -187,14 +196,19 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun showNotificationPermissionDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("알림 권한 필요")
-            .setMessage("알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?")
-            .setPositiveButton("설정으로 이동") { _, _ ->
-                openAppNotificationSettings(requireContext())
+        requireContext().run {
+            showDialog(
+                title = "알림 권한 필요",
+                description = "알림을 받으려면 알림 권한을 활성화해야 합니다. 설정 화면으로 이동하시겠습니까?"
+            ) {
+                confirmText = "설정으로 이동"
+                cancelText = "취소"
+                onConfirm { dialog ->
+                    openAppNotificationSettings(this@run)
+                    dialog.dismiss()
+                }
             }
-            .setNegativeButton("취소", null)
-            .show()
+        }
     }
 
     private fun checkNotificationPermission(context: Context): Boolean {
@@ -207,22 +221,22 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun showLogoutDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("로그아웃")
-            .setMessage("로그아웃 하시겠습니까?")
-            .setPositiveButton("로그아웃") { _, _ ->
-                mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
-                startActivity(Intent(requireContext(), LoginActivity::class.java))
+        requireContext().run {
+            showDialog("로그아웃", "로그아웃 하시겠습니까?") {
+                isDestructive = true
+                onConfirm {
+                    mainViewModel.logOut() // 로그아웃은 메인 액티비티에서 처리하도록 수정
+                    startActivity(Intent(this@run, LoginActivity::class.java))
+                }
             }
-            .setNegativeButton("취소", null)
-            .show()
+        }
     }
 
     private fun moveToOss() {
         try {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
         } catch (e: Exception) {
-            showToast("오픈소스 라이브러리를 불러올 수 없습니다.")
+            showErrorToast(getString(R.string.toast_oss_load_fail))
             Timber.e("Error opening OSS Licenses: ${e.message}")
         }
     }

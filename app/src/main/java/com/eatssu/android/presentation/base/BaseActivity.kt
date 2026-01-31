@@ -9,22 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.eatssu.android.R
-import com.eatssu.android.data.repository.FirebaseRemoteConfigRepository
-import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.common.NetworkConnection
-import com.eatssu.android.presentation.common.VersionViewModel
-import com.eatssu.android.presentation.common.VersionViewModelFactory
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.util.observeNetworkError
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
@@ -44,11 +40,9 @@ abstract class BaseActivity<B : ViewBinding>(
     protected lateinit var toolbarTitle: TextView
     private lateinit var backBtn: MaterialCardView
 
-    private lateinit var versionViewModel: VersionViewModel
-    private lateinit var firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 
     private val networkCheck: NetworkConnection by lazy {
-        NetworkConnection(this)
+        NetworkConnection(this, lifecycleScope)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +54,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
         toolbar = findViewById(R.id.toolbar)
         toolbarTitle = findViewById(R.id.toolbar_title)
-        backBtn =findViewById(R.id.mcv_setting)
+        backBtn = findViewById(R.id.mcv_setting)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false) // 툴바 기본 제목 비활성화
@@ -71,17 +65,11 @@ abstract class BaseActivity<B : ViewBinding>(
 
         networkCheck.register() // 네트워크 객체 등록
 
-        firebaseRemoteConfigRepository = FirebaseRemoteConfigRepository()
-        versionViewModel = ViewModelProvider(this, VersionViewModelFactory(firebaseRemoteConfigRepository))[VersionViewModel::class.java]
-
-        if(versionViewModel.checkForceUpdate()){
-            showForceUpdateDialog()
-        }
-
         _binding = bindingFactory(layoutInflater, findViewById(R.id.fl_content), true)
 
         // refreshtoken 관리
         observeTokenExpiration()
+        observeNetworkError()
 
         setContainerInset()
 
@@ -118,18 +106,9 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private fun observeTokenExpiration() {
         lifecycleScope.launch {
-            TokenEventBus.tokenExpired.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_expired), Toast.LENGTH_SHORT).show()
-                navigateToLogin()
-            }
-        }
-
-        lifecycleScope.launch {
-            TokenEventBus.tokenServerError.collect {
-                Toast.makeText(this@BaseActivity,
-                    getString(R.string.token_server_error), Toast.LENGTH_SHORT)
-                    .show()
+            TokenEventBus.tokenExpired.collect { reason ->
+                Timber.i("Logged out due to: $reason")
+                showInfoToast(R.string.toast_token_expired)
                 navigateToLogin()
             }
         }
@@ -168,10 +147,6 @@ abstract class BaseActivity<B : ViewBinding>(
         return super.dispatchTouchEvent(ev)
     }
 
-    private fun showForceUpdateDialog() {
-        val intent = Intent(this, ForceUpdateDialogActivity::class.java)
-        startActivity(intent)
-    }
 
     override fun onResume() {
         super.onResume()
@@ -182,7 +157,5 @@ abstract class BaseActivity<B : ViewBinding>(
         }
     }
 
-    open fun shouldLogScreenId(): Boolean {
-        return true
-    }
+    open fun shouldLogScreenId(): Boolean = true
 }

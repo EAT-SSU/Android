@@ -1,0 +1,10 @@
+ko: |
+  - 카카오톡 문의하기가 접근 안되는 오류를 수정했어요.
+  - 중복된 닉네임의 오류 메세지를 정정했어요.
+  - 안쓰는 이미지 파일을 지워서 앱을 가볍게 만들었어요.
+  - 식단 속 메뉴의 구분자를 변경해 가시성을 올렸어요.
+en: |
+  - Fixed an issue preventing access to KakaoTalk inquiries.
+  - Clarified the error message for duplicate nicknames.
+  - Optimized app size by removing unused images.
+  - Enhanced menu readability by adjusting separators in meal plans.
