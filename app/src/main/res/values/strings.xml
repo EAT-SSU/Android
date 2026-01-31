@@ -151,6 +151,12 @@
     <!-- Rating (Parameterized) -->
     <!-- ========================== -->
     <string name="rate_n">%1$d점</string>
+    <!-- 호환성을 위해 개별 평점도 유지 -->
+    <string name="rate_1">1점</string>
+    <string name="rate_2">2점</string>
+    <string name="rate_3">3점</string>
+    <string name="rate_4">4점</string>
+    <string name="rate_5">5점</string>
 
     <!-- ========================== -->
     <!-- Menu/Restaurant Related -->
@@ -227,11 +233,30 @@
     <string name="report_title">리뷰를 신고하는 이유를 선택해주세요.</string>
     <string name="report_sub">하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.</string>
     <string name="report_write_hint">리뷰 신고 사유를 작성해 주세요</string>
+    <string name="report_btn">EAT SSU에게 보내기</string>
+
+    <!-- ========================== -->
+    <!-- Report Types -->
+    <!-- ========================== -->
+    <string name="report1">메뉴와 관련없는 내용</string>
+    <string name="report2">음란성, 욕설 등 부적절한 내용</string>
+    <string name="report3">부적절한 홍보 또는 광고</string>
+    <string name="report4">리뷰 작성 취지에 맞지 않은 내용 (복사글 등)</string>
+    <string name="report5">저작권 도용 의심 (사진 등)</string>
+    <string name="report6">기타 (하단 내용 작성)</string>
 
     <!-- ========================== -->
     <!-- Input Validation -->
     <!-- ========================== -->
     <string name="max_150">최대 150자</string>
+
+    <!-- ========================== -->
+    <!-- Common Strings -->
+    <!-- ========================== -->
+    <string name="back_btn">back</string>
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+    <string name="save">저장하기</string>
 
     <!-- ========================== -->
     <!-- App Slogan -->

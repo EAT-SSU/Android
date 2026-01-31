@@ -9,6 +9,7 @@ import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
+import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
@@ -151,6 +152,13 @@ class WriteReviewViewModel @Inject constructor(
                 _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_review_write_failed), ToastType.ERROR))
                 return@launch
             }
+
+            // 리뷰 작성 완료 로깅
+            EventLogger.completeReview(
+                rating = editing.rating.toLong(),
+                likes = editing.likedMenuIds.size.toLong(),
+                photoAttached = editing.selectedImageUri != null
+            )
 
             _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_review_write_success), ToastType.SUCCESS))
             _uiEvent.emit(UiEvent.NavigateBack)

@@ -6,7 +6,6 @@ import com.eatssu.android.R
 import com.eatssu.android.BuildConfig.VERSION_CODE
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.GetIsAccessTokenValidUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
@@ -26,7 +25,6 @@ import javax.inject.Inject
 class IntroViewModel @Inject constructor(
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-    private val getIsAccessTokenValidUseCase: GetIsAccessTokenValidUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : ViewModel() {
 
@@ -115,19 +113,7 @@ class IntroViewModel @Inject constructor(
                 return@launch
             }
 
-            // 토큰이 있어도 유효하지 않음
-            if (!getIsAccessTokenValidUseCase(userAccessToken)) {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        UiText.StringResource(R.string.toast_token_invalid),
-                        ToastType.INFO
-                    )
-                )
-                return@launch
-            }
-
-            // 토큰이 있고 유효함
+            // 스플래시에서는 헬스체크만 수행. 토큰 유효성/재발급은 실제 API 요청에서 Authenticator가 처리.
             _uiState.value = UiState.Success(IntroState.ValidToken)
         }
     }

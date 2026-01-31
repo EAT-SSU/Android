@@ -29,10 +29,13 @@ import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showErrorToast
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.talk.TalkApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -140,11 +143,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
         }
 
         binding.llInquire.setOnClickListener {
-            startWebView(
-                getString(R.string.kakao_talk_channel_url),
-                getString(R.string.contact),
-                ScreenId.EXTERNAL_INQUIRE
-            )
+            val context = requireContext()
+            val channelPublicId = "_ZlVAn"
+
+            TalkApiClient.instance.chatChannel(context, channelPublicId) {
+                val url = TalkApiClient.instance.chatChannelUrl(channelPublicId)
+                KakaoCustomTabsClient.openWithDefault(context, url)
+            }
+
+            EventLogger.screenView(ScreenId.EXTERNAL_INQUIRE)
         }
 
         binding.llMyReview.setOnClickListener {

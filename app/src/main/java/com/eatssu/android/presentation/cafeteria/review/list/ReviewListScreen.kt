@@ -14,9 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,6 +37,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
@@ -46,10 +51,15 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.OthersRev
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -58,6 +68,7 @@ import com.eatssu.design_system.theme.Gray100
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Star
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ReviewListScreen(
@@ -76,17 +87,33 @@ fun ReviewListScreen(
         viewModel.getReview(menuType, id)
     }
 
+    // Screen View 로깅
+    TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
+
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
+    val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
-    when (uiEvent) {
-        is UiEvent.ShowToast -> {
-            context.showToast(uiEvent as UiEvent.ShowToast)
+    LaunchedEffect(uiEvent) {
+        when (val event = uiEvent) {
+            is UiEvent.ShowToast -> context.showToast(event)
+            is ReviewListEvent.ReviewDeleted -> {
+                context.showToast(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_review_delete_success),
+                        ToastType.SUCCESS
+                    )
+                )
+                reviewPagingItems.refresh()
+            }
+
+            else -> {}
         }
     }
 
     ReviewListScreen(
         uiState = reviewListState,
+        reviewPagingItems = reviewPagingItems,
         modifier = modifier,
         menuName = menuName,
         onBack = onBack,
@@ -99,6 +126,7 @@ fun ReviewListScreen(
 @Composable
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
+    reviewPagingItems: LazyPagingItems<Review>,
     modifier: Modifier = Modifier,
     menuName: String,
     onBack: () -> Unit = {},
@@ -154,6 +182,7 @@ internal fun ReviewListScreen(
                 text = stringResource(R.string.review_write),
                 onClick = {
                     onReviewWriteButtonClick()
+                    EventLogger.writeReview() //작성 하러가기가 이벤트임
                 },
                 modifier = Modifier
                     .padding(24.dp)
@@ -166,9 +195,7 @@ internal fun ReviewListScreen(
                 .fillMaxSize()
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
@@ -197,7 +224,7 @@ internal fun ReviewListScreen(
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
                                 Text(
-                                    "리뷰",
+                                    stringResource(R.string.review),
                                     style = EatssuTheme.typography.h2,
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -220,59 +247,156 @@ internal fun ReviewListScreen(
 
 
                     is UiState.Success -> {
-                        val info = uiState.data?.reviewInfo
-                        val reviewList = uiState.data?.reviewList ?: emptyList()
+                        val info = uiState.data.reviewInfo
 
-                        ReviewInfoContent(menuName, info)
+                        val loadState = reviewPagingItems.loadState
+                        val isInitialLoading = loadState.refresh is LoadState.Loading
+                        val isError = loadState.refresh is LoadState.Error
 
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            Spacer(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .fillMaxWidth()   // 가로 전체 차지
-                                    .height(16.dp)
-                                    .background(Gray100) // 배경색 적용
-                            )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            item {
+                                ReviewInfoContent(menuName, info)
+                            }
 
-                            Row(Modifier.padding(horizontal = 24.dp)) {
-                                Text(
-                                    stringResource(R.string.review),
-                                    style = EatssuTheme.typography.h2,
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "${info?.reviewCnt}",
-                                    color = Primary,
-                                    style = EatssuTheme.typography.h2,
+                            item {
+                                Spacer(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .fillMaxWidth()
+                                        .height(16.dp)
+                                        .background(Gray100)
                                 )
                             }
 
-                            if (uiState.data?.reviewList?.size == 0) {
-                                EmptyReviewContent(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(top = 100.dp),
-                                )
+                            item {
+                                Row(Modifier.padding(horizontal = 24.dp)) {
+                                    Text(
+                                        stringResource(R.string.review),
+                                        style = EatssuTheme.typography.h2,
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "${info?.reviewCnt}",
+                                        color = Primary,
+                                        style = EatssuTheme.typography.h2,
+                                    )
+                                }
+                            }
+
+                            if (isInitialLoading) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 100.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        DelayedLoadingIndicator(modifier = Modifier)
+                                    }
+                                }
+                            } else if (isError) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 100.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text(
+                                                stringResource(R.string.toast_review_load_failed),
+                                                style = EatssuTheme.typography.body1
+                                            )
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            EatSsuButton(
+                                                text = "재시도",
+                                                onClick = { reviewPagingItems.retry() },
+                                                modifier = Modifier.width(100.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            } else if (reviewPagingItems.itemCount == 0) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .align(Alignment.CenterHorizontally)
+                                            .fillMaxHeight(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        EmptyReviewContent(
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                        )
+                                    }
+                                }
                             } else {
-                                reviewList.forEach { item ->
-                                    ReviewItem(
-                                        modifier = Modifier.padding(horizontal = 24.dp),
-                                        writeName = item.writerNickname,
-                                        writeDate = item.writeDate,
-                                        content = item.content,
-                                        rating = item.rating,
-                                        menuLikeInfoList = item.menuLikeInfoList,
-                                        imgUrl = item.imgUrl,
-                                        onMoreClick = {
-                                            if (item.isWriter) {
-                                                showMyBottomSheet = true
-                                                selectedReview = item
-                                            } else {
-                                                showOthersBottomSheet = true
-                                                selectedReview = item
+                                items(
+                                    count = reviewPagingItems.itemCount,
+                                    key = reviewPagingItems.itemKey { it.reviewId }
+                                ) { index ->
+                                    val item = reviewPagingItems.get(index)
+                                    item?.let {
+                                        ReviewItem(
+                                            modifier = Modifier.padding(
+                                                horizontal = 24.dp,
+                                                vertical = 8.dp
+                                            ),
+                                            writeName = it.writerNickname,
+                                            writeDate = it.writeDate,
+                                            content = it.content,
+                                            rating = it.rating,
+                                            menuLikeInfoList = it.menuLikeInfoList,
+                                            imgUrl = it.imgUrl,
+                                            onMoreClick = {
+                                                if (it.isWriter) {
+                                                    showMyBottomSheet = true
+                                                    selectedReview = it
+                                                } else {
+                                                    showOthersBottomSheet = true
+                                                    selectedReview = it
+                                                }
+                                            }
+                                        )
+                                    }
+                                }
+
+                                // Append Loading / Error
+                                when (val appendState = loadState.append) {
+                                    is LoadState.Loading -> {
+                                        item {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(16.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                DelayedLoadingIndicator(modifier = Modifier)
                                             }
                                         }
-                                    )
+                                    }
+
+                                    is LoadState.Error -> {
+                                        item {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Text("추가 데이터를 불러오지 못했습니다.")
+                                                EatSsuButton(
+                                                    text = "재시도",
+                                                    onClick = { reviewPagingItems.retry() },
+                                                    modifier = Modifier.width(100.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    else -> {}
                                 }
                             }
                         }
@@ -303,7 +427,7 @@ internal fun ReviewListScreen(
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
                                 Text(
-                                    "리뷰",
+                                    stringResource(R.string.review),
                                     style = EatssuTheme.typography.h2,
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -317,8 +441,8 @@ internal fun ReviewListScreen(
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .fillMaxHeight()
-                                    .padding(top = 100.dp)
+                                    .fillMaxHeight(),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     stringResource(R.string.review_error_occurred),
@@ -341,7 +465,7 @@ fun ReviewInfoContent(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
         Box(
@@ -455,10 +579,42 @@ fun EmptyReviewContent(modifier: Modifier) {
     }
 }
 
+@Composable
+fun <T : Any> rememberPreviewPagingItems(
+    pagingData: PagingData<T>
+): LazyPagingItems<T> {
+    val flow = remember {
+        flowOf(pagingData)
+    }
+    return flow.collectAsLazyPagingItems()
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun ReviewListPreview() {
+    val reviewList = List(5) { id ->
+        Review(
+            reviewId = id.toLong(),
+            isWriter = false,
+            menuLikeInfoList = emptyList(),
+            writerNickname = "작성자 $id",
+            rating = 5,
+            writeDate = "2024.10.10",
+            content = "맛있어요 $id",
+            imgUrl = null
+        )
+    }
+
+    val pagingData = PagingData.from(
+        reviewList,
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.NotLoading(endOfPaginationReached = false),
+            prepend = LoadState.NotLoading(endOfPaginationReached = false),
+            append = LoadState.NotLoading(endOfPaginationReached = false)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
@@ -468,98 +624,17 @@ fun ReviewListPreview() {
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
-                        reviewCnt = 123,
-                        fiveStarCount = 80,
-                        fourStarCount = 20,
-                        threeStarCount = 10,
-                        twoStarCount = 5,
-                        oneStarCount = 8,
-                        rating = 4.5,
+                        reviewCnt = 5,
+                        fiveStarCount = 5,
+                        fourStarCount = 0,
+                        threeStarCount = 0,
+                        twoStarCount = 0,
+                        oneStarCount = 0,
+                        rating = 5.0,
                     ),
-                    reviewList = listOf(
-                        Review(
-                            isWriter = false,
-                            reviewId = 0,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "숭실푸드파이터",
-                            writeDate = "2024-12-31",
-                            rating = 4,
-                            content = "맛있어요",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 1,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "맛있는리뷰어",
-                            writeDate = "2024-12-30",
-                            rating = 5,
-                            content = "정말 맛있어요! 다음에도 먹고 싶어요.",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 2,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "음식평론가",
-                            writeDate = "2024-12-29",
-                            rating = 3,
-                            content = "그럭저럭 괜찮아요",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 2,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "음식평론가",
-                            writeDate = "2024-12-29",
-                            rating = 3,
-                            content = "그럭저럭 괜찮아요",
-                            imgUrl = "https://picsum.photos/400/301", // 실제 이미지 URL 사용
-                        )
-                    )
                 )
             ),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
@@ -567,13 +642,34 @@ fun ReviewListPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListLoadingPreview() {
+    val pagingData = PagingData.empty<Review>(
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.Loading,
+            prepend = LoadState.NotLoading(endOfPaginationReached = false),
+            append = LoadState.NotLoading(endOfPaginationReached = false)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Loading
+            uiState = UiState.Success(
+                ReviewListState(
+                    reviewInfo = ReviewInfo(
+                        reviewCnt = 0,
+                        fiveStarCount = 0,
+                        fourStarCount = 0,
+                        threeStarCount = 0,
+                        twoStarCount = 0,
+                        oneStarCount = 0,
+                        rating = 0.0,
+                    ),
+                )
+            ),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
@@ -581,6 +677,14 @@ fun ReviewListLoadingPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListEmptyPreview() {
+    val pagingData = PagingData.empty<Review>(
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.NotLoading(endOfPaginationReached = true),
+            prepend = LoadState.NotLoading(endOfPaginationReached = true),
+            append = LoadState.NotLoading(endOfPaginationReached = true)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기+닭고기+돼지고기+양고기",
@@ -598,9 +702,9 @@ fun ReviewListEmptyPreview() {
                         oneStarCount = 0,
                         rating = 0.0,
                     ),
-                    reviewList = emptyList()
                 )
             ),
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
@@ -608,13 +712,22 @@ fun ReviewListEmptyPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ReviewListErrorPreview() {
+    val pagingData = PagingData.empty<Review>(
+        sourceLoadStates = LoadStates(
+            refresh = LoadState.Error(Exception("Error")),
+            prepend = LoadState.NotLoading(endOfPaginationReached = false),
+            append = LoadState.NotLoading(endOfPaginationReached = false)
+        )
+    )
+
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Error
+            uiState = UiState.Error,
+            reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }

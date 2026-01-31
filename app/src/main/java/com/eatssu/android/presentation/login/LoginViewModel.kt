@@ -3,8 +3,6 @@ package com.eatssu.android.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.remote.dto.request.LoginWithKakaoRequest
-import com.eatssu.android.domain.model.TokenStateManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
@@ -12,6 +10,7 @@ import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
+import com.eatssu.common.enums.DeviceType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +41,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = UiState.Loading
 
-            val token = loginUseCase(LoginWithKakaoRequest(email, providerID)) ?: run {
+            val token = loginUseCase(email, providerID, DeviceType.ANDROID) ?: run {
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
@@ -58,7 +57,6 @@ class LoginViewModel @Inject constructor(
             setUserEmailUseCase(email)
 
             _uiState.value = UiState.Success(LoginState.LoginSuccess)
-            TokenStateManager.setTokenValid()
         }
     }
 

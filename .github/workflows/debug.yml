@@ -1,0 +1,151 @@
+name: Build & Firebase App Tester
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    name: Build Debug & Release APK
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Create Local Properties
+      run: touch local.properties
+
+    - name: Access Local Properties
+      env:
+        DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
+        PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
+        POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+        POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+      run: |
+        echo DEV_BASE_URL=\"$DEV_BASE_URL\" >> local.properties
+        echo PROD_BASE_URL=\"$PROD_BASE_URL\" >> local.properties
+        echo KAKAO_NATIVE_APP_KEY=$KAKAO_NATIVE_APP_KEY >> local.properties
+        echo NAVER_MAPS_CLIENT_ID=$NAVER_MAPS_CLIENT_ID >> local.properties
+        echo POSTHOG_API_KEY=$POSTHOG_API_KEY >> local.properties
+        echo POSTHOG_HOST=$POSTHOG_HOST >> local.properties
+  
+    - name: Generate google-services.json
+      run: |
+        echo "$GOOGLE_SERVICE" > app/google-services.json.b64
+        base64 -d -i app/google-services.json.b64 > app/google-services.json
+      env:
+        GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # - name: Assemble Debug APK
+    #   if: >
+    #     github.event_name == 'pull_request' &&
+    #     startsWith(github.event.pull_request.head.ref, 'release/') && 
+    #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    #   run: ./gradlew assembleDebug
+
+    # - name: Upload Debug APK artifact
+    #   if: >
+    #     github.event_name == 'pull_request' &&
+    #     startsWith(github.event.pull_request.head.ref, 'release/') && 
+    #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: debug-apk
+    #     path: app/build/outputs/apk/debug/*.apk
+    #     retention-days: 1
+
+    - name: Assemble Release APK
+      if: >
+        github.event_name == 'pull_request' &&
+        startsWith(github.event.pull_request.head.ref, 'release/') && 
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      run: ./gradlew assembleRelease
+
+    - name: Upload Release APK artifact
+      if: >
+        github.event_name == 'pull_request' &&
+        startsWith(github.event.pull_request.head.ref, 'release/') && 
+        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release/*.apk
+        retention-days: 1
+
+  deploy-firebase:
+    needs: build
+    name: Deploy to Firebase
+    if: >
+      github.event_name == 'pull_request' &&
+      startsWith(github.event.pull_request.head.ref, 'release/') && 
+      (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Download Release APK artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release
+
+    # Release만 Firebase 배포
+    - name: Install Firebase CLI
+      run: npm i -g firebase-tools
+
+    - name: Distribute Release APK to Firebase App Distribution
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      run: |
+        firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+          --app "$FIREBASE_APP_ID" \
+          --groups "eat-ssu-android-qa" \
+          --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+          --token "$FIREBASE_TOKEN"
+      
+    # PR 코멘트
+    - name: Comment PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const body =
+            [
+              `✅ Firebase App Distribution으로 Release APK 배포됨 (그룹: eat-ssu-android-qa)`,
+            ].join('\n');
+          
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            body,
+          });

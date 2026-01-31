@@ -6,11 +6,9 @@ import com.eatssu.android.BuildConfig.BASE_URL
 import com.eatssu.android.di.network.ApiResultCallAdapterFactory
 import com.eatssu.android.di.network.TokenAuthenticator
 import com.eatssu.android.di.network.TokenInterceptor
-import com.eatssu.android.domain.usecase.auth.GetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
-import com.eatssu.android.domain.usecase.auth.ReissueTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
-import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
+import com.eatssu.android.domain.usecase.auth.ReissueAndStoreTokenUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -125,17 +123,13 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideTokenAuthenticator(
-        getRefreshTokenUseCase: GetRefreshTokenUseCase,
-        setAccessTokenUseCase: SetAccessTokenUseCase,
-        setRefreshTokenUseCase: SetRefreshTokenUseCase,
-        reissueTokenUseCase: ReissueTokenUseCase,
+        getAccessTokenUseCase: GetAccessTokenUseCase,
+        reissueAndStoreTokenUseCase: ReissueAndStoreTokenUseCase,
         logoutUseCase: LogoutUseCase,
     ): TokenAuthenticator {
         return TokenAuthenticator(
-            getRefreshTokenUseCase,
-            setAccessTokenUseCase,
-            setRefreshTokenUseCase,
-            reissueTokenUseCase,
+            getAccessTokenUseCase,
+            reissueAndStoreTokenUseCase,
             logoutUseCase,
         )
     }

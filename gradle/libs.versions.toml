@@ -43,7 +43,8 @@ glide = "4.15.1"
 glide-compiler = "4.12.0"
 compressor = "3.0.1"
 coroutines = "1.7.3"
-kakao-login = "2.8.6"
+kakao-login = "2.23.0"
+kakao-talk = "2.23.0"
 hilt = "2.50"
 androidxHilt = "1.2.0"
 play-services-base = "18.0.1"
@@ -51,14 +52,15 @@ firebase-bom = "32.6.0"
 firebase-crashlytics = "2.9.9"
 google-services = "4.4.2"
 timber = "5.0.1"
-kotlin-android = "1.9.25"
-ksp = "1.9.0-1.0.13"
+kotlin-android = "2.0.21"
+ksp = "2.0.21-1.0.28"
 ossLicenses = "17.3.0"
 ossLicensesPlugin = "0.10.6"
 glanceAppwidget = "1.1.1"
 glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
 posthog = "3.+"
+paging = "3.3.6"
 
 [libraries]
 
@@ -148,6 +150,7 @@ transport-runtime = { group = "com.google.android.datatransport", name = "transp
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 compressor = { group = "id.zelory", name = "compressor", version.ref = "compressor" }
 kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-login" }
+kakao-talk = { group = "com.kakao.sdk", name = "v2-talk", version.ref = "kakao-talk" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
 oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
@@ -157,10 +160,16 @@ naver-map-location = { module = "io.github.fornewid:naver-map-location", version
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 posthog-android = { group = "com.posthog", name = "posthog-android", version.ref = "posthog" }
 
+# paging
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

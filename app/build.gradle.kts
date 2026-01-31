@@ -3,14 +3,13 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    id("kotlin-android")
     id("com.google.android.gms.oss-licenses-plugin")
-    id("kotlin-kapt")
-
 }
 
 android {
@@ -30,8 +29,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 28
         targetSdk = 35
-        versionCode = 47
-        versionName = "3.2.0"
+        versionCode = 52
+        versionName = "3.2.1"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,8 +42,24 @@ android {
         compose = true
     }
 
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("KEYSTORE_PATH")
+            if (keystorePath != null) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
-        release {
+        getByName("release") {
+            val keystorePath = System.getenv("KEYSTORE_PATH")
+            if (keystorePath != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             val p = Properties()
             p.load(project.rootProject.file("local.properties").reader())
 
@@ -68,9 +83,10 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
         }
 
-        debug {
+        getByName("debug") {
             applicationIdSuffix = ".debug"
 //            isDebuggable = false
 
@@ -103,16 +119,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-
     kotlin {
         jvmToolchain(17)
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     splits {
@@ -188,7 +196,7 @@ dependencies {
 
     //glide: 사진 업로드
     implementation(libs.glide)
-    kapt(libs.glide.compiler)
+    ksp(libs.glide.compiler)
 
     //coil: 이미지 로딩
     implementation(libs.coil.compose)
@@ -201,13 +209,14 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    // Kakao login SDK
+    // Kakao SDK
     implementation(libs.kakao.login)
+    implementation(libs.kakao.talk)
 
     // Hilt for Dependency Injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.navigation.compose)
@@ -253,8 +262,8 @@ dependencies {
     // PostHog
     implementation(libs.posthog.android)
 
-}
+    // Paging3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
-kapt {
-    correctErrorTypes = true
 }

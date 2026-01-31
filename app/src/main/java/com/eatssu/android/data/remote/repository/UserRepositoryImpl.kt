@@ -33,7 +33,7 @@ class UserRepositoryImpl @Inject constructor(
                     Result.success(Unit)
                 } else {
                     Result.failure(
-                        Exception("올바르지 않은 닉네임이에요.")
+                        Exception("이미 사용 중인 닉네임이에요.")
                     )
                 }
             }

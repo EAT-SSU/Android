@@ -38,10 +38,12 @@ import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
 import com.eatssu.design_system.component.RatingBarMedium
@@ -71,6 +73,9 @@ fun WriteReviewScreen(
     val galleryLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? -> viewModel.setSelectedImage(uri) }
+
+    // Screen View 로깅
+    TrackScreenViewEvent(ScreenId.REVIEW_V2_WRITE)
 
     // 처음 진입 시, 메뉴 불러오기: 기본찬(김치, 단무지, 밥) 등을 거르기 위함
     LaunchedEffect(menuType, id, menuName) {

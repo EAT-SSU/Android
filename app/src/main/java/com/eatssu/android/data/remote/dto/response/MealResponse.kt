@@ -3,6 +3,8 @@ package com.eatssu.android.data.remote.dto.response
 import com.eatssu.android.domain.model.Menu
 import com.google.gson.annotations.SerializedName
 
+private const val MENU_SEPARATOR = ", "
+
 data class GetMealResponse(
     @SerializedName("mealId") var mealId: Long? = null,
     @SerializedName("price") var price: Int? = null,
@@ -20,7 +22,7 @@ fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {
 
     this.forEach { mealResponse ->
         val menuNames =
-            mealResponse.briefMenus.joinToString(separator = " + ") { it.name ?: "" }
+            mealResponse.briefMenus.mapNotNull { it.name }.joinToString(separator = MENU_SEPARATOR)
         val mealId = mealResponse.mealId ?: -1
         val price = mealResponse.price ?: 0
         val mainRating = mealResponse.rating ?: 0.0
