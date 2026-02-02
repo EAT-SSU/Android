@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.intro
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
@@ -10,9 +9,9 @@ import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,7 +23,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
@@ -57,7 +55,7 @@ class IntroViewModel @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e, "앱 초기화 중 오류 발생")
                 _uiState.value = UiState.Error
-                _uiEvent.emit(UiEvent.ShowToast("앱 초기화 중 오류가 발생했습니다", ToastType.ERROR))
+                _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_app_init_error), ToastType.ERROR))
             }
         }
     }
@@ -81,7 +79,7 @@ class IntroViewModel @Inject constructor(
             when (result) {
                 is VersionCheckResult.ForceUpdateRequired -> {
                     Timber.d("강제 업데이트 필요: 최신 버전 ${result.minimumVersionCode}")
-                    _uiEvent.emit(UiEvent.ShowToast("앱을 업데이트해주세요", ToastType.INFO))
+                    _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_app_update_required), ToastType.INFO))
                 }
 
                 VersionCheckResult.UpdateNotRequired -> {
@@ -108,7 +106,7 @@ class IntroViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                        context.getString(R.string.toast_token_invalid),
+                        UiText.StringResource(R.string.toast_token_invalid),
                         ToastType.INFO
                     )
                 )

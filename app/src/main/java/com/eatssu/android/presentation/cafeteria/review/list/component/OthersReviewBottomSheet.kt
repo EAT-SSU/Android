@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,7 +77,7 @@ fun OthersReviewBottomSheet(
             )
 
             Text(
-                text = "리뷰 설정",
+                text = stringResource(R.string.review_settings),
                 style = EatssuTheme.typography.body2,
                 color = Gray600,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 22.dp)
@@ -97,7 +98,7 @@ fun OthersReviewBottomSheet(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = "신고하기",
+                    text = stringResource(R.string.title_report),
                     style = EatssuTheme.typography.body2,
                     color = Black
                 )

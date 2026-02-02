@@ -28,10 +28,10 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "점심시간 전 알림",
+            context.getString(R.string.notification_channel_lunch_name),
             NotificationManager.IMPORTANCE_HIGH // 중요도를 높게 설정
         ).apply {
-            description = "점심시간 전, 푸시알림을 발송합니다."
+            description = context.getString(R.string.notification_channel_lunch_description)
             enableLights(true)
             enableVibration(true)  // 진동도 활성화
             lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC // 잠금 화면에서도 표시

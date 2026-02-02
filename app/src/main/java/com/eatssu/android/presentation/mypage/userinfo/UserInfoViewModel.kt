@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.mypage.userinfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
@@ -13,6 +14,7 @@ import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -122,7 +124,8 @@ class UserInfoViewModel @Inject constructor(
             val result = validateNicknameServerUseCase(currentNickname)
 
             result.onFailure { error ->
-                val errorMessage = error.message ?: "올바르지 않은 닉네임이에요."
+                val errorMessage = error.message?.let { UiText.DynamicString(it) }
+                    ?: UiText.StringResource(R.string.nickname_error_invalid)
 
                 _uiState.update {
                     UiState.Success(
@@ -156,7 +159,7 @@ class UserInfoViewModel @Inject constructor(
                     selectedCollege = college,
                     isCollegeChanged = isCollegeChanged,
                     // 단과대가 변경되면 학과 초기화
-                    selectedDepartment = Department(-1, "학과"),
+                    selectedDepartment = null,
                     departmentList = emptyList()
                 )
             )
@@ -206,8 +209,12 @@ class UserInfoViewModel @Inject constructor(
             if (data.isNicknameChanged) {
                 val result = setUserNicknameUseCase(data.nickname)
                 result.onFailure { error ->
-                    val errorMessage = error.message ?: "닉네임 변경에 실패했어요."
-                    _uiEvent.emit(UiEvent.ShowToast(errorMessage, ToastType.ERROR))
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            UiText.StringResource(R.string.toast_nickname_change_failed),
+                            ToastType.ERROR
+                        )
+                    )
                     _uiState.value = UiState.Error
                     return@launch
                 }
@@ -216,25 +223,25 @@ class UserInfoViewModel @Inject constructor(
 
             // 학과/단과대 변경이 있는 경우
             if (data.isCollegeChanged || data.isDepartmentChanged) {
-                val success = userRepository.setUserDepartment(data.selectedDepartment.departmentId)
+                val department = data.selectedDepartment ?: return@launch
+                val college = data.selectedCollege ?: return@launch
+
+                val success = userRepository.setUserDepartment(department.departmentId)
                 if (!success) {
                     _uiState.value = UiState.Error
                     return@launch
                 }
 
-                setUserCollegeDepartmentUseCase(
-                    data.selectedCollege,
-                    data.selectedDepartment
-                )
+                setUserCollegeDepartmentUseCase(college, department)
                 departmentUpdated = true
             }
 
             // 성공 메시지
             val message = when {
-                nicknameUpdated && departmentUpdated -> "정보가 업데이트되었습니다."
-                nicknameUpdated -> "닉네임이 변경되었습니다."
-                departmentUpdated -> "학과 정보가 업데이트되었습니다."
-                else -> "변경사항이 없습니다."
+                nicknameUpdated && departmentUpdated -> UiText.StringResource(R.string.toast_info_updated)
+                nicknameUpdated -> UiText.StringResource(R.string.toast_nickname_changed)
+                departmentUpdated -> UiText.StringResource(R.string.toast_department_updated)
+                else -> UiText.StringResource(R.string.toast_no_changes)
             }
 
             _uiEvent.emit(UiEvent.ShowToast(message, ToastType.INFO))
@@ -255,16 +262,16 @@ data class UserInfoData(
     val nickname: String = "",
     val originalNickname: String = "",
     val isNicknameChanged: Boolean = false,
-    val nicknameValidationError: String? = null, // 닉네임 검증 에러 텍스트
+    val nicknameValidationError: UiText? = null, // 닉네임 검증 에러 텍스트
     val isDuplicationChecked: Boolean = false, // 중복 확인 완료 여부
 
     // 단과대/학과
-    val selectedCollege: College = College(-1, "단과대"),
-    val originalCollege: College = College(-1, "단과대"),
+    val selectedCollege: College? = null,
+    val originalCollege: College? = null,
     val isCollegeChanged: Boolean = false,
 
-    val selectedDepartment: Department = Department(-1, "학과"),
-    val originalDepartment: Department = Department(-1, "학과"),
+    val selectedDepartment: Department? = null,
+    val originalDepartment: Department? = null,
     val isDepartmentChanged: Boolean = false,
 
     // 목록
@@ -286,7 +293,7 @@ data class UserInfoData(
             val isNicknameValid = isDuplicationChecked && nicknameValidationError == null
 
             val hasDepartmentChange = isCollegeChanged || isDepartmentChanged
-            val isDepartmentSelected = selectedDepartment.departmentId != -1
+            val isDepartmentSelected = selectedDepartment != null
 
             return when {
                 // 닉네임 변경: 닉네임 유효성 필수

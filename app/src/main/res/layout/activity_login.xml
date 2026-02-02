@@ -40,20 +40,30 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_logo">
 
         <TextView
-            android:id="@+id/tv_title_for_ssu"
+            android:id="@+id/tv_slogan_part1"
             style="@style/H2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="숭실대에서 "
+            android:layout_marginEnd="4dp"
+            android:text="@string/app_slogan_part1"
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/tv_title_for_eat"
+            android:id="@+id/tv_slogan_part2"
             style="@style/H2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="먹자"
+            android:layout_marginEnd="4dp"
+            android:text="@string/app_slogan_part2"
             android:textColor="@color/primary" />
+
+        <TextView
+            android:id="@+id/tv_slogan_part3"
+            style="@style/H2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_slogan_part3"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

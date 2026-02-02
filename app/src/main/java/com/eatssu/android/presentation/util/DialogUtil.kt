@@ -32,10 +32,10 @@ class DialogBuilder(
     var cancellable: Boolean = true
 
     // 확인 버튼 텍스트
-    var confirmText: String = context.getString(R.string.confirm)
+    var confirmText: String = context.getString(R.string.button_confirm)
 
     // 취소 버튼 텍스트
-    var cancelText: String = context.getString(R.string.cancel)
+    var cancelText: String = context.getString(R.string.button_cancel)
 
     // 취소 버튼 표시 여부
     var showCancelButton: Boolean = true

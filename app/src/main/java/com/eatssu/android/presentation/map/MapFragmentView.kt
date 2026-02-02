@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -133,11 +134,7 @@ fun MapRoute(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(
-                context,
-                "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(context, context.getString(R.string.dialog_location_permission_description), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -156,8 +153,7 @@ fun MapRoute(
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
-                    .show()
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message.asString(context), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -286,12 +282,13 @@ internal fun MapScreen(
     departmentName: String?,
     selectedFilter: FilterType,
 ) {
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "제휴 지도",
+                        text = stringResource(R.string.title_partnership_map),
                         style = EatssuTheme.typography.subtitle1
                     )
                 },
@@ -414,36 +411,26 @@ internal fun MapScreen(
                                 RestaurantType.PUB -> R.drawable.ic_map_marker_pub
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
-
-                            Image(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-
-                            Text(
-                                text = partnership.storeName,
-                                style = EatssuTheme.typography.caption3,
-                                color = Color.Black
-                            )
+                        ),
+                        width = 20.dp,
+                        height = 20.dp,
+                        captionAligns = arrayOf(Align.Bottom),
+                        state = markerState,
+                        captionText = partnership.storeName,
+                        captionColor = Black,
+                        captionTextSize = 10.sp,
+                        onClick = {
+                            if (partnership.partnershipInfos.isEmpty()) {
+                                showToast("제휴 정보가 없습니다.")
+                                true
+                            } else {
+                                // 제휴 정보가 있을 때만 바텀시트 띄움
+                                // LaunchedEffect에서 자동으로 표시됨
+                                viewModel.selectPartnershipByStoreName(partnership.storeName)
+                                true
+                            }
                         }
-                    },
-                    onClickCluster = { info, _ ->
-                        animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
-                        true
-                    },
-                    onClickLeaf = { info, _ ->
-                        val partnership = info.tag as? Partnership ?: return@Clustering true
-
-                        if (partnership.partnershipInfos.isEmpty()) {
-                            // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-                            showToast("제휴 정보가 없습니다.")
-                        } else {
-                            // 제휴 정보가 있을 때만 바텀시트 띄움
-                            viewModel.selectPartnershipByStoreName(partnership.storeName)
-                        }
-                        true
-                    }
+                    )
 
                 )
             }

@@ -38,7 +38,7 @@ class UserInfoActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = "내 정보"
+        toolbarTitle.text = getString(R.string.my_info)
 
         setupListeners()
         observeUiState()
@@ -108,7 +108,7 @@ class UserInfoActivity :
         // 닉네임 상태에 따른 UI 업데이트
         when {
             data.nicknameValidationError != null -> {
-                binding.tvNicknameStatus.text = data.nicknameValidationError
+                binding.tvNicknameStatus.text = data.nicknameValidationError.asString(this)
                 binding.tvNicknameStatus.setTextColor(getColor(R.color.error))
                 binding.etChNickname.setBackgroundResource(R.drawable.shape_text_field_small_red)
             }
@@ -133,17 +133,17 @@ class UserInfoActivity :
 
     private fun updateCollegeDepartmentUI(data: UserInfoData) {
         with(binding) {
-            tvCollege.text = data.selectedCollege.collegeName
+            tvCollege.text = data.selectedCollege?.collegeName ?: "단과대"
             tvCollege.setTextColor(
                 getColor(
-                    if (data.selectedCollege.collegeId != -1) R.color.gray700 else R.color.gray400
+                    if (data.selectedCollege != null) R.color.gray700 else R.color.gray400
                 )
             )
 
-            tvDepartment.text = data.selectedDepartment.departmentName
+            tvDepartment.text = data.selectedDepartment?.departmentName ?: "학과"
             tvDepartment.setTextColor(
                 getColor(
-                    if (data.selectedDepartment.departmentId != -1) R.color.gray700 else R.color.gray400
+                    if (data.selectedDepartment != null) R.color.gray700 else R.color.gray400
                 )
             )
         }
@@ -177,8 +177,8 @@ class UserInfoActivity :
         val data = state.data
 
         // 단과대를 먼저 선택하도록 유도
-        if (data.selectedCollege.collegeId == -1) {
-            showToast("단과대를 먼저 선택해 주세요.", ToastType.ERROR)
+        if (data.selectedCollege == null) {
+            showToast(R.string.toast_college_required, ToastType.ERROR)
             return
         }
 

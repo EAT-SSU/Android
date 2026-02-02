@@ -28,11 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eatssu.android.R
 import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
@@ -167,7 +169,7 @@ fun MapRestaurantBottomSheet(
                                         append("${item.collegeName}${item.departmentName}")
                                     }
                                     else -> {
-                                        append("단과대/학과 정보를 알 수 없음")
+                                        append(stringResource(R.string.map_unknown_college_department))
                                     }
                                 }
 

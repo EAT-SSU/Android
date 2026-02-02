@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.eatssu.android.R
 import com.eatssu.android.databinding.FragmentCafeteriaBinding
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.base.BaseFragment
@@ -49,7 +50,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
         viewPager.adapter = viewpagerFragmentAdapter
         viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
-        val tabTitles = listOf("아침", "점심", "저녁")
+        val tabTitles = listOf(getString(R.string.widget_morning), getString(R.string.widget_lunch), getString(R.string.widget_dinner))
         TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = tabTitles[position] }.attach()
 
         // ViewPager 페이지 변경 감지

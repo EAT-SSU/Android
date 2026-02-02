@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="닉네임 설정"
+        android:text="@string/userinfo_nickname_setting"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
             android:layout_marginStart="5dp"
             android:background="@drawable/shape_button_duplicate"
             android:stateListAnimator="@null"
-            android:text="중복확인"
+            android:text="@string/button_check_duplicate"
             app:layout_constraintStart_toEndOf="@+id/et_ch_nickname" />
     </LinearLayout>
 
@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="소속 설정"
+        android:text="@string/userinfo_affiliation_setting"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname_status"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +101,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingEnd="40dp"
-            android:text="단과대"
+            android:text="@string/college_placeholder"
             android:textColor="@color/gray400" />
 
         <ImageView
@@ -134,7 +134,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingEnd="40dp"
-            android:text="학과"
+            android:text="@string/department_placeholder"
             android:textColor="@color/gray400" />
 
         <ImageView
@@ -197,7 +197,7 @@
         android:layout_marginBottom="30dp"
         android:background="@drawable/shape_button_duplicate"
         android:stateListAnimator="@null"
-        android:text="@string/save"
+        android:text="@string/button_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -10,7 +10,9 @@ data class DepartmentResponse(
     val departmentName: String?,
 )
 
-fun DepartmentResponse.toDomain() = Department(
-    departmentId = this.departmentId ?: -1,
-    departmentName = this.departmentName ?: "학과",
-)
+// 이 함수가 null을 반환하는 경우, 이 함수를 호출하는 UserRepositoryImpl에서 mapNotNull로 걸러짐
+fun DepartmentResponse.toDomain(): Department? {
+    val id = departmentId ?: return null
+    val name = departmentName ?: return null
+    return Department(departmentId = id, departmentName = name)
+}
