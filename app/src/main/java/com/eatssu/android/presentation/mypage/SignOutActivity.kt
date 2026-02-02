@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivitySignOutBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
@@ -30,7 +31,7 @@ class SignOutActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = "탈퇴하기" // 툴바 제목 설정
+        toolbarTitle.text = getString(R.string.title_sign_out) // 툴바 제목 설정
 
         val nickname = intent.getStringExtra("nickname")?.trim() ?: ""
 

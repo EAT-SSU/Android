@@ -50,15 +50,7 @@ fun ReviewProgressBar(
                     .padding(vertical = 2.dp)
             ) {
                 Text(
-                    text = stringResource(
-                        id = when (rating) {
-                            5 -> R.string.rate_5
-                            4 -> R.string.rate_4
-                            3 -> R.string.rate_3
-                            2 -> R.string.rate_2
-                            else -> R.string.rate_1
-                        }
-                    ),
+                    text = stringResource(R.string.rate_n, rating),
                     style = EatssuTheme.typography.caption2,
                 )
                 Spacer(modifier = Modifier.width(8.dp))

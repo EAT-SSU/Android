@@ -40,7 +40,7 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
 
         EventLogger.clickRestaurantInfo(restaurantType)
 
-        binding.tvName.text = restaurantType.korean
+        binding.tvName.text = getString(restaurantType.displayNameResId)
 
         CoroutineScope(Dispatchers.Main).launch {
             val restaurantInfo = infoViewModel.getRestaurantInfo(restaurantType)

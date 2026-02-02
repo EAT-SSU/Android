@@ -62,7 +62,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(
             content = if (selectedReportType == ReportType.EXTRA) {
                 inputText
             } else {
-                selectedReportType.description
+                getString(selectedReportType.descriptionResId)
             }
 
             reportViewModel.postData(reviewId, reportType, content)
@@ -70,7 +70,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(
             lifecycleScope.launch {
                 reportViewModel.uiState.collectLatest {
                     showToast(
-                        it.toastMessage,
+                        it.toastMessage.asString(this@ReportActivity),
                         if (it.isDone) ToastType.SUCCESS else ToastType.ERROR
                     )
                     if (it.isDone) {

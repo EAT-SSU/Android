@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.login
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
@@ -10,10 +9,10 @@ import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.DeviceType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +28,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
-    private val setUserEmailUseCase: SetUserEmailUseCase,
-    @ApplicationContext private val context: Context
+    private val setUserEmailUseCase: SetUserEmailUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<LoginState>>(UiState.Init)
@@ -47,7 +45,7 @@ class LoginViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
-                        context.getString(R.string.toast_login_failed),
+                        UiText.StringResource(R.string.toast_login_failed),
                         ToastType.ERROR
                     )
                 )

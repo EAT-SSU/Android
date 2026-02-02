@@ -2,12 +2,14 @@ package com.eatssu.android.presentation.mypage.myreview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -65,10 +67,19 @@ class MyReviewViewModel @Inject constructor(
         viewModelScope.launch {
             val success = deleteReviewUseCase(reviewId)
             if (!success) {
-                _uiEvent.emit(UiEvent.ShowToast("리뷰 삭제에 실패했습니다.", ToastType.ERROR))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_review_delete_failed),
+                        ToastType.ERROR
+                    )
+                )
                 return@launch
             }
-            _uiEvent.emit(UiEvent.ShowToast("리뷰를 삭제했습니다.", ToastType.SUCCESS))
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    UiText.StringResource(R.string.toast_review_delete_success), ToastType.SUCCESS
+                )
+            )
             // 삭제 성공 시 내 리뷰 목록 재조회
             getMyReviewList()
         }

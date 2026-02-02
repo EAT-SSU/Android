@@ -34,10 +34,10 @@ class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
 
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "서버가 보낸 알림",
+            getString(R.string.notification_channel_server_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "잇슈 서버가 보낸 알림을 표시합니다."
+            description = getString(R.string.notification_channel_server_description)
             enableLights(true)
             enableVibration(true)  // 진동도 활성화
             lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC // 잠금 화면에서도 표시

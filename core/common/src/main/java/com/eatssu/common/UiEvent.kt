@@ -8,7 +8,7 @@ import com.eatssu.common.enums.ToastType
  */
 interface UiEvent {
     data class ShowToast(
-        val message: String,
+        val message: UiText,
         val type: ToastType
     ) : UiEvent
     object NavigateBack : UiEvent

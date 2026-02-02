@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -108,7 +109,7 @@ internal fun MyReviewListScreen(
     Scaffold(
         topBar = {
             EatSsuTopBar(
-                title = "내 리뷰",
+                title = stringResource(R.string.my_review),
                 onBack = onBack
             )
         },
@@ -167,13 +168,13 @@ internal fun MyReviewListScreen(
                                     )
                                     Spacer(Modifier.height(16.dp))
                                     Text(
-                                        "아직 작성된 리뷰가 없어요",
+                                        stringResource(R.string.none_review),
                                         style = EatssuTheme.typography.subtitle2,
                                         color = Gray600
                                     )
                                     Spacer(Modifier.height(8.dp))
                                     Text(
-                                        "첫 리뷰를 남겨 주세요!",
+                                        stringResource(R.string.none_review_my),
                                         style = EatssuTheme.typography.caption2,
                                         color = Gray600
                                     )

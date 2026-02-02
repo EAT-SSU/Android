@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/mypage_full"
+            android:text="@string/mypage"
             android:textColor="@color/gray700" />
     </androidx.appcompat.widget.Toolbar>
 
@@ -89,14 +89,14 @@
                         style="@style/Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="푸시 알림 설정"
+                        android:text="@string/mypage_push_notification_title"
                         android:textColor="@color/black" />
 
                     <TextView
                         style="@style/Caption2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="매일 오전 11시에 알림을 보내드려요"
+                        android:text="@string/mypage_push_notification_description"
                         android:textColor="@color/gray400" />
                 </LinearLayout>
 
@@ -187,6 +187,42 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray300" />
                 </LinearLayout>
+
+                <!--
+                언어 설정은 제대로 디자인 나오기 전까지 제외
+                <LinearLayout
+                    android:id="@+id/ll_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        style="@style/Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/language_setting"
+                        android:textColor="@color/black" />
+
+                    <android.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray300" />
+                </LinearLayout>
+                -->
 
                 <!-- 문의하기 -->
                 <LinearLayout

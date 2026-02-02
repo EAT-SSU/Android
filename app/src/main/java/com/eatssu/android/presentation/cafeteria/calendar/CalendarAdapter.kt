@@ -8,8 +8,6 @@ import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemCalendarListBinding
 import com.eatssu.android.presentation.util.CalendarUtil
 import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 
 internal class CalendarAdapter(
@@ -33,10 +31,14 @@ internal class CalendarAdapter(
 
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
+        val context = holder.itemView.context
+
         val date = days[position]
         holder.dayOfMonth.text = date.dayOfMonth.toString()
-        holder.dayText.text =
-            date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN).toString()
+
+        // custom_weekdays 사용해 weekday 표기
+        val weekdayNames = context.resources.getStringArray(R.array.custom_weekdays)
+        holder.dayText.text = weekdayNames[date.dayOfWeek.value - 1]
 
         /**
          * iOS의 FSCalendar를 Custom으로 만들었습니다.
@@ -48,7 +50,7 @@ internal class CalendarAdapter(
             holder.dayOfMonth.setBackgroundResource(R.drawable.selector_background_blue)
             holder.dayOfMonth.setTextColor(
                 ContextCompat.getColor(
-                    holder.itemView.context,
+                    context,
                     R.color.selector_calendar_colortext
                 )
             )
@@ -56,7 +58,7 @@ internal class CalendarAdapter(
             //오늘 날짜가 선택 되지 않았을 때, 오늘 날 text 색 지정
             holder.dayOfMonth.setTextColor(
                 ContextCompat.getColor(
-                    holder.itemView.context,
+                    context,
                     R.color.primary
                 )
             )

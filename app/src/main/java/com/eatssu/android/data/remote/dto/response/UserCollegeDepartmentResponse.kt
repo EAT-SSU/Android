@@ -15,14 +15,14 @@ data class UserCollegeDepartmentResponse(
     val collegeName: String?,
 )
 
-fun UserCollegeDepartmentResponse.toDomain(): Pair<College, Department> =
-    Pair(
-        College(
-            collegeId = this.collegeId ?: -1,
-            collegeName = this.collegeName ?: "단과대"
-        ),
-        Department(
-            departmentId = this.departmentId ?: -1,
-            departmentName = this.departmentName ?: "학과"
-        )
+// 이 함수가 null을 반환하는 경우, 이 함수를 호출하는 UserRepositoryImpl에서 mapNotNull로 걸러짐
+fun UserCollegeDepartmentResponse.toDomain(): Pair<College, Department>? {
+    val colId = collegeId ?: return null
+    val colName = collegeName ?: return null
+    val deptId = departmentId ?: return null
+    val deptName = departmentName ?: return null
+    return Pair(
+        College(collegeId = colId, collegeName = colName),
+        Department(departmentId = deptId, departmentName = deptName)
     )
+}

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -123,7 +124,7 @@ fun MapRoute(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(context, "내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.dialog_location_permission_description), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -142,7 +143,7 @@ fun MapRoute(
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message.asString(context), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -256,12 +257,13 @@ internal fun MapScreen(
     departmentName: String?,
     selectedFilter: FilterType,
 ) {
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "제휴 지도",
+                        text = stringResource(R.string.title_partnership_map),
                         style = EatssuTheme.typography.subtitle1
                     )
                 },
@@ -357,7 +359,7 @@ internal fun MapScreen(
                         captionTextSize = 10.sp,
                         onClick = {
                             if (partnership.partnershipInfos.isEmpty()) {
-                                showToast("제휴 정보가 없습니다.")
+                                showToast(context.getString(R.string.toast_partnership_info_not_found))
                                 true
                             } else {
                                 // 제휴 정보가 있을 때만 바텀시트 띄움

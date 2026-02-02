@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,7 @@ import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.ToastType
@@ -94,9 +96,14 @@ fun ReviewListScreen(
 
     LaunchedEffect(uiEvent) {
         when (val event = uiEvent) {
-            is UiEvent.ShowToast -> context.showToast(event.message, event.type)
+            is UiEvent.ShowToast -> context.showToast(event)
             is ReviewListEvent.ReviewDeleted -> {
-                context.showToast("리뷰를 삭제했습니다.", ToastType.SUCCESS)
+                context.showToast(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_review_delete_success),
+                        ToastType.SUCCESS
+                    )
+                )
                 reviewPagingItems.refresh()
             }
 
@@ -166,13 +173,13 @@ internal fun ReviewListScreen(
     Scaffold(
         topBar = {
             EatSsuTopBar(
-                title = "리뷰",
+                title = stringResource(R.string.review),
                 onBack = onBack
             )
         },
         bottomBar = { // 하단에 버튼을 고정하기 위함
             EatSsuButton(
-                text = "리뷰 작성하기",
+                text = stringResource(R.string.review_write),
                 onClick = {
                     onReviewWriteButtonClick()
                     EventLogger.writeReview() //작성 하러가기가 이벤트임
@@ -217,7 +224,7 @@ internal fun ReviewListScreen(
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
                                 Text(
-                                    "리뷰",
+                                    stringResource(R.string.review),
                                     style = EatssuTheme.typography.h2,
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -266,7 +273,7 @@ internal fun ReviewListScreen(
                             item {
                                 Row(Modifier.padding(horizontal = 24.dp)) {
                                     Text(
-                                        "리뷰",
+                                        stringResource(R.string.review),
                                         style = EatssuTheme.typography.h2,
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
@@ -299,7 +306,7 @@ internal fun ReviewListScreen(
                                     ) {
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text(
-                                                "리뷰를 불러오지 못했습니다.",
+                                                stringResource(R.string.toast_review_load_failed),
                                                 style = EatssuTheme.typography.body1
                                             )
                                             Spacer(modifier = Modifier.height(8.dp))
@@ -420,7 +427,7 @@ internal fun ReviewListScreen(
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
                                 Text(
-                                    "리뷰",
+                                    stringResource(R.string.review),
                                     style = EatssuTheme.typography.h2,
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -438,7 +445,7 @@ internal fun ReviewListScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "에러가 발생했습니다.",
+                                    stringResource(R.string.review_error_occurred),
                                     style = EatssuTheme.typography.body1,
                                     modifier = Modifier.align(Alignment.Center)
                                 )
@@ -483,7 +490,7 @@ fun ReviewInfoContent(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        "오늘의 메뉴",
+                        stringResource(R.string.today_menu),
                         style = EatssuTheme.typography.subtitle1
                     )
                 }
@@ -559,13 +566,13 @@ fun EmptyReviewContent(modifier: Modifier) {
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            "아직 작성된 리뷰가 없어요",
+            stringResource(R.string.none_review),
             style = EatssuTheme.typography.subtitle2,
             color = Gray600
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            "메뉴에 가장 먼저 리뷰를 남겨주세요!",
+            stringResource(R.string.none_review_list_detail),
             style = EatssuTheme.typography.caption2,
             color = Gray600
         )

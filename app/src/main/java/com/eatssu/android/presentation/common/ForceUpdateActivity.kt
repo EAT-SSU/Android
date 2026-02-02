@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import com.eatssu.android.R
 import com.eatssu.android.presentation.util.showDialog
 
 
@@ -16,8 +17,8 @@ class ForceUpdateDialogActivity : AppCompatActivity() {
     }
 
     private fun showForceUpdateDialog() {
-        showDialog("강제 업데이트", "새 버전의 앱을 설치해야 합니다.") {
-            confirmText = "업데이트"
+        showDialog(getString(R.string.title_force_update), getString(R.string.dialog_force_update_message)) {
+            confirmText = getString(R.string.button_update)
             cancellable = false
             showCancelButton = false
 

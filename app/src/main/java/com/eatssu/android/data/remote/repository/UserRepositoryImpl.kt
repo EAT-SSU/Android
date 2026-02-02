@@ -51,16 +51,16 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getTotalColleges(): List<College> =
         userService.getCollegeList()
-            .map { list -> list.map { it.toDomain() } }
+            .map { list -> list.mapNotNull { it.toDomain() } }
             .orEmptyList()
 
     override suspend fun getTotalDepartments(collegeId: Int): List<Department> =
         userService.getDepartmentsByCollege(collegeId)
-            .map { list -> list.map { it.toDomain() } }
+            .map { list -> list.mapNotNull { it.toDomain() } }
             .orEmptyList()
 
     override suspend fun getUserCollegeDepartment(): Pair<College, Department>? =
-        userService.getUserCollegeDepartment().map { it.toDomain() }.orNull()
+        userService.getUserCollegeDepartment().orNull()?.toDomain()
 
     override suspend fun setUserDepartment(departmentId: Int): Boolean {
         return userService.setUserDepartment(UserDepartmentRequest(departmentId)).isSuccess()
