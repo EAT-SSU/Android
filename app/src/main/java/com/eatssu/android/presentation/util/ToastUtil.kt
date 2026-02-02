@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.eatssu.android.databinding.ToastLayoutBinding
 import com.eatssu.android.presentation.map.findActivityOrNull
 import com.eatssu.common.UiEvent
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
@@ -60,6 +61,9 @@ fun Context.showToast(
 
 fun Context.showToast(@StringRes messageId: Int, type: ToastType) =
     showToast(getString(messageId), type)
+
+fun Context.showToast(uiText: UiText, type: ToastType) =
+    showToast(uiText.asString(this), type)
 
 fun Context.showToast(event: UiEvent.ShowToast) =
     showToast(event.message.asString(this), event.type)

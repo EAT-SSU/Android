@@ -3,6 +3,7 @@
 package com.eatssu.android.presentation.map
 
 import android.Manifest
+import android.R.id.message
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -46,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -63,10 +65,13 @@ import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Primary
@@ -134,7 +139,10 @@ fun MapRoute(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(context, context.getString(R.string.dialog_location_permission_description), Toast.LENGTH_SHORT).show()
+            context.showToast(
+                UiText.StringResource(R.string.dialog_location_permission_description),
+                ToastType.INFO
+            )
         }
     }
 
@@ -153,7 +161,7 @@ fun MapRoute(
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message.asString(context), Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowToast -> context.showToast(event)
             }
         }
     }
@@ -226,9 +234,9 @@ fun MapRoute(
         locationSource = locationSource,
         departmentSheetState = departmentSheetState,
         partnershipSheetState = partnershipSheetState,
-        showToast = { message ->
+        showToast = { uiText, info ->
             scope.launch {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                context.showToast(uiText, info)
             }
         },
         navigateToUserInfo = {
@@ -271,7 +279,7 @@ internal fun MapScreen(
     locationSource: FusedLocationSource,
     departmentSheetState: SheetState,
     partnershipSheetState: SheetState,
-    showToast: (String) -> Unit,
+    showToast: (UiText, ToastType) -> Unit,
     navigateToUserInfo: () -> Unit,
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
@@ -282,7 +290,6 @@ internal fun MapScreen(
     departmentName: String?,
     selectedFilter: FilterType,
 ) {
-    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -411,26 +418,39 @@ internal fun MapScreen(
                                 RestaurantType.PUB -> R.drawable.ic_map_marker_pub
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
-                        ),
-                        width = 20.dp,
-                        height = 20.dp,
-                        captionAligns = arrayOf(Align.Bottom),
-                        state = markerState,
-                        captionText = partnership.storeName,
-                        captionColor = Black,
-                        captionTextSize = 10.sp,
-                        onClick = {
-                            if (partnership.partnershipInfos.isEmpty()) {
-                                showToast("제휴 정보가 없습니다.")
-                                true
-                            } else {
-                                // 제휴 정보가 있을 때만 바텀시트 띄움
-                                // LaunchedEffect에서 자동으로 표시됨
-                                viewModel.selectPartnershipByStoreName(partnership.storeName)
-                                true
-                            }
+
+                            Image(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+
+                            Text(
+                                text = partnership.storeName,
+                                style = EatssuTheme.typography.caption3,
+                                color = Color.Black
+                            )
                         }
-                    )
+                    },
+                    onClickCluster = { info, _ ->
+                        animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
+                        true
+                    },
+                    onClickLeaf = { info, _ ->
+                        val partnership = info.tag as? Partnership ?: return@Clustering true
+
+                        if (partnership.partnershipInfos.isEmpty()) {
+                            // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
+                            showToast(
+                                UiText.StringResource(R.string.toast_partnership_info_not_found),
+                                ToastType.INFO
+                            )
+                        } else {
+                            // 제휴 정보가 있을 때만 바텀시트 띄움
+                            viewModel.selectPartnershipByStoreName(partnership.storeName)
+                        }
+                        true
+                    }
 
                 )
             }
