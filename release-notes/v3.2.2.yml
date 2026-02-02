@@ -1,4 +1,10 @@
 ko: |
   - 이벤트 로고를 일반 로고로 바꿨어요. 다른 이벤트를 기대해봐요.
+  - 제휴지도 마커 클러스터링을 도입했어요.
+  - 토큰 유지 시간을 늘렸어요. 
+  - 리뷰 리스트 로딩을 더 효율적으로 바꿨어요.
 en: |
   - The event logo has been replaced with our regular logo. Look forward to more events coming soon.
+  - We’ve introduced marker clustering on the partner map.
+  - The token retention period has been extended.
+  - Review list loading has been optimized for better performance.
