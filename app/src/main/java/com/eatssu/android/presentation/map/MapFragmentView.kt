@@ -3,6 +3,7 @@
 package com.eatssu.android.presentation.map
 
 import android.Manifest
+import android.R.id.message
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -11,11 +12,19 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -31,8 +40,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,6 +55,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
+import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
@@ -53,25 +65,28 @@ import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.ScreenId
-import com.eatssu.design_system.theme.Black
+import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray300
+import com.eatssu.design_system.theme.Primary
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.compose.Align
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.clustering.ClusteringKey
 import com.naver.maps.map.compose.CameraPositionState
+import com.naver.maps.map.compose.Clustering
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
-import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
-import com.naver.maps.map.compose.rememberMarkerState
-import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -124,7 +139,10 @@ fun MapRoute(
     ) { permissions ->
         val granted = permissions.values.all { it }
         if (!granted) {
-            Toast.makeText(context, context.getString(R.string.dialog_location_permission_description), Toast.LENGTH_SHORT).show()
+            context.showToast(
+                UiText.StringResource(R.string.dialog_location_permission_description),
+                ToastType.INFO
+            )
         }
     }
 
@@ -143,15 +161,17 @@ fun MapRoute(
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message.asString(context), Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowToast -> context.showToast(event)
             }
         }
     }
 
     // 최초 실행 시 위치 권한 요청
     LaunchedEffect(Unit) {
-        val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-        val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val fine =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+        val coarse =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (fine != PackageManager.PERMISSION_GRANTED || coarse != PackageManager.PERMISSION_GRANTED) {
             permissionLauncher.launch(
@@ -214,9 +234,9 @@ fun MapRoute(
         locationSource = locationSource,
         departmentSheetState = departmentSheetState,
         partnershipSheetState = partnershipSheetState,
-        showToast = { message ->
+        showToast = { uiText, info ->
             scope.launch {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                context.showToast(uiText, info)
             }
         },
         navigateToUserInfo = {
@@ -228,6 +248,18 @@ fun MapRoute(
         },
         onHidePartnershipSheet = {
             scope.launch { partnershipSheetState.hide() }
+        },
+        animateCameraPositionTo = { position, currentZoom ->
+            scope.launch {
+                cameraPositionState.animate(
+                    CameraUpdate.toCameraPosition(
+                        CameraPosition(
+                            position,
+                            currentZoom + 2.0
+                        )
+                    )
+                )
+            }
         },
         onSelectedFilterChange = { filter ->
             viewModel.setFilter(filter)
@@ -247,17 +279,17 @@ internal fun MapScreen(
     locationSource: FusedLocationSource,
     departmentSheetState: SheetState,
     partnershipSheetState: SheetState,
-    showToast: (String) -> Unit,
+    showToast: (UiText, ToastType) -> Unit,
     navigateToUserInfo: () -> Unit,
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
+    animateCameraPositionTo: (LatLng, Double) -> Unit,
     onSelectedFilterChange: (FilterType) -> Unit,
     departmentId: Long,
     collegeId: Long,
     departmentName: String?,
     selectedFilter: FilterType,
 ) {
-    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -331,46 +363,96 @@ internal fun MapScreen(
                 locationSource = locationSource,
                 contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
-                    locationTrackingMode = LocationTrackingMode.Follow,
+                    // 현재 다른 위치에 있는 경우에도 숭실대입구를 보여주어야 함
+                    locationTrackingMode = LocationTrackingMode.NoFollow,
                 ),
             ) {
-                mapState.partnerships.forEach { partnership ->
-                    val markerState = rememberMarkerState(
-                        position = LatLng(
-                            partnership.latitude,
-                            partnership.longitude
-                        )
+                val clusterItems = mapState.partnerships.associateBy {
+                    ItemKey(
+                        it.storeName,
+                        LatLng(it.latitude, it.longitude)
                     )
-
-                    Marker(
-                        icon = OverlayImage.fromResource(
-                            when (partnership.restaurantType) {
-                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
-                                RestaurantType.RESTAURANT -> R.drawable.ic_map_marker_restaurant
-                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
-                            }
-                        ),
-                        width = 20.dp,
-                        height = 20.dp,
-                        captionAligns = arrayOf(Align.Bottom),
-                        state = markerState,
-                        captionText = partnership.storeName,
-                        captionColor = Black,
-                        captionTextSize = 10.sp,
-                        onClick = {
-                            if (partnership.partnershipInfos.isEmpty()) {
-                                showToast(context.getString(R.string.toast_partnership_info_not_found))
-                                true
-                            } else {
-                                // 제휴 정보가 있을 때만 바텀시트 띄움
-                                // LaunchedEffect에서 자동으로 표시됨
-                                viewModel.selectPartnershipByStoreName(partnership.storeName)
-                                true
-                            }
-                        }
-                    )
-
                 }
+
+                Clustering(
+                    items = clusterItems,
+                    thresholdStrategy = {
+                        // 줌 레벨에 상관 없이 임의의 값 사용
+                        25.0
+                    },
+
+                    clusterContent = {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(Primary, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${it.size}",
+                                color = Color.White,
+                                style = EatssuTheme.typography.body2
+                            )
+                        }
+                    },
+                    leafContent = { info ->
+                        val partnership = info.tag as? Partnership ?: return@Clustering
+
+                        Row(
+                            modifier = Modifier
+                                .background(Color.White, RoundedCornerShape(13.dp))
+                                .border(1.dp, Gray300, RoundedCornerShape(13.dp))
+                                .padding(
+                                    start = 3.dp,
+                                    end = 7.dp,
+                                    top = 2.5.dp,
+                                    bottom = 2.5.dp
+                                ),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = spacedBy(
+                                3.dp
+                            )
+                        ) {
+                            val iconRes = when (partnership.restaurantType) {
+                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
+                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
+                                else -> R.drawable.ic_map_marker_restaurant
+                            }
+
+                            Image(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+
+                            Text(
+                                text = partnership.storeName,
+                                style = EatssuTheme.typography.caption3,
+                                color = Color.Black
+                            )
+                        }
+                    },
+                    onClickCluster = { info, _ ->
+                        animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
+                        true
+                    },
+                    onClickLeaf = { info, _ ->
+                        val partnership = info.tag as? Partnership ?: return@Clustering true
+
+                        if (partnership.partnershipInfos.isEmpty()) {
+                            // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
+                            showToast(
+                                UiText.StringResource(R.string.toast_partnership_info_not_found),
+                                ToastType.INFO
+                            )
+                        } else {
+                            // 제휴 정보가 있을 때만 바텀시트 띄움
+                            viewModel.selectPartnershipByStoreName(partnership.storeName)
+                        }
+                        true
+                    }
+
+                )
             }
 
             // 학과 정보를 입력하지 않은 상태에서 제휴 필터를 변경하려고 할 때 BottomSheet 표시
@@ -384,25 +466,6 @@ internal fun MapScreen(
                 modifier = Modifier.padding(top = 12.dp),
                 departmentName = departmentName.toString()
             )
-
-            // 찜 기능
-//            FloatingActionButton(
-//                onClick = { /* TODO */ },
-//                containerColor = White,
-//                elevation = FloatingActionButtonDefaults.elevation(4.dp),
-//                shape = CircleShape,
-//                modifier = Modifier
-//                    .padding(top = 12.dp, end = 16.dp)
-//                    .border(width = 1.dp, color = Gray300, shape = CircleShape)
-//                    .size(40.dp)
-//                    .align(Alignment.TopEnd)
-//            ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.ic_like),
-//                    contentDescription = "좋아요",
-//                    modifier = Modifier.size(20.dp)
-//                )
-//            }
         }
     }
 }
@@ -420,4 +483,8 @@ fun MapFragmentComposeViewPreview() {
     EatssuTheme {
         MapRoute()
     }
+}
+
+data class ItemKey(val id: String, private val latLng: LatLng) : ClusteringKey {
+    override fun getPosition() = latLng
 }
