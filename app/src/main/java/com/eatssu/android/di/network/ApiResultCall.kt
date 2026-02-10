@@ -3,6 +3,7 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.BaseResponse
 import com.eatssu.android.presentation.base.NetworkErrorEventBus
+import kotlinx.serialization.json.Json
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -16,7 +17,7 @@ import java.lang.reflect.Type
 class ApiResultCall<T : Any>(
     private val call: Call<BaseResponse<T>>,
     private val responseType: Type,
-    private val json: kotlinx.serialization.json.Json
+    private val json: Json
 ) : Call<ApiResult<T>> {
 
     override fun enqueue(callback: Callback<ApiResult<T>>) {
