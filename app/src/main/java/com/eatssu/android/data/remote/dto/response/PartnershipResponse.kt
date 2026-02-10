@@ -23,7 +23,7 @@ data class PartnershipResponse(
         @SerialName("id")
         val id: Int?,
         @SerialName("partnershipType")
-        val partnershipType: StoreType?,
+        val partnershipType: String?,
         @SerialName("collegeName")
         val collegeName: String?,
         @SerialName("departmentName")
@@ -50,7 +50,7 @@ fun PartnershipResponse.toDomain(): Partnership =
         partnershipInfos = partnershipInfos.map {
             Partnership.PartnershipInfo(
                 id = it.id ?: -1,
-                partnershipType = it.partnershipType ?: StoreType.RESTAURANT,
+                partnershipType = it.partnershipType ?: "",
                 collegeName = it.collegeName ?: "",
                 departmentName = it.departmentName ?: "",
                 likeCount = it.likeCount ?: 0,
