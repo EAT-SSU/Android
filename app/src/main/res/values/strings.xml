@@ -118,6 +118,7 @@
     <!-- ========================== -->
     <string name="toast_app_init_error">앱 초기화 중 오류가 발생했습니다</string>
     <string name="toast_app_update_required">앱을 업데이트해주세요</string>
+    <string name="toast_app_update_canceled">업데이트가 취소되었어요</string>
     <string name="toast_partnership_info_not_found">제휴 정보가 없습니다.</string>
     <string name="toast_login_failed">로그인에 실패했어요.</string>
     <string name="toast_logout_success">로그아웃했어요.</string>

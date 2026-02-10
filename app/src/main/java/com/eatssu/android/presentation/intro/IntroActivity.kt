@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
@@ -16,6 +17,7 @@ import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.UiText
 
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.ScreenId
@@ -164,7 +166,11 @@ class IntroActivity : AppCompatActivity() {
 
         if (requestCode == UPDATE_REQUEST_CODE) {
             if (resultCode != RESULT_OK) {
-                showToast(UiEvent.ShowToast("업데이트가 취소되었습니다.", ToastType.INFO))
+                showToast(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_app_update_canceled), ToastType.INFO
+                    )
+                )
                 // If the update is cancelled or fails,
                 // you can request to start the update again.
                 introViewModel.startAppChecks()
