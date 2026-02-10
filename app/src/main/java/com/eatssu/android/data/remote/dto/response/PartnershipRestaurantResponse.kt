@@ -8,31 +8,31 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PartnershipRestaurantResponse(
     @SerialName("id")
-    val id: Int?,
+    val id: Int? = null,
     @SerialName("partnershipType")
-    val partnershipType: String?,
+    val partnershipType: String? = null,
     @SerialName("storeName")
-    val storeName: String?,
+    val storeName: String? = null,
     @SerialName("description")
-    val description: String?,
+    val description: String? = null,
     @SerialName("startDate")
-    val startDate: String?,
+    val startDate: String? = null,
     @SerialName("endDate")
-    val endDate: String?,
+    val endDate: String? = null,
     @SerialName("restaurantType")
-    val restaurantType: StoreType?,
+    val restaurantType: StoreType? = null,
     @SerialName("longitude")
-    val longitude: Double?,
+    val longitude: Double? = null,
     @SerialName("latitude")
-    val latitude: Double?,
+    val latitude: Double? = null,
     @SerialName("collegeName")
-    val collegeName: String?,
+    val collegeName: String? = null,
     @SerialName("departmentName")
-    val departmentName: String?,
+    val departmentName: String? = null,
     @SerialName("partnershipLikeCount")
-    val partnershipLikeCount: Int?,
+    val partnershipLikeCount: Int? = null,
     @SerialName("likedByUser")
-    val likedByUser: Boolean?,
+    val likedByUser: Boolean? = null,
 )
 
 fun PartnershipRestaurantResponse.toDomain(): PartnershipRestaurant =

@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CollegeResponse(
     @SerialName("id")
-    val collegeId: Int?,
+    val collegeId: Int? = null,
     @SerialName("name")
-    val collegeName: String?
+    val collegeName: String? = null
 )
 
 // 이 함수가 null을 반환하는 경우, 이 함수를 호출하는 UserRepositoryImpl에서 mapNotNull로 걸러짐
