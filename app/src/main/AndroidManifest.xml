@@ -66,9 +66,6 @@
             android:name="com.naver.maps.map.NCP_KEY_ID"
             android:value="${NAVER_MAPS_CLIENT_ID}" />
 
-        <!--   푸시알림 리시버     -->
-
-
         <!--   위젯 리시버     -->
         <receiver
             android:name=".presentation.widget.MealWidgetReceiver"
