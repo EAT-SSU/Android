@@ -37,8 +37,6 @@ datastore = "1.0.0"
 composeBom = "2024.04.01"
 lifecycle = "2.7.0"
 retrofit = "2.9.0"
-converter-gson = "2.9.0"
-gson = "2.10.1"
 okhttp = "4.12.0"
 glide = "4.15.1"
 glide-compiler = "4.12.0"
@@ -62,6 +60,8 @@ glanceAppwidgetPreview = "1.1.1"
 glancePreview = "1.1.1"
 posthog = "3.+"
 paging = "3.3.6"
+kotlinx-serialization-json = "1.7.3"
+retrofit-kotlinx-serialization-converter = "1.0.0"
 
 [libraries]
 
@@ -103,6 +103,7 @@ androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version
 # coroutines
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
 # glance
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
@@ -124,10 +125,9 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 
 # retrofit, okhttp, gson
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+retrofit-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-kotlinx-serialization-converter" }
 
 # hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -169,6 +169,7 @@ androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", 
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-android" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }

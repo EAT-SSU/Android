@@ -1,20 +1,23 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Menu
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 private const val MENU_SEPARATOR = ", "
 
+@Serializable
 data class GetMealResponse(
-    @SerializedName("mealId") var mealId: Long? = null,
-    @SerializedName("price") var price: Int? = null,
-    @SerializedName("rating") var rating: Double? = null,
-    @SerializedName("briefMenus") var briefMenus: List<MenusInformationList> = emptyList(),
+    @SerialName("mealId") var mealId: Long? = null,
+    @SerialName("price") var price: Int? = null,
+    @SerialName("rating") var rating: Double? = null,
+    @SerialName("briefMenus") var briefMenus: List<MenusInformationList> = emptyList(),
 )
 
+@Serializable
 data class MenusInformationList(
-    @SerializedName("menuId") var menuId: Long? = null,
-    @SerializedName("name") var name: String? = null,
+    @SerialName("menuId") var menuId: Long? = null,
+    @SerialName("name") var name: String? = null,
 )
 
 fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {

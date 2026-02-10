@@ -1,28 +1,32 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Review
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MealReviewListResponse(
-    @SerializedName("numberOfElements") val numberOfElements: Int? = null,
-    @SerializedName("hasNext") val hasNext: Boolean? = null,
-    @SerializedName("dataList") val dataList: List<DataList> = arrayListOf()
+    @SerialName("numberOfElements") val numberOfElements: Int? = null,
+    @SerialName("hasNext") val hasNext: Boolean? = null,
+    @SerialName("dataList") val dataList: List<DataList> = arrayListOf()
 ) {
+    @Serializable
     data class DataList(
-        @SerializedName("reviewId") val reviewId: Long? = null,
-        @SerializedName("menuList") val menuList: List<MenuList> = arrayListOf(),
-        @SerializedName("writerId") val writerId: Long? = null,
-        @SerializedName("isWriter") val isWriter: Boolean? = null,
-        @SerializedName("writerNickname") val writerNickname: String? = null,
-        @SerializedName("rating") val rating: Int? = null,
-        @SerializedName("writtenAt") val writtenAt: String? = null,
-        @SerializedName("content") val content: String? = null,
-        @SerializedName("imageUrls") val imageUrls: List<String> = arrayListOf(),
+        @SerialName("reviewId") val reviewId: Long? = null,
+        @SerialName("menuList") val menuList: List<MenuList> = arrayListOf(),
+        @SerialName("writerId") val writerId: Long? = null,
+        @SerialName("isWriter") val isWriter: Boolean? = null,
+        @SerialName("writerNickname") val writerNickname: String? = null,
+        @SerialName("rating") val rating: Int? = null,
+        @SerialName("writtenAt") val writtenAt: String? = null,
+        @SerialName("content") val content: String? = null,
+        @SerialName("imageUrls") val imageUrls: List<String> = arrayListOf(),
     ) {
+        @Serializable
         data class MenuList(
-            @SerializedName("id") val id: Long? = null,
-            @SerializedName("name") val name: String? = null,
-            @SerializedName("isLike") val isLike: Boolean? = null,
+            @SerialName("id") val id: Long? = null,
+            @SerialName("name") val name: String? = null,
+            @SerialName("isLike") val isLike: Boolean? = null,
         )
     }
 }

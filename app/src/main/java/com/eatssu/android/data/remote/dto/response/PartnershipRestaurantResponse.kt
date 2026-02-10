@@ -1,35 +1,37 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.PartnershipRestaurant
-import com.eatssu.android.domain.model.RestaurantType
-import com.google.gson.annotations.SerializedName
+import com.eatssu.common.enums.StoreType
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PartnershipRestaurantResponse(
-    @SerializedName("id")
+    @SerialName("id")
     val id: Int?,
-    @SerializedName("partnershipType")
+    @SerialName("partnershipType")
     val partnershipType: String?,
-    @SerializedName("storeName")
+    @SerialName("storeName")
     val storeName: String?,
-    @SerializedName("description")
+    @SerialName("description")
     val description: String?,
-    @SerializedName("startDate")
+    @SerialName("startDate")
     val startDate: String?,
-    @SerializedName("endDate")
+    @SerialName("endDate")
     val endDate: String?,
-    @SerializedName("restaurantType")
-    val restaurantType: String?,
-    @SerializedName("longitude")
+    @SerialName("restaurantType")
+    val restaurantType: StoreType?,
+    @SerialName("longitude")
     val longitude: Double?,
-    @SerializedName("latitude")
+    @SerialName("latitude")
     val latitude: Double?,
-    @SerializedName("collegeName")
+    @SerialName("collegeName")
     val collegeName: String?,
-    @SerializedName("departmentName")
+    @SerialName("departmentName")
     val departmentName: String?,
-    @SerializedName("partnershipLikeCount")
+    @SerialName("partnershipLikeCount")
     val partnershipLikeCount: Int?,
-    @SerializedName("likedByUser")
+    @SerialName("likedByUser")
     val likedByUser: Boolean?,
 )
 
@@ -41,14 +43,7 @@ fun PartnershipRestaurantResponse.toDomain(): PartnershipRestaurant =
         description = description ?: "",
         startDate = startDate ?: "",
         endDate = endDate ?: "",
-        restaurantType = restaurantType ?.let {
-            when (it) {
-                "CAFE" -> RestaurantType.CAFE
-                "RESTAURANT" -> RestaurantType.RESTAURANT
-                "PUB" -> RestaurantType.PUB
-                else -> RestaurantType.RESTAURANT
-            }
-        } ?: RestaurantType.RESTAURANT,
+        restaurantType = restaurantType ?: StoreType.RESTAURANT,
         longitude = longitude ?: 126.95661313346206,
         latitude = latitude ?: 37.49517278813046,
         collegeName = collegeName ?: "",

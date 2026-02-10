@@ -1,5 +1,7 @@
 package com.eatssu.android.domain.model
 
+import com.eatssu.common.enums.StoreType
+
 data class PartnershipRestaurant(
     val id: Int,
     val partnershipType: String,
@@ -7,7 +9,7 @@ data class PartnershipRestaurant(
     val description: String,
     val startDate: String,
     val endDate: String,
-    val restaurantType: RestaurantType,
+    val storeType: StoreType,
     val longitude: Double,
     val latitude: Double,
     val collegeName: String,
@@ -15,7 +17,3 @@ data class PartnershipRestaurant(
     val partnershipLikeCount: Int,
     val likedByUser: Boolean,
 )
-
-enum class RestaurantType {
-    CAFE, RESTAURANT, PUB
-}

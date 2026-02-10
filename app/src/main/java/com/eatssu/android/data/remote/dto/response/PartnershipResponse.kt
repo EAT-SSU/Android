@@ -1,39 +1,42 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Partnership
-import com.eatssu.android.domain.model.RestaurantType
-import com.google.gson.annotations.SerializedName
+import com.eatssu.common.enums.StoreType
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PartnershipResponse(
-    @SerializedName("storeName")
+    @SerialName("storeName")
     val storeName: String?,
-    @SerializedName("longitude")
+    @SerialName("longitude")
     val longitude: Double?,
-    @SerializedName("latitude")
+    @SerialName("latitude")
     val latitude: Double?,
-    @SerializedName("restaurantType")
-    val restaurantType: String?,
-    @SerializedName("partnershipInfos")
+    @SerialName("restaurantType")
+    val restaurantType: StoreType?,
+    @SerialName("partnershipInfos")
     val partnershipInfos: List<PartnershipInfo>
 ){
+    @Serializable
     data class PartnershipInfo(
-        @SerializedName("id")
+        @SerialName("id")
         val id: Int?,
-        @SerializedName("partnershipType")
-        val partnershipType: String?,
-        @SerializedName("collegeName")
+        @SerialName("partnershipType")
+        val partnershipType: StoreType?,
+        @SerialName("collegeName")
         val collegeName: String?,
-        @SerializedName("departmentName")
+        @SerialName("departmentName")
         val departmentName: String?,
-        @SerializedName("likeCount")
+        @SerialName("likeCount")
         val likeCount: Int?,
-        @SerializedName("isLiked")
+        @SerialName("isLiked")
         val isLiked: Boolean?,
-        @SerializedName("description")
+        @SerialName("description")
         val description: String?,
-        @SerializedName("startDate")
+        @SerialName("startDate")
         val startDate: String?,
-        @SerializedName("endDate")
+        @SerialName("endDate")
         val endDate: String?
     )
 }
@@ -43,18 +46,11 @@ fun PartnershipResponse.toDomain(): Partnership =
         storeName = storeName ?: "",
         longitude = longitude ?: 126.95661313346206,
         latitude = latitude ?: 37.49517278813046,
-        restaurantType = restaurantType ?.let {
-            when(it) {
-                "CAFE" -> RestaurantType.CAFE
-                "RESTAURANT" -> RestaurantType.RESTAURANT
-                "PUB" -> RestaurantType.PUB
-                else -> RestaurantType.RESTAURANT
-            }
-        } ?: RestaurantType.RESTAURANT,
+        restaurantType = restaurantType ?: StoreType.RESTAURANT,
         partnershipInfos = partnershipInfos.map {
             Partnership.PartnershipInfo(
                 id = it.id ?: -1,
-                partnershipType = it.partnershipType ?: "",
+                partnershipType = it.partnershipType ?: StoreType.RESTAURANT,
                 collegeName = it.collegeName ?: "",
                 departmentName = it.departmentName ?: "",
                 likeCount = it.likeCount ?: 0,

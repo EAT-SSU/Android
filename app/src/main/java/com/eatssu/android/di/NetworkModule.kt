@@ -13,13 +13,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -49,6 +50,14 @@ annotation class NoToken
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    @Singleton
+    @Provides
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        isLenient = true
+    }
 
     // 토큰이 필요한 okhttpClient
     @Singleton
@@ -89,7 +98,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideCallAdapterFactory(): CallAdapter.Factory = ApiResultCallAdapterFactory()
+    fun provideCallAdapterFactory(json: Json): CallAdapter.Factory =
+        ApiResultCallAdapterFactory(json)
 
     // 토큰이 필요한 retrofit
     @Singleton
@@ -97,10 +107,11 @@ object NetworkModule {
     fun provideAuthRetrofit(
         okHttpClient: OkHttpClient,
         callAdapterFactory: CallAdapter.Factory,
+        json: Json
     ): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
             .addCallAdapterFactory(callAdapterFactory)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
     }
@@ -112,10 +123,11 @@ object NetworkModule {
     fun provideNoAuthRetrofit(
         @NoToken okHttpClient: OkHttpClient,
         callAdapterFactory: CallAdapter.Factory,
+        json: Json
     ): Retrofit {
         return Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL)
             .addCallAdapterFactory(callAdapterFactory)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .addConverterFactory(NullOnEmptyConverterFactory())
             .build()
     }

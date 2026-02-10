@@ -1,22 +1,25 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.ReviewInfo
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlin.math.round
 
+@Serializable
 data class MenuReviewInfoResponse(
-    @SerializedName("menuName") val menuName: String? = null,
-    @SerializedName("totalReviewCount") val totalReviewCount: Int? = null,
-    @SerializedName("rating") val rating: Double? = null,
-    @SerializedName("likeCount") val likeCount: Int? = null,
-    @SerializedName("reviewRatingCount") val reviewRatingCount: ReviewRatingCount? = ReviewRatingCount(),
+    @SerialName("menuName") val menuName: String? = null,
+    @SerialName("totalReviewCount") val totalReviewCount: Int? = null,
+    @SerialName("rating") val rating: Double? = null,
+    @SerialName("likeCount") val likeCount: Int? = null,
+    @SerialName("reviewRatingCount") val reviewRatingCount: ReviewRatingCount? = ReviewRatingCount(),
 ) {
+    @Serializable
     data class ReviewRatingCount(
-        @SerializedName("oneStarCount") val oneStarCount: Int? = null,
-        @SerializedName("twoStarCount") val twoStarCount: Int? = null,
-        @SerializedName("threeStarCount") val threeStarCount: Int? = null,
-        @SerializedName("fourStarCount") val fourStarCount: Int? = null,
-        @SerializedName("fiveStarCount") val fiveStarCount: Int? = null,
+        @SerialName("oneStarCount") val oneStarCount: Int? = null,
+        @SerialName("twoStarCount") val twoStarCount: Int? = null,
+        @SerialName("threeStarCount") val threeStarCount: Int? = null,
+        @SerialName("fourStarCount") val fourStarCount: Int? = null,
+        @SerialName("fiveStarCount") val fiveStarCount: Int? = null,
     )
 }
 

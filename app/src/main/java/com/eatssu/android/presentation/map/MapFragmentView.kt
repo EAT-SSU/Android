@@ -3,13 +3,11 @@
 package com.eatssu.android.presentation.map
 
 import android.Manifest
-import android.R.id.message
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -47,7 +45,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -56,7 +53,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Partnership
-import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
@@ -71,6 +67,7 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.StoreType
 import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
@@ -327,7 +324,7 @@ internal fun MapScreen(
         if (partnershipSheetState.isVisible) {
             mapState.restaurantPartnershipInfo?.let { info ->
 
-                mapState.placeType?.let { placeType ->
+                mapState.storeType?.let { storeType ->
 
                     EventLogger.clickPartnerRestaurant(
                         college = collegeId,
@@ -337,7 +334,7 @@ internal fun MapScreen(
 
                     MapRestaurantBottomSheet(
                         storeName = info.storeName,
-                        placeType = placeType,
+                        storeType = storeType,
                         mapRestaurantList = mapState.restaurantInfoList,
                         onDismiss = {
                             onHidePartnershipSheet()
@@ -414,8 +411,8 @@ internal fun MapScreen(
                             )
                         ) {
                             val iconRes = when (partnership.restaurantType) {
-                                RestaurantType.CAFE -> R.drawable.ic_map_marker_cafe
-                                RestaurantType.PUB -> R.drawable.ic_map_marker_pub
+                                StoreType.CAFE -> R.drawable.ic_map_marker_cafe
+                                StoreType.PUB -> R.drawable.ic_map_marker_pub
                                 else -> R.drawable.ic_map_marker_restaurant
                             }
 

@@ -8,14 +8,11 @@ import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
 import androidx.glance.state.GlanceStateDefinition
 import com.eatssu.android.domain.model.WidgetMealInfo
-import com.eatssu.common.enums.Restaurant
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 import java.io.File
 import java.io.InputStream
@@ -55,52 +52,23 @@ object MealInfoStateDefinition : GlanceStateDefinition<WidgetMealInfo> {
     }
 
     object MealInfoSerializer : Serializer<WidgetMealInfo> {
-        private val gson = Gson()
-        override val defaultValue = WidgetMealInfo.Loading
+        override val defaultValue: WidgetMealInfo = WidgetMealInfo.Loading
 
         override suspend fun readFrom(input: InputStream): WidgetMealInfo {
             return try {
                 val jsonRaw = input.readBytes().decodeToString()
                 Timber.d("readFrom: raw = '$jsonRaw'")
                 if (jsonRaw.isBlank()) return defaultValue
-                val obj = JsonParser.parseString(jsonRaw).asJsonObject
-                when (obj.get("type").asString) {
-                    "Loading" -> WidgetMealInfo.Loading
-                    "Unavailable" -> WidgetMealInfo.Unavailable
-                    "Available" -> {
-                        val mealListType = object : TypeToken<List<List<String>>>() {}.type
-                        val breakfast =
-                            gson.fromJson<List<List<String>>>(obj.get("breakfast"), mealListType)
-                        val lunch =
-                            gson.fromJson<List<List<String>>>(obj.get("lunch"), mealListType)
-                        val dinner =
-                            gson.fromJson<List<List<String>>>(obj.get("dinner"), mealListType)
-                        val restaurant = Restaurant.valueOf(obj.get("restaurant").asString)
-                        WidgetMealInfo.Available(breakfast, lunch, dinner, restaurant)
-                    }
 
-                    else -> defaultValue
-                }
+                Json.decodeFromString(jsonRaw)
             } catch (e: Exception) {
                 Timber.e("Serialization error: ${e.message}")
-                throw CorruptionException("Could not read data: ${e.message}")
+                throw CorruptionException("Could not read data: ${e.message}", e)
             }
         }
 
         override suspend fun writeTo(t: WidgetMealInfo, output: OutputStream) {
-            val obj = JsonObject()
-            when (t) {
-                is WidgetMealInfo.Loading -> obj.addProperty("type", "Loading")
-                is WidgetMealInfo.Unavailable -> obj.addProperty("type", "Unavailable")
-                is WidgetMealInfo.Available -> {
-                    obj.addProperty("type", "Available")
-                    obj.add("breakfast", gson.toJsonTree(t.breakfast))
-                    obj.add("lunch", gson.toJsonTree(t.lunch))
-                    obj.add("dinner", gson.toJsonTree(t.dinner))
-                    obj.addProperty("restaurant", t.restaurant.name)
-                }
-            }
-            val json = gson.toJson(obj)
+            val json = Json.encodeToString(t)
             Timber.d("[writeTo] json = $json")
             output.use {
                 it.write(json.encodeToByteArray())

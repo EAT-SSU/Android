@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
@@ -185,10 +186,7 @@ dependencies {
 
     //retrofit2: 서버통신
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
 
-    // Gson for JSON parsing
-    implementation(libs.gson)
 
     //OkHttp: 통신 로그 확인하기 위함
     implementation(libs.okhttp)
@@ -265,6 +263,10 @@ dependencies {
     // Paging3
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
+
+    // Kotlin Serialization
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
 }
 
 configurations.all {

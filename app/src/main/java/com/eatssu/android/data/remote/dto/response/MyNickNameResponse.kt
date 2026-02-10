@@ -1,8 +1,10 @@
 package com.eatssu.android.data.remote.dto.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MyNickNameResponse(
-    @SerializedName("nickname") var nickname: String? = null,
-    @SerializedName("provider") var provider: String,
+    @SerialName("nickname") var nickname: String? = null,
+    @SerialName("provider") var provider: String,
 )

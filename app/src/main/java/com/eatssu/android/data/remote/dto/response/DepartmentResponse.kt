@@ -1,12 +1,14 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Department
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DepartmentResponse(
-    @SerializedName("id")
+    @SerialName("id")
     val departmentId: Int?,
-    @SerializedName("name")
+    @SerialName("name")
     val departmentName: String?,
 )
 
