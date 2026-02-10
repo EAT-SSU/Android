@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 
 @HiltWorker
 class DailyNotificationWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
+    @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val notificationManager: EatSsuNotificationManager
 ) : CoroutineWorker(context, workerParams) {
@@ -21,8 +21,8 @@ class DailyNotificationWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val currentDay = LocalDateTime.now().dayOfWeek
         if (currentDay != DayOfWeek.SATURDAY && currentDay != DayOfWeek.SUNDAY) {
-            val title = context.getString(R.string.notification_context_title)
-            val body = context.getString(R.string.notification_context_text)
+            val title = applicationContext.getString(R.string.notification_context_title)
+            val body = applicationContext.getString(R.string.notification_context_text)
             
             notificationManager.showNotification(
                 title = title,
