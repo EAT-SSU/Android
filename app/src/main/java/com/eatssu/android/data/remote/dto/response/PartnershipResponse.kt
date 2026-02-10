@@ -8,36 +8,36 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PartnershipResponse(
     @SerialName("storeName")
-    val storeName: String?,
+    val storeName: String? = null,
     @SerialName("longitude")
-    val longitude: Double?,
+    val longitude: Double? = null,
     @SerialName("latitude")
-    val latitude: Double?,
+    val latitude: Double? = null,
     @SerialName("restaurantType")
-    val restaurantType: StoreType?,
+    val restaurantType: StoreType? = null,
     @SerialName("partnershipInfos")
-    val partnershipInfos: List<PartnershipInfo>
+    val partnershipInfos: List<PartnershipInfo> = emptyList()
 ){
     @Serializable
     data class PartnershipInfo(
         @SerialName("id")
-        val id: Int?,
+        val id: Int? = null,
         @SerialName("partnershipType")
-        val partnershipType: String?,
+        val partnershipType: String? = null,
         @SerialName("collegeName")
-        val collegeName: String?,
+        val collegeName: String? = null,
         @SerialName("departmentName")
-        val departmentName: String?,
+        val departmentName: String? = null,
         @SerialName("likeCount")
-        val likeCount: Int?,
+        val likeCount: Int? = null,
         @SerialName("isLiked")
-        val isLiked: Boolean?,
+        val isLiked: Boolean? = null,
         @SerialName("description")
-        val description: String?,
+        val description: String? = null,
         @SerialName("startDate")
-        val startDate: String?,
+        val startDate: String? = null,
         @SerialName("endDate")
-        val endDate: String?
+        val endDate: String? = null
     )
 }
 
