@@ -8,16 +8,16 @@ private const val MENU_SEPARATOR = ", "
 
 @Serializable
 data class GetMealResponse(
-    @SerialName("mealId") var mealId: Long? = null,
-    @SerialName("price") var price: Int? = null,
-    @SerialName("rating") var rating: Double? = null,
-    @SerialName("briefMenus") var briefMenus: List<MenusInformationList> = emptyList(),
+    @SerialName("mealId") val mealId: Long? = null,
+    @SerialName("price") val price: Int? = null,
+    @SerialName("rating") val rating: Double? = null,
+    @SerialName("briefMenus") val briefMenus: List<MenusInformationList> = emptyList(),
 )
 
 @Serializable
 data class MenusInformationList(
-    @SerialName("menuId") var menuId: Long? = null,
-    @SerialName("name") var name: String? = null,
+    @SerialName("menuId") val menuId: Long? = null,
+    @SerialName("name") val name: String? = null,
 )
 
 fun List<GetMealResponse>.mapTodayMenuResponseToMenu(): List<Menu> {

@@ -24,7 +24,7 @@ data class CategoryMenuListCollection(
 @Serializable
 data class MenuInformationList(
 
-    @SerialName("menuId") var menuId: Long? = null,
+    @SerialName("menuId") val menuId: Long? = null,
     @SerialName("name") val name: String? = null,
     @SerialName("price") val price: Int? = null,
     @SerialName("rating") val rating: Double? = null,
