@@ -3,6 +3,7 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.BaseResponse
 import com.eatssu.android.presentation.base.NetworkErrorEventBus
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import okhttp3.Request
@@ -44,6 +45,7 @@ class ApiResultCall<T : Any>(
 
                     is SerializationException, is IllegalArgumentException -> {
                         Timber.e(error, "Serialization Error")
+                        FirebaseCrashlytics.getInstance().recordException(error)
                         ApiResult.UnknownError(error)
                     }
 
