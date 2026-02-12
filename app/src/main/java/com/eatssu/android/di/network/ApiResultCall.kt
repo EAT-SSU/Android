@@ -3,6 +3,7 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.BaseResponse
 import com.eatssu.android.presentation.base.NetworkErrorEventBus
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import okhttp3.Request
 import okio.Timeout
@@ -39,6 +40,11 @@ class ApiResultCall<T : Any>(
                         // NetworkError 발생 시 전역 이벤트 발생
                         NetworkErrorEventBus.notifyNetworkError()
                         ApiResult.NetworkError(error)
+                    }
+
+                    is SerializationException, is IllegalArgumentException -> {
+                        Timber.e(error, "Serialization Error")
+                        ApiResult.UnknownError(error)
                     }
 
                     else -> ApiResult.UnknownError(error)
