@@ -25,6 +25,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Duration.Companion.seconds
 
@@ -527,6 +528,109 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
                         expectToast(R.string.toast_department_updated, ToastType.INFO)
                         cancelAndIgnoreRemainingEvents()
                     }
+                }
+            }
+        }
+
+        `when`("단과대만 바꾼 상태로 저장하면") {
+            val setUserNicknameUseCase = mockk<SetUserNicknameUseCase>()
+            val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+            val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
+            val validateNicknameServerUseCase = mockk<ValidateNicknameServerUseCase>()
+            val validateNicknameLocalUseCase = mockk<ValidateNicknameLocalUseCase>()
+            val userRepository = mockk<UserRepository>()
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "oldNick",
+                college = baseCollege,
+                department = baseDepartment,
+            )
+            coEvery { userRepository.getTotalColleges() } returns listOf(baseCollege, otherCollege)
+            coEvery { userRepository.getTotalDepartments(otherCollege.collegeId) } returns emptyList()
+            coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
+            every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
+
+            val viewModel = UserInfoViewModel(
+                setUserNicknameUseCase = setUserNicknameUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                validateNicknameServerUseCase = validateNicknameServerUseCase,
+                validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+                userRepository = userRepository,
+            )
+
+            then("현재 동작대로 Loading 상태에서 조기 종료된다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value is UiState.Success) shouldBe true
+                    }
+
+                    viewModel.selectCollege(otherCollege)
+                    advanceUntilIdle()
+
+                    viewModel.uiEvent.test {
+                        viewModel.saveUserInfo()
+                        advanceUntilIdle()
+
+                        expectNoEvents()
+                        cancelAndIgnoreRemainingEvents()
+                    }
+
+                    viewModel.uiState.value shouldBe UiState.Loading
+                    coVerify(exactly = 0) { userRepository.setUserDepartment(any()) }
+                }
+            }
+        }
+
+        `when`("학과 저장 API가 실패하면") {
+            val setUserNicknameUseCase = mockk<SetUserNicknameUseCase>()
+            val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+            val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
+            val validateNicknameServerUseCase = mockk<ValidateNicknameServerUseCase>()
+            val validateNicknameLocalUseCase = mockk<ValidateNicknameLocalUseCase>()
+            val userRepository = mockk<UserRepository>()
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "oldNick",
+                college = baseCollege,
+                department = baseDepartment,
+            )
+            coEvery { userRepository.getTotalColleges() } returns listOf(baseCollege, otherCollege)
+            coEvery { userRepository.getTotalDepartments(otherCollege.collegeId) } returns listOf(otherDepartment)
+            coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
+            every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
+            coEvery { userRepository.setUserDepartment(otherDepartment.departmentId) } returns false
+
+            val viewModel = UserInfoViewModel(
+                setUserNicknameUseCase = setUserNicknameUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                validateNicknameServerUseCase = validateNicknameServerUseCase,
+                validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+                userRepository = userRepository,
+            )
+
+            then("Error 상태로 전이되고 로컬 학과 갱신은 수행하지 않는다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value is UiState.Success) shouldBe true
+                    }
+
+                    viewModel.selectCollege(otherCollege)
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.departmentList shouldBe listOf(otherDepartment)
+                    }
+                    viewModel.selectDepartment(otherDepartment)
+                    viewModel.saveUserInfo()
+                    advanceUntilIdle()
+
+                    viewModel.uiState.value shouldBe UiState.Error
+                    coVerify(exactly = 0) { setUserCollegeDepartmentUseCase(any(), any()) }
                 }
             }
         }
