@@ -74,6 +74,9 @@
 
 이 프로젝트는 fastlane을 사용하여 자동화된 빌드 및 배포를 지원합니다.
 
+## 🖼 Screenshot Testing
+- [Roborazzi + Robolectric 스크린샷 회귀 테스트 가이드](docs/SCREENSHOT_TESTING.md)
+
 **📖 상세한 가이드는 다음 문서를 참조하세요:**
 👉 **[Fastlane을 이용한 배포 총 정리](.github/FASTLANE_DEPLOYMENT_GUIDE.md)**
 
