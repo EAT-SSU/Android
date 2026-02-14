@@ -1,8 +1,10 @@
 package com.eatssu.android.test
 
 import io.kotest.core.listeners.TestListener
+import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
+import io.mockk.clearAllMocks
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +22,11 @@ class MainDispatcherListener(
     }
 
     override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        unmockkAll()
+        clearAllMocks(answers = false, recordedCalls = true, childMocks = true)
         Dispatchers.resetMain()
+    }
+
+    override suspend fun afterSpec(spec: Spec) {
+        unmockkAll()
     }
 }

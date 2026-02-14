@@ -12,15 +12,19 @@ import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.assertToast
 import com.eatssu.android.test.awaitToastEvent
+import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
 import id.zelory.compressor.Compressor
 import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.clearMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -109,6 +113,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     likeMenuIdList = any(),
                 )
             } returns true
+            mockkObject(EventLogger)
+            every { EventLogger.completeReview(any(), any(), any()) } just Runs
 
             then("성공 토스트와 NavigateBack 이벤트를 보낸다") {
                 runTest {
@@ -147,6 +153,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery {
                 writeReviewUseCase(MenuType.FIXED, 1L, 4, "", "https://img", any())
             } returns true
+            mockkObject(EventLogger)
+            every { EventLogger.completeReview(any(), any(), any()) } just Runs
 
             then("이미지 업로드 성공 토스트 후 리뷰 성공 토스트와 뒤로가기를 보낸다") {
                 runTest {
@@ -154,6 +162,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     advanceUntilIdle()
                     viewModel.onRatingChanged(4)
                     viewModel.setSelectedImage(uri)
+                    clearMocks(writeReviewUseCase, answers = false, recordedCalls = true)
 
                     viewModel.uiEvent.test {
                         viewModel.postReview(MenuType.FIXED, 1L, context)
@@ -193,8 +202,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, context)
                         advanceUntilIdle()
 
-                        (viewModel.uiState.value as UiState.Success).data::class shouldBe WriteReviewState.Editing::class
                         awaitToastEvent().assertToast(R.string.toast_image_compress_failed, ToastType.ERROR)
+                        (viewModel.uiState.value as UiState.Success).data::class shouldBe WriteReviewState.Editing::class
                         coVerify(exactly = 0) { writeReviewUseCase(any(), any(), any(), any(), any(), any()) }
                         cancelAndIgnoreRemainingEvents()
                     }

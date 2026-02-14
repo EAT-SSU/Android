@@ -13,6 +13,7 @@ import com.eatssu.android.test.sampleToken
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.DeviceType
 import com.eatssu.common.enums.ToastType
+import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -24,6 +25,7 @@ import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginViewModelBehaviorSpec : AppBehaviorSpec({
@@ -51,10 +53,10 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
                 runTest {
                     viewModel.uiEvent.test {
                         viewModel.getKakaoLogin("a@b.com", "pid")
-                        advanceUntilIdle()
-
-                        viewModel.uiState.value shouldBe UiState.Error
                         awaitToastEvent().assertToast(R.string.toast_login_failed, ToastType.ERROR)
+                        eventually(2.seconds) {
+                            viewModel.uiState.value shouldBe UiState.Error
+                        }
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -74,12 +76,13 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
             then("토큰과 이메일을 저장하고 성공 상태가 된다") {
                 runTest {
                     viewModel.getKakaoLogin("a@b.com", "pid")
-                    advanceUntilIdle()
 
-                    verify { setAccessTokenUseCase("acc") }
-                    verify { setRefreshTokenUseCase("ref") }
-                    coVerify { setUserEmailUseCase("a@b.com") }
-                    viewModel.uiState.value shouldBe UiState.Success(LoginState.LoginSuccess)
+                    eventually(2.seconds) {
+                        verify { setAccessTokenUseCase("acc") }
+                        verify { setRefreshTokenUseCase("ref") }
+                        coVerify { setUserEmailUseCase("a@b.com") }
+                        viewModel.uiState.value shouldBe UiState.Success(LoginState.LoginSuccess)
+                    }
                 }
             }
         }
