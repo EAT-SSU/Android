@@ -137,13 +137,13 @@ class UserDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         `when`("원격 닉네임 변경이 성공하면") {
             coEvery { userRepository.updateUserName(request) } returns Result.success(Unit)
 
-            then("성공 결과를 반환하고 로컬 닉네임을 먼저 저장한다") {
+            then("성공 결과를 반환하고 원격 성공 후 로컬 닉네임을 저장한다") {
                 runTest {
                     val result = useCase(nickname)
                     result.isSuccess shouldBe true
                     coVerifyOrder {
-                        accountDataStore.setName(nickname)
                         userRepository.updateUserName(request)
+                        accountDataStore.setName(nickname)
                     }
                 }
             }
@@ -152,12 +152,12 @@ class UserDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         `when`("원격 닉네임 변경이 실패하면") {
             coEvery { userRepository.updateUserName(request) } returns Result.failure(IllegalStateException("fail"))
 
-            then("실패 결과를 반환해도 로컬 닉네임 저장은 수행한다") {
+            then("실패 결과를 반환하고 로컬 닉네임은 변경하지 않는다") {
                 runTest {
                     val result = useCase(nickname)
                     result.isFailure shouldBe true
-                    coVerify(exactly = 1) { accountDataStore.setName(nickname) }
                     coVerify(exactly = 1) { userRepository.updateUserName(request) }
+                    coVerify(exactly = 0) { accountDataStore.setName(any()) }
                 }
             }
         }
