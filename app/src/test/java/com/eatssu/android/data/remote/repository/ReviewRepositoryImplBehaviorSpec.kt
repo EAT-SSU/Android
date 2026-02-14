@@ -13,7 +13,6 @@ import com.eatssu.android.data.remote.dto.response.MyReviewListResponse
 import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.test.AppBehaviorSpec
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -129,16 +128,19 @@ class ReviewRepositoryImplBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("writeMenuReview에서 likeMenuIdList가 빈 리스트면") {
-            then("현재 구현 그대로 NoSuchElementException이 발생한다") {
+            val requestSlot = slot<WriteMenuReviewRequest>()
+            coEvery { service.writeMenuReview(capture(requestSlot)) } returns ApiResult.Success(Unit)
+
+            then("menuLike=null로 전달하고 정상 처리한다") {
                 runTest {
-                    shouldThrow<NoSuchElementException> {
-                        repository.writeMenuReview(
-                            rating = 1,
-                            content = "x",
-                            imageUrls = emptyList(),
-                            likeMenuIdList = emptyList(),
-                        )
-                    }
+                    repository.writeMenuReview(
+                        rating = 1,
+                        content = "x",
+                        imageUrls = emptyList(),
+                        likeMenuIdList = emptyList(),
+                    ) shouldBe true
+
+                    requestSlot.captured.menuLike shouldBe null
                 }
             }
         }
