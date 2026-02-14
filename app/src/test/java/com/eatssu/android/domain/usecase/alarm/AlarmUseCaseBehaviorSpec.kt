@@ -8,7 +8,11 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.slot
 import io.mockk.verify
+import java.time.Clock
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class AlarmUseCaseBehaviorSpec : AppBehaviorSpec({
 
@@ -22,24 +26,77 @@ class AlarmUseCaseBehaviorSpec : AppBehaviorSpec({
         mockkStatic(PendingIntent::class)
         every { PendingIntent.getBroadcast(context, 0, any(), flags) } returns pendingIntent
 
-        val useCase = AlarmUseCase(context)
+        `when`("현재 시간이 11시 이전이면") {
+            val zone = ZoneId.systemDefault()
+            val now = ZonedDateTime.of(2025, 1, 1, 10, 30, 0, 0, zone)
+            val clock = Clock.fixed(now.toInstant(), zone)
+            val useCase = AlarmUseCase(context, clock)
+            val triggerAtSlot = slot<Long>()
 
-        `when`("scheduleAlarm을 호출하면") {
-            then("repeating 알람을 등록한다") {
+            then("당일 11시로 repeating 알람을 등록한다") {
                 useCase.scheduleAlarm()
 
                 verify(exactly = 1) {
                     alarmManager.setRepeating(
                         AlarmManager.RTC_WAKEUP,
-                        any(),
+                        capture(triggerAtSlot),
                         AlarmManager.INTERVAL_DAY,
                         pendingIntent,
                     )
                 }
+
+                val expected = now
+                    .withHour(11)
+                    .withMinute(0)
+                    .withSecond(0)
+                    .withNano(0)
+                    .toInstant()
+                    .toEpochMilli()
+
+                triggerAtSlot.captured shouldBe expected
+            }
+        }
+
+        `when`("현재 시간이 11시 이상이면") {
+            val zone = ZoneId.systemDefault()
+            val now = ZonedDateTime.of(2025, 1, 1, 11, 0, 0, 0, zone)
+            val clock = Clock.fixed(now.toInstant(), zone)
+            val useCase = AlarmUseCase(context, clock)
+            val triggerAtSlot = slot<Long>()
+
+            then("다음날 11시로 repeating 알람을 등록한다") {
+                useCase.scheduleAlarm()
+
+                verify(exactly = 1) {
+                    alarmManager.setRepeating(
+                        AlarmManager.RTC_WAKEUP,
+                        capture(triggerAtSlot),
+                        AlarmManager.INTERVAL_DAY,
+                        pendingIntent,
+                    )
+                }
+
+                val expected = now
+                    .plusDays(1)
+                    .withHour(11)
+                    .withMinute(0)
+                    .withSecond(0)
+                    .withNano(0)
+                    .toInstant()
+                    .toEpochMilli()
+
+                triggerAtSlot.captured shouldBe expected
             }
         }
 
         `when`("cancelAlarm을 호출하면") {
+            val zone = ZoneId.systemDefault()
+            val clock = Clock.fixed(
+                ZonedDateTime.of(2025, 1, 1, 10, 0, 0, 0, zone).toInstant(),
+                zone,
+            )
+            val useCase = AlarmUseCase(context, clock)
+
             then("등록했던 pendingIntent로 알람을 취소한다") {
                 useCase.cancelAlarm()
                 verify(exactly = 1) { alarmManager.cancel(pendingIntent) }

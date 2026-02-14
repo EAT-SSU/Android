@@ -2,9 +2,11 @@ package com.eatssu.android.presentation.util
 
 import com.eatssu.android.test.AppBehaviorSpec
 import io.kotest.matchers.shouldBe
+import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import java.time.ZoneOffset
 
 class CalendarUtilBehaviorSpec : AppBehaviorSpec({
 
@@ -35,11 +37,9 @@ class CalendarUtilBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("getNextDayDate를 호출하면") {
-            then("내일 날짜의 yyyyMMdd 문자열을 반환한다") {
-                val expected = LocalDate.now()
-                    .plusDays(1)
-                    .format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-                CalendarUtil.getNextDayDate() shouldBe expected
+            then("주입한 clock 기준 다음 날짜의 yyyyMMdd 문자열을 반환한다") {
+                val clock = Clock.fixed(Instant.parse("2025-12-31T23:59:59Z"), ZoneOffset.UTC)
+                CalendarUtil.getNextDayDate(clock) shouldBe "20260101"
             }
         }
     }

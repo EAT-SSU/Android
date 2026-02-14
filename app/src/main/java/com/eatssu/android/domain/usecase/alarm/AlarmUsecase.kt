@@ -7,10 +7,12 @@ import android.content.Intent
 import com.eatssu.android.alarm.NotificationReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Calendar
+import java.time.Clock
 import javax.inject.Inject
 
 class AlarmUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val clock: Clock,
 ) {
 
     fun scheduleAlarm() {
@@ -21,13 +23,14 @@ class AlarmUseCase @Inject constructor(
         )
 
         val calendar = Calendar.getInstance().apply {
+            timeInMillis = clock.millis()
             set(Calendar.HOUR_OF_DAY, 11)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
 
-        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+        if (calendar.timeInMillis <= clock.millis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 

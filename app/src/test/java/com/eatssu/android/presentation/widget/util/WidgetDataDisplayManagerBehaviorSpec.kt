@@ -3,7 +3,6 @@ package com.eatssu.android.presentation.widget.util
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.android.domain.usecase.widget.GetTodayMealUseCase
 import com.eatssu.android.domain.usecase.widget.MealState
-import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.widget.WidgetCacheManager
 import com.eatssu.android.presentation.widget.WidgetMealList
 import com.eatssu.android.test.AppBehaviorSpec
@@ -11,11 +10,12 @@ import com.eatssu.common.enums.Restaurant
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneOffset
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
@@ -23,10 +23,7 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
     given("위젯 표시 데이터 생성") {
         val useCase = mockk<GetTodayMealUseCase>()
         val restaurant = Restaurant.HAKSIK
-
-        mockkObject(CalendarUtil)
-        every { CalendarUtil.convertMillisToDateString(any()) } returns "20250101"
-        every { CalendarUtil.getNextDayDate() } returns "20250102"
+        val fixedClock = Clock.fixed(Instant.parse("2025-01-01T00:00:00Z"), ZoneOffset.UTC)
 
         val todaySuccess = MealState.Success(
             WidgetMealList(
@@ -54,11 +51,16 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
                 dinner = listOf(listOf("cached-d")),
                 restaurant = restaurant,
             )
-            WidgetCacheManager.cacheMealData(restaurant, cached, "20250101")
+            WidgetCacheManager.cacheMealData(restaurant, cached, "20250101", fixedClock)
 
             then("useCase 호출 없이 캐시 데이터를 반환한다") {
                 runTest {
-                    WidgetDataDisplayManager.fetchMealInfo(useCase, MealTime.Morning, restaurant) shouldBe cached
+                    WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Morning,
+                        restaurant,
+                        fixedClock,
+                    ) shouldBe cached
                     coVerify(exactly = 0) { useCase(any(), any()) }
                 }
             }
@@ -70,14 +72,19 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
 
             then("오늘 식단을 반환하고 캐시에 저장한다") {
                 runTest {
-                    val result = WidgetDataDisplayManager.fetchMealInfo(useCase, MealTime.Lunch, restaurant)
+                    val result = WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Lunch,
+                        restaurant,
+                        fixedClock,
+                    )
                     result shouldBe WidgetMealInfo.Available(
                         breakfast = listOf(listOf("아침A")),
                         lunch = listOf(listOf("점심A")),
                         dinner = listOf(listOf("저녁A")),
                         restaurant = restaurant,
                     )
-                    WidgetCacheManager.getCachedMealData(restaurant, "20250101") shouldBe result
+                    WidgetCacheManager.getCachedMealData(restaurant, "20250101", fixedClock) shouldBe result
                 }
             }
         }
@@ -89,7 +96,12 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
 
             then("내일 식단 기반 결과를 반환한다") {
                 runTest {
-                    val result = WidgetDataDisplayManager.fetchMealInfo(useCase, MealTime.Dinner, restaurant)
+                    val result = WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Dinner,
+                        restaurant,
+                        fixedClock,
+                    )
                     result shouldBe WidgetMealInfo.Available(
                         breakfast = listOf(listOf("내일아침")),
                         lunch = listOf(listOf("내일점심")),
@@ -109,7 +121,12 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
 
             then("빈 리스트의 Available을 반환한다") {
                 runTest {
-                    WidgetDataDisplayManager.fetchMealInfo(useCase, MealTime.Morning, restaurant) shouldBe
+                    WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Morning,
+                        restaurant,
+                        fixedClock,
+                    ) shouldBe
                         WidgetMealInfo.Available(
                             breakfast = emptyList(),
                             lunch = emptyList(),
@@ -117,6 +134,29 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
                             restaurant = restaurant,
                         )
                 }
+            }
+        }
+    }
+
+    given("현재 시간 기반 식사 구간 계산") {
+        `when`("09시 이전이면") {
+            then("Morning을 반환한다") {
+                val clock = Clock.fixed(Instant.parse("2025-01-01T08:59:59Z"), ZoneOffset.UTC)
+                WidgetDataDisplayManager.getCurrentMealTime(clock) shouldBe MealTime.Morning
+            }
+        }
+
+        `when`("09시 이상 15시 미만이면") {
+            then("Lunch를 반환한다") {
+                val clock = Clock.fixed(Instant.parse("2025-01-01T14:59:59Z"), ZoneOffset.UTC)
+                WidgetDataDisplayManager.getCurrentMealTime(clock) shouldBe MealTime.Lunch
+            }
+        }
+
+        `when`("15시 이상이면") {
+            then("Dinner를 반환한다") {
+                val clock = Clock.fixed(Instant.parse("2025-01-01T15:00:00Z"), ZoneOffset.UTC)
+                WidgetDataDisplayManager.getCurrentMealTime(clock) shouldBe MealTime.Dinner
             }
         }
     }

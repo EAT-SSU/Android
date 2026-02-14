@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.util
 
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
+import java.time.Clock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -43,8 +44,8 @@ object CalendarUtil {
         return formatter.format(date)
     }
 
-    fun getNextDayDate(): String {
-        val nextDay = LocalDate.now().plusDays(1)
+    fun getNextDayDate(clock: Clock = Clock.systemDefaultZone()): String {
+        val nextDay = LocalDate.now(clock).plusDays(1)
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
         return nextDay.format(formatter)
     }
