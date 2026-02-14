@@ -210,7 +210,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
-        `when`("이미지 업로드 URL이 null이어도 리뷰 작성이 성공하면") {
+        `when`("이미지 업로드 URL이 null이면") {
             val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
@@ -225,13 +225,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             mockkObject(Compressor)
             coEvery { Compressor.compress(context, any()) } returns compressed
             coEvery { getImageUrlUseCase(compressed) } returns null
-            coEvery {
-                writeReviewUseCase(MenuType.FIXED, 1L, 4, "", null, any())
-            } returns true
-            mockkObject(EventLogger)
-            every { EventLogger.completeReview(any(), any(), any()) } just Runs
 
-            then("현재 동작대로 이미지 업로드 성공 토스트 후 리뷰 성공 흐름을 유지한다") {
+            then("업로드 실패 토스트를 보내고 Editing으로 롤백한다") {
                 runTest {
                     viewModel.loadMenuList(MenuType.FIXED, 1L, "돈가스")
                     advanceUntilIdle()
@@ -242,9 +237,9 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, context)
                         advanceUntilIdle()
 
-                        expectToast(R.string.toast_image_upload_success, ToastType.SUCCESS)
-                        expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
-                        expectNavigateBack()
+                        expectToast(R.string.toast_image_upload_failed, ToastType.ERROR)
+                        viewModel.uiState.value.successDataAs<WriteReviewState.Editing>()
+                        coVerify(exactly = 0) { writeReviewUseCase(any(), any(), any(), any(), any(), any()) }
                         cancelAndIgnoreRemainingEvents()
                     }
                 }

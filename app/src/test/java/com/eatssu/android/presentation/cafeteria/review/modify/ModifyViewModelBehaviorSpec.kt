@@ -95,17 +95,25 @@ class ModifyViewModelBehaviorSpec : AppBehaviorSpec({
             viewModel.onContentChanged("new")
             coEvery { useCase2(11L, 4, "new", any()) } returns false
 
-            then("현재 동작(characterization): 실패 토스트 후에도 뒤로가기+성공 토스트를 보낸다") {
+            then("실패 토스트만 보내고 Editing 상태로 되돌린다") {
                 runTest {
                     viewModel.uiEvent.test {
                         viewModel.submit(11L)
                         advanceUntilIdle()
 
                         awaitToastEvent().assertToast(R.string.toast_review_modify_failed, ToastType.ERROR)
-                        awaitItem() shouldBe UiEvent.NavigateBack
-                        awaitToastEvent().assertToast(R.string.toast_review_modify_success, ToastType.SUCCESS)
+                        expectNoEvents()
                         cancelAndIgnoreRemainingEvents()
                     }
+
+                    viewModel.uiState.value shouldBe UiState.Success(
+                        ModifyState.Editing(
+                            rating = 4,
+                            content = "new",
+                            menuLikeInfos = likes,
+                            baseline = ModifyState.Baseline(4, "old", likes),
+                        )
+                    )
                 }
             }
         }

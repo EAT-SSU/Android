@@ -561,7 +561,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
                 userRepository = userRepository,
             )
 
-            then("현재 동작대로 Loading 상태에서 조기 종료된다") {
+            then("학과 선택 안내 토스트를 보내고 Success 상태를 유지한다") {
                 runTest {
                     eventually(2.seconds) {
                         (viewModel.uiState.value is UiState.Success) shouldBe true
@@ -574,11 +574,13 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.saveUserInfo()
                         advanceUntilIdle()
 
-                        expectNoEvents()
+                        expectToast(R.string.toast_department_required, ToastType.ERROR)
                         cancelAndIgnoreRemainingEvents()
                     }
 
-                    viewModel.uiState.value shouldBe UiState.Loading
+                    val state = viewModel.uiState.value as UiState.Success
+                    state.data.selectedCollege shouldBe otherCollege
+                    state.data.selectedDepartment shouldBe null
                     coVerify(exactly = 0) { userRepository.setUserDepartment(any()) }
                 }
             }

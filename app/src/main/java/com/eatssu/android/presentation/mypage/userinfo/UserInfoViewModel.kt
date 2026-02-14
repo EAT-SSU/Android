@@ -198,10 +198,30 @@ class UserInfoViewModel @Inject constructor(
     fun saveUserInfo() {
         viewModelScope.launch {
             val currentState = _uiState.value as? UiState.Success ?: return@launch
+            val data = currentState.data
+
+            if ((data.isCollegeChanged || data.isDepartmentChanged) && data.selectedDepartment == null) {
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_department_required),
+                        ToastType.ERROR
+                    )
+                )
+                return@launch
+            }
+
+            if ((data.isCollegeChanged || data.isDepartmentChanged) && data.selectedCollege == null) {
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_college_required),
+                        ToastType.ERROR
+                    )
+                )
+                return@launch
+            }
 
             _uiState.update { UiState.Loading }
 
-            val data = currentState.data
             var nicknameUpdated = false
             var departmentUpdated = false
 
@@ -223,8 +243,29 @@ class UserInfoViewModel @Inject constructor(
 
             // 학과/단과대 변경이 있는 경우
             if (data.isCollegeChanged || data.isDepartmentChanged) {
-                val department = data.selectedDepartment ?: return@launch
-                val college = data.selectedCollege ?: return@launch
+                val department = data.selectedDepartment
+                if (department == null) {
+                    _uiState.value = UiState.Success(data)
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            UiText.StringResource(R.string.toast_department_required),
+                            ToastType.ERROR
+                        )
+                    )
+                    return@launch
+                }
+
+                val college = data.selectedCollege
+                if (college == null) {
+                    _uiState.value = UiState.Success(data)
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            UiText.StringResource(R.string.toast_college_required),
+                            ToastType.ERROR
+                        )
+                    )
+                    return@launch
+                }
 
                 val success = userRepository.setUserDepartment(department.departmentId)
                 if (!success) {
@@ -305,4 +346,3 @@ data class UserInfoData(
             }
         }
 }
-
