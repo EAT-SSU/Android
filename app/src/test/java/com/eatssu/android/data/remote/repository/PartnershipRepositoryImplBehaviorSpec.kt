@@ -53,6 +53,16 @@ class PartnershipRepositoryImplBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("전체 제휴 조회 API가 실패하면") {
+            coEvery { partnershipService.getAllPartnerships() } returns ApiResult.Failure(500, "err")
+
+            then("빈 리스트를 반환한다") {
+                runTest {
+                    repository.getAllPartnerships() shouldBe emptyList()
+                }
+            }
+        }
+
         `when`("개별 제휴 조회 API가 성공하면") {
             val response = PartnershipRestaurantResponse(
                 id = 1,
@@ -78,6 +88,16 @@ class PartnershipRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     result?.storeName shouldBe "Cafe A"
                     result?.description shouldBe "10% 할인"
                     result?.collegeName shouldBe "IT"
+                }
+            }
+        }
+
+        `when`("개별 제휴 조회 API가 실패하면") {
+            coEvery { partnershipService.getPartnershipById(1) } returns ApiResult.UnknownError(IllegalStateException("boom"))
+
+            then("null을 반환한다") {
+                runTest {
+                    repository.getPartnershipById(1) shouldBe null
                 }
             }
         }

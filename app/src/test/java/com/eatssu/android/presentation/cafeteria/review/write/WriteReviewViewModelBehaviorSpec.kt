@@ -10,10 +10,10 @@ import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
 import com.eatssu.android.test.AppBehaviorSpec
-import com.eatssu.android.test.assertToast
-import com.eatssu.android.test.awaitToastEvent
+import com.eatssu.android.test.expectNavigateBack
+import com.eatssu.android.test.expectToast
+import com.eatssu.android.test.successDataAs
 import com.eatssu.common.EventLogger
-import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
@@ -101,6 +101,39 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("Editing 상태가 아닐 때 submit하면") {
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+
+            then("아무 동작도 수행하지 않는다") {
+                runTest {
+                    viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
+                    advanceUntilIdle()
+
+                    viewModel.uiState.value shouldBe UiState.Init
+                    coVerify(exactly = 0) {
+                        writeReviewUseCase(any(), any(), any(), any(), any(), any())
+                    }
+                }
+            }
+        }
+
+        `when`("좋아요 메뉴를 같은 id로 두 번 토글하면") {
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+
+            then("likedMenuIds가 추가됐다가 다시 제거된다") {
+                runTest {
+                    viewModel.loadMenuList(MenuType.FIXED, 1L, "돈가스")
+                    advanceUntilIdle()
+
+                    viewModel.toggleLike(101L)
+                    viewModel.uiState.value.successDataAs<WriteReviewState.Editing>().likedMenuIds shouldBe setOf(101L)
+
+                    viewModel.toggleLike(101L)
+                    viewModel.uiState.value.successDataAs<WriteReviewState.Editing>().likedMenuIds shouldBe emptySet()
+                }
+            }
+        }
+
         `when`("이미지 없이 리뷰 작성이 성공하면") {
             val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
             coEvery {
@@ -127,8 +160,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
                         advanceUntilIdle()
 
-                        awaitToastEvent().assertToast(R.string.toast_review_write_success, ToastType.SUCCESS)
-                        awaitItem() shouldBe UiEvent.NavigateBack
+                        expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
+                        expectNavigateBack()
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -168,9 +201,50 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, context)
                         advanceUntilIdle()
 
-                        awaitToastEvent().assertToast(R.string.toast_image_upload_success, ToastType.SUCCESS)
-                        awaitToastEvent().assertToast(R.string.toast_review_write_success, ToastType.SUCCESS)
-                        awaitItem() shouldBe UiEvent.NavigateBack
+                        expectToast(R.string.toast_image_upload_success, ToastType.SUCCESS)
+                        expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
+                        expectNavigateBack()
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+        `when`("이미지 업로드 URL이 null이어도 리뷰 작성이 성공하면") {
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val context = mockk<Context>()
+            val resolver = mockk<ContentResolver>()
+            val uri = mockk<Uri>()
+            val cacheDir = createTempDir(prefix = "write-review-null-url")
+            val compressed = File(cacheDir, "compressed.jpg").apply { writeBytes(byteArrayOf(1, 2, 3)) }
+
+            every { context.contentResolver } returns resolver
+            every { context.cacheDir } returns cacheDir
+            every { resolver.openInputStream(uri) } returns ByteArrayInputStream(byteArrayOf(1, 2, 3))
+
+            mockkObject(Compressor)
+            coEvery { Compressor.compress(context, any()) } returns compressed
+            coEvery { getImageUrlUseCase(compressed) } returns null
+            coEvery {
+                writeReviewUseCase(MenuType.FIXED, 1L, 4, "", null, any())
+            } returns true
+            mockkObject(EventLogger)
+            every { EventLogger.completeReview(any(), any(), any()) } just Runs
+
+            then("현재 동작대로 이미지 업로드 성공 토스트 후 리뷰 성공 흐름을 유지한다") {
+                runTest {
+                    viewModel.loadMenuList(MenuType.FIXED, 1L, "돈가스")
+                    advanceUntilIdle()
+                    viewModel.onRatingChanged(4)
+                    viewModel.setSelectedImage(uri)
+
+                    viewModel.uiEvent.test {
+                        viewModel.postReview(MenuType.FIXED, 1L, context)
+                        advanceUntilIdle()
+
+                        expectToast(R.string.toast_image_upload_success, ToastType.SUCCESS)
+                        expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
+                        expectNavigateBack()
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -202,8 +276,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, context)
                         advanceUntilIdle()
 
-                        awaitToastEvent().assertToast(R.string.toast_image_compress_failed, ToastType.ERROR)
-                        (viewModel.uiState.value as UiState.Success).data::class shouldBe WriteReviewState.Editing::class
+                        expectToast(R.string.toast_image_compress_failed, ToastType.ERROR)
+                        viewModel.uiState.value.successDataAs<WriteReviewState.Editing>()
                         coVerify(exactly = 0) { writeReviewUseCase(any(), any(), any(), any(), any(), any()) }
                         cancelAndIgnoreRemainingEvents()
                     }
@@ -231,7 +305,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, context)
                         advanceUntilIdle()
 
-                        awaitToastEvent().assertToast(R.string.toast_image_upload_failed, ToastType.ERROR)
+                        expectToast(R.string.toast_image_upload_failed, ToastType.ERROR)
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -252,8 +326,8 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
                         advanceUntilIdle()
 
-                        (viewModel.uiState.value as UiState.Success).data::class shouldBe WriteReviewState.Editing::class
-                        awaitToastEvent().assertToast(R.string.toast_review_write_failed, ToastType.ERROR)
+                        viewModel.uiState.value.successDataAs<WriteReviewState.Editing>()
+                        expectToast(R.string.toast_review_write_failed, ToastType.ERROR)
                         cancelAndIgnoreRemainingEvents()
                     }
                 }

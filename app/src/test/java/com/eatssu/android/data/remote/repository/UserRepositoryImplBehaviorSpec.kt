@@ -46,6 +46,34 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("닉네임 변경이 Failure지만 메시지가 없으면") {
+            coEvery {
+                userService.changeNickname(ChangeNicknameRequest("new"))
+            } returns ApiResult.Failure(400, null)
+
+            then("기본 실패 메시지를 반환한다") {
+                runTest {
+                    val result = repository.updateUserName(ChangeNicknameRequest("new"))
+                    result.isFailure shouldBe true
+                    result.exceptionOrNull()?.message shouldBe "닉네임 변경에 실패했어요."
+                }
+            }
+        }
+
+        `when`("닉네임 변경이 UnknownError면") {
+            coEvery {
+                userService.changeNickname(ChangeNicknameRequest("new"))
+            } returns ApiResult.UnknownError(IllegalStateException("boom"))
+
+            then("기본 실패 메시지를 반환한다") {
+                runTest {
+                    val result = repository.updateUserName(ChangeNicknameRequest("new"))
+                    result.isFailure shouldBe true
+                    result.exceptionOrNull()?.message shouldBe "닉네임 변경에 실패했어요."
+                }
+            }
+        }
+
         `when`("닉네임 중복검사에서 true를 받으면") {
             coEvery { userService.checkNickname("ok") } returns ApiResult.Success(true)
 
@@ -64,6 +92,30 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     val result = repository.checkUserNameValidation("dup")
                     result.isFailure shouldBe true
                     result.exceptionOrNull()?.message shouldBe "이미 사용 중인 닉네임이에요."
+                }
+            }
+        }
+
+        `when`("닉네임 중복검사가 Failure이고 메시지가 없으면") {
+            coEvery { userService.checkNickname("bad") } returns ApiResult.Failure(400, null)
+
+            then("기본 검증 실패 메시지를 반환한다") {
+                runTest {
+                    val result = repository.checkUserNameValidation("bad")
+                    result.isFailure shouldBe true
+                    result.exceptionOrNull()?.message shouldBe "올바르지 않은 닉네임이에요."
+                }
+            }
+        }
+
+        `when`("닉네임 중복검사가 UnknownError면") {
+            coEvery { userService.checkNickname("bad") } returns ApiResult.UnknownError(IllegalStateException("boom"))
+
+            then("기본 검증 실패 메시지를 반환한다") {
+                runTest {
+                    val result = repository.checkUserNameValidation("bad")
+                    result.isFailure shouldBe true
+                    result.exceptionOrNull()?.message shouldBe "올바르지 않은 닉네임이에요."
                 }
             }
         }
@@ -154,6 +206,16 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("회원 탈퇴 요청이 성공하면") {
+            coEvery { userService.signOut() } returns ApiResult.Success(true)
+
+            then("true를 반환한다") {
+                runTest {
+                    repository.signOut() shouldBe true
+                }
+            }
+        }
+
         `when`("내 닉네임 조회가 성공하지만 nickname이 null이면") {
             coEvery { userService.getMyInfo() } returns ApiResult.Success(
                 MyNickNameResponse(nickname = null, provider = "KAKAO")
@@ -162,6 +224,28 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
             then("빈 문자열을 반환한다") {
                 runTest {
                     repository.getUserNickName() shouldBe ""
+                }
+            }
+        }
+
+        `when`("단과대/학과 목록 조회 API가 실패하면") {
+            coEvery { userService.getCollegeList() } returns ApiResult.Failure(500, "err")
+            coEvery { userService.getDepartmentsByCollege(1) } returns ApiResult.UnknownError(IllegalStateException("boom"))
+
+            then("둘 다 빈 리스트를 반환한다") {
+                runTest {
+                    repository.getTotalColleges() shouldBe emptyList()
+                    repository.getTotalDepartments(1) shouldBe emptyList()
+                }
+            }
+        }
+
+        `when`("유저 단과대/학과 조회 API가 실패하면") {
+            coEvery { userService.getUserCollegeDepartment() } returns ApiResult.Failure(404, "not found")
+
+            then("null을 반환한다") {
+                runTest {
+                    repository.getUserCollegeDepartment() shouldBe null
                 }
             }
         }

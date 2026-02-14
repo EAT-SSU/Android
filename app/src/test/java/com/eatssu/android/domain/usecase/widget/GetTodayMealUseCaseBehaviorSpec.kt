@@ -11,6 +11,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import java.net.UnknownHostException
+import java.nio.channels.UnresolvedAddressException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GetTodayMealUseCaseBehaviorSpec : AppBehaviorSpec({
@@ -46,6 +47,18 @@ class GetTodayMealUseCaseBehaviorSpec : AppBehaviorSpec({
             coEvery {
                 mealRepository.getTodayMeal("2025-01-01", "HAKSIK", Time.MORNING.name)
             } throws UnknownHostException("offline")
+
+            then("MealState.Failure를 반환한다") {
+                runTest {
+                    useCase("2025-01-01", "HAKSIK") shouldBe MealState.Failure
+                }
+            }
+        }
+
+        `when`("네트워크 주소 미해결 예외가 발생하면") {
+            coEvery {
+                mealRepository.getTodayMeal("2025-01-01", "HAKSIK", Time.MORNING.name)
+            } throws UnresolvedAddressException()
 
             then("MealState.Failure를 반환한다") {
                 runTest {

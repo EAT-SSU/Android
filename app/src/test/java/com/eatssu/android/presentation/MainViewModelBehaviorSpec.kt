@@ -10,8 +10,7 @@ import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.test.AppBehaviorSpec
-import com.eatssu.android.test.assertToast
-import com.eatssu.android.test.awaitToastEvent
+import com.eatssu.android.test.expectToast
 import com.eatssu.android.test.sampleUserInfo
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ToastType
@@ -21,6 +20,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Duration.Companion.seconds
 
@@ -69,6 +70,69 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("저장된 학과 정보가 없는 유저로 초기화되면") {
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = -1, collegeName = "단과대"),
+                department = Department(departmentId = -1, departmentName = "학과"),
+            )
+            coEvery { getUserNickNameUseCase() } coAnswers {
+                delay(10_000)
+                "eatssu"
+            }
+            coEvery { userRepository.getUserCollegeDepartment() } coAnswers {
+                delay(1_000)
+                null
+            }
+
+            then("not found 토스트를 내보낸다") {
+                runTest {
+                    val viewModel = MainViewModel(
+                        logoutUseCase = logoutUseCase,
+                        getUserNickNameUseCase = getUserNickNameUseCase,
+                        setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                        userRepository = userRepository,
+                        getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                    )
+
+                    viewModel.uiEvent.test {
+                        advanceUntilIdle()
+                        expectToast(R.string.not_found, ToastType.ERROR)
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+        `when`("닉네임이 비어있는 유저로 초기화되면") {
+            coEvery { getUserCollegeDepartmentUseCase() } returns userInfo
+            coEvery { userRepository.getUserCollegeDepartment() } returns (college to department)
+            coEvery { getUserNickNameUseCase() } coAnswers {
+                delay(1_000)
+                " "
+            }
+
+            then("닉네임 설정 안내 토스트를 내보낸다") {
+                runTest {
+                    val viewModel = MainViewModel(
+                        logoutUseCase = logoutUseCase,
+                        getUserNickNameUseCase = getUserNickNameUseCase,
+                        setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                        userRepository = userRepository,
+                        getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                    )
+
+                    viewModel.uiEvent.test {
+                        advanceUntilIdle()
+                        expectToast(R.string.set_nickname, ToastType.ERROR)
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
         `when`("로그아웃을 수행하면") {
             val viewModel = MainViewModel(
                 logoutUseCase = logoutUseCase,
@@ -83,7 +147,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.uiEvent.test {
                         viewModel.logOut()
 
-                        awaitToastEvent().assertToast(R.string.toast_logout_success, ToastType.SUCCESS)
+                        expectToast(R.string.toast_logout_success, ToastType.SUCCESS)
                         eventually(2.seconds) {
                             coVerify { logoutUseCase() }
                             viewModel.uiState.value shouldBe UiState.Success(MainState.LoggedOut)

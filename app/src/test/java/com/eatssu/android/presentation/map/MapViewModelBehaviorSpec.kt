@@ -27,6 +27,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Duration.Companion.seconds
 
@@ -223,6 +224,188 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                         state.data.placeType shouldBe PlaceType.PUB
                         state.data.restaurantInfoList.size shouldBe 2
                         state.data.restaurantInfoList[1].period shouldBe "2025-02-01 ~ 2025-11-30"
+                    }
+                }
+            }
+        }
+
+        `when`("초기 상태가 Init일 때 Mine 필터를 선택하면") {
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } coAnswers {
+                delay(10_000)
+                sampleUserInfo(
+                    nickname = "eatssu",
+                    college = College(collegeId = -1, collegeName = "단과대"),
+                    department = Department(departmentId = -1, departmentName = "학과"),
+                )
+            }
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+            )
+
+            then("상태를 변경하지 않고 반환한다") {
+                viewModel.setFilter(FilterType.Mine)
+                viewModel.uiState.value shouldBe UiState.Init
+                coVerify(exactly = 0) { partnershipRepository.getUserCollegePartnerships() }
+            }
+        }
+
+        `when`("제휴 목록에 없는 가게를 선택하면") {
+            val partnerships = listOf(samplePartnership(storeName = "Cafe A"))
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
+            )
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns partnerships
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+            )
+
+            then("선택 상태를 갱신하지 않는다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
+                    }
+
+                    viewModel.selectPartnershipByStoreName("Unknown")
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.restaurantPartnershipInfo shouldBe null
+                        state.data.restaurantInfoList shouldBe emptyList()
+                    }
+                }
+            }
+        }
+
+        `when`("제휴 상세에서 representative를 찾지 못하면") {
+            val partnerships = listOf(
+                samplePartnership(
+                    storeName = "Cafe A",
+                    infos = listOf(
+                        Partnership.PartnershipInfo(
+                            id = 1,
+                            partnershipType = "DISCOUNT",
+                            collegeName = "IT",
+                            departmentName = "CS",
+                            likeCount = 1,
+                            isLiked = true,
+                            description = "할인",
+                            startDate = "2025-01-01",
+                            endDate = "2025-12-31",
+                        )
+                    ),
+                )
+            )
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
+            )
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns partnerships
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+            every { getPartnershipDetailUseCase(partnerships, "Cafe A", 1) } returns null
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+            )
+
+            then("선택 상태를 갱신하지 않는다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
+                    }
+
+                    viewModel.selectPartnershipByStoreName("Cafe A")
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.restaurantPartnershipInfo shouldBe null
+                    }
+                }
+            }
+        }
+
+        `when`("대표 제휴 타입이 CAFE면") {
+            val partnerships = listOf(samplePartnership(storeName = "Cafe C", type = RestaurantType.CAFE))
+            val representative = samplePartnershipRestaurant(type = RestaurantType.CAFE)
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
+            )
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns partnerships
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+            every { getPartnershipDetailUseCase(partnerships, "Cafe C", 1) } returns representative
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+            )
+
+            then("PlaceType.CAFE로 변환한다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
+                    }
+                    viewModel.selectPartnershipByStoreName("Cafe C")
+
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.placeType shouldBe PlaceType.CAFE
+                    }
+                }
+            }
+        }
+
+        `when`("대표 제휴 타입이 RESTAURANT면") {
+            val partnerships = listOf(samplePartnership(storeName = "Restaurant A", type = RestaurantType.RESTAURANT))
+            val representative = samplePartnershipRestaurant(type = RestaurantType.RESTAURANT)
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
+            )
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns partnerships
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+            every { getPartnershipDetailUseCase(partnerships, "Restaurant A", 1) } returns representative
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+            )
+
+            then("PlaceType.RESTAURANT로 변환한다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
+                    }
+                    viewModel.selectPartnershipByStoreName("Restaurant A")
+
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.placeType shouldBe PlaceType.RESTAURANT
                     }
                 }
             }

@@ -12,9 +12,8 @@ import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.android.test.AppBehaviorSpec
-import com.eatssu.android.test.assertToast
 import com.eatssu.android.test.asStringResIdOrNull
-import com.eatssu.android.test.awaitToastEvent
+import com.eatssu.android.test.expectToast
 import com.eatssu.android.test.sampleUserInfo
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
@@ -210,7 +209,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
 
                     viewModel.uiEvent.test {
                         viewModel.saveUserInfo()
-                        awaitToastEvent().assertToast(R.string.toast_no_changes, ToastType.INFO)
+                        expectToast(R.string.toast_no_changes, ToastType.INFO)
 
                         eventually(2.seconds) {
                             val state = viewModel.uiState.value as UiState.Success
@@ -260,7 +259,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.onNicknameChanged("newNick")
                     viewModel.uiEvent.test {
                         viewModel.saveUserInfo()
-                        awaitToastEvent().assertToast(R.string.toast_nickname_change_failed, ToastType.ERROR)
+                        expectToast(R.string.toast_nickname_change_failed, ToastType.ERROR)
                         eventually(2.seconds) {
                             viewModel.uiState.value shouldBe UiState.Error
                         }
@@ -325,7 +324,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
 
                     viewModel.uiEvent.test {
                         viewModel.saveUserInfo()
-                        awaitToastEvent().assertToast(R.string.toast_info_updated, ToastType.INFO)
+                        expectToast(R.string.toast_info_updated, ToastType.INFO)
 
                         eventually(2.seconds) {
                             val state = viewModel.uiState.value as UiState.Success
@@ -335,6 +334,281 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
+            }
+        }
+
+        `when`("닉네임 중복확인이 성공하면") {
+            val setUserNicknameUseCase = mockk<SetUserNicknameUseCase>()
+            val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+            val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
+            val validateNicknameServerUseCase = mockk<ValidateNicknameServerUseCase>()
+            val validateNicknameLocalUseCase = mockk<ValidateNicknameLocalUseCase>()
+            val userRepository = mockk<UserRepository>()
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "oldNick",
+                college = baseCollege,
+                department = baseDepartment,
+            )
+            coEvery { userRepository.getTotalColleges() } returns listOf(baseCollege)
+            coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
+            every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
+            coEvery { validateNicknameServerUseCase("newNick") } returns Result.success(Unit)
+
+            val viewModel = UserInfoViewModel(
+                setUserNicknameUseCase = setUserNicknameUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                validateNicknameServerUseCase = validateNicknameServerUseCase,
+                validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+                userRepository = userRepository,
+            )
+
+            then("중복확인 완료 상태가 true가 된다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value is UiState.Success) shouldBe true
+                    }
+
+                    viewModel.onNicknameChanged("newNick")
+                    viewModel.checkNicknameDuplication()
+
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.isDuplicationChecked shouldBe true
+                        state.data.nicknameValidationError shouldBe null
+                    }
+                }
+            }
+        }
+
+        `when`("닉네임 중복확인 실패 메시지가 null이면") {
+            val setUserNicknameUseCase = mockk<SetUserNicknameUseCase>()
+            val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+            val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
+            val validateNicknameServerUseCase = mockk<ValidateNicknameServerUseCase>()
+            val validateNicknameLocalUseCase = mockk<ValidateNicknameLocalUseCase>()
+            val userRepository = mockk<UserRepository>()
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "oldNick",
+                college = baseCollege,
+                department = baseDepartment,
+            )
+            coEvery { userRepository.getTotalColleges() } returns listOf(baseCollege)
+            coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
+            every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
+            coEvery { validateNicknameServerUseCase("newNick") } returns Result.failure(IllegalStateException())
+
+            val viewModel = UserInfoViewModel(
+                setUserNicknameUseCase = setUserNicknameUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                validateNicknameServerUseCase = validateNicknameServerUseCase,
+                validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+                userRepository = userRepository,
+            )
+
+            then("기본 닉네임 오류 리소스를 사용한다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value is UiState.Success) shouldBe true
+                    }
+
+                    viewModel.onNicknameChanged("newNick")
+                    viewModel.checkNicknameDuplication()
+
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.nicknameValidationError.asStringResIdOrNull() shouldBe R.string.nickname_error_invalid
+                    }
+                }
+            }
+        }
+
+        `when`("닉네임만 바꿔 저장하면") {
+            val setUserNicknameUseCase = mockk<SetUserNicknameUseCase>()
+            val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+            val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
+            val validateNicknameServerUseCase = mockk<ValidateNicknameServerUseCase>()
+            val validateNicknameLocalUseCase = mockk<ValidateNicknameLocalUseCase>()
+            val userRepository = mockk<UserRepository>()
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "oldNick",
+                college = baseCollege,
+                department = baseDepartment,
+            )
+            coEvery { userRepository.getTotalColleges() } returns listOf(baseCollege)
+            coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
+            every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
+            coEvery { validateNicknameServerUseCase("newNick") } returns Result.success(Unit)
+            coEvery { setUserNicknameUseCase("newNick") } returns Result.success(Unit)
+
+            val viewModel = UserInfoViewModel(
+                setUserNicknameUseCase = setUserNicknameUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                validateNicknameServerUseCase = validateNicknameServerUseCase,
+                validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+                userRepository = userRepository,
+            )
+
+            then("닉네임 수정 토스트를 보낸다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value is UiState.Success) shouldBe true
+                    }
+
+                    viewModel.onNicknameChanged("newNick")
+                    viewModel.checkNicknameDuplication()
+
+                    viewModel.uiEvent.test {
+                        viewModel.saveUserInfo()
+                        expectToast(R.string.toast_nickname_changed, ToastType.INFO)
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+        `when`("학과만 바꿔 저장하면") {
+            val setUserNicknameUseCase = mockk<SetUserNicknameUseCase>()
+            val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+            val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
+            val validateNicknameServerUseCase = mockk<ValidateNicknameServerUseCase>()
+            val validateNicknameLocalUseCase = mockk<ValidateNicknameLocalUseCase>()
+            val userRepository = mockk<UserRepository>()
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "oldNick",
+                college = baseCollege,
+                department = baseDepartment,
+            )
+            coEvery { userRepository.getTotalColleges() } returns listOf(baseCollege, otherCollege)
+            coEvery { userRepository.getTotalDepartments(otherCollege.collegeId) } returns listOf(otherDepartment)
+            coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
+            every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
+            coEvery { userRepository.setUserDepartment(otherDepartment.departmentId) } returns true
+            coEvery { setUserCollegeDepartmentUseCase(otherCollege, otherDepartment) } returns Unit
+
+            val viewModel = UserInfoViewModel(
+                setUserNicknameUseCase = setUserNicknameUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                validateNicknameServerUseCase = validateNicknameServerUseCase,
+                validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+                userRepository = userRepository,
+            )
+
+            then("학과 수정 토스트를 보낸다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value is UiState.Success) shouldBe true
+                    }
+
+                    viewModel.selectCollege(otherCollege)
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.departmentList shouldBe listOf(otherDepartment)
+                    }
+                    viewModel.selectDepartment(otherDepartment)
+
+                    viewModel.uiEvent.test {
+                        viewModel.saveUserInfo()
+                        expectToast(R.string.toast_department_updated, ToastType.INFO)
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+    }
+
+    given("UserInfoData 버튼 활성화 규칙") {
+        val baseCollege = College(collegeId = 1, collegeName = "IT")
+        val baseDepartment = Department(departmentId = 11, departmentName = "컴퓨터학부")
+
+        `when`("닉네임이 변경됐고 로컬 검증 오류가 없으며 중복확인을 안 했으면") {
+            then("중복확인 버튼이 활성화된다") {
+                UserInfoData(
+                    nickname = "new",
+                    originalNickname = "old",
+                    isNicknameChanged = true,
+                    nicknameValidationError = null,
+                    isDuplicationChecked = false,
+                ).canCheckDuplication shouldBe true
+            }
+        }
+
+        `when`("닉네임 변경 + 중복확인 완료 + 검증 오류 없음이면") {
+            then("저장 버튼이 활성화된다") {
+                UserInfoData(
+                    nickname = "new",
+                    originalNickname = "old",
+                    isNicknameChanged = true,
+                    nicknameValidationError = null,
+                    isDuplicationChecked = true,
+                ).canSave shouldBe true
+            }
+        }
+
+        `when`("닉네임 변경이 있지만 중복확인을 하지 않았으면") {
+            then("저장 버튼이 비활성화된다") {
+                UserInfoData(
+                    nickname = "new",
+                    originalNickname = "old",
+                    isNicknameChanged = true,
+                    nicknameValidationError = null,
+                    isDuplicationChecked = false,
+                ).canSave shouldBe false
+            }
+        }
+
+        `when`("학과/단과대만 변경됐고 학과가 선택되어 있으면") {
+            then("저장 버튼이 활성화된다") {
+                UserInfoData(
+                    selectedCollege = baseCollege,
+                    originalCollege = baseCollege,
+                    isCollegeChanged = true,
+                    selectedDepartment = baseDepartment,
+                    originalDepartment = baseDepartment,
+                    isDepartmentChanged = false,
+                ).canSave shouldBe true
+            }
+        }
+
+        `when`("학과/단과대만 변경됐지만 학과가 비어있으면") {
+            then("저장 버튼이 비활성화된다") {
+                UserInfoData(
+                    selectedCollege = baseCollege,
+                    originalCollege = baseCollege,
+                    isCollegeChanged = true,
+                    selectedDepartment = null,
+                    originalDepartment = baseDepartment,
+                ).canSave shouldBe false
+            }
+        }
+
+        `when`("변경사항이 전혀 없으면") {
+            then("중복확인/저장 버튼 모두 비활성화된다") {
+                val data = UserInfoData(
+                    nickname = "same",
+                    originalNickname = "same",
+                    isNicknameChanged = false,
+                    nicknameValidationError = null,
+                    isDuplicationChecked = false,
+                )
+
+                data.canCheckDuplication shouldBe false
+                data.canSave shouldBe false
             }
         }
     }

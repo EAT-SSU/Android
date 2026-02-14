@@ -7,8 +7,7 @@ import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
 import com.eatssu.android.test.AppBehaviorSpec
-import com.eatssu.android.test.assertToast
-import com.eatssu.android.test.awaitToastEvent
+import com.eatssu.android.test.expectToast
 import com.eatssu.android.test.sampleReviewInfo
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
@@ -59,7 +58,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                         advanceUntilIdle()
 
                         viewModel.uiState.value shouldBe UiState.Error
-                        awaitToastEvent().assertToast(R.string.toast_review_load_failed, ToastType.ERROR)
+                        expectToast(R.string.toast_review_load_failed, ToastType.ERROR)
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -76,7 +75,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                         viewModel.deleteReview(55L)
                         advanceUntilIdle()
 
-                        awaitToastEvent().assertToast(R.string.toast_review_delete_failed, ToastType.ERROR)
+                        expectToast(R.string.toast_review_delete_failed, ToastType.ERROR)
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -99,6 +98,24 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
 
                         awaitItem() shouldBe ReviewListEvent.ReviewDeleted
                         coVerify(atLeast = 2) { getReviewInfoUseCase(MenuType.FIXED, 300L) }
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+        `when`("조회 파라미터 없이 리뷰 삭제가 성공하면") {
+            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            coEvery { deleteReviewUseCase(77L) } returns true
+
+            then("ReviewDeleted 이벤트만 발생하고 정보 재조회는 하지 않는다") {
+                runTest {
+                    viewModel.uiEvent.test {
+                        viewModel.deleteReview(77L)
+                        advanceUntilIdle()
+
+                        awaitItem() shouldBe ReviewListEvent.ReviewDeleted
+                        coVerify(exactly = 0) { getReviewInfoUseCase(any(), any()) }
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
