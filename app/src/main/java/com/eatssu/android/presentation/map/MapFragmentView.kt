@@ -3,13 +3,11 @@
 package com.eatssu.android.presentation.map
 
 import android.Manifest
-import android.R.id.message
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -47,7 +45,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -64,6 +61,7 @@ import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.ScreenshotTestSeam
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
@@ -102,6 +100,7 @@ fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel()
 ) {
+    val deterministicMode = ScreenshotTestSeam.isEnabled
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     // UiState에서 Success 상태인 실제 MapState 데이터만 추출
@@ -115,7 +114,6 @@ fun MapRoute(
     val partnershipSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
     val activity = remember(context) { context.findActivityOrNull() }
-        ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
     val scope = rememberCoroutineScope()
 
     val departmentId by viewModel.departmentId.collectAsStateWithLifecycle()
@@ -129,8 +127,9 @@ fun MapRoute(
     }
 
     // 위치 추적을 위한 locationSource 생성
-    val locationSource = remember {
-        FusedLocationSource(activity, PERMISSION_REQUEST_CODE)
+    val locationSource = remember(activity, deterministicMode) {
+        if (deterministicMode || activity == null) null
+        else FusedLocationSource(activity, PERMISSION_REQUEST_CODE)
     }
 
     // 위치 권한 요청 런처
@@ -158,28 +157,32 @@ fun MapRoute(
         else -> "학과" to false
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEvent.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowToast -> context.showToast(event)
+    if (!deterministicMode) {
+        LaunchedEffect(Unit) {
+            viewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    is UiEvent.ShowToast -> context.showToast(event)
+                }
             }
         }
     }
 
     // 최초 실행 시 위치 권한 요청
-    LaunchedEffect(Unit) {
-        val fine =
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-        val coarse =
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+    if (!deterministicMode) {
+        LaunchedEffect(Unit) {
+            val fine =
+                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            val coarse =
+                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
 
-        if (fine != PackageManager.PERMISSION_GRANTED || coarse != PackageManager.PERMISSION_GRANTED) {
-            permissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+            if (fine != PackageManager.PERMISSION_GRANTED || coarse != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -213,23 +216,24 @@ fun MapRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     // onResume 시마다 학과 정보 반영
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                Timber.d("MapFragmentComposeView: onResume -> 학과 정보 갱신")
-                mainViewModel.refreshUserDepartment()
+    if (!deterministicMode) {
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    Timber.d("MapFragmentComposeView: onResume -> 학과 정보 갱신")
+                    mainViewModel.refreshUserDepartment()
+                }
             }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
+            lifecycleOwner.lifecycle.addObserver(observer)
 
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
         }
     }
 
     MapScreen(
         mapState = mapState,
-        viewModel = viewModel,
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
         departmentSheetState = departmentSheetState,
@@ -261,6 +265,9 @@ fun MapRoute(
                 )
             }
         },
+        onSelectPartnershipByStoreName = { storeName, partnershipId ->
+            viewModel.selectPartnershipByStoreName(storeName, partnershipId)
+        },
         onSelectedFilterChange = { filter ->
             viewModel.setFilter(filter)
         },
@@ -268,15 +275,16 @@ fun MapRoute(
         collegeId = collegeId,
         departmentName = departmentName,
         selectedFilter = mapState.selectedFilter,
+        useDeterministicRenderer = deterministicMode,
+        deterministicStateLabel = "success",
     )
 }
 
 @Composable
 internal fun MapScreen(
     mapState: MapState,
-    viewModel: MapViewModel,
-    cameraPositionState: CameraPositionState,
-    locationSource: FusedLocationSource,
+    cameraPositionState: CameraPositionState?,
+    locationSource: FusedLocationSource?,
     departmentSheetState: SheetState,
     partnershipSheetState: SheetState,
     showToast: (UiText, ToastType) -> Unit,
@@ -284,11 +292,14 @@ internal fun MapScreen(
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
     animateCameraPositionTo: (LatLng, Double) -> Unit,
+    onSelectPartnershipByStoreName: (String, Int?) -> Unit,
     onSelectedFilterChange: (FilterType) -> Unit,
     departmentId: Long,
     collegeId: Long,
     departmentName: String?,
     selectedFilter: FilterType,
+    useDeterministicRenderer: Boolean = false,
+    deterministicStateLabel: String = "success",
 ) {
     Scaffold(
         topBar = {
@@ -353,14 +364,35 @@ internal fun MapScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.TopCenter,
         ) {
+            if (useDeterministicRenderer) {
+                MapDeterministicPlaceholder(
+                    stateLabel = deterministicStateLabel,
+                    modifier = Modifier.fillMaxSize()
+                )
+                PartnershipFilterToggle(
+                    selected = selectedFilter,
+                    onSelectedChange = onSelectedFilterChange,
+                    modifier = Modifier.padding(top = 12.dp),
+                    departmentName = departmentName.toString()
+                )
+                return@Box
+            }
+
+            val resolvedCameraPositionState = requireNotNull(cameraPositionState) {
+                "cameraPositionState must not be null when deterministic mode is disabled."
+            }
+            val resolvedLocationSource = requireNotNull(locationSource) {
+                "locationSource must not be null when deterministic mode is disabled."
+            }
+
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
+                cameraPositionState = resolvedCameraPositionState,
                 uiSettings = MapUiSettings(
                     isZoomControlEnabled = false,
                     isLocationButtonEnabled = true
                 ),
-                locationSource = locationSource,
+                locationSource = resolvedLocationSource,
                 contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                 properties = MapProperties(
                     // 현재 다른 위치에 있는 경우에도 숭실대입구를 보여주어야 함
@@ -433,7 +465,7 @@ internal fun MapScreen(
                         }
                     },
                     onClickCluster = { info, _ ->
-                        animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
+                        animateCameraPositionTo(info.position, resolvedCameraPositionState.position.zoom)
                         true
                     },
                     onClickLeaf = { info, _ ->
@@ -447,7 +479,7 @@ internal fun MapScreen(
                             )
                         } else {
                             // 제휴 정보가 있을 때만 바텀시트 띄움
-                            viewModel.selectPartnershipByStoreName(partnership.storeName)
+                            onSelectPartnershipByStoreName(partnership.storeName, null)
                         }
                         true
                     }
@@ -467,6 +499,23 @@ internal fun MapScreen(
                 departmentName = departmentName.toString()
             )
         }
+    }
+}
+
+@Composable
+private fun MapDeterministicPlaceholder(
+    stateLabel: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.background(Color(0xFFEFF5FB)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "MAP TEST MODE\n$stateLabel",
+            color = Color(0xFF3C4A59),
+            style = EatssuTheme.typography.body1
+        )
     }
 }
 

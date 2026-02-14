@@ -6,6 +6,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.android.presentation.util.ScreenshotTestSeam
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.ScreenId
 import timber.log.Timber
@@ -23,6 +24,26 @@ class WebViewActivity :
         super.onCreate(savedInstanceState)
 
         binding.webview.apply {
+            if (ScreenshotTestSeam.isEnabled) {
+                toolbarTitle.text = "WebView"
+                settings.javaScriptEnabled = false
+                loadDataWithBaseURL(
+                    null,
+                    """
+                    <html>
+                      <body style="font-family:sans-serif; padding:24px;">
+                        <h2>EAT-SSU WebView Test Mode</h2>
+                        <p>Deterministic content for screenshot regression.</p>
+                      </body>
+                    </html>
+                    """.trimIndent(),
+                    "text/html",
+                    "utf-8",
+                    null
+                )
+                return@apply
+            }
+
             webViewClient = object : WebViewClient() {
 
                 // 렌더러 충돌 시 호출되는 콜백 (Android 8.0 이상)
@@ -76,6 +97,7 @@ class WebViewActivity :
 
     override fun onResume() {
         super.onResume()
+        if (ScreenshotTestSeam.isEnabled) return
 
         val screenIdString = intent.getStringExtra("SCREEN_ID") ?: return
         val screenId = ScreenId.entries.find { it.name == screenIdString } ?: return

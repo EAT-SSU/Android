@@ -9,5 +9,6 @@ import com.eatssu.common.enums.ScreenId
 fun TrackScreenViewEvent(
     screenId: ScreenId
 ) = LaunchedEffect(Unit) {
+    if (ScreenshotTestSeam.isEnabled) return@LaunchedEffect
     EventLogger.screenView(screenId)
 }
