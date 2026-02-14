@@ -65,6 +65,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Run unit tests (required)
+      run: ./gradlew :app:testDebugUnitTest :core:common:testDebugUnitTest
+
     # - name: Assemble Debug APK
     #   if: >
     #     github.event_name == 'pull_request' &&
