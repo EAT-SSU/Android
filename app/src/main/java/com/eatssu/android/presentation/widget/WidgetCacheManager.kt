@@ -4,6 +4,7 @@ package com.eatssu.android.presentation.widget
 import com.eatssu.android.domain.model.WidgetMealInfo
 import com.eatssu.common.enums.Restaurant
 import timber.log.Timber
+import java.time.Clock
 import java.time.LocalDateTime
 
 /**
@@ -27,8 +28,12 @@ object WidgetCacheManager {
     /**
      * 캐시된 데이터가 유효한지 확인
      */
-    private fun isCacheValid(cachedData: CachedMealData, currentDate: String): Boolean {
-        val now = LocalDateTime.now()
+    private fun isCacheValid(
+        cachedData: CachedMealData,
+        currentDate: String,
+        clock: Clock,
+    ): Boolean {
+        val now = LocalDateTime.now(clock)
         val timeDiff = java.time.Duration.between(cachedData.timestamp, now)
 
         return cachedData.date == currentDate &&
@@ -38,10 +43,14 @@ object WidgetCacheManager {
     /**
      * 캐시에서 식당별 메뉴 데이터 조회
      */
-    fun getCachedMealData(restaurant: Restaurant, currentDate: String): WidgetMealInfo? {
+    fun getCachedMealData(
+        restaurant: Restaurant,
+        currentDate: String,
+        clock: Clock = Clock.systemDefaultZone(),
+    ): WidgetMealInfo? {
         val cachedData = cacheMap[restaurant] ?: return null
 
-        return if (isCacheValid(cachedData, currentDate)) {
+        return if (isCacheValid(cachedData, currentDate, clock)) {
             Timber.d("Cache hit for ${restaurant.name} on $currentDate")
             cachedData.mealInfo
         } else {
@@ -54,10 +63,15 @@ object WidgetCacheManager {
     /**
      * 식당별 메뉴 데이터를 캐시에 저장
      */
-    fun cacheMealData(restaurant: Restaurant, mealInfo: WidgetMealInfo, date: String) {
+    fun cacheMealData(
+        restaurant: Restaurant,
+        mealInfo: WidgetMealInfo,
+        date: String,
+        clock: Clock = Clock.systemDefaultZone(),
+    ) {
         val cachedData = CachedMealData(
             mealInfo = mealInfo,
-            timestamp = LocalDateTime.now(),
+            timestamp = LocalDateTime.now(clock),
             date = date
         )
 

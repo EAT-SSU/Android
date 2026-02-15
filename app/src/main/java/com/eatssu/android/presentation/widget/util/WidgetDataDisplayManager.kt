@@ -7,6 +7,7 @@ import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.widget.WidgetCacheManager
 import com.eatssu.common.enums.Restaurant
 import timber.log.Timber
+import java.time.Clock
 import java.time.LocalTime
 
 sealed class MealTime {
@@ -37,12 +38,13 @@ object WidgetDataDisplayManager {
         getMealsUseCase: GetTodayMealUseCase,
         requestedMealTime: MealTime,
         restaurant: Restaurant,
+        clock: Clock = Clock.systemDefaultZone(),
     ): WidgetMealInfo {
         Timber.d("Widget - fetchMealInfo")
-        val targetDate = CalendarUtil.convertMillisToDateString(System.currentTimeMillis())
+        val targetDate = CalendarUtil.convertMillisToDateString(clock.millis())
 
         // 캐시에서 데이터 확인
-        val cachedMealInfo = WidgetCacheManager.getCachedMealData(restaurant, targetDate)
+        val cachedMealInfo = WidgetCacheManager.getCachedMealData(restaurant, targetDate, clock)
         if (cachedMealInfo != null) {
             return cachedMealInfo
         }
@@ -64,13 +66,13 @@ object WidgetDataDisplayManager {
             )
 
             // 캐시에 저장
-            WidgetCacheManager.cacheMealData(restaurant, mealInfo, targetDate)
+            WidgetCacheManager.cacheMealData(restaurant, mealInfo, targetDate, clock)
 
             return mealInfo
         }
 
         // 다음 날 데이터 확인
-        val nextDay = CalendarUtil.getNextDayDate()
+        val nextDay = CalendarUtil.getNextDayDate(clock)
         val getNextDayMealResponse = getMealsUseCase(nextDay, restaurant.name)
 
         if (getNextDayMealResponse is MealState.Success) {
@@ -87,7 +89,7 @@ object WidgetDataDisplayManager {
             )
 
             // 캐시에 저장
-            WidgetCacheManager.cacheMealData(restaurant, mealInfo, targetDate)
+            WidgetCacheManager.cacheMealData(restaurant, mealInfo, targetDate, clock)
 
             return mealInfo
         }
@@ -101,13 +103,15 @@ object WidgetDataDisplayManager {
         )
 
         // 캐시에 저장
-        WidgetCacheManager.cacheMealData(restaurant, emptyMealInfo, targetDate)
+        WidgetCacheManager.cacheMealData(restaurant, emptyMealInfo, targetDate, clock)
 
         return emptyMealInfo
     }
 
-    internal fun getCurrentMealTime(): MealTime {
-        val currentTime = LocalTime.now()
+    internal fun getCurrentMealTime(
+        clock: Clock = Clock.systemDefaultZone(),
+    ): MealTime {
+        val currentTime = LocalTime.now(clock)
         val morningEnd = LocalTime.of(9, 0)
         val lunchEnd = LocalTime.of(15, 0)
 

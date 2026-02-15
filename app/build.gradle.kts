@@ -1,9 +1,11 @@
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.roborazzi)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.hilt.android)
@@ -134,6 +136,26 @@ android {
     lint {
         abortOnError = false
     }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            val requestedTasks = gradle.startParameter.taskNames.joinToString(" ")
+            val runScreenshotCapture =
+                requestedTasks.contains("recordRoborazzi") || requestedTasks.contains("verifyRoborazzi")
+            it.useJUnitPlatform()
+            it.systemProperty("roborazzi.record.filePathStrategy", "relativePathFromRoborazziContextOutputDirectory")
+            it.systemProperty("eatssu.screenshot.capture", runScreenshotCapture.toString())
+        }
+    }
+}
+
+@OptIn(ExperimentalRoborazziApi::class)
+roborazzi {
+    outputDir.set(file("src/test/screenshots"))
+    compare {
+        outputDir.set(file("build/outputs/roborazzi"))
+    }
 }
 
 dependencies {
@@ -180,6 +202,18 @@ dependencies {
 
     // Testing libraries
     testImplementation(libs.junit)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.junit.rule)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testRuntimeOnly(libs.junit.vintage.engine)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
