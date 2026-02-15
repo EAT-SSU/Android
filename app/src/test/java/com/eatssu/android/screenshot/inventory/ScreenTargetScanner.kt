@@ -6,8 +6,7 @@ object ScreenTargetScanner {
     fun scanAllTargets(): Set<String> {
         return buildSet {
             addAll(scanManifestActivities())
-            addAll(scanNavigationFragments())
-            addAll(scanViewPagerFragments())
+            addAll(scanConcreteFragments())
             addAll(scanComposeRoutes())
         }
     }
@@ -20,23 +19,41 @@ object ScreenTargetScanner {
             .toSet()
     }
 
-    fun scanNavigationFragments(): Set<String> {
-        val navigation = readProjectFile("src/main/res/navigation/eatssu_navigation.xml")
-        val regex = Regex("""android:name="([^"]+Fragment)"""")
-        return regex.findAll(navigation)
-            .map { "fragment:${it.groupValues[1]}" }
+    fun scanConcreteFragments(): Set<String> {
+        val kotlinFiles = presentationKotlinFiles()
+        val packageRegex = Regex("""(?m)^\s*package\s+([\w.]+)""")
+        val classRegex = Regex("""(?m)^\s*(?!abstract\b)class\s+(\w+)\s*:\s*([^\n{]+)""")
+
+        return kotlinFiles
+            .flatMap { file ->
+                val source = file.readText()
+                val packageName = packageRegex.find(source)?.groupValues?.get(1) ?: return@flatMap emptyList()
+                classRegex.findAll(source)
+                    .mapNotNull { match ->
+                        val className = match.groupValues[1]
+                        val superTypes = match.groupValues[2]
+                        val isFragmentLike =
+                            superTypes.contains("Fragment") || superTypes.contains("BottomSheetDialogFragment")
+                        if (!isFragmentLike) {
+                            null
+                        } else {
+                            "fragment:$packageName.$className"
+                        }
+                    }
+                    .toList()
+            }
             .toSet()
     }
 
     fun scanComposeRoutes(): Set<String> {
         val routeFiles = listOf(
             "src/main/java/com/eatssu/android/presentation/cafeteria/review/ReviewNav.kt",
-            "src/main/java/com/eatssu/android/presentation/mypage/myreview/MyReviewNav.kt"
+            "src/main/java/com/eatssu/android/presentation/mypage/myreview/MyReviewNav.kt",
         )
         val routeObjects = setOf("ReviewNav", "MyReviewNav")
         val objectRegex = Regex(
             pattern = """object\s+(\w+)\s*\{(.*?)\}""",
-            options = setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.MULTILINE)
+            options = setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.MULTILINE),
         )
         val constRegex = Regex("""const\s+val\s+(\w+)\s*=\s*"[^"]+"""")
 
@@ -55,14 +72,52 @@ object ScreenTargetScanner {
         }
     }
 
-    fun scanViewPagerFragments(): Set<String> {
-        val adapterPath =
-            "src/main/java/com/eatssu/android/presentation/cafeteria/CafeteriaViewPagerAdapter.kt"
-        val adapterSource = readProjectFile(adapterPath)
-        if (!adapterSource.contains("MenuFragment")) return emptySet()
+    fun scanComposeScreens(): Set<String> {
+        val functionRegex = Regex("""^\s*(?:internal\s+)?fun\s+([A-Za-z0-9_]+)\s*\(""")
 
-        // MenuFragment is rendered in Cafeteria ViewPager tabs and not declared in navigation XML.
-        return setOf("fragment:com.eatssu.android.presentation.cafeteria.menu.MenuFragment")
+        return presentationKotlinFiles()
+            .flatMap { file ->
+                val names = mutableSetOf<String>()
+                var composableAhead = false
+
+                file.forEachLine { line ->
+                    val trimmed = line.trim()
+                    if (trimmed.contains("@Composable")) {
+                        composableAhead = true
+                        return@forEachLine
+                    }
+
+                    if (!composableAhead) return@forEachLine
+
+                    if (trimmed.startsWith("@")) return@forEachLine
+                    if (trimmed.isBlank()) return@forEachLine
+
+                    val name = functionRegex.find(trimmed)?.groupValues?.get(1)
+                    if (name != null) {
+                        if (name.endsWith("Screen") && !name.startsWith("Preview")) {
+                            names.add("screen:$name")
+                        }
+                    }
+                    composableAhead = false
+                }
+
+                names
+            }
+            .toSet()
+    }
+
+    private fun presentationKotlinFiles(): List<File> {
+        val candidates = listOf(
+            File("src/main/java/com/eatssu/android/presentation"),
+            File("app/src/main/java/com/eatssu/android/presentation"),
+            File("../app/src/main/java/com/eatssu/android/presentation"),
+        )
+        val root = candidates.firstOrNull { it.exists() }
+            ?: error("Cannot find presentation source root for scanner.")
+
+        return root.walkTopDown()
+            .filter { it.isFile && it.extension == "kt" }
+            .toList()
     }
 
     private fun readProjectFile(moduleRelativePath: String): String {

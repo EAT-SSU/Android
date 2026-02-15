@@ -112,9 +112,11 @@ class ComposeRouteScreenshotsTest {
     private fun RenderTarget(item: ScreenCoverageItem, state: String) {
         when (item.targetId) {
             "activity:.presentation.cafeteria.review.ReviewComposeActivity",
-            "route:ReviewNav.List" -> renderReviewList(state)
+            "route:ReviewNav.List",
+            "screen:ReviewListScreen" -> renderReviewList(state)
 
-            "activity:.presentation.mypage.language.LanguageSelectorActivity" -> {
+            "activity:.presentation.mypage.language.LanguageSelectorActivity",
+            "screen:LanguageSelectorScreen" -> {
                 LanguageSelectorContent(
                     selectedLanguage = AppLanguage.KOREAN,
                     onLanguageSelected = {},
@@ -123,7 +125,8 @@ class ComposeRouteScreenshotsTest {
             }
 
             "activity:.presentation.mypage.myreview.MyReviewListComposeActivity",
-            "route:MyReviewNav.List" -> {
+            "route:MyReviewNav.List",
+            "screen:MyReviewListScreen" -> {
                 MyReviewListScreen(
                     uiState = FakeUiStates.myReviewUiState(state),
                     userNickname = "eatssu_user",
@@ -133,7 +136,8 @@ class ComposeRouteScreenshotsTest {
                 )
             }
 
-            "activity:.presentation.widget.ui.WidgetSettingActivity" -> {
+            "activity:.presentation.widget.ui.WidgetSettingActivity",
+            "screen:WidgetSettingScreen" -> {
                 val optionList = when (state) {
                     "empty" -> emptyList()
                     else -> listOf("학생 식당", "도담 식당", "기숙사 식당")
@@ -148,10 +152,15 @@ class ComposeRouteScreenshotsTest {
                 )
             }
 
-            "fragment:com.eatssu.android.presentation.map.MapFragment" -> renderMap(state)
-            "route:ReviewNav.Write" -> renderWrite(state)
+            "fragment:com.eatssu.android.presentation.map.MapFragment",
+            "screen:MapScreen" -> renderMap(state)
+
+            "route:ReviewNav.Write",
+            "screen:WriteReviewScreen" -> renderWrite(state)
+
             "route:ReviewNav.Modify",
-            "route:MyReviewNav.Modify" -> renderModify(state)
+            "route:MyReviewNav.Modify",
+            "screen:ModifyReviewScreen" -> renderModify(state)
 
             else -> PlaceholderScreen("unsupported: ${item.targetId}")
         }
