@@ -3,7 +3,9 @@ package com.eatssu.android.di.network
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.BaseResponse
 import com.eatssu.android.presentation.base.NetworkErrorEventBus
-import com.google.gson.Gson
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -16,12 +18,9 @@ import java.lang.reflect.Type
 @Suppress("UNCHECKED_CAST")
 class ApiResultCall<T : Any>(
     private val call: Call<BaseResponse<T>>,
-    private val responseType: Type
+    private val responseType: Type,
+    private val json: Json
 ) : Call<ApiResult<T>> {
-
-    companion object {
-        private val gson = Gson()
-    }
 
     override fun enqueue(callback: Callback<ApiResult<T>>) {
         call.enqueue(object : Callback<BaseResponse<T>> {
@@ -42,6 +41,12 @@ class ApiResultCall<T : Any>(
                         // NetworkError 발생 시 전역 이벤트 발생
                         NetworkErrorEventBus.notifyNetworkError()
                         ApiResult.NetworkError(error)
+                    }
+
+                    is SerializationException, is IllegalArgumentException -> {
+                        Timber.e(error, "Serialization Error")
+                        FirebaseCrashlytics.getInstance().recordException(error)
+                        ApiResult.UnknownError(error)
                     }
 
                     else -> ApiResult.UnknownError(error)
@@ -65,12 +70,13 @@ class ApiResultCall<T : Any>(
             // errorBody를 JSON으로 파싱 시도
             if (!errorBodyString.isNullOrEmpty()) {
                 try {
-                    val reader = com.google.gson.stream.JsonReader(java.io.StringReader(errorBodyString))
-                    reader.isLenient = true
-                    val errorResponse = gson.fromJson<BaseResponse<*>>(reader, BaseResponse::class.java)
+                    val errorResponse =
+                        json.decodeFromString<BaseResponse<kotlinx.serialization.json.JsonElement>>(
+                            errorBodyString
+                        )
 
                     // BaseResponse 형태인지 확인 (isSuccess가 false이고 code와 message가 있는 경우)
-                    if (errorResponse?.isSuccess == false &&
+                    if (errorResponse.isSuccess == false &&
                         errorResponse.code != null &&
                         errorResponse.message != null
                     ) {
@@ -132,7 +138,7 @@ class ApiResultCall<T : Any>(
 
     override fun isExecuted(): Boolean = call.isExecuted
 
-    override fun clone(): Call<ApiResult<T>> = ApiResultCall(call.clone(), responseType)
+    override fun clone(): Call<ApiResult<T>> = ApiResultCall(call.clone(), responseType, json)
 
     override fun isCanceled(): Boolean = call.isCanceled
 
@@ -146,4 +152,3 @@ class ApiResultCall<T : Any>(
 
     override fun timeout(): Timeout = call.timeout()
 }
-

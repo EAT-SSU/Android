@@ -1,10 +1,12 @@
 package com.eatssu.android.data.remote.dto.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BaseResponse<T>(
-    @SerializedName("isSuccess") var isSuccess: Boolean? = null,
-    @SerializedName("code") var code: Int? = null,
-    @SerializedName("message") var message: String? = null,
-    @SerializedName("result") var result: T? = null,
+    @SerialName("isSuccess") val isSuccess: Boolean? = null,
+    @SerialName("code") val code: Int? = null,
+    @SerialName("message") val message: String? = null,
+    @SerialName("result") val result: T? = null,
 )

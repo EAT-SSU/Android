@@ -1,15 +1,17 @@
 package com.eatssu.android.data.remote.dto.request
 
 import com.eatssu.common.enums.DeviceType
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class LoginWithKakaoRequest(
-    @SerializedName("email")
+    @SerialName("email")
     val email: String,
 
-    @SerializedName("providerId")
+    @SerialName("providerId")
     val providerId: String,
 
-    @SerializedName("deviceType")
+    @SerialName("deviceType")
     val deviceType: DeviceType,
 )

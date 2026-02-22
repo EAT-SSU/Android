@@ -35,10 +35,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.android.presentation.map.model.PlaceType
+import com.eatssu.android.presentation.map.iconRes
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.StoreType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray400
@@ -50,7 +51,7 @@ import com.eatssu.design_system.theme.Primary
 @Composable
 fun MapRestaurantBottomSheet(
     storeName: String,
-    placeType: PlaceType,
+    storeType: StoreType,
     mapRestaurantList: List<RestaurantInfo>,
     onDismiss: () -> Unit = {}
 ) {
@@ -115,7 +116,7 @@ fun MapRestaurantBottomSheet(
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                painter = painterResource(id = placeType.iconRes),
+                                painter = painterResource(id = storeType.iconRes),
                                 contentDescription = storeName,
                                 modifier = Modifier.size(13.dp)
                             )
@@ -124,7 +125,7 @@ fun MapRestaurantBottomSheet(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = placeType.placeCategory,
+                            text = storeType.value,
                             style = EatssuTheme.typography.caption3,
                             color = Gray400,
                         )
@@ -225,7 +226,7 @@ fun MapRestaurantBottomSheetPreview() {
             MapRestaurantBottomSheet(
                 storeName = "현선이네",
                 mapRestaurantList = dummyList,
-                placeType = PlaceType.RESTAURANT
+                storeType = StoreType.RESTAURANT
             )
         }
     }

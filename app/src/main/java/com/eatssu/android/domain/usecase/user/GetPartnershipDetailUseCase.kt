@@ -23,7 +23,7 @@ class GetPartnershipDetailUseCase @Inject constructor() {
                 description = info.description,
                 startDate = info.startDate,
                 endDate = info.endDate,
-                restaurantType = matched.restaurantType,
+                storeType = matched.restaurantType,
                 longitude = matched.longitude,
                 latitude = matched.latitude,
                 collegeName = info.collegeName,

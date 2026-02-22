@@ -1,16 +1,19 @@
 package com.eatssu.android.data.remote.dto.response
 
-import com.google.gson.annotations.SerializedName
+import com.eatssu.android.domain.model.Token
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TokenResponse(
-    @SerializedName("accessToken")
+    @SerialName("accessToken")
     val accessToken: String,
 
-    @SerializedName("refreshToken")
+    @SerialName("refreshToken")
     val refreshToken: String,
 )
 
-fun TokenResponse.toDomain() = com.eatssu.android.domain.model.Token(
+fun TokenResponse.toDomain() = Token(
     accessToken = accessToken,
     refreshToken = refreshToken,
 )
