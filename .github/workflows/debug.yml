@@ -149,3 +149,25 @@ jobs:
             issue_number: context.payload.pull_request.number,
             body,
           });
+
+    - name: Slack notification for App Distribution
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: |
+          🔥 Firebase App Distribution 배포 완료!
+          
+          PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
+          브랜치: ${{ github.event.pull_request.head.ref }}
+          테스터 그룹: eat-ssu-android-qa
+        custom_payload: |
+          {
+            attachments: [{
+              color: 'good',
+              text: '🔥 Firebase App Distribution 배포 완료!\n\nPR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}\n브랜치: ${{ github.event.pull_request.head.ref }}\n테스터 그룹: eat-ssu-android-qa'
+            }]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_APP_DISTRIBUTION_WEBHOOK_URL }}
+
