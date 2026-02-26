@@ -19,6 +19,7 @@ import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
+import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
@@ -75,6 +76,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 R.id.map_menu -> {
                     navController.navigate(R.id.mapFragment)
                     true
+                }
+
+                R.id.anyone_but_me_menu -> {
+                    startActivity<WebViewActivity> {
+                        putExtra("URL", getString(R.string.anyone_but_me_url))
+                        putExtra("TITLE", getString(R.string.nav_anyone_but_me))
+                        putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
+                    }
+                    false
                 }
 
                 R.id.mypage_menu -> {
