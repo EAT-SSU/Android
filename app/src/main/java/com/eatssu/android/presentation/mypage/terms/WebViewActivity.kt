@@ -56,8 +56,8 @@ class WebViewActivity :
                 useWideViewPort = true // 화면 크기에 맞게 웹 페이지를 조정
             }
 
-            URL = intent.getStringExtra("URL") ?: "" //Todo 뷰모델 사용하도록 수정?
-            TITLE = intent.getStringExtra("TITLE") ?: ""
+            URL = intent.getStringExtra(EXTRA_URL) ?: "" //Todo 뷰모델 사용하도록 수정?
+            TITLE = intent.getStringExtra(EXTRA_TITLE) ?: ""
 
             toolbarTitle.text = TITLE
             Timber.d(URL + TITLE)
@@ -108,6 +108,8 @@ class WebViewActivity :
     override fun shouldLogScreenId() = false
 
     companion object {
+        const val EXTRA_URL = "URL"
+        const val EXTRA_TITLE = "TITLE"
         const val EXTRA_BACK_ICON_RES_ID = "BACK_ICON_RES_ID"
     }
 }

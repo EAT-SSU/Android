@@ -32,8 +32,8 @@ class DeveloperActivity :
     private fun clickRecruiting() {
         binding.imgRecruitingBanner.setOnClickListener {
             val intent = Intent(this, WebViewActivity::class.java).apply {
-                putExtra("TITLE", "Who’s next?")
-                putExtra("URL", getString(R.string.recruiting_url))
+                putExtra(WebViewActivity.EXTRA_TITLE, "Who’s next?")
+                putExtra(WebViewActivity.EXTRA_URL, getString(R.string.recruiting_url))
                 putExtra("SCREEN_ID", ScreenId.EXTERNAL_RECRUIT.name)
             }
             startActivity(intent)

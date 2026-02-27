@@ -80,8 +80,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
                 R.id.anyone_but_me_menu -> {
                     startActivity<WebViewActivity> {
-                        putExtra("URL", getString(R.string.anyone_but_me_url))
-                        putExtra("TITLE", getString(R.string.nav_anyone_but_me))
+                        putExtra(WebViewActivity.EXTRA_URL, getString(R.string.anyone_but_me_url))
+                        putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.nav_anyone_but_me))
                         putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
                         putExtra(
                             WebViewActivity.EXTRA_BACK_ICON_RES_ID,
