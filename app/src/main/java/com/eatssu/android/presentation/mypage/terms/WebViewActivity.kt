@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageView
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.common.EventLogger
@@ -21,6 +23,7 @@ class WebViewActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setBackIconByScreenId()
 
         binding.webview.apply {
             webViewClient = object : WebViewClient() {
@@ -61,6 +64,13 @@ class WebViewActivity :
 
             if (savedInstanceState != null) restoreState(savedInstanceState)
             else loadUrl(URL)
+        }
+    }
+
+    private fun setBackIconByScreenId() {
+        val screenIdString = intent.getStringExtra("SCREEN_ID")
+        if (screenIdString == ScreenId.ANYONE_BUT_ME_MAIN.name) {
+            findViewById<ImageView>(R.id.btn_back).setImageResource(com.eatssu.design_system.R.drawable.ic_close)
         }
     }
 
