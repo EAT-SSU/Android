@@ -83,6 +83,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                         putExtra("URL", getString(R.string.anyone_but_me_url))
                         putExtra("TITLE", getString(R.string.nav_anyone_but_me))
                         putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
+                        putExtra(
+                            WebViewActivity.EXTRA_BACK_ICON_RES_ID,
+                            com.eatssu.design_system.R.drawable.ic_close
+                        )
                     }
                     false
                 }

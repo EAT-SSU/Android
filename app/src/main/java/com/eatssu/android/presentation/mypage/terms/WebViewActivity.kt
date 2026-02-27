@@ -23,7 +23,7 @@ class WebViewActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setBackIconByScreenId()
+        applyBackIconFromIntent()
 
         binding.webview.apply {
             webViewClient = object : WebViewClient() {
@@ -67,10 +67,12 @@ class WebViewActivity :
         }
     }
 
-    private fun setBackIconByScreenId() {
-        val screenIdString = intent.getStringExtra("SCREEN_ID")
-        if (screenIdString == ScreenId.ANYONE_BUT_ME_MAIN.name) {
-            findViewById<ImageView>(R.id.btn_back).setImageResource(com.eatssu.design_system.R.drawable.ic_close)
+    private fun applyBackIconFromIntent() {
+        if (intent.hasExtra(EXTRA_BACK_ICON_RES_ID)) {
+            val backIconResId = intent.getIntExtra(EXTRA_BACK_ICON_RES_ID, 0)
+            if (backIconResId != 0) {
+                findViewById<ImageView>(R.id.btn_back).setImageResource(backIconResId)
+            }
         }
     }
 
@@ -104,4 +106,8 @@ class WebViewActivity :
     }
 
     override fun shouldLogScreenId() = false
+
+    companion object {
+        const val EXTRA_BACK_ICON_RES_ID = "BACK_ICON_RES_ID"
+    }
 }
