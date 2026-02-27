@@ -5,7 +5,7 @@ import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.remote.dto.response.CollegeResponse
 import com.eatssu.android.data.remote.dto.response.DepartmentResponse
-import com.eatssu.android.data.remote.dto.response.MyNickNameResponse
+import com.eatssu.android.data.remote.dto.response.MyPageResponse
 import com.eatssu.android.data.remote.dto.response.PartnershipResponse
 import com.eatssu.android.data.remote.dto.response.UserCollegeDepartmentResponse
 import retrofit2.http.Body
@@ -28,7 +28,7 @@ interface UserService {
     ): ApiResult<Boolean>
 
     @GET("users/mypage") //내 정보 모아보기
-    suspend fun getMyInfo(): ApiResult<MyNickNameResponse>
+    suspend fun getMyInfo(): ApiResult<MyPageResponse>
 
     @DELETE("users") //유저 탈퇴
     suspend fun signOut(): ApiResult<Boolean>
