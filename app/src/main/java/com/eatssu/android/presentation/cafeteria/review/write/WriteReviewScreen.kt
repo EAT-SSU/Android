@@ -30,7 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,7 +41,7 @@ import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLike
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
@@ -58,7 +58,7 @@ import com.eatssu.design_system.theme.Primary
 const val MAX_TEXT_COUNT = 300
 
 @Composable
-fun WriteReviewScreen(
+fun WriteReviewRoute(
     modifier: Modifier = Modifier,
     viewModel: WriteReviewViewModel = hiltViewModel(),
     menuName: String,
@@ -93,8 +93,8 @@ fun WriteReviewScreen(
         }
     }
 
-    when (val data = (ui as? UiState.Success)?.data) {
-        is WriteReviewState.Editing -> {
+    when (val data = ui) {
+        is WriteReviewUiState.Editing -> {
             WriteReviewScreen(
                 modifier = modifier,
                 title = stringResource(R.string.title_review_write),
@@ -116,7 +116,7 @@ fun WriteReviewScreen(
             )
         }
 
-        is WriteReviewState.Posting -> {
+        is WriteReviewUiState.Posting -> {
             WriteReviewScreen(
                 modifier = modifier,
                 title = stringResource(R.string.title_review_write),
@@ -127,12 +127,12 @@ fun WriteReviewScreen(
                 selectedImageUri = data.selectedImageUri,
                 isPosting = true,
                 onBack = onBack,
-                onRatingChanged = {}, // 비활성
-                onContentChanged = {}, // 비활성
-                onToggleLike = {}, // 비활성
-                onImageSelect = {}, // 비활성
-                onImageDelete = {}, // 비활성
-                onSubmit = {} // 중복 제출 방지
+                onRatingChanged = {},
+                onContentChanged = {},
+                onToggleLike = {},
+                onImageSelect = {},
+                onImageDelete = {},
+                onSubmit = {}
             )
         }
 
@@ -317,7 +317,7 @@ internal fun WriteReviewScreen(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun ReviewWritePreview() {
     EatssuTheme {

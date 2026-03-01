@@ -8,14 +8,13 @@ import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -28,11 +27,11 @@ class IntroViewModel @Inject constructor(
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
-    val uiState: StateFlow<UiState<IntroState>> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<IntroUiState> = MutableStateFlow(IntroUiState.Loading)
+    val uiState: StateFlow<IntroUiState> = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent: SharedFlow<UiEvent> = _uiEvent
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private val _versionCheckResult = MutableStateFlow<VersionCheckResult?>(null)
     val versionCheckResult: StateFlow<VersionCheckResult?> = _versionCheckResult.asStateFlow()
@@ -43,7 +42,7 @@ class IntroViewModel @Inject constructor(
 
     private fun initializeApp() {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _uiState.value = IntroUiState.Loading
 
             try {
                 // 1. 버전 체크 (Firebase Remote Config는 자동으로 초기화됨)
@@ -54,7 +53,7 @@ class IntroViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 Timber.e(e, "앱 초기화 중 오류 발생")
-                _uiState.value = UiState.Error
+                _uiState.value = IntroUiState.Error
                 _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_app_init_error), ToastType.ERROR))
             }
         }
@@ -93,7 +92,7 @@ class IntroViewModel @Inject constructor(
 
     private fun autoLogin() {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _uiState.value = IntroUiState.Loading
 
             // 서버와 통신 가능한지 먼저 확인
             if (!healthCheckUseCase()) {
@@ -103,7 +102,7 @@ class IntroViewModel @Inject constructor(
 
             val userAccessToken = getAccessTokenUseCase()
             if (userAccessToken.isEmpty()) {
-                _uiState.value = UiState.Error
+                _uiState.value = IntroUiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
                         UiText.StringResource(R.string.toast_token_invalid),
@@ -114,13 +113,15 @@ class IntroViewModel @Inject constructor(
             }
 
             // 스플래시에서는 헬스체크만 수행. 토큰 유효성/재발급은 실제 API 요청에서 Authenticator가 처리.
-            _uiState.value = UiState.Success(IntroState.ValidToken)
+            _uiState.value = IntroUiState.Success
         }
     }
 }
 
-sealed class IntroState {
-    object ValidToken : IntroState()
+sealed interface IntroUiState {
+    data object Loading : IntroUiState
+    data object Success : IntroUiState
+    data object Error : IntroUiState
 }
 
 sealed class VersionCheckResult {

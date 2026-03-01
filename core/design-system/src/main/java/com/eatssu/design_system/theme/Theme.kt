@@ -2,6 +2,7 @@ package com.eatssu.design_system.theme
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.core.view.WindowCompat
 
 // Color 설정
@@ -83,6 +85,18 @@ fun EatssuTheme(
                 labelSmall = typography.button1
             ),
             content = content
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun EatssuThemePreview() {
+    EatssuTheme {
+        Text(
+            text = "EAT-SSU Theme",
+            style = EatssuTheme.typography.h1,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

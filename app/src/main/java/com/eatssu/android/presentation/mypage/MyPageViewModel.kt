@@ -9,18 +9,15 @@ import com.eatssu.android.domain.usecase.alarm.AlarmUseCase
 import com.eatssu.android.domain.usecase.alarm.SetDailyNotificationStatusUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,25 +30,19 @@ class MyPageViewModel @Inject constructor(
     private val settingDataStore: SettingDataStore
 ) : ViewModel() {
 
-    // 내부는 항상 "값 그 자체"만 들고 있고,
-    // 화면엔 UiState로 감싸서 노출
-    // 로컬 저장소에서 닉네임을 먼저 읽어서 초기 상태 설정
-    private val _state = MutableStateFlow(
+    private val _uiState = MutableStateFlow(
         MyPageState(
             appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
         )
     )
-    val uiState: StateFlow<UiState<MyPageState>> =
-        _state
-            .map { UiState.Success(it) }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Init)
+    val uiState: StateFlow<MyPageState> = _uiState.asStateFlow()
 
     // 이벤트 버퍼를 주면 토스트 연속 발생 시 유실을 줄일 수 있음
     private val _uiEvent = MutableSharedFlow<UiEvent>(
         replay = 0,
         extraBufferCapacity = 1
     )
-    val uiEvent: SharedFlow<UiEvent> = _uiEvent
+    val uiEvent = _uiEvent.asSharedFlow()
 
     init {
         observeNotificationStatus()
@@ -61,7 +52,7 @@ class MyPageViewModel @Inject constructor(
     private fun observeNotificationStatus() {
         viewModelScope.launch {
             settingDataStore.dailyNotificationStatus.collectLatest { isOn ->
-                _state.update { it.copy(isAlarmOn = isOn) }
+                _uiState.update { it.copy(isAlarmOn = isOn) }
             }
         }
     }
@@ -71,7 +62,7 @@ class MyPageViewModel @Inject constructor(
             val nickname = getUserNickNameUseCase()
 
             if (nickname.isBlank()) {
-                _state.update { it.copy(nickname = null) }
+                _uiState.update { it.copy(nickname = null) }
                 _uiEvent.emit(
                     UiEvent.ShowToast(
                         UiText.StringResource(R.string.toast_require_nickname),
@@ -81,7 +72,7 @@ class MyPageViewModel @Inject constructor(
                 return@launch
             }
 
-            _state.update { it.copy(nickname = nickname) }
+            _uiState.update { it.copy(nickname = nickname) }
         }
     }
 

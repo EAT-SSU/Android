@@ -8,7 +8,6 @@ import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.DeviceType
 import com.eatssu.common.enums.ToastType
@@ -31,18 +30,18 @@ class LoginViewModel @Inject constructor(
     private val setUserEmailUseCase: SetUserEmailUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<LoginState>>(UiState.Init)
-    val uiState: StateFlow<UiState<LoginState>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
     fun getKakaoLogin(email: String, providerID: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = UiState.Loading
+            _uiState.value = LoginUiState.Loading
 
             val token = loginUseCase(email, providerID, DeviceType.ANDROID) ?: run {
-                _uiState.value = UiState.Error
+                _uiState.value = LoginUiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
                         UiText.StringResource(R.string.toast_login_failed),
@@ -56,20 +55,23 @@ class LoginViewModel @Inject constructor(
             setRefreshTokenUseCase(token.refreshToken)
             setUserEmailUseCase(email)
 
-            _uiState.value = UiState.Success(LoginState.LoginSuccess)
+            _uiState.value = LoginUiState.Success
         }
     }
 
     fun setInitState() {
-        _uiState.value = UiState.Init
+        _uiState.value = LoginUiState.Idle
     }
 
     fun setLoadingState() {
-        _uiState.value = UiState.Loading
+        _uiState.value = LoginUiState.Loading
     }
 }
 
 // 상태 및 이벤트 정의
-sealed class LoginState {
-    object LoginSuccess : LoginState()
+sealed interface LoginUiState {
+    data object Idle : LoginUiState
+    data object Loading : LoginUiState
+    data object Success : LoginUiState
+    data object Error : LoginUiState
 }

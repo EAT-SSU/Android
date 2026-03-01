@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.domain.usecase.menu.GetMenuListUseCase
-import com.eatssu.common.UiState
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +20,12 @@ class MenuViewModel @Inject constructor(
     private val getMenuListUseCase: GetMenuListUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<MenuState>> = MutableStateFlow(UiState.Init)
-    val uiState: StateFlow<UiState<MenuState>> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<MenuUiState> = MutableStateFlow(MenuUiState.Loading)
+    val uiState: StateFlow<MenuUiState> = _uiState.asStateFlow()
 
     // 주어진 식당 리스트에 대해 메뉴 정보를 비동기로 가져와서 UI 상태를 업데이트
     fun loadMenus(restaurants: List<Restaurant>, menuDate: String, time: Time) {
-        _uiState.value = UiState.Loading
+        _uiState.value = MenuUiState.Loading
 
         viewModelScope.launch {
             // async 함수로 Deferred를 만들어 메뉴 정보 한번에 가져오기
@@ -37,11 +36,14 @@ class MenuViewModel @Inject constructor(
             }
 
             val menuMap = deferredMenus.awaitAll().toMap()
-            _uiState.value = UiState.Success(MenuState(menuMap))
+            _uiState.value = MenuUiState.Success(menuMap)
         }
     }
 }
 
-data class MenuState(
-    val menuMap: Map<Restaurant, List<Menu>> = emptyMap()
-)
+sealed interface MenuUiState {
+    data object Loading : MenuUiState
+    data class Success(
+        val menuMap: Map<Restaurant, List<Menu>> = emptyMap(),
+    ) : MenuUiState
+}

@@ -13,7 +13,6 @@ import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameLocalUseCase
 import com.eatssu.android.domain.usecase.user.ValidateNicknameServerUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +40,7 @@ class UserInfoViewModel @Inject constructor(
         const val MAX_NICKNAME_LENGTH = 16
     }
 
-    private val _uiState = MutableStateFlow<UiState<UserInfoData>>(UiState.Init)
+    private val _uiState = MutableStateFlow<UserInfoUiState>(UserInfoUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
@@ -53,7 +52,7 @@ class UserInfoViewModel @Inject constructor(
 
     private fun initializeUserInfo() {
         viewModelScope.launch {
-            _uiState.update { UiState.Loading }
+            _uiState.update { UserInfoUiState.Loading }
 
             val userInfo = getUserCollegeDepartmentUseCase()
 
@@ -70,17 +69,15 @@ class UserInfoViewModel @Inject constructor(
 
             // 모든 데이터를 한 번에 업데이트
             _uiState.update {
-                UiState.Success(
-                    UserInfoData(
-                        nickname = userInfo.nickname,
-                        originalNickname = userInfo.nickname,
-                        selectedCollege = initialCollege,
-                        originalCollege = initialCollege,
-                        selectedDepartment = initialDepartment,
-                        originalDepartment = initialDepartment,
-                        collegeList = colleges,
-                        departmentList = departments
-                    )
+                UserInfoData(
+                    nickname = userInfo.nickname,
+                    originalNickname = userInfo.nickname,
+                    selectedCollege = initialCollege,
+                    originalCollege = initialCollege,
+                    selectedDepartment = initialDepartment,
+                    originalDepartment = initialDepartment,
+                    collegeList = colleges,
+                    departmentList = departments
                 )
             }
 
@@ -89,7 +86,7 @@ class UserInfoViewModel @Inject constructor(
     }
 
     fun onNicknameChanged(nickname: String) {
-        val currentState = _uiState.value as? UiState.Success ?: return
+        val currentState = _uiState.value as? UserInfoData ?: return
         val trimmedNickname = nickname.trim()
 
         // Local 유효성 검증 (Regex)
@@ -104,24 +101,22 @@ class UserInfoViewModel @Inject constructor(
             is NicknameValidationResult.Valid -> null
         }
 
-        val isNicknameChanged = trimmedNickname != currentState.data.originalNickname
+        val isNicknameChanged = trimmedNickname != currentState.originalNickname
 
         _uiState.update {
-            UiState.Success(
-                currentState.data.copy(
-                    nickname = trimmedNickname,
-                    isNicknameChanged = isNicknameChanged,
-                    nicknameValidationError = errorMessage,
-                    isDuplicationChecked = false // 닉네임 변경 시 중복 확인 초기화
-                )
+            currentState.copy(
+                nickname = trimmedNickname,
+                isNicknameChanged = isNicknameChanged,
+                nicknameValidationError = errorMessage,
+                isDuplicationChecked = false // 닉네임 변경 시 중복 확인 초기화
             )
         }
     }
 
     fun checkNicknameDuplication() {
         viewModelScope.launch {
-            val currentState = _uiState.value as? UiState.Success ?: return@launch
-            val currentNickname = currentState.data.nickname
+            val currentState = _uiState.value as? UserInfoData ?: return@launch
+            val currentNickname = currentState.nickname
 
             // 서버에서 사용 가능 여부 확인
             val result = validateNicknameServerUseCase(currentNickname)
@@ -131,20 +126,16 @@ class UserInfoViewModel @Inject constructor(
                     ?: UiText.StringResource(R.string.nickname_error_invalid)
 
                 _uiState.update {
-                    UiState.Success(
-                        currentState.data.copy(
-                            nicknameValidationError = errorMessage
-                        )
+                    currentState.copy(
+                        nicknameValidationError = errorMessage
                     )
                 }
                 return@launch
             }
 
             _uiState.update {
-                UiState.Success(
-                    currentState.data.copy(
-                        isDuplicationChecked = true,
-                    )
+                currentState.copy(
+                    isDuplicationChecked = true,
                 )
             }
 
@@ -153,18 +144,16 @@ class UserInfoViewModel @Inject constructor(
     }
 
     fun selectCollege(college: College) {
-        val currentState = _uiState.value as? UiState.Success ?: return
-        val isCollegeChanged = college != currentState.data.originalCollege
+        val currentState = _uiState.value as? UserInfoData ?: return
+        val isCollegeChanged = college != currentState.originalCollege
 
         _uiState.update {
-            UiState.Success(
-                currentState.data.copy(
-                    selectedCollege = college,
-                    isCollegeChanged = isCollegeChanged,
-                    // 단과대가 변경되면 학과 초기화
-                    selectedDepartment = null,
-                    departmentList = emptyList()
-                )
+            currentState.copy(
+                selectedCollege = college,
+                isCollegeChanged = isCollegeChanged,
+                // 단과대가 변경되면 학과 초기화
+                selectedDepartment = null,
+                departmentList = emptyList()
             )
         }
 
@@ -173,34 +162,32 @@ class UserInfoViewModel @Inject constructor(
     }
 
     fun selectDepartment(department: Department) {
-        val currentState = _uiState.value as? UiState.Success ?: return
-        val isDepartmentChanged = department != currentState.data.originalDepartment
+        val currentState = _uiState.value as? UserInfoData ?: return
+        val isDepartmentChanged = department != currentState.originalDepartment
 
         _uiState.update {
-            UiState.Success(
-                currentState.data.copy(
-                    selectedDepartment = department,
-                    isDepartmentChanged = isDepartmentChanged,
-                )
+            currentState.copy(
+                selectedDepartment = department,
+                isDepartmentChanged = isDepartmentChanged,
             )
         }
     }
 
     fun loadDepartmentList(collegeId: Int) {
         viewModelScope.launch {
-            val currentState = _uiState.value as? UiState.Success ?: return@launch
+            val currentState = _uiState.value as? UserInfoData ?: return@launch
 
             if (collegeId == -1) {
                 Timber.w("학과 목록 로드 스킵: invalid collegeId=-1")
                 _uiState.update {
-                    UiState.Success(currentState.data.copy(departmentList = emptyList()))
+                    currentState.copy(departmentList = emptyList())
                 }
                 return@launch
             }
 
             val departments = userRepository.getTotalDepartments(collegeId)
             _uiState.update {
-                UiState.Success(currentState.data.copy(departmentList = departments))
+                currentState.copy(departmentList = departments)
             }
             Timber.d("학과 목록 로드: ${departments.size}개 (단과대 ID: $collegeId)")
         }
@@ -208,11 +195,11 @@ class UserInfoViewModel @Inject constructor(
 
     fun saveUserInfo() {
         viewModelScope.launch {
-            val currentState = _uiState.value as? UiState.Success ?: return@launch
+            val currentState = _uiState.value as? UserInfoData ?: return@launch
 
-            _uiState.update { UiState.Loading }
+            _uiState.update { UserInfoUiState.Loading }
 
-            val data = currentState.data
+            val data = currentState
             var nicknameUpdated = false
             var departmentUpdated = false
 
@@ -226,7 +213,7 @@ class UserInfoViewModel @Inject constructor(
                             ToastType.ERROR
                         )
                     )
-                    _uiState.value = UiState.Error
+                    _uiState.value = UserInfoUiState.Error
                     return@launch
                 }
                 nicknameUpdated = true
@@ -239,7 +226,7 @@ class UserInfoViewModel @Inject constructor(
 
                 val success = userRepository.setUserDepartment(department.departmentId)
                 if (!success) {
-                    _uiState.value = UiState.Error
+                    _uiState.value = UserInfoUiState.Error
                     return@launch
                 }
 
@@ -257,14 +244,17 @@ class UserInfoViewModel @Inject constructor(
 
             _uiEvent.emit(UiEvent.ShowToast(message, ToastType.INFO))
             _uiState.update {
-                UiState.Success(
-                    data.copy(
-                        isDone = true
-                    )
+                data.copy(
+                    isDone = true
                 )
             }
         }
     }
+}
+
+sealed interface UserInfoUiState {
+    data object Loading : UserInfoUiState
+    data object Error : UserInfoUiState
 }
 
 // 화면에 표시할 실제 데이터
@@ -290,7 +280,7 @@ data class UserInfoData(
     val departmentList: List<Department> = emptyList(),
 
     val isDone: Boolean = false,
-) {
+) : UserInfoUiState {
     // 중복 확인 버튼 활성화 조건
     val canCheckDuplication: Boolean
         get() = nicknameValidationError == null && // 유효성 검증 통과

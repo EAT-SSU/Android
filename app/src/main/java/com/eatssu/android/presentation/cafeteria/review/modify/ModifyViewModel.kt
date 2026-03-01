@@ -6,7 +6,7 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.ModifyReviewUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,18 +23,16 @@ class ModifyViewModel @Inject constructor(
     private val modifyReviewUseCase: ModifyReviewUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<ModifyState>>(UiState.Init)
-    val uiState: StateFlow<UiState<ModifyState>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ModifyUiState>(ModifyUiState.Loading)
+    val uiState: StateFlow<ModifyUiState> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
     fun init(rating: Int, content: String, menuLikeInfos: List<Review.MenuLikeInfo>) {
-        val base = ModifyState.Baseline(rating, content, menuLikeInfos)
-        _uiState.value = UiState.Success(
-            ModifyState.Editing(
-                rating = rating, content = content, menuLikeInfos = menuLikeInfos, baseline = base
-            )
+        val base = ModifyUiState.Baseline(rating, content, menuLikeInfos)
+        _uiState.value = ModifyUiState.Editing(
+            rating = rating, content = content, menuLikeInfos = menuLikeInfos, baseline = base
         )
     }
 
@@ -44,22 +42,20 @@ class ModifyViewModel @Inject constructor(
         it.copy(menuLikeInfos = it.menuLikeInfos.map { m -> if (m.menuId == id) m.copy(isLike = !m.isLike) else m })
     }
 
-    private inline fun updateEditing(block: (ModifyState.Editing) -> ModifyState.Editing) {
-        val cur = (_uiState.value as? UiState.Success)?.data as? ModifyState.Editing ?: return
-        _uiState.value = UiState.Success(block(cur))
+    private inline fun updateEditing(block: (ModifyUiState.Editing) -> ModifyUiState.Editing) {
+        val cur = _uiState.value as? ModifyUiState.Editing ?: return
+        _uiState.value = block(cur)
     }
 
     fun submit(reviewId: Long) {
-        val editing = (_uiState.value as? UiState.Success)?.data as? ModifyState.Editing ?: return
+        val editing = _uiState.value as? ModifyUiState.Editing ?: return
         if (!editing.canSubmit) return
 
-        _uiState.value = UiState.Success(
-            ModifyState.Modifying(
-                editing.rating,
-                editing.content,
-                editing.menuLikeInfos,
-                editing.baseline
-            )
+        _uiState.value = ModifyUiState.Submitting(
+            editing.rating,
+            editing.content,
+            editing.menuLikeInfos,
+            editing.baseline
         )
 
         viewModelScope.launch {
@@ -67,7 +63,7 @@ class ModifyViewModel @Inject constructor(
                 reviewId, editing.rating, editing.content, editing.menuLikeInfos
             )
             if (!success) {
-                _uiState.value = UiState.Success(editing)
+                _uiState.value = editing
                 _uiEvent.emit(
                     UiEvent.ShowToast(
                         UiText.StringResource(R.string.toast_review_modify_failed),
@@ -87,7 +83,8 @@ class ModifyViewModel @Inject constructor(
     }
 }
 
-sealed class ModifyState {
+sealed interface ModifyUiState {
+    data object Loading : ModifyUiState
 
     data class Baseline(
         val rating: Int,
@@ -99,8 +96,8 @@ sealed class ModifyState {
         val rating: Int = 0,
         val content: String = "",
         val menuLikeInfos: List<Review.MenuLikeInfo> = emptyList(),
-        val baseline: Baseline, // 초기 스냅샷
-    ) : ModifyState() {
+        val baseline: Baseline,
+    ) : ModifyUiState {
         val hasChanges: Boolean
             get() = rating != baseline.rating ||
                     content != baseline.content ||
@@ -112,10 +109,10 @@ sealed class ModifyState {
         val contentCount: Int get() = content.length
     }
 
-    data class Modifying(
+    data class Submitting(
         val rating: Int,
         val content: String,
         val menuLikeInfos: List<Review.MenuLikeInfo>,
-        val baseline: Baseline, // 유지
-    ) : ModifyState()
+        val baseline: Baseline,
+    ) : ModifyUiState
 }

@@ -1,5 +1,8 @@
 package com.eatssu.common.enums
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class ScreenId(val value: String) {
     LOGIN_SPLASH("LOG_001000"),
     LOGIN_MAINTENANCE("LOG_001001"),

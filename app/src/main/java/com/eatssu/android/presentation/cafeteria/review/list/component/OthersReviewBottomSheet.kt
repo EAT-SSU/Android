@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.Black
@@ -107,7 +107,7 @@ fun OthersReviewBottomSheet(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun ReviewActionsSheetPreview() {
     EatssuTheme {
@@ -117,11 +117,7 @@ private fun ReviewActionsSheetPreview() {
     }
 }
 
-@Preview(
-    showBackground = true,
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@ThemePreviews
 @Composable
 private fun ReviewActionsSheetDarkPreview() {
     EatssuTheme {

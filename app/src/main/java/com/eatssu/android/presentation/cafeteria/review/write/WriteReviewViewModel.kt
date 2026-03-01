@@ -11,7 +11,7 @@ import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
@@ -35,7 +35,7 @@ class WriteReviewViewModel @Inject constructor(
     private val getValidMenusOfMealUseCase: GetValidMenusOfMealUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
+    private val _uiState = MutableStateFlow<WriteReviewUiState>(WriteReviewUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -44,7 +44,7 @@ class WriteReviewViewModel @Inject constructor(
 
     fun loadMenuList(menuType: MenuType, id: Long, menuName: String) {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _uiState.value = WriteReviewUiState.Loading
             val menuList: List<MenuMini> = when (menuType) {
                 MenuType.FIXED -> listOf(
                     MenuMini(
@@ -55,14 +55,12 @@ class WriteReviewViewModel @Inject constructor(
 
                 MenuType.VARIABLE -> getValidMenusOfMealUseCase(id)
             }
-            _uiState.value = UiState.Success(
-                WriteReviewState.Editing(
-                    menuList = menuList,
-                    rating = 0,
-                    content = "",
-                    likedMenuIds = emptySet(),
-                    selectedImageUri = null
-                )
+            _uiState.value = WriteReviewUiState.Editing(
+                menuList = menuList,
+                rating = 0,
+                content = "",
+                likedMenuIds = emptySet(),
+                selectedImageUri = null
             )
         }
     }
@@ -79,9 +77,9 @@ class WriteReviewViewModel @Inject constructor(
 
     fun setSelectedImage(uri: Uri?) = updateEditing { it.copy(selectedImageUri = uri) }
 
-    private inline fun updateEditing(block: (WriteReviewState.Editing) -> WriteReviewState.Editing) {
-        val cur = (_uiState.value as? UiState.Success)?.data as? WriteReviewState.Editing ?: return
-        _uiState.value = UiState.Success(block(cur))
+    private inline fun updateEditing(block: (WriteReviewUiState.Editing) -> WriteReviewUiState.Editing) {
+        val cur = _uiState.value as? WriteReviewUiState.Editing ?: return
+        _uiState.value = block(cur)
     }
 
     fun postReview(
@@ -90,18 +88,16 @@ class WriteReviewViewModel @Inject constructor(
         context: Context,
     ) {
         val editing =
-            (_uiState.value as? UiState.Success)?.data as? WriteReviewState.Editing ?: return
+            _uiState.value as? WriteReviewUiState.Editing ?: return
         if (!editing.canSubmit) return
 
         // Posting 단계로 전이 (폼 보존)
-        _uiState.value = UiState.Success(
-            WriteReviewState.Posting(
-                menuList = editing.menuList,
-                rating = editing.rating,
-                content = editing.content,
-                likedMenuIds = editing.likedMenuIds,
-                selectedImageUri = editing.selectedImageUri
-            )
+        _uiState.value = WriteReviewUiState.Posting(
+            menuList = editing.menuList,
+            rating = editing.rating,
+            content = editing.content,
+            likedMenuIds = editing.likedMenuIds,
+            selectedImageUri = editing.selectedImageUri
         )
 
         viewModelScope.launch {
@@ -120,18 +116,18 @@ class WriteReviewViewModel @Inject constructor(
                             // 원본 파일 삭제 (압축된 파일만 유지)
                             originalFile.delete()
                         } else {
-                            _uiState.value = UiState.Success(editing) // 되돌림
+                            _uiState.value = editing // 되돌림
                             _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_image_compress_failed), ToastType.ERROR))
                             return@launch
                         }
                     } else {
-                        _uiState.value = UiState.Success(editing) // 되돌림
+                        _uiState.value = editing // 되돌림
                         _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_image_not_found), ToastType.ERROR))
                         return@launch
                     }
                 } catch (e: Exception) {
                     Timber.e(e, "이미지 업로드 실패")
-                    _uiState.value = UiState.Success(editing) // 되돌림
+                    _uiState.value = editing // 되돌림
                     _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_image_upload_failed), ToastType.ERROR))
                     return@launch
                 }
@@ -148,7 +144,7 @@ class WriteReviewViewModel @Inject constructor(
             )
 
             if (!success) {
-                _uiState.value = UiState.Success(editing) // 되돌림
+                _uiState.value = editing // 되돌림
                 _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_review_write_failed), ToastType.ERROR))
                 return@launch
             }
@@ -187,14 +183,16 @@ private suspend fun compressImage(context: Context, originalFile: File): File? {
 }
 
 
-sealed class WriteReviewState {
+sealed interface WriteReviewUiState {
+    data object Loading : WriteReviewUiState
+
     data class Editing(
         val menuList: List<MenuMini>,
         val rating: Int,
         val content: String,
         val likedMenuIds: Set<Long>,
         val selectedImageUri: Uri?,
-    ) : WriteReviewState() {
+    ) : WriteReviewUiState {
         val canSubmit: Boolean get() = rating > 0
         val contentCount: Int get() = content.length
     }
@@ -205,8 +203,5 @@ sealed class WriteReviewState {
         val content: String,
         val likedMenuIds: Set<Long>,
         val selectedImageUri: Uri?,
-    ) : WriteReviewState()
-
-    // 성공시 상태는 정의하지 않음.
-    // 성공시 네비게이트 이벤트 발생
+    ) : WriteReviewUiState
 }

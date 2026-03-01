@@ -1,6 +1,5 @@
 package com.eatssu.android.presentation.cafeteria.review.list
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,12 +49,12 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewB
 import com.eatssu.android.presentation.cafeteria.review.list.component.OthersReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
-import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
+import com.eatssu.android.presentation.util.ObserveUiEvents
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
@@ -71,7 +70,7 @@ import com.eatssu.design_system.theme.Star
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
-fun ReviewListScreen(
+fun ReviewListRoute(
     modifier: Modifier = Modifier,
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
@@ -80,6 +79,7 @@ fun ReviewListScreen(
     onBack: () -> Unit = {},
     onWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
+    onReportClick: (reviewId: Long) -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -92,10 +92,9 @@ fun ReviewListScreen(
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
-    val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
-    LaunchedEffect(uiEvent) {
-        when (val event = uiEvent) {
+    ObserveUiEvents(viewModel.uiEvent) { event ->
+        when (event) {
             is UiEvent.ShowToast -> context.showToast(event)
             is ReviewListEvent.ReviewDeleted -> {
                 context.showToast(
@@ -106,8 +105,6 @@ fun ReviewListScreen(
                 )
                 reviewPagingItems.refresh()
             }
-
-            else -> {}
         }
     }
 
@@ -119,13 +116,14 @@ fun ReviewListScreen(
         onBack = onBack,
         onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
-        onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) }
+        onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
+        onReportClick = onReportClick,
     )
 }
 
 @Composable
 internal fun ReviewListScreen(
-    uiState: UiState<ReviewListState>,
+    uiState: ReviewListUiState,
     reviewPagingItems: LazyPagingItems<Review>,
     modifier: Modifier = Modifier,
     menuName: String,
@@ -133,9 +131,8 @@ internal fun ReviewListScreen(
     onReviewWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
+    onReportClick: (reviewId: Long) -> Unit = {},
 ) {
-    val context = LocalContext.current
-
     var showMyBottomSheet by remember { mutableStateOf(false) }
     var showOthersBottomSheet by remember { mutableStateOf(false) }
 
@@ -145,9 +142,7 @@ internal fun ReviewListScreen(
         OthersReviewBottomSheet(
             onDismiss = { showOthersBottomSheet = false; selectedReview = null },
             onReport = {
-                val intent = Intent(context, ReportActivity::class.java)
-                intent.putExtra("reviewId", selectedReview?.reviewId)
-                context.startActivity(intent)
+                selectedReview?.reviewId?.let(onReportClick)
                 showOthersBottomSheet = false
                 selectedReview = null
             }
@@ -201,7 +196,7 @@ internal fun ReviewListScreen(
 
                 when (uiState) {
 
-                    is UiState.Init, UiState.Loading -> {
+                    is ReviewListUiState.Loading -> {
                         ReviewInfoContent(
                             menuName, ReviewInfo(
                                 reviewCnt = 0,
@@ -246,8 +241,8 @@ internal fun ReviewListScreen(
                     }
 
 
-                    is UiState.Success -> {
-                        val info = uiState.data.reviewInfo
+                    is ReviewListUiState.Success -> {
+                        val info = uiState.reviewInfo
 
                         val loadState = reviewPagingItems.loadState
                         val isInitialLoading = loadState.refresh is LoadState.Loading
@@ -402,7 +397,7 @@ internal fun ReviewListScreen(
                         }
                     }
 
-                    UiState.Error -> {
+                    ReviewListUiState.Error -> {
                         // TODO: 에러 UI
                         ReviewInfoContent(
                             menuName,
@@ -590,7 +585,7 @@ fun <T : Any> rememberPreviewPagingItems(
 }
 
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun ReviewListPreview() {
     val reviewList = List(5) { id ->
@@ -621,25 +616,23 @@ fun ReviewListPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Success(
-                ReviewListState(
-                    reviewInfo = ReviewInfo(
-                        reviewCnt = 5,
-                        fiveStarCount = 5,
-                        fourStarCount = 0,
-                        threeStarCount = 0,
-                        twoStarCount = 0,
-                        oneStarCount = 0,
-                        rating = 5.0,
-                    ),
-                )
+            uiState = ReviewListUiState.Success(
+                reviewInfo = ReviewInfo(
+                    reviewCnt = 5,
+                    fiveStarCount = 5,
+                    fourStarCount = 0,
+                    threeStarCount = 0,
+                    twoStarCount = 0,
+                    oneStarCount = 0,
+                    rating = 5.0,
+                ),
             ),
             reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun ReviewListLoadingPreview() {
     val pagingData = PagingData.empty<Review>(
@@ -656,25 +649,23 @@ fun ReviewListLoadingPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Success(
-                ReviewListState(
-                    reviewInfo = ReviewInfo(
-                        reviewCnt = 0,
-                        fiveStarCount = 0,
-                        fourStarCount = 0,
-                        threeStarCount = 0,
-                        twoStarCount = 0,
-                        oneStarCount = 0,
-                        rating = 0.0,
-                    ),
-                )
+            uiState = ReviewListUiState.Success(
+                reviewInfo = ReviewInfo(
+                    reviewCnt = 0,
+                    fiveStarCount = 0,
+                    fourStarCount = 0,
+                    threeStarCount = 0,
+                    twoStarCount = 0,
+                    oneStarCount = 0,
+                    rating = 0.0,
+                ),
             ),
             reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun ReviewListEmptyPreview() {
     val pagingData = PagingData.empty<Review>(
@@ -691,25 +682,23 @@ fun ReviewListEmptyPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Success(
-                ReviewListState(
-                    reviewInfo = ReviewInfo(
-                        reviewCnt = 0,
-                        fiveStarCount = 0,
-                        fourStarCount = 0,
-                        threeStarCount = 0,
-                        twoStarCount = 0,
-                        oneStarCount = 0,
-                        rating = 0.0,
-                    ),
-                )
+            uiState = ReviewListUiState.Success(
+                reviewInfo = ReviewInfo(
+                    reviewCnt = 0,
+                    fiveStarCount = 0,
+                    fourStarCount = 0,
+                    threeStarCount = 0,
+                    twoStarCount = 0,
+                    oneStarCount = 0,
+                    rating = 0.0,
+                ),
             ),
             reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun ReviewListErrorPreview() {
     val pagingData = PagingData.empty<Review>(
@@ -726,7 +715,7 @@ fun ReviewListErrorPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
-            uiState = UiState.Error,
+            uiState = ReviewListUiState.Error,
             reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )
     }

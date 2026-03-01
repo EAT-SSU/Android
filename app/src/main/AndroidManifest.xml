@@ -125,28 +125,13 @@
         </activity>
 
         <activity
-            android:name=".presentation.mypage.DeveloperActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.mypage.SignOutActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".presentation.mypage.terms.WebViewActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.mypage.language.LanguageSelectorActivity"
-            android:exported="false" />
-        <activity
-                android:name=".presentation.intro.IntroActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true">
-            <!-- 기본 런처 필터 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- 딥링크 필터  -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -157,35 +142,12 @@
                     android:host="root"
                     android:scheme="eatssu" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.ReviewComposeActivity"
-            android:exported="true">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".presentation.login.LoginActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.common.AndroidMessageDialogActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.common.ForceUpdateDialogActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -199,36 +161,6 @@
                     android:host="oauth"
                     android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".presentation.mypage.userinfo.UserInfoActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.mypage.myreview.MyReviewListComposeActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-        <activity
-            android:name=".presentation.MainActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.cafeteria.review.report.ReportActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
     </application>
 

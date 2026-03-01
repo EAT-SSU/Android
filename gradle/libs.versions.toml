@@ -1,5 +1,4 @@
 [versions]
-accompanistAppcompatTheme = "0.16.0"
 activityCompose = "1.9.2"
 android = "8.6.1"
 androidx-core = "1.7.0"
@@ -8,27 +7,17 @@ hiltAndroidCompiler = "2.42"
 lifecycleRuntimeCompose = "2.8.7"
 animation = "1.7.8"
 coilCompose = "2.5.0"
-composeThemeAdapter = "1.2.1"
 lifecycleRuntimeKtx = "2.5.2"
 lifecycleViewmodelCompose = "2.8.7"
 mapSdk = "3.21.0"
-constraintlayout = "2.1.4"
 naverMapCompose = "fc~cluster-SNAPSHOT"
 naverMapLocation = "21.0.2"
-naverMapClustering = "1.0.2"
-navigationUi = "2.8.9"
 playServicesLocation = "21.3.0"
 navigationFragment = "2.9.3"
 securityCrypto = "1.1.0-alpha06"
-threetenabp = "1.4.4"
-material-calendarview = "1.4.3"
-recyclerview = "1.3.2"
-transport-runtime = "3.1.2"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-activity = "1.8.2"
-fragment = "1.6.2"
 uiTestJunit4 = "1.7.8"
 uiTooling = "1.7.8"
 compose-material3 = "1.3.1"
@@ -38,8 +27,6 @@ composeBom = "2024.04.01"
 lifecycle = "2.7.0"
 retrofit = "2.9.0"
 okhttp = "4.12.0"
-glide = "4.15.1"
-glide-compiler = "4.12.0"
 compressor = "3.0.1"
 coroutines = "1.7.3"
 kakao-login = "2.23.0"
@@ -71,11 +58,6 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
-androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
-androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
-androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHilt" }
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "androidxHilt" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHilt" }
@@ -97,8 +79,6 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 
 # navigation
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationFragment" }
-androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "navigationFragment" }
-androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationFragment" }
 
 # coroutines
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -115,10 +95,6 @@ androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "g
 # datastore
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
-
-# glide
-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide-compiler" }
 
 # coil
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
@@ -143,11 +119,6 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
 
 # etc
-accompanist-appcompat-theme = { group = "com.google.accompanist", name = "accompanist-appcompat-theme", version.ref = "accompanistAppcompatTheme" }
-compose-theme-adapter = { group = "com.google.android.material", name = "compose-theme-adapter", version.ref = "composeThemeAdapter" }
-threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
-material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "material-calendarview" }
-transport-runtime = { group = "com.google.android.datatransport", name = "transport-runtime", version.ref = "transport-runtime" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 compressor = { group = "id.zelory", name = "compressor", version.ref = "compressor" }
 kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-login" }

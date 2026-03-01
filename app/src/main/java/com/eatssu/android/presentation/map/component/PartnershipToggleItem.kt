@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
@@ -101,6 +102,18 @@ fun PartnershipToggleItem(
             text = label,
             color = textColor,
             style = EatssuTheme.typography.body2
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun PartnershipFilterTogglePreview() {
+    EatssuTheme {
+        PartnershipFilterToggle(
+            selected = FilterType.Mine,
+            onSelectedChange = {},
+            departmentName = "컴퓨터학부",
         )
     }
 }

@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.theme.EatssuTheme
 
@@ -20,11 +20,11 @@ fun EatSsuButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    fillMaxWidth: Boolean = true,
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = (if (fillMaxWidth) modifier.fillMaxWidth() else modifier)
             .height(50.dp),
         enabled = enabled,
         shape = RoundedCornerShape(12.dp),
@@ -43,7 +43,7 @@ fun EatSsuButton(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun PreviewRoundedSelectButton() {
     EatssuTheme {
@@ -51,7 +51,7 @@ fun PreviewRoundedSelectButton() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun PreviewRoundedSelectButtonDisabled() {
     EatssuTheme {

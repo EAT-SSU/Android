@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,7 +32,7 @@ import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLike
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
@@ -46,7 +46,7 @@ import com.eatssu.design_system.theme.Primary
 const val MAX_TEXT_COUNT = 300
 
 @Composable
-fun ModifyReviewScreen(
+fun ModifyReviewRoute(
     reviewId: Long,
     initialRating: Int,
     modifier: Modifier = Modifier,
@@ -78,8 +78,8 @@ fun ModifyReviewScreen(
         }
     }
 
-    when (val data = (ui as? UiState.Success)?.data) {
-        is ModifyState.Editing -> {
+    when (val data = ui) {
+        is ModifyUiState.Editing -> {
             ModifyReviewScreen(
                 modifier = modifier,
                 title = stringResource(R.string.title_review_modify),
@@ -98,8 +98,7 @@ fun ModifyReviewScreen(
             )
         }
 
-        is ModifyState.Modifying -> {
-            // 통신 중에도 폼은 유지, 버튼/입력 제한만
+        is ModifyUiState.Submitting -> {
             ModifyReviewScreen(
                 modifier = modifier,
                 title = stringResource(R.string.title_review_modify),
@@ -109,15 +108,14 @@ fun ModifyReviewScreen(
                 isSubmitting = true,
                 canSubmit = false,
                 onBack = onBack,
-                onRatingChanged = {},          // 수정 불가
-                onContentChanged = {},         // 수정 불가
-                onToggleLike = {},             // 수정 불가
-                onSubmit = {}                  // 중복 제출 방지
+                onRatingChanged = {},
+                onContentChanged = {},
+                onToggleLike = {},
+                onSubmit = {}
             )
         }
 
         else -> {
-            // 에러나 초기 로딩 등: 최소 로딩 UI
             Surface(modifier = modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
@@ -247,7 +245,7 @@ internal fun ModifyReviewScreen(
 }
 
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun ModifyReviewPreview() {
     EatssuTheme {

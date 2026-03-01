@@ -6,14 +6,14 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.auth.SignOutUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,19 +24,19 @@ class SignOutViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<SignOutState>> = MutableStateFlow(UiState.Init)
-    val uiState: StateFlow<UiState<SignOutState>> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<SignOutUiState> = MutableStateFlow(SignOutUiState.Idle)
+    val uiState: StateFlow<SignOutUiState> = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent: SharedFlow<UiEvent> = _uiEvent
+    val uiEvent = _uiEvent.asSharedFlow()
 
     fun signOut() {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _uiState.value = SignOutUiState.Loading
 
             val success = signOutUseCase()
             if (!success) {
-                _uiState.value = UiState.Error
+                _uiState.value = SignOutUiState.Error
                 _uiEvent.emit(
                     UiEvent.ShowToast(
                         UiText.StringResource(R.string.toast_sign_out_fail),
@@ -46,7 +46,7 @@ class SignOutViewModel @Inject constructor(
                 return@launch
             }
 
-            _uiState.value = UiState.Success(SignOutState(isSignOuted = true))
+            _uiState.value = SignOutUiState.SignedOut
             _uiEvent.emit(
                 UiEvent.ShowToast(
                     UiText.StringResource(R.string.toast_sign_out_success),
@@ -58,6 +58,9 @@ class SignOutViewModel @Inject constructor(
     }
 }
 
-data class SignOutState(
-    val isSignOuted: Boolean = false,
-)
+sealed interface SignOutUiState {
+    data object Idle : SignOutUiState
+    data object Loading : SignOutUiState
+    data object SignedOut : SignOutUiState
+    data object Error : SignOutUiState
+}

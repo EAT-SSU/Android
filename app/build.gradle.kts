@@ -38,8 +38,8 @@ android {
 
     buildFeatures {
         buildConfig = true
-        viewBinding = true
-        dataBinding = true
+        viewBinding = false
+        dataBinding = false
         compose = true
     }
 
@@ -143,13 +143,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.threetenabp)
-    implementation(libs.material.calendarview)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.transport.runtime)
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.fragment.ktx)
 
     // Compose
     implementation(libs.androidx.activity.compose)
@@ -162,14 +155,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.compose.theme.adapter)
-    implementation(libs.accompanist.appcompat.theme)
     androidTestImplementation(libs.androidx.compose.bom)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // navigation
-    implementation(libs.androidx.navigation.fragment)
-    implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.navigation.compose)
 
     //glance
@@ -186,15 +175,9 @@ dependencies {
 
     //retrofit2: 서버통신
     implementation(libs.retrofit)
-
-
     //OkHttp: 통신 로그 확인하기 위함
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
-
-    //glide: 사진 업로드
-    implementation(libs.glide)
-    ksp(libs.glide.compiler)
 
     //coil: 이미지 로딩
     implementation(libs.coil.compose)
@@ -219,9 +202,8 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.navigation.compose)
 
-    // ViewModel and LiveData
+    // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     implementation(libs.play.services.base)
 

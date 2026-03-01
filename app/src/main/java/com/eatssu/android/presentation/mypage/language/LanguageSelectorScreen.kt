@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,7 +20,7 @@ import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 
 @Composable
-fun LanguageSelectorScreen(
+fun LanguageSelectorRoute(
     modifier: Modifier = Modifier,
     viewModel: LanguageSelectorViewModel = hiltViewModel(),
     onBack: () -> Unit = {}
@@ -83,7 +83,7 @@ fun LanguageSelectorContent(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun LanguageSelectorScreenPreview() {
     EatssuTheme {

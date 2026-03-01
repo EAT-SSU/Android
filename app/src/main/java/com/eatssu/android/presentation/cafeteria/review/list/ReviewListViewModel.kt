@@ -11,7 +11,7 @@ import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
@@ -35,8 +35,8 @@ class ReviewListViewModel @Inject constructor(
     private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<ReviewListState>>(UiState.Init)
-    val uiState: StateFlow<UiState<ReviewListState>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ReviewListUiState>(ReviewListUiState.Loading)
+    val uiState: StateFlow<ReviewListUiState> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -62,12 +62,22 @@ class ReviewListViewModel @Inject constructor(
     }
 
     private suspend fun loadReviewInfo(menuType: MenuType, itemId: Long) {
-        _uiState.value = UiState.Loading
+        _uiState.value = ReviewListUiState.Loading
         try {
             val reviewInfo = getReviewInfoUseCase(menuType, itemId)
-            _uiState.value = UiState.Success(ReviewListState(reviewInfo))
+            if (reviewInfo == null) {
+                _uiState.value = ReviewListUiState.Error
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_review_load_failed),
+                        ToastType.ERROR
+                    )
+                )
+                return
+            }
+            _uiState.value = ReviewListUiState.Success(reviewInfo)
         } catch (e: Exception) {
-            _uiState.value = UiState.Error
+            _uiState.value = ReviewListUiState.Error
             _uiEvent.emit(
                 UiEvent.ShowToast(
                     UiText.StringResource(R.string.toast_review_load_failed),
@@ -102,9 +112,11 @@ class ReviewListViewModel @Inject constructor(
     }
 }
 
-data class ReviewListState(
-    val reviewInfo: ReviewInfo? = null,
-)
+sealed interface ReviewListUiState {
+    data object Loading : ReviewListUiState
+    data class Success(val reviewInfo: ReviewInfo) : ReviewListUiState
+    data object Error : ReviewListUiState
+}
 
 
 sealed interface ReviewListEvent : UiEvent {

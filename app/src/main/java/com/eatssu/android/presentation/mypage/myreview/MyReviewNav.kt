@@ -1,62 +1,91 @@
 package com.eatssu.android.presentation.mypage.myreview
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.eatssu.android.domain.model.Review
-import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
-
-object MyReviewNav {
-    const val List = "list"
-    const val Modify = "modify"
-}
+import androidx.navigation.toRoute
+import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewRoute
+import com.eatssu.android.presentation.navigation.MyReviewDestination
+import com.eatssu.android.presentation.navigation.ReviewModifyPayloadCodec
+import com.eatssu.design_system.theme.EatssuTheme
 
 @Composable
 fun MyReviewNav(
     navHostController: NavHostController = rememberNavController(),
-    onExit: () -> Unit = {}
+    onExit: () -> Unit = {},
 ) {
+    val isPreviewMode = LocalInspectionMode.current
 
     NavHost(
         navController = navHostController,
-        startDestination = MyReviewNav.List
+        startDestination = MyReviewDestination.List,
     ) {
-        // 리뷰 보기
-        composable(MyReviewNav.List) {
-            MyReviewListScreen(
-                onBack = { onExit() },
-                onModifyClick = { review ->
-                    // 선택된 리뷰 데이터를 Modify 화면으로 전달
-                    navHostController.currentBackStackEntry?.savedStateHandle?.apply {
-                        set("reviewId", review.reviewId)
-                        set("initialRating", review.rating)
-                        set("initialContent", review.content)
-                        set("menuList", review.menuLikeInfoList)
-                    }
-
-                    navHostController.navigate(MyReviewNav.Modify) { launchSingleTop = true }
-                },
-            )
+        composable<MyReviewDestination.List> {
+            if (isPreviewMode) {
+                MyReviewNavPreviewPlaceholder(title = "My Review List")
+            } else {
+                MyReviewListRoute(
+                    onBack = { onExit() },
+                    onModifyClick = { review ->
+                        navHostController.navigate(
+                            MyReviewDestination.Modify(
+                                reviewId = review.reviewId,
+                                initialRating = review.rating,
+                                initialContent = review.content,
+                                menuLikeInfoPayload = ReviewModifyPayloadCodec.encode(review.menuLikeInfoList),
+                            )
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
+            }
         }
 
-        // 리뷰 수정
-        composable(MyReviewNav.Modify) { backStackEntry ->
-            val prev = navHostController.previousBackStackEntry?.savedStateHandle
-            val reviewId = prev?.get<Long>("reviewId") ?: 0L
-            val initialRating = prev?.get<Int>("initialRating") ?: 0
-            val initialContent = prev?.get<String>("initialContent") ?: ""
-            val menuLikeInfoNames = prev?.get<List<Review.MenuLikeInfo>>("menuList")
-                ?.let { ArrayList(it) } ?: arrayListOf()
+        composable<MyReviewDestination.Modify> { backStackEntry ->
+            if (isPreviewMode) {
+                MyReviewNavPreviewPlaceholder(title = "Modify My Review")
+            } else {
+                val route = backStackEntry.toRoute<MyReviewDestination.Modify>()
 
-            ModifyReviewScreen(
-                reviewId = reviewId,
-                initialRating = initialRating,
-                initialContent = initialContent,
-                menuLikeInfoList = menuLikeInfoNames,
-                onBack = { navHostController.popBackStack() },
-            )
+                ModifyReviewRoute(
+                    reviewId = route.reviewId,
+                    initialRating = route.initialRating,
+                    initialContent = route.initialContent,
+                    menuLikeInfoList = ReviewModifyPayloadCodec.decode(route.menuLikeInfoPayload),
+                    onBack = { navHostController.popBackStack() },
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun MyReviewNavPreviewPlaceholder(title: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = title,
+            style = EatssuTheme.typography.subtitle1,
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun MyReviewNavPreview() {
+    EatssuTheme {
+        MyReviewNav()
     }
 }

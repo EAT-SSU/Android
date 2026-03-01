@@ -6,7 +6,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,20 +14,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -43,34 +43,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Partnership
-import com.eatssu.android.presentation.MainState
-import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
-import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.ObserveUiEvents
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
 import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
+import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.Primary
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
@@ -85,7 +83,6 @@ import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.util.FusedLocationSource
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -96,18 +93,14 @@ private const val PERMISSION_REQUEST_CODE = 1001
 
 @Composable
 fun MapRoute(
-    viewModel: MapViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel()
+    viewModel: MapViewModel = hiltViewModel(),
+    navigateToUserInfo: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // UiState에서 Success 상태인 실제 MapState 데이터만 추출
-    val mapState: MapState = when (val s = uiState) {
-        is UiState.Success -> s.data
-        else -> MapState()
-    }
+    // MapUiState에서 MapState 데이터만 추출
+    val mapState: MapState = (uiState as? MapState) ?: MapState()
 
-    val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
     val departmentSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val partnershipSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
@@ -143,23 +136,12 @@ fun MapRoute(
         }
     }
 
-    // MainState에서 학과 정보 가져오기
-    val (departmentName, showUserDepartmentBottomSheet) = when (val state = mainUiState) {
-        is UiState.Success -> {
-            when (val data = state.data) {
-                is MainState.DepartmentState -> data.departmentName to data.showUserDepartmentBottomSheet
-                else -> "학과" to false
-            }
-        }
+    val departmentName = mapState.departmentName
+    val showUserDepartmentBottomSheet = mapState.showUserDepartmentBottomSheet
 
-        else -> "학과" to false
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.uiEvent.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowToast -> context.showToast(event)
-            }
+    ObserveUiEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is UiEvent.ShowToast -> context.showToast(event)
         }
     }
 
@@ -214,7 +196,7 @@ fun MapRoute(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 Timber.d("MapFragmentComposeView: onResume -> 학과 정보 갱신")
-                mainViewModel.refreshUserDepartment()
+                viewModel.refreshUserDepartment()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -236,10 +218,7 @@ fun MapRoute(
                 context.showToast(uiText, info)
             }
         },
-        navigateToUserInfo = {
-            val intent = Intent(context, UserInfoActivity::class.java)
-            context.startActivity(intent)
-        },
+        navigateToUserInfo = navigateToUserInfo,
         onHideDepartmentSheet = {
             scope.launch { departmentSheetState.hide() }
         },
@@ -284,23 +263,25 @@ internal fun MapScreen(
     onSelectedFilterChange: (FilterType) -> Unit,
     departmentId: Long,
     collegeId: Long,
-    departmentName: String?,
+    departmentName: String,
     selectedFilter: FilterType,
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.title_partnership_map),
-                        style = EatssuTheme.typography.subtitle1
-                    )
-                },
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 17.dp),
-                windowInsets = TopAppBarDefaults.windowInsets
-            )
+                    .background(Color.White),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(Modifier.height(17.dp))
+                Text(
+                    text = stringResource(R.string.title_partnership_map),
+                    style = EatssuTheme.typography.subtitle1,
+                    color = Gray700,
+                )
+                Spacer(Modifier.height(16.dp))
+            }
         },
     ) { innerPadding ->
 
@@ -461,7 +442,7 @@ internal fun MapScreen(
                     onSelectedFilterChange(next)
                 },
                 modifier = Modifier.padding(top = 12.dp),
-                departmentName = departmentName.toString()
+                departmentName = departmentName,
             )
         }
     }
@@ -474,7 +455,7 @@ fun Context.findActivityOrNull(): Activity? = when (this) {
     else -> null
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun MapFragmentComposeViewPreview() {
     EatssuTheme {

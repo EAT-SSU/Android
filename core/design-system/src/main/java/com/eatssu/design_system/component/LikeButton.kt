@@ -12,7 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.EatssuTheme
@@ -49,7 +49,7 @@ fun LikeButton(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun LikeButtonPreview() {
     EatssuTheme {

@@ -7,8 +7,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
+import com.eatssu.design_system.preview.ThemePreviews
+import com.eatssu.design_system.theme.EatssuTheme
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Text
 import com.eatssu.design_system.R
 
 // 폰트 패밀리 설정
@@ -135,4 +138,16 @@ fun eatssuTypography(): EatssuTypography {
             lineHeight = 40.sp
         )
     )
+}
+
+@ThemePreviews
+@Composable
+private fun EatssuTypographyPreview() {
+    EatssuTheme {
+        val typography = eatssuTypography()
+        Text(
+            text = "Typography Preview",
+            style = typography.subtitle1,
+        )
+    }
 }

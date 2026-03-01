@@ -8,7 +8,7 @@ import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +27,8 @@ class MyReviewViewModel @Inject constructor(
     private val deleteReviewUseCase: DeleteReviewUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<MyReviewState>> = MutableStateFlow(UiState.Init)
-    val uiState: StateFlow<UiState<MyReviewState>> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<MyReviewUiState> = MutableStateFlow(MyReviewUiState.Loading)
+    val uiState: StateFlow<MyReviewUiState> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -47,18 +47,16 @@ class MyReviewViewModel @Inject constructor(
     }
 
     fun getMyReviewList() {
-        _uiState.value = UiState.Loading
+        _uiState.value = MyReviewUiState.Loading
 
         viewModelScope.launch {
             val myReviewList = getMyReviewsUseCase()
 
-            _uiState.value = UiState.Success(
-                if (myReviewList.isEmpty()) {
-                    MyReviewState.NoReview
-                } else {
-                    MyReviewState.ReviewExists(myReviews = myReviewList)
-                }
-            )
+            _uiState.value = if (myReviewList.isEmpty()) {
+                MyReviewUiState.Empty
+            } else {
+                MyReviewUiState.Success(reviews = myReviewList)
+            }
             // todo 에러처리
         }
     }
@@ -87,10 +85,9 @@ class MyReviewViewModel @Inject constructor(
 }
 
 
-sealed class MyReviewState {
-    data class ReviewExists(
-        var myReviews: List<Review>? = null,
-    ) : MyReviewState()
-
-    data object NoReview : MyReviewState()
+sealed interface MyReviewUiState {
+    data object Loading : MyReviewUiState
+    data object Empty : MyReviewUiState
+    data class Success(val reviews: List<Review>) : MyReviewUiState
+    data object Error : MyReviewUiState
 }

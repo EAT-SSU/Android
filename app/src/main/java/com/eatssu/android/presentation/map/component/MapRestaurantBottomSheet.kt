@@ -32,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.map.iconRes
@@ -211,7 +211,7 @@ fun MapRestaurantBottomSheet(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun MapRestaurantBottomSheetPreview() {
     val dummyList = listOf(

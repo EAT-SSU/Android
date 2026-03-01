@@ -9,9 +9,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.R
+import com.eatssu.design_system.preview.ThemePreviews
+import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Star
 
@@ -57,14 +58,18 @@ fun RatingBarMedium(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun RatingBarMediumPreview() {
-    RatingBarMedium(rating = 3, onRatingChanged = {})
+    EatssuTheme {
+        RatingBarMedium(rating = 3, onRatingChanged = {})
+    }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun RatingBarPreview() {
-    RatingBarSmall(rating = 3)
+    EatssuTheme {
+        RatingBarSmall(rating = 3)
+    }
 }

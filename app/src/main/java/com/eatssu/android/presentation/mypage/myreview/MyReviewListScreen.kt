@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,9 +35,10 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
+import com.eatssu.android.presentation.util.ObserveUiEvents
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
-import com.eatssu.common.UiState
+
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
@@ -45,7 +46,7 @@ import com.eatssu.design_system.theme.Gray600
 import timber.log.Timber
 
 @Composable
-fun MyReviewListScreen(
+fun MyReviewListRoute(
     modifier: Modifier = Modifier,
     viewModel: MyReviewViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
@@ -60,11 +61,10 @@ fun MyReviewListScreen(
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val userNickname by viewModel.nickname.collectAsStateWithLifecycle()
-    val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
 
-    when (uiEvent) {
-        is UiEvent.ShowToast -> {
-            context.showToast(uiEvent as UiEvent.ShowToast)
+    ObserveUiEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is UiEvent.ShowToast -> context.showToast(event)
         }
     }
 
@@ -80,7 +80,7 @@ fun MyReviewListScreen(
 
 @Composable
 internal fun MyReviewListScreen(
-    uiState: UiState<MyReviewState>,
+    uiState: MyReviewUiState,
     userNickname: String,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
@@ -122,71 +122,64 @@ internal fun MyReviewListScreen(
             ) {
 
                 when (uiState) {
-                    is UiState.Success -> {
-                        when (val dataState = uiState.data) {
-                            is MyReviewState.ReviewExists -> {
-                                Timber.d("리뷰 존재")
-                                val reviewList = dataState.myReviews ?: emptyList()
+                    is MyReviewUiState.Success -> {
+                        Timber.d("리뷰 존재")
+                        val reviewList = uiState.reviews
 
-                                LazyColumn(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(horizontal = 24.dp),
-                                ) {
-                                    items(reviewList) { item ->
-                                        ReviewItem(
-                                            modifier = Modifier,
-                                            writeName = userNickname,
-                                            writeDate = item.writeDate,
-                                            content = item.content,
-                                            rating = item.rating,
-                                            menuLikeInfoList = item.menuLikeInfoList,
-                                            imgUrl = item.imgUrl,
-                                            onMoreClick = {
-                                                selectedReview = item
-                                                showBottomSheet = true
-                                            }
-                                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 24.dp),
+                        ) {
+                            items(reviewList) { item ->
+                                ReviewItem(
+                                    modifier = Modifier,
+                                    writeName = userNickname,
+                                    writeDate = item.writeDate,
+                                    content = item.content,
+                                    rating = item.rating,
+                                    menuLikeInfoList = item.menuLikeInfoList,
+                                    imgUrl = item.imgUrl,
+                                    onMoreClick = {
+                                        selectedReview = item
+                                        showBottomSheet = true
                                     }
-                                }
+                                )
                             }
-
-                            is MyReviewState.NoReview -> {
-                                Timber.d("리뷰 없음")
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(Gray100),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Icon(
-                                        painterResource(R.drawable.ic_none_review),
-                                        "empty review",
-                                        tint = Gray600,
-                                        modifier = Modifier.size(48.dp)
-                                    )
-                                    Spacer(Modifier.height(16.dp))
-                                    Text(
-                                        stringResource(R.string.none_review),
-                                        style = EatssuTheme.typography.subtitle2,
-                                        color = Gray600
-                                    )
-                                    Spacer(Modifier.height(8.dp))
-                                    Text(
-                                        stringResource(R.string.none_review_my),
-                                        style = EatssuTheme.typography.caption2,
-                                        color = Gray600
-                                    )
-                                }
-                            }
-
-                            null -> TODO()
                         }
                     }
 
+                    is MyReviewUiState.Empty -> {
+                        Timber.d("리뷰 없음")
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Gray100),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_none_review),
+                                "empty review",
+                                tint = Gray600,
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(Modifier.height(16.dp))
+                            Text(
+                                stringResource(R.string.none_review),
+                                style = EatssuTheme.typography.subtitle2,
+                                color = Gray600
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                stringResource(R.string.none_review_my),
+                                style = EatssuTheme.typography.caption2,
+                                color = Gray600
+                            )
+                        }
+                    }
 
-                    UiState.Loading -> {
+                    MyReviewUiState.Loading -> {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize(),
@@ -196,13 +189,8 @@ internal fun MyReviewListScreen(
                         }
                     }
 
-                    UiState.Error -> {
+                    MyReviewUiState.Error -> {
                         // TODO: 에러 UI
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-
-                    UiState.Init -> {
-                        // TODO: 초기 상태 UI
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }
@@ -214,7 +202,7 @@ internal fun MyReviewListScreen(
 }
 
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun ReviewListPreview() {
     EatssuTheme {
@@ -222,97 +210,14 @@ fun ReviewListPreview() {
             userNickname = "숭실푸드파이터",
             onDeleteClick = {},
             onModifyClick = {},
-            uiState = UiState.Success(
-                MyReviewState.ReviewExists(
-                    myReviews = listOf(
-                        Review(
-                            isWriter = true,
-                            reviewId = 0,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "숭실푸드파이터",
-                            writeDate = "2024-12-31",
-                            rating = 4,
-                            content = "맛있어요",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = true,
-                            reviewId = 1,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "맛있는리뷰어",
-                            writeDate = "2024-12-30",
-                            rating = 5,
-                            content = "정말 맛있어요! 다음에도 먹고 싶어요.",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = true,
-                            reviewId = 2,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "음식평론가",
-                            writeDate = "2024-12-29",
-                            rating = 3,
-                            content = "그럭저럭 괜찮아요",
-                            imgUrl = null,
-                        ),
-                        Review(
-                            isWriter = false,
-                            reviewId = 2,
-                            menuLikeInfoList = listOf(
-                                Review.MenuLikeInfo(
-                                    menuId = 1L,
-                                    name = "소고기",
-                                    isLike = true
-                                ), Review.MenuLikeInfo(
-                                    menuId = 2L,
-                                    name = "닭고기",
-                                    isLike = false
-                                )
-                            ),
-                            writerNickname = "음식평론가",
-                            writeDate = "2024-12-29",
-                            rating = 3,
-                            content = "그럭저럭 괜찮아요",
-                            imgUrl = "https://picsum.photos/400/301", // 실제 이미지 URL 사용
-                        )
-                    )
-                )
+            uiState = MyReviewUiState.Success(
+                reviews = emptyList(),
             ),
         )
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun ReviewListEmptyPreview() {
     EatssuTheme {
@@ -320,9 +225,7 @@ fun ReviewListEmptyPreview() {
             userNickname = "숭실푸드파이터",
             onDeleteClick = {},
             onModifyClick = {},
-            uiState = UiState.Success(
-                MyReviewState.NoReview
-            )
+            uiState = MyReviewUiState.Empty
         )
     }
 }

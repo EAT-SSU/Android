@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
-import com.eatssu.android.presentation.intro.IntroActivity
+import com.eatssu.android.presentation.MainActivity
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
@@ -39,7 +39,7 @@ class NotificationReceiver : BroadcastReceiver() {
         notificationManager.createNotificationChannel(channel)
 
 
-        val intent = Intent(context, IntroActivity::class.java).apply {
+        val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
