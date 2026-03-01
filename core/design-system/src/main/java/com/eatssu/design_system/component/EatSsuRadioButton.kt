@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -72,7 +72,7 @@ fun EatSsuRadioButtonGroup(
 
 
 @Composable
-@Preview
+@ThemePreviews
 fun RestaurantSelectionPreview() {
     val restaurantOptions = listOf("학생 식당", "도담 식당", "기숙사 식당")
 

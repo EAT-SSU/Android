@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import com.eatssu.design_system.theme.EatssuTheme
 
 @Composable
@@ -28,7 +28,7 @@ fun DelayedLoadingIndicator(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun DelayedLoadingIndicatorPreview() {
     EatssuTheme {

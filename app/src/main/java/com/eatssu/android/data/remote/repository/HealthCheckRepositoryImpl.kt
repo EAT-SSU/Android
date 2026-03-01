@@ -12,7 +12,8 @@ class HealthCheckRepositoryImpl @Inject constructor(
 ) : HealthCheckRepository {
     override suspend fun checkHealth(): Boolean {
         return try {
-            healthCheckService.checkHealth().isSuccessful
+            val response = healthCheckService.checkHealth()
+            return response.isSuccessful
         } catch (e: IOException) {
             NetworkErrorEventBus.notifyNetworkError()
             Timber.e(e, "Health check network error")

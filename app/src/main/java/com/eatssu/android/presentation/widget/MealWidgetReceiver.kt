@@ -6,6 +6,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import com.eatssu.android.presentation.widget.ui.MealWidget
 import com.eatssu.common.EventLogger
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.io.File
 
@@ -25,21 +26,20 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
 
     private fun cleanupWidgetDataStore(context: Context, appWidgetId: Int) {
         try {
-            val fileKey = "appWidget-$appWidgetId"
-            val dataStoreFile = MealInfoStateDefinition.getLocation(context, fileKey)
-            val tempDataStoreFile = File("${dataStoreFile.absolutePath}.tmp")
+            runBlocking {
+                val filename = "appWidgetLayout-${appWidgetId}"
+                val dataStoreFile = File(context.filesDir, "datastore/$filename")
 
-            if (dataStoreFile.exists() && dataStoreFile.delete()) {
-                Timber.d("Deleted widget DataStore file for widget %d", appWidgetId)
+                if (dataStoreFile.exists()) {
+                    dataStoreFile.delete()
+                    Timber.d("Deleted DataStore file for widget $appWidgetId")
+                }
+
+                EventLogger.removeWidget()
+
             }
-
-            if (tempDataStoreFile.exists() && tempDataStoreFile.delete()) {
-                Timber.d("Deleted widget DataStore temp file for widget %d", appWidgetId)
-            }
-
-            EventLogger.removeWidget()
-        } catch (error: Exception) {
-            Timber.e(error, "Failed to cleanup widget DataStore for widget %d", appWidgetId)
+        } catch (e: Exception) {
+            Timber.e("Failed to cleanup DataStore for widget $appWidgetId: ${e.message}")
         }
     }
 }

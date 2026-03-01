@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -585,7 +585,7 @@ fun <T : Any> rememberPreviewPagingItems(
 }
 
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewListPreview() {
     val reviewList = List(5) { id ->
@@ -632,7 +632,7 @@ fun ReviewListPreview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewListLoadingPreview() {
     val pagingData = PagingData.empty<Review>(
@@ -665,7 +665,7 @@ fun ReviewListLoadingPreview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewListEmptyPreview() {
     val pagingData = PagingData.empty<Review>(
@@ -698,7 +698,7 @@ fun ReviewListEmptyPreview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewListErrorPreview() {
     val pagingData = PagingData.empty<Review>(

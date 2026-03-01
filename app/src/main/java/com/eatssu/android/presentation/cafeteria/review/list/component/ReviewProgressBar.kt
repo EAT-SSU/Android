@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
@@ -85,7 +85,7 @@ fun ReviewProgressBar(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewProgressBarPreview() {
     EatssuTheme {
@@ -101,7 +101,7 @@ fun ReviewProgressBarPreview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewProgressBar1Preview() {
     EatssuTheme {
@@ -117,7 +117,7 @@ fun ReviewProgressBar1Preview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun ReviewProgressBarEmptyPreview() {
     EatssuTheme {

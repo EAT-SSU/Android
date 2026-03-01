@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.component.LikeButton
 import com.eatssu.design_system.theme.EatssuTheme
@@ -34,7 +34,7 @@ fun MenuLikeButtonItem(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun MenuLikeButtonItemPreview() {
     EatssuTheme {

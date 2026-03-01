@@ -1,7 +1,6 @@
 package com.eatssu.android.presentation.mypage
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.util.LogScreenView
@@ -51,14 +50,12 @@ fun DeveloperScreen(
             EatSsuTopBar(
                 title = stringResource(R.string.developer),
                 onBack = onBack,
-                containerColor = Color.Transparent,
             )
         },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(gradientBrush)
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,7 +102,7 @@ fun DeveloperScreen(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun DeveloperScreenPreview() {
     EatssuTheme {

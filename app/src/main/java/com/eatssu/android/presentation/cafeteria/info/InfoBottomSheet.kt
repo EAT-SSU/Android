@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.eatssu.android.R
@@ -151,7 +151,7 @@ private fun InfoRow(label: String, value: String) {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun InfoBottomSheetContentPreview() {
     EatssuTheme {
@@ -169,7 +169,7 @@ private fun InfoBottomSheetContentPreview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun InfoRowPreview() {
     EatssuTheme {

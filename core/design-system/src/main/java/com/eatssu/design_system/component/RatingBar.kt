@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.R
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Star
@@ -58,7 +58,7 @@ fun RatingBarMedium(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun RatingBarMediumPreview() {
     EatssuTheme {
@@ -66,7 +66,7 @@ fun RatingBarMediumPreview() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun RatingBarPreview() {
     EatssuTheme {

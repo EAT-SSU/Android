@@ -1,7 +1,5 @@
 package com.eatssu.android.presentation.cafeteria.review
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -9,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,10 +35,6 @@ fun ReviewNav(
     NavHost(
         navController = navHostController,
         startDestination = ReviewDestination.List,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
-        popExitTransition = { ExitTransition.None },
     ) {
         composable<ReviewDestination.List> {
             if (isPreviewMode) {
@@ -117,7 +111,7 @@ private fun ReviewNavPreviewPlaceholder(title: String) {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun ReviewNavPreview() {
     EatssuTheme {

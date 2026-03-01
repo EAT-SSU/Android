@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.util.asString
@@ -82,7 +82,7 @@ fun WidgetSettingScreen(
     )
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun PreviewWidgetSettingScreen() {
     EatssuTheme {

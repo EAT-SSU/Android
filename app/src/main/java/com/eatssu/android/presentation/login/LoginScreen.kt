@@ -15,24 +15,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.presentation.util.ObserveUiEvents
 import com.eatssu.android.presentation.util.debouncedClickable
-import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Primary
@@ -52,6 +53,7 @@ fun LoginRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState) {
         when (uiState) {
@@ -62,7 +64,7 @@ fun LoginRoute(
 
     ObserveUiEvents(viewModel.uiEvent) { event ->
         when (event) {
-            is UiEvent.ShowToast -> context.showToast(event)
+            is UiEvent.ShowToast -> snackbarHostState.showSnackbar(event.message.asString(context))
         }
     }
 
@@ -137,7 +139,7 @@ private fun LoginContent(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun LoginContentPreview() {
     EatssuTheme {

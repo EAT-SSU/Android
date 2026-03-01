@@ -70,7 +70,6 @@ class ModifyViewModel @Inject constructor(
                         ToastType.ERROR
                     )
                 )
-                return@launch
             }
 
             _uiEvent.emit(UiEvent.NavigateBack)

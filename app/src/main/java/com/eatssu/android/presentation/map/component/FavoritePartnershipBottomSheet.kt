@@ -24,7 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.eatssu.design_system.preview.ThemePreviews
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.map.model.FavoritePartnership
@@ -143,7 +143,7 @@ fun FavoritePartnershipBottomSheet(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun FavoriteAffiliationBottomSheetPreview() {
     val dummyList = listOf(
