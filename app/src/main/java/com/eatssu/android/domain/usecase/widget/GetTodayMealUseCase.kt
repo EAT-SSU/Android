@@ -63,8 +63,9 @@ class GetTodayMealUseCase @Inject constructor(
                 else -> MealException.Unknown("알 수 없는 에러")
             }
 
+            Timber.w(exception, "메뉴 가져오기 실패: %s", error)
+
             MealState.Failure
         }
     )
 }
-

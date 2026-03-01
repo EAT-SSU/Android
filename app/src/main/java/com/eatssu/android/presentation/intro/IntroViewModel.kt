@@ -30,7 +30,7 @@ class IntroViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<IntroUiState> = MutableStateFlow(IntroUiState.Loading)
     val uiState: StateFlow<IntroUiState> = _uiState.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    private val _uiEvent = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
     val uiEvent = _uiEvent.asSharedFlow()
 
     private val _versionCheckResult = MutableStateFlow<VersionCheckResult?>(null)
@@ -90,31 +90,29 @@ class IntroViewModel @Inject constructor(
         }
     }
 
-    private fun autoLogin() {
-        viewModelScope.launch {
-            _uiState.value = IntroUiState.Loading
+    private suspend fun autoLogin() {
+        _uiState.value = IntroUiState.Loading
 
-            // 서버와 통신 가능한지 먼저 확인
-            if (!healthCheckUseCase()) {
-                // 아무 State 처리 없이 Return해도 NetworkErrorEventBus로 인해 오류 페이지로 이동
-                return@launch
-            }
-
-            val userAccessToken = getAccessTokenUseCase()
-            if (userAccessToken.isEmpty()) {
-                _uiState.value = IntroUiState.Error
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        UiText.StringResource(R.string.toast_token_invalid),
-                        ToastType.INFO
-                    )
-                )
-                return@launch
-            }
-
-            // 스플래시에서는 헬스체크만 수행. 토큰 유효성/재발급은 실제 API 요청에서 Authenticator가 처리.
-            _uiState.value = IntroUiState.Success
+        // 서버와 통신 가능한지 먼저 확인
+        if (!healthCheckUseCase()) {
+            // 아무 State 처리 없이 Return해도 NetworkErrorEventBus로 인해 오류 페이지로 이동
+            return
         }
+
+        val userAccessToken = getAccessTokenUseCase()
+        if (userAccessToken.isEmpty()) {
+            _uiState.value = IntroUiState.Error
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    UiText.StringResource(R.string.toast_token_invalid),
+                    ToastType.INFO
+                )
+            )
+            return
+        }
+
+        // 스플래시에서는 헬스체크만 수행. 토큰 유효성/재발급은 실제 API 요청에서 Authenticator가 처리.
+        _uiState.value = IntroUiState.Success
     }
 }
 

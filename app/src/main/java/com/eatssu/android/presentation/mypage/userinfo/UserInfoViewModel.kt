@@ -221,8 +221,19 @@ class UserInfoViewModel @Inject constructor(
 
             // 학과/단과대 변경이 있는 경우
             if (data.isCollegeChanged || data.isDepartmentChanged) {
-                val department = data.selectedDepartment ?: return@launch
-                val college = data.selectedCollege ?: return@launch
+                val college = data.selectedCollege
+                val department = data.selectedDepartment
+
+                if (college == null || department == null) {
+                    _uiState.update { data }
+                    _uiEvent.emit(
+                        UiEvent.ShowToast(
+                            UiText.StringResource(R.string.toast_college_required),
+                            ToastType.ERROR,
+                        )
+                    )
+                    return@launch
+                }
 
                 val success = userRepository.setUserDepartment(department.departmentId)
                 if (!success) {
@@ -297,6 +308,7 @@ data class UserInfoData(
             val isDepartmentSelected = selectedDepartment != null
 
             return when {
+                hasNicknameChange && hasDepartmentChange -> isNicknameValid && isDepartmentSelected
                 // 닉네임 변경: 닉네임 유효성 필수
                 hasNicknameChange -> isNicknameValid
                 // 학과/단과대 변경: 유효한 학과 선택 필수

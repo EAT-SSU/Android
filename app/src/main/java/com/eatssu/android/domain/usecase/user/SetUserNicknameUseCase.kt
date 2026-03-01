@@ -22,8 +22,10 @@ class SetUserNicknameUseCase @Inject constructor(
     private val accountDataStore: AccountDataStore
 ) {
     suspend operator fun invoke(nickname: String): Result<Unit> {
-        // 로컬 저장
-        accountDataStore.setName(nickname)
-        return userRepository.updateUserName(ChangeNicknameRequest(nickname))
+        val result = userRepository.updateUserName(ChangeNicknameRequest(nickname))
+        if (result.isSuccess) {
+            accountDataStore.setName(nickname)
+        }
+        return result
     }
 }
