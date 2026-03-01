@@ -1,5 +1,7 @@
 package com.eatssu.android.presentation.mypage.myreview
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -28,6 +30,10 @@ fun MyReviewNav(
     NavHost(
         navController = navHostController,
         startDestination = MyReviewDestination.List,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None },
     ) {
         composable<MyReviewDestination.List> {
             if (isPreviewMode) {

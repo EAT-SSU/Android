@@ -1,5 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.review
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -35,6 +37,10 @@ fun ReviewNav(
     NavHost(
         navController = navHostController,
         startDestination = ReviewDestination.List,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None },
     ) {
         composable<ReviewDestination.List> {
             if (isPreviewMode) {
