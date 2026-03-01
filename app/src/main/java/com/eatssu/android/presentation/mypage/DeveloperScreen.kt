@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.mypage
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,12 +51,14 @@ fun DeveloperScreen(
             EatSsuTopBar(
                 title = stringResource(R.string.developer),
                 onBack = onBack,
+                containerColor = Color.Transparent,
             )
         },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(gradientBrush)
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
