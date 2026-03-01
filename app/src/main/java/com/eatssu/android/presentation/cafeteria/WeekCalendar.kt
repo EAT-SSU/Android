@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Primary
@@ -90,7 +90,7 @@ fun WeekCalendar(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun WeekCalendarPreview() {
     EatssuTheme {

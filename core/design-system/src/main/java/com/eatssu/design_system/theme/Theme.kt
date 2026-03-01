@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 
 // Color 설정
@@ -89,7 +89,7 @@ fun EatssuTheme(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun EatssuThemePreview() {
     EatssuTheme {

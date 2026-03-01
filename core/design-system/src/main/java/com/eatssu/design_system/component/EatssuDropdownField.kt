@@ -24,7 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eatssu.design_system.R
@@ -108,7 +108,7 @@ fun EatssuDropdownField(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun EatssuDropdownFieldPreview() {
     EatssuTheme {

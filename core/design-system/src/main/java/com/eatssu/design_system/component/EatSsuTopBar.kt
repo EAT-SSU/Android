@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray500
@@ -81,7 +81,7 @@ fun CloseTopBar(
     )
 }
 
-@ThemePreviews
+@Preview
 @Composable
 fun TopBarPreview() {
     EatssuTheme {
@@ -91,7 +91,7 @@ fun TopBarPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 
 @Composable
 private fun CloseTopBarPreview() {

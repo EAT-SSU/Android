@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
@@ -106,7 +106,7 @@ fun WebViewScreen(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun WebViewScreenPreview() {
     EatssuTheme {

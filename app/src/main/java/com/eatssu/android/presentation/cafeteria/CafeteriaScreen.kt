@@ -34,7 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eatssu.android.R
@@ -221,7 +221,7 @@ internal fun CafeteriaScreenContent(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun CafeteriaScreenContentPreview() {
     EatssuTheme {

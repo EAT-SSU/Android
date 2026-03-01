@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
@@ -220,7 +220,7 @@ fun EatssuAppNavHost(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun EatssuAppNavHostPreview() {
     EatssuTheme {

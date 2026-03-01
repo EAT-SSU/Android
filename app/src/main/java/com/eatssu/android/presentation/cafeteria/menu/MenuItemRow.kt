@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eatssu.android.domain.model.Menu
@@ -62,7 +62,7 @@ fun MenuItemRow(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun MenuItemRowPreview() {
     EatssuTheme {

@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
@@ -94,7 +94,7 @@ fun EatssuToastHost(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun EatssuToastHostPreview() {
     EatssuTheme {

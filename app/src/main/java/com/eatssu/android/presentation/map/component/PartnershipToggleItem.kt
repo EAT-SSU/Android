@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
@@ -106,7 +106,7 @@ fun PartnershipToggleItem(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun PartnershipFilterTogglePreview() {
     EatssuTheme {

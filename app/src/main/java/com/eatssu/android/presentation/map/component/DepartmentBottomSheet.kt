@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
@@ -94,7 +94,7 @@ fun DepartmentBottomSheet(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@ThemePreviews
+@Preview
 @Composable
 fun DepartmentBottomSheetPreview() {
     EatssuTheme {

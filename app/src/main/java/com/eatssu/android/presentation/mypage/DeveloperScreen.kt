@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.android.presentation.util.LogScreenView
@@ -102,7 +102,7 @@ fun DeveloperScreen(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun DeveloperScreenPreview() {
     EatssuTheme {

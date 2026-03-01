@@ -25,7 +25,7 @@ import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
@@ -152,7 +152,7 @@ internal fun MenuScreenContent(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun MenuScreenContentPreview() {
     val sampleSections = listOf(
@@ -184,7 +184,7 @@ private fun MenuScreenContentPreview() {
         )
     }
 }
-@ThemePreviews
+@Preview
 @Composable
 private fun MenuScreenContentLoadingPreview() {
     EatssuTheme {
@@ -197,7 +197,7 @@ private fun MenuScreenContentLoadingPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun MenuScreenContentErrorPreview() {
     EatssuTheme {

@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -82,7 +82,7 @@ private fun MyReviewNavPreviewPlaceholder(title: String) {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun MyReviewNavPreview() {
     EatssuTheme {

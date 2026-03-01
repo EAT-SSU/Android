@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -202,7 +202,7 @@ internal fun MyReviewListScreen(
 }
 
 
-@ThemePreviews
+@Preview
 @Composable
 fun ReviewListPreview() {
     EatssuTheme {
@@ -217,7 +217,7 @@ fun ReviewListPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 fun ReviewListEmptyPreview() {
     EatssuTheme {

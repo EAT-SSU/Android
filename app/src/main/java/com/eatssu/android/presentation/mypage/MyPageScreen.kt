@@ -43,7 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import com.eatssu.design_system.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -392,7 +392,7 @@ private fun openAppNotificationSettings(context: Context) {
     context.startActivity(intent)
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun MyPageMenuItemPreview() {
     EatssuTheme {
@@ -403,7 +403,7 @@ private fun MyPageMenuItemPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun MyPageNotificationRowPreview() {
     EatssuTheme {
