@@ -177,7 +177,7 @@ class UserInfoActivity :
         val data = state.data
 
         // 단과대를 먼저 선택하도록 유도
-        if (data.selectedCollege == null) {
+        if (data.selectedCollege == null || data.selectedCollege.collegeId == -1) {
             showToast(R.string.toast_college_required, ToastType.ERROR)
             return
         }
