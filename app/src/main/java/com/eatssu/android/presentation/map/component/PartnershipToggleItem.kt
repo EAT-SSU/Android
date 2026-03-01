@@ -70,7 +70,11 @@ fun PartnershipFilterToggle(
             PartnershipToggleItem(
                 label = label,
                 selected = selected == type,
-                onClick = { onSelectedChange(type) }
+                onClick = {
+                    if (selected != type) {
+                        onSelectedChange(type)
+                    }
+                }
             )
         }
     }

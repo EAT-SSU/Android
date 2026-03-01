@@ -132,7 +132,9 @@ class MapViewModel @Inject constructor(
 
     // 필터 변경 (검증 로직 포함)
     fun setFilter(filter: FilterType) {
-        val currentData = (_uiState.value as? MapState) ?: MapState()
+        val currentData = (_uiState.value as? MapState) ?: return
+
+        if (currentData.selectedFilter == filter) return
 
         // 학과 정보가 없는데 Mine 필터를 선택하려는 경우
         if (filter == FilterType.Mine && _departmentId.value == -1L) {
@@ -167,8 +169,6 @@ class MapViewModel @Inject constructor(
     private fun loadPartnerships() {
         viewModelScope.launch {
             val currentData = (_uiState.value as? MapState) ?: MapState()
-            
-            _uiState.value = MapUiState.Loading
 
             val partnerships = partnershipRepository.getAllPartnerships()
             _uiState.value = currentData.copy(
@@ -182,8 +182,6 @@ class MapViewModel @Inject constructor(
     private fun loadUserCollegePartnerships() {
         viewModelScope.launch {
             val currentData = (_uiState.value as? MapState) ?: MapState()
-            
-            _uiState.value = MapUiState.Loading
 
             val partnerships = partnershipRepository.getUserCollegePartnerships()
             _uiState.value = currentData.copy(
