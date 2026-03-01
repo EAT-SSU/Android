@@ -55,6 +55,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
     }
 
     // 토큰이 필요한 okhttpClient
