@@ -3,21 +3,25 @@ package com.eatssu.android.presentation.cafeteria.review
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.eatssu.android.presentation.cafeteria.review.ReviewNav
 import com.eatssu.common.enums.MenuType
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.eatssu.design_system.theme.EatssuTheme
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import kotlin.properties.Delegates
@@ -31,6 +35,8 @@ class ReviewComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getIntents() // 컴포즈 화면 그리기 전에 호출
+
         setContent {
             EatssuTheme {
                 val navHostController = rememberNavController()
@@ -60,7 +66,6 @@ class ReviewComposeActivity : ComponentActivity() {
                 }
             }
         }
-        getIntents()
     }
 
     private fun getIntents() { //todo 추후 변경
