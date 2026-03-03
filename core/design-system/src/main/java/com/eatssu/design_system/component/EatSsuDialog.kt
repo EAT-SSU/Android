@@ -58,6 +58,13 @@ fun EatSsuDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    if (icon != null) {
+                        androidx.compose.material3.Icon(
+                            painter = icon,
+                            contentDescription = null,
+                            tint = Color.Unspecified
+                        )
+                    }
                     Text(
                         text = title,
                         style = EatssuTheme.typography.h2,
@@ -78,7 +85,7 @@ fun EatSsuDialog(
                     if (!dismissText.isNullOrBlank()) {
                         Button(
                             modifier = Modifier.weight(1f),
-                            onClick = onConfirmClick,
+                            onClick = { onDismissButtonClick?.invoke() ?: onDismissRequest() },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Gray200,
@@ -143,6 +150,13 @@ fun EatSsuWarningDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    if (icon != null) {
+                        androidx.compose.material3.Icon(
+                            painter = icon,
+                            contentDescription = null,
+                            tint = Color.Unspecified
+                        )
+                    }
                     Text(
                         text = title,
                         style = EatssuTheme.typography.h2,
@@ -177,7 +191,7 @@ fun EatSsuWarningDialog(
 
                     Button(
                         modifier = Modifier.weight(1f),
-                        onClick = onConfirmClick,
+                        onClick = { onDismissButtonClick?.invoke() ?: onDismissRequest() },
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Gray200,
