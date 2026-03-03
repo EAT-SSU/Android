@@ -8,19 +8,19 @@ import kotlinx.serialization.Serializable
 data class MealReviewListResponse(
     @SerialName("numberOfElements") val numberOfElements: Int? = null,
     @SerialName("hasNext") val hasNext: Boolean? = null,
-    @SerialName("dataList") val dataList: List<DataList> = arrayListOf()
+    @SerialName("dataList") val dataList: List<DataList> = listOf()
 ) {
     @Serializable
     data class DataList(
         @SerialName("reviewId") val reviewId: Long? = null,
-        @SerialName("menuList") val menuList: List<MenuList> = arrayListOf(),
+        @SerialName("menuList") val menuList: List<MenuList?> = listOf(),
         @SerialName("writerId") val writerId: Long? = null,
         @SerialName("isWriter") val isWriter: Boolean? = null,
         @SerialName("writerNickname") val writerNickname: String? = null,
         @SerialName("rating") val rating: Int? = null,
         @SerialName("writtenAt") val writtenAt: String? = null,
         @SerialName("content") val content: String? = null,
-        @SerialName("imageUrls") val imageUrls: List<String> = arrayListOf(),
+        @SerialName("imageUrls") val imageUrls: List<String?> = listOf(),
     ) {
         @Serializable
         data class MenuList(
@@ -38,7 +38,7 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: -1L,
             isWriter = data.isWriter ?: false,
-            menuLikeInfoList = data.menuList.map { menu ->
+            menuLikeInfoList = data.menuList.filterNotNull().map { menu ->
                 Review.MenuLikeInfo(
                     menuId = menu.id ?: -1L,
                     name = menu.name ?: "",
@@ -49,7 +49,7 @@ fun MealReviewListResponse?.toDomain(): List<Review> {
             rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
-            imgUrl = data.imageUrls.firstOrNull(),
+            imgUrl = data.imageUrls.filterNotNull().firstOrNull(),
         )
     } ?: emptyList()
 }
