@@ -40,15 +40,7 @@ class ReviewComposeActivity : ComponentActivity() {
         setContent {
             EatssuTheme {
                 val navHostController = rememberNavController()
-
-                val parsedMenuType = runCatching {
-                    if (menuType.isNullOrBlank()) null else MenuType.valueOf(menuType!!)
-                }.onFailure { exception ->
-                    Timber.e(exception, "Failed to parse MenuType: \$menuType")
-                    FirebaseCrashlytics.getInstance().recordException(
-                        IllegalArgumentException("Invalid MenuType '\$menuType' for itemId \$itemId. Original exception: \${exception.message}", exception)
-                    )
-                }.getOrNull()
+                val parsedMenuType = MenuType.entries.find { it.name == menuType }
 
                 parsedMenuType?.let { type ->
                     ReviewNav(
@@ -59,7 +51,7 @@ class ReviewComposeActivity : ComponentActivity() {
                         onExit = { finish() }
                     )
                 } ?: run {
-                    Timber.e("Invalid or null MenuType received: \$menuType")
+                    Timber.e("Invalid or null MenuType received: $menuType")
                     ErrorScreen(
                         onBackClick = { finish() }
                     )
