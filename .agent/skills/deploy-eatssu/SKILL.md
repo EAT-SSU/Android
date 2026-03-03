@@ -40,6 +40,8 @@ git tag --list | sort -V | tail -5
 - `versionName`: Semantic Versioning (`X.Y.Z`)
 - `versionCode`: 정수, 항상 +1 증가
 - 태그 형식: `X.Y.Z` (v 접두사 없음)
+- 릴리즈 노트 파일명: `release-notes/v<버전>.yml` (v 접두사 포함)
+→ 태그는 v 없이, 릴리즈 노트 파일명은 v 포함
 
 ### Step 2: 변경사항 파악
 
