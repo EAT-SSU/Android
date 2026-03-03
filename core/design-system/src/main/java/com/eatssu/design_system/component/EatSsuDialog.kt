@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.design_system.theme.Black
@@ -38,7 +37,6 @@ fun EatSsuDialog(
     modifier: Modifier = Modifier,
     dismissText: String? = null,
     onDismissButtonClick: (() -> Unit)? = null,
-    icon: Painter? = null,
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
@@ -58,13 +56,6 @@ fun EatSsuDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (icon != null) {
-                        androidx.compose.material3.Icon(
-                            painter = icon,
-                            contentDescription = null,
-                            tint = Color.Unspecified
-                        )
-                    }
                     Text(
                         text = title,
                         style = EatssuTheme.typography.h2,
@@ -130,7 +121,6 @@ fun EatSsuWarningDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     onDismissButtonClick: (() -> Unit)? = null,
-    icon: Painter? = null,
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
@@ -150,13 +140,6 @@ fun EatSsuWarningDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (icon != null) {
-                        androidx.compose.material3.Icon(
-                            painter = icon,
-                            contentDescription = null,
-                            tint = Color.Unspecified
-                        )
-                    }
                     Text(
                         text = title,
                         style = EatssuTheme.typography.h2,
