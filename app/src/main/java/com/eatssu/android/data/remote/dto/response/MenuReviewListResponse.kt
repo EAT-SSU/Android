@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class MenuReviewListResponse(
     @SerialName("numberOfElements") val numberOfElements: Int? = null,
     @SerialName("hasNext") val hasNext: Boolean? = null,
-    @SerialName("dataList") val dataList: List<DataList> = arrayListOf(),
+    @SerialName("dataList") val dataList: List<DataList> = listOf(),
 ) {
     @Serializable
     data class DataList(
@@ -20,7 +20,7 @@ data class MenuReviewListResponse(
         @SerialName("rating") val rating: Int? = null,
         @SerialName("writtenAt") val writtenAt: String? = null,
         @SerialName("content") val content: String? = null,
-        @SerialName("imageUrls") val imageUrls: List<String> = arrayListOf(),
+        @SerialName("imageUrls") val imageUrls: List<String?> = listOf(),
     ) {
         @Serializable
         data class Menu(
@@ -47,7 +47,7 @@ fun MenuReviewListResponse?.toDomain(): List<Review> {
             rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
-            imgUrl = data.imageUrls.firstOrNull(),
+            imgUrl = data.imageUrls.firstOrNull { it != null },
         )
     } ?: emptyList()
 }
