@@ -184,22 +184,34 @@ jobs:
           if [ -f "$RELEASE_NOTE_FILE" ]; then
             echo "✅ $RELEASE_NOTE_FILE 파일 발견"
             echo "exists=true" >> $GITHUB_OUTPUT
-            
-            RELEASE_NOTES_CONTENT=$(ruby -e "require 'yaml'; begin; puts YAML.load_file('$RELEASE_NOTE_FILE')['ko']; rescue; end")
-            
-            if [ -z "$RELEASE_NOTES_CONTENT" ]; then
-               echo "⚠️ YAML 파일에서 'ko' 항목을 찾을 수 없거나 비어있습니다."
-               echo "release_notes=" >> $GITHUB_OUTPUT
-            else
-               echo "release_notes<<EOF" >> $GITHUB_OUTPUT
-               echo "$RELEASE_NOTES_CONTENT" >> $GITHUB_OUTPUT
-               echo "EOF" >> $GITHUB_OUTPUT
-               echo "📄 릴리즈 노트 내용:"
-               echo "$RELEASE_NOTES_CONTENT"
+
+            RELEASE_NOTES_KO=$(ruby -e "require 'yaml'; begin; data = YAML.load_file('$RELEASE_NOTE_FILE') || {}; puts((data['ko-KR'] || data['ko'] || '').to_s); rescue; end")
+            RELEASE_NOTES_EN=$(ruby -e "require 'yaml'; begin; data = YAML.load_file('$RELEASE_NOTE_FILE') || {}; puts((data['en-US'] || data['en'] || '').to_s); rescue; end")
+
+            if [ -z "$RELEASE_NOTES_KO" ]; then
+               echo "⚠️ YAML 파일에서 한국어 릴리즈 노트(ko/ko-KR)를 찾지 못했습니다."
             fi
+
+            if [ -z "$RELEASE_NOTES_EN" ]; then
+               echo "⚠️ YAML 파일에서 영어 릴리즈 노트(en/en-US)를 찾지 못했습니다."
+            fi
+
+            echo "release_notes_ko<<EOF" >> $GITHUB_OUTPUT
+            echo "$RELEASE_NOTES_KO" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+
+            echo "release_notes_en<<EOF" >> $GITHUB_OUTPUT
+            echo "$RELEASE_NOTES_EN" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+
+            echo "📄 한국어 릴리즈 노트:"
+            echo "$RELEASE_NOTES_KO"
+            echo "📄 영어 릴리즈 노트:"
+            echo "$RELEASE_NOTES_EN"
           else
             echo "⚠️ $RELEASE_NOTE_FILE 파일을 찾을 수 없습니다."
-            echo "release_notes=" >> $GITHUB_OUTPUT
+            echo "release_notes_ko=" >> $GITHUB_OUTPUT
+            echo "release_notes_en=" >> $GITHUB_OUTPUT
           fi
 
       - name: Find previous tag for release notes
@@ -311,9 +323,13 @@ jobs:
             
             버전명: ${{ steps.extract_info.outputs.version }}
             
-            PlayStore 릴리즈 노트
+            PlayStore 릴리즈 노트 (KO)
             
-            ${{ steps.check_release_notes.outputs.release_notes != '' && steps.check_release_notes.outputs.release_notes || '릴리즈 노트가 없습니다.' }}
+            ${{ steps.check_release_notes.outputs.release_notes_ko != '' && steps.check_release_notes.outputs.release_notes_ko || '한국어 릴리즈 노트가 없습니다.' }}
+
+            PlayStore 릴리즈 노트 (EN)
+
+            ${{ steps.check_release_notes.outputs.release_notes_en != '' && steps.check_release_notes.outputs.release_notes_en || 'English release notes are missing.' }}
             
             GitHub 릴리즈노트
             
@@ -322,7 +338,7 @@ jobs:
             {
               attachments: [{
                 color: '${{ job.status }}' === 'success' ? 'good' : 'danger',
-                text: '[Android 업데이트 올렸습니다!]\n\n버전명: ${{ steps.extract_info.outputs.version }}\n\nPlayStore 릴리즈 노트\n\n${{ steps.check_release_notes.outputs.release_notes != '' && steps.check_release_notes.outputs.release_notes || '릴리즈 노트가 없습니다.' }}\n\nGitHub 릴리즈노트\n\n${{ steps.github_release_notes.outputs.github_notes != '' && steps.github_release_notes.outputs.github_notes || '- [Fix] 릴리즈 노트를 가져올 수 없습니다.' }}'
+                text: '[Android 업데이트 올렸습니다!]\n\n버전명: ${{ steps.extract_info.outputs.version }}\n\nPlayStore 릴리즈 노트 (KO)\n\n${{ steps.check_release_notes.outputs.release_notes_ko != '' && steps.check_release_notes.outputs.release_notes_ko || '한국어 릴리즈 노트가 없습니다.' }}\n\nPlayStore 릴리즈 노트 (EN)\n\n${{ steps.check_release_notes.outputs.release_notes_en != '' && steps.check_release_notes.outputs.release_notes_en || 'English release notes are missing.' }}\n\nGitHub 릴리즈노트\n\n${{ steps.github_release_notes.outputs.github_notes != '' && steps.github_release_notes.outputs.github_notes || '- [Fix] 릴리즈 노트를 가져올 수 없습니다.' }}'
               }]
             }
         env:
