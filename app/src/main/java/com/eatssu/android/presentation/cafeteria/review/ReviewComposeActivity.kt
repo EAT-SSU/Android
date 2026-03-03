@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.eatssu.android.presentation.cafeteria.review.ReviewNav
 import com.eatssu.common.enums.MenuType
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,7 +14,7 @@ import kotlin.properties.Delegates
 @AndroidEntryPoint
 class ReviewComposeActivity : ComponentActivity() {
 
-    private lateinit var menuType: String
+    private var menuType: String? = null
     private var itemId by Delegates.notNull<Long>()
     private lateinit var itemName: String
 
@@ -23,20 +24,29 @@ class ReviewComposeActivity : ComponentActivity() {
             EatssuTheme {
                 val navHostController = rememberNavController()
 
-                ReviewNav(
-                    navHostController = navHostController,
-                    menuType = MenuType.valueOf(menuType),
-                    menuName = itemName,
-                    id = itemId,
-                    onExit = { finish() }
-                )
+                val parsedMenuType = runCatching {
+                    if (menuType.isNullOrBlank()) null else MenuType.valueOf(menuType!!)
+                }.getOrNull()
+
+                parsedMenuType?.let { type ->
+                    ReviewNav(
+                        navHostController = navHostController,
+                        menuType = type,
+                        menuName = itemName,
+                        id = itemId,
+                        onExit = { finish() }
+                    )
+                } ?: run {
+                    Timber.e("Invalid or null MenuType received: \$menuType")
+                    finish()
+                }
             }
         }
         getIntents()
     }
 
     private fun getIntents() { //todo 추후 변경
-        menuType = intent.getStringExtra("menuType").toString()
+        menuType = intent.getStringExtra("menuType")
         itemId = intent.getLongExtra("itemId", 0)
         itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
 
