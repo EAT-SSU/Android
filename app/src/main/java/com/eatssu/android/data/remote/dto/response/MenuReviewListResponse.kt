@@ -47,7 +47,7 @@ fun MenuReviewListResponse?.toDomain(): List<Review> {
             rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
-            imgUrl = data.imageUrls.filterNotNull().firstOrNull(),
+            imgUrl = data.imageUrls.firstOrNull { it != null },
         )
     } ?: emptyList()
 }
