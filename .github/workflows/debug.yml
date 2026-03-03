@@ -17,135 +17,136 @@ jobs:
     name: Build Debug & Release APK
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-    - name: set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
+      - name: set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
 
-    - name: Create Local Properties
-      run: touch local.properties
+      - name: Create Local Properties
+        run: touch local.properties
 
-    - name: Access Local Properties
-      env:
-        DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
-        PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
-        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
-        NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
-        POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
-        POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
-      run: |
-        echo DEV_BASE_URL=\"$DEV_BASE_URL\" >> local.properties
-        echo PROD_BASE_URL=\"$PROD_BASE_URL\" >> local.properties
-        echo KAKAO_NATIVE_APP_KEY=$KAKAO_NATIVE_APP_KEY >> local.properties
-        echo NAVER_MAPS_CLIENT_ID=$NAVER_MAPS_CLIENT_ID >> local.properties
-        echo POSTHOG_API_KEY=$POSTHOG_API_KEY >> local.properties
-        echo POSTHOG_HOST=$POSTHOG_HOST >> local.properties
-  
-    - name: Generate google-services.json
-      run: |
-        echo "$GOOGLE_SERVICE" > app/google-services.json.b64
-        base64 -d app/google-services.json.b64 > app/google-services.json
-      env:
-        GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
+      - name: Access Local Properties
+        env:
+          DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          NAVER_MAPS_CLIENT_ID: ${{ secrets.NAVER_MAPS_CLIENT_ID }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+        run: |
+          echo DEV_BASE_URL=\"$DEV_BASE_URL\" >> local.properties
+          echo PROD_BASE_URL=\"$PROD_BASE_URL\" >> local.properties
+          echo KAKAO_NATIVE_APP_KEY=$KAKAO_NATIVE_APP_KEY >> local.properties
+          echo NAVER_MAPS_CLIENT_ID=$NAVER_MAPS_CLIENT_ID >> local.properties
+          echo POSTHOG_API_KEY=$POSTHOG_API_KEY >> local.properties
+          echo POSTHOG_HOST=$POSTHOG_HOST >> local.properties
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Generate google-services.json
+        run: |
+          echo "$GOOGLE_SERVICE" > app/google-services.json.b64
+          base64 -d app/google-services.json.b64 > app/google-services.json
+        env:
+          GOOGLE_SERVICE: ${{ secrets.GOOGLE_SERVICE }}
 
-      #    - name: Assemble Debug APK
-      #      if: >
-      #        github.event_name == 'pull_request' &&
-      #        startsWith(github.event.pull_request.head.ref, 'release/') &&
-      #        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      #      run: ./gradlew assembleDebug
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      #    - name: Upload Debug APK artifact
-      #      if: >
-      #        github.event_name == 'pull_request' &&
-      #        startsWith(github.event.pull_request.head.ref, 'release/') &&
-      #        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      #      uses: actions/upload-artifact@v4
-      #      with:
-      #        name: debug-apk
-      #        path: app/build/outputs/apk/debug/*.apk
+      # - name: Assemble Debug APK
+      #   if: >
+      #     github.event_name == 'pull_request' &&
+      #     startsWith(github.event.pull_request.head.ref, 'release/') &&
+      #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      #   run: ./gradlew assembleDebug
 
-    - name: Decode Keystore for Release Signing
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/')
-      env:
-        KEYSTORE_CONTENT: ${{ secrets.KEYSTORE_CONTENT }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      run: |
-        echo "$KEYSTORE_CONTENT" | base64 -d > $GITHUB_WORKSPACE/release.keystore
-        echo "KEYSTORE_FILE=$GITHUB_WORKSPACE/release.keystore" >> $GITHUB_ENV
-        echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
-        echo "KEY_ALIAS=$KEY_ALIAS" >> $GITHUB_ENV
-        echo "KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
+      # - name: Upload Debug APK artifact
+      #   if: >
+      #     github.event_name == 'pull_request' &&
+      #     startsWith(github.event.pull_request.head.ref, 'release/') &&
+      #     (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: debug-apk
+      #     path: app/build/outputs/apk/debug/*.apk
+      #     retention-days: 1
 
-    - name: Assemble Release APK
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      run: ./gradlew assembleRelease
+      - name: Decode Keystore for Release Signing
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/')
+        env:
+          KEYSTORE_CONTENT: ${{ secrets.KEYSTORE_CONTENT }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_CONTENT" | base64 -d > $GITHUB_WORKSPACE/release.keystore
+          echo "KEYSTORE_FILE=$GITHUB_WORKSPACE/release.keystore" >> $GITHUB_ENV
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
+          echo "KEY_ALIAS=$KEY_ALIAS" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
 
-    - name: Inspect AndroidManifest (NAVER_MAPS_CLIENT_ID injected?)
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') &&
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      run: |
-        APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)
-        echo "APK=$APK"
-        
-        BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
-        AAPT2="$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/aapt2"
-        echo "AAPT2=$AAPT2"
-        
-        # 네이버 meta-data 존재 여부 확인
-        "$AAPT2" dump xmltree --file AndroidManifest.xml "$APK" \
-          | sed -n '/com.naver.maps.map.NCP_KEY_ID/,+20p' || true
-        
-        # placeholder가 그대로 남아있는지 확인(치환 실패 징후)
-        "$AAPT2" dump xmltree --file AndroidManifest.xml "$APK" \
-          | grep -n '\${NAVER_MAPS_CLIENT_ID}' || true
+      - name: Assemble Release APK
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') && 
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        run: ./gradlew assembleRelease
 
-      # Release APK 서명 여부 검증
-    - name: Verify Release APK signature
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      run: |
-        BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
-        "$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/apksigner" verify --print-certs app/build/outputs/apk/release/*.apk
+      - name: Inspect AndroidManifest (NAVER_MAPS_CLIENT_ID injected?)
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') &&
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        run: |
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)
+          echo "APK=$APK"
+          
+          BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
+          AAPT2="$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/aapt2"
+          echo "AAPT2=$AAPT2"
+          
+          # 네이버 meta-data 존재 여부 확인
+          "$AAPT2" dump xmltree --file AndroidManifest.xml "$APK" \
+            | sed -n '/com.naver.maps.map.NCP_KEY_ID/,+20p' || true
+          
+          # placeholder가 그대로 남아있는지 확인(치환 실패 징후)
+          "$AAPT2" dump xmltree --file AndroidManifest.xml "$APK" \
+            | grep -n '\${NAVER_MAPS_CLIENT_ID}' || true
 
-    - name: Upload Release APK artifact
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-apk
-        path: app/build/outputs/apk/release/*.apk
-        retention-days: 1
+        # Release APK 서명 여부 검증
+      - name: Verify Release APK signature
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') && 
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        run: |
+          BUILD_TOOLS_VERSION=$(ls "$ANDROID_SDK_ROOT/build-tools" | sort -V | tail -n 1)
+          "$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/apksigner" verify --print-certs app/build/outputs/apk/release/*.apk
+
+      - name: Upload Release APK artifact
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') && 
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 1
 
   deploy-firebase:
     needs: build
@@ -156,80 +157,76 @@ jobs:
       (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Download Release APK artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: release-apk
-        path: app/build/outputs/apk/release
+      - name: Download Release APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release
 
-    # Release만 Firebase 배포
-    - name: Install Firebase CLI
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      run: npm i -g firebase-tools
+      # Release만 Firebase 배포
+      - name: Install Firebase CLI
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') && 
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        run: npm i -g firebase-tools
 
-    - name: Distribute Release APK to Firebase App Distribution
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-      run: |
-        firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
-          --app "$FIREBASE_APP_ID" \
-          --groups "eat-ssu-android-qa" \
-          --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
-          --token "$FIREBASE_TOKEN"
+      - name: Distribute Release APK to Firebase App Distribution
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') && 
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: |
+          firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+            --app "$FIREBASE_APP_ID" \
+            --groups "eat-ssu-android-qa" \
+            --release-notes "Release | PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+            --token "$FIREBASE_TOKEN"
 
-      # Artifact로 APK 제공
-    - name: Comment PR with artifact download
-      if: >
-        github.event_name == 'pull_request' &&
-        startsWith(github.event.pull_request.head.ref, 'release/') && 
-        (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-          const body =
+      # PR 코멘트
+      - name: Comment PR
+        if: >
+          github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'release/') && 
+          (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body =
             [
-              `✅ CI 완료`,
-              ``,
-              `- Github APK : GitHub Actions Artifacts에서 다운로드 (run 링크: ${runUrl})`,
-              `- Release APK: Firebase App Distribution으로 배포됨 (그룹: eat-ssu-android-qa)`,
+            `✅ Firebase App Distribution으로 Release APK 배포됨 (그룹: eat-ssu-android-qa)`,
             ].join('\n');
-          
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            body,
-          });
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body,
+            });
 
-    - name: Slack notification for App Distribution
-      if: success()
-      uses: 8398a7/action-slack@v3
-      with:
-        status: success
-        text: |
-          🔥 Firebase App Distribution 배포 완료!
-          
-          PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
-          브랜치: ${{ github.event.pull_request.head.ref }}
-          테스터 그룹: eat-ssu-android-qa
-        custom_payload: |
-          {
-            attachments: [{
-              color: 'good',
-              text: '🔥 Firebase App Distribution 배포 완료!\n\nPR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}\n브랜치: ${{ github.event.pull_request.head.ref }}\n테스터 그룹: eat-ssu-android-qa'
-            }]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_APP_DISTRIBUTION_WEBHOOK_URL }}
+      - name: Slack notification for App Distribution
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: |
+            🔥 Firebase App Distribution 배포 완료!
+            
+            PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
+            브랜치: ${{ github.event.pull_request.head.ref }}
+            테스터 그룹: eat-ssu-android-qa
+          custom_payload: |
+            {
+              attachments: [{
+                color: 'good',
+                text: '🔥 Firebase App Distribution 배포 완료!\n\nPR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}\n브랜치: ${{ github.event.pull_request.head.ref }}\n테스터 그룹: eat-ssu-android-qa'
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_APP_DISTRIBUTION_WEBHOOK_URL }}
 
