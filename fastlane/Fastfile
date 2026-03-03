@@ -169,6 +169,7 @@ platform :android do
           json_key: service_account_path,
           skip_upload_apk: true,
           skip_upload_metadata: true,
+          skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true
         }
@@ -280,23 +281,33 @@ platform :android do
 
     require 'yaml'
     begin
-      release_notes_data = YAML.load_file(yaml_file)
-      ko_notes = release_notes_data['ko']
-      en_notes = release_notes_data['en']
+      release_notes_data = YAML.load_file(yaml_file) || {}
+      unless release_notes_data.is_a?(Hash)
+        UI.error("❌ YAML 릴리즈 노트 형식이 올바르지 않습니다. key-value 구조가 필요합니다.")
+        return nil
+      end
 
-      if ko_notes.nil? || ko_notes.strip.empty?
+      normalize_notes = lambda do |value|
+        note = value.to_s.strip
+        note.empty? ? nil : note
+      end
+
+      ko_notes = normalize_notes.call(release_notes_data['ko-KR']) || normalize_notes.call(release_notes_data['ko'])
+      en_notes = normalize_notes.call(release_notes_data['en']) || normalize_notes.call(release_notes_data['en-US'])
+
+      if ko_notes.nil?
         UI.error("❌ 한국어 릴리즈 노트가 비어있습니다.")
         ko_notes = "버그 수정 및 성능 개선"
       end
 
-      if en_notes.nil? || en_notes.strip.empty?
+      if en_notes.nil?
         UI.error("❌ 영어 릴리즈 노트가 비어있습니다.")
         en_notes = "Bug fixes and performance improvements"
       end
 
       return {
-        'ko-KR' => ko_notes.strip,
-        'en-US' => en_notes.strip
+        'ko-KR' => ko_notes,
+        'en-US' => en_notes,
       }
     rescue => e
       UI.error("❌ YAML 파일 파싱 실패: #{e.message}")
@@ -368,6 +379,7 @@ platform :android do
           json_key: service_account_path,
           skip_upload_apk: true,
           skip_upload_metadata: true,
+          skip_upload_changelogs: false,
           # 메타데이터 경로 지정 (릴리즈 노트 포함)
           metadata_path: metadata_dir,
           skip_upload_images: true,
@@ -458,6 +470,7 @@ platform :android do
           json_key: service_account_path,
           skip_upload_apk: true,
           skip_upload_metadata: true,
+          skip_upload_changelogs: false,
           metadata_path: metadata_dir,
           skip_upload_images: true,
           skip_upload_screenshots: true
