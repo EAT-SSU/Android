@@ -245,9 +245,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
             if (licensesId == 0 || metadataId == 0) {
                 showErrorToast(getString(R.string.toast_oss_load_fail))
                 Timber.e(
-                    "OSS raw resource missing. third_party_licenses=%s third_party_license_metadata=%s",
-                    licensesId,
-                    metadataId
+                    "OSS raw resource missing. third_party_licenses=$licensesId third_party_license_metadata=$metadataId"
                 )
                 return
             }
