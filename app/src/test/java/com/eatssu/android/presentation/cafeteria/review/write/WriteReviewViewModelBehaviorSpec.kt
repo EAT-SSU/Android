@@ -30,6 +30,7 @@ import io.mockk.mockkObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlin.io.path.createTempDirectory
 import java.io.ByteArrayInputStream
 import java.io.File
 
@@ -173,7 +174,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
-            val cacheDir = createTempDir(prefix = "write-review")
+            val cacheDir = createTempDirectory(prefix = "write-review").toFile()
             val compressed = File(cacheDir, "compressed.jpg").apply { writeBytes(byteArrayOf(1, 2, 3)) }
 
             every { context.contentResolver } returns resolver
@@ -215,7 +216,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
-            val cacheDir = createTempDir(prefix = "write-review-null-url")
+            val cacheDir = createTempDirectory(prefix = "write-review-null-url").toFile()
             val compressed = File(cacheDir, "compressed.jpg").apply { writeBytes(byteArrayOf(1, 2, 3)) }
 
             every { context.contentResolver } returns resolver
@@ -251,7 +252,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
-            val cacheDir = createTempDir(prefix = "write-review-fail")
+            val cacheDir = createTempDirectory(prefix = "write-review-fail").toFile()
 
             every { context.contentResolver } returns resolver
             every { context.cacheDir } returns cacheDir
