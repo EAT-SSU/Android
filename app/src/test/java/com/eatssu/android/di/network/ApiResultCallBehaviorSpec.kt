@@ -65,7 +65,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
 
         `when`("HTTP 에러 + BaseResponse 에러바디 파싱 성공") {
             val errorJson = """{"isSuccess":false,"code":1234,"message":"bad request"}"""
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onResponse(
                     retrofitCall,
@@ -81,8 +81,26 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("HTTP 에러 + BaseResponse 파싱은 되지만 code가 없으면") {
+            val errorJson = """{"isSuccess":false,"message":"bad request"}"""
+            val origin = FakeBaseResponseCall {
+                val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
+                it.onResponse(
+                    retrofitCall,
+                    Response.error(400, errorJson.toResponseBody())
+                )
+            }
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
+
+            then("HTTP code와 raw 에러 문자열로 Failure를 반환한다") {
+                val result = apiResultCall.enqueueAndGet() as ApiResult.Failure
+                result.responseCode shouldBe 400
+                result.message shouldBe errorJson
+            }
+        }
+
         `when`("HTTP 에러 + 에러바디 파싱 실패") {
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onResponse(
                     retrofitCall,
@@ -99,7 +117,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("HTTP 성공이지만 body가 null이면") {
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 @Suppress("UNCHECKED_CAST")
                 it.onResponse(
@@ -116,7 +134,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("API 레벨에서 isSuccess=false이면") {
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onResponse(
                     retrofitCall,
@@ -133,7 +151,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("responseType이 Unit이면") {
-            val origin = FakeBaseResponseCall<Unit> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<Unit>>>(relaxed = true)
                 it.onResponse(
                     retrofitCall,
@@ -148,7 +166,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("API 성공인데 result가 null이고 Unit이 아니면") {
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onResponse(
                     retrofitCall,
@@ -164,7 +182,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("API 성공 + result 존재") {
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onResponse(
                     retrofitCall,
@@ -180,7 +198,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
 
         `when`("enqueue onFailure에서 IOException이 발생하면") {
             val io = IOException("offline")
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onFailure(retrofitCall, io)
             }
@@ -198,7 +216,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
 
         `when`("enqueue onFailure에서 기타 예외가 발생하면") {
             val error = IllegalStateException("boom")
-            val origin = FakeBaseResponseCall<String> {
+            val origin = FakeBaseResponseCall {
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onFailure(retrofitCall, error)
             }

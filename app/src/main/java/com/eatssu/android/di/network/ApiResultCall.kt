@@ -76,17 +76,19 @@ class ApiResultCall<T : Any>(
                         )
 
                     // BaseResponse 형태인지 확인 (isSuccess가 false이고 code와 message가 있는 경우)
-                    if (errorResponse.isSuccess == false &&
-                        errorResponse.code != null &&
-                        errorResponse.message != null
-                    ) {
+                    if (errorResponse.isSuccess == false) {
+                        val parsedCode = errorResponse.code
+                        val parsedMessage = errorResponse.message
 
-                        Timber.d("ApiResultCall - Parsed error response: ${errorResponse.code} - ${errorResponse.message}")
+                        if (parsedCode != null && !parsedMessage.isNullOrBlank()) {
 
-                        return ApiResult.Failure(
-                            errorResponse.code!!,
-                            errorResponse.message
-                        )
+                            Timber.d("ApiResultCall - Parsed error response: $parsedCode - $parsedMessage")
+
+                            return ApiResult.Failure(
+                                parsedCode,
+                                parsedMessage
+                            )
+                        }
                     }
                 } catch (e: Exception) {
                     Timber.w(e, "ApiResultCall - Failed to parse errorBody as BaseResponse")
