@@ -7,6 +7,7 @@ import com.eatssu.android.presentation.base.NetworkErrorEventBus
 import com.eatssu.android.test.AppBehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import kotlinx.serialization.json.Json
 import okhttp3.Request
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Timeout
@@ -60,6 +61,8 @@ private fun <T : Any> ApiResultCall<T>.enqueueAndGet(): ApiResult<T> {
 class ApiResultCallBehaviorSpec : AppBehaviorSpec({
 
     given("ApiResultCall") {
+        val json = Json { ignoreUnknownKeys = true }
+
         `when`("HTTP 에러 + BaseResponse 에러바디 파싱 성공") {
             val errorJson = """{"isSuccess":false,"code":1234,"message":"bad request"}"""
             val origin = FakeBaseResponseCall<String> {
@@ -69,7 +72,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.error(400, errorJson.toResponseBody())
                 )
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("파싱된 code/message로 Failure를 반환한다") {
                 val result = apiResultCall.enqueueAndGet() as ApiResult.Failure
@@ -86,7 +89,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.error(500, "not-json".toResponseBody())
                 )
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("HTTP code와 raw 에러 문자열로 Failure를 반환한다") {
                 val result = apiResultCall.enqueueAndGet() as ApiResult.Failure
@@ -104,7 +107,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.success(null) as Response<BaseResponse<String>>
                 )
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("UnknownError를 반환한다") {
                 val result = apiResultCall.enqueueAndGet()
@@ -120,7 +123,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.success(BaseResponse(isSuccess = false, code = 2001, message = "api fail"))
                 )
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("Failure(code,message)를 반환한다") {
                 val result = apiResultCall.enqueueAndGet() as ApiResult.Failure
@@ -137,7 +140,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.success(BaseResponse<Unit>(isSuccess = true, code = 0, message = "ok", result = null))
                 )
             }
-            val apiResultCall = ApiResultCall(origin, Unit::class.java as Type)
+            val apiResultCall = ApiResultCall(origin, Unit::class.java as Type, json)
 
             then("Success(Unit)을 반환한다") {
                 apiResultCall.enqueueAndGet() shouldBe ApiResult.Success(Unit)
@@ -152,7 +155,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.success(BaseResponse(isSuccess = true, code = 0, message = "ok", result = null))
                 )
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("UnknownError를 반환한다") {
                 val result = apiResultCall.enqueueAndGet()
@@ -168,7 +171,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                     Response.success(BaseResponse(isSuccess = true, code = 0, message = "ok", result = "payload"))
                 )
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("Success(result)를 반환한다") {
                 apiResultCall.enqueueAndGet() shouldBe ApiResult.Success("payload")
@@ -181,7 +184,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onFailure(retrofitCall, io)
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("NetworkError를 반환하고 NetworkErrorEventBus를 발행한다") {
                 NetworkErrorEventBus.networkError.test {
@@ -199,7 +202,7 @@ class ApiResultCallBehaviorSpec : AppBehaviorSpec({
                 val retrofitCall = mockk<Call<BaseResponse<String>>>(relaxed = true)
                 it.onFailure(retrofitCall, error)
             }
-            val apiResultCall = ApiResultCall(origin, String::class.java)
+            val apiResultCall = ApiResultCall(origin, String::class.java, json)
 
             then("UnknownError를 반환한다") {
                 val result = apiResultCall.enqueueAndGet() as ApiResult.UnknownError

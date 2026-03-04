@@ -13,6 +13,7 @@ import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FirebaseRemoteConfigRepositoryImplBehaviorSpec : AppBehaviorSpec({
@@ -24,7 +25,9 @@ class FirebaseRemoteConfigRepositoryImplBehaviorSpec : AppBehaviorSpec({
         every { remoteConfig.setConfigSettingsAsync(any()) } returns Tasks.forResult(null)
         every { remoteConfig.setDefaultsAsync(R.xml.firebase_remote_config) } returns Tasks.forResult(null)
 
-        val repository = FirebaseRemoteConfigRepositoryImpl()
+        val repository = FirebaseRemoteConfigRepositoryImpl(
+            Json { ignoreUnknownKeys = true }
+        )
 
         `when`("minimum version fetch가 성공하면") {
             every { remoteConfig.fetchAndActivate() } returns Tasks.forResult(true)

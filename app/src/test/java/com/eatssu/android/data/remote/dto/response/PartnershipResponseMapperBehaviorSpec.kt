@@ -1,7 +1,7 @@
 package com.eatssu.android.data.remote.dto.response
 
-import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.test.AppBehaviorSpec
+import com.eatssu.common.enums.StoreType
 import io.kotest.matchers.shouldBe
 
 class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
@@ -13,29 +13,29 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                     storeName = "A",
                     longitude = 1.0,
                     latitude = 2.0,
-                    restaurantType = "CAFE",
+                    restaurantType = StoreType.CAFE,
                     partnershipInfos = emptyList(),
-                ).toDomain().restaurantType shouldBe RestaurantType.CAFE
+                ).toDomain().restaurantType shouldBe StoreType.CAFE
 
                 PartnershipResponse(
                     storeName = "B",
                     longitude = 1.0,
                     latitude = 2.0,
-                    restaurantType = "RESTAURANT",
+                    restaurantType = StoreType.RESTAURANT,
                     partnershipInfos = emptyList(),
-                ).toDomain().restaurantType shouldBe RestaurantType.RESTAURANT
+                ).toDomain().restaurantType shouldBe StoreType.RESTAURANT
 
                 PartnershipResponse(
                     storeName = "C",
                     longitude = 1.0,
                     latitude = 2.0,
-                    restaurantType = "PUB",
+                    restaurantType = StoreType.PUB,
                     partnershipInfos = emptyList(),
-                ).toDomain().restaurantType shouldBe RestaurantType.PUB
+                ).toDomain().restaurantType shouldBe StoreType.PUB
             }
         }
 
-        `when`("restaurantType이 null 또는 알 수 없는 값이면") {
+        `when`("restaurantType이 null이면") {
             then("RESTAURANT로 fallback한다") {
                 PartnershipResponse(
                     storeName = "D",
@@ -43,15 +43,7 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                     latitude = 2.0,
                     restaurantType = null,
                     partnershipInfos = emptyList(),
-                ).toDomain().restaurantType shouldBe RestaurantType.RESTAURANT
-
-                PartnershipResponse(
-                    storeName = "E",
-                    longitude = 1.0,
-                    latitude = 2.0,
-                    restaurantType = "UNKNOWN",
-                    partnershipInfos = emptyList(),
-                ).toDomain().restaurantType shouldBe RestaurantType.RESTAURANT
+                ).toDomain().restaurantType shouldBe StoreType.RESTAURANT
             }
         }
 
@@ -98,14 +90,14 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                     description = "desc",
                     startDate = "2025-01-01",
                     endDate = "2025-12-31",
-                    restaurantType = "CAFE",
+                    restaurantType = StoreType.CAFE,
                     longitude = 1.0,
                     latitude = 2.0,
                     collegeName = "IT",
                     departmentName = "CS",
                     partnershipLikeCount = 1,
                     likedByUser = true,
-                ).toDomain().restaurantType shouldBe RestaurantType.CAFE
+                ).toDomain().storeType shouldBe StoreType.CAFE
 
                 PartnershipRestaurantResponse(
                     id = 1,
@@ -114,14 +106,14 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                     description = "desc",
                     startDate = "2025-01-01",
                     endDate = "2025-12-31",
-                    restaurantType = "RESTAURANT",
+                    restaurantType = StoreType.RESTAURANT,
                     longitude = 1.0,
                     latitude = 2.0,
                     collegeName = "IT",
                     departmentName = "CS",
                     partnershipLikeCount = 1,
                     likedByUser = true,
-                ).toDomain().restaurantType shouldBe RestaurantType.RESTAURANT
+                ).toDomain().storeType shouldBe StoreType.RESTAURANT
 
                 PartnershipRestaurantResponse(
                     id = 1,
@@ -130,18 +122,18 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                     description = "desc",
                     startDate = "2025-01-01",
                     endDate = "2025-12-31",
-                    restaurantType = "PUB",
+                    restaurantType = StoreType.PUB,
                     longitude = 1.0,
                     latitude = 2.0,
                     collegeName = "IT",
                     departmentName = "CS",
                     partnershipLikeCount = 1,
                     likedByUser = true,
-                ).toDomain().restaurantType shouldBe RestaurantType.PUB
+                ).toDomain().storeType shouldBe StoreType.PUB
             }
         }
 
-        `when`("restaurantType이 null 또는 알 수 없는 값이면") {
+        `when`("restaurantType이 null이면") {
             then("RESTAURANT로 fallback한다") {
                 PartnershipRestaurantResponse(
                     id = 1,
@@ -157,23 +149,7 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                     departmentName = "CS",
                     partnershipLikeCount = 1,
                     likedByUser = true,
-                ).toDomain().restaurantType shouldBe RestaurantType.RESTAURANT
-
-                PartnershipRestaurantResponse(
-                    id = 1,
-                    partnershipType = "DISCOUNT",
-                    storeName = "A",
-                    description = "desc",
-                    startDate = "2025-01-01",
-                    endDate = "2025-12-31",
-                    restaurantType = "UNKNOWN",
-                    longitude = 1.0,
-                    latitude = 2.0,
-                    collegeName = "IT",
-                    departmentName = "CS",
-                    partnershipLikeCount = 1,
-                    likedByUser = true,
-                ).toDomain().restaurantType shouldBe RestaurantType.RESTAURANT
+                ).toDomain().storeType shouldBe StoreType.RESTAURANT
             }
         }
 

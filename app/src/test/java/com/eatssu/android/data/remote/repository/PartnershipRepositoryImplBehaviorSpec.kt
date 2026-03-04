@@ -6,6 +6,7 @@ import com.eatssu.android.data.remote.dto.response.PartnershipRestaurantResponse
 import com.eatssu.android.data.remote.service.PartnershipService
 import com.eatssu.android.data.remote.service.UserService
 import com.eatssu.android.test.AppBehaviorSpec
+import com.eatssu.common.enums.StoreType
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -26,7 +27,7 @@ class PartnershipRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     storeName = "Cafe A",
                     longitude = 127.0,
                     latitude = 37.0,
-                    restaurantType = "CAFE",
+                    restaurantType = StoreType.CAFE,
                     partnershipInfos = listOf(
                         PartnershipResponse.PartnershipInfo(
                             id = 1,
@@ -71,7 +72,7 @@ class PartnershipRepositoryImplBehaviorSpec : AppBehaviorSpec({
                 description = "10% 할인",
                 startDate = "2025-01-01",
                 endDate = "2025-12-31",
-                restaurantType = "CAFE",
+                restaurantType = StoreType.CAFE,
                 longitude = 127.0,
                 latitude = 37.0,
                 collegeName = "IT",
@@ -118,7 +119,7 @@ class PartnershipRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     storeName = "Cafe B",
                     longitude = 127.0,
                     latitude = 37.0,
-                    restaurantType = "CAFE",
+                    restaurantType = StoreType.CAFE,
                     partnershipInfos = emptyList(),
                 )
             )

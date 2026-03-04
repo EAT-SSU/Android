@@ -1,8 +1,8 @@
 package com.eatssu.android.domain.usecase.user
 
 import com.eatssu.android.domain.model.Partnership
-import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.test.AppBehaviorSpec
+import com.eatssu.common.enums.StoreType
 import io.kotest.matchers.shouldBe
 
 class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
@@ -38,7 +38,7 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                 storeName = "Cafe A",
                 longitude = 127.0,
                 latitude = 37.0,
-                restaurantType = RestaurantType.CAFE,
+                restaurantType = StoreType.CAFE,
                 partnershipInfos = infos,
             )
         )
@@ -55,7 +55,7 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                 result?.id shouldBe 2
                 result?.storeName shouldBe "Cafe A"
                 result?.description shouldBe "음료 증정"
-                result?.restaurantType shouldBe RestaurantType.CAFE
+                result?.storeType shouldBe StoreType.CAFE
             }
         }
 
@@ -81,7 +81,7 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                     storeName = "Cafe A",
                     longitude = 127.0,
                     latitude = 37.0,
-                    restaurantType = RestaurantType.CAFE,
+                    restaurantType = StoreType.CAFE,
                     partnershipInfos = emptyList(),
                 )
             )

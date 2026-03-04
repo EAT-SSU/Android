@@ -4,10 +4,11 @@ import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.data.remote.dto.response.CollegeResponse
 import com.eatssu.android.data.remote.dto.response.DepartmentResponse
-import com.eatssu.android.data.remote.dto.response.MyNickNameResponse
+import com.eatssu.android.data.remote.dto.response.MyPageResponse
 import com.eatssu.android.data.remote.dto.response.UserCollegeDepartmentResponse
 import com.eatssu.android.data.remote.service.UserService
 import com.eatssu.android.test.AppBehaviorSpec
+import com.eatssu.common.enums.Provider
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -218,7 +219,7 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
         `when`("내 닉네임 조회가 성공하지만 nickname이 null이면") {
             coEvery { userService.getMyInfo() } returns ApiResult.Success(
-                MyNickNameResponse(nickname = null, provider = "KAKAO")
+                MyPageResponse(nickname = null, provider = Provider.KAKAO)
             )
 
             then("빈 문자열을 반환한다") {

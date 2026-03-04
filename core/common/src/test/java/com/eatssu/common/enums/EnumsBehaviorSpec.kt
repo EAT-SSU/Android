@@ -31,13 +31,13 @@ class EnumsBehaviorSpec : BehaviorSpec({
     given("Time") {
         `when`("enum name이 유효하면") {
             then("한국어 식사명을 반환한다") {
-                Time.fromTimeEnumName("LUNCH") shouldBe "중식"
+                Time.entries.find { it.name == "LUNCH" }?.korean shouldBe "중식"
             }
         }
 
         `when`("enum name이 유효하지 않으면") {
-            then("빈 문자열을 반환한다") {
-                Time.fromTimeEnumName("INVALID") shouldBe ""
+            then("null을 반환한다") {
+                Time.entries.find { it.name == "INVALID" }?.korean shouldBe null
             }
         }
     }

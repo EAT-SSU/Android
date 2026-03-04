@@ -3,18 +3,17 @@ package com.eatssu.android.presentation.map
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.Partnership
-import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.map.component.FilterType
-import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.samplePartnership
 import com.eatssu.android.test.samplePartnershipRestaurant
 import com.eatssu.android.test.sampleUserInfo
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.StoreType
 import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
@@ -183,12 +182,12 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 samplePartnership(
                     storeName = "Cafe A",
                     infos = partnershipInfos,
-                    type = RestaurantType.PUB,
+                    type = StoreType.PUB,
                 )
             )
             val representative = samplePartnershipRestaurant(
                 id = 2,
-                type = RestaurantType.PUB,
+                type = StoreType.PUB,
             )
 
             coEvery {
@@ -221,7 +220,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
                         state.data.restaurantPartnershipInfo shouldBe representative
-                        state.data.placeType shouldBe PlaceType.PUB
+                        state.data.storeType shouldBe StoreType.PUB
                         state.data.restaurantInfoList.size shouldBe 2
                         state.data.restaurantInfoList[1].period shouldBe "2025-02-01 ~ 2025-11-30"
                     }
@@ -340,8 +339,8 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("대표 제휴 타입이 CAFE면") {
-            val partnerships = listOf(samplePartnership(storeName = "Cafe C", type = RestaurantType.CAFE))
-            val representative = samplePartnershipRestaurant(type = RestaurantType.CAFE)
+            val partnerships = listOf(samplePartnership(storeName = "Cafe C", type = StoreType.CAFE))
+            val representative = samplePartnershipRestaurant(type = StoreType.CAFE)
 
             coEvery {
                 getUserCollegeDepartmentUseCase()
@@ -360,7 +359,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
             )
 
-            then("PlaceType.CAFE로 변환한다") {
+            then("StoreType.CAFE로 변환한다") {
                 runTest {
                     eventually(2.seconds) {
                         (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
@@ -369,15 +368,15 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
 
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
-                        state.data.placeType shouldBe PlaceType.CAFE
+                        state.data.storeType shouldBe StoreType.CAFE
                     }
                 }
             }
         }
 
         `when`("대표 제휴 타입이 RESTAURANT면") {
-            val partnerships = listOf(samplePartnership(storeName = "Restaurant A", type = RestaurantType.RESTAURANT))
-            val representative = samplePartnershipRestaurant(type = RestaurantType.RESTAURANT)
+            val partnerships = listOf(samplePartnership(storeName = "Restaurant A", type = StoreType.RESTAURANT))
+            val representative = samplePartnershipRestaurant(type = StoreType.RESTAURANT)
 
             coEvery {
                 getUserCollegeDepartmentUseCase()
@@ -396,7 +395,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
             )
 
-            then("PlaceType.RESTAURANT로 변환한다") {
+            then("StoreType.RESTAURANT로 변환한다") {
                 runTest {
                     eventually(2.seconds) {
                         (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
@@ -405,7 +404,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
 
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
-                        state.data.placeType shouldBe PlaceType.RESTAURANT
+                        state.data.storeType shouldBe StoreType.RESTAURANT
                     }
                 }
             }

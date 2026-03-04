@@ -5,6 +5,7 @@ import com.eatssu.android.data.remote.dto.response.BaseResponse
 import com.eatssu.android.test.AppBehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import kotlinx.serialization.json.Json
 import retrofit2.Call
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -20,9 +21,11 @@ class ApiResultCallAdapterBehaviorSpec : AppBehaviorSpec({
             }
 
         val baseResponseType = parameterizedType(BaseResponse::class.java, String::class.java)
+        val json = Json { ignoreUnknownKeys = true }
         val adapter = ApiResultCallAdapter<String>(
             baseResponseType = baseResponseType,
             dataType = String::class.java,
+            json = json,
         )
 
         `when`("responseType을 조회하면") {

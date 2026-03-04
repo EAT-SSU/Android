@@ -7,6 +7,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import kotlinx.serialization.json.Json
 import retrofit2.Call
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
@@ -15,7 +16,9 @@ import java.lang.reflect.Type
 class ApiResultCallAdapterFactoryBehaviorSpec : AppBehaviorSpec({
 
     given("ApiResultCallAdapterFactory") {
-        val factory = ApiResultCallAdapterFactory()
+        val factory = ApiResultCallAdapterFactory(
+            Json { ignoreUnknownKeys = true }
+        )
         val retrofit = mockk<Retrofit>()
 
         fun parameterizedType(rawType: Type, vararg args: Type): ParameterizedType =

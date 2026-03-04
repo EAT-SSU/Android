@@ -4,11 +4,11 @@ import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
-import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.model.UserInfo
+import com.eatssu.common.enums.StoreType
 
 fun sampleCollege(
     id: Int = 1,
@@ -85,7 +85,7 @@ fun samplePartnership(
             endDate = "2025-12-31",
         ),
     ),
-    type: RestaurantType = RestaurantType.CAFE,
+    type: StoreType = StoreType.CAFE,
 ) = Partnership(
     storeName = storeName,
     longitude = 127.0,
@@ -96,7 +96,7 @@ fun samplePartnership(
 
 fun samplePartnershipRestaurant(
     id: Int = 1,
-    type: RestaurantType = RestaurantType.CAFE,
+    type: StoreType = StoreType.CAFE,
 ) = PartnershipRestaurant(
     id = id,
     partnershipType = "DISCOUNT",
@@ -104,7 +104,7 @@ fun samplePartnershipRestaurant(
     description = "desc",
     startDate = "2025-01-01",
     endDate = "2025-12-31",
-    restaurantType = type,
+    storeType = type,
     longitude = 127.0,
     latitude = 37.0,
     collegeName = "IT",
