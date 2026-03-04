@@ -34,6 +34,14 @@ class CalendarUtilBehaviorSpec : AppBehaviorSpec({
                     .toEpochMilli()
                 CalendarUtil.convertMillisToDateString(millis) shouldBe "20250101"
             }
+
+            then("지정한 타임존 기준으로 날짜를 변환한다") {
+                val millis = Instant.parse("2025-01-01T00:30:00Z").toEpochMilli()
+                CalendarUtil.convertMillisToDateString(
+                    millis = millis,
+                    zoneId = ZoneId.of("America/Los_Angeles"),
+                ) shouldBe "20241231"
+            }
         }
 
         `when`("getNextDayDate를 호출하면") {

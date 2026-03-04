@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import java.time.Clock
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -133,6 +134,89 @@ class WidgetDataDisplayManagerBehaviorSpec : AppBehaviorSpec({
                             dinner = emptyList(),
                             restaurant = restaurant,
                         )
+                }
+            }
+        }
+
+        `when`("clock 타임존이 시스템과 달라져도") {
+            WidgetCacheManager.clearAllCache()
+            val losAngelesClock = Clock.fixed(
+                Instant.parse("2025-01-01T00:30:00Z"),
+                ZoneId.of("America/Los_Angeles"),
+            )
+            coEvery { useCase("20241231", restaurant.name) } returns todaySuccess
+
+            then("clock 기준 날짜로 오늘 식단을 조회한다") {
+                runTest {
+                    WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Morning,
+                        restaurant,
+                        losAngelesClock,
+                    )
+
+                    coVerify(exactly = 1) { useCase("20241231", restaurant.name) }
+                    coVerify(exactly = 0) { useCase("20250101", restaurant.name) }
+                }
+            }
+        }
+
+        `when`("자정 전후로 연속 갱신하면") {
+            WidgetCacheManager.clearAllCache()
+            val beforeMidnight = Clock.fixed(Instant.parse("2025-02-01T23:59:00Z"), ZoneOffset.UTC)
+            val afterMidnight = Clock.fixed(Instant.parse("2025-02-02T00:01:00Z"), ZoneOffset.UTC)
+
+            val day1Success = MealState.Success(
+                WidgetMealList(
+                    breakfast = listOf(listOf("1일아침")) to "breakfast",
+                    lunch = listOf(listOf("1일점심")) to "lunch",
+                    dinner = listOf(listOf("1일저녁")) to "dinner",
+                    restaurant = restaurant,
+                )
+            )
+            val day2Success = MealState.Success(
+                WidgetMealList(
+                    breakfast = listOf(listOf("2일아침")) to "breakfast",
+                    lunch = listOf(listOf("2일점심")) to "lunch",
+                    dinner = listOf(listOf("2일저녁")) to "dinner",
+                    restaurant = restaurant,
+                )
+            )
+
+            coEvery { useCase("20250201", restaurant.name) } returns day1Success
+            coEvery { useCase("20250202", restaurant.name) } returns day2Success
+
+            then("이전 날짜 캐시를 사용하지 않고 새로운 날짜를 다시 조회한다") {
+                runTest {
+                    val day1Result = WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Dinner,
+                        restaurant,
+                        beforeMidnight,
+                    )
+
+                    val day2Result = WidgetDataDisplayManager.fetchMealInfo(
+                        useCase,
+                        MealTime.Morning,
+                        restaurant,
+                        afterMidnight,
+                    )
+
+                    day1Result shouldBe WidgetMealInfo.Available(
+                        breakfast = listOf(listOf("1일아침")),
+                        lunch = listOf(listOf("1일점심")),
+                        dinner = listOf(listOf("1일저녁")),
+                        restaurant = restaurant,
+                    )
+                    day2Result shouldBe WidgetMealInfo.Available(
+                        breakfast = listOf(listOf("2일아침")),
+                        lunch = listOf(listOf("2일점심")),
+                        dinner = listOf(listOf("2일저녁")),
+                        restaurant = restaurant,
+                    )
+
+                    coVerify(exactly = 1) { useCase("20250201", restaurant.name) }
+                    coVerify(exactly = 1) { useCase("20250202", restaurant.name) }
                 }
             }
         }

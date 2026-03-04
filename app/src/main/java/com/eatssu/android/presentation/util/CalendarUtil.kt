@@ -1,11 +1,11 @@
 package com.eatssu.android.presentation.util
 
-import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 
@@ -38,10 +38,15 @@ object CalendarUtil {
         return null
     }
 
-    fun convertMillisToDateString(millis: Long): String {
-        val formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-        val date = Date(millis)
-        return formatter.format(date)
+    fun convertMillisToDateString(
+        millis: Long,
+        zoneId: ZoneId = ZoneId.systemDefault(),
+    ): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
+        return Instant.ofEpochMilli(millis)
+            .atZone(zoneId)
+            .toLocalDate()
+            .format(formatter)
     }
 
     fun getNextDayDate(clock: Clock = Clock.systemDefaultZone()): String {

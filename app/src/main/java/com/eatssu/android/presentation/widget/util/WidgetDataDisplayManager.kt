@@ -41,7 +41,7 @@ object WidgetDataDisplayManager {
         clock: Clock = Clock.systemDefaultZone(),
     ): WidgetMealInfo {
         Timber.d("Widget - fetchMealInfo")
-        val targetDate = CalendarUtil.convertMillisToDateString(clock.millis())
+        val targetDate = CalendarUtil.convertMillisToDateString(clock.millis(), clock.zone)
 
         // 캐시에서 데이터 확인
         val cachedMealInfo = WidgetCacheManager.getCachedMealData(restaurant, targetDate, clock)
