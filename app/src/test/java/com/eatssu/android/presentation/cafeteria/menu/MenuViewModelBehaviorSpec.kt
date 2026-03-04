@@ -54,5 +54,33 @@ class MenuViewModelBehaviorSpec : AppBehaviorSpec({
                 }
             }
         }
+
+        `when`("일부 식당 메뉴가 비어있어도") {
+            val viewModel = MenuViewModel(useCase)
+            val r1 = Restaurant.FOOD_COURT
+            val r2 = Restaurant.HAKSIK
+            val m1 = emptyList<Menu>()
+            val m2 = listOf(Menu(id = 2, name = "B", price = 2000, rate = 3.5))
+            coEvery { useCase(r1, "20250101", Time.DINNER) } returns m1
+            coEvery { useCase(r2, "20250101", Time.DINNER) } returns m2
+
+            then("성공 상태로 식당별 결과를 유지한다") {
+                runTest {
+                    viewModel.loadMenus(listOf(r1, r2), "20250101", Time.DINNER)
+                    advanceUntilIdle()
+
+                    viewModel.uiState.value shouldBe UiState.Success(
+                        MenuState(
+                            mapOf(
+                                r1 to m1,
+                                r2 to m2,
+                            )
+                        )
+                    )
+                    coVerify(exactly = 1) { useCase(r1, "20250101", Time.DINNER) }
+                    coVerify(exactly = 1) { useCase(r2, "20250101", Time.DINNER) }
+                }
+            }
+        }
     }
 })
