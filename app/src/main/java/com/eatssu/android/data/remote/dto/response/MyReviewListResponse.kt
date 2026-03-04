@@ -1,26 +1,30 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Review
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MyReviewListResponse(
-    @SerializedName("numberOfElements") val numberOfElements: Int? = null,
-    @SerializedName("hasNext") val hasNext: Boolean? = null,
-    @SerializedName("dataList") val dataList: ArrayList<DataList>? = arrayListOf()
+    @SerialName("numberOfElements") val numberOfElements: Int? = null,
+    @SerialName("hasNext") val hasNext: Boolean? = null,
+    @SerialName("dataList") val dataList: List<DataList>? = listOf()
 ) {
+    @Serializable
     data class DataList(
 
-        @SerializedName("reviewId") val reviewId: Long? = null,
-        @SerializedName("rating") val rating: Int? = null,
-        @SerializedName("writtenAt") val writtenAt: String? = null,
-        @SerializedName("content") val content: String? = null,
-        @SerializedName("imageUrls") val imageUrls: ArrayList<String> = arrayListOf(),
-        @SerializedName("menuList") val menuList: ArrayList<MenuList> = arrayListOf()
+        @SerialName("reviewId") val reviewId: Long? = null,
+        @SerialName("rating") val rating: Int? = null,
+        @SerialName("writtenAt") val writtenAt: String? = null,
+        @SerialName("content") val content: String? = null,
+        @SerialName("imageUrls") val imageUrls: List<String?> = listOf(),
+        @SerialName("menuList") val menuList: List<MenuList?> = listOf()
     ) {
+        @Serializable
         data class MenuList(
-            @SerializedName("id") val id: Long? = null,
-            @SerializedName("name") val name: String? = null,
-            @SerializedName("isLike") val isLike: Boolean? = null
+            @SerialName("id") val id: Long? = null,
+            @SerialName("name") val name: String? = null,
+            @SerialName("isLike") val isLike: Boolean? = null
         )
     }
 }
@@ -30,7 +34,7 @@ fun MyReviewListResponse?.toDomain(): List<Review> {
         Review(
             reviewId = data.reviewId ?: -1L,
             isWriter = true,
-            menuLikeInfoList = data.menuList.map { menu ->
+            menuLikeInfoList = data.menuList.filterNotNull().map { menu ->
                 Review.MenuLikeInfo(
                     menuId = menu.id ?: -1L,
                     name = menu.name ?: "",
@@ -41,7 +45,7 @@ fun MyReviewListResponse?.toDomain(): List<Review> {
             rating = data.rating ?: 0,
             writeDate = data.writtenAt ?: "",
             content = data.content ?: "",
-            imgUrl = data.imageUrls.firstOrNull(),
+            imgUrl = data.imageUrls.firstOrNull { it != null },
         )
     } ?: emptyList()
 }

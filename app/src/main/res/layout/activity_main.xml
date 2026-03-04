@@ -33,6 +33,8 @@
         android:textAlignment="center"
         app:itemTextColor="@color/selector_bottom_navi_item"
         app:itemIconTint="@null"
+        app:labelVisibilityMode="labeled"
+        app:itemHorizontalTranslationEnabled="false"
         app:itemPaddingTop="10dp"
         app:menu="@menu/menu_bottom_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

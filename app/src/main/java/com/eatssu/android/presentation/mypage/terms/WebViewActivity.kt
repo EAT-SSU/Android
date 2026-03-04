@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageView
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.common.EventLogger
@@ -21,6 +23,7 @@ class WebViewActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyBackIconFromIntent()
 
         binding.webview.apply {
             webViewClient = object : WebViewClient() {
@@ -53,14 +56,23 @@ class WebViewActivity :
                 useWideViewPort = true // 화면 크기에 맞게 웹 페이지를 조정
             }
 
-            URL = intent.getStringExtra("URL") ?: "" //Todo 뷰모델 사용하도록 수정?
-            TITLE = intent.getStringExtra("TITLE") ?: ""
+            URL = intent.getStringExtra(EXTRA_URL) ?: "" //Todo 뷰모델 사용하도록 수정?
+            TITLE = intent.getStringExtra(EXTRA_TITLE) ?: ""
 
             toolbarTitle.text = TITLE
             Timber.d(URL + TITLE)
 
             if (savedInstanceState != null) restoreState(savedInstanceState)
             else loadUrl(URL)
+        }
+    }
+
+    private fun applyBackIconFromIntent() {
+        if (intent.hasExtra(EXTRA_BACK_ICON_RES_ID)) {
+            val backIconResId = intent.getIntExtra(EXTRA_BACK_ICON_RES_ID, 0)
+            if (backIconResId != 0) {
+                findViewById<ImageView>(R.id.btn_back).setImageResource(backIconResId)
+            }
         }
     }
 
@@ -94,4 +106,10 @@ class WebViewActivity :
     }
 
     override fun shouldLogScreenId() = false
+
+    companion object {
+        const val EXTRA_URL = "URL"
+        const val EXTRA_TITLE = "TITLE"
+        const val EXTRA_BACK_ICON_RES_ID = "BACK_ICON_RES_ID"
+    }
 }

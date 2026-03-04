@@ -262,8 +262,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
 
     private fun startWebView(url: String, title: String, screenId: ScreenId) {
         val intent = Intent(requireContext(), WebViewActivity::class.java).apply {
-            putExtra("URL", url)
-            putExtra("TITLE", title)
+            putExtra(WebViewActivity.EXTRA_URL, url)
+            putExtra(WebViewActivity.EXTRA_TITLE, title)
             putExtra("SCREEN_ID", screenId.name)
         }
         startActivity(intent)

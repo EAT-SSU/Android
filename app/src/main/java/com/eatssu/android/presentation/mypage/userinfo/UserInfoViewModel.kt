@@ -57,11 +57,14 @@ class UserInfoViewModel @Inject constructor(
 
             val userInfo = getUserCollegeDepartmentUseCase()
 
+            val initialCollege = userInfo.userCollege.takeUnless { it.collegeId == -1 }
+            val initialDepartment = userInfo.userDepartment.takeUnless { it.departmentId == -1 }
+
             // 단과대 목록과 학과 목록을 먼저 모두 가져옴
             val colleges = userRepository.getTotalColleges()
             val departments =
-                if (userInfo.userCollege.collegeId != -1)
-                    userRepository.getTotalDepartments(userInfo.userCollege.collegeId)
+                if (initialCollege != null)
+                    userRepository.getTotalDepartments(initialCollege.collegeId)
                 else
                     emptyList()
 
@@ -71,10 +74,10 @@ class UserInfoViewModel @Inject constructor(
                     UserInfoData(
                         nickname = userInfo.nickname,
                         originalNickname = userInfo.nickname,
-                        selectedCollege = userInfo.userCollege,
-                        originalCollege = userInfo.userCollege,
-                        selectedDepartment = userInfo.userDepartment,
-                        originalDepartment = userInfo.userDepartment,
+                        selectedCollege = initialCollege,
+                        originalCollege = initialCollege,
+                        selectedDepartment = initialDepartment,
+                        originalDepartment = initialDepartment,
                         collegeList = colleges,
                         departmentList = departments
                     )
@@ -186,6 +189,14 @@ class UserInfoViewModel @Inject constructor(
     fun loadDepartmentList(collegeId: Int) {
         viewModelScope.launch {
             val currentState = _uiState.value as? UiState.Success ?: return@launch
+
+            if (collegeId == -1) {
+                Timber.w("학과 목록 로드 스킵: invalid collegeId=-1")
+                _uiState.update {
+                    UiState.Success(currentState.data.copy(departmentList = emptyList()))
+                }
+                return@launch
+            }
 
             val departments = userRepository.getTotalDepartments(collegeId)
             _uiState.update {

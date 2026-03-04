@@ -6,14 +6,15 @@ import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.common.enums.Restaurant
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.google.gson.Gson
 import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
+    private val json: Json
 ) : FirebaseRemoteConfigRepository {
 
     private val instance = FirebaseRemoteConfig.getInstance()
@@ -50,28 +51,16 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
     }
 
     private fun getCafeteriaInfo(): List<RestaurantInfo> {
-        val json = instance.getString("cafeteria_information")
-        return runCatching { parseCafeteriaJson(json) }
+        val jsonString = instance.getString("cafeteria_information")
+        return runCatching { parseCafeteriaJson(jsonString) }
             .onFailure { Timber.e(it, "cafeteria_information JSON 파싱 실패") }
             .getOrDefault(emptyList())
     }
 
-    private fun parseCafeteriaJson(json: String): List<RestaurantInfo> {
+    private fun parseCafeteriaJson(jsonString: String): List<RestaurantInfo> {
         return try {
-            val gson = Gson()
-            val dtoList = gson.fromJson(json, Array<RestaurantInfo>::class.java) ?: emptyArray()
-
-            dtoList.map { dto ->
-                RestaurantInfo(
-                    enum = dto.enum,
-                    name = dto.name,
-                    location = dto.location,
-                    image = dto.image,
-                    time = dto.time,
-                    etc = dto.etc
-                ).also {
-                    Timber.d("Loaded cafeteria info: $it")
-                }
+            json.decodeFromString<List<RestaurantInfo>>(jsonString).also {
+                Timber.d("Loaded cafeteria info: $it")
             }
         } catch (e: Exception) {
             Timber.e(e, "Failed to parse cafeteria JSON")

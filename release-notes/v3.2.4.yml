@@ -1,0 +1,10 @@
+ko: |
+  - 메뉴 정보가 더 안정적으로 표시되도록 오류를 수정했어요.
+  - 특정 화면에서 목록이 비어 보이던 문제를 해결했어요.
+  - 앱의 배포 및 업데이트 과정을 개선해 더 안정적으로 서비스해요.
+  - 전반적인 앱 안정성과 사용성을 높였어요.
+en: |
+  - Fixed an issue to display menu information more reliably.
+  - Resolved an issue where lists could appear empty on some screens.
+  - Improved the app release and update process for more stable service.
+  - Enhanced overall app stability and usability.

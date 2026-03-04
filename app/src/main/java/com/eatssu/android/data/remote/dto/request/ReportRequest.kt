@@ -1,14 +1,16 @@
 package com.eatssu.android.data.remote.dto.request
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ReportRequest(
-    @SerializedName("reviewId")
+    @SerialName("reviewId")
     val reviewId: Long,
 
-    @SerializedName("reportType")
+    @SerialName("reportType")
     val reportType: String,
 
-    @SerializedName("content")
+    @SerialName("content")
     val content: String,
 )

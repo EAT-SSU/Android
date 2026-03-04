@@ -1,29 +1,33 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Menu
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import timber.log.Timber
 
 
+@Serializable
 data class GetFixedMenuResponse(
 
-    @SerializedName("categoryMenuListCollection") val categoryMenuListCollection: ArrayList<CategoryMenuListCollection> = arrayListOf(),
+    @SerialName("categoryMenuListCollection") val categoryMenuListCollection: ArrayList<CategoryMenuListCollection> = arrayListOf(),
 
     )
 
+@Serializable
 data class CategoryMenuListCollection(
 
-    @SerializedName("category") val category: String? = null,
-    @SerializedName("menus") val menus: ArrayList<MenuInformationList> = arrayListOf(),
+    @SerialName("category") val category: String? = null,
+    @SerialName("menus") val menus: ArrayList<MenuInformationList> = arrayListOf(),
 
     )
 
+@Serializable
 data class MenuInformationList(
 
-    @SerializedName("menuId") var menuId: Long? = null,
-    @SerializedName("name") val name: String? = null,
-    @SerializedName("price") val price: Int? = null,
-    @SerializedName("rating") val rating: Double? = null,
+    @SerialName("menuId") val menuId: Long? = null,
+    @SerialName("name") val name: String? = null,
+    @SerialName("price") val price: Int? = null,
+    @SerialName("rating") val rating: Double? = null,
 
     )
 

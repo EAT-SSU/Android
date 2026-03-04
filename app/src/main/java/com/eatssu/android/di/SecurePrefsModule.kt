@@ -2,6 +2,8 @@ package com.eatssu.android.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import timber.log.Timber
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +18,21 @@ object SecurePrefsModule {
     @Provides
     @Singleton
     fun provideSecurePrefs(@ApplicationContext context: Context): SharedPreferences {
+        return try {
+            createSecurePrefs(context)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to create SecurePrefs. Resetting...")
+            FirebaseCrashlytics.getInstance().recordException(e)
+
+            // Clear data
+            context.deleteSharedPreferences("secure_prefs")
+
+            // Retry
+            createSecurePrefs(context)
+        }
+    }
+
+    private fun createSecurePrefs(context: Context): SharedPreferences {
         val masterKey = androidx.security.crypto.MasterKey.Builder(context)
             .setKeyScheme(androidx.security.crypto.MasterKey.KeyScheme.AES256_GCM)
             .build()

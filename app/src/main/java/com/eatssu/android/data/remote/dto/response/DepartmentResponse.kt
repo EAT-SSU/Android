@@ -1,13 +1,15 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Department
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DepartmentResponse(
-    @SerializedName("id")
-    val departmentId: Int?,
-    @SerializedName("name")
-    val departmentName: String?,
+    @SerialName("id")
+    val departmentId: Int? = null,
+    @SerialName("name")
+    val departmentName: String? = null,
 )
 
 // 이 함수가 null을 반환하는 경우, 이 함수를 호출하는 UserRepositoryImpl에서 mapNotNull로 걸러짐

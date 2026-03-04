@@ -1,16 +1,19 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.MenuMini
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MenuOfMealResponse(
-    @SerializedName("menuList") val menuList: ArrayList<MenuList> = arrayListOf()
+    @SerialName("menuList") val menuList: ArrayList<MenuList> = arrayListOf()
 )
 
+@Serializable
 data class MenuList(
 
-    @SerializedName("menuId") val menuId: Long? = null,
-    @SerializedName("name") val name: String? = null
+    @SerialName("menuId") val menuId: Long? = null,
+    @SerialName("name") val name: String? = null
 
 )
 

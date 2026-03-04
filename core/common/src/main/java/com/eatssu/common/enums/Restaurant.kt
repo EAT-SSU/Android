@@ -3,7 +3,9 @@ package com.eatssu.common.enums
 import androidx.annotation.StringRes
 import com.eatssu.common.R
 import com.eatssu.common.UiText
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class Restaurant(
     val value: String,
     @field:StringRes val displayNameResId: Int,
@@ -24,11 +26,6 @@ enum class Restaurant(
 
         fun getVariableRestaurantList(): List<Restaurant> {
             return entries.filter { it.menuType == MenuType.VARIABLE }
-        }
-
-        @Deprecated("다국어 지원을 위해 displayNameResId 사용", ReplaceWith("entries.find { it.name == enumName }?.displayNameResId"))
-        fun fromRestaurantEnumName(enumName: String): String {
-            return ""
         }
     }
 }

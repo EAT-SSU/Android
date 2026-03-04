@@ -1,0 +1,12 @@
+ko: |
+  - 나만아니면돼 게임이 추가되었어요.
+  - 마이페이지가 정상적으로 표시되지 않던 문제를 수정했어요.
+  - 일부 기기에서 앱이 비정상 종료되던 문제를 수정했어요.
+  - 학과 조회 시 발생하던 오류를 수정했어요.
+  - 앱의 안정성과 성능을 개선했어요.
+en: |
+  - Added the "Anyone But Me" game.
+  - Fixed an issue where My Page was not displayed correctly.
+  - Fixed a crash that occurred on some devices.
+  - Fixed an error when looking up departments.
+  - Improved overall app stability and performance.

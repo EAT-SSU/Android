@@ -1,7 +1,9 @@
 package com.eatssu.android.domain.model
 
 import com.eatssu.common.enums.Restaurant
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RestaurantInfo(
     val enum: Restaurant,
     val name: String,

@@ -2,13 +2,14 @@ package com.eatssu.android.di.network
 
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.BaseResponse
+import kotlinx.serialization.json.Json
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class ApiResultCallAdapterFactory : CallAdapter.Factory() {
+class ApiResultCallAdapterFactory(private val json: Json) : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
@@ -40,7 +41,6 @@ class ApiResultCallAdapterFactory : CallAdapter.Factory() {
             override fun getActualTypeArguments(): Array<Type> = arrayOf(successType)
             override fun getOwnerType(): Type? = null
         }
-        return ApiResultCallAdapter(baseResponseType, successType)
+        return ApiResultCallAdapter(baseResponseType, successType, json)
     }
 }
-

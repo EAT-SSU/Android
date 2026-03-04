@@ -2,18 +2,18 @@ package com.eatssu.android.presentation.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eatssu.android.R
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
-import com.eatssu.android.domain.model.RestaurantType
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.map.component.FilterType
-import com.eatssu.android.presentation.map.model.PlaceType
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.StoreType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,11 +24,19 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+
+val StoreType.iconRes: Int
+    get() = when (this) {
+        StoreType.CAFE -> R.drawable.ic_map_cafe
+        StoreType.RESTAURANT -> R.drawable.ic_map_restaurant
+        StoreType.PUB -> R.drawable.ic_map_pub
+    }
+
 data class MapState(
     val partnerships: List<Partnership> = emptyList(),
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
-    val placeType: PlaceType? = null,
+    val storeType: StoreType? = null,
     val selectedFilter: FilterType = FilterType.Mine,
     val filterChangeResult: FilterChangeResult? = null,
 ) {
@@ -186,18 +194,11 @@ class MapViewModel @Inject constructor(
             )
         }
 
-        // Domain 모델(RestaurantType)을 UI 모델(PlaceType)로 변환
-        val placeType = when (representative.restaurantType) {
-            RestaurantType.CAFE -> PlaceType.CAFE
-            RestaurantType.RESTAURANT -> PlaceType.RESTAURANT
-            RestaurantType.PUB -> PlaceType.PUB
-        }
-
         _uiState.value = UiState.Success(
             data.copy(
                 restaurantPartnershipInfo = representative,
                 restaurantInfoList = restaurantInfoList,
-                placeType = placeType
+                storeType = representative.storeType
             )
         )
     }

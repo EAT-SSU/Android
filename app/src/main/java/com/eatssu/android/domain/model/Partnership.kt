@@ -1,10 +1,12 @@
 package com.eatssu.android.domain.model
 
+import com.eatssu.common.enums.StoreType
+
 data class Partnership(
     val storeName: String,
     val longitude: Double,
     val latitude: Double,
-    val restaurantType: RestaurantType,
+    val restaurantType: StoreType,
     val partnershipInfos: List<PartnershipInfo>
 ) {
     data class PartnershipInfo(
