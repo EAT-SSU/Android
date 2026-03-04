@@ -70,6 +70,37 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("초기화 중 닉네임 조회가 늦게 완료되면") {
+            coEvery { getUserCollegeDepartmentUseCase() } returns userInfo
+            coEvery { userRepository.getUserCollegeDepartment() } returns (college to department)
+            coEvery { setUserCollegeDepartmentUseCase(college, department) } returns Unit
+            coEvery { getUserNickNameUseCase() } coAnswers {
+                delay(1_000)
+                "eatssu"
+            }
+
+            then("최종 상태는 DepartmentState로 유지된다") {
+                runTest {
+                    val viewModel = MainViewModel(
+                        logoutUseCase = logoutUseCase,
+                        getUserNickNameUseCase = getUserNickNameUseCase,
+                        setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                        userRepository = userRepository,
+                        getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                    )
+
+                    advanceUntilIdle()
+
+                    viewModel.uiState.value shouldBe UiState.Success(
+                        MainState.DepartmentState(
+                            departmentName = "컴퓨터학부",
+                            showUserDepartmentBottomSheet = false
+                        )
+                    )
+                }
+            }
+        }
+
         `when`("저장된 학과 정보가 없는 유저로 초기화되면") {
             coEvery {
                 getUserCollegeDepartmentUseCase()
