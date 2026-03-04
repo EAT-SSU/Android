@@ -24,6 +24,13 @@ class CalendarUtilBehaviorSpec : AppBehaviorSpec({
                 days.first() shouldBe LocalDate.of(2025, 1, 12)
                 days.last() shouldBe LocalDate.of(2025, 1, 18)
             }
+
+            then("입력 날짜가 일요일이면 해당 날짜를 시작점으로 반환한다") {
+                val days = CalendarUtil.daysInWeekArray(LocalDate.of(2025, 1, 12))
+                days.size shouldBe 7
+                days.first() shouldBe LocalDate.of(2025, 1, 12)
+                days.last() shouldBe LocalDate.of(2025, 1, 18)
+            }
         }
 
         `when`("convertMillisToDateString을 호출하면") {

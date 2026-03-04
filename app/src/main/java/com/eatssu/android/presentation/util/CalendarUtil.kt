@@ -10,7 +10,7 @@ import java.util.Locale
 
 
 object CalendarUtil {
-    lateinit var selectedDate: LocalDate
+    var selectedDate: LocalDate = LocalDate.now()
 
     fun monthYearFromDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM")
@@ -18,24 +18,23 @@ object CalendarUtil {
     }
 
     fun daysInWeekArray(selectedDate: LocalDate): ArrayList<LocalDate> {
-        val days = ArrayList<LocalDate>()
+        val days = ArrayList<LocalDate>(7)
         var current = sundayForDate(selectedDate)
-        val endDate = current!!.plusWeeks(1)
-        while (current!!.isBefore(endDate)) {
+        repeat(7) {
             days.add(current)
             current = current.plusDays(1)
         }
         return days
     }
 
-    private fun sundayForDate(current: LocalDate): LocalDate? {
-        var current = current
-        val oneWeekAgo = current.minusWeeks(1)
-        while (current.isAfter(oneWeekAgo)) {
+    private fun sundayForDate(currentDate: LocalDate): LocalDate {
+        var current = currentDate
+        repeat(7) {
             if (current.dayOfWeek == DayOfWeek.SUNDAY) return current
             current = current.minusDays(1)
         }
-        return null
+
+        return currentDate
     }
 
     fun convertMillisToDateString(
