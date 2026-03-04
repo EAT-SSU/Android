@@ -57,10 +57,25 @@
         </service>
 
 
+
         <!--   오픈소스     -->
         <meta-data
             android:name="com.google.android.gms.oss.licenses.enabled"
             android:value="true" />
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            tools:node="merge" />
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            tools:node="merge" />
 
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
