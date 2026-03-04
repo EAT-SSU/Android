@@ -15,7 +15,7 @@ plugins {
 
 android {
     namespace = "com.eatssu.android"
-    compileSdk = 35
+    compileSdk = 36
 
     /**
      * 현재 팀 내 안드로이드 OS 버전
