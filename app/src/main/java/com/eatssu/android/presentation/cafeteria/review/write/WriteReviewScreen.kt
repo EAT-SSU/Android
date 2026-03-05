@@ -270,15 +270,35 @@ internal fun WriteReviewScreen(
                             if (selectedImageUri != null) {
                                 Column(
                                     modifier = Modifier
-                                        .size(120.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .clickable(enabled = !isPosting) { onImageDelete() }
+                                        .size(150.dp)
+//                                        .clickable(enabled = !isPosting) { onImageDelete() }
                                 ) {
-                                    AsyncImage(
-                                        model = selectedImageUri,
-                                        contentDescription = "Selected image",
-                                        modifier = Modifier.fillMaxSize()
-                                    )
+                                    Box(
+                                        modifier = Modifier.size(92.dp)
+                                    ) {
+                                        AsyncImage(
+                                            model = selectedImageUri,
+                                            contentDescription = "Selected image",
+                                            modifier = Modifier
+                                                .size(80.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                        )
+
+                                        IconButton(
+                                            onClick = { onImageDelete() },
+                                            modifier = Modifier
+                                                .size(24.dp) // 터치 영역
+                                                .align(Alignment.TopEnd)
+                                                .offset(x = 5.dp, y = (-5).dp) // 이미지 위에 살짝 겹치게
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.ic_minus),
+                                                contentDescription = "remove photo",
+                                                tint = Color.Unspecified,
+                                                modifier = Modifier.size(20.dp) // 실제 아이콘
+                                            )
+                                        }
+                                    }
                                 }
                                 Text(
                                     modifier = Modifier.padding(top = 8.dp),
