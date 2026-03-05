@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.eatssu.design_system"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28

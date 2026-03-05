@@ -2,12 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.google.services)
 }
 
 android {
     namespace = "com.eatssu.common"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 23
