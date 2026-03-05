@@ -69,11 +69,11 @@
     <!-- ========================== -->
     <!-- Toast Messages - Review -->
     <!-- ========================== -->
-    <string name="toast_review_write_success">리뷰가 작성되었습니다.</string>
+    <string name="toast_review_write_success">리뷰가 등록되었어요.</string>
     <string name="toast_review_write_failed">리뷰 작성에 실패하였습니다.</string>
     <string name="toast_review_modify_success">리뷰를 수정했습니다.</string>
     <string name="toast_review_modify_failed">리뷰 수정이 실패했습니다.</string>
-    <string name="toast_review_delete_success">리뷰를 삭제했습니다.</string>
+    <string name="toast_review_delete_success">리뷰가 삭제되었어요.</string>
     <string name="toast_review_delete_failed">리뷰 삭제에 실패했습니다.</string>
     <string name="toast_review_load_failed">리뷰를 불러오지 못했습니다.</string>
 
@@ -88,7 +88,7 @@
     <!-- ========================== -->
     <!-- Toast Messages - Report -->
     <!-- ========================== -->
-    <string name="toast_report_success">신고가 완료되었습니다.</string>
+    <string name="toast_report_success">신고가 성공적으로 접수되었어요!</string>
     <string name="toast_report_failed">신고가 실패하였습니다.</string>
 
     <!-- ========================== -->
