@@ -132,6 +132,11 @@
     <string name="toast_sign_out_fail">회원탈퇴에 실패했어요.</string>
 
     <!-- ========================== -->
+    <!-- Cafeteria Menu -->
+    <!-- ========================== -->
+    <string name="menu_public_holiday_banner">공휴일: %1$s</string>
+
+    <!-- ========================== -->
     <!-- Review Screen -->
     <!-- ========================== -->
     <string name="review_how_was_meal">오늘의 식사는 어땠나요?</string>

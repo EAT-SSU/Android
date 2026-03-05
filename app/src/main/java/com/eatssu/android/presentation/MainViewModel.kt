@@ -31,7 +31,7 @@ class MainViewModel @Inject constructor(
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val userRepository: UserRepository,
-    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)

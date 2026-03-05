@@ -18,13 +18,10 @@ import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
 import com.eatssu.common.UiState
-import com.eatssu.common.enums.MenuType
-import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -76,26 +73,11 @@ class MenuFragment : Fragment() {
 
     fun observeViewModel() {
         mainViewModel.getData().observe(viewLifecycleOwner) { dataReceived ->
-
             val menuDate = dataReceived.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-            val dayOfWeek = dataReceived.dayOfWeek
+            Timber.d("Loading menus for date: $menuDate, time: $time")
 
-            // 로딩할 식당 목록 결정
-            val restaurantsToLoad = buildList {
-                // 변동 메뉴 식당
-                addAll(Restaurant.getVariableRestaurantList())
-
-                // 고정 메뉴 식당 (평일 점심만)
-                if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && time == Time.LUNCH) {
-                    add(Restaurant.FOOD_COURT)
-                    add(Restaurant.SNACK_CORNER)
-                }
-            }
-
-            Timber.d("Loading menus for date: $menuDate, time: $time, restaurants: $restaurantsToLoad")
-
-            // 메뉴 로딩
-            menuViewModel.loadMenus(restaurantsToLoad, menuDate, time)
+            // 메뉴 로딩 (ViewModel이 공휴일 포함하여 식당 목록 결정)
+            menuViewModel.loadMenus(dataReceived, time)
         }
     }
 
@@ -103,6 +85,15 @@ class MenuFragment : Fragment() {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             menuViewModel.uiState.collect { state ->
                 if (state !is UiState.Success) return@collect
+
+                val publicHolidayName = state.data.publicHolidayName
+                if (publicHolidayName.isNullOrBlank()) {
+                    binding.tvHolidayBanner.visibility = View.GONE
+                } else {
+                    binding.tvHolidayBanner.visibility = View.VISIBLE
+                    binding.tvHolidayBanner.text =
+                        getString(com.eatssu.android.R.string.menu_public_holiday_banner, publicHolidayName)
+                }
 
                 val menuMap = state.data.menuMap
                 Timber.d("Menu map received: $menuMap")
