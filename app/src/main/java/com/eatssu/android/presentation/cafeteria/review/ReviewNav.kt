@@ -1,6 +1,9 @@
 package com.eatssu.android.presentation.cafeteria.review
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +20,8 @@ object ReviewNav {
     const val Modify = "modify"
 }
 
+private const val KEY_REVIEW_LIST_REFRESH_NONCE = "review_list_refresh_nonce"
+
 @Composable
 fun ReviewNav(
     navHostController: NavHostController = rememberNavController(),
@@ -31,11 +36,16 @@ fun ReviewNav(
         startDestination = ReviewNav.List
     ) {
         // 리뷰 보기
-        composable(ReviewNav.List) {
+        composable(ReviewNav.List) { backStackEntry ->
+            val refreshNonce by backStackEntry.savedStateHandle
+                .getStateFlow(KEY_REVIEW_LIST_REFRESH_NONCE, 0L)
+                .collectAsState()
+
             ReviewListScreen(
                 menuName = menuName,
                 menuType = menuType,
                 id = id,
+                refreshNonce = refreshNonce,
                 onBack = { onExit() },
                 onModifyClick = { review ->
                     // 선택된 리뷰 데이터를 Modify 화면으로 전달
@@ -54,6 +64,12 @@ fun ReviewNav(
                     }
                 }
             )
+
+            LaunchedEffect(refreshNonce) {
+                if (refreshNonce != 0L) {
+                    backStackEntry.savedStateHandle[KEY_REVIEW_LIST_REFRESH_NONCE] = 0L
+                }
+            }
         }
 
         // 리뷰 작성
@@ -62,7 +78,12 @@ fun ReviewNav(
                 menuType = menuType,
                 menuName = menuName,
                 id = id,
-                onBack = { navHostController.popBackStack() },
+                onBack = {
+                    navHostController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(KEY_REVIEW_LIST_REFRESH_NONCE, System.currentTimeMillis())
+                    navHostController.popBackStack()
+                },
             )
         }
 
