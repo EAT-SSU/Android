@@ -17,13 +17,13 @@ import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,21 +41,24 @@ class ReviewListViewModel @Inject constructor(
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    private val _loadParams = MutableStateFlow<Pair<MenuType, Long>?>(null)
+    private val _loadParams = MutableSharedFlow<Pair<MenuType, Long>>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val reviewPagingData: Flow<PagingData<Review>> = _loadParams
-        .filterNotNull()
         .flatMapLatest { (menuType, itemId) ->
             getReviewListPagedUseCase(menuType, itemId)
         }
         .cachedIn(viewModelScope)
 
     fun getReview(menuType: MenuType, itemId: Long) {
-        // 파라미터 업데이트 시 페이징 흐름 트리거
-        // StateFlow는 동일한 값으로 설정되어도 업데이트되지 않으므로 별도의 체크 불필요
-        _loadParams.value = menuType to itemId
-        
+        // 동일 파라미터로 다시 진입(작성/수정 후 popBackStack)해도
+        // 항상 페이징 소스를 새로 만들 수 있도록 SharedFlow로 트리거한다.
+        _loadParams.tryEmit(menuType to itemId)
+
         viewModelScope.launch {
             loadReviewInfo(menuType, itemId)
         }
@@ -94,10 +97,8 @@ class ReviewListViewModel @Inject constructor(
             _uiEvent.emit(ReviewListEvent.ReviewDeleted)
 
             // 정보 갱신
-            val currentParams = _loadParams.value
-            if (currentParams != null) {
-                loadReviewInfo(currentParams.first, currentParams.second)
-            }
+            val currentParams = _loadParams.replayCache.lastOrNull()
+            if (currentParams != null) loadReviewInfo(currentParams.first, currentParams.second)
         }
     }
 }
