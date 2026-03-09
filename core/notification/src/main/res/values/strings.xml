@@ -1,0 +1,8 @@
+<resources>
+    <string name="notification_context_title">🤔 오늘 밥 뭐 먹지</string>
+    <string name="notification_context_text">오늘의 학식을 확인해보세요!</string>
+    <string name="notification_channel_lunch_name">점심시간 전 알림</string>
+    <string name="notification_channel_lunch_description">점심시간 전, 푸시알림을 발송합니다.</string>
+    <string name="notification_channel_server_name">서버가 보낸 알림</string>
+    <string name="notification_channel_server_description">잇슈 서버가 보낸 알림을 표시합니다.</string>
+</resources>

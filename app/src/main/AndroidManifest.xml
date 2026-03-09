@@ -81,16 +81,6 @@
             android:name="com.naver.maps.map.NCP_KEY_ID"
             android:value="${NAVER_MAPS_CLIENT_ID}" />
 
-        <!--   푸시알림 리시버     -->
-        <receiver
-            android:name=".alarm.NotificationReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
         <!--   위젯 리시버     -->
         <receiver
             android:name=".presentation.widget.MealWidgetReceiver"
@@ -104,14 +94,6 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-        <!--   Firebase Cloud Messaging     -->
-        <service
-                android:name=".alarm.EatSsuFirebaseMessagingService"
-                android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <!-- 기본 알림 아이콘과 색상 설정 -->
         <meta-data
