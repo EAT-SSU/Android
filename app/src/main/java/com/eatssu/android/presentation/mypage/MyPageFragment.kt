@@ -234,8 +234,26 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
     }
 
     private fun moveToOss() {
+        val context = requireContext()
         try {
-            startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+            val licensesId = context.resources.getIdentifier("third_party_licenses", "raw", context.packageName)
+            val metadataId = context.resources.getIdentifier(
+                "third_party_license_metadata",
+                "raw",
+                context.packageName
+            )
+            if (licensesId == 0 || metadataId == 0) {
+                showErrorToast(getString(R.string.toast_oss_load_fail))
+                Timber.e(
+                    "OSS raw resource missing. third_party_licenses=$licensesId third_party_license_metadata=$metadataId"
+                )
+                return
+            }
+
+            startActivity(
+                Intent(context, OssLicensesMenuActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            )
         } catch (e: Exception) {
             showErrorToast(getString(R.string.toast_oss_load_fail))
             Timber.e("Error opening OSS Licenses: ${e.message}")

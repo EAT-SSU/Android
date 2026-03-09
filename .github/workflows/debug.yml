@@ -36,6 +36,14 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install Android SDK (API 35)
+      run: |
+        sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+        yes | sdkmanager --licenses
+
     - name: Create Local Properties
       run: touch local.properties
 
@@ -170,4 +178,3 @@ jobs:
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_APP_DISTRIBUTION_WEBHOOK_URL }}
-
