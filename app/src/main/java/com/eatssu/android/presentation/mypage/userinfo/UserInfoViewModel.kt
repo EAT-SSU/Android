@@ -3,10 +3,12 @@ package com.eatssu.android.presentation.mypage.userinfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
+import com.eatssu.android.analytics.AnalyticsIdentityManager
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.GetUserEmailUseCase
 import com.eatssu.android.domain.usecase.user.NicknameValidationResult
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
@@ -30,10 +32,12 @@ import javax.inject.Inject
 class UserInfoViewModel @Inject constructor(
     private val setUserNicknameUseCase: SetUserNicknameUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    private val getUserEmailUseCase: GetUserEmailUseCase,
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val validateNicknameServerUseCase: ValidateNicknameServerUseCase,
     private val validateNicknameLocalUseCase: ValidateNicknameLocalUseCase,
     private val userRepository: UserRepository,
+    private val analyticsIdentityManager: AnalyticsIdentityManager,
 ) : ViewModel() {
 
     companion object {
@@ -255,6 +259,12 @@ class UserInfoViewModel @Inject constructor(
                 else -> UiText.StringResource(R.string.toast_no_changes)
             }
 
+            syncAnalyticsIdentity(
+                nickname = data.nickname,
+                college = data.selectedCollege ?: data.originalCollege,
+                department = data.selectedDepartment ?: data.originalDepartment,
+            )
+
             _uiEvent.emit(UiEvent.ShowToast(message, ToastType.INFO))
             _uiState.update {
                 UiState.Success(
@@ -264,6 +274,22 @@ class UserInfoViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private suspend fun syncAnalyticsIdentity(
+        nickname: String,
+        college: College?,
+        department: Department?,
+    ) {
+        val email = getUserEmailUseCase()
+        if (email.isBlank()) return
+
+        analyticsIdentityManager.identifyUser(
+            email = email,
+            nickname = nickname,
+            college = college,
+            department = department,
+        )
     }
 }
 

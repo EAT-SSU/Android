@@ -21,17 +21,22 @@ import com.eatssu.android.presentation.common.NetworkConnection
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showInfoToast
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 
 abstract class BaseActivity<B : ViewBinding>(
     val bindingFactory: (LayoutInflater, ViewGroup?, Boolean) -> B,
     val screenId: ScreenId
 ) : AppCompatActivity() {
+
+    @Inject
+    protected lateinit var analyticsTracker: AnalyticsTracker
 
     private var _binding: B? = null
     val binding get() = _binding!!
@@ -152,7 +157,7 @@ abstract class BaseActivity<B : ViewBinding>(
         super.onResume()
 
         if (shouldLogScreenId()) {
-            EventLogger.screenView(screenId)
+            analyticsTracker.track(ScreenViewEvent(screenId))
             Timber.d("screen view logging: $screenId")
         }
     }

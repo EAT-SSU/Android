@@ -6,11 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.eatssu.android.analytics.ProvideAnalyticsTracker
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MapFragment : Fragment() {
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +30,10 @@ class MapFragment : Fragment() {
         // Inflate the layout for this fragment
         return ComposeView(requireContext()).apply {
             setContent {
-                EatssuTheme {
-                    MapRoute()
+                ProvideAnalyticsTracker(analyticsTracker) {
+                    EatssuTheme {
+                        MapRoute()
+                    }
                 }
             }
         }

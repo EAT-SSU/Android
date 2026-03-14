@@ -29,9 +29,9 @@ import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showErrorToast
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.ScreenId
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
@@ -150,8 +150,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(ScreenId.MYPAGE_MAIN)
                 val url = TalkApiClient.instance.chatChannelUrl(channelPublicId)
                 KakaoCustomTabsClient.openWithDefault(context, url)
             }
-
-            EventLogger.screenView(ScreenId.EXTERNAL_INQUIRE)
+            analyticsTracker.track(ScreenViewEvent(ScreenId.EXTERNAL_INQUIRE))
         }
 
         binding.llMyReview.setOnClickListener {

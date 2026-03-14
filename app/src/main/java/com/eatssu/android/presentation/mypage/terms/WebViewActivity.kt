@@ -8,10 +8,12 @@ import android.widget.ImageView
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityWebviewBinding
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.ScreenId
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class WebViewActivity :
     BaseActivity<ActivityWebviewBinding>(
         ActivityWebviewBinding::inflate,
@@ -92,7 +94,7 @@ class WebViewActivity :
         val screenIdString = intent.getStringExtra("SCREEN_ID") ?: return
         val screenId = ScreenId.entries.find { it.name == screenIdString } ?: return
 
-        EventLogger.screenView(screenId)
+        analyticsTracker.track(ScreenViewEvent(screenId))
         Timber.d("WebViewActivity screen view logging: $screenId")
     }
 

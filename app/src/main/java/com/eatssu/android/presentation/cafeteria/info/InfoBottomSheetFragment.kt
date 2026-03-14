@@ -7,16 +7,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.eatssu.android.databinding.FragmentBottomsheetInfoBinding
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.CafeteriaAnalyticsEvent
+import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class InfoBottomSheetFragment : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     private var _binding: FragmentBottomsheetInfoBinding? = null
     private val binding get() = _binding!!
 
@@ -38,7 +46,7 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         val restaurantType = enumValues<Restaurant>().find { it.name == name } ?: Restaurant.HAKSIK
         Timber.d("onViewCreated: $name $restaurantType")
 
-        EventLogger.clickRestaurantInfo(restaurantType)
+        analyticsTracker.track(CafeteriaAnalyticsEvent.RestaurantInfoClicked(restaurantType))
 
         binding.tvName.text = getString(restaurantType.displayNameResId)
 
@@ -59,7 +67,7 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        EventLogger.screenView(ScreenId.HOME_INFO)
+        analyticsTracker.track(ScreenViewEvent(ScreenId.HOME_INFO))
     }
 
     companion object {

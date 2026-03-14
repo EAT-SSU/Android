@@ -6,13 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.ScreenId
 import timber.log.Timber
+import javax.inject.Inject
 
 abstract class BaseFragment<B : ViewBinding>(
     val screenId: ScreenId
 ) : Fragment() {
+
+    @Inject
+    protected lateinit var analyticsTracker: AnalyticsTracker
 
     private var _binding: B? = null
     val binding get() = _binding!!
@@ -35,7 +40,7 @@ abstract class BaseFragment<B : ViewBinding>(
 
     override fun onResume() {
         super.onResume()
-        EventLogger.screenView(screenId)
+        analyticsTracker.track(ScreenViewEvent(screenId))
         Timber.d("screen view logging: $screenId")
     }
 }
