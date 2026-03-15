@@ -11,15 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.White
-import com.eatssu.design_system.theme.pretendardMedium
 
 @Composable
 fun AnyoneButMeEventTooltip(
@@ -38,12 +34,7 @@ fun AnyoneButMeEventTooltip(
                 )
                 .padding(horizontal = 12.dp, vertical = 4.dp),
             color = White,
-            style = TextStyle(
-                fontFamily = pretendardMedium,
-                fontWeight = FontWeight.Medium,
-                fontSize = 12.sp,
-                lineHeight = 18.sp
-            )
+            style = EatssuTheme.typography.caption2
         )
 
         Canvas(
