@@ -10,8 +10,6 @@ import android.os.SystemClock
 import android.view.MenuItem
 import android.view.View.GONE
 import androidx.activity.viewModels
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -22,7 +20,7 @@ import com.eatssu.android.R
 import com.eatssu.android.data.local.AppFeatureDataStore
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
-import com.eatssu.android.presentation.event.AnyoneButMeEventDialog
+import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
@@ -33,7 +31,6 @@ import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
-import com.eatssu.design_system.theme.EatssuTheme
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -57,23 +54,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
-    private var canAutoShowEventPopup = false
-    private var hasHandledLaunchEventPopup = false
-    private val showEventPopupDialog = mutableStateOf(false)
+    private lateinit var anyoneButMeEventPopupController: AnyoneButMeEventPopupController
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        canAutoShowEventPopup = savedInstanceState == null
 
         setupNoToolbar()
         setNavigation()
-        setupEventPopup()
+        bindEventPopup(showOnLaunch = savedInstanceState == null)
 
         checkAlarmPermission()
         collectState()
         collectUiEvents()
-        collectEventFeatureState()
     }
 
     private fun setNavigation() {
@@ -111,46 +104,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         }
     }
 
-    private fun setupEventPopup() {
-        binding.composeEventPopup.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+    private fun bindEventPopup(showOnLaunch: Boolean) {
+        anyoneButMeEventPopupController = AnyoneButMeEventPopupController(
+            composeView = binding.composeEventPopup,
+            lifecycleScope = lifecycleScope,
+            appFeatureDataStore = appFeatureDataStore,
+            onOpenAnyoneButMe = ::openAnyoneButMePage,
+            onOpenInstagram = ::openInstagramInBrowser
         )
-        binding.composeEventPopup.setContent {
-            EatssuTheme {
-                if (showEventPopupDialog.value) {
-                    AnyoneButMeEventDialog(
-                        onDismiss = ::hideEventPopup,
-                        onDismissForever = {
-                            hideEventPopup()
-                            lifecycleScope.launch {
-                                appFeatureDataStore.setAnyoneButMeEventPopupDismissed(true)
-                            }
-                        },
-                        onInstagramClick = {
-                            hideEventPopup()
-                            openInstagramInBrowser()
-                        },
-                        onAnyoneButMeClick = ::openAnyoneButMePage
-                    )
-                }
-            }
-        }
-    }
-
-    private fun collectEventFeatureState() {
-        lifecycleScope.launch {
-            appFeatureDataStore.isAnyoneButMeEventPopupDismissed.collectLatest { dismissed ->
-                if (canAutoShowEventPopup && !hasHandledLaunchEventPopup && !dismissed) {
-                    hasHandledLaunchEventPopup = true
-                    showEventPopup()
-                }
-            }
-        }
+        anyoneButMeEventPopupController.bind(showOnLaunch)
     }
 
     private fun openAnyoneButMePage() {
-        hideEventPopup()
-
         startActivity<WebViewActivity> {
             putExtra(WebViewActivity.EXTRA_URL, getString(R.string.anyone_but_me_url))
             putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.nav_anyone_but_me))
@@ -191,15 +156,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
             }
             ?.activityInfo
             ?.packageName
-    }
-
-    private fun showEventPopup() {
-        showEventPopupDialog.value = true
-    }
-
-    private fun hideEventPopup() {
-        canAutoShowEventPopup = false
-        showEventPopupDialog.value = false
     }
 
     // set UI --
