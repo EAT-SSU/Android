@@ -2,6 +2,7 @@ package com.eatssu.android.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -9,14 +10,19 @@ import android.os.SystemClock
 import android.view.MenuItem
 import android.view.View.GONE
 import androidx.activity.viewModels
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.WorkManager
 import com.eatssu.android.R
+import com.eatssu.android.data.local.AppFeatureDataStore
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.android.presentation.event.AnyoneButMeEventDialog
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
@@ -27,6 +33,7 @@ import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.design_system.theme.EatssuTheme
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -45,19 +52,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     @Inject
     lateinit var workManager: WorkManager
 
+    @Inject
+    lateinit var appFeatureDataStore: AppFeatureDataStore
+
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
+    private var canAutoShowEventPopup = false
+    private var hasHandledLaunchEventPopup = false
+    private val showEventPopupDialog = mutableStateOf(false)
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        canAutoShowEventPopup = savedInstanceState == null
 
         setupNoToolbar()
         setNavigation()
+        setupEventPopup()
 
         checkAlarmPermission()
         collectState()
         collectUiEvents()
+        collectEventFeatureState()
     }
 
     private fun setNavigation() {
@@ -79,15 +95,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
 
                 R.id.anyone_but_me_menu -> {
-                    startActivity<WebViewActivity> {
-                        putExtra(WebViewActivity.EXTRA_URL, getString(R.string.anyone_but_me_url))
-                        putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.nav_anyone_but_me))
-                        putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
-                        putExtra(
-                            WebViewActivity.EXTRA_BACK_ICON_RES_ID,
-                            com.eatssu.design_system.R.drawable.ic_close
-                        )
-                    }
+                    openAnyoneButMePage()
                     false
                 }
 
@@ -101,6 +109,97 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
             }
         }
+    }
+
+    private fun setupEventPopup() {
+        binding.composeEventPopup.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+        )
+        binding.composeEventPopup.setContent {
+            EatssuTheme {
+                if (showEventPopupDialog.value) {
+                    AnyoneButMeEventDialog(
+                        onDismiss = ::hideEventPopup,
+                        onDismissForever = {
+                            hideEventPopup()
+                            lifecycleScope.launch {
+                                appFeatureDataStore.setAnyoneButMeEventPopupDismissed(true)
+                            }
+                        },
+                        onInstagramClick = {
+                            hideEventPopup()
+                            openInstagramInBrowser()
+                        },
+                        onAnyoneButMeClick = ::openAnyoneButMePage
+                    )
+                }
+            }
+        }
+    }
+
+    private fun collectEventFeatureState() {
+        lifecycleScope.launch {
+            appFeatureDataStore.isAnyoneButMeEventPopupDismissed.collectLatest { dismissed ->
+                if (canAutoShowEventPopup && !hasHandledLaunchEventPopup && !dismissed) {
+                    hasHandledLaunchEventPopup = true
+                    showEventPopup()
+                }
+            }
+        }
+    }
+
+    private fun openAnyoneButMePage() {
+        hideEventPopup()
+
+        startActivity<WebViewActivity> {
+            putExtra(WebViewActivity.EXTRA_URL, getString(R.string.anyone_but_me_url))
+            putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.nav_anyone_but_me))
+            putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
+            putExtra(
+                WebViewActivity.EXTRA_BACK_ICON_RES_ID,
+                com.eatssu.design_system.R.drawable.ic_close
+            )
+        }
+    }
+
+    private fun openInstagramInBrowser() {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            getString(R.string.eatssu_instagram_url).toUri()
+        ).apply {
+            addCategory(Intent.CATEGORY_BROWSABLE)
+        }
+
+        findBrowserPackage(browserIntent)?.let(browserIntent::setPackage)
+        startActivity(browserIntent)
+    }
+
+    private fun findBrowserPackage(intent: Intent): String? {
+        val browserPackages = packageManager.queryIntentActivities(
+            Intent(Intent.ACTION_VIEW, "https://www.google.com".toUri()).apply {
+                addCategory(Intent.CATEGORY_BROWSABLE)
+            },
+            0
+        ).map { resolveInfo ->
+            resolveInfo.activityInfo.packageName
+        }.toSet()
+
+        return packageManager.queryIntentActivities(intent, 0)
+            .firstOrNull { resolveInfo ->
+                resolveInfo.activityInfo.packageName in browserPackages &&
+                    resolveInfo.activityInfo.packageName != packageName
+            }
+            ?.activityInfo
+            ?.packageName
+    }
+
+    private fun showEventPopup() {
+        showEventPopupDialog.value = true
+    }
+
+    private fun hideEventPopup() {
+        canAutoShowEventPopup = false
+        showEventPopupDialog.value = false
     }
 
     // set UI --
@@ -210,7 +309,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
             }
         }
     }
-
 
     override fun shouldLogScreenId() = false
 }
