@@ -2,7 +2,6 @@ package com.eatssu.android.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,18 +11,15 @@ import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.WorkManager
 import com.eatssu.android.R
-import com.eatssu.android.data.local.AppFeatureDataStore
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
-import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
@@ -50,11 +46,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     lateinit var workManager: WorkManager
 
     @Inject
-    lateinit var appFeatureDataStore: AppFeatureDataStore
+    lateinit var anyoneButMeEventPopupController: AnyoneButMeEventPopupController
 
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
-    private lateinit var anyoneButMeEventPopupController: AnyoneButMeEventPopupController
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +83,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
 
                 R.id.anyone_but_me_menu -> {
-                    openAnyoneButMePage()
+                    anyoneButMeEventPopupController.openAnyoneButMePage()
                     false
                 }
 
@@ -105,57 +100,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     }
 
     private fun bindEventPopup(showOnLaunch: Boolean) {
-        anyoneButMeEventPopupController = AnyoneButMeEventPopupController(
+        anyoneButMeEventPopupController.bind(
             composeView = binding.composeEventPopup,
             lifecycleScope = lifecycleScope,
-            appFeatureDataStore = appFeatureDataStore,
-            onOpenAnyoneButMe = ::openAnyoneButMePage,
-            onOpenInstagram = ::openInstagramInBrowser
+            showOnLaunch = showOnLaunch
         )
-        anyoneButMeEventPopupController.bind(showOnLaunch)
-    }
-
-    private fun openAnyoneButMePage() {
-        startActivity<WebViewActivity> {
-            putExtra(WebViewActivity.EXTRA_URL, getString(R.string.anyone_but_me_url))
-            putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.nav_anyone_but_me))
-            putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
-            putExtra(
-                WebViewActivity.EXTRA_BACK_ICON_RES_ID,
-                com.eatssu.design_system.R.drawable.ic_close
-            )
-        }
-    }
-
-    private fun openInstagramInBrowser() {
-        val browserIntent = Intent(
-            Intent.ACTION_VIEW,
-            getString(R.string.eatssu_instagram_url).toUri()
-        ).apply {
-            addCategory(Intent.CATEGORY_BROWSABLE)
-        }
-
-        findBrowserPackage(browserIntent)?.let(browserIntent::setPackage)
-        startActivity(browserIntent)
-    }
-
-    private fun findBrowserPackage(intent: Intent): String? {
-        val browserPackages = packageManager.queryIntentActivities(
-            Intent(Intent.ACTION_VIEW, "https://www.google.com".toUri()).apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-            },
-            0
-        ).map { resolveInfo ->
-            resolveInfo.activityInfo.packageName
-        }.toSet()
-
-        return packageManager.queryIntentActivities(intent, 0)
-            .firstOrNull { resolveInfo ->
-                resolveInfo.activityInfo.packageName in browserPackages &&
-                    resolveInfo.activityInfo.packageName != packageName
-            }
-            ?.activityInfo
-            ?.packageName
     }
 
     // set UI --

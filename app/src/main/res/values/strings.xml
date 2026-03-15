@@ -302,5 +302,6 @@
     <string name="anyone_but_me_url" translatable="false">https://eatssu-coffee.figma.site/</string>
     <string name="eatssu_instagram" translatable="false">eatssu.official</string>
     <string name="eatssu_instagram_url" translatable="false">https://www.instagram.com/eatssu.official/</string>
+    <string name="eatssu_event_instagram_url" translatable="false">https://www.instagram.com/p/DVu1n6SEs5b/</string>
     <string name="recruiting_url" translatable="false">https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74</string>
 </resources>

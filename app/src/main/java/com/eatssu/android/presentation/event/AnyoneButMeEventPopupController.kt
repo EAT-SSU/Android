@@ -1,26 +1,41 @@
 package com.eatssu.android.presentation.event
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.eatssu.android.R
 import com.eatssu.android.data.local.AppFeatureDataStore
+import com.eatssu.android.presentation.mypage.terms.WebViewActivity
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AnyoneButMeEventPopupController(
-    private val composeView: ComposeView,
-    private val lifecycleScope: LifecycleCoroutineScope,
+@ActivityScoped
+class AnyoneButMeEventPopupController @Inject constructor(
+    @ActivityContext private val context: Context,
     private val appFeatureDataStore: AppFeatureDataStore,
-    private val onOpenAnyoneButMe: () -> Unit,
-    private val onOpenInstagram: () -> Unit,
 ) {
+    private lateinit var composeView: ComposeView
+    private lateinit var lifecycleScope: LifecycleCoroutineScope
     private var canAutoShowOnLaunch = false
     private var hasHandledLaunchPopup = false
     private val isPopupVisible = mutableStateOf(false)
 
-    fun bind(showOnLaunch: Boolean) {
+    fun bind(
+        composeView: ComposeView,
+        lifecycleScope: LifecycleCoroutineScope,
+        showOnLaunch: Boolean,
+    ) {
+        this.composeView = composeView
+        this.lifecycleScope = lifecycleScope
         canAutoShowOnLaunch = showOnLaunch
         setupContent()
         observePopupState()
@@ -37,7 +52,7 @@ class AnyoneButMeEventPopupController(
                         onDismiss = ::hide,
                         onDismissForever = ::dismissForever,
                         onInstagramClick = ::openInstagram,
-                        onAnyoneButMeClick = ::openAnyoneButMe
+                        onAnyoneButMeClick = ::openAnyoneButMePage
                     )
                 }
             }
@@ -62,14 +77,51 @@ class AnyoneButMeEventPopupController(
         }
     }
 
-    private fun openInstagram() {
+    fun openAnyoneButMePage() {
         hide()
-        onOpenInstagram()
+        context.startActivity(
+            Intent(context, WebViewActivity::class.java).apply {
+                putExtra(WebViewActivity.EXTRA_URL, context.getString(R.string.anyone_but_me_url))
+                putExtra(WebViewActivity.EXTRA_TITLE, context.getString(R.string.nav_anyone_but_me))
+                putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
+                putExtra(
+                    WebViewActivity.EXTRA_BACK_ICON_RES_ID,
+                    com.eatssu.design_system.R.drawable.ic_close
+                )
+            }
+        )
     }
 
-    private fun openAnyoneButMe() {
+    private fun openInstagram() {
         hide()
-        onOpenAnyoneButMe()
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            context.getString(R.string.eatssu_event_instagram_url).toUri()
+        ).apply {
+            addCategory(Intent.CATEGORY_BROWSABLE)
+        }
+
+        findBrowserPackage(browserIntent)?.let(browserIntent::setPackage)
+        context.startActivity(browserIntent)
+    }
+
+    private fun findBrowserPackage(intent: Intent): String? {
+        val browserPackages = context.packageManager.queryIntentActivities(
+            Intent(Intent.ACTION_VIEW, "https://www.google.com".toUri()).apply {
+                addCategory(Intent.CATEGORY_BROWSABLE)
+            },
+            0
+        ).map { resolveInfo ->
+            resolveInfo.activityInfo.packageName
+        }.toSet()
+
+        return context.packageManager.queryIntentActivities(intent, 0)
+            .firstOrNull { resolveInfo ->
+                resolveInfo.activityInfo.packageName in browserPackages &&
+                    resolveInfo.activityInfo.packageName != context.packageName
+            }
+            ?.activityInfo
+            ?.packageName
     }
 
     private fun hide() {
