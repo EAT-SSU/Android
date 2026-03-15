@@ -18,6 +18,7 @@ import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
+import com.eatssu.android.presentation.event.AnyoneButMeEventTooltipController
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
@@ -48,6 +49,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     @Inject
     lateinit var anyoneButMeEventPopupController: AnyoneButMeEventPopupController
 
+    @Inject
+    lateinit var anyoneButMeEventTooltipController: AnyoneButMeEventTooltipController
+
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
 
@@ -58,6 +62,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         setupNoToolbar()
         setNavigation()
         bindEventPopup(showOnLaunch = savedInstanceState == null)
+        bindEventTooltip()
 
         checkAlarmPermission()
         collectState()
@@ -104,6 +109,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
             composeView = binding.composeEventPopup,
             lifecycleScope = lifecycleScope,
             showOnLaunch = showOnLaunch
+        )
+    }
+
+    private fun bindEventTooltip() {
+        anyoneButMeEventTooltipController.bind(
+            tooltipComposeView = binding.composeEventTooltip,
+            bottomNavigationView = binding.bottomNaviBar
         )
     }
 
