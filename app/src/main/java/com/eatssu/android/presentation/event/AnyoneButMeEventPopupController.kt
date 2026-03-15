@@ -5,11 +5,11 @@ import android.content.Intent
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.eatssu.android.R
 import com.eatssu.android.data.local.AppFeatureDataStore
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
+import com.eatssu.android.presentation.util.openInBrowser
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -94,34 +94,7 @@ class AnyoneButMeEventPopupController @Inject constructor(
 
     private fun openInstagram() {
         hide()
-        val browserIntent = Intent(
-            Intent.ACTION_VIEW,
-            context.getString(R.string.eatssu_event_instagram_url).toUri()
-        ).apply {
-            addCategory(Intent.CATEGORY_BROWSABLE)
-        }
-
-        findBrowserPackage(browserIntent)?.let(browserIntent::setPackage)
-        context.startActivity(browserIntent)
-    }
-
-    private fun findBrowserPackage(intent: Intent): String? {
-        val browserPackages = context.packageManager.queryIntentActivities(
-            Intent(Intent.ACTION_VIEW, "https://www.google.com".toUri()).apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-            },
-            0
-        ).map { resolveInfo ->
-            resolveInfo.activityInfo.packageName
-        }.toSet()
-
-        return context.packageManager.queryIntentActivities(intent, 0)
-            .firstOrNull { resolveInfo ->
-                resolveInfo.activityInfo.packageName in browserPackages &&
-                    resolveInfo.activityInfo.packageName != context.packageName
-            }
-            ?.activityInfo
-            ?.packageName
+        context.openInBrowser(context.getString(R.string.eatssu_event_instagram_url))
     }
 
     private fun hide() {
