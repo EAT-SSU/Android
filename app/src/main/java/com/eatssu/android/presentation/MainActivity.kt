@@ -35,6 +35,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
@@ -140,17 +142,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-
         if (requestCode == 1000) {
+            val nowDatetime = LocalDateTime.now()
+            val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 승인됨
-                showInfoToast("EAT-SSU 알림 수신을 동의하였습니다.")
-                myPageViewModel.setNotificationOn() //바로 알림 받도록 설정
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                myPageViewModel.setNotificationOn()
             } else {
                 // 권한이 거부됨
-                showInfoToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
-                myPageViewModel.setNotificationOff() //바로 알림 받도록 설정
+                showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                myPageViewModel.setNotificationOff()
             }
         }
     }
