@@ -11,7 +11,8 @@ import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.samplePartnership
 import com.eatssu.android.test.samplePartnershipRestaurant
 import com.eatssu.android.test.sampleUserInfo
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.StoreType
 import io.kotest.assertions.nondeterministic.eventually
@@ -37,10 +38,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
         val partnershipRepository = mockk<PartnershipRepository>()
         val getPartnershipDetailUseCase = mockk<GetPartnershipDetailUseCase>()
         val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
-
-        mockkObject(EventLogger)
-        every { EventLogger.clickMap() } just Runs
-        every { EventLogger.clickMapMine(any(), any()) } just Runs
+        val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
 
         `when`("학과 정보가 없어서 초기 필터가 전체일 때") {
             val allPartnerships = listOf(samplePartnership(storeName = "All Cafe"))
@@ -58,6 +56,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("All 필터로 시작하고 전체 제휴 목록을 로드한다") {
@@ -87,6 +86,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("RequiresDepartment 결과를 상태에 반영하고 Mine 데이터를 로드하지 않는다") {
@@ -124,6 +124,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("필터에 맞는 목록을 로드하고 이벤트 로깅을 수행한다") {
@@ -140,7 +141,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                         allState.data.selectedFilter shouldBe FilterType.All
                         allState.data.partnerships shouldBe allPartnerships
                     }
-                    verify(atLeast = 1) { EventLogger.clickMap() }
+                    verify(atLeast = 1) { analyticsTracker.track(MapAnalyticsEvent.AllClicked) }
 
                     viewModel.setFilter(FilterType.Mine)
                     eventually(2.seconds) {
@@ -148,7 +149,11 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                         mineState.data.selectedFilter shouldBe FilterType.Mine
                         mineState.data.partnerships shouldBe minePartnerships
                     }
-                    verify(atLeast = 1) { EventLogger.clickMapMine(1L, 11L) }
+                    verify(atLeast = 1) {
+                        analyticsTracker.track(
+                            MapAnalyticsEvent.MineClicked(college = 1L, major = 11L),
+                        )
+                    }
                 }
             }
         }
@@ -207,6 +212,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("대표 제휴와 표시용 리스트/장소 타입을 상태에 반영한다") {
@@ -244,6 +250,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("상태를 변경하지 않고 반환한다") {
@@ -269,6 +276,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("선택 상태를 갱신하지 않는다") {
@@ -321,6 +329,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("선택 상태를 갱신하지 않는다") {
@@ -357,6 +366,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("StoreType.CAFE로 변환한다") {
@@ -393,6 +403,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 partnershipRepository = partnershipRepository,
                 getPartnershipDetailUseCase = getPartnershipDetailUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
             )
 
             then("StoreType.RESTAURANT로 변환한다") {
