@@ -56,6 +56,7 @@ object AnalyticsModule {
         ).apply {
             sessionReplay = true
             sessionReplayConfig.screenshot = true
+            debug = BuildConfig.DEBUG
             if (BuildConfig.DEBUG) {
                 sessionReplayConfig.maskAllTextInputs = false
                 sessionReplayConfig.maskAllImages = false
