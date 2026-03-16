@@ -13,7 +13,6 @@ import com.eatssu.android.databinding.FragmentCafeteriaBinding
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter
-import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter.OnItemListener
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
@@ -28,7 +27,7 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
     ScreenId.HOME_MAIN
-), OnItemListener {
+), CalendarAdapter.OnItemListener {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
 
@@ -86,9 +85,9 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
     }
 
     private fun setWeekView() {
-        monthYearText?.text = CalendarUtil.selectedDate?.let { monthYearFromDate(it) }
-        val days = CalendarUtil.selectedDate?.let { daysInWeekArray(it) }
-        val calendarAdapter = days?.let { CalendarAdapter(it, this) }
+        monthYearText?.text = monthYearFromDate(CalendarUtil.selectedDate)
+        val days = daysInWeekArray(CalendarUtil.selectedDate)
+        val calendarAdapter = CalendarAdapter(days, this)
         val gridLayoutManager = GridLayoutManager(requireContext(), 7)
 
         calendarRecyclerView?.layoutManager = gridLayoutManager
