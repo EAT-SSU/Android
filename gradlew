@@ -80,6 +80,51 @@ case "`uname`" in
     ;;
 esac
 
+# Workaround: AGP's JdkImageTransform runs `jlink` and can fail on some
+# GraalVM Community builds (e.g., missing `jdk.internal.vm.ci`).
+# If we're on macOS and currently using GraalVM, prefer a non-Graal JDK 17
+# installation if one is available.
+if [ "$darwin" = "true" ] ; then
+    _opencode_java_cmd="java"
+    if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ] ; then
+        _opencode_java_cmd="$JAVA_HOME/bin/java"
+    fi
+
+    "$_opencode_java_cmd" -version 2>&1 | grep -qi "GraalVM" >/dev/null 2>&1
+    if [ $? -eq 0 ] ; then
+        _opencode_found_java_home=""
+        for _opencode_base in "$HOME/Library/Java/JavaVirtualMachines" "/Library/Java/JavaVirtualMachines" ; do
+            if [ -d "$_opencode_base" ] ; then
+                for _opencode_home in "$_opencode_base"/*/Contents/Home ; do
+                    if [ -x "$_opencode_home/bin/java" ] ; then
+                        "$_opencode_home/bin/java" -version 2>&1 | grep -qi "GraalVM" >/dev/null 2>&1 && continue
+                        "$_opencode_home/bin/java" -version 2>&1 | grep -q '"17\.' >/dev/null 2>&1 || continue
+                        _opencode_found_java_home="$_opencode_home"
+                        break
+                    fi
+                done
+            fi
+            [ -n "$_opencode_found_java_home" ] && break
+        done
+
+        if [ -z "$_opencode_found_java_home" ] ; then
+            for _opencode_home in "/Applications/Android Studio.app/Contents/jbr/Contents/Home" ; do
+                if [ -x "$_opencode_home/bin/java" ] ; then
+                    "$_opencode_home/bin/java" -version 2>&1 | grep -qi "GraalVM" >/dev/null 2>&1 && continue
+                    "$_opencode_home/bin/java" -version 2>&1 | grep -q '"17\.' >/dev/null 2>&1 || continue
+                    _opencode_found_java_home="$_opencode_home"
+                    break
+                fi
+            done
+        fi
+
+        if [ -n "$_opencode_found_java_home" ] ; then
+            JAVA_HOME="$_opencode_found_java_home"
+            export JAVA_HOME
+        fi
+    fi
+fi
+
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 

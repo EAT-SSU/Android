@@ -61,9 +61,9 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
             rating = rating,
             content = content,
             imageUrls = imageUrls,
-            menuLike = likeMenuIdList?.let {
+            menuLike = likeMenuIdList?.firstOrNull()?.let {
                 WriteMenuReviewRequest.MenuLike(
-                    menuId = it.first(),
+                    menuId = it,
                     isLike = true,
                 )
             }

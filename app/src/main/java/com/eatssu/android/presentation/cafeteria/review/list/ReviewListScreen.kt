@@ -78,6 +78,7 @@ fun ReviewListScreen(
     menuType: MenuType,
     menuName: String,
     id: Long,
+    refreshNonce: Long = 0L,
     onBack: () -> Unit = {},
     onWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
@@ -94,6 +95,13 @@ fun ReviewListScreen(
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
+
+    LaunchedEffect(refreshNonce) {
+        if (refreshNonce == 0L) return@LaunchedEffect
+        // 리뷰 작성 화면에서 돌아온 경우, 리스트/정보를 강제로 갱신한다.
+        viewModel.getReview(menuType, id)
+        reviewPagingItems.refresh()
+    }
 
     LaunchedEffect(uiEvent) {
         when (val event = uiEvent) {

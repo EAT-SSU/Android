@@ -17,9 +17,10 @@ import androidx.work.WorkManager
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.presentation.base.BaseActivity
+import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
+import com.eatssu.android.presentation.event.AnyoneButMeEventTooltipController
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
-import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
@@ -34,6 +35,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
@@ -45,6 +48,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     @Inject
     lateinit var workManager: WorkManager
 
+    @Inject
+    lateinit var anyoneButMeEventPopupController: AnyoneButMeEventPopupController
+
+    @Inject
+    lateinit var anyoneButMeEventTooltipController: AnyoneButMeEventTooltipController
+
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
 
@@ -54,6 +63,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
         setupNoToolbar()
         setNavigation()
+        bindEventPopup(showOnLaunch = savedInstanceState == null)
+        bindEventTooltip()
 
         checkAlarmPermission()
         collectState()
@@ -79,15 +90,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
 
                 R.id.anyone_but_me_menu -> {
-                    startActivity<WebViewActivity> {
-                        putExtra(WebViewActivity.EXTRA_URL, getString(R.string.anyone_but_me_url))
-                        putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.nav_anyone_but_me))
-                        putExtra("SCREEN_ID", ScreenId.ANYONE_BUT_ME_MAIN.name)
-                        putExtra(
-                            WebViewActivity.EXTRA_BACK_ICON_RES_ID,
-                            com.eatssu.design_system.R.drawable.ic_close
-                        )
-                    }
+                    anyoneButMeEventPopupController.openAnyoneButMePage()
                     false
                 }
 
@@ -101,6 +104,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
             }
         }
+    }
+
+    private fun bindEventPopup(showOnLaunch: Boolean) {
+        anyoneButMeEventPopupController.bind(
+            composeView = binding.composeEventPopup,
+            lifecycleScope = lifecycleScope,
+            showOnLaunch = showOnLaunch
+        )
+    }
+
+    private fun bindEventTooltip() {
+        anyoneButMeEventTooltipController.bind(
+            tooltipComposeView = binding.composeEventTooltip,
+            bottomNavigationView = binding.bottomNaviBar
+        )
     }
 
     // set UI --
@@ -124,17 +142,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-
         if (requestCode == 1000) {
+            val nowDatetime = LocalDateTime.now()
+            val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 승인됨
-                showInfoToast("EAT-SSU 알림 수신을 동의하였습니다.")
-                myPageViewModel.setNotificationOn() //바로 알림 받도록 설정
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                myPageViewModel.setNotificationOn()
             } else {
                 // 권한이 거부됨
-                showInfoToast("EAT-SSU 알림 수신을 거부하였습니다.\n$dateFormat")
-                myPageViewModel.setNotificationOff() //바로 알림 받도록 설정
+                showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                myPageViewModel.setNotificationOff()
             }
         }
     }
@@ -210,7 +229,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
             }
         }
     }
-
 
     override fun shouldLogScreenId() = false
 }

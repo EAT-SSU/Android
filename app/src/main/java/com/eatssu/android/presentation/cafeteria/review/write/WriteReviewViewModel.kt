@@ -117,6 +117,12 @@ class WriteReviewViewModel @Inject constructor(
                         val compressedFile = compressImage(context, originalFile)
                         if (compressedFile != null && compressedFile.exists()) {
                             imageUrl = getImageUrlUseCase(compressedFile)
+                            if (imageUrl == null) {
+                                _uiState.value = UiState.Success(editing) // 되돌림
+                                _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_image_upload_failed), ToastType.ERROR))
+                                originalFile.delete()
+                                return@launch
+                            }
                             _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_image_upload_success), ToastType.SUCCESS))
 
                             // 원본 파일 삭제 (압축된 파일만 유지)
