@@ -1,6 +1,5 @@
 package com.eatssu.android.analytics
 
-import com.eatssu.common.analytics.AnalyticsDestination
 import com.eatssu.common.analytics.AnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsIdentity
 import com.eatssu.common.analytics.AnalyticsTracker
@@ -11,21 +10,23 @@ import kotlin.jvm.JvmSuppressWildcards
 
 @Singleton
 class DefaultAnalyticsTracker @Inject constructor(
-    destinations: Set<@JvmSuppressWildcards AnalyticsDestination>,
+    trackers: Set<@JvmSuppressWildcards AnalyticsTracker>,
 ) : AnalyticsTracker {
 
-    private val destinations: List<AnalyticsDestination> = destinations.distinctBy(AnalyticsDestination::id)
+    override val id: String = "default"
+
+    private val trackers: List<AnalyticsTracker> = trackers.distinctBy(AnalyticsTracker::id)
 
     override fun track(event: AnalyticsEvent) {
-        destinations.forEach { destination ->
+        trackers.forEach { tracker ->
             runCatching {
-                destination.track(event)
+                tracker.track(event)
             }.onFailure { throwable ->
                 Timber.e(
                     throwable,
                     "Failed to track analytics event %s via %s",
                     event.eventName,
-                    destination.id,
+                    tracker.id,
                 )
             }
         }
@@ -34,28 +35,28 @@ class DefaultAnalyticsTracker @Inject constructor(
     override fun identify(identity: AnalyticsIdentity) {
         if (identity.distinctId.isBlank()) return
 
-        destinations.forEach { destination ->
+        trackers.forEach { tracker ->
             runCatching {
-                destination.identify(identity)
+                tracker.identify(identity)
             }.onFailure { throwable ->
                 Timber.e(
                     throwable,
                     "Failed to identify analytics user via %s",
-                    destination.id,
+                    tracker.id,
                 )
             }
         }
     }
 
     override fun resetIdentity() {
-        destinations.forEach { destination ->
+        trackers.forEach { tracker ->
             runCatching {
-                destination.resetIdentity()
+                tracker.resetIdentity()
             }.onFailure { throwable ->
                 Timber.e(
                     throwable,
                     "Failed to reset analytics identity via %s",
-                    destination.id,
+                    tracker.id,
                 )
             }
         }

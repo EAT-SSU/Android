@@ -1,15 +1,15 @@
 package com.eatssu.android.analytics
 
 import android.os.Bundle
-import com.eatssu.common.analytics.AnalyticsDestination
 import com.eatssu.common.analytics.AnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsIdentity
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
 
-class FirebaseAnalyticsDestination @Inject constructor(
+class FirebaseAnalyticsTracker @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics,
-) : AnalyticsDestination {
+) : AnalyticsTracker {
     override val id: String = "firebase"
 
     override fun track(event: AnalyticsEvent) {

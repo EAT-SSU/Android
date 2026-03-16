@@ -6,7 +6,7 @@ import com.eatssu.common.enums.ScreenId
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class FirebaseAnalyticsDestinationTest {
+class FirebaseAnalyticsTrackerTest {
 
     @Test
     fun `screen view payload uses firebase screen keys`() {

@@ -70,6 +70,8 @@ class AnalyticsIdentityManagerTest {
     }
 
     private class FakeAnalyticsTracker : AnalyticsTracker {
+        override val id: String = "fake"
+
         val identities = mutableListOf<AnalyticsIdentity>()
         var resetCalled: Boolean = false
 

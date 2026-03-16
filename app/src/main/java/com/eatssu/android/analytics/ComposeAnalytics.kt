@@ -21,6 +21,8 @@ fun ProvideAnalyticsTracker(
 }
 
 private object NoOpAnalyticsTracker : AnalyticsTracker {
+    override val id: String = "noop"
+
     override fun track(event: AnalyticsEvent) = Unit
 
     override fun identify(identity: AnalyticsIdentity) = Unit

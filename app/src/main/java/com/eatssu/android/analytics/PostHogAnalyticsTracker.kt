@@ -1,14 +1,14 @@
 package com.eatssu.android.analytics
 
-import com.eatssu.common.analytics.AnalyticsDestination
 import com.eatssu.common.analytics.AnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsIdentity
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.posthog.PostHogInterface
 import javax.inject.Inject
 
-class PostHogAnalyticsDestination @Inject constructor(
+class PostHogAnalyticsTracker @Inject constructor(
     private val postHog: PostHogInterface,
-) : AnalyticsDestination {
+) : AnalyticsTracker {
     override val id: String = "posthog"
 
     override fun track(event: AnalyticsEvent) {

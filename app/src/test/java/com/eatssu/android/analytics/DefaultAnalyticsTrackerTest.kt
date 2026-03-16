@@ -1,9 +1,9 @@
 package com.eatssu.android.analytics
 
-import com.eatssu.common.analytics.AnalyticsDestination
 import com.eatssu.common.analytics.AnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsIdentity
 import com.eatssu.common.analytics.MapAnalyticsEvent
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -12,22 +12,22 @@ import org.junit.Test
 class DefaultAnalyticsTrackerTest {
 
     @Test
-    fun `track dispatches typed event to all destinations`() {
-        val firebaseDestination = FakeAnalyticsDestination(id = "firebase")
-        val postHogDestination = FakeAnalyticsDestination(id = "posthog")
-        val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseDestination, postHogDestination))
+    fun `track dispatches typed event to all trackers`() {
+        val firebaseTracker = FakeAnalyticsTracker(id = "firebase")
+        val postHogTracker = FakeAnalyticsTracker(id = "posthog")
+        val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseTracker, postHogTracker))
         val event = ReviewAnalyticsEvent.Completed(rating = 5L, likes = 2L, photoAttached = true)
 
         analyticsTracker.track(event)
 
-        assertEquals(listOf(event), firebaseDestination.events)
-        assertEquals(listOf(event), postHogDestination.events)
+        assertEquals(listOf(event), firebaseTracker.events)
+        assertEquals(listOf(event), postHogTracker.events)
     }
 
     @Test
-    fun `duplicate destination ids are de duplicated`() {
-        val first = FakeAnalyticsDestination(id = "duplicate")
-        val second = FakeAnalyticsDestination(id = "duplicate")
+    fun `duplicate tracker ids are de duplicated`() {
+        val first = FakeAnalyticsTracker(id = "duplicate")
+        val second = FakeAnalyticsTracker(id = "duplicate")
         val analyticsTracker = DefaultAnalyticsTracker(setOf(first, second))
 
         analyticsTracker.track(MapAnalyticsEvent.AllClicked)
@@ -36,10 +36,10 @@ class DefaultAnalyticsTrackerTest {
     }
 
     @Test
-    fun `identify propagates typed identity to all destinations`() {
-        val firebaseDestination = FakeAnalyticsDestination(id = "firebase")
-        val postHogDestination = FakeAnalyticsDestination(id = "posthog")
-        val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseDestination, postHogDestination))
+    fun `identify propagates typed identity to all trackers`() {
+        val firebaseTracker = FakeAnalyticsTracker(id = "firebase")
+        val postHogTracker = FakeAnalyticsTracker(id = "posthog")
+        val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseTracker, postHogTracker))
         val identity = AnalyticsIdentity(
             distinctId = "test@soongsil.ac.kr",
             email = "test@soongsil.ac.kr",
@@ -48,39 +48,39 @@ class DefaultAnalyticsTrackerTest {
 
         analyticsTracker.identify(identity)
 
-        assertEquals(listOf(identity), firebaseDestination.identities)
-        assertEquals(listOf(identity), postHogDestination.identities)
+        assertEquals(listOf(identity), firebaseTracker.identities)
+        assertEquals(listOf(identity), postHogTracker.identities)
     }
 
     @Test
-    fun `track isolates destination failures`() {
-        val failingDestination = FakeAnalyticsDestination(id = "firebase", failOnTrack = true)
-        val healthyDestination = FakeAnalyticsDestination(id = "posthog")
-        val analyticsTracker = DefaultAnalyticsTracker(setOf(failingDestination, healthyDestination))
+    fun `track isolates tracker failures`() {
+        val failingTracker = FakeAnalyticsTracker(id = "firebase", failOnTrack = true)
+        val healthyTracker = FakeAnalyticsTracker(id = "posthog")
+        val analyticsTracker = DefaultAnalyticsTracker(setOf(failingTracker, healthyTracker))
         val event = MapAnalyticsEvent.AllClicked
 
         analyticsTracker.track(event)
 
-        assertTrue(failingDestination.trackAttempted)
-        assertEquals(listOf(event), healthyDestination.events)
+        assertTrue(failingTracker.trackAttempted)
+        assertEquals(listOf(event), healthyTracker.events)
     }
 
     @Test
-    fun `resetIdentity resets every sink`() {
-        val firebaseDestination = FakeAnalyticsDestination(id = "firebase")
-        val postHogDestination = FakeAnalyticsDestination(id = "posthog")
-        val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseDestination, postHogDestination))
+    fun `resetIdentity resets every tracker`() {
+        val firebaseTracker = FakeAnalyticsTracker(id = "firebase")
+        val postHogTracker = FakeAnalyticsTracker(id = "posthog")
+        val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseTracker, postHogTracker))
 
         analyticsTracker.resetIdentity()
 
-        assertTrue(firebaseDestination.resetCalled)
-        assertTrue(postHogDestination.resetCalled)
+        assertTrue(firebaseTracker.resetCalled)
+        assertTrue(postHogTracker.resetCalled)
     }
 
-    private class FakeAnalyticsDestination(
+    private class FakeAnalyticsTracker(
         override val id: String,
         private val failOnTrack: Boolean = false,
-    ) : AnalyticsDestination {
+    ) : AnalyticsTracker {
         val events = mutableListOf<AnalyticsEvent>()
         val identities = mutableListOf<AnalyticsIdentity>()
         var resetCalled: Boolean = false

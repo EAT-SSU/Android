@@ -9,7 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class PostHogAnalyticsDestinationTest {
+class PostHogAnalyticsTrackerTest {
 
     @Test
     fun `launch payload keeps posthog compatible schema`() {
