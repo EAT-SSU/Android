@@ -50,7 +50,7 @@ sealed interface CafeteriaAnalyticsEvent : AnalyticsEvent {
     ) : CafeteriaAnalyticsEvent {
         override val eventName = "click_day"
         override val properties = buildMap {
-            put("day", day)
+            put("day", day.toWeekdayCode())
         }
     }
 
