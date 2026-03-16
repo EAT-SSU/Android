@@ -15,7 +15,7 @@ plugins {
 
 android {
     namespace = "com.eatssu.android"
-    compileSdk = 35
+    compileSdk = 36
 
     /**
      * 현재 팀 내 안드로이드 OS 버전
@@ -30,8 +30,8 @@ android {
         applicationId = "com.eatssu.android"
         minSdk = 28
         targetSdk = 35
-        versionCode = 58
-        versionName = "3.2.4"
+        versionCode = 59
+        versionName = "3.2.5"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
