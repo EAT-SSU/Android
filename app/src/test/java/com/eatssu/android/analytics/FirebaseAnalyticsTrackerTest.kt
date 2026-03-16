@@ -26,7 +26,7 @@ class FirebaseAnalyticsTrackerTest {
     }
 
     @Test
-    fun `review completion payload keeps firebase compatible numeric values`() {
+    fun `review completion payload keeps firebase compatible boolean value`() {
         val payload = ReviewAnalyticsEvent.Completed(
             rating = 5L,
             likes = 2L,
@@ -38,7 +38,7 @@ class FirebaseAnalyticsTrackerTest {
             mapOf(
                 "rating" to 5L,
                 "likes" to 2L,
-                "photo_attached" to 1,
+                "photo_attached" to true,
             ),
             payload.properties,
         )
