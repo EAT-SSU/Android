@@ -1,7 +1,7 @@
 ---
 name: deploy-eatssu
 description: EAT-SSU Android 앱 릴리즈 자동화. 버전 범프, 릴리즈 노트 작성, release 브랜치 생성, PR 생성까지 전체 배포 플로우를 실행한다. "배포", "릴리즈", "release", "deploy", "출시", "버전 올려" 등의 키워드에 반응.
-version: 1.0.0
+version: 1.0.1
 ---
 
 # Deploy EAT-SSU
@@ -95,6 +95,7 @@ en: |
 4. 최소 10자 이상의 내용
 5. CI/CD, 리팩토링 등 사용자에게 보이지 않는 변경은 "앱의 안정성과 성능을 개선했어요" 류로 통합
 6. 이 내용이 **Google Play Store에 그대로 업로드**됨 (ko → Korea, en → Global)
+7. 각 항목은 **반드시 한 문장만 사용**하고, 두 문장 이상으로 나누거나 접속사로 이어 붙여 문장 두 개처럼 쓰지 않는다
 
 ### Step 6: 커밋
 

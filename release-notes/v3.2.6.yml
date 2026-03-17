@@ -1,0 +1,8 @@
+ko: |
+  - 알림 권한을 허용했을 때만 필요한 안내가 보이도록 개선했어요.
+  - 일부 안내 메시지와 팝업 표현을 다듬었어요.
+  - 앱의 내부 품질과 안정성을 정비했어요.
+en: |
+  - Improved notification guidance so it appears only when notification permission is allowed.
+  - Refined some in-app messages and popup wording.
+  - Improved the app's internal quality and stability.
