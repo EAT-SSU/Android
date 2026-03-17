@@ -3,8 +3,6 @@ package com.eatssu.android.data.remote.repository
 import com.eatssu.android.data.remote.service.PublicHolidayService
 import com.eatssu.android.domain.model.PublicHoliday
 import com.eatssu.android.domain.repository.PublicHolidayRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.net.URLEncoder
 import java.time.LocalDate
@@ -39,50 +37,44 @@ class PublicHolidayRepositoryImpl @Inject constructor(
 
         val normalizedKey = normalizeServiceKey(serviceKey)
 
-        val responseResult = withContext(Dispatchers.IO) {
-            runCatching {
-                publicHolidayService.getRestDeInfo(
-                    serviceKey = normalizedKey,
-                    solYear = yearMonth.year.toString(),
-                    solMonth = yearMonth.monthValue.toString().padStart(2, '0'),
-                )
-            }
-        }
-
-        val response = responseResult.getOrNull() ?: run {
-            Timber.w(responseResult.exceptionOrNull(), "Failed to fetch public holidays")
-            return emptyList()
-        }
-
-        val resultCode = response.response?.header?.resultCode
-        if (resultCode != null && resultCode != "00") {
-            Timber.w(
-                "PublicHoliday API returned non-normal resultCode=%s msg=%s",
-                resultCode,
-                response.response?.header?.resultMsg,
+        return try {
+            val response = publicHolidayService.getRestDeInfo(
+                serviceKey = normalizedKey,
+                solYear = yearMonth.year.toString(),
+                solMonth = yearMonth.monthValue.toString().padStart(2, '0'),
             )
-            return emptyList()
-        }
 
-        val holidays = response.response
-            ?.body
-            ?.items
-            ?.item
-            .orEmpty()
-            .asSequence()
-            .filter { it.isHoliday.equals("Y", ignoreCase = true) }
-            .mapNotNull { item ->
-                val date = item.locdate?.let(::parseLocdate)
-                val name = item.dateName?.trim().orEmpty()
+            val resultCode = response.response?.header?.resultCode
+            if (resultCode != null && resultCode != "00") {
+                Timber.w(
+                    "PublicHoliday API returned non-normal resultCode=%s msg=%s",
+                    resultCode,
+                    response.response?.header?.resultMsg,
+                )
+                emptyList()
+            } else {
+                response.response
+                    ?.body
+                    ?.items
+                    ?.item
+                    .orEmpty()
+                    .asSequence()
+                    .filter { it.isHoliday.equals("Y", ignoreCase = true) }
+                    .mapNotNull { item ->
+                        val date = item.locdate?.let(::parseLocdate)
+                        val name = item.dateName?.trim().orEmpty()
 
-                if (date == null || name.isBlank()) return@mapNotNull null
-                PublicHoliday(date = date, name = name)
+                        if (date == null || name.isBlank()) return@mapNotNull null
+                        PublicHoliday(date = date, name = name)
+                    }
+                    .distinctBy { it.date }
+                    .sortedBy { it.date }
+                    .toList()
             }
-            .distinctBy { it.date }
-            .sortedBy { it.date }
-            .toList()
-
-        return holidays
+        } catch (t: Throwable) {
+            Timber.w(t, "Failed to fetch public holidays")
+            emptyList()
+        }
     }
 
     private fun parseLocdate(locdate: Long): LocalDate? {
