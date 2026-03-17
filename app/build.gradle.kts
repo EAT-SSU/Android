@@ -92,6 +92,13 @@ android {
             val postHogHost: String = p.getProperty("POSTHOG_HOST")
             buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
 
+            val holidayApiKey: String = p.getProperty("HOLIDAY_API_KEY") ?: ""
+            buildConfigField(
+                "String",
+                "HOLIDAY_API_KEY",
+                "\"$holidayApiKey\""
+            )
+
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -124,6 +131,13 @@ android {
 
             val postHogHost: String = p.getProperty("POSTHOG_HOST")
             buildConfigField("String", "POSTHOG_HOST", "\"$postHogHost\"")
+
+            val holidayApiKey: String = p.getProperty("HOLIDAY_API_KEY") ?: ""
+            buildConfigField(
+                "String",
+                "HOLIDAY_API_KEY",
+                "\"$holidayApiKey\""
+            )
 
             isMinifyEnabled = false
         }
