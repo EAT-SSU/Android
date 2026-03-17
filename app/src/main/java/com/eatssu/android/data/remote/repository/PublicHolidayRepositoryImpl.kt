@@ -7,8 +7,8 @@ import timber.log.Timber
 import java.net.URLEncoder
 import java.time.LocalDate
 import java.time.YearMonth
-import javax.inject.Named
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -24,7 +24,6 @@ class PublicHolidayRepositoryImpl @Inject constructor(
     /**
      * 외부 공휴일 API를 호출해 해당 [YearMonth]의 공휴일 목록을 조회한다.
      *
-     *
      * - `HOLIDAY_API_KEY`가 비어있으면 네트워크 호출 없이 빈 리스트를 반환한다.
      * - 네트워크/파싱 실패 또는 비정상 resultCode인 경우 빈 리스트를 반환한다.
      * - `isHoliday == "Y"`만 필터링하고, 날짜 기준으로 중복 제거 후 오름차순 정렬한다.
@@ -36,8 +35,9 @@ class PublicHolidayRepositoryImpl @Inject constructor(
         }
 
         val normalizedKey = normalizeServiceKey(serviceKey)
+        if (normalizedKey.isBlank()) return emptyList()
 
-        return try {
+        try {
             val response = publicHolidayService.getRestDeInfo(
                 serviceKey = normalizedKey,
                 solYear = yearMonth.year.toString(),
@@ -45,23 +45,24 @@ class PublicHolidayRepositoryImpl @Inject constructor(
             )
 
             val resultCode = response.response?.header?.resultCode
-            if (resultCode != null && resultCode != "00") {
+            if (resultCode != "00") {
                 Timber.w(
                     "PublicHoliday API returned non-normal resultCode=%s msg=%s",
                     resultCode,
                     response.response?.header?.resultMsg,
                 )
-                emptyList()
+
+                return emptyList()
             } else {
-                response.response
-                    ?.body
+                return response.response
+                    .body
                     ?.items
                     ?.item
                     .orEmpty()
                     .asSequence()
                     .filter { it.isHoliday.equals("Y", ignoreCase = true) }
                     .mapNotNull { item ->
-                        val date = item.locdate?.let(::parseLocdate)
+                        val date = item.locdate?.let(::parseLocalDate)
                         val name = item.dateName?.trim().orEmpty()
 
                         if (date == null || name.isBlank()) return@mapNotNull null
@@ -73,12 +74,12 @@ class PublicHolidayRepositoryImpl @Inject constructor(
             }
         } catch (t: Throwable) {
             Timber.w(t, "Failed to fetch public holidays")
-            emptyList()
+            return emptyList()
         }
     }
 
-    private fun parseLocdate(locdate: Long): LocalDate? {
-        val s = locdate.toString()
+    private fun parseLocalDate(localDate: Long): LocalDate? {
+        val s = localDate.toString()
         if (s.length != 8) return null
 
         return runCatching {

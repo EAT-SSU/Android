@@ -14,7 +14,6 @@ interface PublicHolidayService {
      * - solYear/solMonth는 양력 기준 연/월이다.
      * - `_type=json`으로 JSON 응답을 받는다.
      */
-
     @GET("B090041/openapi/service/SpcdeInfoService/getRestDeInfo")
     suspend fun getRestDeInfo(
         @Query(value = "ServiceKey", encoded = true) serviceKey: String,
