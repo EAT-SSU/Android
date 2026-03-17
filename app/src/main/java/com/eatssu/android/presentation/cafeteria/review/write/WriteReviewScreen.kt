@@ -7,17 +7,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,7 +60,9 @@ import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.Primary
+import androidx.core.net.toUri
 
 const val MAX_TEXT_COUNT = 300
 
@@ -242,10 +251,10 @@ internal fun WriteReviewScreen(
                                 },
                                 shape = RoundedCornerShape(10.dp),
                                 colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                                    focusedContainerColor = Gray100,
-                                    unfocusedContainerColor = Gray100,
-                                    unfocusedBorderColor = Gray200,
-                                    focusedBorderColor = Gray200,
+                                    focusedContainerColor = Gray100, //fill
+                                    unfocusedContainerColor = Gray100, //fill
+                                    unfocusedBorderColor = Gray200, //stroke
+                                    focusedBorderColor = Gray200, //storke
                                     unfocusedLabelColor = Gray400,
                                     focusedLabelColor = Gray400,
                                     cursorColor = Primary
@@ -270,42 +279,58 @@ internal fun WriteReviewScreen(
                             if (selectedImageUri != null) {
                                 Column(
                                     modifier = Modifier
-                                        .size(120.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .clickable(enabled = !isPosting) { onImageDelete() }
+                                        .size(150.dp)
+//                                        .clickable(enabled = !isPosting) { onImageDelete() }
                                 ) {
-                                    AsyncImage(
-                                        model = selectedImageUri,
-                                        contentDescription = "Selected image",
-                                        modifier = Modifier.fillMaxSize()
-                                    )
+                                    Box(
+                                        modifier = Modifier.size(92.dp)
+                                    ) {
+                                        AsyncImage(
+                                            model = selectedImageUri,
+                                            contentDescription = "Selected image",
+                                            modifier = Modifier
+                                                .size(80.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                        )
+
+                                        IconButton(
+                                            onClick = { onImageDelete() },
+                                            modifier = Modifier
+                                                .size(24.dp) // 터치 영역
+                                                .align(Alignment.TopEnd)
+                                                .offset(x = 5.dp, y = (-5).dp) // 이미지 위에 살짝 겹치게
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.ic_minus),
+                                                contentDescription = "remove photo",
+                                                tint = Color.Unspecified,
+                                                modifier = Modifier.size(20.dp) // 실제 아이콘
+                                            )
+                                        }
+                                    }
                                 }
-                                Text(
-                                    modifier = Modifier.padding(top = 8.dp),
-                                    text = stringResource(R.string.review_photo_delete_hint),
-                                    color = Gray500,
-                                    style = EatssuTheme.typography.caption3
-                                )
                             } else {
-                                Column(
+                                Row (
                                     modifier = Modifier
-                                        .size(60.dp)
+                                        .fillMaxWidth()
+                                        .height(60.dp)
                                         .clip(RoundedCornerShape(5.dp))
-                                        .background(Gray100)
-                                        .border(1.dp, Gray200, RoundedCornerShape(5.dp))
+//                                        .background(White)
+                                        .border(1.dp, Gray200, RoundedCornerShape(12.dp))
                                         .clickable(enabled = !isPosting) { onImageSelect() },
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center,
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_camera_light),
+                                        painter = painterResource(R.drawable.ic_camera_24),
                                         contentDescription = "add photo",
-                                        tint = Gray300
+                                        tint = Gray700
                                     )
+                                    Spacer(Modifier.width(8.dp))
                                     Text(
                                         stringResource(R.string.review_photo_count, 0, 1),
-                                        color = Gray400,
-                                        style = EatssuTheme.typography.caption3
+                                        color = Gray700,
+                                        style = EatssuTheme.typography.body1
                                     )
                                 }
                             }
@@ -330,6 +355,32 @@ private fun ReviewWritePreview() {
             content = "맛있었습니다!",
             likedMenuIds = setOf(1L),
             selectedImageUri = null,
+            isPosting = false,
+            onBack = {},
+            onRatingChanged = {},
+            onContentChanged = {},
+            onToggleLike = {},
+            onImageSelect = {},
+            onImageDelete = {},
+            onSubmit = {}
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun ReviewWritePreviewPhoto() {
+    EatssuTheme {
+        WriteReviewScreen(
+            title = "리뷰 작성하기",
+            menuList = listOf(
+                MenuMini(1, "김치"), MenuMini(2, "계란말이"), MenuMini(3, "닭볶음탕")
+            ),
+            rating = 3,
+            content = "맛있었습니다!",
+            likedMenuIds = setOf(1L),
+            selectedImageUri = "https://static.wtable.co.kr/image-resize/production/service/recipe/2167/4x3/c9d9173f-d3e1-43cd-871d-339614b0dbac.jpg".toUri(),
             isPosting = false,
             onBack = {},
             onRatingChanged = {},

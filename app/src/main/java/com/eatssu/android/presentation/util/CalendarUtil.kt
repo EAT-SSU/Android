@@ -1,15 +1,16 @@
 package com.eatssu.android.presentation.util
 
-import java.text.SimpleDateFormat
 import java.time.DayOfWeek
+import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 
 object CalendarUtil {
-    lateinit var selectedDate: LocalDate
+    var selectedDate: LocalDate = LocalDate.now()
 
     fun monthYearFromDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM")
@@ -17,34 +18,38 @@ object CalendarUtil {
     }
 
     fun daysInWeekArray(selectedDate: LocalDate): ArrayList<LocalDate> {
-        val days = ArrayList<LocalDate>()
+        val days = ArrayList<LocalDate>(7)
         var current = sundayForDate(selectedDate)
-        val endDate = current!!.plusWeeks(1)
-        while (current!!.isBefore(endDate)) {
+        repeat(7) {
             days.add(current)
             current = current.plusDays(1)
         }
         return days
     }
 
-    private fun sundayForDate(current: LocalDate): LocalDate? {
-        var current = current
-        val oneWeekAgo = current.minusWeeks(1)
-        while (current.isAfter(oneWeekAgo)) {
+    private fun sundayForDate(currentDate: LocalDate): LocalDate {
+        var current = currentDate
+        repeat(7) {
             if (current.dayOfWeek == DayOfWeek.SUNDAY) return current
             current = current.minusDays(1)
         }
-        return null
+
+        return currentDate
     }
 
-    fun convertMillisToDateString(millis: Long): String {
-        val formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-        val date = Date(millis)
-        return formatter.format(date)
+    fun convertMillisToDateString(
+        millis: Long,
+        zoneId: ZoneId = ZoneId.systemDefault(),
+    ): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
+        return Instant.ofEpochMilli(millis)
+            .atZone(zoneId)
+            .toLocalDate()
+            .format(formatter)
     }
 
-    fun getNextDayDate(): String {
-        val nextDay = LocalDate.now().plusDays(1)
+    fun getNextDayDate(clock: Clock = Clock.systemDefaultZone()): String {
+        val nextDay = LocalDate.now(clock).plusDays(1)
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
         return nextDay.format(formatter)
     }

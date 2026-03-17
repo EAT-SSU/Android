@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.eatssu.android.databinding.FragmentBottomsheetInfoBinding
 import com.eatssu.common.EventLogger
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -42,15 +41,16 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.tvName.text = getString(restaurantType.displayNameResId)
 
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val restaurantInfo = infoViewModel.getRestaurantInfo(restaurantType)
+            val binding = _binding ?: return@launch
 
             restaurantInfo?.let {
                 binding.tvLocation.text = it.location
                 binding.tvTime.text = it.time
                 binding.tvEtc.text = it.etc
 
-                Glide.with(this@InfoBottomSheetFragment)
+                Glide.with(binding.ivCafeteriaPhoto)
                     .load(it.image)
                     .into(binding.ivCafeteriaPhoto)
             }
@@ -60,6 +60,11 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onResume() {
         super.onResume()
         EventLogger.screenView(ScreenId.HOME_INFO)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

@@ -180,8 +180,6 @@ internal fun MyReviewListScreen(
                                     )
                                 }
                             }
-
-                            null -> TODO()
                         }
                     }
 

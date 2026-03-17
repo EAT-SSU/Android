@@ -41,9 +41,11 @@ class MainViewModel @Inject constructor(
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     init {
-        loadStoredUserDepartment()
-        getUserDepartment()
-        fetchAndCheckNickname()
+        viewModelScope.launch {
+            loadStoredUserDepartment()
+            getUserDepartment()
+            fetchAndCheckNickname()
+        }
     }
 
     fun refreshUserDepartment() {
@@ -57,21 +59,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun fetchAndCheckNickname() {
-        viewModelScope.launch {
-            _uiState.value = UiState.Loading
+    private suspend fun fetchAndCheckNickname() {
+        val nickname = getUserNickNameUseCase()
 
-            val nickname = getUserNickNameUseCase()
-
-            // 1) 닉네임 없음
-            if (nickname.isBlank()) {
-                _uiState.value = UiState.Success(MainState.NicknameNull)
-                _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.set_nickname), ToastType.ERROR))
-                return@launch
-            }
-
-            // 2) 정상 닉네임
-            _uiState.value = UiState.Success(MainState.NicknameExists(nickname))
+        if (nickname.isBlank()) {
+            _uiState.value = UiState.Success(MainState.NicknameNull)
+            _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.set_nickname), ToastType.ERROR))
         }
     }
 
@@ -99,49 +92,44 @@ class MainViewModel @Inject constructor(
         return data
     }
 
-    private fun loadStoredUserDepartment() {
-        viewModelScope.launch {
-            val userInfo = getUserCollegeDepartmentUseCase()
-            _uiState.value = UiState.Success(
-                MainState.DepartmentState(
-                    departmentName = userInfo.userDepartment.departmentName,
-                    showUserDepartmentBottomSheet =
-                        (userInfo.userCollege.collegeId == -1 || userInfo.userDepartment.departmentId == -1)
-                )
+    private suspend fun loadStoredUserDepartment() {
+        val userInfo = getUserCollegeDepartmentUseCase()
+        _uiState.value = UiState.Success(
+            MainState.DepartmentState(
+                departmentName = userInfo.userDepartment.departmentName,
+                showUserDepartmentBottomSheet =
+                    (userInfo.userCollege.collegeId == -1 || userInfo.userDepartment.departmentId == -1)
             )
-        }
+        )
     }
 
-    private fun getUserDepartment() {
-        viewModelScope.launch {
-            val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
-                _uiState.value = UiState.Error
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        UiText.StringResource(R.string.not_found),
-                        ToastType.ERROR
-                    )
-                )
-                return@launch
-            }
-
-            setUserCollegeDepartmentUseCase(college, department)
-
-            _uiState.value = UiState.Success(
-                MainState.DepartmentState(
-                    departmentName = department.departmentName,
-                    showUserDepartmentBottomSheet =
-                        (college.collegeId == -1 || department.departmentId == -1)
+    private suspend fun getUserDepartment() {
+        val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
+            _uiEvent.emit(
+                UiEvent.ShowToast(
+                    UiText.StringResource(R.string.not_found),
+                    ToastType.ERROR
                 )
             )
+            return
         }
+
+        setUserCollegeDepartmentUseCase(college, department)
+
+        _uiState.value = UiState.Success(
+            MainState.DepartmentState(
+                departmentName = department.departmentName,
+                showUserDepartmentBottomSheet =
+                    (college.collegeId == -1 || department.departmentId == -1)
+            )
+        )
     }
+
 }
 
 
 sealed class MainState {
     object NicknameNull : MainState()
-    data class NicknameExists(val nickname: String) : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
         val departmentName: String? = "",
