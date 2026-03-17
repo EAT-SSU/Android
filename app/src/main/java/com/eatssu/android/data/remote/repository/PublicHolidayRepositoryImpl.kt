@@ -23,6 +23,14 @@ class PublicHolidayRepositoryImpl @Inject constructor(
         const val PUBLIC_HOLIDAY_SERVICE_KEY_NAME: String = "PublicHolidayServiceKey"
     }
 
+    /**
+     * 외부 공휴일 API를 호출해 해당 [YearMonth]의 공휴일 목록을 조회한다.
+     *
+     *
+     * - `HOLIDAY_API_KEY`가 비어있으면 네트워크 호출 없이 빈 리스트를 반환한다.
+     * - 네트워크/파싱 실패 또는 비정상 resultCode인 경우 빈 리스트를 반환한다.
+     * - `isHoliday == "Y"`만 필터링하고, 날짜 기준으로 중복 제거 후 오름차순 정렬한다.
+     */
     override suspend fun getHolidays(yearMonth: YearMonth): List<PublicHoliday> {
         if (serviceKey.isBlank()) {
             Timber.w("HOLIDAY_API_KEY is blank; skipping public holiday fetch")

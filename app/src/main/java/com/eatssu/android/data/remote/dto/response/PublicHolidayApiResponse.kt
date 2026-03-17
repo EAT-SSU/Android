@@ -40,6 +40,10 @@ data class PublicHolidayApiResponse(
     )
 
     @OptIn(ExperimentalSerializationApi::class)
+    /**
+     * 공휴일 API는 item이 1개일 때는 Object, 여러 개일 때는 Array로 내려주는 케이스가 있어
+     * 역직렬화 시 항상 List 형태로 정규화한다.
+     */
     object PublicHolidayItemListSerializer : JsonTransformingSerializer<List<Item>>(
         ListSerializer(Item.serializer())
     ) {

@@ -18,8 +18,15 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+/** 공휴일 API 전용 Retrofit 구분자. */
 annotation class PublicHolidayApi
 
+/**
+ * 공휴일 API 전용 Retrofit/Service 제공 모듈.
+ *
+ * - 인증 토큰이 필요 없는 외부 API이므로 `@NoToken` OkHttpClient를 사용한다.
+ * - 키는 `BuildConfig.HOLIDAY_API_KEY`로 주입되며, 비어있을 수 있다(로컬 환경 등).
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object PublicHolidayModule {
