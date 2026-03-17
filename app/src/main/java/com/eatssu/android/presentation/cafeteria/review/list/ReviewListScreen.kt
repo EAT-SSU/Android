@@ -44,6 +44,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.eatssu.android.R
+import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewBottomSheet
@@ -53,10 +54,10 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewPro
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
+import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.ToastType
@@ -143,6 +144,7 @@ internal fun ReviewListScreen(
     onDeleteClick: (reviewId: Long) -> Unit,
 ) {
     val context = LocalContext.current
+    val analyticsTracker = LocalAnalyticsTracker.current
 
     var showMyBottomSheet by remember { mutableStateOf(false) }
     var showOthersBottomSheet by remember { mutableStateOf(false) }
@@ -190,7 +192,7 @@ internal fun ReviewListScreen(
                 text = stringResource(R.string.review_write),
                 onClick = {
                     onReviewWriteButtonClick()
-                    EventLogger.writeReview() //작성 하러가기가 이벤트임
+                    analyticsTracker.track(ReviewAnalyticsEvent.WriteClicked)
                 },
                 modifier = Modifier
                     .padding(24.dp)

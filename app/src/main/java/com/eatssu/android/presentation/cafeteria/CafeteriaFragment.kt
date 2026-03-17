@@ -16,7 +16,7 @@ import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.CafeteriaAnalyticsEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.Time
 import com.google.android.material.tabs.TabLayout
@@ -74,7 +74,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
                     2 -> Time.DINNER
                     else -> Time.LUNCH // 기본값
                 }
-                EventLogger.selectMealTime(time)
+                analyticsTracker.track(CafeteriaAnalyticsEvent.MealTimeSelected(time))
             }
         })
     }
@@ -113,6 +113,6 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
         mainViewModel.setData(date)
         mainPosition = position
         setWeekView()
-        EventLogger.selectDay(date.dayOfWeek.name)
+        analyticsTracker.track(CafeteriaAnalyticsEvent.DaySelected(date.dayOfWeek.name))
     }
 }

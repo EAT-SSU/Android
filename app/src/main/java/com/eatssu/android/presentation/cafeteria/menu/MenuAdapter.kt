@@ -11,10 +11,12 @@ import com.eatssu.android.R
 import com.eatssu.android.databinding.ItemCafeteriaSectionBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.cafeteria.info.InfoBottomSheetFragment
+import com.eatssu.common.analytics.AnalyticsTracker
 
 class MenuAdapter(
     private val fragmentManager: FragmentManager,
-    private val sectionList: List<Section>
+    private val sectionList: List<Section>,
+    private val analyticsTracker: AnalyticsTracker,
 ) : RecyclerView.Adapter<MenuAdapter.MyViewHolder>() {
 
     class MyViewHolder(
@@ -23,7 +25,8 @@ class MenuAdapter(
 
         fun bind(
             fragmentManager: FragmentManager,
-            sectionModel: Section
+            sectionModel: Section,
+            analyticsTracker: AnalyticsTracker,
         ) {
 
             binding.llCafeteriaInfo.setOnClickListener {
@@ -45,7 +48,7 @@ class MenuAdapter(
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)
                 adapter = sectionModel.menuList?.let {
-                    MenuSubAdapter(it, sectionModel.cafeteria)
+                    MenuSubAdapter(it, sectionModel.cafeteria, analyticsTracker)
                 }
             }
         }
@@ -60,7 +63,7 @@ class MenuAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         sectionList[position].let { sectionModel ->
-            holder.bind(fragmentManager, sectionModel)
+            holder.bind(fragmentManager, sectionModel, analyticsTracker)
         }
     }
 

@@ -13,17 +13,23 @@ import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
-import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.AppAnalyticsEvent
+import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
 
     private val introViewModel: IntroViewModel by viewModels()
     private lateinit var binding: ActivityIntroBinding
@@ -94,17 +100,17 @@ class IntroActivity : AppCompatActivity() {
     private fun log() {
         val launchPath = intent.getStringExtra("launch_path")
         when (launchPath) {
-            "widget" -> EventLogger.appLaunch(LaunchPath.WIDGET)
-            "local_notification" -> EventLogger.appLaunch(LaunchPath.LOCAL_NOTIFICATION)
-            "remote_notification" -> EventLogger.appLaunch(LaunchPath.REMOTE_NOTIFICATION)
+            "widget" -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.WIDGET))
+            "local_notification" -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.LOCAL_NOTIFICATION))
+            "remote_notification" -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.REMOTE_NOTIFICATION))
             // launch_path가 없으면 일반적인 앱 아이콘 클릭으로 간주
-            else -> EventLogger.appLaunch(LaunchPath.ICON)
+            else -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.ICON))
         }
     }
 
     override fun onResume() {
         super.onResume()
-        EventLogger.screenView(ScreenId.LOGIN_SPLASH)
+        analyticsTracker.track(ScreenViewEvent(ScreenId.LOGIN_SPLASH))
     }
 
     private fun showForceUpdateDialog() {

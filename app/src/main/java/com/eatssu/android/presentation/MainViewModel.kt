@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
+import com.eatssu.android.analytics.AnalyticsIdentityManager
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.GetUserEmailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.common.UiEvent
@@ -32,6 +34,8 @@ class MainViewModel @Inject constructor(
     private val setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
     private val userRepository: UserRepository,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    private val getUserEmailUseCase: GetUserEmailUseCase,
+    private val analyticsIdentityManager: AnalyticsIdentityManager,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
@@ -65,7 +69,10 @@ class MainViewModel @Inject constructor(
         if (nickname.isBlank()) {
             _uiState.value = UiState.Success(MainState.NicknameNull)
             _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.set_nickname), ToastType.ERROR))
+            return
         }
+
+        syncAnalyticsIdentity()
     }
 
     fun logOut() {
@@ -115,6 +122,7 @@ class MainViewModel @Inject constructor(
         }
 
         setUserCollegeDepartmentUseCase(college, department)
+        syncAnalyticsIdentity()
 
         _uiState.value = UiState.Success(
             MainState.DepartmentState(
@@ -125,6 +133,18 @@ class MainViewModel @Inject constructor(
         )
     }
 
+    private suspend fun syncAnalyticsIdentity() {
+        val email = getUserEmailUseCase()
+        if (email.isBlank()) return
+
+        val userInfo = getUserCollegeDepartmentUseCase()
+        analyticsIdentityManager.identifyUser(
+            email = email,
+            nickname = userInfo.nickname,
+            college = userInfo.userCollege,
+            department = userInfo.userDepartment,
+        )
+    }
 }
 
 

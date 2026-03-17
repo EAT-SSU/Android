@@ -19,15 +19,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.eatssu.android.analytics.ProvideAnalyticsTracker
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.MenuType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ReviewComposeActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
 
     private var menuType: String? = null
     private var itemId by Delegates.notNull<Long>()
@@ -38,23 +44,25 @@ class ReviewComposeActivity : ComponentActivity() {
         getIntents() // 컴포즈 화면 그리기 전에 호출
 
         setContent {
-            EatssuTheme {
-                val navHostController = rememberNavController()
-                val parsedMenuType = MenuType.entries.find { it.name == menuType }
+            ProvideAnalyticsTracker(analyticsTracker) {
+                EatssuTheme {
+                    val navHostController = rememberNavController()
+                    val parsedMenuType = MenuType.entries.find { it.name == menuType }
 
-                parsedMenuType?.let { type ->
-                    ReviewNav(
-                        navHostController = navHostController,
-                        menuType = type,
-                        menuName = itemName,
-                        id = itemId,
-                        onExit = { finish() }
-                    )
-                } ?: run {
-                    Timber.e("Invalid or null MenuType received: $menuType")
-                    ErrorScreen(
-                        onBackClick = { finish() }
-                    )
+                    parsedMenuType?.let { type ->
+                        ReviewNav(
+                            navHostController = navHostController,
+                            menuType = type,
+                            menuName = itemName,
+                            id = itemId,
+                            onExit = { finish() }
+                        )
+                    } ?: run {
+                        Timber.e("Invalid or null MenuType received: $menuType")
+                        ErrorScreen(
+                            onBackClick = { finish() }
+                        )
+                    }
                 }
             }
         }

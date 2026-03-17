@@ -17,15 +17,20 @@ import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MenuFragment : Fragment() {
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
@@ -115,7 +120,7 @@ class MenuFragment : Fragment() {
         binding.rv.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = MenuAdapter(getParentFragmentManager(), sectionList)
+            adapter = MenuAdapter(getParentFragmentManager(), sectionList, analyticsTracker)
         }
     }
 

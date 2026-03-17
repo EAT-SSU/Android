@@ -10,9 +10,10 @@ import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.model.RestaurantInfo
-import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.StoreType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,6 +52,7 @@ class MapViewModel @Inject constructor(
     private val partnershipRepository: PartnershipRepository,
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -125,12 +127,17 @@ class MapViewModel @Inject constructor(
         when (filter) {
             FilterType.All -> {
                 loadPartnerships()
-                EventLogger.clickMap()
+                analyticsTracker.track(MapAnalyticsEvent.AllClicked)
             }
 
             FilterType.Mine -> {
                 loadUserCollegePartnerships()
-                EventLogger.clickMapMine(_collegeId.value, _departmentId.value)
+                analyticsTracker.track(
+                    MapAnalyticsEvent.MineClicked(
+                        college = _collegeId.value,
+                        major = _departmentId.value,
+                    ),
+                )
             }
         }
     }
