@@ -2,10 +2,12 @@ package com.eatssu.android.presentation.mypage.userinfo
 
 import app.cash.turbine.test
 import com.eatssu.android.R
+import com.eatssu.android.analytics.AnalyticsIdentityManager
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.GetUserEmailUseCase
 import com.eatssu.android.domain.usecase.user.NicknameValidationResult
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.domain.usecase.user.SetUserNicknameUseCase
@@ -32,6 +34,26 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
 
+    fun buildViewModel(
+        setUserNicknameUseCase: SetUserNicknameUseCase,
+        getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+        setUserCollegeDepartmentUseCase: SetUserCollegeDepartmentUseCase,
+        validateNicknameServerUseCase: ValidateNicknameServerUseCase,
+        validateNicknameLocalUseCase: ValidateNicknameLocalUseCase,
+        userRepository: UserRepository,
+        getUserEmailUseCase: GetUserEmailUseCase = mockk(relaxed = true),
+        analyticsIdentityManager: AnalyticsIdentityManager = mockk(relaxed = true),
+    ) = UserInfoViewModel(
+        setUserNicknameUseCase = setUserNicknameUseCase,
+        getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+        getUserEmailUseCase = getUserEmailUseCase,
+        setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+        validateNicknameServerUseCase = validateNicknameServerUseCase,
+        validateNicknameLocalUseCase = validateNicknameLocalUseCase,
+        userRepository = userRepository,
+        analyticsIdentityManager = analyticsIdentityManager,
+    )
+
     given("유저 정보 수정 화면") {
         val baseCollege = College(collegeId = 1, collegeName = "IT")
         val baseDepartment = Department(departmentId = 11, departmentName = "컴퓨터학부")
@@ -57,7 +79,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -101,7 +123,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
                 validateNicknameLocalUseCase("x", UserInfoViewModel.MIN_NICKNAME_LENGTH, UserInfoViewModel.MAX_NICKNAME_LENGTH)
             } returns NicknameValidationResult.Invalid(UiText.StringResource(R.string.nickname_error_length))
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -147,7 +169,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
             coEvery { validateNicknameServerUseCase("newNick") } returns Result.failure(IllegalArgumentException("dup"))
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -193,7 +215,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -242,7 +264,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
             coEvery { setUserNicknameUseCase("newNick") } returns Result.failure(IllegalStateException("fail"))
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -299,7 +321,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery { userRepository.setUserDepartment(otherDepartment.departmentId) } returns true
             coEvery { setUserCollegeDepartmentUseCase(otherCollege, otherDepartment) } returns Unit
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -358,7 +380,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
             coEvery { validateNicknameServerUseCase("newNick") } returns Result.success(Unit)
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -405,7 +427,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
             coEvery { validateNicknameServerUseCase("newNick") } returns Result.failure(IllegalStateException())
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -452,7 +474,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery { validateNicknameServerUseCase("newNick") } returns Result.success(Unit)
             coEvery { setUserNicknameUseCase("newNick") } returns Result.success(Unit)
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -501,7 +523,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery { userRepository.setUserDepartment(otherDepartment.departmentId) } returns true
             coEvery { setUserCollegeDepartmentUseCase(otherCollege, otherDepartment) } returns Unit
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -552,7 +574,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery { userRepository.getTotalDepartments(baseCollege.collegeId) } returns listOf(baseDepartment)
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
@@ -607,7 +629,7 @@ class UserInfoViewModelBehaviorSpec : AppBehaviorSpec({
             every { validateNicknameLocalUseCase(any(), any(), any()) } returns NicknameValidationResult.Valid
             coEvery { userRepository.setUserDepartment(otherDepartment.departmentId) } returns false
 
-            val viewModel = UserInfoViewModel(
+            val viewModel = buildViewModel(
                 setUserNicknameUseCase = setUserNicknameUseCase,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,

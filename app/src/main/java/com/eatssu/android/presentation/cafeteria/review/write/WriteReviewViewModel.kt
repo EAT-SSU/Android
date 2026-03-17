@@ -9,10 +9,11 @@ import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.usecase.menu.GetValidMenusOfMealUseCase
 import com.eatssu.android.domain.usecase.review.GetImageUrlUseCase
 import com.eatssu.android.domain.usecase.review.WriteReviewUseCase
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
+import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,7 @@ class WriteReviewViewModel @Inject constructor(
     private val writeReviewUseCase: WriteReviewUseCase,
     private val getImageUrlUseCase: GetImageUrlUseCase,
     private val getValidMenusOfMealUseCase: GetValidMenusOfMealUseCase,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<WriteReviewState>>(UiState.Init)
@@ -160,10 +162,12 @@ class WriteReviewViewModel @Inject constructor(
             }
 
             // 리뷰 작성 완료 로깅
-            EventLogger.completeReview(
-                rating = editing.rating.toLong(),
-                likes = editing.likedMenuIds.size.toLong(),
-                photoAttached = editing.selectedImageUri != null
+            analyticsTracker.track(
+                ReviewAnalyticsEvent.Completed(
+                    rating = editing.rating.toLong(),
+                    likes = editing.likedMenuIds.size.toLong(),
+                    photoAttached = editing.selectedImageUri != null,
+                ),
             )
 
             _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_review_write_success), ToastType.SUCCESS))

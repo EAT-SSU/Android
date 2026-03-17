@@ -13,7 +13,8 @@ import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.expectNavigateBack
 import com.eatssu.android.test.expectToast
 import com.eatssu.android.test.successDataAs
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ToastType
@@ -27,6 +28,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -41,9 +43,10 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         val writeReviewUseCase = mockk<WriteReviewUseCase>()
         val getImageUrlUseCase = mockk<GetImageUrlUseCase>()
         val getValidMenusOfMealUseCase = mockk<GetValidMenusOfMealUseCase>()
+        val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
 
         `when`("고정 메뉴 타입을 로드하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
 
             then("단일 메뉴 Editing 상태를 만든다") {
                 runTest {
@@ -64,7 +67,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("가변 메뉴 타입을 로드하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             val menus = listOf(MenuMini(10L, "A"), MenuMini(11L, "B"))
             coEvery { getValidMenusOfMealUseCase(999L) } returns menus
 
@@ -85,7 +88,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("rating이 0인 상태에서 submit하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
 
             then("요청하지 않는다") {
                 runTest {
@@ -103,7 +106,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("Editing 상태가 아닐 때 submit하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
 
             then("아무 동작도 수행하지 않는다") {
                 runTest {
@@ -119,7 +122,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("좋아요 메뉴를 같은 id로 두 번 토글하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
 
             then("likedMenuIds가 추가됐다가 다시 제거된다") {
                 runTest {
@@ -136,7 +139,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("이미지 없이 리뷰 작성이 성공하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             coEvery {
                 writeReviewUseCase(
                     menuType = MenuType.FIXED,
@@ -147,8 +150,6 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     likeMenuIdList = any(),
                 )
             } returns true
-            mockkObject(EventLogger)
-            every { EventLogger.completeReview(any(), any(), any()) } just Runs
 
             then("성공 토스트와 NavigateBack 이벤트를 보낸다") {
                 runTest {
@@ -163,6 +164,15 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
 
                         expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
                         expectNavigateBack()
+                        verify {
+                            analyticsTracker.track(
+                                ReviewAnalyticsEvent.Completed(
+                                    rating = 5,
+                                    likes = 0,
+                                    photoAttached = false,
+                                ),
+                            )
+                        }
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -170,7 +180,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("이미지 업로드 성공 후 리뷰 작성이 성공하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
@@ -187,8 +197,6 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
             coEvery {
                 writeReviewUseCase(MenuType.FIXED, 1L, 4, "", "https://img", any())
             } returns true
-            mockkObject(EventLogger)
-            every { EventLogger.completeReview(any(), any(), any()) } just Runs
 
             then("이미지 업로드 성공 토스트 후 리뷰 성공 토스트와 뒤로가기를 보낸다") {
                 runTest {
@@ -205,6 +213,15 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                         expectToast(R.string.toast_image_upload_success, ToastType.SUCCESS)
                         expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
                         expectNavigateBack()
+                        verify {
+                            analyticsTracker.track(
+                                ReviewAnalyticsEvent.Completed(
+                                    rating = 4,
+                                    likes = 0,
+                                    photoAttached = true,
+                                ),
+                            )
+                        }
                         cancelAndIgnoreRemainingEvents()
                     }
                 }
@@ -212,7 +229,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("이미지 업로드 URL이 null이면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
@@ -248,7 +265,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("이미지 압축이 실패하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
@@ -282,7 +299,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("이미지 업로드 과정에서 예외가 발생하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             val context = mockk<Context>()
             val resolver = mockk<ContentResolver>()
             val uri = mockk<Uri>()
@@ -309,7 +326,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 작성 API가 실패하면") {
-            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase)
+            val viewModel = WriteReviewViewModel(writeReviewUseCase, getImageUrlUseCase, getValidMenusOfMealUseCase, analyticsTracker)
             coEvery { writeReviewUseCase(MenuType.FIXED, 1L, 3, "", null, any()) } returns false
 
             then("Editing으로 롤백하고 실패 토스트를 보낸다") {

@@ -8,8 +8,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.common.KakaoSdk
-import com.posthog.android.PostHogAndroid
-import com.posthog.android.PostHogAndroidConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,26 +34,6 @@ class App : Application(), Configuration.Provider {
             Firebase.analytics.setAnalyticsCollectionEnabled(true)
         }
 
-        setupPostHog()
-    }
-
-    private fun setupPostHog() {
-        // Create a PostHog Config with the given API key and host
-        val config = PostHogAndroidConfig(
-            apiKey = BuildConfig.POSTHOG_API_KEY,
-            host = BuildConfig.POSTHOG_HOST,
-        ).apply {
-            sessionReplay = true
-            sessionReplayConfig.screenshot = true
-            if (BuildConfig.DEBUG) {
-                sessionReplayConfig.maskAllTextInputs = false
-                sessionReplayConfig.maskAllImages = false
-            }
-        }
-
-
-        // Setup PostHog with the given Context and Config
-        PostHogAndroid.setup(this, config)
     }
 
     override val workManagerConfiguration: Configuration

@@ -9,6 +9,7 @@ import com.eatssu.android.domain.repository.OauthRepository
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.sampleToken
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.DeviceType
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
@@ -108,7 +109,8 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         val accountDataStore = mockk<AccountDataStore>()
         val tokenStore = mockk<TokenStore>()
         val settingDataStore = mockk<SettingDataStore>()
-        val useCase = LogoutUseCase(accountDataStore, tokenStore, settingDataStore)
+        val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
+        val useCase = LogoutUseCase(accountDataStore, tokenStore, settingDataStore, analyticsTracker)
 
         coJustRun { accountDataStore.clear() }
         every { tokenStore.clear() } just Runs
@@ -123,6 +125,7 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
                         tokenStore.clear()
                         settingDataStore.clear()
                     }
+                    io.mockk.verify(exactly = 1) { analyticsTracker.resetIdentity() }
                 }
             }
         }

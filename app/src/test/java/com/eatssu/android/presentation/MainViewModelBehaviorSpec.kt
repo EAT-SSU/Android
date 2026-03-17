@@ -2,11 +2,13 @@ package com.eatssu.android.presentation
 
 import app.cash.turbine.test
 import com.eatssu.android.R
+import com.eatssu.android.analytics.AnalyticsIdentityManager
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
+import com.eatssu.android.domain.usecase.user.GetUserEmailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.android.test.AppBehaviorSpec
@@ -34,6 +36,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
         val setUserCollegeDepartmentUseCase = mockk<SetUserCollegeDepartmentUseCase>()
         val userRepository = mockk<UserRepository>()
         val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
+        val getUserEmailUseCase = mockk<GetUserEmailUseCase>()
+        val analyticsIdentityManager = mockk<AnalyticsIdentityManager>(relaxed = true)
 
         val college = College(collegeId = 1, collegeName = "IT")
         val department = Department(departmentId = 11, departmentName = "컴퓨터학부")
@@ -45,6 +49,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
 
         coEvery { logoutUseCase() } returns Unit
         coEvery { getUserNickNameUseCase() } returns "eatssu"
+        coEvery { getUserEmailUseCase() } returns "test@soongsil.ac.kr"
         coEvery { getUserCollegeDepartmentUseCase() } returns userInfo
         coEvery { userRepository.getUserCollegeDepartment() } returns (college to department)
         coEvery { setUserCollegeDepartmentUseCase(college, department) } returns Unit
@@ -56,6 +61,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
                 userRepository = userRepository,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                getUserEmailUseCase = getUserEmailUseCase,
+                analyticsIdentityManager = analyticsIdentityManager,
             )
 
             then("부서명이 반영된 DepartmentState로 전이된다") {
@@ -87,6 +94,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
                         userRepository = userRepository,
                         getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                        getUserEmailUseCase = getUserEmailUseCase,
+                        analyticsIdentityManager = analyticsIdentityManager,
                     )
 
                     advanceUntilIdle()
@@ -126,6 +135,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
                         userRepository = userRepository,
                         getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                        getUserEmailUseCase = getUserEmailUseCase,
+                        analyticsIdentityManager = analyticsIdentityManager,
                     )
 
                     viewModel.uiEvent.test {
@@ -153,6 +164,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
                         userRepository = userRepository,
                         getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                        getUserEmailUseCase = getUserEmailUseCase,
+                        analyticsIdentityManager = analyticsIdentityManager,
                     )
 
                     viewModel.uiEvent.test {
@@ -171,6 +184,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
                 userRepository = userRepository,
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                getUserEmailUseCase = getUserEmailUseCase,
+                analyticsIdentityManager = analyticsIdentityManager,
             )
 
             then("로그아웃 유즈케이스 호출 후 성공 토스트와 LoggedOut 상태를 반영한다") {

@@ -52,6 +52,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
+import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
@@ -62,10 +63,10 @@ import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
-import com.eatssu.common.EventLogger
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
+import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
 import com.eatssu.common.enums.ToastType
@@ -287,6 +288,8 @@ internal fun MapScreen(
     departmentName: String?,
     selectedFilter: FilterType,
 ) {
+    val analyticsTracker = LocalAnalyticsTracker.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -323,14 +326,16 @@ internal fun MapScreen(
         // 특정 식당에 대한 제휴 정보 BottomSheet
         if (partnershipSheetState.isVisible) {
             mapState.restaurantPartnershipInfo?.let { info ->
-
                 mapState.storeType?.let { storeType ->
-
-                    EventLogger.clickPartnerRestaurant(
-                        college = collegeId,
-                        major = departmentId,
-                        partnerRestaurantId = info.id.toLong()
-                    )
+                    LaunchedEffect(info.id, collegeId, departmentId) {
+                        analyticsTracker.track(
+                            MapAnalyticsEvent.PartnerRestaurantClicked(
+                                college = collegeId,
+                                major = departmentId,
+                                partnerRestaurantId = info.id.toLong(),
+                            ),
+                        )
+                    }
 
                     MapRestaurantBottomSheet(
                         storeName = info.storeName,

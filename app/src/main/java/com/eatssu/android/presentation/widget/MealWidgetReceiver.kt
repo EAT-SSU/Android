@@ -4,14 +4,19 @@ import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import com.eatssu.android.presentation.widget.ui.MealWidget
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.WidgetAnalyticsEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MealWidgetReceiver : GlanceAppWidgetReceiver() {
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     override val glanceAppWidget: GlanceAppWidget
         get() = MealWidget()
 
@@ -35,7 +40,7 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
                     Timber.d("Deleted DataStore file for widget $appWidgetId")
                 }
 
-                EventLogger.removeWidget()
+                analyticsTracker.track(WidgetAnalyticsEvent.Removed())
 
             }
         } catch (e: Exception) {

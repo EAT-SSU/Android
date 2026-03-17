@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
+import com.eatssu.android.analytics.AnalyticsIdentityManager
 import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
@@ -28,7 +29,8 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
-    private val setUserEmailUseCase: SetUserEmailUseCase
+    private val setUserEmailUseCase: SetUserEmailUseCase,
+    private val analyticsIdentityManager: AnalyticsIdentityManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<LoginState>>(UiState.Init)
@@ -55,6 +57,7 @@ class LoginViewModel @Inject constructor(
             setAccessTokenUseCase(token.accessToken)
             setRefreshTokenUseCase(token.refreshToken)
             setUserEmailUseCase(email)
+            analyticsIdentityManager.identifyUser(email = email)
 
             _uiState.value = UiState.Success(LoginState.LoginSuccess)
         }

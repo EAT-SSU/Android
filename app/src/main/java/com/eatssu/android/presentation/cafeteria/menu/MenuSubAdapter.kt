@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.cafeteria.review.ReviewComposeActivity
-import com.eatssu.common.EventLogger
+import com.eatssu.common.analytics.CafeteriaAnalyticsEvent
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 
@@ -18,6 +19,7 @@ import com.eatssu.common.enums.Restaurant
 class MenuSubAdapter(
     private val dataList: List<Menu>,
     private val restaurant: Restaurant,
+    private val analyticsTracker: AnalyticsTracker,
 ) :
     RecyclerView.Adapter<MenuSubAdapter.ViewHolder>() {
 
@@ -58,7 +60,7 @@ class MenuSubAdapter(
                     }
                 }
                 ContextCompat.startActivity(binding.root.context, intent, null)
-                EventLogger.clickMenu(restaurant)
+                analyticsTracker.track(CafeteriaAnalyticsEvent.MenuClicked(restaurant))
                 // Re-enable after short delay
                 binding.root.postDelayed({ binding.root.isEnabled = true }, 800)
             }
