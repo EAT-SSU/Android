@@ -1,8 +1,8 @@
 ko: |
-  - 알림 권한을 허용했을 때만 필요한 안내가 보이도록 개선해 더 자연스럽게 이용할 수 있어요.
-  - 일부 안내 메시지와 팝업 표현을 다듬어 화면 전환 중에도 더 일관된 경험을 제공해요.
-  - 앱의 내부 품질과 안정성을 정비해 전반적인 사용 경험을 더 안정적으로 개선했어요.
+  - 알림 권한을 허용했을 때만 필요한 안내가 보이도록 개선했어요.
+  - 일부 안내 메시지와 팝업 표현을 다듬었어요.
+  - 앱의 내부 품질과 안정성을 정비했어요.
 en: |
-  - Improved notification guidance so messages appear only when notification permission is enabled.
-  - Refined in-app messages and popups for a more consistent experience across screens.
-  - Improved internal quality and stability for a more reliable overall app experience.
+  - Improved notification guidance so it appears only when notification permission is allowed.
+  - Refined some in-app messages and popup wording.
+  - Improved the app's internal quality and stability.
