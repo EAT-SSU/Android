@@ -18,8 +18,22 @@ import javax.inject.Singleton
 class GetPublicHolidaysOfMonthUseCase @Inject constructor(
     private val publicHolidayRepository: PublicHolidayRepository,
 ) {
+    companion object {
+        private const val MAX_CACHE_SIZE: Int = 12
+    }
+
     private val mutex = Mutex()
-    private val cache: MutableMap<YearMonth, List<PublicHoliday>> = linkedMapOf()
+    private val cache = object : LinkedHashMap<YearMonth, List<PublicHoliday>>(
+        /* initialCapacity = */ MAX_CACHE_SIZE,
+        /* loadFactor = */ 0.75f,
+        /* accessOrder = */ true,
+    ) {
+        override fun removeEldestEntry(
+            eldest: MutableMap.MutableEntry<YearMonth, List<PublicHoliday>>,
+        ): Boolean {
+            return size > MAX_CACHE_SIZE
+        }
+    }
 
     suspend operator fun invoke(yearMonth: YearMonth): List<PublicHoliday> {
         mutex.withLock {

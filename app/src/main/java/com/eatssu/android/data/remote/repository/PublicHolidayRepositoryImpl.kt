@@ -77,12 +77,6 @@ class PublicHolidayRepositoryImpl @Inject constructor(
         return holidays
     }
 
-    override suspend fun getHoliday(date: LocalDate): PublicHoliday? {
-        val yearMonth = YearMonth.from(date)
-        val holidays = getHolidays(yearMonth)
-        return holidays.firstOrNull { it.date == date }
-    }
-
     private fun parseLocdate(locdate: Long): LocalDate? {
         val s = locdate.toString()
         if (s.length != 8) return null
