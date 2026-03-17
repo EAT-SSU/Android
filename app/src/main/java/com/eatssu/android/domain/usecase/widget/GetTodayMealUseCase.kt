@@ -67,4 +67,3 @@ class GetTodayMealUseCase @Inject constructor(
         }
     )
 }
-

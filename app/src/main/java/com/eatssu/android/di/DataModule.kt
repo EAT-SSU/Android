@@ -7,6 +7,7 @@ import com.eatssu.android.data.remote.repository.MealRepositoryImpl
 import com.eatssu.android.data.remote.repository.MenuRepositoryImpl
 import com.eatssu.android.data.remote.repository.OauthRepositoryImpl
 import com.eatssu.android.data.remote.repository.PartnershipRepositoryImpl
+import com.eatssu.android.data.remote.repository.PublicHolidayRepositoryImpl
 import com.eatssu.android.data.remote.repository.ReportRepositoryImpl
 import com.eatssu.android.data.remote.repository.ReviewRepositoryImpl
 import com.eatssu.android.data.remote.repository.UserRepositoryImpl
@@ -16,6 +17,7 @@ import com.eatssu.android.domain.repository.MealRepository
 import com.eatssu.android.domain.repository.MenuRepository
 import com.eatssu.android.domain.repository.OauthRepository
 import com.eatssu.android.domain.repository.PartnershipRepository
+import com.eatssu.android.domain.repository.PublicHolidayRepository
 import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.android.domain.repository.UserRepository
@@ -72,4 +74,9 @@ abstract class DataModule {
     internal abstract fun bindsFirebaseRemoteConfigRepository(
         firebaseRemoteConfigRepositoryImpl: FirebaseRemoteConfigRepositoryImpl,
     ): FirebaseRemoteConfigRepository
+
+    @Binds
+    internal abstract fun bindsPublicHolidayRepository(
+        publicHolidayRepositoryImpl: PublicHolidayRepositoryImpl,
+    ): PublicHolidayRepository
 }
