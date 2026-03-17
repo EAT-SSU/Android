@@ -86,15 +86,6 @@ class MenuFragment : Fragment() {
             menuViewModel.uiState.collect { state ->
                 if (state !is UiState.Success) return@collect
 
-                val publicHolidayName = state.data.publicHolidayName
-                if (publicHolidayName.isNullOrBlank()) {
-                    binding.tvHolidayBanner.visibility = View.GONE
-                } else {
-                    binding.tvHolidayBanner.visibility = View.VISIBLE
-                    binding.tvHolidayBanner.text =
-                        getString(com.eatssu.android.R.string.menu_public_holiday_banner, publicHolidayName)
-                }
-
                 val menuMap = state.data.menuMap
                 Timber.d("Menu map received: $menuMap")
 

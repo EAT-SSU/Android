@@ -31,7 +31,6 @@ class MenuViewModel @Inject constructor(
             _uiState.value = UiState.Success(
                 MenuState(
                     menuMap = result.menuMap,
-                    publicHolidayName = result.publicHolidayName,
                 )
             )
         }
@@ -40,5 +39,4 @@ class MenuViewModel @Inject constructor(
 
 data class MenuState(
     val menuMap: Map<Restaurant, List<Menu>> = emptyMap(),
-    val publicHolidayName: String? = null,
 )

@@ -43,7 +43,6 @@ class LoadMenusUseCase @Inject constructor(
 
         MenuLoadResult(
             menuMap = menuMap,
-            publicHolidayName = holiday?.name,
         )
     }
 
