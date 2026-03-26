@@ -36,7 +36,7 @@ abstract class BaseActivity<B : ViewBinding>(
 ) : AppCompatActivity() {
 
     @Inject
-    protected lateinit var analyticsTracker: AnalyticsTracker
+    lateinit var analyticsTracker: AnalyticsTracker
 
     private var _binding: B? = null
     val binding get() = _binding!!
