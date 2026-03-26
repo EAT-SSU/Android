@@ -91,9 +91,10 @@ class ReviewRepositoryImplBehaviorSpec : AppBehaviorSpec({
             val requestSlot = slot<WriteMenuReviewRequest>()
             coEvery { service.writeMenuReview(capture(requestSlot)) } returns ApiResult.Success(Unit)
 
-            then("첫 번째 likeMenuId만 menuLike로 매핑한다") {
+            then("menuId와 isLike를 menuLike로 전달한다") {
                 runTest {
                     repository.writeMenuReview(
+                        menuId = 9L,
                         rating = 3,
                         content = "메뉴리뷰",
                         imageUrls = listOf("img"),
@@ -114,15 +115,19 @@ class ReviewRepositoryImplBehaviorSpec : AppBehaviorSpec({
             val requestSlot = slot<WriteMenuReviewRequest>()
             coEvery { service.writeMenuReview(capture(requestSlot)) } returns ApiResult.Success(Unit)
 
-            then("menuLike=null로 전달한다") {
+            then("menuLike.isLike=false로 전달한다") {
                 runTest {
                     repository.writeMenuReview(
+                        menuId = 1L,
                         rating = 2,
                         content = "x",
                         imageUrls = emptyList(),
                         likeMenuIdList = null,
                     )
-                    requestSlot.captured.menuLike shouldBe null
+                    requestSlot.captured.menuLike shouldBe WriteMenuReviewRequest.MenuLike(
+                        menuId = 1L,
+                        isLike = false,
+                    )
                 }
             }
         }
@@ -131,16 +136,20 @@ class ReviewRepositoryImplBehaviorSpec : AppBehaviorSpec({
             val requestSlot = slot<WriteMenuReviewRequest>()
             coEvery { service.writeMenuReview(capture(requestSlot)) } returns ApiResult.Success(Unit)
 
-            then("menuLike=null로 전달하고 정상 처리한다") {
+            then("menuLike.isLike=false로 전달하고 정상 처리한다") {
                 runTest {
                     repository.writeMenuReview(
+                        menuId = 1L,
                         rating = 1,
                         content = "x",
                         imageUrls = emptyList(),
                         likeMenuIdList = emptyList(),
                     ) shouldBe true
 
-                    requestSlot.captured.menuLike shouldBe null
+                    requestSlot.captured.menuLike shouldBe WriteMenuReviewRequest.MenuLike(
+                        menuId = 1L,
+                        isLike = false,
+                    )
                 }
             }
         }

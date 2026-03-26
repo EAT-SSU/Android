@@ -18,6 +18,7 @@ interface ReviewRepository {
     ): Boolean
 
     suspend fun writeMenuReview(
+        menuId: Long,
         rating: Int,
         content: String,
         imageUrls: List<String>,

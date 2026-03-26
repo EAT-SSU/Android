@@ -51,6 +51,7 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
     }
 
     override suspend fun writeMenuReview(
+        menuId: Long,
         rating: Int,
         content: String,
         imageUrls: List<String>,
@@ -61,12 +62,10 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
             rating = rating,
             content = content,
             imageUrls = imageUrls,
-            menuLike = likeMenuIdList?.firstOrNull()?.let {
-                WriteMenuReviewRequest.MenuLike(
-                    menuId = it,
-                    isLike = true,
-                )
-            }
+            menuLike = WriteMenuReviewRequest.MenuLike(
+                menuId = menuId,
+                isLike = likeMenuIdList?.contains(menuId) == true,
+            ),
         )
         return reviewService.writeMenuReview(request).isSuccess()
     }
