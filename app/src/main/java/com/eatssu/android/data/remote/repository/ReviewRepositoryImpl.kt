@@ -64,7 +64,7 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
             imageUrls = imageUrls,
             menuLike = WriteMenuReviewRequest.MenuLike(
                 menuId = menuId,
-                isLike = likeMenuIdList?.contains(menuId) == true,
+                isLike = likeMenuIdList?.contains(menuId) ?: false,
             ),
         )
         return reviewService.writeMenuReview(request).isSuccess()
