@@ -148,7 +148,7 @@ class ReviewDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
 
             then("true를 반환한다") {
                 runTest {
-                    useCase(reviewId, reportType, content) shouldBe true
+                    useCase(reviewId = reviewId, reportType = reportType, content = content) shouldBe true
                 }
             }
         }
