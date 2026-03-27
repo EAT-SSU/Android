@@ -38,8 +38,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.graphics.drawable.ColorDrawable
+import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 
 @Composable
 fun EatSsuDialog(
@@ -54,6 +60,7 @@ fun EatSsuDialog(
 ) {
     if (!visible) return
 
+    val view = LocalView.current
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -61,11 +68,22 @@ fun EatSsuDialog(
             decorFitsSystemWindows = false
         )
     ) {
+        SideEffect {
+            (view.parent as? DialogWindowProvider)?.window?.let { window ->
+                window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+                window.setDimAmount(0f)
+            }
+        }
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.3f))
+                .background(Color.Black.copy(alpha = 0.3f)),
+            contentAlignment = Alignment.Center
         ) {
             AnimatedVisibility(
                 visible = visible,
@@ -77,7 +95,6 @@ fun EatSsuDialog(
             ) {
                 Surface(
                     modifier = Modifier
-                        .align(Alignment.Center)
                         .padding(24.dp),
                     shape = RoundedCornerShape(28.dp),
                     color = White
