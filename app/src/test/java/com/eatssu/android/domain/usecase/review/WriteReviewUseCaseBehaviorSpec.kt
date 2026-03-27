@@ -20,6 +20,7 @@ class WriteReviewUseCaseBehaviorSpec : AppBehaviorSpec({
         `when`("FIXED 메뉴에 이미지 없이 작성하면") {
             coEvery {
                 reviewRepository.writeMenuReview(
+                    menuId = 100L,
                     rating = 5,
                     content = "good",
                     imageUrls = emptyList(),
@@ -40,6 +41,7 @@ class WriteReviewUseCaseBehaviorSpec : AppBehaviorSpec({
 
                     coVerify(exactly = 1) {
                         reviewRepository.writeMenuReview(
+                            menuId = 100L,
                             rating = 5,
                             content = "good",
                             imageUrls = emptyList(),
@@ -53,6 +55,7 @@ class WriteReviewUseCaseBehaviorSpec : AppBehaviorSpec({
         `when`("FIXED 메뉴에 이미지가 있으면") {
             coEvery {
                 reviewRepository.writeMenuReview(
+                    menuId = 100L,
                     rating = 4,
                     content = "",
                     imageUrls = listOf("https://img"),

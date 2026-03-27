@@ -18,6 +18,7 @@ class WriteReviewUseCase @Inject constructor(
         when (menuType) {
             MenuType.FIXED -> {
                 return reviewRepository.writeMenuReview(
+                    menuId = itemId,
                     rating = rating,
                     content = content,
                     imageUrls = if (imageUrl != null) listOf(imageUrl) else emptyList(),
