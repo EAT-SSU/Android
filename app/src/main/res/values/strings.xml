@@ -146,6 +146,10 @@
     <string name="review_settings">리뷰 설정</string>
     <string name="review_error_occurred">에러가 발생했습니다.</string>
     <string name="review_write">리뷰 작성하기</string>
+    <string name="review_exit_dialog_title">나가시겠어요?</string>
+    <string name="review_exit_dialog_description">지금 나가면 작성한 내용이 저장되지 않습니다.</string>
+    <string name="review_exit_dialog_confirm">계속 작성</string>
+    <string name="review_exit_dialog_dismiss">나가기</string>
 
     <!-- ========================== -->
     <!-- Review List -->

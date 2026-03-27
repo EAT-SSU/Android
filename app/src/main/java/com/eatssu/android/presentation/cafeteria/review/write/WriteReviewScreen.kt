@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.cafeteria.review.write
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -30,6 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,9 +43,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.presentation.cafeteria.review.write.component.MenuLikeButtonItem
@@ -53,6 +57,7 @@ import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
+import com.eatssu.design_system.component.EatSsuDialog
 import com.eatssu.design_system.component.RatingBarMedium
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
@@ -62,7 +67,7 @@ import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.Primary
-import androidx.core.net.toUri
+import coil.compose.AsyncImage
 
 const val MAX_TEXT_COUNT = 300
 
@@ -102,6 +107,40 @@ fun WriteReviewScreen(
         }
     }
 
+    var showExitDialog by remember { mutableStateOf(false) }
+
+    val hasUnsavedChanges = when (val data = (ui as? UiState.Success)?.data) {
+        is WriteReviewState.Editing -> data.rating > 0 || data.content.isNotEmpty() || data.selectedImageUri != null
+        else -> false
+    }
+
+    val handleBack = {
+        if (hasUnsavedChanges) {
+            showExitDialog = true
+        } else {
+            onBack()
+        }
+    }
+
+    BackHandler(enabled = true) {
+        handleBack()
+    }
+
+    if (showExitDialog) {
+        EatSsuDialog(
+            title = stringResource(R.string.review_exit_dialog_title),
+            description = stringResource(R.string.review_exit_dialog_description),
+            confirmText = stringResource(R.string.review_exit_dialog_confirm),
+            dismissText = stringResource(R.string.review_exit_dialog_dismiss),
+            onConfirmClick = { showExitDialog = false },
+            onDismissButtonClick = {
+                showExitDialog = false
+                onBack()
+            },
+            onDismissRequest = { showExitDialog = false }
+        )
+    }
+
     when (val data = (ui as? UiState.Success)?.data) {
         is WriteReviewState.Editing -> {
             WriteReviewScreen(
@@ -113,7 +152,7 @@ fun WriteReviewScreen(
                 likedMenuIds = data.likedMenuIds,
                 selectedImageUri = data.selectedImageUri,
                 isPosting = false,
-                onBack = onBack,
+                onBack = handleBack,
                 onRatingChanged = viewModel::onRatingChanged,
                 onContentChanged = { new ->
                     if (new.length <= MAX_TEXT_COUNT) viewModel.onContentChanged(new)
@@ -135,7 +174,7 @@ fun WriteReviewScreen(
                 likedMenuIds = data.likedMenuIds,
                 selectedImageUri = data.selectedImageUri,
                 isPosting = true,
-                onBack = onBack,
+                onBack = handleBack,
                 onRatingChanged = {}, // 비활성
                 onContentChanged = {}, // 비활성
                 onToggleLike = {}, // 비활성
