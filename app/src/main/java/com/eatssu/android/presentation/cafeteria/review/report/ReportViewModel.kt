@@ -3,7 +3,6 @@ package com.eatssu.android.presentation.cafeteria.review.report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
-import com.eatssu.android.data.remote.dto.request.ReportRequest
 import com.eatssu.android.domain.usecase.review.PostReportUseCase
 import com.eatssu.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +28,7 @@ class ReportViewModel
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true) }
 
-            val success = postReportUseCase(ReportRequest(reviewId, reportType, content))
+            val success = postReportUseCase(reviewId, reportType, content)
             if (!success) {
                 _uiState.update {
                     it.copy(

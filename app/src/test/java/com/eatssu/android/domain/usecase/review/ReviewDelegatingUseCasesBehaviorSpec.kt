@@ -1,7 +1,6 @@
 package com.eatssu.android.domain.usecase.review
 
 import androidx.paging.PagingData
-import com.eatssu.android.data.remote.dto.request.ReportRequest
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.domain.repository.ReviewRepository
@@ -140,28 +139,26 @@ class ReviewDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
     given("PostReportUseCase") {
         val reportRepository = mockk<ReportRepository>()
         val useCase = PostReportUseCase(reportRepository)
-        val body = ReportRequest(
-            reviewId = 3L,
-            reportType = "SPAM",
-            content = "신고 사유",
-        )
+        val reviewId = 3L
+        val reportType = "SPAM"
+        val content = "신고 사유"
 
         `when`("신고가 성공하면") {
-            coEvery { reportRepository.reportReview(body) } returns true
+            coEvery { reportRepository.reportReview(reviewId, reportType, content) } returns true
 
             then("true를 반환한다") {
                 runTest {
-                    useCase(body) shouldBe true
+                    useCase(reviewId, reportType, content) shouldBe true
                 }
             }
         }
 
         `when`("신고가 실패하면") {
-            coEvery { reportRepository.reportReview(body) } returns false
+            coEvery { reportRepository.reportReview(reviewId, reportType, content) } returns false
 
             then("false를 반환한다") {
                 runTest {
-                    useCase(body) shouldBe false
+                    useCase(reviewId, reportType, content) shouldBe false
                 }
             }
         }
