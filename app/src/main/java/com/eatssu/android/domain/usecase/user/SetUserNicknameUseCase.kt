@@ -1,28 +1,15 @@
 package com.eatssu.android.domain.usecase.user
 
 import com.eatssu.android.data.local.AccountDataStore
-import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.repository.UserRepository
 import javax.inject.Inject
-
-//class SetUserNameUseCase @Inject constructor(
-//    private val userRepository: UserRepository,
-//    @ApplicationContext private val context: Context
-//) {
-//    suspend operator fun invoke(name: String): Flow<BaseResponse<Void>> {
-//        MySharedPreferences.setUserName(context, name)
-//        //Todo 이게 최선일까? 로컬에 이름 Set과 리모트의 이름 change를 usecase를 따로 만들어야하나?
-//
-//        return userRepository.updateUserName(ChangeNicknameRequest(name))
-//    }
-//}
 
 class SetUserNicknameUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val accountDataStore: AccountDataStore
 ) {
     suspend operator fun invoke(nickname: String): Result<Unit> {
-        val result = userRepository.updateUserName(ChangeNicknameRequest(nickname))
+        val result = userRepository.updateUserName(nickname)
         if (result.isSuccess) {
             // 서버 닉네임 변경이 성공한 경우에만 로컬 닉네임 변경
             accountDataStore.setName(nickname)

@@ -28,7 +28,7 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("Result.success를 반환한다") {
                 runTest {
-                    repository.updateUserName(ChangeNicknameRequest("new")).isSuccess shouldBe true
+                    repository.updateUserName("new").isSuccess shouldBe true
                 }
             }
         }
@@ -40,7 +40,7 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("서버 메시지를 포함한 실패 Result를 반환한다") {
                 runTest {
-                    val result = repository.updateUserName(ChangeNicknameRequest("new"))
+                    val result = repository.updateUserName("new")
                     result.isFailure shouldBe true
                     result.exceptionOrNull()?.message shouldBe "bad nickname"
                 }
@@ -54,7 +54,7 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("기본 실패 메시지를 반환한다") {
                 runTest {
-                    val result = repository.updateUserName(ChangeNicknameRequest("new"))
+                    val result = repository.updateUserName("new")
                     result.isFailure shouldBe true
                     result.exceptionOrNull()?.message shouldBe "닉네임 변경에 실패했어요."
                 }
@@ -68,7 +68,7 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("기본 실패 메시지를 반환한다") {
                 runTest {
-                    val result = repository.updateUserName(ChangeNicknameRequest("new"))
+                    val result = repository.updateUserName("new")
                     result.isFailure shouldBe true
                     result.exceptionOrNull()?.message shouldBe "닉네임 변경에 실패했어요."
                 }

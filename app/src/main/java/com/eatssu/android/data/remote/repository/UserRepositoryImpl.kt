@@ -19,8 +19,8 @@ class UserRepositoryImpl @Inject constructor(
     private val userService: UserService
 ) : UserRepository {
 
-    override suspend fun updateUserName(body: ChangeNicknameRequest): Result<Unit> =
-        when (val result = userService.changeNickname(body)) {
+    override suspend fun updateUserName(nickname: String): Result<Unit> =
+        when (val result = userService.changeNickname(ChangeNicknameRequest(nickname))) {
             is ApiResult.Success -> Result.success(Unit)
             is ApiResult.Failure -> Result.failure(Exception(result.message ?: "닉네임 변경에 실패했어요."))
             else -> Result.failure(Exception("닉네임 변경에 실패했어요."))
