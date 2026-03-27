@@ -9,7 +9,7 @@ class PostReportUseCase @Inject constructor(
     suspend operator fun invoke(
         reviewId: Long,
         reportType: String,
-        content: String
+        content: String,
     ): Boolean =
         reportRepository.reportReview(
             reviewId = reviewId,
