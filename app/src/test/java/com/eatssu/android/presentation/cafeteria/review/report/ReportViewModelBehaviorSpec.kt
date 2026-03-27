@@ -32,7 +32,7 @@ class ReportViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.uiState.value.toastMessage.asStringResIdOrNull() shouldBe R.string.toast_report_failed
                     viewModel.uiState.value.isDone shouldBe false
 
-                    coVerify { postReportUseCase(1L, "COPY", "bad") }
+                    coVerify { postReportUseCase(reviewId = 1L, reportType = "COPY", content = "bad") }
                 }
             }
         }
