@@ -16,9 +16,9 @@ class ReportRepositoryImpl @Inject constructor(private val reportService: Report
     ): Boolean =
         reportService.reportReview(
             ReportRequest(
-                reviewId,
-                reportType,
-                content
+                reviewId = reviewId,
+                reportType = reportType,
+                content = content
             )
         ).isSuccess()
 
