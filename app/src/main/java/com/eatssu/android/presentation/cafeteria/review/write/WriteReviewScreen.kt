@@ -137,7 +137,8 @@ fun WriteReviewScreen(
                 showExitDialog = false
                 onBack()
             },
-            onDismissRequest = { showExitDialog = false }
+            onDismissRequest = { showExitDialog = false },
+            visible = showExitDialog
         )
     }
 
