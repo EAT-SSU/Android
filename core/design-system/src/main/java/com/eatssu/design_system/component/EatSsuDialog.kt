@@ -60,7 +60,6 @@ fun EatSsuDialog(
 ) {
     if (!visible) return
 
-    val view = LocalView.current
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -68,6 +67,7 @@ fun EatSsuDialog(
             decorFitsSystemWindows = false
         )
     ) {
+        val view = LocalView.current
         SideEffect {
             (view.parent as? DialogWindowProvider)?.window?.let { window ->
                 window.setLayout(
