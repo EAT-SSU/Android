@@ -55,6 +55,12 @@ class EnumsBehaviorSpec : BehaviorSpec({
                 )
             }
         }
+
+        `when`("analytics value를 확인하면") {
+            then("기숙사 식당은 설계 문서 기준 값으로 노출된다") {
+                Restaurant.DORMITORY.value shouldBe "dormitory"
+            }
+        }
     }
 
     given("ReportType") {

@@ -127,7 +127,6 @@ class MapViewModel @Inject constructor(
         when (filter) {
             FilterType.All -> {
                 loadPartnerships()
-                analyticsTracker.track(MapAnalyticsEvent.AllClicked)
             }
 
             FilterType.Mine -> {

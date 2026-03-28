@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.widget
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.ui.MealWidget
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.WidgetAnalyticsEvent
@@ -16,6 +17,9 @@ import javax.inject.Inject
 class MealWidgetReceiver : GlanceAppWidgetReceiver() {
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
+
+    @Inject
+    lateinit var loadRestaurantByFileKeyUseCase: LoadRestaurantByFileKeyUseCase
 
     override val glanceAppWidget: GlanceAppWidget
         get() = MealWidget()
@@ -32,15 +36,17 @@ class MealWidgetReceiver : GlanceAppWidgetReceiver() {
     private fun cleanupWidgetDataStore(context: Context, appWidgetId: Int) {
         try {
             runBlocking {
+                val widgetFileKey = "appWidget-$appWidgetId"
                 val filename = "appWidgetLayout-${appWidgetId}"
                 val dataStoreFile = File(context.filesDir, "datastore/$filename")
+                val restaurant = loadRestaurantByFileKeyUseCase(widgetFileKey)
 
                 if (dataStoreFile.exists()) {
                     dataStoreFile.delete()
                     Timber.d("Deleted DataStore file for widget $appWidgetId")
                 }
 
-                analyticsTracker.track(WidgetAnalyticsEvent.Removed())
+                analyticsTracker.track(WidgetAnalyticsEvent.Removed(restaurant))
 
             }
         } catch (e: Exception) {

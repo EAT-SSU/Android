@@ -30,7 +30,7 @@ class DefaultAnalyticsTrackerTest {
         val second = FakeAnalyticsTracker(id = "duplicate")
         val analyticsTracker = DefaultAnalyticsTracker(setOf(first, second))
 
-        analyticsTracker.track(MapAnalyticsEvent.AllClicked)
+        analyticsTracker.track(MapAnalyticsEvent.EntryClicked)
 
         assertEquals(1, first.events.size + second.events.size)
     }
@@ -57,7 +57,7 @@ class DefaultAnalyticsTrackerTest {
         val failingTracker = FakeAnalyticsTracker(id = "firebase", failOnTrack = true)
         val healthyTracker = FakeAnalyticsTracker(id = "posthog")
         val analyticsTracker = DefaultAnalyticsTracker(setOf(failingTracker, healthyTracker))
-        val event = MapAnalyticsEvent.AllClicked
+        val event = MapAnalyticsEvent.EntryClicked
 
         analyticsTracker.track(event)
 
