@@ -1,0 +1,4 @@
+ko: |
+  - 단일 메뉴 리뷰가 정상적으로 등록되도록 오류를 수정했어요.
+en: |
+  - Fixed an issue where writing a review for a single menu item could fail.
