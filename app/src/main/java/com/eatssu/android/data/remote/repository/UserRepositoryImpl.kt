@@ -23,7 +23,8 @@ class UserRepositoryImpl @Inject constructor(
         when (val result = userService.changeNickname(ChangeNicknameRequest(nickname))) {
             is ApiResult.Success -> Result.success(Unit)
             is ApiResult.Failure -> Result.failure(Exception(result.message ?: "닉네임 변경에 실패했어요."))
-            else -> Result.failure(Exception("닉네임 변경에 실패했어요."))
+            is ApiResult.NetworkError -> Result.failure(result.exception)
+            is ApiResult.UnknownError -> Result.failure(result.exception)
         }
 
     override suspend fun checkUserNameValidation(nickname: String): Result<Unit> {

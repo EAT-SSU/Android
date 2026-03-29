@@ -66,11 +66,11 @@ class UserRepositoryImplBehaviorSpec : AppBehaviorSpec({
                 userService.changeNickname(ChangeNicknameRequest("new"))
             } returns ApiResult.UnknownError(IllegalStateException("boom"))
 
-            then("기본 실패 메시지를 반환한다") {
+            then("exception을 그대로 담은 실패 Result를 반환한다") {
                 runTest {
                     val result = repository.updateUserName("new")
                     result.isFailure shouldBe true
-                    result.exceptionOrNull()?.message shouldBe "닉네임 변경에 실패했어요."
+                    result.exceptionOrNull()?.message shouldBe "boom"
                 }
             }
         }
