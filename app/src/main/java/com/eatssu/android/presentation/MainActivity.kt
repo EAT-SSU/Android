@@ -46,6 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 ) {
     companion object {
         private const val ENABLE_ANYONE_BUT_ME_POPUP = false
+        private const val ENABLE_ANYONE_BUT_ME_TOOLTIP = false
     }
 
     @Inject
@@ -67,7 +68,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         setupNoToolbar()
         setNavigation()
         bindEventPopup(showOnLaunch = ENABLE_ANYONE_BUT_ME_POPUP && savedInstanceState == null)
-        bindEventTooltip()
+        if (ENABLE_ANYONE_BUT_ME_TOOLTIP) {
+            bindEventTooltip()
+        }
 
         checkAlarmPermission()
         collectState()
