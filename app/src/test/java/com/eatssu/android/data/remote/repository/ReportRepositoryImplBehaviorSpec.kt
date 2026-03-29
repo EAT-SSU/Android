@@ -27,7 +27,11 @@ class ReportRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("true를 반환한다") {
                 runTest {
-                    repository.reportReview(request) shouldBe true
+                    repository.reportReview(
+                        reviewId = request.reviewId,
+                        reportType = request.reportType,
+                        content = request.content,
+                    ) shouldBe true
                 }
             }
         }
@@ -37,7 +41,11 @@ class ReportRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("false를 반환한다") {
                 runTest {
-                    repository.reportReview(request) shouldBe false
+                    repository.reportReview(
+                        reviewId = request.reviewId,
+                        reportType = request.reportType,
+                        content = request.content,
+                    ) shouldBe false
                 }
             }
         }

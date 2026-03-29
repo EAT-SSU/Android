@@ -1,7 +1,6 @@
 package com.eatssu.android.data.remote.repository
 
 import com.eatssu.android.data.model.ApiResult
-import com.eatssu.android.domain.model.ReissueTokenResult
 import com.eatssu.android.data.model.map
 import com.eatssu.android.data.model.orElse
 import com.eatssu.android.data.model.orNull
@@ -9,6 +8,7 @@ import com.eatssu.android.data.remote.dto.request.CheckValidTokenRequest
 import com.eatssu.android.data.remote.dto.request.LoginWithKakaoRequest
 import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.OauthService
+import com.eatssu.android.domain.model.ReissueTokenResult
 import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.repository.OauthRepository
 import com.eatssu.common.enums.DeviceType
@@ -43,8 +43,8 @@ class OauthRepositoryImpl @Inject constructor(private val oauthService: OauthSer
             )
         ).map { it.toDomain() }.orNull()
 
-    override suspend fun checkValidToken(body: CheckValidTokenRequest): Boolean =
-        oauthService.checkValidToken(body).orElse(false)
+    override suspend fun checkValidToken(token: String): Boolean =
+        oauthService.checkValidToken(CheckValidTokenRequest(token)).orElse(false)
 }
 
 private fun String.asAuthorizationHeaderValue(): String =

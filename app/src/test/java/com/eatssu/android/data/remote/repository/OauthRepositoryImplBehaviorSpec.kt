@@ -88,7 +88,7 @@ class OauthRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("성공값을 그대로 반환한다") {
                 runTest {
-                    repository.checkValidToken(body) shouldBe true
+                    repository.checkValidToken("access") shouldBe true
                 }
             }
         }
@@ -99,7 +99,7 @@ class OauthRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("기본값 false를 반환한다") {
                 runTest {
-                    repository.checkValidToken(body) shouldBe false
+                    repository.checkValidToken("access") shouldBe false
                 }
             }
         }

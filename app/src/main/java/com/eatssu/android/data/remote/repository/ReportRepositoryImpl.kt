@@ -9,7 +9,17 @@ import javax.inject.Inject
 class ReportRepositoryImpl @Inject constructor(private val reportService: ReportService) :
     ReportRepository {
 
-    override suspend fun reportReview(body: ReportRequest): Boolean =
-        reportService.reportReview(body).isSuccess()
+    override suspend fun reportReview(
+        reviewId: Long,
+        reportType: String,
+        content: String,
+    ): Boolean =
+        reportService.reportReview(
+            ReportRequest(
+                reviewId = reviewId,
+                reportType = reportType,
+                content = content
+            )
+        ).isSuccess()
 
 }

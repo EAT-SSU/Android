@@ -1,6 +1,5 @@
 package com.eatssu.android.domain.repository
 
-import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 
@@ -8,7 +7,7 @@ interface UserRepository {
 
     // 닉네임 변경
     suspend fun updateUserName(
-        body: ChangeNicknameRequest,
+        nickname: String,
     ): Result<Unit>
 
     // 유저 닉네임 중복 검사

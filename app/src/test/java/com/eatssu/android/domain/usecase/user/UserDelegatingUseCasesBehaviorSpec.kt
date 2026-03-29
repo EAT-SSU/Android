@@ -1,7 +1,6 @@
 package com.eatssu.android.domain.usecase.user
 
 import com.eatssu.android.data.local.AccountDataStore
-import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.sampleCollege
@@ -130,19 +129,18 @@ class UserDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         val accountDataStore = mockk<AccountDataStore>()
         val useCase = SetUserNicknameUseCase(userRepository, accountDataStore)
         val nickname = "new-nick"
-        val request = ChangeNicknameRequest(nickname)
 
         coJustRun { accountDataStore.setName(nickname) }
 
         `when`("원격 닉네임 변경이 성공하면") {
-            coEvery { userRepository.updateUserName(request) } returns Result.success(Unit)
+            coEvery { userRepository.updateUserName(nickname) } returns Result.success(Unit)
 
             then("성공 결과를 반환하고 원격 성공 후 로컬 닉네임을 저장한다") {
                 runTest {
                     val result = useCase(nickname)
                     result.isSuccess shouldBe true
                     coVerifyOrder {
-                        userRepository.updateUserName(request)
+                        userRepository.updateUserName(nickname)
                         accountDataStore.setName(nickname)
                     }
                 }
@@ -150,13 +148,15 @@ class UserDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("원격 닉네임 변경이 실패하면") {
-            coEvery { userRepository.updateUserName(request) } returns Result.failure(IllegalStateException("fail"))
+            coEvery { userRepository.updateUserName(nickname) } returns Result.failure(
+                IllegalStateException("fail")
+            )
 
             then("실패 결과를 반환하고 로컬 닉네임은 변경하지 않는다") {
                 runTest {
                     val result = useCase(nickname)
                     result.isFailure shouldBe true
-                    coVerify(exactly = 1) { userRepository.updateUserName(request) }
+                    coVerify(exactly = 1) { userRepository.updateUserName(nickname) }
                     coVerify(exactly = 0) { accountDataStore.setName(any()) }
                 }
             }

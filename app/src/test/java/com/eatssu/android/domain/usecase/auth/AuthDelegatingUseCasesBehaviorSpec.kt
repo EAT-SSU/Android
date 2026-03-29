@@ -3,7 +3,6 @@ package com.eatssu.android.domain.usecase.auth
 import com.eatssu.android.data.local.AccountDataStore
 import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.data.local.TokenStore
-import com.eatssu.android.data.remote.dto.request.CheckValidTokenRequest
 import com.eatssu.android.domain.model.ReissueTokenResult
 import com.eatssu.android.domain.repository.OauthRepository
 import com.eatssu.android.domain.repository.UserRepository
@@ -20,7 +19,6 @@ import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 
@@ -163,13 +161,12 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         val useCase = GetIsAccessTokenValidUseCase(oauthRepository)
 
         `when`("토큰 유효성 검사를 요청하면") {
-            val bodySlot = slot<CheckValidTokenRequest>()
-            coEvery { oauthRepository.checkValidToken(capture(bodySlot)) } returns true
+            coEvery { oauthRepository.checkValidToken("user-access-token") } returns true
 
-            then("CheckValidTokenRequest(token)으로 위임하고 결과를 반환한다") {
+            then("token으로 위임하고 결과를 반환한다") {
                 runTest {
                     useCase("user-access-token") shouldBe true
-                    bodySlot.captured.token shouldBe "user-access-token"
+                    coVerify(exactly = 1) { oauthRepository.checkValidToken("user-access-token") }
                 }
             }
         }
