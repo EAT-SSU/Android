@@ -44,6 +44,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ActivityMainBinding::inflate,
     ScreenId.HOME_MAIN
 ) {
+    companion object {
+        private const val ENABLE_ANYONE_BUT_ME = false
+    }
 
     @Inject
     lateinit var workManager: WorkManager
@@ -63,8 +66,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
         setupNoToolbar()
         setNavigation()
-        bindEventPopup(showOnLaunch = savedInstanceState == null)
-        bindEventTooltip()
+        if (ENABLE_ANYONE_BUT_ME) {
+            bindEventPopup(showOnLaunch = savedInstanceState == null)
+            bindEventTooltip()
+        }
 
         checkAlarmPermission()
         collectState()
