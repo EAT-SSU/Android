@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.BuildConfig.VERSION_CODE
+import com.eatssu.android.data.local.AppThemePreferences
+import com.eatssu.android.domain.model.AppTheme
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.health.HealthCheckUseCase
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class IntroViewModel @Inject constructor(
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-    private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
+    private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
+    private val appThemePreferences: AppThemePreferences,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
@@ -37,6 +40,9 @@ class IntroViewModel @Inject constructor(
     private val _versionCheckResult = MutableStateFlow<VersionCheckResult?>(null)
     val versionCheckResult: StateFlow<VersionCheckResult?> = _versionCheckResult.asStateFlow()
 
+    private val _appTheme = MutableStateFlow(appThemePreferences.getAppTheme())
+    val appTheme: StateFlow<AppTheme> = _appTheme.asStateFlow()
+
     init {
         initializeApp()
     }
@@ -46,6 +52,8 @@ class IntroViewModel @Inject constructor(
             _uiState.value = UiState.Loading
 
             try {
+                syncAppTheme()
+
                 // 1. 버전 체크 (Firebase Remote Config는 자동으로 초기화됨)
                 checkVersionUpdate()
 
@@ -57,6 +65,17 @@ class IntroViewModel @Inject constructor(
                 _uiState.value = UiState.Error
                 _uiEvent.emit(UiEvent.ShowToast(UiText.StringResource(R.string.toast_app_init_error), ToastType.ERROR))
             }
+        }
+    }
+
+    private suspend fun syncAppTheme() {
+        try {
+            val remoteTheme = firebaseRemoteConfigRepository.getAppTheme()
+            _appTheme.value = remoteTheme
+            appThemePreferences.setAppTheme(remoteTheme)
+            Timber.i("theme loaded $remoteTheme")
+        } catch (e: Exception) {
+            Timber.e(e, "앱 테마 로드 중 예외 발생")
         }
     }
 

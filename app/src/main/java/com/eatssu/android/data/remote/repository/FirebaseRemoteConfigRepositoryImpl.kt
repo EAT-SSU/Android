@@ -1,6 +1,7 @@
 package com.eatssu.android.data.remote.repository
 
 import com.eatssu.android.R
+import com.eatssu.android.domain.model.AppTheme
 import com.eatssu.android.domain.model.RestaurantInfo
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.common.enums.Restaurant
@@ -29,25 +30,27 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMinimumVersionCode(): Long {
-        // 값을 가져오기 전에 fetchAndActivate 호출
-        // min fetch interval이 지나지 않았으면 로컬 캐시를 사용하고, 지났으면 서버에서 가져옵니다.
-        try {
-            instance.fetchAndActivate().await()
-        } catch (e: Exception) {
-            Timber.e(e, "RemoteConfig fetchAndActivate 실패")
-        }
+        fetchAndActivateSafely()
         return instance.getLong("android_version_code")
     }
 
+    override suspend fun getAppTheme(): AppTheme {
+        fetchAndActivateSafely()
+        return AppTheme.fromStringOrDefault(instance.getString("app_theme"))
+    }
+
     override suspend fun getRestaurantInfo(restaurant: Restaurant): RestaurantInfo? {
-        // 값을 가져오기 전에 fetchAndActivate 호출
+        fetchAndActivateSafely()
+        return getCafeteriaInfo().find { it.enum == restaurant }
+    }
+
+    private suspend fun fetchAndActivateSafely() {
         // min fetch interval이 지나지 않았으면 로컬 캐시를 사용하고, 지났으면 서버에서 가져옵니다.
         try {
             instance.fetchAndActivate().await()
         } catch (e: Exception) {
             Timber.e(e, "RemoteConfig fetchAndActivate 실패")
         }
-        return getCafeteriaInfo().find { it.enum == restaurant }
     }
 
     private fun getCafeteriaInfo(): List<RestaurantInfo> {
