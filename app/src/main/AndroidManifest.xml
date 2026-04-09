@@ -197,12 +197,12 @@
         </activity-alias>
 
         <activity-alias
-            android:name=".alias.BlossomLauncherAlias"
+            android:name=".alias.SpringLauncherAlias"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher_blossom"
+            android:icon="@mipmap/ic_launcher_spring"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_blossom_round"
+            android:roundIcon="@mipmap/ic_launcher_spring_round"
             android:targetActivity=".presentation.intro.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
