@@ -16,6 +16,11 @@
     </entry>
 
     <entry>
+        <key>app_theme</key>
+        <value>default</value>
+    </entry>
+
+    <entry>
         <key>cafeteria_information</key>
         <value>
             [
