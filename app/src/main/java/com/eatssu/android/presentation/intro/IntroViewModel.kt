@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.BuildConfig.VERSION_CODE
-import com.eatssu.android.data.local.AppThemeDataStore
+import com.eatssu.android.data.local.AppThemePreferences
 import com.eatssu.android.domain.model.AppTheme
 import com.eatssu.android.domain.repository.FirebaseRemoteConfigRepository
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
@@ -16,11 +16,9 @@ import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,7 +28,7 @@ class IntroViewModel @Inject constructor(
     private val healthCheckUseCase: HealthCheckUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
-    private val appThemeDataStore: AppThemeDataStore,
+    private val appThemePreferences: AppThemePreferences,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<IntroState>> = MutableStateFlow(UiState.Init)
@@ -42,12 +40,8 @@ class IntroViewModel @Inject constructor(
     private val _versionCheckResult = MutableStateFlow<VersionCheckResult?>(null)
     val versionCheckResult: StateFlow<VersionCheckResult?> = _versionCheckResult.asStateFlow()
 
-    val appTheme: StateFlow<AppTheme> = appThemeDataStore.appTheme
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = appThemeDataStore.cachedAppTheme,
-        )
+    private val _appTheme = MutableStateFlow(appThemePreferences.getAppTheme())
+    val appTheme: StateFlow<AppTheme> = _appTheme.asStateFlow()
 
     init {
         initializeApp()
@@ -77,7 +71,8 @@ class IntroViewModel @Inject constructor(
     private suspend fun syncAppTheme() {
         try {
             val remoteTheme = firebaseRemoteConfigRepository.getAppTheme()
-            appThemeDataStore.setAppTheme(remoteTheme)
+            _appTheme.value = remoteTheme
+            appThemePreferences.setAppTheme(remoteTheme)
             Timber.i("theme loaded $remoteTheme")
         } catch (e: Exception) {
             Timber.e(e, "앱 테마 로드 중 예외 발생")

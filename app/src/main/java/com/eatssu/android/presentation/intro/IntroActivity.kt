@@ -25,6 +25,7 @@ import com.eatssu.common.analytics.ScreenViewEvent
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -110,25 +111,30 @@ class IntroActivity : AppCompatActivity() {
     private fun syncLauncherIcon(theme: AppTheme) {
         if (BuildConfig.DEBUG) return
 
-        val manifestPackageName = BuildConfig::class.java.packageName
-        val enabledAlias = ComponentName(packageName, manifestPackageName + theme.launcherAliasSuffix)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val currentPackageName = this@IntroActivity.packageName
+            val targetAliasName = "$currentPackageName${theme.launcherAliasSuffix}"
 
-        AppTheme.entries.forEach { appTheme ->
-            val componentName = ComponentName(packageName, manifestPackageName + appTheme.launcherAliasSuffix)
-            val newState = if (componentName == enabledAlias) {
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            } else {
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            AppTheme.entries.forEach { appTheme ->
+                val aliasName = "$currentPackageName${appTheme.launcherAliasSuffix}"
+                val componentName = ComponentName(currentPackageName, aliasName)
+                val newState = if (aliasName == targetAliasName) {
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                } else {
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                }
+
+                // 현재 상태와 다를 때만 설정 변경하여 불필요한 IPC 호출 방지
+                if (packageManager.getComponentEnabledSetting(componentName) != newState) {
+                    packageManager.setComponentEnabledSetting(
+                        componentName,
+                        newState,
+                        PackageManager.DONT_KILL_APP,
+                    )
+                }
             }
-
-            packageManager.setComponentEnabledSetting(
-                componentName,
-                newState,
-                PackageManager.DONT_KILL_APP,
-            )
+            Timber.d("런처 아이콘 테마 적용 완료: %s", theme.remoteValue)
         }
-
-        Timber.d("런처 아이콘 테마 적용: %s", theme.remoteValue)
     }
 
     private fun observeEvents() {
