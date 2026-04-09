@@ -1,12 +1,16 @@
 package com.eatssu.android.presentation.intro
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.BuildConfig
 import com.eatssu.android.databinding.ActivityIntroBinding
+import com.eatssu.android.domain.model.AppTheme
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.login.LoginActivity
@@ -23,6 +27,7 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,6 +45,10 @@ class IntroActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
         log()
+
+        // 로컬에 저장된 테마 동기로 불러오기
+        applySplashTheme(introViewModel.appTheme.value)
+        observeTheme()
 
         observeState()
         observeEvents()
@@ -63,6 +72,15 @@ class IntroActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeTheme() {
+        lifecycleScope.launch {
+            introViewModel.appTheme.collectLatest { theme ->
+                applySplashTheme(theme)
+                syncLauncherIcon(theme)
+            }
+        }
+    }
+
     private fun observeState() {
         lifecycleScope.launch {
             introViewModel.uiState.collectLatest { state ->
@@ -82,6 +100,35 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun applySplashTheme(theme: AppTheme) {
+        binding.root.setBackgroundResource(theme.splashBackgroundResId)
+        binding.ivLogo.setImageResource(theme.splashLogoResId)
+    }
+
+    private fun syncLauncherIcon(theme: AppTheme) {
+        if (BuildConfig.DEBUG) return
+
+        val manifestPackageName = BuildConfig::class.java.packageName
+        val enabledAlias = ComponentName(packageName, manifestPackageName + theme.launcherAliasSuffix)
+
+        AppTheme.entries.forEach { appTheme ->
+            val componentName = ComponentName(packageName, manifestPackageName + appTheme.launcherAliasSuffix)
+            val newState = if (componentName == enabledAlias) {
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            } else {
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            }
+
+            packageManager.setComponentEnabledSetting(
+                componentName,
+                newState,
+                PackageManager.DONT_KILL_APP,
+            )
+        }
+
+        Timber.d("런처 아이콘 테마 적용: %s", theme.remoteValue)
     }
 
     private fun observeEvents() {
