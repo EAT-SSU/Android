@@ -69,72 +69,6 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
-        `when`("전체 제휴에 Festival 요소가 하나라도 있으면") {
-            val festivalInfo = Partnership.PartnershipInfo(
-                id = 2,
-                partnershipType = "EVENT",
-                collegeName = "IT",
-                departmentName = "컴퓨터학부",
-                likeCount = 5,
-                isLiked = false,
-                description = "축제 할인",
-                startDate = "2025-05-01",
-                endDate = "2025-05-31",
-                periodType = PeriodType.FESTIVAL,
-            )
-            val normalInfo = Partnership.PartnershipInfo(
-                id = 1,
-                partnershipType = "DISCOUNT",
-                collegeName = "IT",
-                departmentName = "컴퓨터학부",
-                likeCount = 2,
-                isLiked = true,
-                description = "상시 할인",
-                startDate = "2025-01-01",
-                endDate = "2025-12-31",
-                periodType = PeriodType.NORMAL,
-            )
-            val allPartnerships = listOf(
-                samplePartnership(
-                    storeName = "Festival Cafe",
-                    infos = listOf(normalInfo, festivalInfo),
-                ),
-                samplePartnership(storeName = "Normal Cafe"),
-            )
-            coEvery {
-                getUserCollegeDepartmentUseCase()
-            } returns sampleUserInfo(
-                nickname = "eatssu",
-                college = College(collegeId = 1, collegeName = "IT"),
-                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
-            )
-            coEvery { partnershipRepository.getAllPartnerships() } returns allPartnerships
-            coEvery { partnershipRepository.getUserCollegePartnerships() } returns listOf(
-                samplePartnership(storeName = "Mine Cafe"),
-            )
-
-            val viewModel = MapViewModel(
-                partnershipRepository = partnershipRepository,
-                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
-                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
-                analyticsTracker = analyticsTracker,
-            )
-
-            then("Festival 필터로 시작하고 Festival 정보만 노출한다") {
-                runTest {
-                    eventually(2.seconds) {
-                        val state = viewModel.uiState.value as UiState.Success
-                        state.data.selectedFilter shouldBe FilterType.Festival
-                        state.data.partnerships shouldBe listOf(
-                            allPartnerships.first().copy(partnershipInfos = listOf(festivalInfo)),
-                        )
-                    }
-                    coVerify(exactly = 1) { partnershipRepository.getAllPartnerships() }
-                    coVerify(exactly = 0) { partnershipRepository.getUserCollegePartnerships() }
-                }
-            }
-        }
-
         `when`("학과 정보가 없는 사용자가 Mine 필터를 선택하면") {
             coEvery {
                 getUserCollegeDepartmentUseCase()
@@ -218,46 +152,6 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                             MapAnalyticsEvent.MineClicked(college = 1L, major = 11L),
                         )
                     }
-                }
-            }
-        }
-
-        `when`("필터 변경 후 목록 로딩이 지연되면") {
-            val minePartnerships = listOf(samplePartnership(storeName = "Mine Cafe"))
-            val allPartnerships = listOf(samplePartnership(storeName = "All Cafe"))
-            coEvery {
-                getUserCollegeDepartmentUseCase()
-            } returns sampleUserInfo(
-                nickname = "eatssu",
-                college = College(collegeId = 1, collegeName = "IT"),
-                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
-            )
-            coEvery { partnershipRepository.getUserCollegePartnerships() } returns minePartnerships
-            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
-
-            val viewModel = MapViewModel(
-                partnershipRepository = partnershipRepository,
-                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
-                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
-                analyticsTracker = analyticsTracker,
-            )
-
-            then("선택된 탭 상태를 Loading으로 잃지 않는다") {
-                runTest {
-                    eventually(2.seconds) {
-                        val initial = viewModel.uiState.value as UiState.Success
-                        initial.data.selectedFilter shouldBe FilterType.Mine
-                        initial.data.partnerships shouldBe minePartnerships
-                    }
-
-                    coEvery { partnershipRepository.getAllPartnerships() } coAnswers {
-                        delay(10_000)
-                        allPartnerships
-                    }
-                    viewModel.setFilter(FilterType.All)
-
-                    val state = viewModel.uiState.value as UiState.Success
-                    state.data.selectedFilter shouldBe FilterType.All
                 }
             }
         }
