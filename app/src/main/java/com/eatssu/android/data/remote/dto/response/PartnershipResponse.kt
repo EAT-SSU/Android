@@ -1,6 +1,7 @@
 package com.eatssu.android.data.remote.dto.response
 
 import com.eatssu.android.domain.model.Partnership
+import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -37,7 +38,9 @@ data class PartnershipResponse(
         @SerialName("startDate")
         val startDate: String? = null,
         @SerialName("endDate")
-        val endDate: String? = null
+        val endDate: String? = null,
+        @SerialName("periodType")
+        val periodType: String? = null
     )
 }
 
@@ -57,7 +60,11 @@ fun PartnershipResponse.toDomain(): Partnership =
                 isLiked = it.isLiked ?: false,
                 description = it.description ?: "",
                 startDate = it.startDate ?: "",
-                endDate = it.endDate ?: ""
+                endDate = it.endDate ?: "",
+                periodType = when (it.periodType) {
+                    "FESTIVAL" -> PeriodType.FESTIVAL
+                    else -> PeriodType.NORMAL
+                }
             )
         }
     )

@@ -14,6 +14,7 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.MapAnalyticsEvent
+import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -83,8 +84,8 @@ class MapViewModel @Inject constructor(
             // departmentId가 변경되면 필터 자동 설정
             val current = uiState.value
             val currentData = if (current is UiState.Success) current.data else MapState()
-            val initialFilter = if (newDepartmentId == -1L) FilterType.All else FilterType.Mine
-
+//            val initialFilter = if (newDepartmentId == -1L) FilterType.All else FilterType.Mine // TODO 축제기간 종료 시 주석 해제
+            val initialFilter = FilterType.Festival // TODO 축제기간 한정 Festival 강제. 축제기간 끝나면 주석
             _uiState.value = UiState.Success(
                 MapState(selectedFilter = initialFilter)
             )
@@ -92,6 +93,7 @@ class MapViewModel @Inject constructor(
             // 초기 필터에 따라 데이터 로드
             when (initialFilter) {
                 FilterType.All -> loadPartnerships()
+                FilterType.Festival -> loadFestivalPartnerships()
                 FilterType.Mine -> loadUserCollegePartnerships()
             }
             
@@ -130,6 +132,10 @@ class MapViewModel @Inject constructor(
                 analyticsTracker.track(MapAnalyticsEvent.AllClicked)
             }
 
+            FilterType.Festival -> {
+                loadFestivalPartnerships()
+            }
+
             FilterType.Mine -> {
                 loadUserCollegePartnerships()
                 analyticsTracker.track(
@@ -151,6 +157,33 @@ class MapViewModel @Inject constructor(
             _uiState.value = UiState.Loading
 
             val partnerships = partnershipRepository.getAllPartnerships()
+            _uiState.value = UiState.Success(
+                currentData.copy(
+                    partnerships = partnerships,
+                    filterChangeResult = null
+                )
+            )
+        }
+    }
+
+    // 축제 정보 로딩
+    private fun loadFestivalPartnerships() {
+        viewModelScope.launch {
+            val current = uiState.value
+            val currentData = if (current is UiState.Success) current.data else MapState()
+
+            _uiState.value = UiState.Loading
+
+            val partnerships = partnershipRepository.getAllPartnerships().mapNotNull {
+                val festivalInfos =
+                    it.partnershipInfos.filter { info -> info.periodType == PeriodType.FESTIVAL }
+                if (festivalInfos.isEmpty()) return@mapNotNull null
+
+                it.copy(
+                    partnershipInfos = festivalInfos
+                )
+            }
+
             _uiState.value = UiState.Success(
                 currentData.copy(
                     partnerships = partnerships,
