@@ -153,6 +153,9 @@
             android:name=".presentation.mypage.language.LanguageSelectorActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.mypage.terms.TermSelectorActivity"
+            android:exported="false" />
+        <activity
                 android:name=".presentation.intro.IntroActivity"
             android:exported="true">
             <!-- 딥링크 필터  -->
