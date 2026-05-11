@@ -40,7 +40,7 @@ data class PartnershipResponse(
         @SerialName("endDate")
         val endDate: String? = null,
         @SerialName("periodType")
-        val periodType: String? = null
+        val periodType: PeriodType = PeriodType.NORMAL
     )
 }
 
@@ -61,10 +61,7 @@ fun PartnershipResponse.toDomain(): Partnership =
                 description = it.description ?: "",
                 startDate = it.startDate ?: "",
                 endDate = it.endDate ?: "",
-                periodType = when (it.periodType) {
-                    "FESTIVAL" -> PeriodType.FESTIVAL
-                    else -> PeriodType.NORMAL
-                }
+                periodType = it.periodType
             )
         }
     )
