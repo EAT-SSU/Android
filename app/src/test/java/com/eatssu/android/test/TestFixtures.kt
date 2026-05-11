@@ -8,6 +8,7 @@ import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.model.Token
 import com.eatssu.android.domain.model.UserInfo
+import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 
 fun sampleCollege(
@@ -83,6 +84,7 @@ fun samplePartnership(
             description = "desc",
             startDate = "2025-01-01",
             endDate = "2025-12-31",
+            periodType = PeriodType.NORMAL,
         ),
     ),
     type: StoreType = StoreType.CAFE,

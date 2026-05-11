@@ -1,5 +1,6 @@
 package com.eatssu.android.domain.model
 
+import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 
 data class Partnership(
@@ -18,6 +19,7 @@ data class Partnership(
         val isLiked: Boolean,
         val description: String,
         val startDate: String,
-        val endDate: String
+        val endDate: String,
+        val periodType: PeriodType,
     )
 }

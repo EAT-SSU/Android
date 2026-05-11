@@ -2,6 +2,7 @@ package com.eatssu.android.domain.usecase.user
 
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.test.AppBehaviorSpec
+import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 import io.kotest.matchers.shouldBe
 
@@ -20,6 +21,7 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                 description = "10% 할인",
                 startDate = "2025-01-01",
                 endDate = "2025-12-31",
+                periodType = PeriodType.NORMAL
             ),
             Partnership.PartnershipInfo(
                 id = 2,
@@ -31,6 +33,7 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                 description = "음료 증정",
                 startDate = "2025-02-01",
                 endDate = "2025-11-30",
+                periodType = PeriodType.NORMAL
             ),
         )
         val partnerships = listOf(

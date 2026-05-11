@@ -11,20 +11,18 @@ import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.samplePartnership
 import com.eatssu.android.test.samplePartnershipRestaurant
 import com.eatssu.android.test.sampleUserInfo
+import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.MapAnalyticsEvent
-import com.eatssu.common.UiState
+import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.matchers.shouldBe
-import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -170,6 +168,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     description = "10% 할인",
                     startDate = "2025-01-01",
                     endDate = "2025-12-31",
+                    periodType = PeriodType.NORMAL,
                 ),
                 Partnership.PartnershipInfo(
                     id = 2,
@@ -181,6 +180,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     description = "음료 증정",
                     startDate = "2025-02-01",
                     endDate = "2025-11-30",
+                    periodType = PeriodType.NORMAL,
                 ),
             )
             val partnerships = listOf(
@@ -310,6 +310,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                             description = "할인",
                             startDate = "2025-01-01",
                             endDate = "2025-12-31",
+                            periodType = PeriodType.NORMAL,
                         )
                     ),
                 )
