@@ -13,6 +13,7 @@ import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showErrorToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.eatssu.common.analytics.LoginAnalyticsEvent
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
@@ -52,6 +53,7 @@ class LoginActivity :
         }
 
         binding.ibKakaoLogin.setOnClickListener {
+            analyticsTracker.track(LoginAnalyticsEvent.Clicked(LoginAnalyticsEvent.Method.KAKAO))
             handleKakaoLogin()
         }
     }

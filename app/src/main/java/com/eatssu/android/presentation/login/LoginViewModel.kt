@@ -8,6 +8,8 @@ import com.eatssu.android.domain.usecase.auth.LoginUseCase
 import com.eatssu.android.domain.usecase.auth.SetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.auth.SetRefreshTokenUseCase
 import com.eatssu.android.domain.usecase.user.SetUserEmailUseCase
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.LoginAnalyticsEvent
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
@@ -30,6 +32,7 @@ class LoginViewModel @Inject constructor(
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val setUserEmailUseCase: SetUserEmailUseCase,
+    private val analyticsTracker: AnalyticsTracker,
     private val analyticsIdentityManager: AnalyticsIdentityManager,
 ) : ViewModel() {
 
@@ -58,6 +61,7 @@ class LoginViewModel @Inject constructor(
             setRefreshTokenUseCase(token.refreshToken)
             setUserEmailUseCase(email)
             analyticsIdentityManager.identifyUser(email = email)
+            analyticsTracker.track(LoginAnalyticsEvent.Completed(LoginAnalyticsEvent.Method.KAKAO))
 
             _uiState.value = UiState.Success(LoginState.LoginSuccess)
         }

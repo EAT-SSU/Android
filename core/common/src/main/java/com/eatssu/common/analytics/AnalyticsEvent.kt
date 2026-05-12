@@ -26,6 +26,32 @@ sealed interface AppAnalyticsEvent : AnalyticsEvent {
     }
 }
 
+sealed interface LoginAnalyticsEvent : AnalyticsEvent {
+    enum class Method(val value: String) {
+        KAKAO("kakao"),
+        APPLE("apple"),
+        GUEST("guest"),
+    }
+
+    data class Clicked(
+        val method: Method,
+    ) : LoginAnalyticsEvent {
+        override val eventName = "click_login"
+        override val properties = buildMap {
+            put("method", method.value)
+        }
+    }
+
+    data class Completed(
+        val method: Method,
+    ) : LoginAnalyticsEvent {
+        override val eventName = "complete_login"
+        override val properties = buildMap {
+            put("method", method.value)
+        }
+    }
+}
+
 sealed interface CafeteriaAnalyticsEvent : AnalyticsEvent {
     data class RestaurantInfoClicked(
         val restaurant: Restaurant,
@@ -48,7 +74,7 @@ sealed interface CafeteriaAnalyticsEvent : AnalyticsEvent {
     data class DaySelected(
         val day: String,
     ) : CafeteriaAnalyticsEvent {
-        override val eventName = "click_day"
+        override val eventName = "select_day"
         override val properties = buildMap {
             put("day", day.toWeekdayCode())
         }
@@ -79,13 +105,13 @@ sealed interface ReviewAnalyticsEvent : AnalyticsEvent {
         override val properties = buildMap {
             put("rating", rating)
             put("likes", likes)
-            put("photo_attached", photoAttached)
+            put("photo_attached", if (photoAttached) 1L else 0L)
         }
     }
 }
 
 sealed interface MapAnalyticsEvent : AnalyticsEvent {
-    object AllClicked : MapAnalyticsEvent {
+    object EntryClicked : MapAnalyticsEvent {
         override val eventName = "click_map"
         override val properties = emptyMap<String, Any>()
     }
@@ -115,6 +141,45 @@ sealed interface MapAnalyticsEvent : AnalyticsEvent {
     }
 }
 
+sealed interface AnyoneButMeAnalyticsEvent : AnalyticsEvent {
+    data class Clicked(
+        val college: Long,
+        val major: Long,
+    ) : AnyoneButMeAnalyticsEvent {
+        override val eventName = "click_plz_not_me"
+        override val properties = buildMap {
+            put("college", college)
+            put("major", major)
+        }
+    }
+}
+
+sealed interface MyPageAnalyticsEvent : AnalyticsEvent {
+    object MenuClicked : MyPageAnalyticsEvent {
+        override val eventName = "click_mypage_menu"
+        override val properties = emptyMap<String, Any>()
+    }
+}
+
+sealed interface PopupAnalyticsEvent : AnalyticsEvent {
+    enum class Action(val value: String) {
+        CLICK_POPUP_IMAGE("click_popup_image"),
+        GO_INSTA("go_insta"),
+        NOT_SHOW_AGAIN("not_show_again"),
+        CLOSE("close"),
+    }
+
+    data class AnyoneButMe(
+        val action: Action,
+    ) : PopupAnalyticsEvent {
+        override val eventName = "popup_event"
+        override val properties = buildMap {
+            put("popup_name", "plz_not_me")
+            put("popup_action", action.value)
+        }
+    }
+}
+
 sealed interface WidgetAnalyticsEvent : AnalyticsEvent {
     data class Added(
         val restaurant: Restaurant,
@@ -135,11 +200,13 @@ sealed interface WidgetAnalyticsEvent : AnalyticsEvent {
     }
 
     data class Changed(
-        val restaurant: Restaurant,
+        val restaurantBefore: Restaurant,
+        val restaurantAfter: Restaurant,
     ) : WidgetAnalyticsEvent {
         override val eventName = "change_widget"
         override val properties = buildMap {
-            put("restaurants", restaurant.value)
+            put("restaurant_before", restaurantBefore.value)
+            put("restaurant_after", restaurantAfter.value)
         }
     }
 }

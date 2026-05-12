@@ -11,6 +11,8 @@ import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.assertToast
 import com.eatssu.android.test.awaitToastEvent
 import com.eatssu.android.test.sampleToken
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.LoginAnalyticsEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.DeviceType
 import com.eatssu.common.enums.ToastType
@@ -36,6 +38,7 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
         val setAccessTokenUseCase = mockk<SetAccessTokenUseCase>()
         val setRefreshTokenUseCase = mockk<SetRefreshTokenUseCase>()
         val setUserEmailUseCase = mockk<SetUserEmailUseCase>()
+        val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
         val analyticsIdentityManager = mockk<AnalyticsIdentityManager>(relaxed = true)
 
         every { setAccessTokenUseCase(any()) } just Runs
@@ -48,6 +51,7 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
                 setAccessTokenUseCase = setAccessTokenUseCase,
                 setRefreshTokenUseCase = setRefreshTokenUseCase,
                 setUserEmailUseCase = setUserEmailUseCase,
+                analyticsTracker = analyticsTracker,
                 analyticsIdentityManager = analyticsIdentityManager,
             )
             coEvery { loginUseCase("a@b.com", "pid", DeviceType.ANDROID) } returns null
@@ -72,6 +76,7 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
                 setAccessTokenUseCase = setAccessTokenUseCase,
                 setRefreshTokenUseCase = setRefreshTokenUseCase,
                 setUserEmailUseCase = setUserEmailUseCase,
+                analyticsTracker = analyticsTracker,
                 analyticsIdentityManager = analyticsIdentityManager,
             )
             val token = sampleToken("acc", "ref")
@@ -86,6 +91,11 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
                         verify { setRefreshTokenUseCase("ref") }
                         coVerify { setUserEmailUseCase("a@b.com") }
                         verify { analyticsIdentityManager.identifyUser(email = "a@b.com") }
+                        verify {
+                            analyticsTracker.track(
+                                LoginAnalyticsEvent.Completed(LoginAnalyticsEvent.Method.KAKAO),
+                            )
+                        }
                         viewModel.uiState.value shouldBe UiState.Success(LoginState.LoginSuccess)
                     }
                 }
@@ -99,6 +109,7 @@ class LoginViewModelBehaviorSpec : AppBehaviorSpec({
             setAccessTokenUseCase = mockk(relaxed = true),
             setRefreshTokenUseCase = mockk(relaxed = true),
             setUserEmailUseCase = mockk(relaxed = true),
+            analyticsTracker = mockk(relaxed = true),
             analyticsIdentityManager = mockk(relaxed = true),
         )
 

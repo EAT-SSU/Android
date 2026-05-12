@@ -125,7 +125,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 analyticsTracker = analyticsTracker,
             )
 
-            then("필터에 맞는 목록을 로드하고 이벤트 로깅을 수행한다") {
+            then("필터에 맞는 목록을 로드하고 Mine 필터 이벤트를 로깅한다") {
                 runTest {
                     eventually(2.seconds) {
                         val initial = viewModel.uiState.value as UiState.Success
@@ -139,7 +139,6 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                         allState.data.selectedFilter shouldBe FilterType.All
                         allState.data.partnerships shouldBe allPartnerships
                     }
-                    verify(atLeast = 1) { analyticsTracker.track(MapAnalyticsEvent.AllClicked) }
 
                     viewModel.setFilter(FilterType.Mine)
                     eventually(2.seconds) {

@@ -38,7 +38,7 @@ class FirebaseAnalyticsTrackerTest {
             mapOf(
                 "rating" to 5L,
                 "likes" to 2L,
-                "photo_attached" to true,
+                "photo_attached" to 1L,
             ),
             payload.properties,
         )

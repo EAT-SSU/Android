@@ -25,6 +25,8 @@ import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.eatssu.common.analytics.MapAnalyticsEvent
+import com.eatssu.common.analytics.MyPageAnalyticsEvent
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
@@ -90,6 +92,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
 
                 R.id.map_menu -> {
+                    analyticsTracker.track(MapAnalyticsEvent.EntryClicked)
                     navController.navigate(R.id.mapFragment)
                     true
                 }
@@ -100,6 +103,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
 
                 R.id.mypage_menu -> {
+                    analyticsTracker.track(MyPageAnalyticsEvent.MenuClicked)
                     navController.navigate(R.id.myPageFragment)
                     true
                 }

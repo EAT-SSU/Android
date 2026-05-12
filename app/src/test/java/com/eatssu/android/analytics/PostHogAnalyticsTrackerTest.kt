@@ -2,6 +2,7 @@ package com.eatssu.android.analytics
 
 import com.eatssu.common.analytics.AnalyticsIdentity
 import com.eatssu.common.analytics.AppAnalyticsEvent
+import com.eatssu.common.analytics.LoginAnalyticsEvent
 import com.eatssu.common.analytics.WidgetAnalyticsEvent
 import com.eatssu.common.enums.LaunchPath
 import com.eatssu.common.enums.Restaurant
@@ -17,6 +18,14 @@ class PostHogAnalyticsTrackerTest {
 
         assertEquals("app_launch", payload.eventName)
         assertEquals(mapOf("launch_path" to "widget"), payload.properties)
+    }
+
+    @Test
+    fun `remote notification launch payload keeps distinct path`() {
+        val payload = AppAnalyticsEvent.Launch(LaunchPath.REMOTE_NOTIFICATION).toPayload()
+
+        assertEquals("app_launch", payload.eventName)
+        assertEquals(mapOf("launch_path" to "remote_notification"), payload.properties)
     }
 
     @Test
@@ -56,5 +65,30 @@ class PostHogAnalyticsTrackerTest {
 
         assertEquals("add_widget", payload.eventName)
         assertEquals(mapOf("restaurants" to "haksik"), payload.properties)
+    }
+
+    @Test
+    fun `widget change payload keeps before and after keys`() {
+        val payload = WidgetAnalyticsEvent.Changed(
+            restaurantBefore = Restaurant.DODAM,
+            restaurantAfter = Restaurant.HAKSIK,
+        ).toPayload()
+
+        assertEquals("change_widget", payload.eventName)
+        assertEquals(
+            mapOf(
+                "restaurant_before" to "dodam",
+                "restaurant_after" to "haksik",
+            ),
+            payload.properties,
+        )
+    }
+
+    @Test
+    fun `login payload keeps method schema`() {
+        val payload = LoginAnalyticsEvent.Clicked(LoginAnalyticsEvent.Method.KAKAO).toPayload()
+
+        assertEquals("click_login", payload.eventName)
+        assertEquals(mapOf("method" to "kakao"), payload.properties)
     }
 }

@@ -8,8 +8,12 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.eatssu.android.R
 import com.eatssu.android.data.local.AppFeatureDataStore
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.util.openInBrowser
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.AnyoneButMeAnalyticsEvent
+import com.eatssu.common.analytics.PopupAnalyticsEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -22,6 +26,8 @@ import javax.inject.Inject
 class AnyoneButMeEventPopupController @Inject constructor(
     @ActivityContext private val context: Context,
     private val appFeatureDataStore: AppFeatureDataStore,
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
+    private val analyticsTracker: AnalyticsTracker,
 ) {
     private lateinit var composeView: ComposeView
     private lateinit var lifecycleScope: LifecycleCoroutineScope
@@ -49,10 +55,10 @@ class AnyoneButMeEventPopupController @Inject constructor(
             EatssuTheme {
                 if (isPopupVisible.value) {
                     AnyoneButMeEventDialog(
-                        onDismiss = ::hide,
+                        onDismiss = ::closeByUser,
                         onDismissForever = ::dismissForever,
                         onInstagramClick = ::openInstagram,
-                        onAnyoneButMeClick = ::openAnyoneButMePage
+                        onAnyoneButMeClick = { openAnyoneButMePage(fromPopup = true) }
                     )
                 }
             }
@@ -71,13 +77,18 @@ class AnyoneButMeEventPopupController @Inject constructor(
     }
 
     private fun dismissForever() {
+        trackPopupAction(PopupAnalyticsEvent.Action.NOT_SHOW_AGAIN)
         hide()
         lifecycleScope.launch {
             appFeatureDataStore.setAnyoneButMeEventPopupDismissed(true)
         }
     }
 
-    fun openAnyoneButMePage() {
+    fun openAnyoneButMePage(fromPopup: Boolean = false) {
+        if (fromPopup) {
+            trackPopupAction(PopupAnalyticsEvent.Action.CLICK_POPUP_IMAGE)
+        }
+        trackAnyoneButMeClicked()
         hide()
         context.startActivity(
             Intent(context, WebViewActivity::class.java).apply {
@@ -93,8 +104,30 @@ class AnyoneButMeEventPopupController @Inject constructor(
     }
 
     private fun openInstagram() {
+        trackPopupAction(PopupAnalyticsEvent.Action.GO_INSTA)
         hide()
         context.openInBrowser(context.getString(R.string.eatssu_event_instagram_url))
+    }
+
+    private fun closeByUser() {
+        trackPopupAction(PopupAnalyticsEvent.Action.CLOSE)
+        hide()
+    }
+
+    private fun trackPopupAction(action: PopupAnalyticsEvent.Action) {
+        analyticsTracker.track(PopupAnalyticsEvent.AnyoneButMe(action))
+    }
+
+    private fun trackAnyoneButMeClicked() {
+        lifecycleScope.launch {
+            val userInfo = getUserCollegeDepartmentUseCase()
+            analyticsTracker.track(
+                AnyoneButMeAnalyticsEvent.Clicked(
+                    college = userInfo.userCollege.collegeId.toLong(),
+                    major = userInfo.userDepartment.departmentId.toLong(),
+                ),
+            )
+        }
     }
 
     private fun hide() {
