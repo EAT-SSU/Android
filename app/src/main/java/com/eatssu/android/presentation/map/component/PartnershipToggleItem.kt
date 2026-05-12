@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Festival
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
@@ -84,7 +85,13 @@ fun PartnershipToggleItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = if (selected) Primary else Color.Transparent
+    val backgroundColor =
+        if (selected && (label == stringResource(R.string.partnership_filter_festival)))
+            Festival
+        else if (selected)
+            Primary
+        else
+            Color.Transparent
     val textColor = if (selected) White else Gray600
 
     Box(

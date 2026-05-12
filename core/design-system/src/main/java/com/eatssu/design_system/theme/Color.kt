@@ -16,6 +16,7 @@ val Gray700 = Color(0xFF1F1F1F)
 // Brand
 val Primary = Color(0xFF66D4C2)
 val Secondary = Color(0xFFEEFBF8)
+val Festival = Color(0xFF97AFFF)
 
 // Yellow
 val Star = Color(0xFFFFC700)
