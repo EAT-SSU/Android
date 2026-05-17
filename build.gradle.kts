@@ -16,3 +16,10 @@ buildscript {
         classpath(libs.oss.licenses.plugin)
     }
 }
+
+tasks.register<Exec>("generateLocalizedStrings") {
+    group = "localization"
+    description =
+        "language.csv 파일을 통해 res/values-* 위치에 양식에 맞게 strings.xml 파일을 생성합니다. csv에 기존 strings.xml에 매칭되는 값이 없는 경우 한글 값이 들어갑니다."
+    commandLine("python3", "scripts/generate_android_strings.py")
+}
