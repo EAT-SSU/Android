@@ -40,6 +40,7 @@ data class MapState(
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
     val storeType: StoreType? = null,
     val selectedFilter: FilterType = FilterType.Mine,
+    val availableFilters: List<FilterType> = FilterType.entries,
     val filterChangeResult: FilterChangeResult? = null,
 ) {
     sealed class FilterChangeResult {
@@ -83,14 +84,24 @@ class MapViewModel @Inject constructor(
             _departmentId.value = newDepartmentId
             _collegeId.value = newCollegeId
 
+            val hasFestival = allPartnerships.hasFestivalPartnership()
+            val availableFilters = if (hasFestival) {
+                FilterType.entries
+            } else {
+                listOf(FilterType.All, FilterType.Mine)
+            }
+
             // Festival 제휴가 하나라도 있으면 Festival을 우선하고, 없으면 기존 기본 필터 규칙을 따른다.
             val initialFilter = when {
-                allPartnerships.hasFestivalPartnership() -> FilterType.Festival
+                hasFestival -> FilterType.Festival
                 newDepartmentId == -1L -> FilterType.All
                 else -> FilterType.Mine
             }
             _uiState.value = UiState.Success(
-                MapState(selectedFilter = initialFilter),
+                MapState(
+                    selectedFilter = initialFilter,
+                    availableFilters = availableFilters,
+                ),
             )
 
             when (initialFilter) {
@@ -181,15 +192,9 @@ class MapViewModel @Inject constructor(
             if (prefetchedPartnerships == null)
                 _uiState.value = UiState.Loading
 
-            val partnerships = partnershipRepository.getAllPartnerships().mapNotNull {
-                val festivalInfos =
-                    it.partnershipInfos.filter { info -> info.periodType == PeriodType.FESTIVAL }
-                if (festivalInfos.isEmpty()) return@mapNotNull null
-
-                it.copy(
-                    partnershipInfos = festivalInfos
-                )
-            }
+            val partnerships =
+                (prefetchedPartnerships ?: partnershipRepository.getAllPartnerships())
+                    .festivalPartnerships()
 
             _uiState.value = UiState.Success(
                 currentData.copy(
