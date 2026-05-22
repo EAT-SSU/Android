@@ -13,6 +13,7 @@ import com.eatssu.android.presentation.cafeteria.review.list.ReviewListScreen
 import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScreen
 import com.eatssu.android.presentation.cafeteria.review.write.WriteReviewScreen
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 
 object ReviewNav {
     const val List = "list"
@@ -27,6 +28,7 @@ fun ReviewNav(
     navHostController: NavHostController = rememberNavController(),
     menuName: String,
     menuType: MenuType,
+    restaurant: Restaurant,
     id: Long,
     onExit: () -> Unit = {}
 ) {
@@ -44,6 +46,7 @@ fun ReviewNav(
             ReviewListScreen(
                 menuName = menuName,
                 menuType = menuType,
+                restaurant = restaurant,
                 id = id,
                 refreshNonce = refreshNonce,
                 onBack = { onExit() },
@@ -76,6 +79,7 @@ fun ReviewNav(
         composable(ReviewNav.Write) { backStackEntry ->
             WriteReviewScreen(
                 menuType = menuType,
+                restaurant = restaurant,
                 menuName = menuName,
                 id = id,
                 onBack = {

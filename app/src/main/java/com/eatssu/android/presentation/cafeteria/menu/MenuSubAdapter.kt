@@ -43,6 +43,7 @@ class MenuSubAdapter(
 
                 val item = dataList[position]
                 val intent = Intent(binding.root.context, ReviewComposeActivity::class.java)
+                intent.putExtra("restaurant", restaurant.name)
 
                 when (restaurant.menuType) {
                     MenuType.FIXED -> {

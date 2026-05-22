@@ -59,6 +59,7 @@ import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.component.DelayedLoadingIndicator
@@ -76,6 +77,7 @@ fun ReviewListScreen(
     modifier: Modifier = Modifier,
     viewModel: ReviewListViewModel = hiltViewModel(),
     menuType: MenuType,
+    restaurant: Restaurant,
     menuName: String,
     id: Long,
     refreshNonce: Long = 0L,
@@ -125,6 +127,7 @@ fun ReviewListScreen(
         reviewPagingItems = reviewPagingItems,
         modifier = modifier,
         menuName = menuName,
+        restaurant = restaurant,
         onBack = onBack,
         onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
@@ -138,6 +141,7 @@ internal fun ReviewListScreen(
     reviewPagingItems: LazyPagingItems<Review>,
     modifier: Modifier = Modifier,
     menuName: String,
+    restaurant: Restaurant,
     onBack: () -> Unit = {},
     onReviewWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
@@ -192,7 +196,7 @@ internal fun ReviewListScreen(
                 text = stringResource(R.string.review_write),
                 onClick = {
                     onReviewWriteButtonClick()
-                    analyticsTracker.track(ReviewAnalyticsEvent.WriteClicked)
+                    analyticsTracker.track(ReviewAnalyticsEvent.WriteClicked(restaurant))
                 },
                 modifier = Modifier
                     .padding(24.dp)
@@ -628,6 +632,7 @@ fun ReviewListPreview() {
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
+            restaurant = Restaurant.HAKSIK,
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
@@ -663,6 +668,7 @@ fun ReviewListLoadingPreview() {
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
+            restaurant = Restaurant.HAKSIK,
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
@@ -698,6 +704,7 @@ fun ReviewListEmptyPreview() {
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기+닭고기+돼지고기+양고기",
+            restaurant = Restaurant.HAKSIK,
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
@@ -733,6 +740,7 @@ fun ReviewListErrorPreview() {
     EatssuTheme {
         ReviewListScreen(
             menuName = "소고기+닭고기+돼지고기+양고기+오리고기",
+            restaurant = Restaurant.HAKSIK,
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},

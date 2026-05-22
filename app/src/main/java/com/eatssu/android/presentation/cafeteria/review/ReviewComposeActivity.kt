@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.analytics.ProvideAnalyticsTracker
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.design_system.theme.EatssuTheme
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +37,7 @@ class ReviewComposeActivity : ComponentActivity() {
     lateinit var analyticsTracker: AnalyticsTracker
 
     private var menuType: String? = null
+    private var restaurant: String? = null
     private var itemId by Delegates.notNull<Long>()
     private lateinit var itemName: String
 
@@ -48,17 +50,19 @@ class ReviewComposeActivity : ComponentActivity() {
                 EatssuTheme {
                     val navHostController = rememberNavController()
                     val parsedMenuType = MenuType.entries.find { it.name == menuType }
+                    val parsedRestaurant = Restaurant.entries.find { it.name == restaurant }
 
-                    parsedMenuType?.let { type ->
+                    if (parsedMenuType != null && parsedRestaurant != null) {
                         ReviewNav(
                             navHostController = navHostController,
-                            menuType = type,
+                            menuType = parsedMenuType,
+                            restaurant = parsedRestaurant,
                             menuName = itemName,
                             id = itemId,
                             onExit = { finish() }
                         )
-                    } ?: run {
-                        Timber.e("Invalid or null MenuType received: $menuType")
+                    } else {
+                        Timber.e("Invalid review parameters received: menuType=$menuType, restaurant=$restaurant")
                         ErrorScreen(
                             onBackClick = { finish() }
                         )
@@ -70,6 +74,7 @@ class ReviewComposeActivity : ComponentActivity() {
 
     private fun getIntents() { //todo 추후 변경
         menuType = intent.getStringExtra("menuType")
+        restaurant = intent.getStringExtra("restaurant")
         itemId = intent.getLongExtra("itemId", 0)
         itemName = intent.getStringExtra("itemName").toString().replace(Regex("[\\[\\]]"), "")
 

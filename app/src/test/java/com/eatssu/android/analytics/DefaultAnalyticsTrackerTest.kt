@@ -5,6 +5,7 @@ import com.eatssu.common.analytics.AnalyticsIdentity
 import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
+import com.eatssu.common.enums.Restaurant
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -16,7 +17,12 @@ class DefaultAnalyticsTrackerTest {
         val firebaseTracker = FakeAnalyticsTracker(id = "firebase")
         val postHogTracker = FakeAnalyticsTracker(id = "posthog")
         val analyticsTracker = DefaultAnalyticsTracker(setOf(firebaseTracker, postHogTracker))
-        val event = ReviewAnalyticsEvent.Completed(rating = 5L, likes = 2L, photoAttached = true)
+        val event = ReviewAnalyticsEvent.Completed(
+            rating = 5L,
+            likes = 2L,
+            photoAttached = true,
+            restaurant = Restaurant.HAKSIK,
+        )
 
         analyticsTracker.track(event)
 
