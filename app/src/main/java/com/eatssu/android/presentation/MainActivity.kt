@@ -32,11 +32,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
-import javax.inject.Inject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -95,6 +93,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
 
                 R.id.anyone_but_me_menu -> {
+                    mainViewModel.analyticsPlzNotMe()
                     anyoneButMeEventPopupController.openAnyoneButMePage()
                     false
                 }

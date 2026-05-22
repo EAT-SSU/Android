@@ -16,9 +16,11 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.analytics.ProvideAnalyticsTracker
+import com.eatssu.android.domain.usecase.widget.LoadRestaurantByFileKeyUseCase
 import com.eatssu.android.domain.usecase.widget.SaveRestaurantByFileKeyUseCase
 import com.eatssu.android.presentation.widget.MealWorker
 import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.WidgetAnalyticsEvent
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +35,9 @@ class WidgetSettingActivity : ComponentActivity() {
     lateinit var saveRestaurantByFileKeyUseCase: SaveRestaurantByFileKeyUseCase
 
     @Inject
+    lateinit var loadRestaurantByFileKeyUseCase: LoadRestaurantByFileKeyUseCase
+
+    @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +46,9 @@ class WidgetSettingActivity : ComponentActivity() {
             ProvideAnalyticsTracker(analyticsTracker) {
                 EatssuTheme {
 
-                    val restaurantOptions = Restaurant.getVariableRestaurantList().map {
-                        getString(it.displayNameResId)
-                    } // 변동 식당만 불러옵니다. 하드코딩 x
+                    val restaurants = Restaurant.getVariableRestaurantList()
+                    val restaurantOptions =
+                        restaurants.map { getString(it.displayNameResId) } // 변동 식당만 불러옵니다. 하드코딩 x
 
                     var selectedRestaurant by rememberSaveable { mutableStateOf(restaurantOptions[0]) }
 
@@ -60,6 +65,14 @@ class WidgetSettingActivity : ComponentActivity() {
                         } else {
                             null
                         }
+
+                        val fileKey =
+                            appWidgetId?.takeIf { it != AppWidgetManager.INVALID_APPWIDGET_ID }
+                                ?.let { "appWidget-$it" }
+                        val savedRestaurant = fileKey?.let { loadRestaurantByFileKeyUseCase(it) }
+                        if (savedRestaurant != null) {
+                            selectedRestaurant = getString(savedRestaurant.displayNameResId)
+                        }
                     }
 
                     WidgetSettingScreen(
@@ -69,42 +82,65 @@ class WidgetSettingActivity : ComponentActivity() {
                             selectedRestaurant = displayName
                         },
                         onConfirm = { selectedRestaurantValue ->
-                            if (glanceId == null) {
+                            val currentGlanceId = glanceId
+                            if (currentGlanceId == null || appWidgetId == null) {
                                 finish()
                                 return@WidgetSettingScreen
                             }
 
                             lifecycleScope.launch {
+                                val fileKey = "appWidget-$appWidgetId"
+                                val previousRestaurant = loadRestaurantByFileKeyUseCase(fileKey)
 
                                 saveRestaurantByFileKeyUseCase(
-                                    "appWidget-${appWidgetId}",
+                                    fileKey,
                                     selectedRestaurantValue
                                 )
 
+                                trackWidgetSelection(previousRestaurant, selectedRestaurantValue)
+
                                 // 위젯 업데이트
-                                glanceId?.let {
-                                    MealWidget().update(this@WidgetSettingActivity, it)
-                                }
+                                MealWidget().update(this@WidgetSettingActivity, currentGlanceId)
 
                                 // MealWorker 실행
                                 MealWorker.enqueue(this@WidgetSettingActivity)
 
-                                Timber.d("선택하기 버튼으로 저장: $selectedRestaurantValue for glanceId: $glanceId")
-                            }
+                                Timber.d("선택하기 버튼으로 저장: $selectedRestaurantValue for glanceId: $currentGlanceId")
 
-                            // 결과 설정
-                            val resultIntent = Intent().apply {
-                                putExtra(
-                                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                                    appWidgetId ?: AppWidgetManager.INVALID_APPWIDGET_ID
-                                )
+                                // 결과 설정
+                                val resultIntent = Intent().apply {
+                                    putExtra(
+                                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                                        appWidgetId
+                                    )
+                                }
+                                setResult(RESULT_OK, resultIntent)
+                                finish()
                             }
-                            setResult(RESULT_OK, resultIntent)
-                            finish()
                         },
                         onBack = { finish() }
                     )
                 }
+            }
+        }
+    }
+
+    private fun trackWidgetSelection(
+        previousRestaurant: Restaurant?,
+        selectedRestaurant: Restaurant,
+    ) {
+        when {
+            previousRestaurant == null -> {
+                analyticsTracker.track(WidgetAnalyticsEvent.Added(selectedRestaurant))
+            }
+
+            previousRestaurant != selectedRestaurant -> {
+                analyticsTracker.track(
+                    WidgetAnalyticsEvent.Changed(
+                        restaurantBefore = previousRestaurant,
+                        restaurantAfter = selectedRestaurant,
+                    ),
+                )
             }
         }
     }

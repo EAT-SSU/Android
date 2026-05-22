@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.domain.model.AppTheme
 import com.eatssu.android.presentation.MainActivity
@@ -27,6 +28,7 @@ import com.eatssu.common.enums.ScreenId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,6 +38,9 @@ class IntroActivity : AppCompatActivity() {
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
+
+    @Inject
+    lateinit var settingDataStore: SettingDataStore
 
     private val introViewModel: IntroViewModel by viewModels()
     private lateinit var binding: ActivityIntroBinding
@@ -151,13 +156,16 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun log() {
-        val launchPath = intent.getStringExtra("launch_path")
-        when (launchPath) {
-            "widget" -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.WIDGET))
-            "local_notification" -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.LOCAL_NOTIFICATION))
-            "remote_notification" -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.REMOTE_NOTIFICATION))
-            // launch_path가 없으면 일반적인 앱 아이콘 클릭으로 간주
-            else -> analyticsTracker.track(AppAnalyticsEvent.Launch(LaunchPath.ICON))
+        lifecycleScope.launch {
+            val localeCode = settingDataStore.appLanguage.first().code
+            val launchPath = when (intent.getStringExtra("launch_path")) {
+                "widget" -> LaunchPath.WIDGET
+                "local_notification" -> LaunchPath.LOCAL_NOTIFICATION
+                "remote_notification" -> LaunchPath.REMOTE_NOTIFICATION
+                // launch_path가 없으면 일반적인 앱 아이콘 클릭으로 간주
+                else -> LaunchPath.ICON
+            }
+            analyticsTracker.track(AppAnalyticsEvent.Launch(launchPath, localeCode))
         }
     }
 

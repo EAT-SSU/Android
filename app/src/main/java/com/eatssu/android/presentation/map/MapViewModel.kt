@@ -99,6 +99,14 @@ class MapViewModel @Inject constructor(
                 FilterType.Mine -> loadUserCollegePartnerships()
             }
 
+            analyticsTracker.track(
+                MapAnalyticsEvent.MapClicked(
+                    college = _collegeId.value,
+                    major = _departmentId.value,
+                    isFestival = (initialFilter == FilterType.Festival)
+                ),
+            )
+
             Timber.d("학과 정보 : ${userCollegeDepartment.userDepartment.departmentName}")
         }
     }
@@ -131,11 +139,22 @@ class MapViewModel @Inject constructor(
         when (filter) {
             FilterType.All -> {
                 loadPartnerships()
-                analyticsTracker.track(MapAnalyticsEvent.AllClicked)
+                analyticsTracker.track(
+                    MapAnalyticsEvent.AllClicked(
+                        college = _collegeId.value,
+                        major = _departmentId.value,
+                    ),
+                )
             }
 
             FilterType.Festival -> {
                 loadFestivalPartnerships()
+                analyticsTracker.track(
+                    MapAnalyticsEvent.FestivalClicked(
+                        college = _collegeId.value,
+                        major = _departmentId.value,
+                    ),
+                )
             }
 
             FilterType.Mine -> {

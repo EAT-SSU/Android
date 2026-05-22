@@ -15,6 +15,9 @@ import com.eatssu.android.domain.usecase.user.SetUserCollegeDepartmentUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.ClickMyPageMenuEvent
+import com.eatssu.common.analytics.ClickPlzNotMeEvent
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,6 +39,7 @@ class MainViewModel @Inject constructor(
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val getUserEmailUseCase: GetUserEmailUseCase,
     private val analyticsIdentityManager: AnalyticsIdentityManager,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
@@ -59,6 +63,35 @@ class MainViewModel @Inject constructor(
                 MainState.DepartmentState(
                     departmentName = userInfo.userDepartment.departmentName
                 )
+            )
+        }
+    }
+
+    fun analyticsPlzNotMe() {
+        viewModelScope.launch {
+            val userCollegeDepartment = getUserCollegeDepartmentUseCase()
+            val newDepartmentId = userCollegeDepartment.userDepartment.departmentId.toLong()
+            val newCollegeId = userCollegeDepartment.userCollege.collegeId.toLong()
+
+            analyticsTracker.track(
+                ClickPlzNotMeEvent(
+                    college = newDepartmentId,
+                    major = newCollegeId,
+                ),
+            )
+
+        }
+    }
+
+    fun trackMyPageMenu(menu: String) {
+        viewModelScope.launch {
+            val userCollegeDepartment = getUserCollegeDepartmentUseCase()
+            analyticsTracker.track(
+                ClickMyPageMenuEvent(
+                    college = userCollegeDepartment.userCollege.collegeId.toLong(),
+                    major = userCollegeDepartment.userDepartment.departmentId.toLong(),
+                    menu = menu,
+                ),
             )
         }
     }

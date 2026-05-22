@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
     private val setAccessTokenUseCase: SetAccessTokenUseCase,
     private val setRefreshTokenUseCase: SetRefreshTokenUseCase,
     private val setUserEmailUseCase: SetUserEmailUseCase,
-    private val analyticsIdentityManager: AnalyticsIdentityManager,
+    private val analyticsIdentityManager: AnalyticsIdentityManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<LoginState>>(UiState.Init)

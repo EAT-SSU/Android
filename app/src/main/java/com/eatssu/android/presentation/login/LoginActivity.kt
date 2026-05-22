@@ -15,6 +15,7 @@ import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.CredentialsEvent
 import com.eatssu.common.enums.ScreenId
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -59,6 +60,7 @@ class LoginActivity :
     //kakao login sdk를 통해 유저 정보를 가져와 rest api 호출하는 뷰모델 함수 호출
     private fun handleKakaoLogin() {
         lifecycleScope.launch {
+            analyticsTracker.track(CredentialsEvent.ClickLoginEvent("kakao"))
             try {
                 loginViewModel.setLoadingState()
                 val oAuthToken = UserApiClient.loginWithKakao(this@LoginActivity)
@@ -68,6 +70,7 @@ class LoginActivity :
                         val providerID = user.id.toString()
                         val email = user.kakaoAccount?.email.toString()
                         loginViewModel.getKakaoLogin(email, providerID)
+                        analyticsTracker.track(CredentialsEvent.CompleteLoginEvent("kakao"))
                     } ?: Timber.e(error, "User info fetch failed")
                 }
             } catch (error: Throwable) {

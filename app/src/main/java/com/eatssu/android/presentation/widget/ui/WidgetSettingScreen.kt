@@ -16,8 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
-import com.eatssu.android.analytics.LocalAnalyticsTracker
-import com.eatssu.common.analytics.WidgetAnalyticsEvent
 import com.eatssu.android.presentation.util.asString
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.design_system.component.EatSsuButton
@@ -34,8 +32,6 @@ fun WidgetSettingScreen(
     onConfirm: (Restaurant) -> Unit = {},
     onBack: () -> Unit = {}  // 뒤로가기 동작을 위한 람다 추가
 ) {
-    val analyticsTracker = LocalAnalyticsTracker.current
-
     // onClick 람다에서 LocalContext 접근이 불가하므로 Composable 레벨에서 미리 매핑 생성
     val restaurantDisplayNameMap = Restaurant.getVariableRestaurantList()
         .associateBy { it.toUiText().asString() }
@@ -77,7 +73,6 @@ fun WidgetSettingScreen(
                             ?: Restaurant.HAKSIK
 
                         onConfirm(selectedRestaurantEnum)
-                        analyticsTracker.track(WidgetAnalyticsEvent.Added(selectedRestaurantEnum))
                     }
                 )
             }
