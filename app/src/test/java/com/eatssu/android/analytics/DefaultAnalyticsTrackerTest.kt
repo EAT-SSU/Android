@@ -2,8 +2,8 @@ package com.eatssu.android.analytics
 
 import com.eatssu.common.analytics.AnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsIdentity
-import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.enums.Restaurant
 import org.junit.Assert.assertEquals
@@ -36,7 +36,7 @@ class DefaultAnalyticsTrackerTest {
         val second = FakeAnalyticsTracker(id = "duplicate")
         val analyticsTracker = DefaultAnalyticsTracker(setOf(first, second))
 
-        analyticsTracker.track(MapAnalyticsEvent.AllClicked)
+        analyticsTracker.track(MapAnalyticsEvent.AllClicked(college = -1L, major = -1L))
 
         assertEquals(1, first.events.size + second.events.size)
     }
@@ -63,7 +63,7 @@ class DefaultAnalyticsTrackerTest {
         val failingTracker = FakeAnalyticsTracker(id = "firebase", failOnTrack = true)
         val healthyTracker = FakeAnalyticsTracker(id = "posthog")
         val analyticsTracker = DefaultAnalyticsTracker(setOf(failingTracker, healthyTracker))
-        val event = MapAnalyticsEvent.AllClicked
+        val event = MapAnalyticsEvent.AllClicked(college = -1L, major = -1L)
 
         analyticsTracker.track(event)
 
