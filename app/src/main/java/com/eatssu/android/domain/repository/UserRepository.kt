@@ -34,4 +34,10 @@ interface UserRepository {
     suspend fun setUserDepartment(
         departmentId: Int,
     ): Boolean
+
+    suspend fun getUserLanguage(): String
+
+    suspend fun patchUserLanguage(
+        language: String,
+    ): Boolean
 }

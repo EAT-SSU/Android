@@ -7,6 +7,7 @@ import com.eatssu.android.data.model.orElse
 import com.eatssu.android.data.model.orEmptyList
 import com.eatssu.android.data.model.orNull
 import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.remote.dto.request.LanguageRequest
 import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.remote.dto.response.toDomain
 import com.eatssu.android.data.remote.service.UserService
@@ -65,6 +66,14 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setUserDepartment(departmentId: Int): Boolean {
         return userService.setUserDepartment(UserDepartmentRequest(departmentId)).isSuccess()
+    }
+
+    override suspend fun getUserLanguage(): String {
+        return userService.getUserLanguage().map { it.language }.orNull() ?: ""
+    }
+
+    override suspend fun patchUserLanguage(language: String): Boolean {
+        return userService.patchUserLanguage(LanguageRequest(language)).isSuccess()
     }
 
 }
