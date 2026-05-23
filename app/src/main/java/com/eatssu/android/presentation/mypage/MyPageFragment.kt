@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.mypage
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
@@ -76,6 +78,12 @@ class MyPageFragment : Fragment() {
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private var lastNotificationPermissionState: Boolean? = null
+    private val languageSelectorLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                mainViewModel.refreshUserDepartmentFromServer()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -136,8 +144,7 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onLanguageSettingClick = {
-                                        mainViewModel.trackMyPageMenu(MENU_LANGUAGE_SETTING)
-                                        startActivity(
+                                        languageSelectorLauncher.launch(
                                             Intent(
                                                 requireContext(),
                                                 LanguageSelectorActivity::class.java
@@ -153,12 +160,10 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onDeveloperClick = {
-                                        mainViewModel.trackMyPageMenu(MENU_CREATOR)
-                                        startActivity(
-                                            Intent(
-                                                requireContext(),
-                                                DeveloperActivity::class.java
-                                            )
+                                        startWebView(
+                                            getString(R.string.developer_url),
+                                            getString(R.string.developer),
+                                            ScreenId.EXTERNAL_TERMS
                                         )
                                     },
                                     onOssClick = ::moveToOss,

@@ -12,12 +12,14 @@ class EnumsBehaviorSpec : BehaviorSpec({
         `when`("코드가 매칭되면") {
             then("해당 언어를 반환한다") {
                 AppLanguage.fromCode("ko") shouldBe AppLanguage.KOREAN
+                AppLanguage.fromCode("en") shouldBe AppLanguage.ENGLISH
+                AppLanguage.fromCode("ja") shouldBe AppLanguage.JAPANESE
             }
         }
 
         `when`("코드가 매칭되지 않으면") {
             then("KOREAN을 기본값으로 반환한다") {
-                AppLanguage.fromCode("en") shouldBe AppLanguage.KOREAN
+                AppLanguage.fromCode("unknown") shouldBe AppLanguage.KOREAN
             }
         }
 

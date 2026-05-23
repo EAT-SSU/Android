@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.analytics.AnalyticsIdentityManager
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.repository.UserRepository
 import com.eatssu.android.domain.usecase.auth.LogoutUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -40,6 +42,7 @@ class MainViewModel @Inject constructor(
     private val getUserEmailUseCase: GetUserEmailUseCase,
     private val analyticsIdentityManager: AnalyticsIdentityManager,
     private val analyticsTracker: AnalyticsTracker,
+    private val settingDataStore: SettingDataStore,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MainState>> = MutableStateFlow(UiState.Init)
@@ -51,7 +54,8 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             loadStoredUserDepartment()
-            getUserDepartment()
+            syncLanguageState()
+            loadUserDepartmentFromServer()
             fetchAndCheckNickname()
         }
     }
@@ -93,6 +97,9 @@ class MainViewModel @Inject constructor(
                     menu = menu,
                 ),
             )
+    fun refreshUserDepartmentFromServer() {
+        viewModelScope.launch {
+            loadUserDepartmentFromServer()
         }
     }
 
@@ -143,7 +150,7 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private suspend fun getUserDepartment() {
+    private suspend fun loadUserDepartmentFromServer() {
         val (college, department) = userRepository.getUserCollegeDepartment() ?: run {
             _uiEvent.emit(
                 UiEvent.ShowToast(
@@ -177,6 +184,12 @@ class MainViewModel @Inject constructor(
             college = userInfo.userCollege,
             department = userInfo.userDepartment,
         )
+    }
+
+    private suspend fun syncLanguageState() {
+        // 어떤 이유로 앱과 서버의 언어가 다를 수 있기 때문에, 앱 언어 설정을 서버에 전송
+        val language = settingDataStore.appLanguage.first()
+        userRepository.patchUserLanguage(language.code.uppercase())
     }
 }
 

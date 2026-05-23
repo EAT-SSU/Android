@@ -62,9 +62,72 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
                         state.data.selectedFilter shouldBe FilterType.All
+                        state.data.availableFilters shouldBe listOf(FilterType.All, FilterType.Mine)
                         state.data.partnerships shouldBe allPartnerships
                     }
                     coVerify(atLeast = 1) { partnershipRepository.getAllPartnerships() }
+                }
+            }
+        }
+
+        `when`("Festival 제휴가 있으면") {
+            val festivalInfo = Partnership.PartnershipInfo(
+                id = 1,
+                partnershipType = "DISCOUNT",
+                collegeName = "IT",
+                departmentName = "CS",
+                likeCount = 1,
+                isLiked = false,
+                description = "축제 할인",
+                startDate = "2025-05-01",
+                endDate = "2025-05-03",
+                periodType = PeriodType.FESTIVAL,
+            )
+            val normalInfo = Partnership.PartnershipInfo(
+                id = 2,
+                partnershipType = "DISCOUNT",
+                collegeName = "IT",
+                departmentName = "CS",
+                likeCount = 1,
+                isLiked = false,
+                description = "상시 할인",
+                startDate = "2025-01-01",
+                endDate = "2025-12-31",
+                periodType = PeriodType.NORMAL,
+            )
+            val allPartnerships = listOf(
+                samplePartnership(
+                    storeName = "Festival Cafe",
+                    infos = listOf(festivalInfo, normalInfo),
+                )
+            )
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
+            )
+            coEvery { partnershipRepository.getAllPartnerships() } returns allPartnerships
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns emptyList()
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
+            )
+
+            then("Festival 필터로 시작하고 Festival 필터 버튼을 표시한다") {
+                runTest {
+                    eventually(2.seconds) {
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.selectedFilter shouldBe FilterType.Festival
+                        state.data.availableFilters shouldBe FilterType.entries.toList()
+                        state.data.partnerships.first().partnershipInfos shouldBe listOf(
+                            festivalInfo
+                        )
+                    }
                 }
             }
         }
@@ -90,7 +153,9 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
             then("RequiresDepartment 결과를 상태에 반영하고 Mine 데이터를 로드하지 않는다") {
                 runTest {
                     eventually(2.seconds) {
-                        viewModel.uiState.value shouldBe UiState.Success(MapState(selectedFilter = FilterType.All))
+                        val state = viewModel.uiState.value as UiState.Success
+                        state.data.selectedFilter shouldBe FilterType.All
+                        state.data.availableFilters shouldBe listOf(FilterType.All, FilterType.Mine)
                     }
 
                     clearMocks(partnershipRepository, answers = false, recordedCalls = true)

@@ -43,3 +43,5 @@ val WarningBr = Color(0xFFFFE0A3)
 val Danger = Color(0xFFDE3412)
 val DangerBg = Color(0xFFFDEFEC)
 val DangerBr = Color(0xFFFCDFD9)
+
+val CheckedColor = Color(0xFF66D4C2)

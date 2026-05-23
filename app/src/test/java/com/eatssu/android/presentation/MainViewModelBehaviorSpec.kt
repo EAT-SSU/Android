@@ -3,6 +3,7 @@ package com.eatssu.android.presentation
 import app.cash.turbine.test
 import com.eatssu.android.R
 import com.eatssu.android.analytics.AnalyticsIdentityManager
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.repository.UserRepository
@@ -17,15 +18,18 @@ import com.eatssu.android.test.sampleUserInfo
 import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.ClickMyPageMenuEvent
+import com.eatssu.common.enums.AppLanguage
 import com.eatssu.common.enums.ToastType
 import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Duration.Companion.seconds
@@ -42,6 +46,8 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
         val getUserEmailUseCase = mockk<GetUserEmailUseCase>()
         val analyticsIdentityManager = mockk<AnalyticsIdentityManager>(relaxed = true)
         val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
+        val settingDataStore = mockk<SettingDataStore>()
+        val appLanguageFlow = MutableStateFlow(AppLanguage.KOREAN)
 
         val college = College(collegeId = 1, collegeName = "IT")
         val department = Department(departmentId = 11, departmentName = "컴퓨터학부")
@@ -56,7 +62,9 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
         coEvery { getUserEmailUseCase() } returns "test@soongsil.ac.kr"
         coEvery { getUserCollegeDepartmentUseCase() } returns userInfo
         coEvery { userRepository.getUserCollegeDepartment() } returns (college to department)
+        coEvery { userRepository.patchUserLanguage(any()) } returns true
         coEvery { setUserCollegeDepartmentUseCase(college, department) } returns Unit
+        every { settingDataStore.appLanguage } returns appLanguageFlow
 
         `when`("학과 정보를 새로고침하면") {
             val viewModel = MainViewModel(
@@ -68,6 +76,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserEmailUseCase = getUserEmailUseCase,
                 analyticsIdentityManager = analyticsIdentityManager,
                 analyticsTracker = analyticsTracker,
+                settingDataStore = settingDataStore,
             )
 
             then("부서명이 반영된 DepartmentState로 전이된다") {
@@ -102,6 +111,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         getUserEmailUseCase = getUserEmailUseCase,
                         analyticsIdentityManager = analyticsIdentityManager,
                         analyticsTracker = analyticsTracker,
+                        settingDataStore = settingDataStore,
                     )
 
                     advanceUntilIdle()
@@ -144,6 +154,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         getUserEmailUseCase = getUserEmailUseCase,
                         analyticsIdentityManager = analyticsIdentityManager,
                         analyticsTracker = analyticsTracker,
+                        settingDataStore = settingDataStore,
                     )
 
                     viewModel.uiEvent.test {
@@ -174,6 +185,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         getUserEmailUseCase = getUserEmailUseCase,
                         analyticsIdentityManager = analyticsIdentityManager,
                         analyticsTracker = analyticsTracker,
+                        settingDataStore = settingDataStore,
                     )
 
                     viewModel.uiEvent.test {
@@ -195,6 +207,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserEmailUseCase = getUserEmailUseCase,
                 analyticsIdentityManager = analyticsIdentityManager,
                 analyticsTracker = analyticsTracker,
+                settingDataStore = settingDataStore,
             )
 
             then("로그아웃 유즈케이스 호출 후 성공 토스트와 LoggedOut 상태를 반영한다") {
