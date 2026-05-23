@@ -236,6 +236,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserEmailUseCase = getUserEmailUseCase,
                 analyticsIdentityManager = analyticsIdentityManager,
                 analyticsTracker = analyticsTracker,
+                settingDataStore = settingDataStore,
             )
 
             then("사용자 학과/단과대와 메뉴명을 이벤트에 담아 전송한다") {

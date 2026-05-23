@@ -97,6 +97,9 @@ class MainViewModel @Inject constructor(
                     menu = menu,
                 ),
             )
+        }
+    }
+
     fun refreshUserDepartmentFromServer() {
         viewModelScope.launch {
             loadUserDepartmentFromServer()

@@ -144,6 +144,7 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onLanguageSettingClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_LANGUAGE_SETTING)
                                         languageSelectorLauncher.launch(
                                             Intent(
                                                 requireContext(),
@@ -160,6 +161,7 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onDeveloperClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_CREATOR)
                                         startWebView(
                                             getString(R.string.developer_url),
                                             getString(R.string.developer),
