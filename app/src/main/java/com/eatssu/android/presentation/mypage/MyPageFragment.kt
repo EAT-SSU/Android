@@ -147,11 +147,10 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onDeveloperClick = {
-                                        startActivity(
-                                            Intent(
-                                                requireContext(),
-                                                DeveloperActivity::class.java
-                                            )
+                                        startWebView(
+                                            getString(R.string.developer_url),
+                                            getString(R.string.developer),
+                                            ScreenId.EXTERNAL_TERMS
                                         )
                                     },
                                     onOssClick = ::moveToOss,
