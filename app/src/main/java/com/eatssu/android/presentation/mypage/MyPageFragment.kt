@@ -61,6 +61,17 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MyPageFragment : Fragment() {
 
+    companion object {
+        private const val MENU_NOTIFICATION_SETTINGS = "notification_settings"
+        private const val MENU_MY_INFO = "my_info"
+        private const val MENU_MY_REVIEW = "my_review"
+        private const val MENU_INQUIRY = "inquiry"
+        private const val MENU_LANGUAGE_SETTING = "language_setting"
+        private const val MENU_CREATOR = "creator"
+        private const val MENU_LOGOUT = "logout"
+        private const val MENU_WITHDRAW = "withdraw"
+    }
+
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
@@ -107,6 +118,7 @@ class MyPageFragment : Fragment() {
                                     departmentName = departmentName,
                                     onAlarmToggle = ::handleAlarmSwitchChange,
                                     onMyInfoClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_MY_INFO)
                                         startActivity(
                                             Intent(
                                                 requireContext(),
@@ -115,6 +127,7 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onMyReviewClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_MY_REVIEW)
                                         startActivity(
                                             Intent(
                                                 requireContext(),
@@ -131,6 +144,7 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onLanguageSettingClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_LANGUAGE_SETTING)
                                         languageSelectorLauncher.launch(
                                             Intent(
                                                 requireContext(),
@@ -147,6 +161,7 @@ class MyPageFragment : Fragment() {
                                         )
                                     },
                                     onDeveloperClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_CREATOR)
                                         startWebView(
                                             getString(R.string.developer_url),
                                             getString(R.string.developer),
@@ -199,6 +214,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun handleAlarmSwitchChange(isChecked: Boolean) {
+        mainViewModel.trackMyPageMenu(MENU_NOTIFICATION_SETTINGS)
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
@@ -211,6 +227,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun openInquire() {
+        mainViewModel.trackMyPageMenu(MENU_INQUIRY)
         val context = requireContext()
         val channelPublicId = "_ZlVAn"
 
@@ -222,6 +239,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun openSignOut() {
+        mainViewModel.trackMyPageMenu(MENU_WITHDRAW)
         val nickname = (myPageViewModel.uiState.value as? UiState.Success)?.data?.nickname
         Intent(requireContext(), SignOutActivity::class.java).apply {
             putExtra("nickname", nickname)
@@ -275,6 +293,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun showLogoutDialog() {
+        mainViewModel.trackMyPageMenu(MENU_LOGOUT)
         requireContext().run {
             showDialog(getString(R.string.dialog_logout_title), getString(R.string.dialog_logout_message)) {
                 isDestructive = true

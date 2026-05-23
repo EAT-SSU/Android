@@ -50,6 +50,7 @@ import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
@@ -72,6 +73,7 @@ fun WriteReviewScreen(
     viewModel: WriteReviewViewModel = hiltViewModel(),
     menuName: String,
     menuType: MenuType,
+    restaurant: Restaurant,
     id: Long,
     onBack: () -> Unit,
 ) {
@@ -121,7 +123,7 @@ fun WriteReviewScreen(
                 onToggleLike = viewModel::toggleLike,
                 onImageSelect = { galleryLauncher.launch("image/*") },
                 onImageDelete = { viewModel.setSelectedImage(null) },
-                onSubmit = { viewModel.postReview(menuType, id, context) }
+                onSubmit = { viewModel.postReview(menuType, restaurant, id, context) }
             )
         }
 

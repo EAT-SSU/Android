@@ -17,6 +17,7 @@ import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ToastType
 import id.zelory.compressor.Compressor
 import io.kotest.matchers.shouldBe
@@ -95,7 +96,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.loadMenuList(MenuType.FIXED, 1L, "돈가스")
                     advanceUntilIdle()
 
-                    viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
+                    viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, mockk(relaxed = true))
                     advanceUntilIdle()
 
                     coVerify(exactly = 0) {
@@ -110,7 +111,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
 
             then("아무 동작도 수행하지 않는다") {
                 runTest {
-                    viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
+                    viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, mockk(relaxed = true))
                     advanceUntilIdle()
 
                     viewModel.uiState.value shouldBe UiState.Init
@@ -159,7 +160,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.onContentChanged("good")
 
                     viewModel.uiEvent.test {
-                        viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
+                        viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, mockk(relaxed = true))
                         advanceUntilIdle()
 
                         expectToast(R.string.toast_review_write_success, ToastType.SUCCESS)
@@ -170,6 +171,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                                     rating = 5,
                                     likes = 0,
                                     photoAttached = false,
+                                    restaurant = Restaurant.HAKSIK,
                                 ),
                             )
                         }
@@ -207,7 +209,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     clearMocks(writeReviewUseCase, answers = false, recordedCalls = true)
 
                     viewModel.uiEvent.test {
-                        viewModel.postReview(MenuType.FIXED, 1L, context)
+                        viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, context)
                         advanceUntilIdle()
 
                         expectToast(R.string.toast_image_upload_success, ToastType.SUCCESS)
@@ -219,6 +221,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                                     rating = 4,
                                     likes = 0,
                                     photoAttached = true,
+                                    restaurant = Restaurant.HAKSIK,
                                 ),
                             )
                         }
@@ -252,7 +255,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.setSelectedImage(uri)
 
                     viewModel.uiEvent.test {
-                        viewModel.postReview(MenuType.FIXED, 1L, context)
+                        viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, context)
                         advanceUntilIdle()
 
                         expectToast(R.string.toast_image_upload_failed, ToastType.ERROR)
@@ -286,7 +289,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.setSelectedImage(uri)
 
                     viewModel.uiEvent.test {
-                        viewModel.postReview(MenuType.FIXED, 1L, context)
+                        viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, context)
                         advanceUntilIdle()
 
                         expectToast(R.string.toast_image_compress_failed, ToastType.ERROR)
@@ -315,7 +318,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.setSelectedImage(uri)
 
                     viewModel.uiEvent.test {
-                        viewModel.postReview(MenuType.FIXED, 1L, context)
+                        viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, context)
                         advanceUntilIdle()
 
                         expectToast(R.string.toast_image_upload_failed, ToastType.ERROR)
@@ -336,7 +339,7 @@ class WriteReviewViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.onRatingChanged(3)
 
                     viewModel.uiEvent.test {
-                        viewModel.postReview(MenuType.FIXED, 1L, mockk(relaxed = true))
+                        viewModel.postReview(MenuType.FIXED, Restaurant.HAKSIK, 1L, mockk(relaxed = true))
                         advanceUntilIdle()
 
                         viewModel.uiState.value.successDataAs<WriteReviewState.Editing>()

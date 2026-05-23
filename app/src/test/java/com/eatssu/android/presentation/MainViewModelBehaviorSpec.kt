@@ -16,6 +16,8 @@ import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.expectToast
 import com.eatssu.android.test.sampleUserInfo
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.ClickMyPageMenuEvent
 import com.eatssu.common.enums.AppLanguage
 import com.eatssu.common.enums.ToastType
 import io.kotest.assertions.nondeterministic.eventually
@@ -24,6 +26,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,6 +45,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
         val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
         val getUserEmailUseCase = mockk<GetUserEmailUseCase>()
         val analyticsIdentityManager = mockk<AnalyticsIdentityManager>(relaxed = true)
+        val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
         val settingDataStore = mockk<SettingDataStore>()
         val appLanguageFlow = MutableStateFlow(AppLanguage.KOREAN)
 
@@ -71,6 +75,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 getUserEmailUseCase = getUserEmailUseCase,
                 analyticsIdentityManager = analyticsIdentityManager,
+                analyticsTracker = analyticsTracker,
                 settingDataStore = settingDataStore,
             )
 
@@ -105,6 +110,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                         getUserEmailUseCase = getUserEmailUseCase,
                         analyticsIdentityManager = analyticsIdentityManager,
+                        analyticsTracker = analyticsTracker,
                         settingDataStore = settingDataStore,
                     )
 
@@ -147,6 +153,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                         getUserEmailUseCase = getUserEmailUseCase,
                         analyticsIdentityManager = analyticsIdentityManager,
+                        analyticsTracker = analyticsTracker,
                         settingDataStore = settingDataStore,
                     )
 
@@ -177,6 +184,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                         getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                         getUserEmailUseCase = getUserEmailUseCase,
                         analyticsIdentityManager = analyticsIdentityManager,
+                        analyticsTracker = analyticsTracker,
                         settingDataStore = settingDataStore,
                     )
 
@@ -198,6 +206,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                 getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
                 getUserEmailUseCase = getUserEmailUseCase,
                 analyticsIdentityManager = analyticsIdentityManager,
+                analyticsTracker = analyticsTracker,
                 settingDataStore = settingDataStore,
             )
 
@@ -212,6 +221,37 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                             viewModel.uiState.value shouldBe UiState.Success(MainState.LoggedOut)
                         }
                         cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+        `when`("마이페이지 메뉴 클릭을 로깅하면") {
+            val viewModel = MainViewModel(
+                logoutUseCase = logoutUseCase,
+                getUserNickNameUseCase = getUserNickNameUseCase,
+                setUserCollegeDepartmentUseCase = setUserCollegeDepartmentUseCase,
+                userRepository = userRepository,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                getUserEmailUseCase = getUserEmailUseCase,
+                analyticsIdentityManager = analyticsIdentityManager,
+                analyticsTracker = analyticsTracker,
+                settingDataStore = settingDataStore,
+            )
+
+            then("사용자 학과/단과대와 메뉴명을 이벤트에 담아 전송한다") {
+                runTest {
+                    viewModel.trackMyPageMenu("my_info")
+                    advanceUntilIdle()
+
+                    verify {
+                        analyticsTracker.track(
+                            ClickMyPageMenuEvent(
+                                college = 1L,
+                                major = 11L,
+                                menu = "my_info",
+                            ),
+                        )
                     }
                 }
             }

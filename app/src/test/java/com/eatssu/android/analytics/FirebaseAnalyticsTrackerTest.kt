@@ -2,6 +2,7 @@ package com.eatssu.android.analytics
 
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.analytics.ScreenViewEvent
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -26,11 +27,12 @@ class FirebaseAnalyticsTrackerTest {
     }
 
     @Test
-    fun `review completion payload keeps firebase compatible boolean value`() {
+    fun `review completion payload keeps restaurant and photo value`() {
         val payload = ReviewAnalyticsEvent.Completed(
             rating = 5L,
             likes = 2L,
             photoAttached = true,
+            restaurant = Restaurant.HAKSIK,
         ).toPayload()
 
         assertEquals("complete_review_v2", payload.eventName)
@@ -38,7 +40,8 @@ class FirebaseAnalyticsTrackerTest {
             mapOf(
                 "rating" to 5L,
                 "likes" to 2L,
-                "photo_attached" to true,
+                "photo_attached" to 1,
+                "restaurants" to "haksik",
             ),
             payload.properties,
         )

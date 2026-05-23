@@ -204,7 +204,11 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                         allState.data.selectedFilter shouldBe FilterType.All
                         allState.data.partnerships shouldBe allPartnerships
                     }
-                    verify(atLeast = 1) { analyticsTracker.track(MapAnalyticsEvent.AllClicked) }
+                    verify(atLeast = 1) {
+                        analyticsTracker.track(
+                            MapAnalyticsEvent.AllClicked(college = 1L, major = 11L),
+                        )
+                    }
 
                     viewModel.setFilter(FilterType.Mine)
                     eventually(2.seconds) {

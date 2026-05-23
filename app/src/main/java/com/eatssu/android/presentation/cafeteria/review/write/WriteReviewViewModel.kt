@@ -15,6 +15,7 @@ import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.common.enums.MenuType
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.zelory.compressor.Compressor
@@ -88,6 +89,7 @@ class WriteReviewViewModel @Inject constructor(
 
     fun postReview(
         menuType: MenuType,
+        restaurant: Restaurant,
         itemId: Long,
         context: Context,
     ) {
@@ -167,6 +169,7 @@ class WriteReviewViewModel @Inject constructor(
                     rating = editing.rating.toLong(),
                     likes = editing.likedMenuIds.size.toLong(),
                     photoAttached = editing.selectedImageUri != null,
+                    restaurant = restaurant,
                 ),
             )
 
