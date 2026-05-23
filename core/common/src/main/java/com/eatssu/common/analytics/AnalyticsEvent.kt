@@ -251,7 +251,16 @@ data class PopupEvent(
     }
 }
 
-
+data class ChangeLanguageEvent(
+    val lang_from: String,
+    val lang_to: String,
+) : AppAnalyticsEvent {
+    override val eventName = "change_language"
+    override val properties = buildMap {
+        put("lang_from", lang_from)
+        put("lang_to", lang_to)
+    }
+}
 
 private fun String.toWeekdayCode() = when (this) {
     "SUNDAY" -> "sun"
