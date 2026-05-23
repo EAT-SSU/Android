@@ -466,7 +466,8 @@ internal fun MapScreen(
                     onSelectedFilterChange(next)
                 },
                 modifier = Modifier.padding(top = 12.dp),
-                departmentName = departmentName.toString()
+                departmentName = departmentName.toString(),
+                filters = mapState.availableFilters,
             )
         }
     }

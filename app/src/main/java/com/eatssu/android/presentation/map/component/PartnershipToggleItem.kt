@@ -54,10 +54,11 @@ fun PartnershipFilterToggle(
     selected: FilterType,
     onSelectedChange: (FilterType) -> Unit,
     departmentName: String,
+    filters: List<FilterType> = FilterType.entries,
     modifier: Modifier = Modifier,
 ) {
     Timber.d("departmentName = $departmentName")
-    val items = FilterType.entries.map {
+    val items = filters.map {
         it to it.getLabel(departmentName)
     }
     Row(
