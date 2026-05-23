@@ -2,6 +2,7 @@ package com.eatssu.android.analytics
 
 import com.eatssu.common.analytics.AnalyticsIdentity
 import com.eatssu.common.analytics.AppAnalyticsEvent
+import com.eatssu.common.analytics.ChangeLanguageEvent
 import com.eatssu.common.analytics.PopupEvent
 import com.eatssu.common.analytics.WidgetAnalyticsEvent
 import com.eatssu.common.enums.LaunchPath
@@ -21,6 +22,23 @@ class PostHogAnalyticsTrackerTest {
             mapOf(
                 "launch_path" to "widget",
                 "localeCode" to "ko",
+            ),
+            payload.properties,
+        )
+    }
+
+    @Test
+    fun `change language payload keeps previous and next locale codes`() {
+        val payload = ChangeLanguageEvent(
+            lang_from = "ko",
+            lang_to = "en",
+        ).toPayload()
+
+        assertEquals("change_language", payload.eventName)
+        assertEquals(
+            mapOf(
+                "lang_from" to "ko",
+                "lang_to" to "en",
             ),
             payload.properties,
         )

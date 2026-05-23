@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
+import com.eatssu.android.analytics.LocalAnalyticsTracker
+import com.eatssu.common.analytics.ChangeLanguageEvent
 import com.eatssu.common.enums.AppLanguage
 import com.eatssu.design_system.component.EatSsuRadioCheckBoxGroup
 import com.eatssu.design_system.component.EatSsuTopBar
@@ -25,11 +27,22 @@ fun LanguageSelectorScreen(
     onBack: () -> Unit = {}
 ) {
     val selectedLanguage by viewModel.selectedLanguage.collectAsStateWithLifecycle()
+    val analyticsTracker = LocalAnalyticsTracker.current
 
     LanguageSelectorContent(
         modifier = modifier,
         selectedLanguage = selectedLanguage,
-        onLanguageSelected = { viewModel.selectLanguage(it) },
+        onLanguageSelected = { language ->
+            if (selectedLanguage != language) {
+                analyticsTracker.track(
+                    ChangeLanguageEvent(
+                        lang_from = selectedLanguage.code,
+                        lang_to = language.code,
+                    ),
+                )
+            }
+            viewModel.selectLanguage(language)
+        },
         onBack = onBack
     )
 }
