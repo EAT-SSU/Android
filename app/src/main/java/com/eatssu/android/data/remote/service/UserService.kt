@@ -2,9 +2,11 @@ package com.eatssu.android.data.remote.service
 
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.request.ChangeNicknameRequest
+import com.eatssu.android.data.remote.dto.request.LanguageRequest
 import com.eatssu.android.data.remote.dto.request.UserDepartmentRequest
 import com.eatssu.android.data.remote.dto.response.CollegeResponse
 import com.eatssu.android.data.remote.dto.response.DepartmentResponse
+import com.eatssu.android.data.remote.dto.response.LanguageResponse
 import com.eatssu.android.data.remote.dto.response.MyPageResponse
 import com.eatssu.android.data.remote.dto.response.PartnershipResponse
 import com.eatssu.android.data.remote.dto.response.UserCollegeDepartmentResponse
@@ -51,5 +53,14 @@ interface UserService {
 
     @GET("users/department/partnerships")    // 유저 학과의 제휴 조회
     suspend fun getUserDepartmentPartnerships(): ApiResult<List<PartnershipResponse>>
+
+    @GET("users/language")    // 언어 설정 조회
+    suspend fun getUserLanguage(): ApiResult<LanguageResponse>
+
+    @PATCH("users/language")    // 언어 설정 변경
+    suspend fun patchUserLanguage(
+        @Body language: LanguageRequest,
+    ): ApiResult<Unit>
+
 
 }

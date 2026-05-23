@@ -1,0 +1,228 @@
+key,ko,en,ja,vi
+app_name,EAT-SSU,EAT-SSU,EAT-SSU,
+custom_weekdays,월 | 화 | 수 | 목 | 금 | 토 | 일,Mon | Tue | Wed | Thu | Fri | Sat | Sun,月 | 火 | 水 | 木 | 金 | 土 | 日,
+title_review_write,리뷰 작성하기,Write a Review,レビューを書く,
+title_review_modify,리뷰 수정하기,Edit Review,レビューを編集,
+title_sign_out,탈퇴하기,Delete Account,アカウント削除,
+title_report,신고하기,Report,通報,
+title_widget_setting,위젯 설정,Widget Settings,ウィジェット設定,
+title_partnership_map,제휴 지도,Partner Map,提携マップ,
+title_force_update,강제 업데이트,Force Update,強制アップデート,
+nav_cafeteria_menu,학식,Cafeteria,学食,
+nav_map,지도,Map,地図,
+nav_anyone_but_me,나만아니면돼~,Lucky Game,ラッキーゲーム,
+nav_mypage,마이,My,マイページ,
+nav_back,back,Back,戻る,
+button_complete,완료하기,Done,完了,
+button_modify,수정하기,Edit,編集,
+button_delete,삭제하기,Delete,削除,
+button_save,저장하기,Save,保存,
+button_report,신고하기,Report,通報,
+button_cancel,취소,Cancel,キャンセル,
+button_confirm,확인,Confirm,確認,
+button_update,업데이트,Update,アップデート,
+button_check_duplicate,중복확인,Check Availability -> Check,重複確認,
+dialog_logout_title,로그아웃,Log Out,ログアウト,
+dialog_logout_message,로그아웃 하시겠습니까?,Do you want to log out?,ログアウトしますか？,
+dialog_force_update_message,새 버전의 앱을 설치해야 합니다.,You need to install the latest version of the app.,アプリの最新バージョンをインストールする必要があります。,
+dialog_location_permission_description,내 위치를 바로 확인하며 제휴 식당을 찾아볼 수 있도록 위치 권한을 허용해 주세요.,Please allow location access so you can quickly check your location and find partner restaurants nearby.,現在地をすばやく確認し、近くの提携店舗を探すために位置情報の利用を許可してください。,
+dialog_notification_permission_title,알림 권한 필요,Notification Permission Required,通知権限が必要です,
+dialog_notification_permission_description,알림을 받으려면 알림 권한을 활성화해야 합니다.\n설정에서 알림 권한을 허용해주세요.,"To receive notifications, you need to enable notification permission.
+ Please allow notification access in Settings.","通知を受け取るには、通知権限を有効にする必要があります。
+ 設定で通知を許可してください。",
+dialog_settings,설정으로 이동,Go to Settings,設定へ移動,
+dialog_placeholder_title,제목을 입력해주세요,Please enter a title,タイトルを入力してください,
+dialog_placeholder_body,본문을 입력해주세요,Please enter the content,内容を入力してください,
+dialog_network_error_title,네트워크 연결 안 됨,No Network Connection,ネットワーク接続なし,
+dialog_network_error_message,"Wi-Fi, 모바일 데이터를 확인해주세요",Please check your Wi-Fi or mobile data connection.,Wi-Fiまたはモバイルデータ接続を確認してください。,
+dialog_notice_title,공지,Notice,お知らせ,
+toast_review_write_success,리뷰가 등록되었어요.,Your review has been posted.,レビューを投稿しました。,
+toast_review_write_failed,리뷰 작성에 실패하였습니다.,Failed to post your review.,レビューの投稿に失敗しました。,
+toast_review_modify_success,리뷰를 수정했습니다.,Your review has been updated.,レビューを更新しました。,
+toast_review_modify_failed,리뷰 수정이 실패했습니다.,Failed to update your review.,レビューの更新に失敗しました。,
+toast_review_delete_success,리뷰가 삭제되었어요.,Your review has been deleted.,レビューを削除しました。,
+toast_review_delete_failed,리뷰 삭제에 실패했습니다.,Failed to delete your review.,レビューの削除に失敗しました。,
+toast_review_load_failed,리뷰를 불러오지 못했습니다.,Could not load reviews.,レビューを読み込めませんでした。,
+toast_image_upload_success,이미지가 업로드되었습니다.,Image uploaded successfully.,画像をアップロードしました。,
+toast_image_upload_failed,이미지 업로드에 실패하였습니다.,Failed to upload image.,画像のアップロードに失敗しました。,
+toast_image_compress_failed,이미지 압축에 실패하였습니다.,Failed to compress image.,画像の圧縮に失敗しました。,
+toast_image_not_found,이미지 파일을 찾을 수 없습니다.,Could not find the image file.,画像ファイルが見つかりませんでした。,
+toast_report_success,신고가 성공적으로 접수되었어요!,Your report has been submitted successfully!,通報が正常に送信されました！,
+toast_report_failed,신고가 실패하였습니다.,Failed to submit your report.,通報の送信に失敗しました。,
+toast_nickname_change_failed,닉네임 변경에 실패했어요.,Failed to change your nickname.,ニックネームの変更に失敗しました。,
+toast_college_required,단과대를 먼저 선택해주세요.,Please select your college first.,先に学部を選択してください。,
+toast_department_required,학과를 선택해주세요.,Please select your department.,学科を選択してください。,
+toast_info_updated,정보가 업데이트되었습니다.,Your information has been updated.,情報が更新されました。,
+toast_nickname_changed,닉네임이 변경되었습니다.,Your nickname has been changed.,ニックネームが変更されました。,
+toast_department_updated,학과 정보가 업데이트되었습니다.,Your department information has been updated.,学科情報が更新されました。,
+toast_no_changes,변경사항이 없습니다.,No changes were made.,変更内容はありません。,
+nickname_error_length,%1$d~%2$d글자를 입력해 주세요.,Please enter %1$d to %2$d characters.,%1$d〜%2$d文字で入力してください。,
+nickname_error_whitespace,띄어쓰기를 제외한 공백 문자는 사용할 수 없어요.,Whitespace characters other than spaces are not allowed.,スペース以外の空白文字は使用できません。,
+nickname_error_consecutive_space,연속된 띄어쓰기는 사용할 수 없어요.,Consecutive spaces are not allowed.,連続したスペースは使用できません。,
+nickname_error_allowed_chars,허용 문자(한글/영문/숫자)만 사용할 수 있어요.,"Only Korean, English letters, and numbers are allowed.",韓国語、英字、数字のみ使用できます。,
+nickname_error_consecutive_special,"연속된 특수문자(--, __)는 사용할 수 없어요.","Consecutive special characters (--, __) are not allowed.",連続した特殊文字（--、__）は使用できません。,
+nickname_error_only_numbers,숫자만으로 된 닉네임은 사용할 수 없어요.,A nickname cannot contain only numbers.,数字だけのニックネームは使用できません。,
+nickname_error_special_position,특수문자로 시작/끝나는 닉네임은 사용할 수 없어요.,A nickname cannot start or end with a special character.,ニックネームの先頭または末尾に特殊文字は使用できません。,
+nickname_error_profanity,"욕설, 비속어 등의 표현이 포함된 닉네임은 사용할 수 없어요.",Nicknames containing profanity or abusive language are not allowed.,悪口や不適切な表現を含むニックネームは使用できません。,
+nickname_error_invalid,올바르지 않은 닉네임이에요.,This nickname is not valid.,このニックネームは使用できません。,
+toast_app_init_error,앱 초기화 중 오류가 발생했습니다,An error occurred while initializing the app.,アプリの初期化中にエラーが発生しました。,
+toast_app_update_required,앱을 업데이트해주세요,Please update the app.,アプリをアップデートしてください。,
+toast_partnership_info_not_found,제휴 정보가 없습니다.,No partner information found.,提携情報が見つかりません。,
+toast_login_failed,로그인에 실패했어요.,Login failed.,ログインに失敗しました。,
+toast_logout_success,로그아웃했어요.,You have been logged out.,ログアウトしました。,
+toast_token_invalid,다시 로그인해주세요.,Please log in again.,もう一度ログインしてください。,
+toast_token_expired,세션이 만료되어 다시 로그인해주세요.,Your session has expired. Please log in again.,セッションの有効期限が切れました。もう一度ログインしてください。,
+toast_require_nickname,닉네임을 설정해주세요.,Please set a nickname.,ニックネームを設定してください。,
+toast_notification_enable,EAT-SSU 수신 동의 (%1$s),EAT-SSU notifications enabled (%1$s),EAT-SSU通知が有効になりました（%1$s）,
+toast_notification_disable,EAT-SSU 수신 거절 (%1$s),EAT-SSU notifications disabled (%1$s),EAT-SSU通知が無効になりました（%1$s）,
+toast_oss_load_fail,오픈소스 라이브러리를 불러올 수 없어요.,Could not load open-source libraries.,オープンソースライブラリを読み込めませんでした。,
+toast_sign_out_success,회원탈퇴되었어요.,Your account has been deleted.,アカウントを削除しました。,
+toast_sign_out_fail,회원탈퇴에 실패했어요.,Failed to delete your account.,アカウントの削除に失敗しました。,
+review_how_was_meal,오늘의 식사는 어땠나요?,How was your meal today?,今日の食事はいかがでしたか？,
+review_recommend_menu,추천하고 싶은 메뉴가 있나요?,Any dishes you'd recommend?,おすすめしたいメニューはありますか？,
+review_placeholder,메뉴에 대한 상세한 리뷰를 작성해주세요,Write a detailed review of the menu,メニューについて詳しくレビューを書いてください,
+review_preparing,화면을 준비하는 중입니다.,Preparing the screen.,画面を準備しています。,
+review_posting,작성 중...,Posting...,投稿中...,
+review_modifying,수정 중...,Updating...,更新中...,
+review_photo_delete_hint,"사진 클릭 시, 삭제됩니다.",Tap a photo to delete it.,写真をタップすると削除できます。,
+review_photo_count,사진 추가(%1$d/%2$d),Add Photo (%1$d/%2$d),写真を追加（%1$d/%2$d）,
+review_settings,리뷰 설정,Review Settings,レビュー設定,
+review_error_occurred,에러가 발생했습니다.,An error occurred.,エラーが発生しました。,
+review_write,리뷰 작성하기,Write a Review,レビューを書く,
+review,리뷰,Reviews,レビュー,
+my_review,내 리뷰,My Reviews,自分のレビュー,
+none_review,아직 작성한 리뷰가 없어요,No reviews yet,まだレビューがありません,
+none_review_my,첫 리뷰를 남겨 주세요!,Be the first to leave a review!,最初のレビューを書いてみましょう！,
+none_review_list_detail,메뉴에 가장 먼저 리뷰를 남겨주세요!,Be the first to review this menu item!,このメニューに最初のレビューを書いてみましょう！,
+rate_n,%1$d점,%1$d pts,%1$d点,
+today_menu,오늘의 메뉴,Today's Menu,今日のメニュー,
+price,가격,Price,価格,
+rate,평점,Rating → ★,評価,
+student_cafeteria,학생식당,Student Cafeteria,学生食堂,
+widget_select_restaurant,확인하고 싶은 식당을 선택하세요.,Select the cafeteria you want to check.,確認したい食堂を選択してください。,
+widget_select,선택하기,Select,選択,
+widget_morning,아침,Breakfast,朝食,
+widget_lunch,점심,Lunch,昼食,
+widget_dinner,저녁,Dinner,夕食,
+widget_no_menu,오늘의 메뉴가 없습니다.,No menu available today.,本日のメニューはありません。,
+widget_loading,로딩 중,Loading,読み込み中,
+widget_network_error,네트워크 연결 상태를 확인해주세요.,Please check your network connection.,ネットワーク接続を確認してください。,
+widget_setup_required,설정 필요,Setup Required,設定が必要です,
+widget_select_prompt,위젯 설정에서 식당을 선택해주세요.,Please select a cafeteria in Widget Settings.,ウィジェット設定で食堂を選択してください。,
+mypage,마이페이지,My Page,マイページ,
+my_info,내 정보,My Info,自分の情報,
+logout,로그아웃,Log Out,ログアウト,
+signout,회원탈퇴,Delete Account,アカウント削除,
+app_version,앱 버전,App Version,アプリバージョン,
+mypage_push_notification_title,푸시 알림 설정,Push Notification Settings,プッシュ通知設定,
+mypage_push_notification_description,매일 오전 11시에 알림을 보내드려요,We'll send you a notification every day at 11:00 AM.,毎日午前11時に通知をお送りします。,
+language_setting,언어 설정,Language Settings,言語設定,
+language_select_description,사용할 언어를 선택하세요.,Choose the language you want to use.,使用する言語を選択してください。,
+language_system_default,시스템 언어 (기본값),System Language (Default),システム言語（デフォルト）,
+kakao,카카오,Kakao,Kakao,
+connect_account,연결된 계정,Connected Account,連携済みアカウント,
+nickname,닉네임,Nickname,ニックネーム,
+set_nickname,닉네임을 설정해주세요,Please set a nickname,ニックネームを設定してください,
+set_nickname_length,%1$d~%2$d글자를 입력해주세요.,Please enter %1$d to %2$d characters.,%1$d〜%2$d文字で入力してください。,
+set_nickname_able,사용 가능한 닉네임입니다!,This nickname is available!,このニックネームは使用できます！,
+userinfo_nickname_setting,닉네임 설정,Edit Nickname,ニックネーム編集,
+userinfo_affiliation_setting,소속 설정,Set Affiliation -> College & Department,所属設定,
+not_found,정보를 불러올 수 없어요.,Could not load the information.,情報を読み込めませんでした。,
+server_error_title,통신 오류,Connection Error,接続エラー,
+server_error_message,서버와 통신할 수 없습니다.\n잠시 후 다시 시도해주세요.,"Unable to communicate with the server.
+ Please try again later.","サーバーと通信できません。
+ しばらくしてからもう一度お試しください。",
+report_title,리뷰를 신고하는 이유를 선택해주세요.,Please choose why you are reporting this review.,このレビューを通報する理由を選択してください。,
+report_sub,하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합니다.,You can report the same review only once within 24 hours.,同じレビューは24時間以内に1回のみ通報できます。,
+report_write_hint,리뷰 신고 사유를 작성해 주세요,Please write the reason for reporting this review,通報理由を入力してください,
+max_150,최대 150자,Up to 150 characters,最大150文字,
+app_slogan_part1,숭실대에서,Eat at,,
+app_slogan_part2,먹자,Soongsil,숭실대에서 먹자,
+inquire,문의하기,Contact Us,お問い合わせ,
+service_rule,서비스 이용약관,Terms of Service,利用規約,
+private_information,개인정보 처리방침,Privacy Policy,プライバシーポリシー,
+policy,개인정보 처리방침,Privacy Policy,プライバシーポリシー,
+terms,서비스 이용약관,Terms of Service,利用規約,
+developer,만든 사람들,Credits,クレジット,
+oss_licenses,오픈소스 라이브러리,Open-Source Libraries,オープンソースライブラリ,
+signout_question,정말 탈퇴하시겠습니까?,Are you sure you want to delete your account?,本当にアカウントを削除しますか？,
+signout_description,"작성한 리뷰는 삭제되지 않으며, (알수없음)으로 표시됩니다.\n자세한 내용은 서비스 이용약관 및 개인정보처리방침을 확인해 주세요.","Your reviews will not be deleted and will be displayed as (Unknown).
+ For details, please check the Terms of Service and Privacy Policy.","レビューは削除されず、（不明）として表示されます。
+ 詳細は利用規約とプライバシーポリシーをご確認ください。",
+signout_nickname,닉네임을 입력해주세요,Please enter your nickname,ニックネームを入力してください,
+notification_context_title,🤔 오늘 밥 뭐 먹지,🤔 What should I eat today?,🤔 今日なに食べる？,
+notification_context_text,오늘의 학식을 확인해보세요!,Check today's cafeteria menu!,今日の学食メニューを確認しよう！,
+notification_channel_lunch_name,점심시간 전 알림,Before-Lunch Notifications,昼食前通知,
+notification_channel_lunch_description,"점심시간 전, 푸시알림을 발송합니다.",Sends push notifications before lunchtime.,昼食時間前にプッシュ通知を送信します。,
+notification_channel_server_name,서버가 보낸 알림,Server Notifications,サーバー通知,
+notification_channel_server_description,잇슈 서버가 보낸 알림을 표시합니다.,Shows notifications sent by the EAT-SSU server.,EAT-SSUサーバーから送信された通知を表示します。,
+input_department,학과 입력하기,Enter your department,学科を入力,
+input_string_description,학과를 입력하고\n나만의 제휴를 확인해보세요!,"Enter your department
+ and check your personalized partnerships!","学科を入力して
+ 自分に合った提携情報を確認しましょう！",
+map_unknown_college_department,단과대/학과 정보를 알 수 없음,College/Department information unavailable,学部/学科情報なし,
+location,식당 위치,Location,場所,
+etc,비고,Notes,備考,
+time,영업 시간,Hours,営業時間,
+favorite_partnership,찜한 제휴,Favorite Partners,お気に入り提携先,
+partnership_filter_mine,내 제휴,My Partners,自分の提携先,
+partnership_filter_all,전체,All,すべて,
+partnership_filter_department_placeholder,학과,Department,学科,
+policy_url,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8,
+terms_url,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80,
+anyone_but_me_url,https://eatssu-coffee.figma.site/,https://eatssu-coffee.figma.site/,https://eatssu-coffee.figma.site/,
+eatssu_instagram,eatssu.official,eatssu.official,eatssu.official,
+eatssu_instagram_url,https://www.instagram.com/eatssu.official/,https://www.instagram.com/eatssu.official/,https://www.instagram.com/eatssu.official/,
+eatssu_event_instagram_url,https://www.instagram.com/p/DVu1n6SEs5b/,https://www.instagram.com/p/DVu1n6SEs5b/,https://www.instagram.com/p/DVu1n6SEs5b/,
+recruiting_url,https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74,https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74,https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=74,
+((학생식당)) 식당 위치,학생회관 3층,"Student Union, 3F",,
+((학생식당)) 영업 시간,"08:00~09:00(천원의아침밥)
+11:20~14:00(점심)
+14:00~17:00(공간 개방)","08:00 – 09:00(1,000-Won Breakfast)
+11:20 – 14:00(Lunch)
+14:00 – 17:00(Space Open)",,
+((학생식당)) 비고,"3개 코너 운영
+뚝배기, 덮밥, 양식
+주말 휴무","3 Food Stations
+Hot Pot(Ttukbaegi), Rice Bowls, Western food
+Closed on weekends",,
+((도담식당)) 식당 위치,신양관 2층,"Shinyang Hall, 2F",,
+((도담식당)) 영업 시간,"평일
+11:20~14:00(점심)
+17:00~18:30(저녁)
+
+주말
+11:20~13:30(점심)","Weekdays
+11:20 – 14:00(Lunch)
+17:00 – 18:30(Dinner)
+
+Weekends
+11:20 –13:30(Lunch)",,
+((도담식당)) 비고,"2개 코너 운영
+일반식, 웰빙코너","2 Food Stations
+Standard Meal, Healthy Meal Corner",,
+((기숙사 식당)) 식당 위치,레지던스홀 지하 1층,"Residence Hall, B1",,
+((기숙사 식당)) 영업 시간,"평일
+11:20~13:50(점심)
+17:00~18:30(저녁)
+
+주말
+11:20~13:30(점심)
+17:00~18:20(저녁)","Weekdays
+11:20 – 13:50(Lunch)
+17:00 – 18:30(Dinner)
+
+Weekends
+11:20~13:30(Lunch)
+17:00 – 18:20(Dinner)",,
+((기숙사 식당)) 비고,조식 미운영,No Breakfast Service,,
+((FACULTY(교직원전용))) 식당 위치,전산관 지하 1층,"Jeonsan Hall, B1",,
+((FACULTY(교직원전용))) 영업 시간,"11:30~14:00(점심)
+14:00~17:00(공간개방)","11:20 – 14:00(Lunch)
+14:00 – 17:00(Space Open)",,
+((FACULTY(교직원전용))) 비고,주말 휴무,Closed on weekends,,
+(스낵코너)) 식당 위치,학생회관 3층,"Student Union, 3F",,
+(스낵코너)) 영업 시간,11:00~15:30(점심),11:00 – 15:30(Lunch),,
+(스낵코너)) 비고,"분식류, 옛날도시락, 컵밥 등
+주말 휴무","Bunsik(Korean snack food), Old School Korean Lunch Box, Cup-bab, etc.
+Closed on weekends",,
