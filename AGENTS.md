@@ -138,3 +138,10 @@ Follow existing patterns first. Repo has minimal automated formatting/lint beyon
 - Team conventions (external):
   - https://github.com/EAT-SSU/Android/wiki/Android-convention
   - https://github.com/EAT-SSU/Android/wiki/Git-convention
+
+## Commit Message Convention
+Format: `<type>: <Korean description>`
+Examples: `fix: 00 고침`, `feat: 이력서 섹션 추가`, `style: 타이포 조정`
+Keep the type in English (Conventional Commits style), and write the description in Korean.
+간결하지만 자세한 작업 내용을 한글로 커밋한다.
+커밋은 한 커밋에 하나의 일만 포함한다. 여러가지 일은 커밋을 쪼갠다.

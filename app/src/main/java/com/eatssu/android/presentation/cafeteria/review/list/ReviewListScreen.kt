@@ -227,13 +227,15 @@ internal fun ReviewListScreen(
                                 rating = 0.0,
                             )
                         )
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
                             Spacer(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
-                                    .fillMaxWidth()   // 가로 전체 차지
+                                    .fillMaxWidth()
                                     .height(16.dp)
-                                    .background(Gray100) // 배경색 적용
+                                    .background(Gray100)
                             )
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
@@ -250,9 +252,9 @@ internal fun ReviewListScreen(
                             }
                             Box(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .fillMaxHeight()
-                                    .padding(top = 100.dp)
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                contentAlignment = Alignment.Center
                             ) {
                                 DelayedLoadingIndicator(modifier = Modifier)
                             }
@@ -267,14 +269,12 @@ internal fun ReviewListScreen(
                         val isInitialLoading = loadState.refresh is LoadState.Loading
                         val isError = loadState.refresh is LoadState.Error
 
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            item {
+                        if (isInitialLoading || isError || reviewPagingItems.itemCount == 0) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
                                 ReviewInfoContent(menuName, info)
-                            }
 
-                            item {
                                 Spacer(
                                     modifier = Modifier
                                         .padding(vertical = 16.dp)
@@ -282,9 +282,7 @@ internal fun ReviewListScreen(
                                         .height(16.dp)
                                         .background(Gray100)
                                 )
-                            }
 
-                            item {
                                 Row(Modifier.padding(horizontal = 24.dp)) {
                                     Text(
                                         stringResource(R.string.review),
@@ -297,27 +295,16 @@ internal fun ReviewListScreen(
                                         style = EatssuTheme.typography.h2,
                                     )
                                 }
-                            }
 
-                            if (isInitialLoading) {
-                                item {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 100.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    if (isInitialLoading) {
                                         DelayedLoadingIndicator(modifier = Modifier)
-                                    }
-                                }
-                            } else if (isError) {
-                                item {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 100.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
+                                    } else if (isError) {
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text(
                                                 stringResource(R.string.toast_review_load_failed),
@@ -330,23 +317,46 @@ internal fun ReviewListScreen(
                                                 modifier = Modifier.width(100.dp)
                                             )
                                         }
-                                    }
-                                }
-                            } else if (reviewPagingItems.itemCount == 0) {
-                                item {
-                                    Box(
-                                        modifier = Modifier
-                                            .align(Alignment.CenterHorizontally)
-                                            .fillMaxHeight(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
+                                    } else if (reviewPagingItems.itemCount == 0) {
                                         EmptyReviewContent(
-                                            modifier = Modifier
-                                                .fillMaxWidth(),
+                                            modifier = Modifier.fillMaxWidth(),
                                         )
                                     }
                                 }
-                            } else {
+                            }
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                item {
+                                    ReviewInfoContent(menuName, info)
+                                }
+
+                                item {
+                                    Spacer(
+                                        modifier = Modifier
+                                            .padding(vertical = 16.dp)
+                                            .fillMaxWidth()
+                                            .height(16.dp)
+                                            .background(Gray100)
+                                    )
+                                }
+
+                                item {
+                                    Row(Modifier.padding(horizontal = 24.dp)) {
+                                        Text(
+                                            stringResource(R.string.review),
+                                            style = EatssuTheme.typography.h2,
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = "${info?.reviewCnt}",
+                                            color = Primary,
+                                            style = EatssuTheme.typography.h2,
+                                        )
+                                    }
+                                }
+
                                 items(
                                     count = reviewPagingItems.itemCount,
                                     key = reviewPagingItems.itemKey { it.reviewId }

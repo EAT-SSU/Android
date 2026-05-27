@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.cafeteria.review.modify
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +40,7 @@ import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.component.CloseTopBar
 import com.eatssu.design_system.component.EatSsuButton
+import com.eatssu.design_system.component.EatSsuDialog
 import com.eatssu.design_system.component.RatingBarMedium
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
@@ -78,6 +83,40 @@ fun ModifyReviewScreen(
         }
     }
 
+    var showExitDialog by remember { mutableStateOf(false) }
+
+    val hasUnsavedChanges = (ui as? UiState.Success)?.data?.let {
+        (it as? ModifyState.Editing)?.hasChanges ?: false
+    } ?: false
+
+    val handleBack = {
+        if (hasUnsavedChanges) {
+            showExitDialog = true
+        } else {
+            onBack()
+        }
+    }
+
+    BackHandler(enabled = true) {
+        handleBack()
+    }
+
+    if (showExitDialog) {
+        EatSsuDialog(
+            title = stringResource(R.string.review_exit_dialog_title),
+            description = stringResource(R.string.review_exit_dialog_description),
+            confirmText = stringResource(R.string.review_exit_dialog_confirm),
+            dismissText = stringResource(R.string.review_exit_dialog_dismiss),
+            onConfirmClick = { showExitDialog = false },
+            onDismissButtonClick = {
+                showExitDialog = false
+                onBack()
+            },
+            onDismissRequest = { showExitDialog = false },
+            visible = showExitDialog
+        )
+    }
+
     when (val data = (ui as? UiState.Success)?.data) {
         is ModifyState.Editing -> {
             ModifyReviewScreen(
@@ -88,7 +127,7 @@ fun ModifyReviewScreen(
                 menuLikeInfos = data.menuLikeInfos,
                 isSubmitting = false,
                 canSubmit = data.canSubmit,
-                onBack = onBack,
+                onBack = handleBack,
                 onRatingChanged = viewModel::onRatingChanged,
                 onContentChanged = { new ->
                     if (new.length <= MAX_TEXT_COUNT) viewModel.onContentChanged(new)
@@ -108,7 +147,7 @@ fun ModifyReviewScreen(
                 menuLikeInfos = data.menuLikeInfos,
                 isSubmitting = true,
                 canSubmit = false,
-                onBack = onBack,
+                onBack = handleBack,
                 onRatingChanged = {},          // 수정 불가
                 onContentChanged = {},         // 수정 불가
                 onToggleLike = {},             // 수정 불가
