@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -64,7 +64,7 @@ fun ReviewItem(
             Column {
                 Text(
                     writeName,
-                    style = EatssuTheme.typography.caption1
+                    style = EatssuTheme.typography.caption2
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 RatingBarSmall(rating = rating)
@@ -80,29 +80,32 @@ fun ReviewItem(
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(18.dp) // 터치 영역 확장 ( (48 - 12) / 2 )
-                        .offset(x = 18.dp, y = 18.dp) // 시각 위치 되돌리기
+                        .minimumInteractiveComponentSize()
                         .clickable(
                             onClick = onMoreClick,
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         )
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_menu_12),
-                        contentDescription = "etc",
-                        modifier = Modifier.size(12.dp),
-                        tint = Color.Unspecified
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_menu_12),
+                            contentDescription = "etc",
+                            modifier = Modifier.size(12.dp),
+                            tint = Color.Unspecified
+                        )
+
+                        Text(
+                            text = writeDate,
+                            style = EatssuTheme.typography.caption2,
+                            color = Gray400
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = writeDate,
-                    style = EatssuTheme.typography.caption3,
-                    color = Gray400
-                )
             }
 
         }
