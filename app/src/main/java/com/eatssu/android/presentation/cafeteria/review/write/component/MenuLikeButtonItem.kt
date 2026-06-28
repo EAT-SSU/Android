@@ -18,7 +18,7 @@ fun MenuLikeButtonItem(
     onLikeChanged: (Boolean) -> Unit,
 ) {
 
-    Row(modifier.padding(vertical = 6.dp)) {
+    Row(modifier.padding(vertical = 3.dp)) {
         Text(
             mealName,
             style = EatssuTheme.typography.body3
