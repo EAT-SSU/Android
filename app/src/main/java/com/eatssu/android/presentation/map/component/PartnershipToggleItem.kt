@@ -29,8 +29,8 @@ import timber.log.Timber
 
 enum class FilterType(@StringRes val labelResId: Int) {
     Festival(R.string.partnership_filter_festival),
-    All(R.string.partnership_filter_all),
     Mine(R.string.partnership_filter_mine),
+    All(R.string.partnership_filter_all),
 }
 
 @Composable

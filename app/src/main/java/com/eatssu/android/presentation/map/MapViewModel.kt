@@ -88,7 +88,7 @@ class MapViewModel @Inject constructor(
             val availableFilters = if (hasFestival) {
                 FilterType.entries
             } else {
-                listOf(FilterType.All, FilterType.Mine)
+                listOf(FilterType.Mine, FilterType.All)
             }
 
             // Festival 제휴가 하나라도 있으면 Festival을 우선하고, 없으면 기존 기본 필터 규칙을 따른다.
