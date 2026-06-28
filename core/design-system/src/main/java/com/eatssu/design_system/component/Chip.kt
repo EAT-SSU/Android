@@ -40,7 +40,7 @@ fun Chip(
         Row(
             modifier = Modifier
                 .padding(horizontal = 6.dp, vertical = 5.dp) // 원하는 상하 여백 명시
-                .heightIn(min = 16.dp), // 아이콘 유무와 상관없이 동일한 높이 유지 (16dp 아이콘 + 상하 5dp + 라운드 여유)
+                .heightIn(min = 20.dp), // 아이콘 유무와 상관없이 동일한 높이 유지 (16dp 아이콘 + 상하 5dp + 라운드 여유)
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isLike) {
@@ -54,7 +54,7 @@ fun Chip(
             }
             Text(
                 text = menuName,
-                style = EatssuTheme.typography.caption3,
+                style = EatssuTheme.typography.caption2,
                 color = Primary
             )
         }
