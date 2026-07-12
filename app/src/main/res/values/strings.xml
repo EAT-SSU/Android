@@ -145,6 +145,10 @@
     <string name="review_photo_count">사진 추가(%1$d/%2$d)</string>
     <string name="review_settings">리뷰 설정</string>
     <string name="review_error_occurred">에러가 발생했습니다.</string>
+    <string name="review_show_translation">번역 보기</string>
+    <string name="review_show_original">원문 보기</string>
+    <string name="review_translating">번역 중...</string>
+    <string name="toast_review_translation_failed">리뷰 번역에 실패했습니다.</string>
     <string name="review_write">리뷰 작성하기</string>
 
     <!-- ========================== -->

@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -45,6 +48,11 @@ fun ReviewItem(
     modifier: Modifier = Modifier,
     menuLikeInfoList: List<Review.MenuLikeInfo>? = null,
     imgUrl: String? = null,
+    translatedContent: String? = null,
+    isTranslationVisible: Boolean = false,
+    isTranslationLoading: Boolean = false,
+    showTranslationAction: Boolean = false,
+    onTranslationClick: () -> Unit = {},
     onMoreClick: () -> Unit = {}, // 바텀시트 열기 콜백
 ) {
     Column(modifier = modifier.padding(vertical = 24.dp)) {
@@ -128,7 +136,32 @@ fun ReviewItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(content, style = EatssuTheme.typography.body3)
+        Text(
+            text = if (isTranslationVisible && translatedContent != null) {
+                translatedContent
+            } else {
+                content
+            },
+            style = EatssuTheme.typography.body3
+        )
+
+        if (showTranslationAction && content.isNotBlank()) {
+            Spacer(modifier = Modifier.height(4.dp))
+            TextButton(
+                onClick = onTranslationClick,
+                enabled = !isTranslationLoading,
+                modifier = Modifier.align(Alignment.Start)
+            ) {
+                Text(
+                    text = when {
+                        isTranslationLoading -> stringResource(R.string.review_translating)
+                        isTranslationVisible -> stringResource(R.string.review_show_original)
+                        else -> stringResource(R.string.review_show_translation)
+                    },
+                    style = EatssuTheme.typography.caption2
+                )
+            }
+        }
 
         // 이미지가 있는 경우에만 표시
         if (!imgUrl.isNullOrBlank() && imgUrl != "null") {
