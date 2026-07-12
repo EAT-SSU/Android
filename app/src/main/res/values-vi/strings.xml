@@ -148,6 +148,10 @@
     <string name="review_photo_count">Thêm ảnh (%1$d/%2$d)</string>
     <string name="review_settings">Cài đặt đánh giá</string>
     <string name="review_error_occurred">Đã xảy ra lỗi.</string>
+    <string name="review_show_translation">Xem bản dịch</string>
+    <string name="review_show_original">Xem bản gốc</string>
+    <string name="review_translating">Đang dịch...</string>
+    <string name="toast_review_translation_failed">Không thể dịch đánh giá.</string>
     <string name="review_write">Viết đánh giá</string>
 
     <!-- ========================== -->

@@ -148,6 +148,10 @@
     <string name="review_photo_count">写真を追加（%1$d/%2$d）</string>
     <string name="review_settings">レビュー設定</string>
     <string name="review_error_occurred">エラーが発生しました。</string>
+    <string name="review_show_translation">翻訳を見る</string>
+    <string name="review_show_original">原文を見る</string>
+    <string name="review_translating">翻訳中...</string>
+    <string name="toast_review_translation_failed">レビューの翻訳に失敗しました。</string>
     <string name="review_write">レビューを書く</string>
 
     <!-- ========================== -->

@@ -12,6 +12,7 @@ import com.eatssu.android.data.remote.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.remote.dto.response.MenuReviewInfoResponse
 import com.eatssu.android.data.remote.dto.response.MenuReviewListResponse
 import com.eatssu.android.data.remote.dto.response.MyReviewListResponse
+import com.eatssu.android.data.remote.dto.response.ReviewTranslationResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -86,5 +87,11 @@ interface ReviewService {
 
     @GET("users/v2/reviews") // 내가 쓴 리뷰
     suspend fun getMyReviews(): ApiResult<MyReviewListResponse>
+
+    @GET("/v2/reviews/{reviewId}/translation")
+    suspend fun getReviewTranslation(
+        @Path("reviewId") reviewId: Long,
+        @Query("targetLanguage") targetLanguage: String,
+    ): ApiResult<ReviewTranslationResponse>
 
 }

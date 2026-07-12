@@ -115,6 +115,13 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewService: Review
         return reviewService.getMyReviews().map { it.toDomain() }.orEmptyList()
     }
 
+    override suspend fun getReviewTranslation(
+        reviewId: Long,
+        targetLanguage: String,
+    ) = reviewService.getReviewTranslation(reviewId, targetLanguage)
+        .map { it.toDomain() }
+        .orNull()
+
     override fun getMenuReviewListPaged(menuId: Long?): Flow<PagingData<Review>> {
         return Pager(
             config = PagingConfig(pageSize = 20),
