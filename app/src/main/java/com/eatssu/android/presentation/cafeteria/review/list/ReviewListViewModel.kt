@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
@@ -36,7 +37,11 @@ class ReviewListViewModel @Inject constructor(
     private val getReviewListPagedUseCase: GetReviewListPagedUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
     private val getReviewTranslationUseCase: GetReviewTranslationUseCase,
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ViewModel() {
+
+    val isLoggedIn: Boolean
+        get() = getAccessTokenUseCase().isNotBlank()
 
     private val _uiState = MutableStateFlow<UiState<ReviewListState>>(UiState.Init)
     val uiState: StateFlow<UiState<ReviewListState>> = _uiState.asStateFlow()
@@ -131,13 +136,16 @@ class ReviewListViewModel @Inject constructor(
 
             val translation = getReviewTranslationUseCase(review.reviewId, targetLanguage)
             if (translation == null || translation.translatedContent.isBlank()) {
-                _translationStates.value = _translationStates.value - review.reviewId
-                _uiEvent.emit(
-                    UiEvent.ShowToast(
-                        UiText.StringResource(R.string.toast_review_translation_failed),
-                        ToastType.ERROR
-                    )
+                _translationStates.value = _translationStates.value + (
+                    review.reviewId to ReviewTranslationUiState(isUnavailable = true)
                 )
+                return@launch
+            }
+
+            if (translation.translatedContent.trim().equals(review.content.trim(), ignoreCase = true)) {
+                _translationStates.value = _translationStates.value + (
+                    review.reviewId to ReviewTranslationUiState(isUnavailable = true)
+                    )
                 return@launch
             }
 

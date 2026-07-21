@@ -116,10 +116,8 @@ class ReviewDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         val useCase = GetReviewTranslationUseCase(reviewRepository)
         val translation = ReviewTranslation(
             reviewId = 1L,
-            sourceLanguage = "KO",
-            targetLanguage = "EN",
+            language = "EN",
             translatedContent = "It was delicious.",
-            provider = "DEEPL",
             cached = true,
         )
 

@@ -138,8 +138,11 @@ fun ReviewListScreen(
         onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
-        onTranslationClick = { review -> viewModel.toggleReviewTranslation(review, targetLanguage) },
+        onTranslationClick = { review ->
+            targetLanguage?.let { viewModel.toggleReviewTranslation(review, it) }
+        },
         targetLanguage = targetLanguage,
+        isLoggedIn = viewModel.isLoggedIn,
     )
 }
 
@@ -156,7 +159,8 @@ internal fun ReviewListScreen(
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
     onTranslationClick: (Review) -> Unit,
-    targetLanguage: String,
+    targetLanguage: String?,
+    isLoggedIn: Boolean,
 ) {
     val context = LocalContext.current
     val analyticsTracker = LocalAnalyticsTracker.current
@@ -379,7 +383,11 @@ internal fun ReviewListScreen(
                                             translatedContent = translationState?.translatedContent,
                                             isTranslationVisible = translationState?.isTranslated == true,
                                             isTranslationLoading = translationState?.isLoading == true,
-                                            showTranslationAction = shouldShowReviewTranslationAction(targetLanguage),
+                                            showTranslationAction = shouldShowReviewTranslationAction(
+                                                targetLanguage = targetLanguage,
+                                                isLoggedIn = isLoggedIn,
+                                                content = it.content,
+                                            ) && translationState?.isUnavailable != true,
                                             onTranslationClick = { onTranslationClick(it) },
                                             onMoreClick = {
                                                 if (it.isWriter) {
@@ -655,6 +663,7 @@ fun ReviewListPreview() {
             onDeleteClick = {},
             onTranslationClick = {},
             targetLanguage = "EN",
+            isLoggedIn = true,
             translationStates = emptyMap(),
             uiState = UiState.Success(
                 ReviewListState(
@@ -694,6 +703,7 @@ fun ReviewListLoadingPreview() {
             onDeleteClick = {},
             onTranslationClick = {},
             targetLanguage = "EN",
+            isLoggedIn = true,
             translationStates = emptyMap(),
             uiState = UiState.Success(
                 ReviewListState(
@@ -733,6 +743,7 @@ fun ReviewListEmptyPreview() {
             onDeleteClick = {},
             onTranslationClick = {},
             targetLanguage = "EN",
+            isLoggedIn = true,
             translationStates = emptyMap(),
             uiState = UiState.Success(
                 ReviewListState(
@@ -772,6 +783,7 @@ fun ReviewListErrorPreview() {
             onDeleteClick = {},
             onTranslationClick = {},
             targetLanguage = "EN",
+            isLoggedIn = true,
             translationStates = emptyMap(),
             uiState = UiState.Error,
             reviewPagingItems = rememberPreviewPagingItems(pagingData),

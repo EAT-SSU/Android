@@ -81,8 +81,11 @@ fun MyReviewListScreen(
         onBack = onBack,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
         onModifyClick = onModifyClick,
-        onTranslationClick = { review -> viewModel.toggleReviewTranslation(review, targetLanguage) },
+        onTranslationClick = { review ->
+            targetLanguage?.let { viewModel.toggleReviewTranslation(review, it) }
+        },
         targetLanguage = targetLanguage,
+        isLoggedIn = viewModel.isLoggedIn,
     )
 }
 
@@ -96,7 +99,8 @@ internal fun MyReviewListScreen(
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
     onTranslationClick: (Review) -> Unit,
-    targetLanguage: String,
+    targetLanguage: String?,
+    isLoggedIn: Boolean,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedReview by remember { mutableStateOf<Review?>(null) }
@@ -157,7 +161,11 @@ internal fun MyReviewListScreen(
                                             translatedContent = translationState?.translatedContent,
                                             isTranslationVisible = translationState?.isTranslated == true,
                                             isTranslationLoading = translationState?.isLoading == true,
-                                            showTranslationAction = shouldShowReviewTranslationAction(targetLanguage),
+                                            showTranslationAction = shouldShowReviewTranslationAction(
+                                                targetLanguage = targetLanguage,
+                                                isLoggedIn = isLoggedIn,
+                                                content = item.content,
+                                            ) && translationState?.isUnavailable != true,
                                             onTranslationClick = { onTranslationClick(item) },
                                             onMoreClick = {
                                                 selectedReview = item
@@ -239,6 +247,7 @@ fun ReviewListPreview() {
             onModifyClick = {},
             onTranslationClick = {},
             targetLanguage = "EN",
+            isLoggedIn = true,
             translationStates = emptyMap(),
             uiState = UiState.Success(
                 MyReviewState.ReviewExists(
@@ -340,6 +349,7 @@ fun ReviewListEmptyPreview() {
             onModifyClick = {},
             onTranslationClick = {},
             targetLanguage = "EN",
+            isLoggedIn = true,
             translationStates = emptyMap(),
             uiState = UiState.Success(
                 MyReviewState.NoReview

@@ -7,18 +7,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ReviewTranslationResponse(
     @SerialName("reviewId") val reviewId: Long? = null,
-    @SerialName("sourceLanguage") val sourceLanguage: String? = null,
-    @SerialName("targetLanguage") val targetLanguage: String? = null,
+    @SerialName("language") val language: String? = null,
     @SerialName("translatedContent") val translatedContent: String? = null,
-    @SerialName("provider") val provider: String? = null,
     @SerialName("cached") val cached: Boolean? = null,
 )
 
 fun ReviewTranslationResponse.toDomain() = ReviewTranslation(
     reviewId = reviewId ?: -1L,
-    sourceLanguage = sourceLanguage.orEmpty(),
-    targetLanguage = targetLanguage.orEmpty(),
+    language = language.orEmpty(),
     translatedContent = translatedContent.orEmpty(),
-    provider = provider.orEmpty(),
     cached = cached ?: false,
 )

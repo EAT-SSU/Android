@@ -88,10 +88,10 @@ interface ReviewService {
     @GET("users/v2/reviews") // 내가 쓴 리뷰
     suspend fun getMyReviews(): ApiResult<MyReviewListResponse>
 
-    @GET("/v2/reviews/{reviewId}/translation")
+    @POST("/v2/reviews/{reviewId}/translate")
     suspend fun getReviewTranslation(
         @Path("reviewId") reviewId: Long,
-        @Query("targetLanguage") targetLanguage: String,
+        @Query("language") language: String,
     ): ApiResult<ReviewTranslationResponse>
 
 }

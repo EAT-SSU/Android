@@ -392,10 +392,8 @@ class ReviewRepositoryImplBehaviorSpec : AppBehaviorSpec({
             coEvery { service.getReviewTranslation(1L, "EN") } returns ApiResult.Success(
                 ReviewTranslationResponse(
                     reviewId = 1L,
-                    sourceLanguage = "KO",
-                    targetLanguage = "EN",
+                    language = "EN",
                     translatedContent = "It was delicious.",
-                    provider = "DEEPL",
                     cached = true,
                 )
             )
