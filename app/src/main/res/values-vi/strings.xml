@@ -149,9 +149,19 @@
     <string name="review_settings">리뷰 설정</string>
     <string name="review_error_occurred">에러가 발생했습니다.</string>
     <string name="review_show_translation">Xem bản dịch</string>
+    <string name="review_translate">Dịch</string>
     <string name="review_show_original">Xem bản gốc</string>
     <string name="review_translating">Đang dịch...</string>
+    <string name="review_translated_by_ai">Được AI dịch từ tiếng Hàn</string>
+    <string name="review_translation_unavailable">Không thể dịch</string>
+    <string name="review_translation_accuracy_notice">Bản dịch AI không phải lúc nào cũng chính xác.</string>
+    <string name="review_translation_unavailable_notice">Tính năng dịch AI tạm thời không khả dụng.\nVui lòng thử lại sau.</string>
+    <string name="review_translation_information">Thông tin bản dịch</string>
+    <string name="review_profile_image">Ảnh hồ sơ</string>
+    <string name="review_more">Menu đánh giá</string>
+    <string name="review_image">Ảnh đánh giá</string>
     <string name="toast_review_translation_failed">Không thể dịch đánh giá.</string>
+    <string name="toast_review_translation_unchanged">Bản dịch giống với nội dung gốc.</string>
     <string name="review_write">리뷰 작성하기</string>
 
     <!-- ========================== -->

@@ -149,9 +149,19 @@
     <string name="review_settings">レビュー設定</string>
     <string name="review_error_occurred">エラーが発生しました。</string>
     <string name="review_show_translation">翻訳を見る</string>
+    <string name="review_translate">翻訳する</string>
     <string name="review_show_original">原文を見る</string>
     <string name="review_translating">翻訳中...</string>
+    <string name="review_translated_by_ai">AIによる韓国語からの翻訳</string>
+    <string name="review_translation_unavailable">翻訳を利用できません</string>
+    <string name="review_translation_accuracy_notice">AI翻訳は必ずしも正確ではない場合があります。</string>
+    <string name="review_translation_unavailable_notice">AI翻訳は一時的に利用できません。\n後でもう一度お試しください。</string>
+    <string name="review_translation_information">翻訳について</string>
+    <string name="review_profile_image">プロフィール画像</string>
+    <string name="review_more">レビューメニュー</string>
+    <string name="review_image">レビュー画像</string>
     <string name="toast_review_translation_failed">レビューの翻訳に失敗しました。</string>
+    <string name="toast_review_translation_unchanged">翻訳結果は原文と同じです。</string>
     <string name="review_write">レビューを書く</string>
 
     <!-- ========================== -->

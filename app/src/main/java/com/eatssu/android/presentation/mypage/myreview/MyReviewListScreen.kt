@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -104,6 +105,7 @@ internal fun MyReviewListScreen(
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedReview by remember { mutableStateOf<Review?>(null) }
+    val reviewListScrollState = rememberLazyListState()
 
     if (showBottomSheet && selectedReview != null) {
         MyReviewBottomSheet(
@@ -147,6 +149,7 @@ internal fun MyReviewListScreen(
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(horizontal = 24.dp),
+                                    state = reviewListScrollState,
                                 ) {
                                     items(reviewList) { item ->
                                         val translationState = translationStates[item.reviewId]
@@ -161,11 +164,13 @@ internal fun MyReviewListScreen(
                                             translatedContent = translationState?.translatedContent,
                                             isTranslationVisible = translationState?.isTranslated == true,
                                             isTranslationLoading = translationState?.isLoading == true,
+                                            isTranslationUnavailable = translationState?.isUnavailable == true,
+                                            isParentScrolling = reviewListScrollState.isScrollInProgress,
                                             showTranslationAction = shouldShowReviewTranslationAction(
                                                 targetLanguage = targetLanguage,
                                                 isLoggedIn = isLoggedIn,
                                                 content = item.content,
-                                            ) && translationState?.isUnavailable != true,
+                                            ),
                                             onTranslationClick = { onTranslationClick(item) },
                                             onMoreClick = {
                                                 selectedReview = item
