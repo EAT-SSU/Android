@@ -105,9 +105,9 @@ class MyReviewViewModel @Inject constructor(
         val currentState = _translationStates.value[review.reviewId]
         if (currentState?.isLoading == true) return
 
-        if (currentState?.isTranslated == true) {
+        if (currentState?.translatedContent != null) {
             _translationStates.value = _translationStates.value + (
-                review.reviewId to currentState.copy(isTranslated = false)
+                review.reviewId to currentState.copy(isTranslated = !currentState.isTranslated)
                 )
             return
         }

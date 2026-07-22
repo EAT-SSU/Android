@@ -121,10 +121,10 @@ class ReviewDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
             cached = true,
         )
 
-        `when`("repository媛 由щ럭 踰덉뿭 寃곌낵瑜?諛섑솚?섎㈃") {
+        `when`("repository가 리뷰 번역 결과를 반환하면") {
             coEvery { reviewRepository.getReviewTranslation(1L, "EN") } returns translation
 
-            then("?숈씪 寃곌낵瑜?諛섑솚?쒕떎") {
+            then("동일 결과를 반환한다") {
                 runTest {
                     useCase(1L, "EN") shouldBe translation
                 }

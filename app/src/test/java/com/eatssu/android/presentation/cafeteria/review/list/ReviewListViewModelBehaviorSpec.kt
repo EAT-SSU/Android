@@ -159,6 +159,38 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("번역 결과가 캐시되어 있으면") {
+            val review = sampleReview(id = 255L, content = "맛있어요")
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
+            coEvery { getReviewTranslationUseCase(255L, "EN") } returns ReviewTranslation(
+                reviewId = 255L,
+                language = "EN",
+                translatedContent = "It was delicious.",
+                cached = true,
+            )
+
+            then("원문과 번역을 전환해도 번역 API는 한 번만 호출한다") {
+                runTest {
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    advanceUntilIdle()
+                    viewModel.translationStates.value[255L]?.isTranslated shouldBe true
+
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    viewModel.translationStates.value[255L]?.isTranslated shouldBe false
+
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    viewModel.translationStates.value[255L]?.isTranslated shouldBe true
+                    coVerify(exactly = 1) { getReviewTranslationUseCase(255L, "EN") }
+                }
+            }
+        }
+
         `when`("번역 결과가 원문과 같으면") {
             val review = sampleReview(id = 256L, content = "얌")
             val viewModel = ReviewListViewModel(

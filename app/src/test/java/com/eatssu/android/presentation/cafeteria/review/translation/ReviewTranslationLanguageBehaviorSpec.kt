@@ -6,18 +6,19 @@ import io.kotest.matchers.shouldBe
 class ReviewTranslationLanguageBehaviorSpec : AppBehaviorSpec({
 
     given("영어 번역 버튼 노출 조건") {
-        `when`("리뷰에 번역 가능한 비ASCII 문자가 있으면") {
+        `when`("리뷰에 한글이 포함되어 있으면") {
             then("번역 버튼을 보여준다") {
                 shouldShowReviewTranslationAction("EN", true, "맛있어요") shouldBe true
-                shouldShowReviewTranslationAction("EN", true, "おいしいです") shouldBe true
-                shouldShowReviewTranslationAction("EN", true, "ngon quá") shouldBe true
+                shouldShowReviewTranslationAction("EN", true, "good ㅋㅋ") shouldBe true
             }
         }
 
-        `when`("리뷰가 ASCII 문자로만 구성되면") {
+        `when`("리뷰에 한글이 없으면") {
             then("번역 버튼을 숨긴다") {
                 shouldShowReviewTranslationAction("EN", true, "yoyoyoyoy") shouldBe false
                 shouldShowReviewTranslationAction("EN", true, "Already in English") shouldBe false
+                shouldShowReviewTranslationAction("EN", true, "おいしいです") shouldBe false
+                shouldShowReviewTranslationAction("EN", true, "ngon quá") shouldBe false
                 shouldShowReviewTranslationAction("EN", true, "123 !!!") shouldBe false
             }
         }
