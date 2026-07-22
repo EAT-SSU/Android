@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -31,11 +31,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
+import androidx.compose.ui.window.PopupProperties
 import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
@@ -243,6 +250,14 @@ private fun TranslationStatusRow(
     actionLabel: String? = null,
     onActionClick: () -> Unit = {},
 ) {
+    val density = LocalDensity.current
+    val tooltipPositionProvider = remember(density) {
+        TranslationTooltipPositionProvider(
+            windowPaddingPx = with(density) { 8.dp.roundToPx() },
+            anchorSpacingPx = with(density) { 4.dp.roundToPx() },
+        )
+    }
+
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = label,
@@ -280,24 +295,58 @@ private fun TranslationStatusRow(
                     .padding(2.dp),
             )
 
-            DropdownMenu(
-                expanded = showTooltip,
-                onDismissRequest = onTooltipDismiss,
-                offset = DpOffset(x = (-220).dp, y = (-72).dp),
-                shape = RoundedCornerShape(2.dp),
-                containerColor = White,
-                border = BorderStroke(1.dp, Gray300),
-                shadowElevation = 2.dp,
-                modifier = Modifier.widthIn(max = 280.dp),
-            ) {
-                Text(
-                    text = tooltipText,
-                    style = EatssuTheme.typography.caption2,
-                    color = Gray600,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                )
+            if (showTooltip) {
+                Popup(
+                    popupPositionProvider = tooltipPositionProvider,
+                    onDismissRequest = onTooltipDismiss,
+                    properties = PopupProperties(focusable = true),
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(2.dp),
+                        color = White,
+                        border = BorderStroke(1.dp, Gray300),
+                        shadowElevation = 2.dp,
+                        modifier = Modifier.widthIn(max = 280.dp),
+                    ) {
+                        Text(
+                            text = tooltipText,
+                            style = EatssuTheme.typography.caption2,
+                            color = Gray600,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                        )
+                    }
+                }
             }
         }
+    }
+}
+
+private class TranslationTooltipPositionProvider(
+    private val windowPaddingPx: Int,
+    private val anchorSpacingPx: Int,
+) : PopupPositionProvider {
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize,
+    ): IntOffset {
+        val maxX = (windowSize.width - popupContentSize.width - windowPaddingPx)
+            .coerceAtLeast(windowPaddingPx)
+        val preferredX = when (layoutDirection) {
+            LayoutDirection.Ltr -> anchorBounds.right - popupContentSize.width
+            LayoutDirection.Rtl -> anchorBounds.left
+        }
+        val x = preferredX.coerceIn(windowPaddingPx, maxX)
+
+        val aboveAnchor = anchorBounds.top - popupContentSize.height - anchorSpacingPx
+        val belowAnchor = anchorBounds.bottom + anchorSpacingPx
+        val maxY = (windowSize.height - popupContentSize.height - windowPaddingPx)
+            .coerceAtLeast(windowPaddingPx)
+        val preferredY = if (aboveAnchor >= windowPaddingPx) aboveAnchor else belowAnchor
+        val y = preferredY.coerceIn(windowPaddingPx, maxY)
+
+        return IntOffset(x, y)
     }
 }
 
