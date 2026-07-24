@@ -138,6 +138,8 @@ fun ReviewItem(
 
 
             }
+        }
+    }
 
     Column(modifier = modifier.padding(vertical = 10.dp)) {
         ReviewHeader(
