@@ -35,9 +35,9 @@
     <!-- Navigation -->
     <!-- ========================== -->
     <string name="nav_cafeteria_menu">Cafeteria</string>
-    <string name="nav_map">Map</string>
+    <string name="nav_map">Partner Map</string>
     <string name="nav_anyone_but_me">Lucky Game</string>
-    <string name="nav_mypage">My</string>
+    <string name="nav_mypage">My Page</string>
     <string name="nav_back">Back</string>
 
     <!-- ========================== -->
@@ -51,7 +51,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_update">Update</string>
-    <string name="button_check_duplicate">Check Availability -&gt; Check</string>
+    <string name="button_check_duplicate">Check</string>
 
     <!-- ========================== -->
     <!-- Dialog -->
@@ -61,7 +61,7 @@
     <string name="dialog_force_update_message">You need to install the latest version of the app.</string>
     <string name="dialog_location_permission_description">Please allow location access so you can quickly check your location and find partner restaurants nearby.</string>
     <string name="dialog_notification_permission_title">Notification Permission Required</string>
-    <string name="dialog_notification_permission_description">To receive notifications, you need to enable notification permission.\n Please allow notification access in Settings.</string>
+    <string name="dialog_notification_permission_description">To receive notifications, you need to enable notification permission.\nPlease allow notification access in Settings.</string>
     <string name="dialog_settings">Go to Settings</string>
     <string name="dialog_placeholder_title">Please enter a title</string>
     <string name="dialog_placeholder_body">Please enter the content</string>
@@ -148,6 +148,20 @@
     <string name="review_photo_count">Add Photo (%1$d/%2$d)</string>
     <string name="review_settings">Review Settings</string>
     <string name="review_error_occurred">An error occurred.</string>
+    <string name="review_show_translation">Show translation</string>
+    <string name="review_translate">Translate</string>
+    <string name="review_show_original">Show original</string>
+    <string name="review_translating">Translating...</string>
+    <string name="review_translated_by_ai">Translated from Korean by AI</string>
+    <string name="review_translation_unavailable">Translation unavailable</string>
+    <string name="review_translation_accuracy_notice">AI translations may not always be accurate.</string>
+    <string name="review_translation_unavailable_notice">AI translation is temporarily unavailable.\nPlease try again later.</string>
+    <string name="review_translation_information">Translation information</string>
+    <string name="review_profile_image">Profile image</string>
+    <string name="review_more">Review menu</string>
+    <string name="review_image">Review image</string>
+    <string name="toast_review_translation_failed">Failed to translate the review.</string>
+    <string name="toast_review_translation_unchanged">The translation is the same as the original.</string>
     <string name="review_write">Write a Review</string>
 
     <!-- ========================== -->
@@ -169,7 +183,7 @@
     <!-- ========================== -->
     <string name="today_menu">Today\'s Menu</string>
     <string name="price">Price</string>
-    <string name="rate">Rating → ★</string>
+    <string name="rate">★</string>
     <string name="student_cafeteria">Student Cafeteria</string>
 
     <!-- ========================== -->
@@ -194,9 +208,9 @@
     <string name="logout">Log Out</string>
     <string name="signout">Delete Account</string>
     <string name="app_version">App Version</string>
-    <string name="mypage_push_activity_section_title">알림 및 활동</string>
-    <string name="mypage_service_section_title">서비스 정보</string>
-    <string name="mypage_etc_section_title">기타</string>
+    <string name="mypage_push_activity_section_title">Notifications and Activity</string>
+    <string name="mypage_service_section_title">Service Info</string>
+    <string name="mypage_etc_section_title">etc.</string>
     <string name="mypage_push_notification_title">Push Notification Settings</string>
     <string name="mypage_push_notification_description">We\'ll send you a notification every day at 11:00 AM.</string>
 
@@ -223,14 +237,14 @@
     <!-- User Info -->
     <!-- ========================== -->
     <string name="userinfo_nickname_setting">Edit Nickname</string>
-    <string name="userinfo_affiliation_setting">Set Affiliation -&gt; College &amp; Department</string>
+    <string name="userinfo_affiliation_setting">College &amp; Department</string>
 
     <!-- ========================== -->
     <!-- Errors -->
     <!-- ========================== -->
     <string name="not_found">Could not load the information.</string>
     <string name="server_error_title">Connection Error</string>
-    <string name="server_error_message">Unable to communicate with the server.\n Please try again later.</string>
+    <string name="server_error_message">Unable to communicate with the server.\nPlease try again later.</string>
 
     <!-- ========================== -->
     <!-- Report -->
@@ -261,15 +275,15 @@
     <string name="private_information">Privacy Policy</string>
     <string name="policy">Privacy Policy</string>
     <string name="terms">Terms of Service</string>
-    <string name="terms_and_rule">약관 및 정책</string>
-    <string name="developer">Credits</string>
+    <string name="terms_and_rule">Terms and Policies</string>
+    <string name="developer">Creators</string>
     <string name="oss_licenses">Open-Source Libraries</string>
 
     <!-- ========================== -->
     <!-- Sign Out -->
     <!-- ========================== -->
     <string name="signout_question">Are you sure you want to delete your account?</string>
-    <string name="signout_description">Your reviews will not be deleted and will be displayed as (Unknown).\n For details, please check the Terms of Service and Privacy Policy.</string>
+    <string name="signout_description">Your reviews will not be deleted and will appear as (Unknown).\nFor details, please check the Terms of Service and Privacy Policy.</string>
     <string name="signout_nickname">Please enter your nickname</string>
 
     <!-- ========================== -->
@@ -286,7 +300,7 @@
     <!-- Department/College -->
     <!-- ========================== -->
     <string name="input_department">Enter your department</string>
-    <string name="input_string_description">Enter your department\n and check your personalized partnerships!</string>
+    <string name="input_string_description">Enter your department\nand check your personalized partnerships!</string>
     <string name="map_unknown_college_department">College/Department information unavailable</string>
 
     <!-- ========================== -->
@@ -297,9 +311,10 @@
     <string name="time">Hours</string>
     <string name="favorite_partnership">Favorite Partners</string>
     <string name="partnership_filter_mine">My Partners</string>
-    <string name="partnership_filter_festival">축제</string>
+    <string name="partnership_filter_festival">Festival</string>
     <string name="partnership_filter_all">All</string>
     <string name="partnership_filter_department_placeholder">Department</string>
+    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->

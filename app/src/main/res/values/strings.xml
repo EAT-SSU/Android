@@ -145,6 +145,20 @@
     <string name="review_photo_count">사진 추가(%1$d/%2$d)</string>
     <string name="review_settings">리뷰 설정</string>
     <string name="review_error_occurred">에러가 발생했습니다.</string>
+    <string name="review_show_translation">번역 보기</string>
+    <string name="review_translate">번역하기</string>
+    <string name="review_show_original">원문 보기</string>
+    <string name="review_translating">번역 중...</string>
+    <string name="review_translated_by_ai">AI가 한국어에서 번역함</string>
+    <string name="review_translation_unavailable">번역을 사용할 수 없음</string>
+    <string name="review_translation_accuracy_notice">AI 번역은 항상 정확하지 않을 수 있습니다.</string>
+    <string name="review_translation_unavailable_notice">현재 AI 번역을 사용할 수 없습니다.\n나중에 다시 시도해 주세요.</string>
+    <string name="review_translation_information">번역 안내</string>
+    <string name="review_profile_image">프로필 이미지</string>
+    <string name="review_more">리뷰 메뉴</string>
+    <string name="review_image">리뷰 이미지</string>
+    <string name="toast_review_translation_failed">리뷰 번역에 실패했습니다.</string>
+    <string name="toast_review_translation_unchanged">번역 결과가 원문과 동일합니다.</string>
     <string name="review_write">리뷰 작성하기</string>
 
     <!-- ========================== -->
@@ -306,7 +320,7 @@
     <string name="policy_url" translatable="false">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8</string>
     <string name="terms_url" translatable="false">https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80</string>
     <string name="anyone_but_me_url" translatable="false">https://eatssu-coffee.figma.site/</string>
-    <string name="eatssu_instagram_link" translatable="false">EAT-SSU 인스타그램 바로가기</string>
+    <string name="eatssu_instagram_link">EAT-SSU 인스타그램 바로가기</string>
     <string name="eatssu_instagram" translatable="false">eatssu.official</string>
     <string name="eatssu_instagram_url" translatable="false">https://www.instagram.com/eatssu.official/</string>
     <string name="eatssu_event_instagram_url" translatable="false">https://www.instagram.com/p/DVu1n6SEs5b/</string>

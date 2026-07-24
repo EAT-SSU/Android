@@ -10,6 +10,7 @@ import com.eatssu.android.data.remote.dto.response.MenuList
 import com.eatssu.android.data.remote.dto.response.MenuOfMealResponse
 import com.eatssu.android.data.remote.dto.response.MenuReviewInfoResponse
 import com.eatssu.android.data.remote.dto.response.MyReviewListResponse
+import com.eatssu.android.data.remote.dto.response.ReviewTranslationResponse
 import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.test.AppBehaviorSpec
@@ -384,6 +385,35 @@ class ReviewRepositoryImplBehaviorSpec : AppBehaviorSpec({
             then("빈 리스트를 반환한다") {
                 runTest {
                     repository.getMyReviews() shouldBe emptyList()
+                }
+            }
+        }
+        `when`("getReviewTranslation API succeeds") {
+            coEvery { service.getReviewTranslation(1L, "EN") } returns ApiResult.Success(
+                ReviewTranslationResponse(
+                    reviewId = 1L,
+                    language = "EN",
+                    translatedContent = "It was delicious.",
+                    cached = true,
+                )
+            )
+
+            then("maps to ReviewTranslation") {
+                runTest {
+                    val result = repository.getReviewTranslation(1L, "EN")
+                    result?.reviewId shouldBe 1L
+                    result?.translatedContent shouldBe "It was delicious."
+                    result?.cached shouldBe true
+                }
+            }
+        }
+
+        `when`("getReviewTranslation API fails") {
+            coEvery { service.getReviewTranslation(2L, "EN") } returns ApiResult.Failure(500, "error")
+
+            then("returns null") {
+                runTest {
+                    repository.getReviewTranslation(2L, "EN") shouldBe null
                 }
             }
         }

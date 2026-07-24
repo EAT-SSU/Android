@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -52,6 +53,9 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.OthersRev
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
+import com.eatssu.android.presentation.cafeteria.review.translation.ReviewTranslationUiState
+import com.eatssu.android.presentation.cafeteria.review.translation.currentReviewTranslationTargetLanguage
+import com.eatssu.android.presentation.cafeteria.review.translation.shouldShowReviewTranslationAction
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
@@ -95,8 +99,10 @@ fun ReviewListScreen(
     TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
+    val translationStates by viewModel.translationStates.collectAsStateWithLifecycle()
     val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
+    val targetLanguage = currentReviewTranslationTargetLanguage()
 
     LaunchedEffect(refreshNonce) {
         if (refreshNonce == 0L) return@LaunchedEffect
@@ -124,6 +130,7 @@ fun ReviewListScreen(
 
     ReviewListScreen(
         uiState = reviewListState,
+        translationStates = translationStates,
         reviewPagingItems = reviewPagingItems,
         modifier = modifier,
         menuName = menuName,
@@ -131,13 +138,19 @@ fun ReviewListScreen(
         onBack = onBack,
         onReviewWriteButtonClick = onWriteButtonClick,
         onModifyClick = onModifyClick,
-        onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) }
+        onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
+        onTranslationClick = { review ->
+            targetLanguage?.let { viewModel.toggleReviewTranslation(review, it) }
+        },
+        targetLanguage = targetLanguage,
+        isLoggedIn = viewModel.isLoggedIn,
     )
 }
 
 @Composable
 internal fun ReviewListScreen(
     uiState: UiState<ReviewListState>,
+    translationStates: Map<Long, ReviewTranslationUiState>,
     reviewPagingItems: LazyPagingItems<Review>,
     modifier: Modifier = Modifier,
     menuName: String,
@@ -146,6 +159,9 @@ internal fun ReviewListScreen(
     onReviewWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
+    onTranslationClick: (Review) -> Unit,
+    targetLanguage: String?,
+    isLoggedIn: Boolean,
 ) {
     val context = LocalContext.current
     val analyticsTracker = LocalAnalyticsTracker.current
@@ -154,6 +170,7 @@ internal fun ReviewListScreen(
     var showOthersBottomSheet by remember { mutableStateOf(false) }
 
     var selectedReview by remember { mutableStateOf<Review?>(null) }
+    val reviewListScrollState = rememberLazyListState()
 
     if (showOthersBottomSheet && selectedReview != null) {
         OthersReviewBottomSheet(
@@ -268,7 +285,8 @@ internal fun ReviewListScreen(
                         val isError = loadState.refresh is LoadState.Error
 
                         LazyColumn(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            state = reviewListScrollState,
                         ) {
                             item {
                                 ReviewInfoContent(menuName, info)
@@ -353,10 +371,10 @@ internal fun ReviewListScreen(
                                 ) { index ->
                                     val item = reviewPagingItems.get(index)
                                     item?.let {
+                                        val translationState = translationStates[it.reviewId]
                                         ReviewItem(
                                             modifier = Modifier.padding(
                                                 horizontal = 24.dp,
-                                                vertical = 8.dp
                                             ),
                                             writeName = it.writerNickname,
                                             writeDate = it.writeDate,
@@ -364,6 +382,17 @@ internal fun ReviewListScreen(
                                             rating = it.rating,
                                             menuLikeInfoList = it.menuLikeInfoList,
                                             imgUrl = it.imgUrl,
+                                            translatedContent = translationState?.translatedContent,
+                                            isTranslationVisible = translationState?.isTranslated == true,
+                                            isTranslationLoading = translationState?.isLoading == true,
+                                            isTranslationUnavailable = translationState?.isUnavailable == true,
+                                            isParentScrolling = reviewListScrollState.isScrollInProgress,
+                                            showTranslationAction = shouldShowReviewTranslationAction(
+                                                targetLanguage = targetLanguage,
+                                                isLoggedIn = isLoggedIn,
+                                                content = it.content,
+                                            ),
+                                            onTranslationClick = { onTranslationClick(it) },
                                             onMoreClick = {
                                                 if (it.isWriter) {
                                                     showMyBottomSheet = true
@@ -636,6 +665,10 @@ fun ReviewListPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
+            onTranslationClick = {},
+            targetLanguage = "EN",
+            isLoggedIn = true,
+            translationStates = emptyMap(),
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
@@ -672,6 +705,10 @@ fun ReviewListLoadingPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
+            onTranslationClick = {},
+            targetLanguage = "EN",
+            isLoggedIn = true,
+            translationStates = emptyMap(),
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
@@ -708,6 +745,10 @@ fun ReviewListEmptyPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
+            onTranslationClick = {},
+            targetLanguage = "EN",
+            isLoggedIn = true,
+            translationStates = emptyMap(),
             uiState = UiState.Success(
                 ReviewListState(
                     reviewInfo = ReviewInfo(
@@ -744,6 +785,10 @@ fun ReviewListErrorPreview() {
             onReviewWriteButtonClick = {},
             onModifyClick = {},
             onDeleteClick = {},
+            onTranslationClick = {},
+            targetLanguage = "EN",
+            isLoggedIn = true,
+            translationStates = emptyMap(),
             uiState = UiState.Error,
             reviewPagingItems = rememberPreviewPagingItems(pagingData),
         )

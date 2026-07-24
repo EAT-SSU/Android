@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="16dp"
+    android:padding="20dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.core.widget.NestedScrollView
@@ -42,40 +42,6 @@
                     android:paddingTop="16dp"
                     android:textColor="@color/black"
                     tools:text="학생식당"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="24dp"
-                    android:background="@color/gray200" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <TextView
-                    android:id="@+id/tv_location_info"
-                    style="@style/Subtitle2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:text="@string/location"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_location"
-                    style="@style/Body3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:gravity="end"
-                    tools:text="학생회관 3층"
-                    android:textColor="@color/black" />
             </LinearLayout>
 
             <!--  테두리 때문에 카드뷰 씀  -->
@@ -83,7 +49,7 @@
                 android:id="@+id/cv_photo"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="24dp"
                 app:cardCornerRadius="5dp">
 
                 <ImageView
@@ -97,32 +63,53 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_location_info"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location"
+                    android:textColor="@color/gray500" />
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    tools:text="학생회관 3층"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_time_info"
-                    style="@style/Subtitle2"
-                    android:layout_width="0dp"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:text="@string/time"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/gray500" />
 
                 <TextView
                     android:id="@+id/tv_time"
-                    style="@style/Body3"
-                    android:layout_width="0dp"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:gravity="end"
+                    android:layout_marginTop="4dp"
                     tools:text="08:10~09:20\n
-    천원의 아침밥, 100개 한정\n\n
-    11:20~14:00\n
-    점심\n\n
-    14:00~17:20\n
-    공간 개방"
+천원의 아침밥, 100개 한정\n\n
+11:20~14:00\n
+점심\n\n
+14:00~17:20\n
+공간 개방"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -130,28 +117,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_etc_info"
-                    style="@style/Subtitle2"
-                    android:layout_width="0dp"
+                    style="@style/Body2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:text="@string/etc"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/gray500" />
 
                 <TextView
                     android:id="@+id/tv_etc"
-                    style="@style/Body3"
-                    android:layout_width="0dp"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:gravity="end"
+                    android:layout_marginTop="4dp"
                     tools:text="3개 코너 운영\n
-    뚝배기, 덮밥, 양식"
+뚝배기, 덮밥, 양식"
                     android:textColor="@color/black" />
             </LinearLayout>
         </LinearLayout>

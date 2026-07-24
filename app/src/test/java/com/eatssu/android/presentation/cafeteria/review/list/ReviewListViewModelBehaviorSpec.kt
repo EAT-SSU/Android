@@ -3,11 +3,15 @@ package com.eatssu.android.presentation.cafeteria.review.list
 import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.eatssu.android.R
+import com.eatssu.android.domain.model.ReviewTranslation
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewTranslationUseCase
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.expectToast
+import com.eatssu.android.test.sampleReview
 import com.eatssu.android.test.sampleReviewInfo
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.MenuType
@@ -29,11 +33,20 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         val getReviewInfoUseCase = mockk<GetReviewInfoUseCase>()
         val getReviewListPagedUseCase = mockk<GetReviewListPagedUseCase>()
         val deleteReviewUseCase = mockk<DeleteReviewUseCase>()
+        val getReviewTranslationUseCase = mockk<GetReviewTranslationUseCase>()
+        val getAccessTokenUseCase = mockk<GetAccessTokenUseCase>()
 
         every { getReviewListPagedUseCase(any(), any()) } returns flowOf(PagingData.empty())
+        every { getAccessTokenUseCase() } returns "access-token"
 
         `when`("리뷰 정보를 정상 조회하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
             val info = sampleReviewInfo()
             coEvery { getReviewInfoUseCase(MenuType.FIXED, 100L) } returns info
 
@@ -48,7 +61,13 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 정보 조회에서 예외가 발생하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
             coEvery { getReviewInfoUseCase(MenuType.VARIABLE, 101L) } throws IllegalStateException("boom")
 
             then("Error 상태와 실패 토스트를 보낸다") {
@@ -66,7 +85,13 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 삭제가 실패하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
             coEvery { deleteReviewUseCase(55L) } returns false
 
             then("실패 토스트를 보낸다") {
@@ -83,7 +108,13 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 삭제가 성공하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
             coEvery { getReviewInfoUseCase(MenuType.FIXED, 300L) } returns sampleReviewInfo(count = 3)
             coEvery { deleteReviewUseCase(56L) } returns true
 
@@ -105,7 +136,13 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("조회 파라미터 없이 리뷰 삭제가 성공하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
             coEvery { deleteReviewUseCase(77L) } returns true
 
             then("ReviewDeleted 이벤트만 발생하고 정보 재조회는 하지 않는다") {
@@ -118,6 +155,64 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                         coVerify(exactly = 0) { getReviewInfoUseCase(any(), any()) }
                         cancelAndIgnoreRemainingEvents()
                     }
+                }
+            }
+        }
+
+        `when`("번역 결과가 캐시되어 있으면") {
+            val review = sampleReview(id = 255L, content = "맛있어요")
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
+            coEvery { getReviewTranslationUseCase(255L, "EN") } returns ReviewTranslation(
+                reviewId = 255L,
+                language = "EN",
+                translatedContent = "It was delicious.",
+                cached = true,
+            )
+
+            then("원문과 번역을 전환해도 번역 API는 한 번만 호출한다") {
+                runTest {
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    advanceUntilIdle()
+                    viewModel.translationStates.value[255L]?.isTranslated shouldBe true
+
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    viewModel.translationStates.value[255L]?.isTranslated shouldBe false
+
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    viewModel.translationStates.value[255L]?.isTranslated shouldBe true
+                    coVerify(exactly = 1) { getReviewTranslationUseCase(255L, "EN") }
+                }
+            }
+        }
+
+        `when`("번역 결과가 원문과 같으면") {
+            val review = sampleReview(id = 256L, content = "얌")
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+            )
+            coEvery { getReviewTranslationUseCase(256L, "EN") } returns ReviewTranslation(
+                reviewId = 256L,
+                language = "EN",
+                translatedContent = "얌",
+                cached = true,
+            )
+
+            then("안내 토스트를 표시하고 번역을 비활성화한다") {
+                runTest {
+                    viewModel.toggleReviewTranslation(review, "EN")
+                    advanceUntilIdle()
+
+                    viewModel.translationStates.value[256L]?.isUnavailable shouldBe true
                 }
             }
         }

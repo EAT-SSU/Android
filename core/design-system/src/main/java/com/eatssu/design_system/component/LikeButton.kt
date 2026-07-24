@@ -32,7 +32,7 @@ fun LikeButton(
 
     Button(
         onClick = onClick,
-        modifier = modifier.size(58.dp, 28.dp),
+        modifier = modifier.size(58.dp, 36.dp),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp, borderColor),
         colors = ButtonDefaults.buttonColors(
