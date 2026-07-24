@@ -62,7 +62,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
                         state.data.selectedFilter shouldBe FilterType.All
-                        state.data.availableFilters shouldBe listOf(FilterType.All, FilterType.Mine)
+                        state.data.availableFilters shouldBe listOf(FilterType.Mine, FilterType.All)
                         state.data.partnerships shouldBe allPartnerships
                     }
                     coVerify(atLeast = 1) { partnershipRepository.getAllPartnerships() }
@@ -155,7 +155,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
                         state.data.selectedFilter shouldBe FilterType.All
-                        state.data.availableFilters shouldBe listOf(FilterType.All, FilterType.Mine)
+                        state.data.availableFilters shouldBe listOf(FilterType.Mine, FilterType.All)
                     }
 
                     clearMocks(partnershipRepository, answers = false, recordedCalls = true)
