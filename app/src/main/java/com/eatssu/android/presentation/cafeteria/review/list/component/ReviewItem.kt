@@ -78,6 +78,66 @@ fun ReviewItem(
     LaunchedEffect(isParentScrolling) {
         if (isParentScrolling) showTranslationTooltip = false
     }
+    Column(modifier = modifier.padding(vertical = 24.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = com.eatssu.design_system.R.drawable.ic_profile_24),
+                contentDescription = "Profile Image",
+                modifier = Modifier.size(30.dp),
+                tint = Color.Unspecified,
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Column {
+                Text(
+                    writeName,
+                    style = EatssuTheme.typography.caption2
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                RatingBarSmall(rating = rating)
+            }
+
+            Spacer(
+                modifier = Modifier.weight(1f)
+            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End
+            ) {
+                Box(
+                    modifier = Modifier
+                        .minimumInteractiveComponentSize()
+                        .clickable(
+                            onClick = onMoreClick,
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_menu_12),
+                            contentDescription = "etc",
+                            modifier = Modifier.size(12.dp),
+                            tint = Color.Unspecified
+                        )
+
+                        Text(
+                            text = writeDate,
+                            style = EatssuTheme.typography.caption2,
+                            color = Gray400
+                        )
+                    }
+                }
+
+
+            }
 
     Column(modifier = modifier.padding(vertical = 10.dp)) {
         ReviewHeader(

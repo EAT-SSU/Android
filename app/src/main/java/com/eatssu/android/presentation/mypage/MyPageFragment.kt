@@ -62,7 +62,7 @@ import javax.inject.Inject
 class MyPageFragment : Fragment() {
 
     companion object {
-        private const val MENU_NOTIFICATION_SETTINGS = "notification_settings"
+        private const val MENU_NOTIFICATION_SETTINGS = "notification_setting"
         private const val MENU_MY_INFO = "my_info"
         private const val MENU_MY_REVIEW = "my_review"
         private const val MENU_INQUIRY = "inquiry"
@@ -70,6 +70,7 @@ class MyPageFragment : Fragment() {
         private const val MENU_CREATOR = "creator"
         private const val MENU_LOGOUT = "logout"
         private const val MENU_WITHDRAW = "withdraw"
+        private const val MENU_INSTAGRAM = "insta"
     }
 
     @Inject
@@ -137,6 +138,7 @@ class MyPageFragment : Fragment() {
                                     },
                                     onInquireClick = ::openInquire,
                                     onInstagramClick = {
+                                        mainViewModel.trackMyPageMenu(MENU_INSTAGRAM)
                                         startWebView(
                                             getString(R.string.eatssu_instagram_url),
                                             getString(R.string.eatssu_instagram),
