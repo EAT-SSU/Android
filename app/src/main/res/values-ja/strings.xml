@@ -35,7 +35,7 @@
     <!-- Navigation -->
     <!-- ========================== -->
     <string name="nav_cafeteria_menu">学食</string>
-    <string name="nav_map">地図</string>
+    <string name="nav_map">マップ</string>
     <string name="nav_anyone_but_me">ラッキーゲーム</string>
     <string name="nav_mypage">マイページ</string>
     <string name="nav_back">戻る</string>
@@ -51,22 +51,22 @@
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">確認</string>
     <string name="button_update">アップデート</string>
-    <string name="button_check_duplicate">重複確認</string>
+    <string name="button_check_duplicate">確認</string>
 
     <!-- ========================== -->
     <!-- Dialog -->
     <!-- ========================== -->
     <string name="dialog_logout_title">ログアウト</string>
     <string name="dialog_logout_message">ログアウトしますか？</string>
-    <string name="dialog_force_update_message">アプリの最新バージョンをインストールする必要があります。</string>
-    <string name="dialog_location_permission_description">現在地をすばやく確認し、近くの提携店舗を探すために位置情報の利用を許可してください。</string>
+    <string name="dialog_force_update_message">最新バージョンのアプリをインストールする必要があります。</string>
+    <string name="dialog_location_permission_description">現在地をすぐに確認し、近くの提携レストランを探せるように、位置情報へのアクセスを許可してください。</string>
     <string name="dialog_notification_permission_title">通知権限が必要です</string>
-    <string name="dialog_notification_permission_description">通知を受け取るには、通知権限を有効にする必要があります。\n 設定で通知を許可してください。</string>
+    <string name="dialog_notification_permission_description">通知を受け取るには、通知権限を有効にする必要があります。\n設定で通知を許可してください。</string>
     <string name="dialog_settings">設定へ移動</string>
     <string name="dialog_placeholder_title">タイトルを入力してください</string>
-    <string name="dialog_placeholder_body">内容を入力してください</string>
-    <string name="dialog_network_error_title">ネットワーク接続なし</string>
-    <string name="dialog_network_error_message">Wi-Fiまたはモバイルデータ接続を確認してください。</string>
+    <string name="dialog_placeholder_body">本文を入力してください</string>
+    <string name="dialog_network_error_title">ネットワークに接続されていません</string>
+    <string name="dialog_network_error_message">Wi-Fiまたはモバイルデータ通信を確認してください。</string>
     <string name="dialog_notice_title">お知らせ</string>
 
     <!-- ========================== -->
@@ -86,7 +86,7 @@
     <string name="toast_image_upload_success">画像をアップロードしました。</string>
     <string name="toast_image_upload_failed">画像のアップロードに失敗しました。</string>
     <string name="toast_image_compress_failed">画像の圧縮に失敗しました。</string>
-    <string name="toast_image_not_found">画像ファイルが見つかりませんでした。</string>
+    <string name="toast_image_not_found">画像ファイルが見つかりません。</string>
 
     <!-- ========================== -->
     <!-- Toast Messages - Report -->
@@ -100,10 +100,10 @@
     <string name="toast_nickname_change_failed">ニックネームの変更に失敗しました。</string>
     <string name="toast_college_required">先に学部を選択してください。</string>
     <string name="toast_department_required">学科を選択してください。</string>
-    <string name="toast_info_updated">情報が更新されました。</string>
-    <string name="toast_nickname_changed">ニックネームが変更されました。</string>
-    <string name="toast_department_updated">学科情報が更新されました。</string>
-    <string name="toast_no_changes">変更内容はありません。</string>
+    <string name="toast_info_updated">情報を更新しました。</string>
+    <string name="toast_nickname_changed">ニックネームを変更しました。</string>
+    <string name="toast_department_updated">学科情報を更新しました。</string>
+    <string name="toast_no_changes">変更はありません。</string>
 
     <!-- ========================== -->
     <!-- Nickname Validation Errors -->
@@ -114,8 +114,8 @@
     <string name="nickname_error_allowed_chars">韓国語、英字、数字のみ使用できます。</string>
     <string name="nickname_error_consecutive_special">連続した特殊文字（--、__）は使用できません。</string>
     <string name="nickname_error_only_numbers">数字だけのニックネームは使用できません。</string>
-    <string name="nickname_error_special_position">ニックネームの先頭または末尾に特殊文字は使用できません。</string>
-    <string name="nickname_error_profanity">悪口や不適切な表現を含むニックネームは使用できません。</string>
+    <string name="nickname_error_special_position">特殊文字で始まる、または終わるニックネームは使用できません。</string>
+    <string name="nickname_error_profanity">暴言や不適切な表現を含むニックネームは使用できません。</string>
     <string name="nickname_error_invalid">このニックネームは使用できません。</string>
 
     <!-- ========================== -->
@@ -123,14 +123,14 @@
     <!-- ========================== -->
     <string name="toast_app_init_error">アプリの初期化中にエラーが発生しました。</string>
     <string name="toast_app_update_required">アプリをアップデートしてください。</string>
-    <string name="toast_partnership_info_not_found">提携情報が見つかりません。</string>
+    <string name="toast_partnership_info_not_found">提携情報がありません。</string>
     <string name="toast_login_failed">ログインに失敗しました。</string>
     <string name="toast_logout_success">ログアウトしました。</string>
     <string name="toast_token_invalid">もう一度ログインしてください。</string>
     <string name="toast_token_expired">セッションの有効期限が切れました。もう一度ログインしてください。</string>
     <string name="toast_require_nickname">ニックネームを設定してください。</string>
-    <string name="toast_notification_enable">EAT-SSU通知が有効になりました（%1$s）</string>
-    <string name="toast_notification_disable">EAT-SSU通知が無効になりました（%1$s）</string>
+    <string name="toast_notification_enable">EAT-SSUの通知をオンにしました（%1$s）</string>
+    <string name="toast_notification_disable">EAT-SSUの通知をオフにしました（%1$s）</string>
     <string name="toast_oss_load_fail">オープンソースライブラリを読み込めませんでした。</string>
     <string name="toast_sign_out_success">アカウントを削除しました。</string>
     <string name="toast_sign_out_fail">アカウントの削除に失敗しました。</string>
@@ -140,11 +140,11 @@
     <!-- ========================== -->
     <string name="review_how_was_meal">今日の食事はいかがでしたか？</string>
     <string name="review_recommend_menu">おすすめしたいメニューはありますか？</string>
-    <string name="review_placeholder">メニューについて詳しくレビューを書いてください</string>
+    <string name="review_placeholder">メニューについて詳しいレビューを書いてください</string>
     <string name="review_preparing">画面を準備しています。</string>
     <string name="review_posting">投稿中...</string>
     <string name="review_modifying">更新中...</string>
-    <string name="review_photo_delete_hint">写真をタップすると削除できます。</string>
+    <string name="review_photo_delete_hint">写真をタップすると削除されます。</string>
     <string name="review_photo_count">写真を追加（%1$d/%2$d）</string>
     <string name="review_settings">レビュー設定</string>
     <string name="review_error_occurred">エラーが発生しました。</string>
@@ -160,8 +160,8 @@
     <string name="review">レビュー</string>
     <string name="my_review">自分のレビュー</string>
     <string name="none_review">まだレビューがありません</string>
-    <string name="none_review_my">最初のレビューを書いてみましょう！</string>
-    <string name="none_review_list_detail">このメニューに最初のレビューを書いてみましょう！</string>
+    <string name="none_review_my">最初のレビューを投稿しましょう！</string>
+    <string name="none_review_list_detail">このメニューに最初のレビューを残しましょう！</string>
 
     <!-- ========================== -->
     <!-- Rating (Parameterized) -->
@@ -173,7 +173,7 @@
     <!-- ========================== -->
     <string name="today_menu">今日のメニュー</string>
     <string name="price">価格</string>
-    <string name="rate">評価</string>
+    <string name="rate">★</string>
     <string name="student_cafeteria">学生食堂</string>
 
     <!-- ========================== -->
@@ -184,7 +184,7 @@
     <string name="widget_morning">朝食</string>
     <string name="widget_lunch">昼食</string>
     <string name="widget_dinner">夕食</string>
-    <string name="widget_no_menu">本日のメニューはありません。</string>
+    <string name="widget_no_menu">今日のメニューはありません。</string>
     <string name="widget_loading">読み込み中</string>
     <string name="widget_network_error">ネットワーク接続を確認してください。</string>
     <string name="widget_setup_required">設定が必要です</string>
@@ -198,9 +198,9 @@
     <string name="logout">ログアウト</string>
     <string name="signout">アカウント削除</string>
     <string name="app_version">アプリバージョン</string>
-    <string name="mypage_push_activity_section_title">알림 및 활동</string>
-    <string name="mypage_service_section_title">서비스 정보</string>
-    <string name="mypage_etc_section_title">기타</string>
+    <string name="mypage_push_activity_section_title">Notifications and Activity</string>
+    <string name="mypage_service_section_title">Service Info</string>
+    <string name="mypage_etc_section_title">など</string>
     <string name="mypage_push_notification_title">プッシュ通知設定</string>
     <string name="mypage_push_notification_description">毎日午前11時に通知をお送りします。</string>
 
@@ -212,7 +212,7 @@
     <!-- ========================== -->
     <!-- Login -->
     <!-- ========================== -->
-    <string name="kakao">Kakao</string>
+    <string name="kakao">カカオ</string>
     <string name="connect_account">連携済みアカウント</string>
 
     <!-- ========================== -->
@@ -221,27 +221,27 @@
     <string name="nickname">ニックネーム</string>
     <string name="set_nickname">ニックネームを設定してください</string>
     <string name="set_nickname_length">%1$d〜%2$d文字で入力してください。</string>
-    <string name="set_nickname_able">このニックネームは使用できます！</string>
+    <string name="set_nickname_able">使用できるニックネームです！</string>
 
     <!-- ========================== -->
     <!-- User Info -->
     <!-- ========================== -->
     <string name="userinfo_nickname_setting">ニックネーム編集</string>
-    <string name="userinfo_affiliation_setting">所属設定</string>
+    <string name="userinfo_affiliation_setting">学部・学科</string>
 
     <!-- ========================== -->
     <!-- Errors -->
     <!-- ========================== -->
     <string name="not_found">情報を読み込めませんでした。</string>
-    <string name="server_error_title">接続エラー</string>
-    <string name="server_error_message">サーバーと通信できません。\n しばらくしてからもう一度お試しください。</string>
+    <string name="server_error_title">通信エラー</string>
+    <string name="server_error_message">サーバーと通信できません。\nしばらくしてからもう一度お試しください。</string>
 
     <!-- ========================== -->
     <!-- Report -->
     <!-- ========================== -->
     <string name="report_title">このレビューを通報する理由を選択してください。</string>
     <string name="report_sub">同じレビューは24時間以内に1回のみ通報できます。</string>
-    <string name="report_write_hint">通報理由を入力してください</string>
+    <string name="report_write_hint">レビューを通報する理由を入力してください</string>
 
     <!-- ========================== -->
     <!-- Input Validation -->
@@ -254,8 +254,8 @@
     <!-- ========================== -->
     <!-- App Slogan -->
     <!-- ========================== -->
-    <string name="app_slogan_part1">숭실대에서 </string>
-    <string name="app_slogan_part2">숭실대에서 먹자</string>
+    <string name="app_slogan_part1">崇実大で</string>
+    <string name="app_slogan_part2">食べよう</string>
 
     <!-- ========================== -->
     <!-- Links & External -->
@@ -265,24 +265,24 @@
     <string name="private_information">プライバシーポリシー</string>
     <string name="policy">プライバシーポリシー</string>
     <string name="terms">利用規約</string>
-    <string name="terms_and_rule">약관 및 정책</string>
-    <string name="developer">クレジット</string>
+    <string name="terms_and_rule">規約と方針</string>
+    <string name="developer">開発者</string>
     <string name="oss_licenses">オープンソースライブラリ</string>
 
     <!-- ========================== -->
     <!-- Sign Out -->
     <!-- ========================== -->
     <string name="signout_question">本当にアカウントを削除しますか？</string>
-    <string name="signout_description">レビューは削除されず、（不明）として表示されます。\n 詳細は利用規約とプライバシーポリシーをご確認ください。</string>
+    <string name="signout_description">投稿したレビューは削除されず、(不明)として表示されます。\n詳細は利用規約およびプライバシーポリシーをご確認ください。</string>
     <string name="signout_nickname">ニックネームを入力してください</string>
 
     <!-- ========================== -->
     <!-- Notification -->
     <!-- ========================== -->
-    <string name="notification_context_title">🤔 今日なに食べる？</string>
-    <string name="notification_context_text">今日の学食メニューを確認しよう！</string>
+    <string name="notification_context_title">🤔 今日何食べよう？</string>
+    <string name="notification_context_text">今日の学食メニューをチェックしましょう！</string>
     <string name="notification_channel_lunch_name">昼食前通知</string>
-    <string name="notification_channel_lunch_description">昼食時間前にプッシュ通知を送信します。</string>
+    <string name="notification_channel_lunch_description">昼食前にプッシュ通知を送信します。</string>
     <string name="notification_channel_server_name">サーバー通知</string>
     <string name="notification_channel_server_description">EAT-SSUサーバーから送信された通知を表示します。</string>
 
@@ -290,8 +290,8 @@
     <!-- Department/College -->
     <!-- ========================== -->
     <string name="input_department">学科を入力</string>
-    <string name="input_string_description">学科を入力して\n 自分に合った提携情報を確認しましょう！</string>
-    <string name="map_unknown_college_department">学部/学科情報なし</string>
+    <string name="input_string_description">学科を入力して\n自分だけの提携特典を確認しましょう！</string>
+    <string name="map_unknown_college_department">学部・学科情報を確認できません</string>
 
     <!-- ========================== -->
     <!-- Partnership -->
@@ -299,11 +299,12 @@
     <string name="location">場所</string>
     <string name="etc">備考</string>
     <string name="time">営業時間</string>
-    <string name="favorite_partnership">お気に入り提携先</string>
-    <string name="partnership_filter_mine">自分の提携先</string>
-    <string name="partnership_filter_festival">축제</string>
+    <string name="favorite_partnership">お気に入りの提携</string>
+    <string name="partnership_filter_mine">自分の提携</string>
+    <string name="partnership_filter_festival">祭り</string>
     <string name="partnership_filter_all">すべて</string>
     <string name="partnership_filter_department_placeholder">学科</string>
+    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->

@@ -23,7 +23,7 @@ sealed interface AppAnalyticsEvent : AnalyticsEvent {
         override val eventName = "app_launch"
         override val properties = buildMap {
             put("launch_path", launchPath.value)
-            put("localeCode", localeCode)
+            put("app_locale", localeCode)
         }
     }
 }
