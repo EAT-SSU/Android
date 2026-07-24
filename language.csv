@@ -86,6 +86,10 @@ review_photo_delete_hint,"사진 클릭 시, 삭제됩니다.",Tap a photo to de
 review_photo_count,사진 추가(%1$d/%2$d),Add Photo (%1$d/%2$d),写真を追加（%1$d/%2$d）,Thêm ảnh (%1$d/%2$d)
 review_settings,리뷰 설정,Review Settings,レビュー設定,Cài đặt đánh giá
 review_error_occurred,에러가 발생했습니다.,An error occurred.,エラーが発生しました。,Đã xảy ra lỗi.
+review_show_translation,번역 보기,Show translation,翻訳を見る,Xem bản dịch
+review_show_original,원문 보기,Show original,原文を見る,Xem bản gốc
+review_translating,번역 중...,Translating...,翻訳中...,Đang dịch...
+toast_review_translation_failed,리뷰 번역에 실패했습니다.,Failed to translate the review.,レビューの翻訳に失敗しました。,Không thể dịch đánh giá.
 review_write,리뷰 작성하기,Write a Review,レビューを書く,Viết đánh giá
 review,리뷰,Reviews,レビュー,Đánh giá
 my_review,내 리뷰,My Reviews,自分のレビュー,Đánh giá của tôi

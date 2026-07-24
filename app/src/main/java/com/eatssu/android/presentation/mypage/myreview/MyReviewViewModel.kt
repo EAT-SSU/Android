@@ -6,7 +6,9 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetMyReviewsUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewTranslationUseCase
 import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
+import com.eatssu.android.presentation.cafeteria.review.translation.ReviewTranslationUiState
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
@@ -25,6 +27,7 @@ class MyReviewViewModel @Inject constructor(
     private val getMyReviewsUseCase: GetMyReviewsUseCase,
     private val getUserNickNameUseCase: GetUserNickNameUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
+    private val getReviewTranslationUseCase: GetReviewTranslationUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MyReviewState>> = MutableStateFlow(UiState.Init)
@@ -35,6 +38,10 @@ class MyReviewViewModel @Inject constructor(
 
     private val _nickname = MutableStateFlow("")
     val nickname: StateFlow<String> = _nickname
+
+    private val _translationStates = MutableStateFlow<Map<Long, ReviewTranslationUiState>>(emptyMap())
+    val translationStates: StateFlow<Map<Long, ReviewTranslationUiState>> =
+        _translationStates.asStateFlow()
 
     init {
         getMyReviewList()
@@ -81,7 +88,48 @@ class MyReviewViewModel @Inject constructor(
                 )
             )
             // 삭제 성공 시 내 리뷰 목록 재조회
+            _translationStates.value = _translationStates.value - reviewId
             getMyReviewList()
+        }
+    }
+
+    fun toggleReviewTranslation(
+        review: Review,
+        targetLanguage: String,
+    ) {
+        val currentState = _translationStates.value[review.reviewId]
+        if (currentState?.isLoading == true) return
+
+        if (currentState?.isTranslated == true) {
+            _translationStates.value = _translationStates.value + (
+                review.reviewId to currentState.copy(isTranslated = false)
+                )
+            return
+        }
+
+        viewModelScope.launch {
+            _translationStates.value = _translationStates.value + (
+                review.reviewId to ReviewTranslationUiState(isLoading = true)
+                )
+
+            val translation = getReviewTranslationUseCase(review.reviewId, targetLanguage)
+            if (translation == null || translation.translatedContent.isBlank()) {
+                _translationStates.value = _translationStates.value - review.reviewId
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        UiText.StringResource(R.string.toast_review_translation_failed),
+                        ToastType.ERROR
+                    )
+                )
+                return@launch
+            }
+
+            _translationStates.value = _translationStates.value + (
+                review.reviewId to ReviewTranslationUiState(
+                    translatedContent = translation.translatedContent,
+                    isTranslated = true,
+                )
+                )
         }
     }
 }

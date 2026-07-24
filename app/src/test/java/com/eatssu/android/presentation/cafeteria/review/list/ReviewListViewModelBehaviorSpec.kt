@@ -6,6 +6,7 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewTranslationUseCase
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.expectToast
 import com.eatssu.android.test.sampleReviewInfo
@@ -29,11 +30,17 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         val getReviewInfoUseCase = mockk<GetReviewInfoUseCase>()
         val getReviewListPagedUseCase = mockk<GetReviewListPagedUseCase>()
         val deleteReviewUseCase = mockk<DeleteReviewUseCase>()
+        val getReviewTranslationUseCase = mockk<GetReviewTranslationUseCase>()
 
         every { getReviewListPagedUseCase(any(), any()) } returns flowOf(PagingData.empty())
 
         `when`("리뷰 정보를 정상 조회하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+            )
             val info = sampleReviewInfo()
             coEvery { getReviewInfoUseCase(MenuType.FIXED, 100L) } returns info
 
@@ -48,7 +55,12 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 정보 조회에서 예외가 발생하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+            )
             coEvery { getReviewInfoUseCase(MenuType.VARIABLE, 101L) } throws IllegalStateException("boom")
 
             then("Error 상태와 실패 토스트를 보낸다") {
@@ -66,7 +78,12 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 삭제가 실패하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+            )
             coEvery { deleteReviewUseCase(55L) } returns false
 
             then("실패 토스트를 보낸다") {
@@ -83,7 +100,12 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("리뷰 삭제가 성공하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+            )
             coEvery { getReviewInfoUseCase(MenuType.FIXED, 300L) } returns sampleReviewInfo(count = 3)
             coEvery { deleteReviewUseCase(56L) } returns true
 
@@ -105,7 +127,12 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("조회 파라미터 없이 리뷰 삭제가 성공하면") {
-            val viewModel = ReviewListViewModel(getReviewInfoUseCase, getReviewListPagedUseCase, deleteReviewUseCase)
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+            )
             coEvery { deleteReviewUseCase(77L) } returns true
 
             then("ReviewDeleted 이벤트만 발생하고 정보 재조회는 하지 않는다") {

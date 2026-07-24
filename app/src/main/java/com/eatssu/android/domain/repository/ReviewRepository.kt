@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.eatssu.android.domain.model.MenuMini
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.domain.model.ReviewTranslation
 import java.io.File
 import kotlinx.coroutines.flow.Flow
 
@@ -55,6 +56,11 @@ interface ReviewRepository {
     ): List<MenuMini>
 
     suspend fun getMyReviews(): List<Review>
+
+    suspend fun getReviewTranslation(
+        reviewId: Long,
+        targetLanguage: String,
+    ): ReviewTranslation?
 
     fun getMenuReviewListPaged(menuId: Long?): Flow<PagingData<Review>>
 
