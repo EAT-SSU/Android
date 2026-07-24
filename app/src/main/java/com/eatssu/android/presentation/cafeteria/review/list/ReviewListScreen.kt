@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -169,6 +170,7 @@ internal fun ReviewListScreen(
     var showOthersBottomSheet by remember { mutableStateOf(false) }
 
     var selectedReview by remember { mutableStateOf<Review?>(null) }
+    val reviewListScrollState = rememberLazyListState()
 
     if (showOthersBottomSheet && selectedReview != null) {
         OthersReviewBottomSheet(
@@ -283,7 +285,8 @@ internal fun ReviewListScreen(
                         val isError = loadState.refresh is LoadState.Error
 
                         LazyColumn(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            state = reviewListScrollState,
                         ) {
                             item {
                                 ReviewInfoContent(menuName, info)
@@ -372,7 +375,6 @@ internal fun ReviewListScreen(
                                         ReviewItem(
                                             modifier = Modifier.padding(
                                                 horizontal = 24.dp,
-                                                vertical = 8.dp
                                             ),
                                             writeName = it.writerNickname,
                                             writeDate = it.writeDate,
@@ -383,11 +385,13 @@ internal fun ReviewListScreen(
                                             translatedContent = translationState?.translatedContent,
                                             isTranslationVisible = translationState?.isTranslated == true,
                                             isTranslationLoading = translationState?.isLoading == true,
+                                            isTranslationUnavailable = translationState?.isUnavailable == true,
+                                            isParentScrolling = reviewListScrollState.isScrollInProgress,
                                             showTranslationAction = shouldShowReviewTranslationAction(
                                                 targetLanguage = targetLanguage,
                                                 isLoggedIn = isLoggedIn,
                                                 content = it.content,
-                                            ) && translationState?.isUnavailable != true,
+                                            ),
                                             onTranslationClick = { onTranslationClick(it) },
                                             onMoreClick = {
                                                 if (it.isWriter) {
