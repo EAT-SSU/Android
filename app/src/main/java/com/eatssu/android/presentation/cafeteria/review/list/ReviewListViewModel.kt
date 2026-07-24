@@ -7,9 +7,12 @@ import androidx.paging.cachedIn
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
+import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
+import com.eatssu.android.domain.usecase.review.GetReviewTranslationUseCase
+import com.eatssu.android.presentation.cafeteria.review.translation.ReviewTranslationUiState
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
@@ -33,13 +36,22 @@ class ReviewListViewModel @Inject constructor(
     private val getReviewInfoUseCase: GetReviewInfoUseCase,
     private val getReviewListPagedUseCase: GetReviewListPagedUseCase,
     private val deleteReviewUseCase: DeleteReviewUseCase,
+    private val getReviewTranslationUseCase: GetReviewTranslationUseCase,
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ViewModel() {
+
+    val isLoggedIn: Boolean
+        get() = getAccessTokenUseCase().isNotBlank()
 
     private val _uiState = MutableStateFlow<UiState<ReviewListState>>(UiState.Init)
     val uiState: StateFlow<UiState<ReviewListState>> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()
+
+    private val _translationStates = MutableStateFlow<Map<Long, ReviewTranslationUiState>>(emptyMap())
+    val translationStates: StateFlow<Map<Long, ReviewTranslationUiState>> =
+        _translationStates.asStateFlow()
 
     private val _loadParams = MutableSharedFlow<Pair<MenuType, Long>>(
         replay = 1,
@@ -95,10 +107,54 @@ class ReviewListViewModel @Inject constructor(
             }
 
             _uiEvent.emit(ReviewListEvent.ReviewDeleted)
+            _translationStates.value = _translationStates.value - reviewId
 
             // 정보 갱신
             val currentParams = _loadParams.replayCache.lastOrNull()
             if (currentParams != null) loadReviewInfo(currentParams.first, currentParams.second)
+        }
+    }
+
+    fun toggleReviewTranslation(
+        review: Review,
+        targetLanguage: String,
+    ) {
+        val currentState = _translationStates.value[review.reviewId]
+        if (currentState?.isLoading == true) return
+
+        if (currentState?.translatedContent != null) {
+            _translationStates.value = _translationStates.value + (
+                review.reviewId to currentState.copy(isTranslated = !currentState.isTranslated)
+                )
+            return
+        }
+
+        viewModelScope.launch {
+            _translationStates.value = _translationStates.value + (
+                review.reviewId to ReviewTranslationUiState(isLoading = true)
+                )
+
+            val translation = getReviewTranslationUseCase(review.reviewId, targetLanguage)
+            if (translation == null || translation.translatedContent.isBlank()) {
+                _translationStates.value = _translationStates.value + (
+                    review.reviewId to ReviewTranslationUiState(isUnavailable = true)
+                )
+                return@launch
+            }
+
+            if (translation.translatedContent.trim().equals(review.content.trim(), ignoreCase = true)) {
+                _translationStates.value = _translationStates.value + (
+                    review.reviewId to ReviewTranslationUiState(isUnavailable = true)
+                    )
+                return@launch
+            }
+
+            _translationStates.value = _translationStates.value + (
+                review.reviewId to ReviewTranslationUiState(
+                    translatedContent = translation.translatedContent,
+                    isTranslated = true,
+                )
+                )
         }
     }
 }

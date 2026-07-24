@@ -35,6 +35,9 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
+import com.eatssu.android.presentation.cafeteria.review.translation.ReviewTranslationUiState
+import com.eatssu.android.presentation.cafeteria.review.translation.currentReviewTranslationTargetLanguage
+import com.eatssu.android.presentation.cafeteria.review.translation.shouldShowReviewTranslationAction
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
@@ -60,7 +63,9 @@ fun MyReviewListScreen(
 
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val userNickname by viewModel.nickname.collectAsStateWithLifecycle()
+    val translationStates by viewModel.translationStates.collectAsStateWithLifecycle()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = null)
+    val targetLanguage = currentReviewTranslationTargetLanguage()
 
     when (uiEvent) {
         is UiEvent.ShowToast -> {
@@ -71,10 +76,16 @@ fun MyReviewListScreen(
     MyReviewListScreen(
         uiState = reviewListState,
         userNickname = userNickname,
+        translationStates = translationStates,
         modifier = modifier,
         onBack = onBack,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
         onModifyClick = onModifyClick,
+        onTranslationClick = { review ->
+            targetLanguage?.let { viewModel.toggleReviewTranslation(review, it) }
+        },
+        targetLanguage = targetLanguage,
+        isLoggedIn = viewModel.isLoggedIn,
     )
 }
 
@@ -82,10 +93,14 @@ fun MyReviewListScreen(
 internal fun MyReviewListScreen(
     uiState: UiState<MyReviewState>,
     userNickname: String,
+    translationStates: Map<Long, ReviewTranslationUiState>,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
     onModifyClick: (Review) -> Unit,
     onDeleteClick: (reviewId: Long) -> Unit,
+    onTranslationClick: (Review) -> Unit,
+    targetLanguage: String?,
+    isLoggedIn: Boolean,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedReview by remember { mutableStateOf<Review?>(null) }
@@ -134,6 +149,7 @@ internal fun MyReviewListScreen(
                                         .padding(horizontal = 24.dp),
                                 ) {
                                     items(reviewList) { item ->
+                                        val translationState = translationStates[item.reviewId]
                                         ReviewItem(
                                             modifier = Modifier,
                                             writeName = userNickname,
@@ -142,6 +158,15 @@ internal fun MyReviewListScreen(
                                             rating = item.rating,
                                             menuLikeInfoList = item.menuLikeInfoList,
                                             imgUrl = item.imgUrl,
+                                            translatedContent = translationState?.translatedContent,
+                                            isTranslationVisible = translationState?.isTranslated == true,
+                                            isTranslationLoading = translationState?.isLoading == true,
+                                            showTranslationAction = shouldShowReviewTranslationAction(
+                                                targetLanguage = targetLanguage,
+                                                isLoggedIn = isLoggedIn,
+                                                content = item.content,
+                                            ) && translationState?.isUnavailable != true,
+                                            onTranslationClick = { onTranslationClick(item) },
                                             onMoreClick = {
                                                 selectedReview = item
                                                 showBottomSheet = true
@@ -220,6 +245,10 @@ fun ReviewListPreview() {
             userNickname = "숭실푸드파이터",
             onDeleteClick = {},
             onModifyClick = {},
+            onTranslationClick = {},
+            targetLanguage = "EN",
+            isLoggedIn = true,
+            translationStates = emptyMap(),
             uiState = UiState.Success(
                 MyReviewState.ReviewExists(
                     myReviews = listOf(
@@ -318,6 +347,10 @@ fun ReviewListEmptyPreview() {
             userNickname = "숭실푸드파이터",
             onDeleteClick = {},
             onModifyClick = {},
+            onTranslationClick = {},
+            targetLanguage = "EN",
+            isLoggedIn = true,
+            translationStates = emptyMap(),
             uiState = UiState.Success(
                 MyReviewState.NoReview
             )

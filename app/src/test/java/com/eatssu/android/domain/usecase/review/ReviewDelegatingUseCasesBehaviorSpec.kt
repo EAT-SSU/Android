@@ -2,6 +2,7 @@ package com.eatssu.android.domain.usecase.review
 
 import androidx.paging.PagingData
 import com.eatssu.android.domain.model.Review
+import com.eatssu.android.domain.model.ReviewTranslation
 import com.eatssu.android.domain.repository.ReportRepository
 import com.eatssu.android.domain.repository.ReviewRepository
 import com.eatssu.android.test.AppBehaviorSpec
@@ -106,6 +107,27 @@ class ReviewDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         `when`("menuType이 VARIABLE면") {
             then("변동 메뉴 paging flow를 반환한다") {
                 useCase(MenuType.VARIABLE, 20L) shouldBe mealFlow
+            }
+        }
+    }
+
+    given("GetReviewTranslationUseCase") {
+        val reviewRepository = mockk<ReviewRepository>()
+        val useCase = GetReviewTranslationUseCase(reviewRepository)
+        val translation = ReviewTranslation(
+            reviewId = 1L,
+            language = "EN",
+            translatedContent = "It was delicious.",
+            cached = true,
+        )
+
+        `when`("repository가 리뷰 번역 결과를 반환하면") {
+            coEvery { reviewRepository.getReviewTranslation(1L, "EN") } returns translation
+
+            then("동일 결과를 반환한다") {
+                runTest {
+                    useCase(1L, "EN") shouldBe translation
+                }
             }
         }
     }
