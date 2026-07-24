@@ -149,9 +149,19 @@
     <string name="review_settings">Review Settings</string>
     <string name="review_error_occurred">An error occurred.</string>
     <string name="review_show_translation">Show translation</string>
+    <string name="review_translate">Translate</string>
     <string name="review_show_original">Show original</string>
     <string name="review_translating">Translating...</string>
+    <string name="review_translated_by_ai">Translated from Korean by AI</string>
+    <string name="review_translation_unavailable">Translation unavailable</string>
+    <string name="review_translation_accuracy_notice">AI translations may not always be accurate.</string>
+    <string name="review_translation_unavailable_notice">AI translation is temporarily unavailable.\nPlease try again later.</string>
+    <string name="review_translation_information">Translation information</string>
+    <string name="review_profile_image">Profile image</string>
+    <string name="review_more">Review menu</string>
+    <string name="review_image">Review image</string>
     <string name="toast_review_translation_failed">Failed to translate the review.</string>
+    <string name="toast_review_translation_unchanged">The translation is the same as the original.</string>
     <string name="review_write">Write a Review</string>
 
     <!-- ========================== -->
