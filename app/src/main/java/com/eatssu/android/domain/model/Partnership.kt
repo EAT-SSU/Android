@@ -8,7 +8,9 @@ data class Partnership(
     val longitude: Double,
     val latitude: Double,
     val restaurantType: StoreType,
-    val partnershipInfos: List<PartnershipInfo>
+    val partnershipInfos: List<PartnershipInfo>,
+    val naverMapUrl: String? = null,
+    val kakaoMapUrl: String? = null,
 ) {
     data class PartnershipInfo(
         val id: Int,

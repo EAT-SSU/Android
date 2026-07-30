@@ -16,9 +16,13 @@ data class PartnershipResponse(
     val latitude: Double? = null,
     @SerialName("restaurantType")
     val restaurantType: StoreType? = null,
+    @SerialName("naverMapUrl")
+    val naverMapUrl: String? = null,
+    @SerialName("kakaoMapUrl")
+    val kakaoMapUrl: String? = null,
     @SerialName("partnershipInfos")
     val partnershipInfos: List<PartnershipInfo> = emptyList()
-){
+) {
     @Serializable
     data class PartnershipInfo(
         @SerialName("id")
@@ -50,6 +54,8 @@ fun PartnershipResponse.toDomain(): Partnership =
         longitude = longitude ?: 126.95661313346206,
         latitude = latitude ?: 37.49517278813046,
         restaurantType = restaurantType ?: StoreType.RESTAURANT,
+        naverMapUrl = naverMapUrl?.trim()?.takeIf(String::isNotEmpty),
+        kakaoMapUrl = kakaoMapUrl?.trim()?.takeIf(String::isNotEmpty),
         partnershipInfos = partnershipInfos.map {
             Partnership.PartnershipInfo(
                 id = it.id ?: -1,

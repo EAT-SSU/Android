@@ -29,7 +29,9 @@ class GetPartnershipDetailUseCase @Inject constructor() {
                 collegeName = info.collegeName,
                 departmentName = info.departmentName,
                 partnershipLikeCount = info.likeCount,
-                likedByUser = info.isLiked
+                likedByUser = info.isLiked,
+                naverMapUrl = matched.naverMapUrl,
+                kakaoMapUrl = matched.kakaoMapUrl,
             )
         }
     }

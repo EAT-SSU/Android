@@ -302,6 +302,9 @@
     <string name="input_department">Nhập ngành học của bạn</string>
     <string name="input_string_description">Nhập ngành học của bạn\nvà xem các ưu đãi dành riêng cho bạn!</string>
     <string name="map_unknown_college_department">Không có thông tin khoa/ngành</string>
+    <string name="map_open_kakao">KakaoMap</string>
+    <string name="map_open_naver">Bản đồ Naver</string>
+    <string name="toast_map_open_failed">Không thể mở bản đồ. Vui lòng thử lại sau.</string>
 
     <!-- ========================== -->
     <!-- Partnership -->

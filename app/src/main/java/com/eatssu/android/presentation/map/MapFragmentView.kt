@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -237,6 +238,14 @@ fun MapRoute(
                 context.showToast(uiText, info)
             }
         },
+        openMapUrl = { url ->
+            if (!context.openMapUrl(url)) {
+                context.showToast(
+                    UiText.StringResource(R.string.toast_map_open_failed),
+                    ToastType.ERROR,
+                )
+            }
+        },
         navigateToUserInfo = {
             val intent = Intent(context, UserInfoActivity::class.java)
             context.startActivity(intent)
@@ -278,6 +287,7 @@ internal fun MapScreen(
     departmentSheetState: SheetState,
     partnershipSheetState: SheetState,
     showToast: (UiText, ToastType) -> Unit,
+    openMapUrl: (String) -> Unit,
     navigateToUserInfo: () -> Unit,
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
@@ -341,6 +351,14 @@ internal fun MapScreen(
                         storeName = info.storeName,
                         storeType = storeType,
                         mapRestaurantList = mapState.restaurantInfoList,
+                        naverMapUrl = info.naverMapUrl,
+                        kakaoMapUrl = info.kakaoMapUrl,
+                        onNaverMapClick = {
+                            info.naverMapUrl?.let(openMapUrl)
+                        },
+                        onKakaoMapClick = {
+                            info.kakaoMapUrl?.let(openMapUrl)
+                        },
                         onDismiss = {
                             onHidePartnershipSheet()
                         }
@@ -478,6 +496,24 @@ fun Context.findActivityOrNull(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivityOrNull()
     else -> null
+}
+
+private fun Context.openMapUrl(url: String): Boolean {
+    val uri = url.toUri()
+    if (uri.scheme !in setOf("http", "https")) return false
+
+    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+        addCategory(Intent.CATEGORY_BROWSABLE)
+        if (this@openMapUrl !is Activity) {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+    }
+
+    return runCatching {
+        startActivity(intent)
+    }.onFailure { throwable ->
+        Timber.e(throwable, "Failed to open map URL")
+    }.isSuccess
 }
 
 @Preview(showBackground = true)

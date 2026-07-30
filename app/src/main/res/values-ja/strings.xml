@@ -302,6 +302,9 @@
     <string name="input_department">学科を入力</string>
     <string name="input_string_description">学科を入力して\n自分だけの提携特典を確認しましょう！</string>
     <string name="map_unknown_college_department">学部・学科情報を確認できません</string>
+    <string name="map_open_kakao">カカオマップ</string>
+    <string name="map_open_naver">NAVERマップ</string>
+    <string name="toast_map_open_failed">地図を開けません。しばらくしてからもう一度お試しください。</string>
 
     <!-- ========================== -->
     <!-- Partnership -->

@@ -47,6 +47,30 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("지도 URL이 존재하면") {
+            val result = PartnershipResponse(
+                naverMapUrl = " https://naver.me/test ",
+                kakaoMapUrl = "https://place.map.kakao.com/test",
+            ).toDomain()
+
+            then("공백을 제거해 도메인 모델로 전달한다") {
+                result.naverMapUrl shouldBe "https://naver.me/test"
+                result.kakaoMapUrl shouldBe "https://place.map.kakao.com/test"
+            }
+        }
+
+        `when`("지도 URL이 빈 문자열이면") {
+            val result = PartnershipResponse(
+                naverMapUrl = " ",
+                kakaoMapUrl = null,
+            ).toDomain()
+
+            then("노출할 수 없는 URL을 null로 매핑한다") {
+                result.naverMapUrl shouldBe null
+                result.kakaoMapUrl shouldBe null
+            }
+        }
+
         `when`("필드가 null인 응답을 매핑하면") {
             val result = PartnershipResponse(
                 storeName = null,
@@ -72,6 +96,8 @@ class PartnershipResponseMapperBehaviorSpec : AppBehaviorSpec({
                 result.storeName shouldBe ""
                 result.longitude shouldBe 126.95661313346206
                 result.latitude shouldBe 37.49517278813046
+                result.naverMapUrl shouldBe null
+                result.kakaoMapUrl shouldBe null
                 result.partnershipInfos.first().id shouldBe -1
                 result.partnershipInfos.first().partnershipType shouldBe ""
                 result.partnershipInfos.first().likeCount shouldBe 0

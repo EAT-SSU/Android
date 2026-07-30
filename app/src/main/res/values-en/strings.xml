@@ -302,6 +302,9 @@
     <string name="input_department">Enter your department</string>
     <string name="input_string_description">Enter your department\nand check your personalized partnerships!</string>
     <string name="map_unknown_college_department">College/Department information unavailable</string>
+    <string name="map_open_kakao">KakaoMap</string>
+    <string name="map_open_naver">Naver Map</string>
+    <string name="toast_map_open_failed">Unable to open the map. Please try again later.</string>
 
     <!-- ========================== -->
     <!-- Partnership -->
