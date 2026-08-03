@@ -16,4 +16,6 @@ data class PartnershipRestaurant(
     val departmentName: String,
     val partnershipLikeCount: Int,
     val likedByUser: Boolean,
+    val naverMapUrl: String? = null,
+    val kakaoMapUrl: String? = null,
 )

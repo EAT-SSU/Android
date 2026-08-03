@@ -54,6 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.Partnership
+import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
@@ -98,7 +99,8 @@ private const val PERMISSION_REQUEST_CODE = 1001
 @Composable
 fun MapRoute(
     viewModel: MapViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel()
+    mainViewModel: MainViewModel = viewModel(),
+    mapExternalNavigator: MapExternalNavigator? = null,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -237,6 +239,22 @@ fun MapRoute(
                 context.showToast(uiText, info)
             }
         },
+        openMap = { provider, restaurant ->
+            scope.launch {
+                val opened = mapExternalNavigator?.open(
+                    context = context,
+                    provider = provider,
+                    restaurant = restaurant,
+                ) ?: context.openMapWithoutResolution(provider, restaurant)
+
+                if (!opened) {
+                    context.showToast(
+                        UiText.StringResource(R.string.toast_map_open_failed),
+                        ToastType.ERROR,
+                    )
+                }
+            }
+        },
         navigateToUserInfo = {
             val intent = Intent(context, UserInfoActivity::class.java)
             context.startActivity(intent)
@@ -245,7 +263,10 @@ fun MapRoute(
             scope.launch { departmentSheetState.hide() }
         },
         onHidePartnershipSheet = {
-            scope.launch { partnershipSheetState.hide() }
+            scope.launch {
+                partnershipSheetState.hide()
+                viewModel.clearSelectedPartnership()
+            }
         },
         animateCameraPositionTo = { position, currentZoom ->
             scope.launch {
@@ -278,6 +299,7 @@ internal fun MapScreen(
     departmentSheetState: SheetState,
     partnershipSheetState: SheetState,
     showToast: (UiText, ToastType) -> Unit,
+    openMap: (MapProvider, PartnershipRestaurant) -> Unit,
     navigateToUserInfo: () -> Unit,
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
@@ -341,6 +363,12 @@ internal fun MapScreen(
                         storeName = info.storeName,
                         storeType = storeType,
                         mapRestaurantList = mapState.restaurantInfoList,
+                        onNaverMapClick = {
+                            openMap(MapProvider.NAVER, info)
+                        },
+                        onKakaoMapClick = {
+                            openMap(MapProvider.KAKAO, info)
+                        },
                         onDismiss = {
                             onHidePartnershipSheet()
                         }

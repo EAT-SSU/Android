@@ -43,6 +43,8 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                 latitude = 37.0,
                 restaurantType = StoreType.CAFE,
                 partnershipInfos = infos,
+                naverMapUrl = "https://naver.me/test",
+                kakaoMapUrl = "https://place.map.kakao.com/test",
             )
         )
 
@@ -59,6 +61,8 @@ class GetPartnershipDetailUseCaseBehaviorSpec : AppBehaviorSpec({
                 result?.storeName shouldBe "Cafe A"
                 result?.description shouldBe "음료 증정"
                 result?.storeType shouldBe StoreType.CAFE
+                result?.naverMapUrl shouldBe "https://naver.me/test"
+                result?.kakaoMapUrl shouldBe "https://place.map.kakao.com/test"
             }
         }
 

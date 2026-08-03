@@ -18,6 +18,9 @@ class MapFragment : Fragment() {
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
+    @Inject
+    lateinit var mapExternalNavigator: MapExternalNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,7 +35,7 @@ class MapFragment : Fragment() {
             setContent {
                 ProvideAnalyticsTracker(analyticsTracker) {
                     EatssuTheme {
-                        MapRoute()
+                        MapRoute(mapExternalNavigator = mapExternalNavigator)
                     }
                 }
             }

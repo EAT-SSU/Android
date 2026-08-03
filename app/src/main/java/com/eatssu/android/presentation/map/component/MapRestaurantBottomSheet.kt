@@ -2,9 +2,11 @@ package com.eatssu.android.presentation.map.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,7 +55,9 @@ fun MapRestaurantBottomSheet(
     storeName: String,
     storeType: StoreType,
     mapRestaurantList: List<RestaurantInfo>,
-    onDismiss: () -> Unit = {}
+    onNaverMapClick: () -> Unit = {},
+    onKakaoMapClick: () -> Unit = {},
+    onDismiss: () -> Unit = {},
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -154,7 +158,11 @@ fun MapRestaurantBottomSheet(
             Spacer(modifier = Modifier.height(20.dp))
 
             // 제휴 리스트
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false),
+            ) {
                 itemsIndexed(mapRestaurantList) { index, item ->
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
@@ -207,7 +215,73 @@ fun MapRestaurantBottomSheet(
                     }
                 }
             }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Gray200),
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(horizontal = 24.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                MapLinkButton(
+                    iconRes = R.drawable.ic_kakao_map,
+                    labelRes = R.string.map_open_kakao,
+                    onClick = onKakaoMapClick,
+                    modifier = Modifier.weight(1f),
+                )
+
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(24.dp)
+                        .background(Gray400),
+                )
+
+                MapLinkButton(
+                    iconRes = R.drawable.ic_naver_map,
+                    labelRes = R.string.map_open_naver,
+                    onClick = onNaverMapClick,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun MapLinkButton(
+    iconRes: Int,
+    labelRes: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxHeight()
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Image(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(
+            text = stringResource(labelRes),
+            style = EatssuTheme.typography.body2,
+            color = Gray600,
+        )
     }
 }
 
@@ -226,7 +300,7 @@ fun MapRestaurantBottomSheetPreview() {
             MapRestaurantBottomSheet(
                 storeName = "현선이네",
                 mapRestaurantList = dummyList,
-                storeType = StoreType.RESTAURANT
+                storeType = StoreType.RESTAURANT,
             )
         }
     }

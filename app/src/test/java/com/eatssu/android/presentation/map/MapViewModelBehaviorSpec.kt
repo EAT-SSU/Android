@@ -490,5 +490,51 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 }
             }
         }
+
+        `when`("a partnership sheet is dismissed and the same store is selected again") {
+            val partnerships = listOf(samplePartnership(storeName = "Nolsoop"))
+            val representative = samplePartnershipRestaurant(type = StoreType.CAFE)
+
+            coEvery {
+                getUserCollegeDepartmentUseCase()
+            } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "CS"),
+            )
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns partnerships
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+            every { getPartnershipDetailUseCase(partnerships, "Nolsoop", 1) } returns representative
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
+            )
+
+            then("the selection state is cleared before reopening the same store") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe partnerships
+                    }
+
+                    viewModel.selectPartnershipByStoreName("Nolsoop")
+                    (viewModel.uiState.value as UiState.Success)
+                        .data.restaurantPartnershipInfo shouldBe representative
+
+                    viewModel.clearSelectedPartnership()
+                    with((viewModel.uiState.value as UiState.Success).data) {
+                        restaurantPartnershipInfo shouldBe null
+                        restaurantInfoList shouldBe emptyList()
+                        storeType shouldBe null
+                    }
+
+                    viewModel.selectPartnershipByStoreName("Nolsoop")
+                    (viewModel.uiState.value as UiState.Success)
+                        .data.restaurantPartnershipInfo shouldBe representative
+                }
+            }
+        }
     }
 })

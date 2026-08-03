@@ -27,9 +27,14 @@ platform :android do
     dev_base_url = ENV["DEV_BASE_URL"] || ""
     prod_base_url = ENV["PROD_BASE_URL"] || ""
     kakao_key = ENV["KAKAO_NATIVE_APP_KEY"] || ""
+    kakao_rest_api_key = ENV["KAKAO_REST_API_KEY"] || ""
     naver_maps_id = ENV["NAVER_MAPS_CLIENT_ID"] || ""
     posthog_api_key = ENV["POSTHOG_API_KEY"] || ""
     posthog_host = ENV["POSTHOG_HOST"] || ""
+
+    if environment == "production" && kakao_rest_api_key.empty?
+      UI.user_error!("KAKAO_REST_API_KEY is required for a production build")
+    end
     
     base_url = environment == "production" ? prod_base_url : dev_base_url
     
@@ -39,6 +44,7 @@ platform :android do
       "DEV_BASE_URL=\"#{dev_base_url}\"",
       "PROD_BASE_URL=\"#{prod_base_url}\"",
       "KAKAO_NATIVE_APP_KEY=#{kakao_key}",
+      "KAKAO_REST_API_KEY=#{kakao_rest_api_key}",
       "NAVER_MAPS_CLIENT_ID=#{naver_maps_id}",
       "POSTHOG_API_KEY=#{posthog_api_key}",
       "POSTHOG_HOST=#{posthog_host}"

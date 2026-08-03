@@ -73,6 +73,8 @@ fun sampleReviewInfo(
 
 fun samplePartnership(
     storeName: String = "Cafe A",
+    naverMapUrl: String? = null,
+    kakaoMapUrl: String? = null,
     infos: List<Partnership.PartnershipInfo> = listOf(
         Partnership.PartnershipInfo(
             id = 1,
@@ -94,11 +96,15 @@ fun samplePartnership(
     latitude = 37.0,
     restaurantType = type,
     partnershipInfos = infos,
+    naverMapUrl = naverMapUrl,
+    kakaoMapUrl = kakaoMapUrl,
 )
 
 fun samplePartnershipRestaurant(
     id: Int = 1,
     type: StoreType = StoreType.CAFE,
+    naverMapUrl: String? = null,
+    kakaoMapUrl: String? = null,
 ) = PartnershipRestaurant(
     id = id,
     partnershipType = "DISCOUNT",
@@ -113,4 +119,6 @@ fun samplePartnershipRestaurant(
     departmentName = "CS",
     partnershipLikeCount = 3,
     likedByUser = true,
+    naverMapUrl = naverMapUrl,
+    kakaoMapUrl = kakaoMapUrl,
 )

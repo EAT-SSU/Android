@@ -301,6 +301,9 @@
     <string name="input_department">학과 입력하기</string>
     <string name="input_string_description">학과를 입력하고\n나만의 제휴를 확인해보세요!</string>
     <string name="map_unknown_college_department">단과대/학과 정보를 알 수 없음</string>
+    <string name="map_open_kakao">카카오맵</string>
+    <string name="map_open_naver">네이버지도</string>
+    <string name="toast_map_open_failed">지도를 열 수 없어요. 잠시 후 다시 시도해 주세요.</string>
 
     <!-- ========================== -->
     <!-- Partnership -->
