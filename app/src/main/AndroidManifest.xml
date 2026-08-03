@@ -10,6 +10,8 @@
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
+        <package android:name="com.nhn.android.nmap" />
+        <package android:name="net.daum.android.map" />
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />

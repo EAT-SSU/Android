@@ -46,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -55,6 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
 import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.Partnership
+import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
@@ -99,7 +99,8 @@ private const val PERMISSION_REQUEST_CODE = 1001
 @Composable
 fun MapRoute(
     viewModel: MapViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel()
+    mainViewModel: MainViewModel = viewModel(),
+    mapExternalNavigator: MapExternalNavigator? = null,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -238,12 +239,20 @@ fun MapRoute(
                 context.showToast(uiText, info)
             }
         },
-        openMapUrl = { url ->
-            if (!context.openMapUrl(url)) {
-                context.showToast(
-                    UiText.StringResource(R.string.toast_map_open_failed),
-                    ToastType.ERROR,
-                )
+        openMap = { provider, restaurant ->
+            scope.launch {
+                val opened = mapExternalNavigator?.open(
+                    context = context,
+                    provider = provider,
+                    restaurant = restaurant,
+                ) ?: context.openMapWithoutResolution(provider, restaurant)
+
+                if (!opened) {
+                    context.showToast(
+                        UiText.StringResource(R.string.toast_map_open_failed),
+                        ToastType.ERROR,
+                    )
+                }
             }
         },
         navigateToUserInfo = {
@@ -254,7 +263,10 @@ fun MapRoute(
             scope.launch { departmentSheetState.hide() }
         },
         onHidePartnershipSheet = {
-            scope.launch { partnershipSheetState.hide() }
+            scope.launch {
+                partnershipSheetState.hide()
+                viewModel.clearSelectedPartnership()
+            }
         },
         animateCameraPositionTo = { position, currentZoom ->
             scope.launch {
@@ -287,7 +299,7 @@ internal fun MapScreen(
     departmentSheetState: SheetState,
     partnershipSheetState: SheetState,
     showToast: (UiText, ToastType) -> Unit,
-    openMapUrl: (String) -> Unit,
+    openMap: (MapProvider, PartnershipRestaurant) -> Unit,
     navigateToUserInfo: () -> Unit,
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
@@ -351,13 +363,11 @@ internal fun MapScreen(
                         storeName = info.storeName,
                         storeType = storeType,
                         mapRestaurantList = mapState.restaurantInfoList,
-                        naverMapUrl = info.naverMapUrl,
-                        kakaoMapUrl = info.kakaoMapUrl,
                         onNaverMapClick = {
-                            info.naverMapUrl?.let(openMapUrl)
+                            openMap(MapProvider.NAVER, info)
                         },
                         onKakaoMapClick = {
-                            info.kakaoMapUrl?.let(openMapUrl)
+                            openMap(MapProvider.KAKAO, info)
                         },
                         onDismiss = {
                             onHidePartnershipSheet()
@@ -496,24 +506,6 @@ fun Context.findActivityOrNull(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivityOrNull()
     else -> null
-}
-
-private fun Context.openMapUrl(url: String): Boolean {
-    val uri = url.toUri()
-    if (uri.scheme !in setOf("http", "https")) return false
-
-    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-        addCategory(Intent.CATEGORY_BROWSABLE)
-        if (this@openMapUrl !is Activity) {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-    }
-
-    return runCatching {
-        startActivity(intent)
-    }.onFailure { throwable ->
-        Timber.e(throwable, "Failed to open map URL")
-    }.isSuccess
 }
 
 @Preview(showBackground = true)

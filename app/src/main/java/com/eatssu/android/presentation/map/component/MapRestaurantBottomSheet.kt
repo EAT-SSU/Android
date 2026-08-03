@@ -55,15 +55,11 @@ fun MapRestaurantBottomSheet(
     storeName: String,
     storeType: StoreType,
     mapRestaurantList: List<RestaurantInfo>,
-    naverMapUrl: String? = null,
-    kakaoMapUrl: String? = null,
     onNaverMapClick: () -> Unit = {},
     onKakaoMapClick: () -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val hasNaverMapUrl = !naverMapUrl.isNullOrBlank()
-    val hasKakaoMapUrl = !kakaoMapUrl.isNullOrBlank()
 
     LaunchedEffect(Unit) {
         sheetState.show()
@@ -220,48 +216,40 @@ fun MapRestaurantBottomSheet(
                 }
             }
 
-            if (hasKakaoMapUrl || hasNaverMapUrl) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Gray200),
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Gray200),
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(horizontal = 24.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                MapLinkButton(
+                    iconRes = R.drawable.ic_kakao_map,
+                    labelRes = R.string.map_open_kakao,
+                    onClick = onKakaoMapClick,
+                    modifier = Modifier.weight(1f),
                 )
 
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .padding(horizontal = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    if (hasKakaoMapUrl) {
-                        MapLinkButton(
-                            iconRes = R.drawable.ic_kakao_map,
-                            labelRes = R.string.map_open_kakao,
-                            onClick = onKakaoMapClick,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
+                        .width(1.dp)
+                        .height(24.dp)
+                        .background(Gray400),
+                )
 
-                    if (hasKakaoMapUrl && hasNaverMapUrl) {
-                        Box(
-                            modifier = Modifier
-                                .width(1.dp)
-                                .height(24.dp)
-                                .background(Gray400),
-                        )
-                    }
-
-                    if (hasNaverMapUrl) {
-                        MapLinkButton(
-                            iconRes = R.drawable.ic_naver_map,
-                            labelRes = R.string.map_open_naver,
-                            onClick = onNaverMapClick,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                }
+                MapLinkButton(
+                    iconRes = R.drawable.ic_naver_map,
+                    labelRes = R.string.map_open_naver,
+                    onClick = onNaverMapClick,
+                    modifier = Modifier.weight(1f),
+                )
             }
         }
     }
@@ -313,8 +301,6 @@ fun MapRestaurantBottomSheetPreview() {
                 storeName = "현선이네",
                 mapRestaurantList = dummyList,
                 storeType = StoreType.RESTAURANT,
-                naverMapUrl = "https://naver.me/test",
-                kakaoMapUrl = "https://place.map.kakao.com/test",
             )
         }
     }

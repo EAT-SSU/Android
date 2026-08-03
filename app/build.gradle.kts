@@ -82,6 +82,9 @@ android {
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
 
+            val kakaoRestApiKey: String = p.getProperty("KAKAO_REST_API_KEY") ?: ""
+            buildConfigField("String", "KAKAO_REST_API_KEY", "\"$kakaoRestApiKey\"")
+
             val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
             buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")
             manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = naverMapsClientID
@@ -121,6 +124,9 @@ android {
             val kakaoKey: String = p.getProperty("KAKAO_NATIVE_APP_KEY")
             buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
             manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+
+            val kakaoRestApiKey: String = p.getProperty("KAKAO_REST_API_KEY") ?: ""
+            buildConfigField("String", "KAKAO_REST_API_KEY", "\"$kakaoRestApiKey\"")
 
             val naverMapsClientID: String = p.getProperty("NAVER_MAPS_CLIENT_ID")
             buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"$naverMapsClientID\"")

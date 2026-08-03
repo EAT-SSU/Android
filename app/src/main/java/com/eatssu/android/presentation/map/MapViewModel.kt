@@ -273,6 +273,19 @@ class MapViewModel @Inject constructor(
             ),
         )
     }
+
+    fun clearSelectedPartnership() {
+        val current = uiState.value
+        if (current !is UiState.Success) return
+
+        _uiState.value = UiState.Success(
+            current.data.copy(
+                restaurantPartnershipInfo = null,
+                restaurantInfoList = emptyList(),
+                storeType = null,
+            ),
+        )
+    }
 }
 
 private fun List<Partnership>.hasFestivalPartnership(): Boolean =
