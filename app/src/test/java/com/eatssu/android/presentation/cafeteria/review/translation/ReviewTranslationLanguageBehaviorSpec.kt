@@ -5,27 +5,32 @@ import io.kotest.matchers.shouldBe
 
 class ReviewTranslationLanguageBehaviorSpec : AppBehaviorSpec({
 
-    given("영어 번역 버튼 노출 조건") {
+    given("다국어 번역 버튼 노출 조건") {
         `when`("리뷰에 한글이 포함되어 있으면") {
-            then("번역 버튼을 보여준다") {
-                shouldShowReviewTranslationAction("EN", true, "맛있어요") shouldBe true
-                shouldShowReviewTranslationAction("EN", true, "good ㅋㅋ") shouldBe true
+            then("지원하는 모든 언어에서 번역 버튼을 보여준다") {
+                listOf("EN", "JA", "VI").forEach { targetLanguage ->
+                    shouldShowReviewTranslationAction(targetLanguage, true, "맛있어요") shouldBe true
+                    shouldShowReviewTranslationAction(targetLanguage, true, "good ㅋㅋ") shouldBe true
+                }
             }
         }
 
         `when`("리뷰에 한글이 없으면") {
             then("번역 버튼을 숨긴다") {
-                shouldShowReviewTranslationAction("EN", true, "yoyoyoyoy") shouldBe false
-                shouldShowReviewTranslationAction("EN", true, "Already in English") shouldBe false
-                shouldShowReviewTranslationAction("EN", true, "おいしいです") shouldBe false
-                shouldShowReviewTranslationAction("EN", true, "ngon quá") shouldBe false
-                shouldShowReviewTranslationAction("EN", true, "123 !!!") shouldBe false
+                listOf("EN", "JA", "VI").forEach { targetLanguage ->
+                    shouldShowReviewTranslationAction(targetLanguage, true, "yoyoyoyoy") shouldBe false
+                    shouldShowReviewTranslationAction(targetLanguage, true, "Already in English") shouldBe false
+                    shouldShowReviewTranslationAction(targetLanguage, true, "おいしいです") shouldBe false
+                    shouldShowReviewTranslationAction(targetLanguage, true, "ngon quá") shouldBe false
+                    shouldShowReviewTranslationAction(targetLanguage, true, "123 !!!") shouldBe false
+                }
             }
         }
 
         `when`("지원하지 않는 번역 언어이면") {
             then("번역 버튼을 숨긴다") {
                 shouldShowReviewTranslationAction(null, true, "맛있어요") shouldBe false
+                shouldShowReviewTranslationAction("KO", true, "맛있어요") shouldBe false
             }
         }
 
@@ -36,11 +41,12 @@ class ReviewTranslationLanguageBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("앱 언어로 번역 대상 언어를 결정하면") {
-            then("영어 앱에서만 영어 번역을 지원한다") {
+            then("영어, 일본어, 베트남어 앱에서 해당 언어로 번역한다") {
                 reviewTranslationTargetLanguage("en") shouldBe "EN"
+                reviewTranslationTargetLanguage("ja") shouldBe "JA"
+                reviewTranslationTargetLanguage("vi") shouldBe "VI"
                 reviewTranslationTargetLanguage("ko") shouldBe null
-                reviewTranslationTargetLanguage("ja") shouldBe null
-                reviewTranslationTargetLanguage("vi") shouldBe null
+                reviewTranslationTargetLanguage("fr") shouldBe null
             }
         }
     }
