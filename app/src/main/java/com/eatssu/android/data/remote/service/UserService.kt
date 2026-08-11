@@ -54,6 +54,9 @@ interface UserService {
     @GET("users/department/partnerships")    // 유저 학과의 제휴 조회
     suspend fun getUserDepartmentPartnerships(): ApiResult<List<PartnershipResponse>>
 
+    @GET("users/partnerships") // 유저가 찜한 제휴 조회
+    suspend fun getUserFavoritePartnerships(): ApiResult<List<PartnershipResponse>>
+
     @GET("users/language")    // 언어 설정 조회
     suspend fun getUserLanguage(): ApiResult<LanguageResponse>
 

@@ -4,6 +4,8 @@ import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.PartnershipResponse
 import com.eatssu.android.data.remote.dto.response.PartnershipRestaurantResponse
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface PartnershipService {
 
@@ -13,10 +15,14 @@ interface PartnershipService {
 
     // 개별 제휴 조회
     @GET("partnerships/{partnershipId}")
-    suspend fun getPartnershipById(partnershipId: Int): ApiResult<PartnershipRestaurantResponse>
+    suspend fun getPartnershipById(
+        @Path("partnershipId") partnershipId: Int
+    ): ApiResult<PartnershipRestaurantResponse>
 
     // TODO 제휴 찜/등록하기/ 취소하기
-    @GET("partnerships/{partnershipId}/like")
-    suspend fun likePartnership(partnershipId: Int): ApiResult<Unit>
+    @POST("partnerships/{partnershipId}/like")
+    suspend fun likePartnership(
+        @Path("partnershipId") partnershipId: Int
+    ): ApiResult<Unit>
 
 }

@@ -6,9 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,10 +54,12 @@ import com.eatssu.design_system.theme.Primary
 fun MapRestaurantBottomSheet(
     storeName: String,
     storeType: StoreType,
+    isLike: Boolean,
     mapRestaurantList: List<RestaurantInfo>,
     onNaverMapClick: () -> Unit = {},
     onKakaoMapClick: () -> Unit = {},
     onDismiss: () -> Unit = {},
+    onLikeClick: () -> Unit = {},
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -137,22 +139,18 @@ fun MapRestaurantBottomSheet(
                 }
 
                 // 찜 기능
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    modifier = Modifier.padding(bottom = 24.dp)
-//                ) {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.ic_like),
-//                        contentDescription = "좋아요",
-//                        modifier = Modifier.size(18.dp)
-//                    )
-//                    Spacer(modifier = Modifier.width(4.dp))
-//                    Text(
-//                        text = "0",
-//                        style = EatssuTheme.typography.caption2,
-//                        color = Gray600
-//                    )
-//                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = if (isLike) R.drawable.ic_like_filled else R.drawable.ic_like_line),
+                        contentDescription = "좋아요",
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable { onLikeClick() }
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -301,6 +299,7 @@ fun MapRestaurantBottomSheetPreview() {
                 storeName = "현선이네",
                 mapRestaurantList = dummyList,
                 storeType = StoreType.RESTAURANT,
+                isLike = false
             )
         }
     }

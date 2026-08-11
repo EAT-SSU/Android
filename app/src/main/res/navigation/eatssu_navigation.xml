@@ -17,6 +17,20 @@
         android:name="com.eatssu.android.presentation.map.MapFragment"
         android:label="Map"/>
 
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.eatssu.android.presentation.favorite.FavoriteFragment"
+        android:label="Favorite" />
+
+    <fragment
+        android:id="@+id/favoriteDetailFragment"
+        android:name="com.eatssu.android.presentation.favorite.FavoriteDetailFragment"
+        android:label="Favorite Detail">
+        <argument
+            android:name="partnershipId"
+            app:argType="integer" />
+    </fragment>
+
     <!-- 세 번째 화면 (MyPage) -->
     <fragment
         android:id="@+id/myPageFragment"
