@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -80,7 +83,7 @@ fun FavoriteDetailRoute(
     }
 }
 
-@OptIn(ExperimentalNaverMapApi::class)
+@OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteDetailScreen(
     restaurant: PartnershipRestaurant,
@@ -112,7 +115,13 @@ private fun FavoriteDetailScreen(
 
         Box(
             modifier = Modifier
-                .padding(start = 18.dp, top = 18.dp)
+                .fillMaxSize()
+                .background(BottomSheetDefaults.ScrimColor),
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(start = 18.dp, top = 30.dp)
                 .size(44.dp)
                 .clip(CircleShape)
                 .background(White)
@@ -142,6 +151,7 @@ private fun FavoriteDetailScreen(
             onKakaoMapClick = onKakaoMapClick,
             onDismiss = onBack,
             onLikeClick = onLikeClick,
+            scrimColor = Color.Transparent,
         )
     }
 }

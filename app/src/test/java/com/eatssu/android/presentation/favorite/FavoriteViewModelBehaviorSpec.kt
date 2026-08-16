@@ -46,5 +46,21 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
                 state.filteredPartnerships.map { it.storeName } shouldBe listOf("식당")
             }
         }
+
+        `when`("찜 해제를 요청하면") {
+            coEvery {
+                repository.likePartnership(
+                    1,
+                    wasLiked = true
+                )
+            } returns com.eatssu.android.data.model.ApiResult.Success(Unit)
+            viewModel.loadFavorites()
+            viewModel.removeFavorite(1)
+
+            then("해당 항목을 목록에서 제거한다") {
+                val state = (viewModel.uiState.value as UiState.Success).data
+                state.partnerships.map { it.partnershipId } shouldBe listOf(2)
+            }
+        }
     }
 })

@@ -321,6 +321,13 @@
     <string name="favorite_empty_description">관심 있는 제휴를 찜하고 빠르게 확인해 보세요!</string>
     <string name="favorite_open">제휴 찜 열기</string>
     <string name="favorite_open_detail">제휴 상세보기</string>
+    <string name="favorite_edit">편집</string>
+    <string name="favorite_select_all">전체 선택</string>
+    <string name="favorite_delete">삭제</string>
+    <string name="favorite_delete_count">삭제 %d</string>
+    <string name="favorite_added_snackbar">찜한 제휴에 추가했어요.</string>
+    <string name="favorite_deleted_snackbar">찜한 제휴에서 삭제했어요.</string>
+    <string name="favorite_undo">취소하기</string>
     <string name="partnership_filter_mine">내 제휴</string>
     <string name="partnership_filter_festival">축제</string>
     <string name="partnership_filter_all">전체</string>
