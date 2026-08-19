@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.cafeteria.review
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +25,6 @@ import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.design_system.theme.EatssuTheme
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,6 +42,7 @@ class ReviewComposeActivity : ComponentActivity() {
     private lateinit var itemName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         getIntents() // 컴포즈 화면 그리기 전에 호출
 
@@ -84,7 +85,9 @@ class ReviewComposeActivity : ComponentActivity() {
     @Composable
     private fun ErrorScreen(onBackClick: () -> Unit) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
