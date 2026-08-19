@@ -1,7 +1,10 @@
 package com.eatssu.android.domain.model
 
+import android.os.Parcelable
 import com.eatssu.common.enums.StoreType
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PartnershipRestaurant(
     val id: Int,
     val partnershipType: String,
@@ -18,4 +21,4 @@ data class PartnershipRestaurant(
     val likedByUser: Boolean,
     val naverMapUrl: String? = null,
     val kakaoMapUrl: String? = null,
-)
+) : Parcelable

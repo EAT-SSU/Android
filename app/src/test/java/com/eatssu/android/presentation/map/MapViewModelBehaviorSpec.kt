@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.map
 
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.College
 import com.eatssu.android.domain.model.Department
 import com.eatssu.android.domain.model.Partnership
@@ -533,6 +534,115 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.selectPartnershipByStoreName("Nolsoop")
                     (viewModel.uiState.value as UiState.Success)
                         .data.restaurantPartnershipInfo shouldBe representative
+                }
+            }
+        }
+
+        `when`("제휴 좋아요 요청이 성공하면") {
+            val partnership = samplePartnership(
+                storeName = "Cafe Like",
+                infos = listOf(
+                    Partnership.PartnershipInfo(
+                        id = 7,
+                        partnershipType = "DISCOUNT",
+                        collegeName = "IT",
+                        departmentName = "CS",
+                        likeCount = 3,
+                        isLiked = false,
+                        description = "할인",
+                        startDate = "2025-01-01",
+                        endDate = "2025-12-31",
+                        periodType = PeriodType.NORMAL,
+                    )
+                ),
+            )
+            val representative = samplePartnershipRestaurant(id = 7).copy(
+                likedByUser = false,
+                partnershipLikeCount = 3,
+            )
+
+            coEvery { getUserCollegeDepartmentUseCase() } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "CS"),
+            )
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns listOf(
+                partnership
+            )
+            coEvery { partnershipRepository.likePartnership(7, false) } returns ApiResult.Success(
+                Unit
+            )
+            every {
+                getPartnershipDetailUseCase(listOf(partnership), "Cafe Like", 7)
+            } returns representative
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
+            )
+
+            then("목록과 현재 열린 상세의 좋아요 상태를 함께 갱신한다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe listOf(
+                            partnership
+                        )
+                    }
+                    viewModel.selectPartnershipByStoreName("Cafe Like", 7)
+                    viewModel.likePartnership(7)
+
+                    eventually(2.seconds) {
+                        val state = (viewModel.uiState.value as UiState.Success).data
+                        state.partnerships.first().partnershipInfos.first().isLiked shouldBe true
+                        state.partnerships.first().partnershipInfos.first().likeCount shouldBe 4
+                        state.restaurantPartnershipInfo?.likedByUser shouldBe true
+                        state.restaurantPartnershipInfo?.partnershipLikeCount shouldBe 4
+                    }
+                    coVerify(exactly = 1) { partnershipRepository.likePartnership(7, false) }
+                }
+            }
+        }
+
+        `when`("제휴 좋아요 요청이 실패하면") {
+            val partnership = samplePartnership(storeName = "Cafe Failed")
+
+            coEvery { getUserCollegeDepartmentUseCase() } returns sampleUserInfo(
+                nickname = "eatssu",
+                college = College(collegeId = 1, collegeName = "IT"),
+                department = Department(departmentId = 11, departmentName = "CS"),
+            )
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns listOf(
+                partnership
+            )
+            coEvery {
+                partnershipRepository.likePartnership(1, true)
+            } returns ApiResult.Failure(500, "error")
+
+            val viewModel = MapViewModel(
+                partnershipRepository = partnershipRepository,
+                getPartnershipDetailUseCase = getPartnershipDetailUseCase,
+                getUserCollegeDepartmentUseCase = getUserCollegeDepartmentUseCase,
+                analyticsTracker = analyticsTracker,
+            )
+
+            then("기존 로컬 상태를 유지한다") {
+                runTest {
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe listOf(
+                            partnership
+                        )
+                    }
+                    viewModel.likePartnership(1)
+
+                    eventually(2.seconds) {
+                        (viewModel.uiState.value as UiState.Success).data.partnerships shouldBe listOf(
+                            partnership
+                        )
+                    }
                 }
             }
         }

@@ -11,14 +11,18 @@ import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.WorkManager
 import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
+import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
 import com.eatssu.android.presentation.event.AnyoneButMeEventTooltipController
+import com.eatssu.android.presentation.favorite.FavoriteDetailFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
@@ -57,6 +61,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
     private val mainViewModel: MainViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
+    private lateinit var navController: NavController
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +82,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     private fun setNavigation() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
         binding.bottomNaviBar.itemIconTintList = null
 
         binding.bottomNaviBar.setOnSingleItemSelectedListener { item ->
@@ -92,10 +97,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     true
                 }
 
-                R.id.anyone_but_me_menu -> {
-                    mainViewModel.analyticsPlzNotMe()
-                    anyoneButMeEventPopupController.openAnyoneButMePage()
-                    false
+//                R.id.anyone_but_me_menu -> {
+//                    mainViewModel.analyticsPlzNotMe()
+//                    anyoneButMeEventPopupController.openAnyoneButMePage()
+//                    false
+//                }
+
+                R.id.favorite_menu -> {
+                    navController.navigate(R.id.favoriteFragment)
+                    true
                 }
 
                 R.id.mypage_menu -> {
@@ -108,6 +118,39 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 }
             }
         }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val menuItemId = when (destination.id) {
+                R.id.cafeteria_menu -> R.id.cafeteria_menu
+                R.id.mapFragment, R.id.favoriteDetailFragment -> R.id.map_menu
+                R.id.favoriteFragment -> R.id.favorite_menu
+                R.id.myPageFragment -> R.id.mypage_menu
+                else -> null
+            }
+            menuItemId?.let { binding.bottomNaviBar.menu.findItem(it).isChecked = true }
+        }
+    }
+
+    fun openFavoriteTab() {
+        if (navController.currentDestination?.id != R.id.favoriteFragment) {
+            navController.navigate(R.id.favoriteFragment)
+        }
+    }
+
+    fun openMapTab() {
+        if (navController.currentDestination?.id != R.id.mapFragment) {
+            navController.navigate(R.id.mapFragment)
+        }
+    }
+
+    fun openFavoriteDetail(partnership: PartnershipRestaurant) {
+        navController.navigate(
+            R.id.favoriteDetailFragment,
+            bundleOf(
+                FavoriteDetailFragment.ARG_PARTNERSHIP_ID to partnership.id,
+                FavoriteDetailFragment.ARG_PARTNERSHIP to partnership,
+            ),
+        )
     }
 
     private fun bindEventPopup(showOnLaunch: Boolean) {

@@ -27,6 +27,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -101,6 +102,7 @@ fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel(),
     mapExternalNavigator: MapExternalNavigator? = null,
+    onFavoriteClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -287,6 +289,7 @@ fun MapRoute(
         collegeId = collegeId,
         departmentName = departmentName,
         selectedFilter = mapState.selectedFilter,
+        onFavoriteClick = onFavoriteClick,
     )
 }
 
@@ -309,6 +312,7 @@ internal fun MapScreen(
     collegeId: Long,
     departmentName: String?,
     selectedFilter: FilterType,
+    onFavoriteClick: () -> Unit,
 ) {
     val analyticsTracker = LocalAnalyticsTracker.current
 
@@ -362,6 +366,7 @@ internal fun MapScreen(
                     MapRestaurantBottomSheet(
                         storeName = info.storeName,
                         storeType = storeType,
+                        isLike = info.likedByUser,
                         mapRestaurantList = mapState.restaurantInfoList,
                         onNaverMapClick = {
                             openMap(MapProvider.NAVER, info)
@@ -371,6 +376,9 @@ internal fun MapScreen(
                         },
                         onDismiss = {
                             onHidePartnershipSheet()
+                        },
+                        onLikeClick = {
+                            viewModel.likePartnership(info.id)
                         }
                     )
                 }
@@ -497,6 +505,28 @@ internal fun MapScreen(
                 departmentName = departmentName.toString(),
                 filters = mapState.availableFilters,
             )
+
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = 18.dp,
+                        bottom = dimensionResource(R.dimen.bottom_nav_height) + 18.dp,
+                    )
+                    .size(48.dp),
+                shape = CircleShape,
+                color = Color.White,
+                shadowElevation = 4.dp,
+                onClick = onFavoriteClick,
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_like_selected),
+                        contentDescription = stringResource(R.string.favorite_open),
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
+            }
         }
     }
 }

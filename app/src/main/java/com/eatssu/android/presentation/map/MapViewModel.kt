@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
+import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
@@ -286,7 +287,61 @@ class MapViewModel @Inject constructor(
             ),
         )
     }
+
+    fun likePartnership(id: Int) {
+        viewModelScope.launch {
+            val current = _uiState.value as? UiState.Success ?: return@launch
+            val wasLiked = current.data.partnershipLikeStatus(id) ?: return@launch
+            val result = partnershipRepository.likePartnership(id, wasLiked)
+            if (result !is ApiResult.Success) return@launch
+
+            val latest = _uiState.value as? UiState.Success ?: return@launch
+
+            // 서버 반영에 성공하면 기존 목록과 현재 열린 상세의 좋아요 상태를 함께 갱신한다.
+            _uiState.value = UiState.Success(latest.data.togglePartnershipLike(id))
+        }
+    }
 }
+
+private fun MapState.partnershipLikeStatus(id: Int): Boolean? =
+    restaurantPartnershipInfo
+        ?.takeIf { it.id == id }
+        ?.likedByUser
+        ?: partnerships.asSequence()
+            .flatMap { it.partnershipInfos.asSequence() }
+            .firstOrNull { it.id == id }
+            ?.isLiked
+
+private fun MapState.togglePartnershipLike(id: Int): MapState =
+    copy(
+        partnerships = partnerships.map { partnership ->
+            partnership.copy(
+                partnershipInfos = partnership.partnershipInfos.map { info ->
+                    if (info.id == id) {
+                        info.copy(
+                            isLiked = !info.isLiked,
+                            likeCount = info.likeCount.updatedLikeCount(info.isLiked),
+                        )
+                    } else {
+                        info
+                    }
+                },
+            )
+        },
+        restaurantPartnershipInfo = restaurantPartnershipInfo?.let { info ->
+            if (info.id == id) {
+                info.copy(
+                    likedByUser = !info.likedByUser,
+                    partnershipLikeCount = info.partnershipLikeCount.updatedLikeCount(info.likedByUser),
+                )
+            } else {
+                info
+            }
+        },
+    )
+
+private fun Int.updatedLikeCount(wasLiked: Boolean): Int =
+    (this + if (wasLiked) -1 else 1).coerceAtLeast(0)
 
 private fun List<Partnership>.hasFestivalPartnership(): Boolean =
     any { partnership ->

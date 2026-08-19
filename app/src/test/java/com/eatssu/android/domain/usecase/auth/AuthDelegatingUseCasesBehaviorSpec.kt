@@ -1,6 +1,7 @@
 package com.eatssu.android.domain.usecase.auth
 
 import com.eatssu.android.data.local.AccountDataStore
+import com.eatssu.android.data.local.FavoritePartnershipDataStore
 import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.data.local.TokenStore
 import com.eatssu.android.domain.model.ReissueTokenResult
@@ -107,12 +108,20 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         val accountDataStore = mockk<AccountDataStore>()
         val tokenStore = mockk<TokenStore>()
         val settingDataStore = mockk<SettingDataStore>()
+        val favoritePartnershipDataStore = mockk<FavoritePartnershipDataStore>()
         val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
-        val useCase = LogoutUseCase(accountDataStore, tokenStore, settingDataStore, analyticsTracker)
+        val useCase = LogoutUseCase(
+            accountDataStore,
+            tokenStore,
+            settingDataStore,
+            favoritePartnershipDataStore,
+            analyticsTracker,
+        )
 
         coJustRun { accountDataStore.clear() }
         every { tokenStore.clear() } just Runs
         coJustRun { settingDataStore.clear() }
+        coJustRun { favoritePartnershipDataStore.clear() }
 
         `when`("invoke를 호출하면") {
             then("로컬 저장소를 순서대로 clear한다") {
@@ -122,6 +131,7 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
                         accountDataStore.clear()
                         tokenStore.clear()
                         settingDataStore.clear()
+                        favoritePartnershipDataStore.clear()
                     }
                     io.mockk.verify(exactly = 1) { analyticsTracker.resetIdentity() }
                 }
