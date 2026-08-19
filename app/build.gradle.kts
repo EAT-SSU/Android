@@ -29,7 +29,7 @@ android {
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 66
         versionName = "3.2.13"
 

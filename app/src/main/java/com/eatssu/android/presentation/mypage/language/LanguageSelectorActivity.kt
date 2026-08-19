@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.mypage.language
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,7 @@ class LanguageSelectorActivity : ComponentActivity() {
     private var hasLanguageChanged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         hasLanguageChanged = savedInstanceState?.getBoolean(KEY_LANGUAGE_CHANGED) ?: false
         updateResultIfNeeded()

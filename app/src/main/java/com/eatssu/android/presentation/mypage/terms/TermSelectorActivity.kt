@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
@@ -30,6 +31,7 @@ class TermSelectorActivity : ComponentActivity() {
     lateinit var getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             EatssuTheme {

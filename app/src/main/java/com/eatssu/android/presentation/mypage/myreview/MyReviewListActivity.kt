@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.mypage.myreview
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.eatssu.android.analytics.ProvideAnalyticsTracker
 import com.eatssu.common.analytics.AnalyticsTracker
@@ -17,6 +18,7 @@ class MyReviewListComposeActivity : ComponentActivity() {
     lateinit var analyticsTracker: AnalyticsTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         setContent {
