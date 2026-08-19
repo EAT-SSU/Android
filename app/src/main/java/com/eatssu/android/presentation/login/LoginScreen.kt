@@ -21,12 +21,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,10 +40,14 @@ import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Secondary
 import com.eatssu.design_system.theme.White
 
+/**
+ * 로그인 화면 Composable
+ */
 @Composable
 fun LoginScreen(
     isLoading: Boolean,
     onKakaoLoginClick: () -> Unit,
+    onBrowseGoodPriceStoreClick: () -> Unit, // 착한가격업소 둘러보기 클릭 콜백
     modifier: Modifier = Modifier,
 ) {
     TrackScreenViewEvent(screenId = ScreenId.LOGIN_LOGIN)
@@ -123,80 +127,82 @@ fun LoginScreen(
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.padding(vertical = 20.dp),
             )
 
+            // 착한가격업소 둘러보기 버튼 (로그인 없이 바로 지도 화면으로 이동)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
                     .border(
                         color = Primary,
                         width = 1.dp,
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     )
                     .background(Secondary)
+                    .clickable { onBrowseGoodPriceStoreClick() },
             ) {
                 Row(
                     modifier = Modifier
                         .padding(
                             vertical = 14.dp,
-                            horizontal = 16.dp
+                            horizontal = 16.dp,
                         ),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
                         modifier = Modifier.size(32.dp),
                         painter = painterResource(R.drawable.ic_map_marker_restaurant),
-                        contentDescription = null
+                        contentDescription = null,
                     )
 
                     Column {
                         Text(
-                            text = "착한가격업소 둘러보기",
-                            style = EatssuTheme.typography.button2
+                            text = stringResource(id = R.string.btn_browse_good_price_stores),
+                            style = EatssuTheme.typography.button2,
+                            color = Black,
                         )
 
                         Text(
                             text = "내 주변 착한 한 끼를 찾아보세요",
-                            style = EatssuTheme.typography.caption2
+                            style = EatssuTheme.typography.caption2,
+                            color = Black,
                         )
                     }
 
                     Spacer(Modifier.weight(1f))
 
-                    IconButton(
+                    Icon(
+                        painter = painterResource(R.drawable.ic_arrow_right),
+                        tint = Primary,
+                        contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        onClick = { }
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.ic_arrow_right),
-                            tint = Primary,
-                            contentDescription = null
-                        )
-                    }
+                    )
                 }
             }
 
+            // 서울시 로고 영역
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(top = 50.dp)
-                    .height(30.dp)
+                    .height(30.dp),
             ) {
                 Image(
-                    painterResource(R.drawable.seoul_logo_kr),
+                    painter = painterResource(R.drawable.seoul_logo_kr),
                     contentDescription = "KOR Seoul Logo",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 VerticalDivider(
-                    modifier = Modifier.width(1.dp)
+                    modifier = Modifier.width(1.dp),
                 )
                 Image(
-                    painterResource(R.drawable.seoul_logo_en),
+                    painter = painterResource(R.drawable.seoul_logo_en),
                     contentDescription = "ENG Seoul Logo",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -210,6 +216,7 @@ private fun LoginScreenPreview() {
         LoginScreen(
             isLoading = false,
             onKakaoLoginClick = {},
+            onBrowseGoodPriceStoreClick = {},
         )
     }
 }
@@ -221,6 +228,7 @@ private fun LoginScreenLoadingPreview() {
         LoginScreen(
             isLoading = true,
             onKakaoLoginClick = {},
+            onBrowseGoodPriceStoreClick = {},
         )
     }
 }

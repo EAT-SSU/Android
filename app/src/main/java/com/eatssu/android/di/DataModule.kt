@@ -79,4 +79,10 @@ abstract class DataModule {
     internal abstract fun bindsPublicHolidayRepository(
         publicHolidayRepositoryImpl: PublicHolidayRepositoryImpl,
     ): PublicHolidayRepository
+
+    // 착한가격업소 레포지토리 바인딩
+    @Binds
+    internal abstract fun bindsGoodPriceStoreRepository(
+        goodPriceStoreRepositoryImpl: com.eatssu.android.data.remote.repository.GoodPriceStoreRepositoryImpl,
+    ): com.eatssu.android.domain.repository.GoodPriceStoreRepository
 }

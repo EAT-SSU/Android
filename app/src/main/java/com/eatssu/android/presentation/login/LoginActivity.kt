@@ -68,6 +68,9 @@ class LoginActivity : ComponentActivity() {
                     LoginScreen(
                         isLoading = uiState is UiState.Loading,
                         onKakaoLoginClick = { handleKakaoLogin() },
+                        onBrowseGoodPriceStoreClick = {
+                            startActivity<com.eatssu.android.presentation.goodprice.GoodPriceMapActivity>()
+                        },
                     )
                 }
             }
