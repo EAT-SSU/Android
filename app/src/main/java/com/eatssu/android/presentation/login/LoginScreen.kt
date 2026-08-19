@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,9 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +37,7 @@ import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Primary
+import com.eatssu.design_system.theme.Secondary
 import com.eatssu.design_system.theme.White
 
 @Composable
@@ -70,7 +79,7 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(id = R.string.app_slogan_part1),
+                    text = stringResource(id = R.string.app_slogan_part1) + " ",
                     style = EatssuTheme.typography.h2,
                     color = Black,
                 )
@@ -111,6 +120,84 @@ fun LoginScreen(
                             .clickable(onClick = onKakaoLoginClick),
                     )
                 }
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 20.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        color = Primary,
+                        width = 1.dp,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .background(Secondary)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            vertical = 14.dp,
+                            horizontal = 16.dp
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        modifier = Modifier.size(32.dp),
+                        painter = painterResource(R.drawable.ic_map_marker_restaurant),
+                        contentDescription = null
+                    )
+
+                    Column {
+                        Text(
+                            text = "착한가격업소 둘러보기",
+                            style = EatssuTheme.typography.button2
+                        )
+
+                        Text(
+                            text = "내 주변 착한 한 끼를 찾아보세요",
+                            style = EatssuTheme.typography.caption2
+                        )
+                    }
+
+                    Spacer(Modifier.weight(1f))
+
+                    IconButton(
+                        modifier = Modifier.size(18.dp),
+                        onClick = { }
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_right),
+                            tint = Primary,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(top = 50.dp)
+                    .height(30.dp)
+            ) {
+                Image(
+                    painterResource(R.drawable.seoul_logo_kr),
+                    contentDescription = "KOR Seoul Logo",
+                    modifier = Modifier.weight(1f)
+                )
+                VerticalDivider(
+                    modifier = Modifier.width(1.dp)
+                )
+                Image(
+                    painterResource(R.drawable.seoul_logo_en),
+                    contentDescription = "ENG Seoul Logo",
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
