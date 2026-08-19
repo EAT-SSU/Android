@@ -28,6 +28,8 @@
     <string name="title_partnership_map">제휴 지도</string>
     <string name="title_good_price_map">착한가격업소 지도</string>
     <string name="title_force_update">강제 업데이트</string>
+    <string name="tab_school_partnership">학교 제휴</string>
+    <string name="tab_good_price">착한 가격</string>
 
     <!-- ========================== -->
     <!-- Navigation -->

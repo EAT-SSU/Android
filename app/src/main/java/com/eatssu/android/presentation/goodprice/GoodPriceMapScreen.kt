@@ -11,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -85,6 +86,8 @@ private const val LOCATION_PERMISSION_REQUEST_CODE = 2001
 @Composable
 fun GoodPriceMapRoute(
     viewModel: GoodPriceMapViewModel = viewModel(),
+    showTopBar: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -127,6 +130,8 @@ fun GoodPriceMapRoute(
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
         errorMessage = errorMessage,
+        showTopBar = showTopBar,
+        contentPadding = contentPadding,
         onCategorySelected = { viewModel.setCategory(it) },
         onStoreClick = { viewModel.selectStore(it.id) },
         onDismissBottomSheet = { viewModel.clearSelectedStore() },
@@ -150,6 +155,8 @@ fun GoodPriceMapScreen(
     cameraPositionState: CameraPositionState,
     locationSource: FusedLocationSource?,
     errorMessage: String?,
+    showTopBar: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(),
     onCategorySelected: (GoodPriceCategory) -> Unit,
     onStoreClick: (GoodPriceStore) -> Unit,
     onDismissBottomSheet: () -> Unit,
@@ -169,19 +176,21 @@ fun GoodPriceMapScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            // 상단 타이틀: 디자인 가이드에 따라 뒤로가기 버튼 없이 가운데 타이틀만 표시
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.title_good_price_map),
-                        style = EatssuTheme.typography.subtitle1,
-                        color = Black,
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = White,
-                ),
-            )
+            if (showTopBar) {
+                // 상단 타이틀: 디자인 가이드에 따라 뒤로가기 버튼 없이 가운데 타이틀만 표시
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.title_good_price_map),
+                            style = EatssuTheme.typography.subtitle1,
+                            color = Black,
+                        )
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = White,
+                    ),
+                )
+            }
         },
     ) { innerPadding ->
         Box(
@@ -189,7 +198,7 @@ fun GoodPriceMapScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            // 네이버 지도 영역 (하단 네비게이션 바 없음)
+            // 네이버 지도 영역 (학교 제휴 탭과 동일하게 contentPadding 적용)
             NaverMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
@@ -198,6 +207,7 @@ fun GoodPriceMapScreen(
                     isLocationButtonEnabled = locationSource != null,
                 ),
                 locationSource = locationSource,
+                contentPadding = contentPadding,
                 properties = MapProperties(
                     locationTrackingMode = LocationTrackingMode.NoFollow,
                 ),
@@ -309,7 +319,9 @@ fun GoodPriceMapScreen(
                 exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 24.dp),
+                    .padding(
+                        bottom = 24.dp + contentPadding.calculateBottomPadding()
+                    ),
             ) {
                 errorMessage?.let { message ->
                     EatSsuSnackbar(

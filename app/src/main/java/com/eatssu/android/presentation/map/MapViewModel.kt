@@ -74,6 +74,17 @@ class MapViewModel @Inject constructor(
         fetchUserCollegeDepartment()
     }
 
+    fun refresh() {
+        fetchUserCollegeDepartment()
+    }
+
+    fun clearFilterChangeResult() {
+        val current = uiState.value
+        if (current is UiState.Success) {
+            _uiState.value = UiState.Success(current.data.copy(filterChangeResult = null))
+        }
+    }
+
     private fun fetchUserCollegeDepartment() {
         viewModelScope.launch {
             val userCollegeDepartment = getUserCollegeDepartmentUseCase()
@@ -92,23 +103,35 @@ class MapViewModel @Inject constructor(
                 listOf(FilterType.Mine, FilterType.All)
             }
 
-            // Festival 제휴가 하나라도 있으면 Festival을 우선하고, 없으면 기존 기본 필터 규칙을 따른다.
+            // Festival 제휴가 하나라도 있으면 Festival을 우선하고, 없으면 Mine을 기본으로 설정한다.
             val initialFilter = when {
                 hasFestival -> FilterType.Festival
-                newDepartmentId == -1L -> FilterType.All
                 else -> FilterType.Mine
             }
-            _uiState.value = UiState.Success(
-                MapState(
-                    selectedFilter = initialFilter,
-                    availableFilters = availableFilters,
-                ),
-            )
 
-            when (initialFilter) {
-                FilterType.All -> loadPartnerships(prefetchedPartnerships = allPartnerships)
-                FilterType.Festival -> loadFestivalPartnerships(prefetchedPartnerships = allPartnerships)
-                FilterType.Mine -> loadUserCollegePartnerships()
+            if (newDepartmentId == -1L && initialFilter == FilterType.Mine) {
+                // 학과 미입력 유저: 바텀시트 요청 상태 설정, 마커 데이터는 빈 상태(emptyList)로 둠
+                _uiState.value = UiState.Success(
+                    MapState(
+                        selectedFilter = FilterType.Mine,
+                        availableFilters = availableFilters,
+                        filterChangeResult = MapState.FilterChangeResult.RequiresDepartment,
+                        partnerships = emptyList(),
+                    ),
+                )
+            } else {
+                _uiState.value = UiState.Success(
+                    MapState(
+                        selectedFilter = initialFilter,
+                        availableFilters = availableFilters,
+                    ),
+                )
+
+                when (initialFilter) {
+                    FilterType.All -> loadPartnerships(prefetchedPartnerships = allPartnerships)
+                    FilterType.Festival -> loadFestivalPartnerships(prefetchedPartnerships = allPartnerships)
+                    FilterType.Mine -> loadUserCollegePartnerships()
+                }
             }
 
             analyticsTracker.track(
@@ -130,10 +153,14 @@ class MapViewModel @Inject constructor(
 
         // 학과 정보가 없는데 Mine 필터를 선택하려는 경우
         if (filter == FilterType.Mine && _departmentId.value == -1L) {
-            // 학과 입력이 필요한 경우 결과를 MapState에 반영
+            // 학과 입력이 필요한 경우 결과를 MapState에 반영하고 마커는 비어있는 상태 유지
             if (current is UiState.Success) {
                 _uiState.value = UiState.Success(
-                    currentData.copy(filterChangeResult = MapState.FilterChangeResult.RequiresDepartment)
+                    currentData.copy(
+                        selectedFilter = FilterType.Mine,
+                        filterChangeResult = MapState.FilterChangeResult.RequiresDepartment,
+                        partnerships = emptyList(),
+                    )
                 )
             }
             return
