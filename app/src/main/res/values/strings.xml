@@ -26,7 +26,10 @@
     <string name="title_report">신고하기</string>
     <string name="title_widget_setting">위젯 설정</string>
     <string name="title_partnership_map">제휴 지도</string>
+    <string name="title_good_price_map">착한가격업소 지도</string>
     <string name="title_force_update">강제 업데이트</string>
+    <string name="tab_school_partnership">학교 제휴</string>
+    <string name="tab_good_price">착한 가격</string>
 
     <!-- ========================== -->
     <!-- Navigation -->
@@ -131,6 +134,8 @@
     <string name="toast_oss_load_fail">오픈소스 라이브러리를 불러올 수 없어요.</string>
     <string name="toast_sign_out_success">회원탈퇴되었어요.</string>
     <string name="toast_sign_out_fail">회원탈퇴에 실패했어요.</string>
+    <string name="toast_load_good_price_stores_failed">업소 정보를 불러오지 못했어요.</string>
+    <string name="btn_browse_good_price_stores">착한가격업소 둘러보기</string>
 
     <!-- ========================== -->
     <!-- Review Screen -->
@@ -263,7 +268,7 @@
     <!-- App Slogan -->
     <!-- ========================== -->
     <string name="app_slogan_part1">숭실대에서 </string>
-    <string name="app_slogan_part2">먹자</string>
+    <string name="app_slogan_part2">서울 곳곳까지</string>
     <string name="app_slogan_part3" translatable="false"></string>
 
     <!-- ========================== -->

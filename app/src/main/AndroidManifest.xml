@@ -158,6 +158,9 @@
             android:name=".presentation.mypage.terms.TermSelectorActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.goodprice.GoodPriceMapActivity"
+            android:exported="false" />
+        <activity
                 android:name=".presentation.intro.IntroActivity"
             android:exported="true">
             <!-- 딥링크 필터  -->

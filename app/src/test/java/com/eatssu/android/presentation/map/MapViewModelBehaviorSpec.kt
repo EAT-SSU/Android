@@ -39,7 +39,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
         val getUserCollegeDepartmentUseCase = mockk<GetUserCollegeDepartmentUseCase>()
         val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
 
-        `when`("학과 정보가 없어서 초기 필터가 전체일 때") {
+        `when`("학과 정보가 없을 때") {
             val allPartnerships = listOf(samplePartnership(storeName = "All Cafe"))
             coEvery {
                 getUserCollegeDepartmentUseCase()
@@ -58,15 +58,16 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 analyticsTracker = analyticsTracker,
             )
 
-            then("All 필터로 시작하고 전체 제휴 목록을 로드한다") {
+            then("Mine 필터로 시작하고 학과 입력 필요(RequiresDepartment) 상태와 빈 마커 목록을 유지한다") {
                 runTest {
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
-                        state.data.selectedFilter shouldBe FilterType.All
+                        state.data.selectedFilter shouldBe FilterType.Mine
                         state.data.availableFilters shouldBe listOf(FilterType.Mine, FilterType.All)
-                        state.data.partnerships shouldBe allPartnerships
+                        state.data.filterChangeResult shouldBe MapState.FilterChangeResult.RequiresDepartment
+                        state.data.partnerships shouldBe emptyList()
                     }
-                    coVerify(atLeast = 1) { partnershipRepository.getAllPartnerships() }
+                    coVerify(exactly = 0) { partnershipRepository.getUserCollegePartnerships() }
                 }
             }
         }
@@ -133,7 +134,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
-        `when`("학과 정보가 없는 사용자가 Mine 필터를 선택하면") {
+        `when`("학과 정보가 없는 사용자가 All에서 Mine 필터로 변경하려고 하면") {
             coEvery {
                 getUserCollegeDepartmentUseCase()
             } returns sampleUserInfo(
@@ -153,10 +154,11 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
 
             then("RequiresDepartment 결과를 상태에 반영하고 Mine 데이터를 로드하지 않는다") {
                 runTest {
+                    // All 필터로 변경
+                    viewModel.setFilter(FilterType.All)
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
                         state.data.selectedFilter shouldBe FilterType.All
-                        state.data.availableFilters shouldBe listOf(FilterType.Mine, FilterType.All)
                     }
 
                     clearMocks(partnershipRepository, answers = false, recordedCalls = true)
@@ -164,7 +166,9 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
 
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
+                        state.data.selectedFilter shouldBe FilterType.Mine
                         state.data.filterChangeResult shouldBe MapState.FilterChangeResult.RequiresDepartment
+                        state.data.partnerships shouldBe emptyList()
                     }
                     coVerify(exactly = 0) { partnershipRepository.getUserCollegePartnerships() }
                 }

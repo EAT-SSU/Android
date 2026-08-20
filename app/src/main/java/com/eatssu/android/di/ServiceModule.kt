@@ -67,4 +67,10 @@ object ServiceModule {
         return noTokenRetrofit.create(HealthCheckService::class.java)
     }
 
+    // 착한가격업소 서비스 제공 (비로그인 사용자도 호출 가능하도록 @NoToken Retrofit 사용)
+    @Provides
+    @Singleton
+    fun provideGoodPriceStoreService(@NoToken noTokenRetrofit: Retrofit): com.eatssu.android.data.remote.service.GoodPriceStoreService {
+        return noTokenRetrofit.create(com.eatssu.android.data.remote.service.GoodPriceStoreService::class.java)
+    }
 }
