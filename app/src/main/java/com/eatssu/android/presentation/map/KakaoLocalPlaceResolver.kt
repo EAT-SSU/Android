@@ -3,7 +3,6 @@ package com.eatssu.android.presentation.map
 import com.eatssu.android.BuildConfig
 import com.eatssu.android.data.remote.dto.response.KakaoLocalSearchResponse
 import com.eatssu.android.data.remote.service.KakaoLocalService
-import com.eatssu.android.domain.model.PartnershipRestaurant
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -11,7 +10,7 @@ class KakaoLocalPlaceResolver @Inject constructor(
     private val kakaoLocalService: KakaoLocalService,
 ) {
     internal suspend fun resolve(
-        restaurant: PartnershipRestaurant,
+        destination: MapDestination,
         preferredPlaceId: String?,
     ): ResolvedMapPlace? {
         val restApiKey = BuildConfig.KAKAO_REST_API_KEY.trim()
@@ -20,9 +19,9 @@ class KakaoLocalPlaceResolver @Inject constructor(
         val response = runCatching {
             kakaoLocalService.searchPlaces(
                 authorization = "KakaoAK $restApiKey",
-                query = restaurant.storeName,
-                longitude = restaurant.longitude,
-                latitude = restaurant.latitude,
+                query = destination.storeName,
+                longitude = destination.longitude,
+                latitude = destination.latitude,
             )
         }.onFailure { throwable ->
             Timber.w(throwable, "Failed to resolve Kakao local place")

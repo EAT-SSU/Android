@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.eatssu.android.analytics.ProvideAnalyticsTracker
+import com.eatssu.android.presentation.map.MapExternalNavigator
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,9 @@ class GoodPriceMapActivity : ComponentActivity() {
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
+    @Inject
+    lateinit var mapExternalNavigator: MapExternalNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,7 +31,7 @@ class GoodPriceMapActivity : ComponentActivity() {
             // 애널리틱스 트래커 및 EatssuTheme 적용
             ProvideAnalyticsTracker(analyticsTracker) {
                 EatssuTheme {
-                    GoodPriceMapRoute()
+                    GoodPriceMapRoute(mapExternalNavigator = mapExternalNavigator)
                 }
             }
         }

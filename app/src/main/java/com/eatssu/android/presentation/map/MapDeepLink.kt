@@ -55,25 +55,34 @@ internal object MapDeepLink {
     fun kakaoCoordinateUrl(latitude: Double, longitude: Double): String =
         "kakaomap://look?p=$latitude,$longitude"
 
-    fun serverWebUrl(provider: MapProvider, restaurant: PartnershipRestaurant): String? =
+    fun serverWebUrl(provider: MapProvider, destination: MapDestination): String? =
         when (provider) {
-            MapProvider.NAVER -> restaurant.naverMapUrl
-            MapProvider.KAKAO -> restaurant.kakaoMapUrl
+            MapProvider.NAVER -> destination.naverMapUrl
+            MapProvider.KAKAO -> destination.kakaoMapUrl
         }?.takeIf { url -> url.isHttpWebUrl() }
+
+    fun serverWebUrl(provider: MapProvider, restaurant: PartnershipRestaurant): String? =
+        serverWebUrl(provider, restaurant.toMapDestination())
+
+    fun fallbackWebUrl(
+        provider: MapProvider,
+        destination: MapDestination,
+        resolvedPlace: ResolvedMapPlace?,
+    ): String = when (provider) {
+        MapProvider.NAVER ->
+            "https://map.naver.com/p/search/${(resolvedPlace?.name ?: destination.storeName).pathEncoded()}"
+
+        MapProvider.KAKAO -> resolvedPlace?.let { place ->
+            "https://map.kakao.com/link/map/${place.id}"
+        } ?: "https://map.kakao.com/link/map/" +
+            "${destination.storeName.pathEncoded()},${destination.latitude},${destination.longitude}"
+    }
 
     fun fallbackWebUrl(
         provider: MapProvider,
         restaurant: PartnershipRestaurant,
         resolvedPlace: ResolvedMapPlace?,
-    ): String = when (provider) {
-        MapProvider.NAVER ->
-            "https://map.naver.com/p/search/${(resolvedPlace?.name ?: restaurant.storeName).pathEncoded()}"
-
-        MapProvider.KAKAO -> resolvedPlace?.let { place ->
-            "https://map.kakao.com/link/map/${place.id}"
-        } ?: "https://map.kakao.com/link/map/" +
-            "${restaurant.storeName.pathEncoded()},${restaurant.latitude},${restaurant.longitude}"
-    }
+    ): String = fallbackWebUrl(provider, restaurant.toMapDestination(), resolvedPlace)
 
     fun supportsKakaoPlaceAction(versionName: String?): Boolean =
         versionName
@@ -106,35 +115,40 @@ internal object MapDeepLink {
 
 internal fun Context.openMapWithoutResolution(
     provider: MapProvider,
-    restaurant: PartnershipRestaurant,
+    destination: MapDestination,
 ): Boolean {
     if (!isPackageInstalled(provider.packageName)) {
         return openWebUrl(
-            MapDeepLink.serverWebUrl(provider, restaurant)
-                ?: MapDeepLink.fallbackWebUrl(provider, restaurant, resolvedPlace = null),
+            MapDeepLink.serverWebUrl(provider, destination)
+                ?: MapDeepLink.fallbackWebUrl(provider, destination, resolvedPlace = null),
         )
     }
 
     val appUrl = when (provider) {
         MapProvider.NAVER -> MapDeepLink.naverCoordinateUrl(
-            storeName = restaurant.storeName,
-            latitude = restaurant.latitude,
-            longitude = restaurant.longitude,
+            storeName = destination.storeName,
+            latitude = destination.latitude,
+            longitude = destination.longitude,
             appName = packageName,
         )
 
         MapProvider.KAKAO -> MapDeepLink.kakaoCoordinateUrl(
-            latitude = restaurant.latitude,
-            longitude = restaurant.longitude,
+            latitude = destination.latitude,
+            longitude = destination.longitude,
         )
     }
 
     return startMapUrl(appUrl, provider) ||
         openWebUrl(
-            MapDeepLink.serverWebUrl(provider, restaurant)
-                ?: MapDeepLink.fallbackWebUrl(provider, restaurant, resolvedPlace = null),
+            MapDeepLink.serverWebUrl(provider, destination)
+                ?: MapDeepLink.fallbackWebUrl(provider, destination, resolvedPlace = null),
         )
 }
+
+internal fun Context.openMapWithoutResolution(
+    provider: MapProvider,
+    restaurant: PartnershipRestaurant,
+): Boolean = openMapWithoutResolution(provider, restaurant.toMapDestination())
 
 internal fun Context.startMapUrl(url: String, provider: MapProvider): Boolean =
     startMapIntent(mapIntent(url, provider.packageName), provider)

@@ -389,6 +389,7 @@ fun MapRoute(
                 // 1: 착한 가격 탭 (서울시 전역 착한가격업소 지도, 학과 바텀시트 불필요)
                 1 -> {
                     GoodPriceMapRoute(
+                        mapExternalNavigator = mapExternalNavigator,
                         showTopBar = false,
                         contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
                         modifier = Modifier.fillMaxSize(),

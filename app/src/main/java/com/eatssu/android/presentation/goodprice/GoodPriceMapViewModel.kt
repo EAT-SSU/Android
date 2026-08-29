@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eatssu.android.R
 import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.domain.model.GoodPriceStore
 import com.eatssu.android.domain.usecase.goodprice.GetGoodPriceStoreDetailUseCase
 import com.eatssu.android.domain.usecase.goodprice.GetGoodPriceStoresUseCase
 import com.eatssu.common.UiEvent
@@ -77,21 +78,36 @@ class GoodPriceMapViewModel @Inject constructor(
     }
 
     // 특정 업소 마커 클릭 시 상세 정보 조회
-    fun selectStore(storeId: Long) {
+    fun selectStore(store: GoodPriceStore) {
+        _uiState.update {
+            it.copy(
+                selectedStore = store,
+                selectedStoreDetail = null,
+            )
+        }
+
         viewModelScope.launch {
-            when (val result = getGoodPriceStoreDetailUseCase(storeId)) {
+            when (val result = getGoodPriceStoreDetailUseCase(store.id)) {
                 is ApiResult.Success -> {
-                    _uiState.update { it.copy(selectedStoreDetail = result.data) }
+                    _uiState.update { state ->
+                        if (state.selectedStore?.id == store.id) {
+                            state.copy(selectedStoreDetail = result.data)
+                        } else {
+                            state
+                        }
+                    }
                 }
 
                 else -> {
-                    // 상세 정보 조회 실패 시에도 동일한 에러 토스트 표시
-                    _uiEvent.emit(
-                        UiEvent.ShowToast(
-                            UiText.StringResource(R.string.toast_load_good_price_stores_failed),
-                            ToastType.ERROR,
+                    if (_uiState.value.selectedStore?.id == store.id) {
+                        // 상세 정보 조회 실패 시에도 동일한 에러 토스트 표시
+                        _uiEvent.emit(
+                            UiEvent.ShowToast(
+                                UiText.StringResource(R.string.toast_load_good_price_stores_failed),
+                                ToastType.ERROR,
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -99,6 +115,11 @@ class GoodPriceMapViewModel @Inject constructor(
 
     // 바텀시트 닫을 때 선택된 업소 정보 초기화
     fun clearSelectedStore() {
-        _uiState.update { it.copy(selectedStoreDetail = null) }
+        _uiState.update {
+            it.copy(
+                selectedStore = null,
+                selectedStoreDetail = null,
+            )
+        }
     }
 }

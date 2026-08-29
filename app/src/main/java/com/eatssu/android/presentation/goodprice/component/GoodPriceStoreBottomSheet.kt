@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.GoodPriceStoreDetail
+import com.eatssu.android.presentation.map.component.MapLinkButtons
 import com.eatssu.common.enums.GoodPriceCategory
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
@@ -43,6 +44,8 @@ import com.eatssu.design_system.theme.White
 @Composable
 fun GoodPriceStoreBottomSheet(
     storeDetail: GoodPriceStoreDetail,
+    onKakaoMapClick: () -> Unit,
+    onNaverMapClick: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,5 +140,10 @@ fun GoodPriceStoreBottomSheet(
                 )
             }
         }
+
+        MapLinkButtons(
+            onKakaoMapClick = onKakaoMapClick,
+            onNaverMapClick = onNaverMapClick,
+        )
     }
 }
