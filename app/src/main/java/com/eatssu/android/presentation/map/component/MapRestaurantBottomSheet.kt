@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -253,41 +252,10 @@ fun MapRestaurantBottomSheet(
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Gray200),
+            MapLinkButtons(
+                onKakaoMapClick = onKakaoMapClick,
+                onNaverMapClick = onNaverMapClick,
             )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .padding(horizontal = 24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                MapLinkButton(
-                    iconRes = R.drawable.ic_kakao_map,
-                    labelRes = R.string.map_open_kakao,
-                    onClick = onKakaoMapClick,
-                    modifier = Modifier.weight(1f),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .height(24.dp)
-                        .background(Gray400),
-                )
-
-                MapLinkButton(
-                    iconRes = R.drawable.ic_naver_map,
-                    labelRes = R.string.map_open_naver,
-                    onClick = onNaverMapClick,
-                    modifier = Modifier.weight(1f),
-                )
-            }
             }
 
             Box(
@@ -316,36 +284,6 @@ fun MapRestaurantBottomSheet(
         }
     }
 }
-}
-
-@Composable
-private fun MapLinkButton(
-    iconRes: Int,
-    labelRes: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxHeight()
-            .clickable(onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = stringResource(labelRes),
-            style = EatssuTheme.typography.body2,
-            color = Gray600,
-        )
-    }
 }
 
 @Preview(showBackground = true)
