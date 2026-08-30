@@ -212,13 +212,17 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             val current = _uiState.value as? UiState.Success ?: return@launch
             val wasLiked = current.data.partnershipLikeStatus(id) ?: return@launch
+
+            // 찜 상태는 즉시 화면에 반영하고, 서버 요청이 실패한 경우에만 원래 상태로 되돌린다.
+            _uiState.value = UiState.Success(current.data.togglePartnershipLike(id))
+
             val result = partnershipRepository.likePartnership(id, wasLiked)
-            if (result !is ApiResult.Success) return@launch
+            if (result is ApiResult.Success) return@launch
 
             val latest = _uiState.value as? UiState.Success ?: return@launch
-
-            // 서버 반영에 성공하면 기존 목록과 현재 열린 상세의 좋아요 상태를 함께 갱신한다.
-            _uiState.value = UiState.Success(latest.data.togglePartnershipLike(id))
+            if (latest.data.partnershipLikeStatus(id) == !wasLiked) {
+                _uiState.value = UiState.Success(latest.data.togglePartnershipLike(id))
+            }
         }
     }
 }
