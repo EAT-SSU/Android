@@ -336,6 +336,9 @@
     <string name="partnership_filter_mine">내 제휴</string>
     <string name="partnership_filter_festival">축제</string>
     <string name="partnership_filter_all">전체</string>
+    <string name="partnership_filter_restaurant">음식점</string>
+    <string name="partnership_filter_cafe">카페</string>
+    <string name="partnership_filter_pub">주점</string>
     <string name="partnership_filter_department_placeholder">학과</string>
 
     <!-- ========================== -->

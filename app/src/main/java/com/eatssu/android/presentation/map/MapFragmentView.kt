@@ -28,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -69,9 +68,9 @@ import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.goodprice.GoodPriceMapRoute
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
-import com.eatssu.android.presentation.map.component.FilterType
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
-import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
+import com.eatssu.android.presentation.map.component.PartnershipCategory
+import com.eatssu.android.presentation.map.component.PartnershipCategoryFilterRow
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
@@ -118,7 +117,6 @@ fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel(),
     mapExternalNavigator: MapExternalNavigator? = null,
-    onFavoriteClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -168,14 +166,14 @@ fun MapRoute(
     }
 
     // MainState에서 학과 정보 가져오기
-    val (departmentName, showUserDepartmentBottomSheet) = when (val state = mainUiState) {
+    val showUserDepartmentBottomSheet = when (val state = mainUiState) {
         is UiState.Success -> {
             when (val data = state.data) {
-                is MainState.DepartmentState -> data.departmentName to data.showUserDepartmentBottomSheet
-                else -> "학과" to false
+                is MainState.DepartmentState -> data.showUserDepartmentBottomSheet
+                else -> false
             }
         }
-        else -> "학과" to false
+        else -> false
     }
 
     LaunchedEffect(Unit) {
@@ -375,14 +373,12 @@ fun MapRoute(
                                 )
                             }
                         },
-                        onSelectedFilterChange = { filter ->
-                            viewModel.setFilter(filter)
+                        onSelectedCategoryChange = { category ->
+                            viewModel.setCategory(category)
                         },
                         departmentId = departmentId,
                         collegeId = collegeId,
-                        departmentName = departmentName,
-                        selectedFilter = mapState.selectedFilter,
-                        onFavoriteClick = onFavoriteClick,
+                        selectedCategory = mapState.selectedCategory,
                     )
                 }
 
@@ -414,12 +410,10 @@ internal fun MapScreen(
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
     animateCameraPositionTo: (LatLng, Double) -> Unit,
-    onSelectedFilterChange: (FilterType) -> Unit,
+    onSelectedCategoryChange: (PartnershipCategory) -> Unit,
     departmentId: Long,
     collegeId: Long,
-    departmentName: String?,
-    selectedFilter: FilterType,
-    onFavoriteClick: () -> Unit,
+    selectedCategory: PartnershipCategory,
 ) {
     val analyticsTracker = LocalAnalyticsTracker.current
 
@@ -493,7 +487,7 @@ internal fun MapScreen(
                 locationTrackingMode = LocationTrackingMode.NoFollow,
             ),
         ) {
-            val clusterItems = mapState.partnerships.associateBy {
+            val clusterItems = mapState.visiblePartnerships.associateBy {
                 ItemKey(
                     it.storeName,
                     LatLng(it.latitude, it.longitude),
@@ -574,39 +568,14 @@ internal fun MapScreen(
             )
         }
 
-        // 단과대 제휴 토글 버튼
-        PartnershipFilterToggle(
-            selected = selectedFilter,
-            onSelectedChange = { next ->
-                if (partnershipSheetState.isVisible) return@PartnershipFilterToggle
-                onSelectedFilterChange(next)
+        PartnershipCategoryFilterRow(
+            selectedCategory = selectedCategory,
+            onCategorySelected = { next ->
+                if (partnershipSheetState.isVisible) return@PartnershipCategoryFilterRow
+                onSelectedCategoryChange(next)
             },
             modifier = Modifier.padding(top = 12.dp),
-            departmentName = departmentName.toString(),
-            filters = mapState.availableFilters,
         )
-
-        Surface(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = 18.dp,
-                    bottom = dimensionResource(R.dimen.bottom_nav_height) + 18.dp,
-                )
-                .size(48.dp),
-            shape = CircleShape,
-            color = Color.White,
-            shadowElevation = 4.dp,
-            onClick = onFavoriteClick,
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Image(
-                    painter = painterResource(R.drawable.ic_like_selected),
-                    contentDescription = stringResource(R.string.favorite_open),
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-        }
     }
 }
 

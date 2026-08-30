@@ -316,6 +316,9 @@
     <string name="partnership_filter_mine">自分の提携</string>
     <string name="partnership_filter_festival">祭り</string>
     <string name="partnership_filter_all">すべて</string>
+    <string name="partnership_filter_restaurant">レストラン</string>
+    <string name="partnership_filter_cafe">カフェ</string>
+    <string name="partnership_filter_pub">居酒屋</string>
     <string name="partnership_filter_department_placeholder">学科</string>
     <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 

@@ -316,6 +316,9 @@
     <string name="partnership_filter_mine">My Partners</string>
     <string name="partnership_filter_festival">Festival</string>
     <string name="partnership_filter_all">All</string>
+    <string name="partnership_filter_restaurant">Restaurant</string>
+    <string name="partnership_filter_cafe">Cafe</string>
+    <string name="partnership_filter_pub">Pub</string>
     <string name="partnership_filter_department_placeholder">Department</string>
     <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 

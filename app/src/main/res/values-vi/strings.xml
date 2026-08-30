@@ -316,6 +316,9 @@
     <string name="partnership_filter_mine">Ưu đãi của tôi</string>
     <string name="partnership_filter_festival">các hoạt động lễ hội</string>
     <string name="partnership_filter_all">Tất cả</string>
+    <string name="partnership_filter_restaurant">Nhà hàng</string>
+    <string name="partnership_filter_cafe">Quán cà phê</string>
+    <string name="partnership_filter_pub">Quán rượu</string>
     <string name="partnership_filter_department_placeholder">Ngành/Khoa</string>
     <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 
