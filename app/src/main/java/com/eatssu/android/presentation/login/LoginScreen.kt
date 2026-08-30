@@ -166,7 +166,7 @@ fun LoginScreen(
                         )
 
                         Text(
-                            text = "내 주변 착한 한 끼를 찾아보세요",
+                            text = stringResource(id = R.string.btn_browse_good_price_stores_subtitle),
                             style = EatssuTheme.typography.caption2,
                             color = Black,
                         )

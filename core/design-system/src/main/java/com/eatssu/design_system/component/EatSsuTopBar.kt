@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.eatssu.design_system.R
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +43,10 @@ fun EatSsuTopBar(
                     tint = Gray500
                 )
             }
-        }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = White,
+        ),
     )
 }
 
@@ -55,7 +59,7 @@ fun CloseTopBar(
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         title = {
             Text(
                 text = title,
@@ -77,7 +81,7 @@ fun CloseTopBar(
             containerColor = MaterialTheme.colorScheme.surface,
             titleContentColor = MaterialTheme.colorScheme.onSurface,
             actionIconContentColor = MaterialTheme.colorScheme.onSurface,
-        )
+        ),
     )
 }
 
@@ -92,11 +96,11 @@ fun TopBarPreview() {
 }
 
 @Preview(showBackground = true)
-
 @Composable
 private fun CloseTopBarPreview() {
     EatssuTheme {
         CloseTopBar(title = "가운데 제목", {})
     }
 }
+
 

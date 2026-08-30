@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.eatssu.common.enums.GoodPriceCategory
@@ -54,7 +55,7 @@ fun GoodPriceFilterRow(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = category.displayName,
+                    text = stringResource(id = category.displayNameResId),
                     // Body3 글꼴을 사용하며, 선택된 경우에만 Bold 처리
                     style = EatssuTheme.typography.body3.copy(
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,

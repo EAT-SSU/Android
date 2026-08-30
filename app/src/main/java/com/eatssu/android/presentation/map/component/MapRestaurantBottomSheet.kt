@@ -154,7 +154,7 @@ fun MapRestaurantBottomSheet(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = storeType.value,
+                            text = stringResource(id = storeType.displayNameResId),
                             style = EatssuTheme.typography.caption3,
                             color = Gray400,
                         )

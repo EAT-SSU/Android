@@ -14,6 +14,37 @@
     <string name="restaurant_the_kitchen">더 키친</string>
 
     <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">Student Union Building, 3F</string>
+    <string name="cafeteria_student_time">08:00~09:00(1,000-Won Breakfast)\n11:20~14:00(Lunch)\n14:00~17:00(Open Space Hours)</string>
+    <string name="cafeteria_student_etc">3 Food Stations\nHot Pot(Ttukbaegi-style Meals), Rice Bowls, Western food\nClosed on weekends</string>
+
+    <string name="cafeteria_dodam_location">Shinyang Hall, 2F</string>
+    <string name="cafeteria_dodam_time">Weekdays\n11:20~14:00(Lunch)\n17:00~18:30(Dinner)\n\nWeekends\n11:20~13:30(Lunch)</string>
+    <string name="cafeteria_dodam_etc">2 Food Stations\nStandard Meals, Healthy Meals</string>
+
+    <string name="cafeteria_dormitory_location">Residence Hall, B1</string>
+    <string name="cafeteria_dormitory_time">Weekdays\n11:20~13:50(Lunch)\n17:00~18:30(Dinner)\n\nWeekends\n11:20~13:30(Lunch)\n17:00~18:20(Dinner)</string>
+    <string name="cafeteria_dormitory_etc">Breakfast Not Available</string>
+
+    <string name="cafeteria_faculty_location">Jeonsan Hall, B1</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(Lunch)\n14:00~17:00(Open Space Hours)</string>
+    <string name="cafeteria_faculty_etc">Closed on weekends</string>
+
+    <string name="cafeteria_snack_corner_location">Student Union Building, 3F</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(Lunch)</string>
+    <string name="cafeteria_snack_corner_etc">Bunsik(Korean Snacks), Old-school Lunch Box, Cup Rice, etc.\nClosed on weekends</string>
+
+    <string name="cafeteria_food_court_location">Student Union Building, 2F</string>
+    <string name="cafeteria_food_court_time">Closed</string>
+    <string name="cafeteria_food_court_etc">Coming Soon</string>
+
+    <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
+
+    <!-- ========================== -->
     <!-- Report Types -->
     <!-- ========================== -->
     <string name="report_type_no_associate_content">Content unrelated to the menu item</string>
@@ -28,4 +59,23 @@
     <!-- ========================== -->
     <string name="college_placeholder">College</string>
     <string name="department_placeholder">Department</string>
+
+    <!-- ========================== -->
+    <!-- Good Price Categories -->
+    <!-- ========================== -->
+    <string name="category_good_price_all">All</string>
+    <string name="category_good_price_korean">Korean</string>
+    <string name="category_good_price_japanese">Japanese</string>
+    <string name="category_good_price_western">Western</string>
+    <string name="category_good_price_chinese">Chinese</string>
+    <string name="category_good_price_bakery">Bakery</string>
+    <string name="category_good_price_etc">Others</string>
+
+    <!-- ========================== -->
+    <!-- School Partnership Categories -->
+    <!-- ========================== -->
+    <string name="category_school_partnership_all">All</string>
+    <string name="category_school_partnership_restaurant">Restaurant</string>
+    <string name="category_school_partnership_cafe">Cafe</string>
+    <string name="category_school_partnership_pub">Pub</string>
 </resources>

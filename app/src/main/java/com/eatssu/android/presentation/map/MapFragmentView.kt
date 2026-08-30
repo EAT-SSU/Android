@@ -18,23 +18,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -53,6 +53,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -82,10 +83,10 @@ import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
 import com.eatssu.common.enums.ToastType
-import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.White
 import com.naver.maps.geometry.LatLng
@@ -249,22 +250,27 @@ fun MapRoute(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
-            Column(modifier = Modifier.background(White)) {
-                // 상단 타이틀: 지도
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.nav_map),
-                            style = EatssuTheme.typography.subtitle1,
-                            color = Black,
-                        )
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = White,
-                    ),
-                    windowInsets = TopAppBarDefaults.windowInsets,
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(White)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 17.dp)
+                        .height(56.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(R.string.nav_map),
+                        style = EatssuTheme.typography.subtitle1,
+                        color = Gray700,
+                        textAlign = TextAlign.Center,
+                    )
+                }
 
                 // 상단 탭: 학교 제휴 | 착한 가격
                 TabRow(
@@ -518,38 +524,39 @@ internal fun MapScreen(
                     }
                 },
                 leafContent = { info ->
-                    val partnership = info.tag as? Partnership ?: return@Clustering
+                    val partnership = info.tag as? Partnership
+                    if (partnership != null) {
+                        Row(
+                            modifier = Modifier
+                                .background(Color.White, RoundedCornerShape(13.dp))
+                                .border(1.dp, Gray300, RoundedCornerShape(13.dp))
+                                .padding(
+                                    start = 3.dp,
+                                    end = 7.dp,
+                                    top = 2.5.dp,
+                                    bottom = 2.5.dp,
+                                ),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = spacedBy(3.dp),
+                        ) {
+                            val iconRes = when (partnership.restaurantType) {
+                                StoreType.CAFE -> R.drawable.ic_map_marker_cafe
+                                StoreType.PUB -> R.drawable.ic_map_marker_pub
+                                else -> R.drawable.ic_map_marker_restaurant
+                            }
 
-                    Row(
-                        modifier = Modifier
-                            .background(Color.White, RoundedCornerShape(13.dp))
-                            .border(1.dp, Gray300, RoundedCornerShape(13.dp))
-                            .padding(
-                                start = 3.dp,
-                                end = 7.dp,
-                                top = 2.5.dp,
-                                bottom = 2.5.dp,
-                            ),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = spacedBy(3.dp),
-                    ) {
-                        val iconRes = when (partnership.restaurantType) {
-                            StoreType.CAFE -> R.drawable.ic_map_marker_cafe
-                            StoreType.PUB -> R.drawable.ic_map_marker_pub
-                            else -> R.drawable.ic_map_marker_restaurant
+                            Image(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                            )
+
+                            Text(
+                                text = partnership.storeName,
+                                style = EatssuTheme.typography.caption3,
+                                color = Color.Black,
+                            )
                         }
-
-                        Image(
-                            painter = painterResource(id = iconRes),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                        )
-
-                        Text(
-                            text = partnership.storeName,
-                            style = EatssuTheme.typography.caption3,
-                            color = Color.Black,
-                        )
                     }
                 },
                 onClickCluster = { info, _ ->
@@ -585,28 +592,28 @@ internal fun MapScreen(
             departmentName = departmentName.toString(),
             filters = mapState.availableFilters,
         )
-
-        Surface(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = 18.dp,
-                    bottom = dimensionResource(R.dimen.bottom_nav_height) + 18.dp,
-                )
-                .size(48.dp),
-            shape = CircleShape,
-            color = Color.White,
-            shadowElevation = 4.dp,
-            onClick = onFavoriteClick,
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Image(
-                    painter = painterResource(R.drawable.ic_like_selected),
-                    contentDescription = stringResource(R.string.favorite_open),
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-        }
+// TODO 찜 기능 완료 시
+//        Surface(
+//            modifier = Modifier
+//                .align(Alignment.BottomEnd)
+//                .padding(
+//                    end = 18.dp,
+//                    bottom = dimensionResource(R.dimen.bottom_nav_height) + 18.dp,
+//                )
+//                .size(48.dp),
+//            shape = CircleShape,
+//            color = Color.White,
+//            shadowElevation = 4.dp,
+//            onClick = onFavoriteClick,
+//        ) {
+//            Box(contentAlignment = Alignment.Center) {
+//                Image(
+//                    painter = painterResource(R.drawable.ic_like_selected),
+//                    contentDescription = stringResource(R.string.favorite_open),
+//                    modifier = Modifier.size(24.dp),
+//                )
+//            }
+//        }
     }
 }
 

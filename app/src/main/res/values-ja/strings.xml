@@ -29,7 +29,10 @@
     <string name="title_report">通報</string>
     <string name="title_widget_setting">ウィジェット設定</string>
     <string name="title_partnership_map">提携マップ</string>
+    <string name="title_good_price_map">お手頃価格のお店マップ</string>
     <string name="title_force_update">強制アップデート</string>
+    <string name="tab_school_partnership">学校提携</string>
+    <string name="tab_good_price">お手頃価格</string>
 
     <!-- ========================== -->
     <!-- Navigation -->
@@ -134,6 +137,9 @@
     <string name="toast_oss_load_fail">オープンソースライブラリを読み込めませんでした。</string>
     <string name="toast_sign_out_success">アカウントを削除しました。</string>
     <string name="toast_sign_out_fail">アカウントの削除に失敗しました。</string>
+    <string name="toast_load_good_price_stores_failed">店舗情報の読み込みに失敗しました。</string>
+    <string name="btn_browse_good_price_stores">お手頃価格のお店を見る</string>
+    <string name="btn_browse_good_price_stores_subtitle">近くでお手頃な一食を探してみましょう</string>
 
     <!-- ========================== -->
     <!-- Review Screen -->
@@ -149,19 +155,19 @@
     <string name="review_settings">レビュー設定</string>
     <string name="review_error_occurred">エラーが発生しました。</string>
     <string name="review_show_translation">翻訳を見る</string>
-    <string name="review_translate">翻訳する</string>
+    <string name="review_translate">번역하기</string>
     <string name="review_show_original">原文を見る</string>
     <string name="review_translating">翻訳中...</string>
-    <string name="review_translated_by_ai">AIによる韓国語からの翻訳</string>
-    <string name="review_translation_unavailable">翻訳を利用できません</string>
-    <string name="review_translation_accuracy_notice">AI翻訳は必ずしも正確ではない場合があります。</string>
-    <string name="review_translation_unavailable_notice">AI翻訳は一時的に利用できません。\n後でもう一度お試しください。</string>
-    <string name="review_translation_information">翻訳について</string>
-    <string name="review_profile_image">プロフィール画像</string>
-    <string name="review_more">レビューメニュー</string>
-    <string name="review_image">レビュー画像</string>
+    <string name="review_translated_by_ai">AI가 한국어에서 번역함</string>
+    <string name="review_translation_unavailable">번역을 사용할 수 없음</string>
+    <string name="review_translation_accuracy_notice">AI 번역은 항상 정확하지 않을 수 있습니다.</string>
+    <string name="review_translation_unavailable_notice">현재 AI 번역을 사용할 수 없습니다.\n나중에 다시 시도해 주세요.</string>
+    <string name="review_translation_information">번역 안내</string>
+    <string name="review_profile_image">프로필 이미지</string>
+    <string name="review_more">리뷰 메뉴</string>
+    <string name="review_image">리뷰 이미지</string>
     <string name="toast_review_translation_failed">レビューの翻訳に失敗しました。</string>
-    <string name="toast_review_translation_unchanged">翻訳結果は原文と同じです。</string>
+    <string name="toast_review_translation_unchanged">번역 결과가 원문과 동일합니다.</string>
     <string name="review_write">レビューを書く</string>
 
     <!-- ========================== -->
@@ -208,9 +214,9 @@
     <string name="logout">ログアウト</string>
     <string name="signout">アカウント削除</string>
     <string name="app_version">アプリバージョン</string>
-    <string name="mypage_push_activity_section_title">Notifications and Activity</string>
-    <string name="mypage_service_section_title">Service Info</string>
-    <string name="mypage_etc_section_title">など</string>
+    <string name="mypage_push_activity_section_title">알림 및 활동</string>
+    <string name="mypage_service_section_title">서비스 정보</string>
+    <string name="mypage_etc_section_title">기타</string>
     <string name="mypage_push_notification_title">プッシュ通知設定</string>
     <string name="mypage_push_notification_description">毎日午前11時に通知をお送りします。</string>
 
@@ -265,7 +271,7 @@
     <!-- App Slogan -->
     <!-- ========================== -->
     <string name="app_slogan_part1">崇実大で</string>
-    <string name="app_slogan_part2">食べよう</string>
+    <string name="app_slogan_part2">ソウルの街中へ</string>
 
     <!-- ========================== -->
     <!-- Links & External -->
@@ -275,7 +281,7 @@
     <string name="private_information">プライバシーポリシー</string>
     <string name="policy">プライバシーポリシー</string>
     <string name="terms">利用規約</string>
-    <string name="terms_and_rule">規約と方針</string>
+    <string name="terms_and_rule">약관 및 정책</string>
     <string name="developer">開発者</string>
     <string name="oss_licenses">オープンソースライブラリ</string>
 
@@ -302,9 +308,9 @@
     <string name="input_department">学科を入力</string>
     <string name="input_string_description">学科を入力して\n自分だけの提携特典を確認しましょう！</string>
     <string name="map_unknown_college_department">学部・学科情報を確認できません</string>
-    <string name="map_open_kakao">カカオマップ</string>
-    <string name="map_open_naver">NAVERマップ</string>
-    <string name="toast_map_open_failed">地図を開けません。しばらくしてからもう一度お試しください。</string>
+    <string name="map_open_kakao">KakaoMap</string>
+    <string name="map_open_naver">Naver Map</string>
+    <string name="toast_map_open_failed">地図を開けませんでした。しばらくしてからもう一度お試しください。</string>
 
     <!-- ========================== -->
     <!-- Partnership -->
@@ -313,13 +319,53 @@
     <string name="etc">備考</string>
     <string name="time">営業時間</string>
     <string name="favorite_partnership">お気に入りの提携</string>
+    <string name="favorite_title">찜</string>
+    <string name="favorite_menu_tab">메뉴 찜</string>
+    <string name="favorite_partnership_tab">제휴 찜</string>
+    <string name="favorite_filter_all">전체</string>
+    <string name="favorite_empty_title">아직 찜한 제휴가 없어요.</string>
+    <string name="favorite_empty_description">관심 있는 제휴를 찜하고 빠르게 확인해 보세요!</string>
+    <string name="favorite_open">제휴 찜 열기</string>
+    <string name="favorite_open_detail">제휴 상세보기</string>
+    <string name="favorite_edit">편집</string>
+    <string name="favorite_select_all">전체 선택</string>
+    <string name="favorite_delete">삭제</string>
+    <string name="favorite_delete_count">삭제 %d</string>
+    <string name="favorite_added_snackbar">찜한 제휴에 추가했어요.</string>
+    <string name="favorite_deleted_snackbar">찜한 제휴에서 삭제했어요.</string>
+    <string name="favorite_undo">취소하기</string>
     <string name="partnership_filter_mine">自分の提携</string>
-    <string name="partnership_filter_festival">祭り</string>
+    <string name="partnership_filter_festival">축제</string>
     <string name="partnership_filter_all">すべて</string>
     <string name="partnership_filter_department_placeholder">学科</string>
-    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->
     <!-- ========================== -->
+    <string name="eatssu_instagram_link">EAT-SSU 인스타그램 바로가기</string>
+
+    <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">学生会館 3階</string>
+    <string name="cafeteria_student_time">08:00~09:00(千ウォン朝食)\n11:20~14:00(昼食)\n14:00~17:00(スペース開放)</string>
+    <string name="cafeteria_student_etc">3つのコーナーを運営\nトゥッペギ料理、丼もの、洋食\n週末休業</string>
+    <string name="cafeteria_dodam_location">信陽館 2階</string>
+    <string name="cafeteria_dodam_time">平日\n11:20~14:00(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)</string>
+    <string name="cafeteria_dodam_etc">2つのコーナーを運営\n一般食、ヘルシーメニュー</string>
+    <string name="cafeteria_dormitory_location">レジデンスホール 地下1階</string>
+    <string name="cafeteria_dormitory_time">平日\n11:20~13:50(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)\n17:00~18:20(夕食)</string>
+    <string name="cafeteria_dormitory_etc">朝食の提供なし</string>
+    <string name="cafeteria_faculty_location">電算館 地下1階</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(昼食)\n14:00~17:00(スペース開放)</string>
+    <string name="cafeteria_faculty_etc">週末休業</string>
+    <string name="cafeteria_snack_corner_location">学生会館 3階</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(昼食)</string>
+    <string name="cafeteria_snack_corner_etc">粉食類、昔ながらのお弁当、カップご飯など\n週末休業</string>
+    <string name="cafeteria_food_court_location">学生会館 2階</string>
+    <string name="cafeteria_food_court_time">休業</string>
+    <string name="cafeteria_food_court_etc">準備中</string>
+    <string name="cafeteria_the_kitchen_location">学生会館 2階</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
 </resources>

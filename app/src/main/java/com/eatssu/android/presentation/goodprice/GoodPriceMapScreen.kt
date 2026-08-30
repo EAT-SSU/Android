@@ -314,8 +314,9 @@ fun GoodPriceMapScreen(
                     },
                     // 개별 마커 클릭 시 업소 상세 바텀시트 호출
                     onClickLeaf = { leaf, _ ->
-                        val store = leaf.tag as? GoodPriceStore ?: return@Clustering true
-                        onStoreClick(store)
+                        (leaf.tag as? GoodPriceStore)?.let { store ->
+                            onStoreClick(store)
+                        }
                         true
                     },
                 )

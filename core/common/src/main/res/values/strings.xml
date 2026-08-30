@@ -11,6 +11,37 @@
     <string name="restaurant_the_kitchen">더 키친</string>
 
     <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">학생회관 3층</string>
+    <string name="cafeteria_student_time">08:00~09:00(천원의아침밥)\n11:20~14:00(점심)\n14:00~17:00(공간 개방)</string>
+    <string name="cafeteria_student_etc">3개 코너 운영\n뚝배기, 덮밥, 양식\n주말 휴무</string>
+
+    <string name="cafeteria_dodam_location">신양관 2층</string>
+    <string name="cafeteria_dodam_time">평일\n11:20~14:00(점심)\n17:00~18:30(저녁)\n\n주말\n11:20~13:30(점심)</string>
+    <string name="cafeteria_dodam_etc">2개 코너 운영\n일반식, 웰빙코너</string>
+
+    <string name="cafeteria_dormitory_location">레지던스홀 지하 1층</string>
+    <string name="cafeteria_dormitory_time">평일\n11:20~13:50(점심)\n17:00~18:30(저녁)\n\n주말\n11:20~13:30(점심)\n17:00~18:20(저녁)</string>
+    <string name="cafeteria_dormitory_etc">조식 미운영</string>
+
+    <string name="cafeteria_faculty_location">전산관 지하 1층</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(점심)\n14:00~17:00(공간개방)</string>
+    <string name="cafeteria_faculty_etc">주말 휴무</string>
+
+    <string name="cafeteria_snack_corner_location">학생회관 3층</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(점심)</string>
+    <string name="cafeteria_snack_corner_etc">분식류, 옛날도시락, 컵밥 등\n주말 휴무</string>
+
+    <string name="cafeteria_food_court_location">학생회관 2층</string>
+    <string name="cafeteria_food_court_time">휴무</string>
+    <string name="cafeteria_food_court_etc">준비 중</string>
+
+    <string name="cafeteria_the_kitchen_location">학생회관 2층</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
+
+    <!-- ========================== -->
     <!-- Report Types -->
     <!-- ========================== -->
     <string name="report_type_no_associate_content">메뉴와 관련없는 내용</string>
@@ -25,4 +56,23 @@
     <!-- ========================== -->
     <string name="college_placeholder">단과대</string>
     <string name="department_placeholder">학과</string>
+
+    <!-- ========================== -->
+    <!-- Good Price Categories -->
+    <!-- ========================== -->
+    <string name="category_good_price_all">전체</string>
+    <string name="category_good_price_korean">한식</string>
+    <string name="category_good_price_japanese">일식</string>
+    <string name="category_good_price_western">양식</string>
+    <string name="category_good_price_chinese">중식</string>
+    <string name="category_good_price_bakery">베이커리</string>
+    <string name="category_good_price_etc">기타</string>
+
+    <!-- ========================== -->
+    <!-- School Partnership Categories -->
+    <!-- ========================== -->
+    <string name="category_school_partnership_all">전체</string>
+    <string name="category_school_partnership_restaurant">음식점</string>
+    <string name="category_school_partnership_cafe">카페</string>
+    <string name="category_school_partnership_pub">주점</string>
 </resources>

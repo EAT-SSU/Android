@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,6 +61,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -74,7 +77,6 @@ import com.eatssu.common.enums.StoreType
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuSnackbar
 import com.eatssu.design_system.component.EatSsuSnackbarType
-import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Error
 import com.eatssu.design_system.theme.Gray200
@@ -82,6 +84,7 @@ import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Gray600
+import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Secondary
 import com.eatssu.design_system.theme.White
@@ -141,20 +144,47 @@ internal fun FavoriteScreen(
     TrackScreenViewEvent(ScreenId.MAP_FAVORITE)
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
-            EatSsuTopBar(
-                title = stringResource(R.string.favorite_title),
-                onBack = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(White)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 17.dp)
+                        .height(56.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(R.string.favorite_title),
+                        style = EatssuTheme.typography.subtitle1,
+                        color = Gray700,
+                        textAlign = TextAlign.Center,
+                    )
+
                     if (isEditMode) {
-                        isEditMode = false
-                        selectedPartnershipIds = emptySet()
-                    } else {
-                        onBackToMap()
+                        IconButton(
+                            onClick = {
+                                isEditMode = false
+                                selectedPartnershipIds = emptySet()
+                            },
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(start = 12.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_arrow_left),
+                                contentDescription = "뒤로가기",
+                                tint = Gray500,
+                            )
+                        }
                     }
-                },
-            )
-        },
-        modifier = Modifier.padding(top = 17.dp)
+                }
+            }
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
