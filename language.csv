@@ -137,7 +137,7 @@ report_sub,하나의 리뷰에 대해 24시간 내 한 번만 신고 가능합�
 report_write_hint,리뷰 신고 사유를 작성해 주세요,Please write the reason for reporting this review,レビューを通報する理由を入力してください,Vui lòng nhập lý do báo cáo đánh giá này
 max_150,최대 150자,Up to 150 characters,最大150文字,Tối đa 150 ký tự
 app_slogan_part1,숭실대에서,Eat at,崇実大で,Ăn tại
-app_slogan_part2,먹자,Soongsil,食べよう,Soongsil
+app_slogan_part2,서울 곳곳까지,From Soongsil to all of Seoul,ソウルの街中へ,Khắp mọi nơi ở Seoul
 inquire,문의하기,Contact Us,お問い合わせ,Liên hệ
 service_rule,서비스 이용약관,Terms of Service,利用規約,Điều khoản dịch vụ
 private_information,개인정보 처리방침,Privacy Policy,プライバシーポリシー,Chính sách quyền riêng tư
@@ -182,3 +182,116 @@ recruiting_url,https://eat-ssu.notion.site/1d2eeef75a1681ae800cf6ffa6faa37d?pvs=
 ,저작권 도용 의심 (사진 등),Suspected copyright infringement (e.g. photos),著作権侵害の疑い（写真など）,"Nghi ngờ vi phạm bản quyền (ảnh, v.v.)"
 ,기타 (하단 내용 작성),Other (write details below),その他（下部に内容を入力）,Khác (viết nội dung bên dưới)
 ,리뷰 신고 사유를 알려주세요,Tell us why you are reporting this review,レビューを通報する理由を教えてください,Vui lòng cho biết lý do báo cáo đánh giá này
+title_good_price_map,착한가격업소 지도,Good Price Stores Map,お手頃価格のお店マップ,Bản đồ cửa hàng giá tốt
+tab_school_partnership,학교 제휴,Campus Partners,学校提携,Đối tác trường
+tab_good_price,착한 가격,Good Price,お手頃価格,Giá tốt
+btn_browse_good_price_stores,착한가격업소 둘러보기,Explore Good Price Stores,お手頃価格のお店を見る,Khám phá cửa hàng giá tốt
+btn_browse_good_price_stores_subtitle,내 주변 착한 한 끼를 찾아보세요,Find an affordable meal near you,近くでお手頃な一食を探してみましょう,Tìm một bữa ăn hợp túi tiền gần bạn
+toast_load_good_price_stores_failed,업소 정보를 불러오지 못했어요.,Failed to load store information.,店舗情報の読み込みに失敗しました。,Không thể tải thông tin cửa hàng.
+toast_map_open_failed,지도를 열 수 없어요. 잠시 후 다시 시도해 주세요.,Failed to open the map. Please try again in a moment.,地図を開けませんでした。しばらくしてからもう一度お試しください。,Không thể mở bản đồ. Vui lòng thử lại sau giây lát.
+map_open_kakao,카카오맵,KakaoMap,KakaoMap,KakaoMap
+map_open_naver,네이버지도,Naver Map,Naver Map,Naver Map
+category_good_price_all,전체,All,すべて,Tất cả
+category_good_price_korean,한식,Korean,韓国料理,Món Hàn
+category_good_price_japanese,일식,Japanese,日本料理,Món Nhật
+category_good_price_western,양식,Western,洋食,Món Âu
+category_good_price_chinese,중식,Chinese,中華料理,Món Trung
+category_good_price_bakery,베이커리,Bakery,ベーカリー,Tiệm bánh
+category_good_price_etc,기타,Others,その他,Khác
+category_school_partnership_all,전체,All,すべて,Tất cả
+category_school_partnership_restaurant,음식점,Restaurant,飲食店,Nhà hàng
+category_school_partnership_cafe,카페,Cafe,カフェ,Quán cà phê
+category_school_partnership_pub,주점,Pub,居酒屋,Quán nhậu
+cafeteria_student_location,학생회관 3층,"Student Union Building, 3F",学生会館 3階,"Tòa Student Union, tầng 3"
+cafeteria_student_time,"08:00~09:00(천원의아침밥)
+11:20~14:00(점심)
+14:00~17:00(공간 개방)","08:00~09:00(1,000-Won Breakfast)
+11:20~14:00(Lunch)
+14:00~17:00(Open Space Hours)","08:00~09:00(千ウォン朝食)
+11:20~14:00(昼食)
+14:00~17:00(スペース開放)","08:00~09:00(Bữa sáng 1.000 won)
+11:20~14:00(Bữa trưa)
+14:00~17:00(Giờ mở không gian)"
+cafeteria_student_etc,"3개 코너 운영
+뚝배기, 덮밥, 양식
+주말 휴무","3 Food Stations
+Hot Pot(Ttukbaegi-style Meals), Rice Bowls, Western food
+Closed on weekends","3つのコーナーを運営
+トゥッペギ料理、丼もの、洋食
+週末休業","3 quầy phục vụ
+Món kiểu ttukbaegi, cơm tô, món Âu
+Đóng cửa cuối tuần"
+cafeteria_dodam_location,신양관 2층,"Shinyang Hall, 2F",信陽館 2階,"Tòa Shinyang, tầng 2"
+cafeteria_dodam_time,"평일
+11:20~14:00(점심)
+17:00~18:30(저녁)
+
+주말
+11:20~13:30(점심)","Weekdays
+11:20~14:00(Lunch)
+17:00~18:30(Dinner)
+
+Weekends
+11:20~13:30(Lunch)","平日
+11:20~14:00(昼食)
+17:00~18:30(夕食)
+
+週末
+11:20~13:30(昼食)","Ngày thường
+11:20~14:00(Bữa trưa)
+17:00~18:30(Bữa tối)
+
+Cuối tuần
+11:20~13:30(Bữa trưa)"
+cafeteria_dodam_etc,"2개 코너 운영
+일반식, 웰빙코너","2 Food Stations
+Standard Meals, Healthy Meals","2つのコーナーを運営
+一般食、ヘルシーメニュー","2 quầy phục vụ
+Suất ăn thường, suất ăn lành mạnh"
+cafeteria_dormitory_location,레지던스홀 지하 1층,"Residence Hall, B1",レジデンスホール 地下1階,"Residence Hall, tầng B1"
+cafeteria_dormitory_time,"평일
+11:20~13:50(점심)
+17:00~18:30(저녁)
+
+주말
+11:20~13:30(점심)
+17:00~18:20(저녁)","Weekdays
+11:20~13:50(Lunch)
+17:00~18:30(Dinner)
+
+Weekends
+11:20~13:30(Lunch)
+17:00~18:20(Dinner)","平日
+11:20~13:50(昼食)
+17:00~18:30(夕食)
+
+週末
+11:20~13:30(昼食)
+17:00~18:20(夕食)","Ngày thường
+11:20~13:50(Bữa trưa)
+17:00~18:30(Bữa tối)
+
+Cuối tuần
+11:20~13:30(Bữa trưa)
+17:00~18:20(Bữa tối)"
+cafeteria_dormitory_etc,조식 미운영,Breakfast Not Available,朝食の提供なし,Không phục vụ bữa sáng
+cafeteria_faculty_location,전산관 지하 1층,"Jeonsan Hall, B1",電算館 地下1階,"Tòa Jeonsan, tầng B1"
+cafeteria_faculty_time,"11:30~14:00(점심)
+14:00~17:00(공간개방)","11:30~14:00(Lunch)
+14:00~17:00(Open Space Hours)","11:30~14:00(昼食)
+14:00~17:00(スペース開放)","11:30~14:00(Bữa trưa)
+14:00~17:00(Giờ mở không gian)"
+cafeteria_faculty_etc,주말 휴무,Closed on weekends,週末休業,Đóng cửa cuối tuần
+cafeteria_snack_corner_location,학생회관 3층,"Student Union Building, 3F",学生会館 3階,"Tòa Student Union, tầng 3"
+cafeteria_snack_corner_time,11:00~15:30(점심),11:00~15:30(Lunch),11:00~15:30(昼食),11:00~15:30(Bữa trưa)
+cafeteria_snack_corner_etc,"분식류, 옛날도시락, 컵밥 등
+주말 휴무","Bunsik(Korean Snacks), Old-school Lunch Box, Cup Rice, etc.
+Closed on weekends","粉食類、昔ながらのお弁当、カップご飯など
+週末休業","Bunsik(đồ ăn vặt Hàn Quốc), cơm hộp kiểu xưa, cơm ly, v.v.
+Đóng cửa cuối tuần"
+cafeteria_food_court_location,학생회관 2층,"Student Union Building, 2F",学生会館 2階,"Tòa Student Union, tầng 2"
+cafeteria_food_court_time,휴무,Closed,休業,Nghỉ
+cafeteria_food_court_etc,준비 중,Coming Soon,準備中,Đang chuẩn bị
+cafeteria_the_kitchen_location,학생회관 2층,"Student Union Building, 2F",学生会館 2階,"Tòa Student Union, tầng 2"
+cafeteria_the_kitchen_time,,,,
+cafeteria_the_kitchen_etc,,,,

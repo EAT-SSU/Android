@@ -7,24 +7,21 @@ import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
-import com.eatssu.android.presentation.map.component.FilterType
+import com.eatssu.android.presentation.map.component.PartnershipCategory
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.samplePartnership
 import com.eatssu.android.test.samplePartnershipRestaurant
 import com.eatssu.android.test.sampleUserInfo
 import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
-import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.matchers.shouldBe
-import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -58,12 +55,11 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 analyticsTracker = analyticsTracker,
             )
 
-            then("Mine 필터로 시작하고 학과 입력 필요(RequiresDepartment) 상태와 빈 마커 목록을 유지한다") {
+            then("전체 카테고리로 시작하고 학과 입력 필요 상태와 빈 마커 목록을 유지한다") {
                 runTest {
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
-                        state.data.selectedFilter shouldBe FilterType.Mine
-                        state.data.availableFilters shouldBe listOf(FilterType.Mine, FilterType.All)
+                        state.data.selectedCategory shouldBe PartnershipCategory.ALL
                         state.data.filterChangeResult shouldBe MapState.FilterChangeResult.RequiresDepartment
                         state.data.partnerships shouldBe emptyList()
                     }
@@ -111,7 +107,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
             )
             coEvery { partnershipRepository.getAllPartnerships() } returns allPartnerships
-            coEvery { partnershipRepository.getUserCollegePartnerships() } returns emptyList()
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns allPartnerships
 
             val viewModel = MapViewModel(
                 partnershipRepository = partnershipRepository,
@@ -120,21 +116,21 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 analyticsTracker = analyticsTracker,
             )
 
-            then("Festival 필터로 시작하고 Festival 필터 버튼을 표시한다") {
+            then("별도 Festival 필터 없이 전체 카테고리에 포함한다") {
                 runTest {
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
-                        state.data.selectedFilter shouldBe FilterType.Festival
-                        state.data.availableFilters shouldBe FilterType.entries.toList()
+                        state.data.selectedCategory shouldBe PartnershipCategory.ALL
                         state.data.partnerships.first().partnershipInfos shouldBe listOf(
-                            festivalInfo
+                            festivalInfo,
+                            normalInfo,
                         )
                     }
                 }
             }
         }
 
-        `when`("학과 정보가 없는 사용자가 All에서 Mine 필터로 변경하려고 하면") {
+        `when`("학과 정보가 없는 사용자가 카테고리를 변경하면") {
             coEvery {
                 getUserCollegeDepartmentUseCase()
             } returns sampleUserInfo(
@@ -152,21 +148,21 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 analyticsTracker = analyticsTracker,
             )
 
-            then("RequiresDepartment 결과를 상태에 반영하고 Mine 데이터를 로드하지 않는다") {
+            then("선택 카테고리와 학과 입력 필요 상태를 유지하고 데이터를 로드하지 않는다") {
                 runTest {
-                    // All 필터로 변경
-                    viewModel.setFilter(FilterType.All)
                     eventually(2.seconds) {
-                        val state = viewModel.uiState.value as UiState.Success
-                        state.data.selectedFilter shouldBe FilterType.All
+                        viewModel.uiState.value shouldBe UiState.Success(
+                            MapState(
+                                selectedCategory = PartnershipCategory.ALL,
+                                filterChangeResult = MapState.FilterChangeResult.RequiresDepartment,
+                            ),
+                        )
                     }
-
-                    clearMocks(partnershipRepository, answers = false, recordedCalls = true)
-                    viewModel.setFilter(FilterType.Mine)
+                    viewModel.setCategory(PartnershipCategory.CAFE)
 
                     eventually(2.seconds) {
                         val state = viewModel.uiState.value as UiState.Success
-                        state.data.selectedFilter shouldBe FilterType.Mine
+                        state.data.selectedCategory shouldBe PartnershipCategory.CAFE
                         state.data.filterChangeResult shouldBe MapState.FilterChangeResult.RequiresDepartment
                         state.data.partnerships shouldBe emptyList()
                     }
@@ -175,9 +171,20 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
-        `when`("학과 정보가 있는 사용자가 필터를 변경하면") {
-            val minePartnerships = listOf(samplePartnership(storeName = "Mine Cafe"))
-            val allPartnerships = listOf(samplePartnership(storeName = "All Cafe"))
+        `when`("학과 정보가 있는 사용자가 카테고리를 변경하면") {
+            val restaurant = samplePartnership(
+                storeName = "Restaurant",
+                type = StoreType.RESTAURANT,
+            )
+            val cafe = samplePartnership(
+                storeName = "Cafe",
+                type = StoreType.CAFE,
+            )
+            val pub = samplePartnership(
+                storeName = "Pub",
+                type = StoreType.PUB,
+            )
+            val partnerships = listOf(restaurant, cafe, pub)
             coEvery {
                 getUserCollegeDepartmentUseCase()
             } returns sampleUserInfo(
@@ -185,8 +192,8 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 college = College(collegeId = 1, collegeName = "IT"),
                 department = Department(departmentId = 11, departmentName = "컴퓨터학부"),
             )
-            coEvery { partnershipRepository.getUserCollegePartnerships() } returns minePartnerships
-            coEvery { partnershipRepository.getAllPartnerships() } returns allPartnerships
+            coEvery { partnershipRepository.getUserCollegePartnerships() } returns partnerships
+            coEvery { partnershipRepository.getAllPartnerships() } returns emptyList()
 
             val viewModel = MapViewModel(
                 partnershipRepository = partnershipRepository,
@@ -195,36 +202,27 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
                 analyticsTracker = analyticsTracker,
             )
 
-            then("필터에 맞는 목록을 로드하고 이벤트 로깅을 수행한다") {
+            then("학과 제휴 목록을 장소 유형별로 필터링한다") {
                 runTest {
                     eventually(2.seconds) {
                         val initial = viewModel.uiState.value as UiState.Success
-                        initial.data.selectedFilter shouldBe FilterType.Mine
-                        initial.data.partnerships shouldBe minePartnerships
+                        initial.data.selectedCategory shouldBe PartnershipCategory.ALL
+                        initial.data.partnerships shouldBe partnerships
+                        initial.data.visiblePartnerships shouldBe partnerships
                     }
 
-                    viewModel.setFilter(FilterType.All)
+                    viewModel.setCategory(PartnershipCategory.CAFE)
                     eventually(2.seconds) {
-                        val allState = viewModel.uiState.value as UiState.Success
-                        allState.data.selectedFilter shouldBe FilterType.All
-                        allState.data.partnerships shouldBe allPartnerships
-                    }
-                    verify(atLeast = 1) {
-                        analyticsTracker.track(
-                            MapAnalyticsEvent.AllClicked(college = 1L, major = 11L),
-                        )
+                        val cafeState = viewModel.uiState.value as UiState.Success
+                        cafeState.data.selectedCategory shouldBe PartnershipCategory.CAFE
+                        cafeState.data.visiblePartnerships shouldBe listOf(cafe)
                     }
 
-                    viewModel.setFilter(FilterType.Mine)
+                    viewModel.setCategory(PartnershipCategory.RESTAURANT)
                     eventually(2.seconds) {
-                        val mineState = viewModel.uiState.value as UiState.Success
-                        mineState.data.selectedFilter shouldBe FilterType.Mine
-                        mineState.data.partnerships shouldBe minePartnerships
-                    }
-                    verify(atLeast = 1) {
-                        analyticsTracker.track(
-                            MapAnalyticsEvent.MineClicked(college = 1L, major = 11L),
-                        )
+                        val restaurantState = viewModel.uiState.value as UiState.Success
+                        restaurantState.data.selectedCategory shouldBe PartnershipCategory.RESTAURANT
+                        restaurantState.data.visiblePartnerships shouldBe listOf(restaurant)
                     }
                 }
             }
@@ -308,7 +306,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
-        `when`("초기 상태가 Init일 때 Mine 필터를 선택하면") {
+        `when`("초기 상태가 Init일 때 카테고리를 선택하면") {
             coEvery {
                 getUserCollegeDepartmentUseCase()
             } coAnswers {
@@ -328,7 +326,7 @@ class MapViewModelBehaviorSpec : AppBehaviorSpec({
             )
 
             then("상태를 변경하지 않고 반환한다") {
-                viewModel.setFilter(FilterType.Mine)
+                viewModel.setCategory(PartnershipCategory.CAFE)
                 viewModel.uiState.value shouldBe UiState.Init
                 coVerify(exactly = 0) { partnershipRepository.getUserCollegePartnerships() }
             }

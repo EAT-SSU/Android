@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.eatssu.android.R
@@ -99,7 +100,7 @@ fun GoodPriceStoreBottomSheet(
                         modifier = Modifier.size(16.dp),
                     )
                     Text(
-                        text = storeDetail.category.displayName,
+                        text = stringResource(id = storeDetail.category.displayNameResId),
                         style = EatssuTheme.typography.body2,
                         color = Gray600,
                     )

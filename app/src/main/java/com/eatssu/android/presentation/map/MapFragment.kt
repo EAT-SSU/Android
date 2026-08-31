@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.eatssu.android.analytics.ProvideAnalyticsTracker
-import com.eatssu.android.presentation.MainActivity
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.design_system.theme.EatssuTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,9 +37,6 @@ class MapFragment : Fragment() {
                     EatssuTheme {
                         MapRoute(
                             mapExternalNavigator = mapExternalNavigator,
-                            onFavoriteClick = {
-                                (requireActivity() as MainActivity).openFavoriteTab()
-                            },
                         )
                     }
                 }

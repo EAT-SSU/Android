@@ -14,6 +14,37 @@
     <string name="restaurant_the_kitchen">더 키친</string>
 
     <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">学生会館 3階</string>
+    <string name="cafeteria_student_time">08:00~09:00(千ウォン朝食)\n11:20~14:00(昼食)\n14:00~17:00(スペース開放)</string>
+    <string name="cafeteria_student_etc">3つのコーナーを運営\nトゥッペギ料理、丼もの、洋食\n週末休業</string>
+
+    <string name="cafeteria_dodam_location">信陽館 2階</string>
+    <string name="cafeteria_dodam_time">平日\n11:20~14:00(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)</string>
+    <string name="cafeteria_dodam_etc">2つのコーナーを運営\n一般食、ヘルシーメニュー</string>
+
+    <string name="cafeteria_dormitory_location">レジデンスホール 地下1階</string>
+    <string name="cafeteria_dormitory_time">平日\n11:20~13:50(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)\n17:00~18:20(夕食)</string>
+    <string name="cafeteria_dormitory_etc">朝食の提供なし</string>
+
+    <string name="cafeteria_faculty_location">電算館 地下1階</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(昼食)\n14:00~17:00(スペース開放)</string>
+    <string name="cafeteria_faculty_etc">週末休業</string>
+
+    <string name="cafeteria_snack_corner_location">学生会館 3階</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(昼食)</string>
+    <string name="cafeteria_snack_corner_etc">粉食類、昔ながらのお弁当、カップご飯など\n週末休業</string>
+
+    <string name="cafeteria_food_court_location">学生会館 2階</string>
+    <string name="cafeteria_food_court_time">休業</string>
+    <string name="cafeteria_food_court_etc">準備中</string>
+
+    <string name="cafeteria_the_kitchen_location">学生会館 2階</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
+
+    <!-- ========================== -->
     <!-- Report Types -->
     <!-- ========================== -->
     <string name="report_type_no_associate_content">メニューと関係のない内容</string>
@@ -28,4 +59,23 @@
     <!-- ========================== -->
     <string name="college_placeholder">学部</string>
     <string name="department_placeholder">学科</string>
+
+    <!-- ========================== -->
+    <!-- Good Price Categories -->
+    <!-- ========================== -->
+    <string name="category_good_price_all">すべて</string>
+    <string name="category_good_price_korean">韓国料理</string>
+    <string name="category_good_price_japanese">日本料理</string>
+    <string name="category_good_price_western">洋食</string>
+    <string name="category_good_price_chinese">中華料理</string>
+    <string name="category_good_price_bakery">ベーカリー</string>
+    <string name="category_good_price_etc">その他</string>
+
+    <!-- ========================== -->
+    <!-- School Partnership Categories -->
+    <!-- ========================== -->
+    <string name="category_school_partnership_all">すべて</string>
+    <string name="category_school_partnership_restaurant">飲食店</string>
+    <string name="category_school_partnership_cafe">カフェ</string>
+    <string name="category_school_partnership_pub">居酒屋</string>
 </resources>

@@ -42,7 +42,8 @@ class MenuAdapter(
             }
 
             binding.tvCafeteria.text = binding.root.context.getString(sectionModel.cafeteria.displayNameResId)
-            binding.tvCafeteriaLocation.text = sectionModel.cafeteriaLocation
+            binding.tvCafeteriaLocation.text =
+                binding.root.context.getString(sectionModel.cafeteria.locationResId)
 
             binding.rvMenu.apply {
                 setHasFixedSize(true)

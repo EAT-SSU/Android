@@ -9,13 +9,12 @@ import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.domain.usecase.user.GetPartnershipDetailUseCase
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
-import com.eatssu.android.presentation.map.component.FilterType
+import com.eatssu.android.presentation.map.component.PartnershipCategory
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.MapAnalyticsEvent
-import com.eatssu.common.enums.PeriodType
 import com.eatssu.common.enums.StoreType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,10 +39,14 @@ data class MapState(
     val restaurantPartnershipInfo: PartnershipRestaurant? = null,
     val restaurantInfoList: List<RestaurantInfo> = emptyList(),
     val storeType: StoreType? = null,
-    val selectedFilter: FilterType = FilterType.Mine,
-    val availableFilters: List<FilterType> = FilterType.entries,
+    val selectedCategory: PartnershipCategory = PartnershipCategory.ALL,
     val filterChangeResult: FilterChangeResult? = null,
 ) {
+    val visiblePartnerships: List<Partnership>
+        get() = selectedCategory.storeType?.let { storeType ->
+            partnerships.filter { it.restaurantType == storeType }
+        } ?: partnerships
+
     sealed class FilterChangeResult {
         object Success : FilterChangeResult()
         object RequiresDepartment : FilterChangeResult()
@@ -90,31 +93,19 @@ class MapViewModel @Inject constructor(
             val userCollegeDepartment = getUserCollegeDepartmentUseCase()
             val newDepartmentId = userCollegeDepartment.userDepartment.departmentId.toLong()
             val newCollegeId = userCollegeDepartment.userCollege.collegeId.toLong()
-            // Festival 존재 여부를 판단하고, All/Festival 초기 목록에도 재사용한다.
-            val allPartnerships = partnershipRepository.getAllPartnerships()
+            val selectedCategory = (_uiState.value as? UiState.Success)
+                ?.data
+                ?.selectedCategory
+                ?: PartnershipCategory.ALL
 
             _departmentId.value = newDepartmentId
             _collegeId.value = newCollegeId
 
-            val hasFestival = allPartnerships.hasFestivalPartnership()
-            val availableFilters = if (hasFestival) {
-                FilterType.entries
-            } else {
-                listOf(FilterType.Mine, FilterType.All)
-            }
-
-            // Festival 제휴가 하나라도 있으면 Festival을 우선하고, 없으면 Mine을 기본으로 설정한다.
-            val initialFilter = when {
-                hasFestival -> FilterType.Festival
-                else -> FilterType.Mine
-            }
-
-            if (newDepartmentId == -1L && initialFilter == FilterType.Mine) {
+            if (newDepartmentId == -1L) {
                 // 학과 미입력 유저: 바텀시트 요청 상태 설정, 마커 데이터는 빈 상태(emptyList)로 둠
                 _uiState.value = UiState.Success(
                     MapState(
-                        selectedFilter = FilterType.Mine,
-                        availableFilters = availableFilters,
+                        selectedCategory = selectedCategory,
                         filterChangeResult = MapState.FilterChangeResult.RequiresDepartment,
                         partnerships = emptyList(),
                     ),
@@ -122,23 +113,17 @@ class MapViewModel @Inject constructor(
             } else {
                 _uiState.value = UiState.Success(
                     MapState(
-                        selectedFilter = initialFilter,
-                        availableFilters = availableFilters,
+                        selectedCategory = selectedCategory,
                     ),
                 )
-
-                when (initialFilter) {
-                    FilterType.All -> loadPartnerships(prefetchedPartnerships = allPartnerships)
-                    FilterType.Festival -> loadFestivalPartnerships(prefetchedPartnerships = allPartnerships)
-                    FilterType.Mine -> loadUserCollegePartnerships()
-                }
+                loadUserCollegePartnerships()
             }
 
             analyticsTracker.track(
                 MapAnalyticsEvent.MapClicked(
                     college = _collegeId.value,
                     major = _departmentId.value,
-                    isFestival = (initialFilter == FilterType.Festival)
+                    isFestival = false,
                 ),
             )
 
@@ -146,110 +131,18 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    // 필터 변경 (검증 로직 포함)
-    fun setFilter(filter: FilterType) {
-        val current = uiState.value
-        val currentData = if (current is UiState.Success) current.data else MapState()
+    fun setCategory(category: PartnershipCategory) {
+        val current = uiState.value as? UiState.Success ?: return
+        if (current.data.selectedCategory == category) return
 
-        // 학과 정보가 없는데 Mine 필터를 선택하려는 경우
-        if (filter == FilterType.Mine && _departmentId.value == -1L) {
-            // 학과 입력이 필요한 경우 결과를 MapState에 반영하고 마커는 비어있는 상태 유지
-            if (current is UiState.Success) {
-                _uiState.value = UiState.Success(
-                    currentData.copy(
-                        selectedFilter = FilterType.Mine,
-                        filterChangeResult = MapState.FilterChangeResult.RequiresDepartment,
-                        partnerships = emptyList(),
-                    )
-                )
-            }
-            return
-        }
-
-        // 필터 변경 성공
-        val updatedData = currentData.copy(
-            restaurantPartnershipInfo = null,
-            selectedFilter = filter,
-            filterChangeResult = null,
+        _uiState.value = UiState.Success(
+            current.data.copy(
+                selectedCategory = category,
+                restaurantPartnershipInfo = null,
+                restaurantInfoList = emptyList(),
+                storeType = null,
+            ),
         )
-        _uiState.value = UiState.Success(updatedData)
-
-        // 필터에 따라 데이터 로드
-        when (filter) {
-            FilterType.All -> {
-                loadPartnerships()
-                analyticsTracker.track(
-                    MapAnalyticsEvent.AllClicked(
-                        college = _collegeId.value,
-                        major = _departmentId.value,
-                    ),
-                )
-            }
-
-            FilterType.Festival -> {
-                loadFestivalPartnerships()
-                analyticsTracker.track(
-                    MapAnalyticsEvent.FestivalClicked(
-                        college = _collegeId.value,
-                        major = _departmentId.value,
-                    ),
-                )
-            }
-
-            FilterType.Mine -> {
-                loadUserCollegePartnerships()
-                analyticsTracker.track(
-                    MapAnalyticsEvent.MineClicked(
-                        college = _collegeId.value,
-                        major = _departmentId.value,
-                    ),
-                )
-            }
-        }
-    }
-
-    // 제휴 정보 로딩
-    private fun loadPartnerships(
-        prefetchedPartnerships: List<Partnership>? = null,
-    ) {
-        viewModelScope.launch {
-            val current = uiState.value
-            val currentData = if (current is UiState.Success) current.data else MapState()
-
-            if (prefetchedPartnerships == null)
-                _uiState.value = UiState.Loading
-
-            val partnerships = prefetchedPartnerships ?: partnershipRepository.getAllPartnerships()
-            _uiState.value = UiState.Success(
-                currentData.copy(
-                    partnerships = partnerships,
-                    filterChangeResult = null,
-                ),
-            )
-        }
-    }
-
-    private fun loadFestivalPartnerships(
-        prefetchedPartnerships: List<Partnership>? = null,
-    ) {
-        viewModelScope.launch {
-            val current = uiState.value
-            val currentData = if (current is UiState.Success) current.data else MapState()
-
-            if (prefetchedPartnerships == null)
-                _uiState.value = UiState.Loading
-
-            val partnerships =
-                (prefetchedPartnerships ?: partnershipRepository.getAllPartnerships())
-                    .festivalPartnerships()
-
-            _uiState.value = UiState.Success(
-                currentData.copy(
-                    partnerships = partnerships,
-                    filterChangeResult = null,
-                ),
-            )
-        }
     }
 
     // 사용자 단과대 제휴 정보 로딩
@@ -319,13 +212,17 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             val current = _uiState.value as? UiState.Success ?: return@launch
             val wasLiked = current.data.partnershipLikeStatus(id) ?: return@launch
+
+            // 찜 상태는 즉시 화면에 반영하고, 서버 요청이 실패한 경우에만 원래 상태로 되돌린다.
+            _uiState.value = UiState.Success(current.data.togglePartnershipLike(id))
+
             val result = partnershipRepository.likePartnership(id, wasLiked)
-            if (result !is ApiResult.Success) return@launch
+            if (result is ApiResult.Success) return@launch
 
             val latest = _uiState.value as? UiState.Success ?: return@launch
-
-            // 서버 반영에 성공하면 기존 목록과 현재 열린 상세의 좋아요 상태를 함께 갱신한다.
-            _uiState.value = UiState.Success(latest.data.togglePartnershipLike(id))
+            if (latest.data.partnershipLikeStatus(id) == !wasLiked) {
+                _uiState.value = UiState.Success(latest.data.togglePartnershipLike(id))
+            }
         }
     }
 }
@@ -369,17 +266,3 @@ private fun MapState.togglePartnershipLike(id: Int): MapState =
 
 private fun Int.updatedLikeCount(wasLiked: Boolean): Int =
     (this + if (wasLiked) -1 else 1).coerceAtLeast(0)
-
-private fun List<Partnership>.hasFestivalPartnership(): Boolean =
-    any { partnership ->
-        partnership.partnershipInfos.any { info -> info.periodType == PeriodType.FESTIVAL }
-    }
-
-private fun List<Partnership>.festivalPartnerships(): List<Partnership> =
-    mapNotNull { partnership ->
-        val festivalInfos =
-            partnership.partnershipInfos.filter { info -> info.periodType == PeriodType.FESTIVAL }
-        if (festivalInfos.isEmpty()) return@mapNotNull null
-
-        partnership.copy(partnershipInfos = festivalInfos)
-    }
