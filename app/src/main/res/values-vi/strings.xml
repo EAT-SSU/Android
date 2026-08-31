@@ -188,6 +188,7 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">Thực đơn hôm nay</string>
+    <string name="cafeteria_outside_business_hours">Hiện đang ngoài giờ phục vụ.</string>
     <string name="price">Giá</string>
     <string name="rate">★</string>
     <string name="student_cafeteria">Nhà ăn sinh viên</string>
