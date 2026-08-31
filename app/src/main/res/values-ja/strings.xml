@@ -188,6 +188,7 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">今日のメニュー</string>
+    <string name="cafeteria_outside_business_hours">営業時間外です。</string>
     <string name="price">価格</string>
     <string name="rate">★</string>
     <string name="student_cafeteria">学生食堂</string>

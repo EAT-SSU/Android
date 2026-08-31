@@ -98,6 +98,7 @@ none_review_my,첫 리뷰를 남겨 주세요!,Be the first to leave a review!,�
 none_review_list_detail,메뉴에 가장 먼저 리뷰를 남겨주세요!,Be the first to review this menu item!,このメニューに最初のレビューを残しましょう！,Hãy là người đầu tiên đánh giá món này!
 rate_n,%1$d점,%1$d pts,%1$d点,%1$d điểm
 today_menu,오늘의 메뉴,Today's Menu,今日のメニュー,Thực đơn hôm nay
+cafeteria_outside_business_hours,영업 시간이 아니에요.,It's outside business hours.,営業時間外です。,Hiện đang ngoài giờ phục vụ.
 price,가격,Price,価格,Giá
 rate,평점,★,★,★
 student_cafeteria,학생식당,Student Cafeteria,学生食堂,Nhà ăn sinh viên
@@ -163,6 +164,9 @@ time,영업 시간,Hours,営業時間,Giờ mở cửa
 favorite_partnership,찜한 제휴,Favorite Partners,お気に入りの提携,Ưu đãi yêu thích
 partnership_filter_mine,내 제휴,My Partners,自分の提携,Ưu đãi của tôi
 partnership_filter_all,전체,All,すべて,Tất cả
+partnership_filter_restaurant,음식점,Restaurant,レストラン,Nhà hàng
+partnership_filter_cafe,카페,Cafe,カフェ,Quán cà phê
+partnership_filter_pub,주점,Pub,居酒屋,Quán rượu
 partnership_filter_department_placeholder,학과,Department,学科,Ngành/Khoa
 policy_url,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8,,,
 terms_url,https://github.com/EAT-SSU/Docs/wiki/EAT%E2%80%90SSU-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80,,,

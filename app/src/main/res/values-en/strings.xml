@@ -188,6 +188,7 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">Today\'s Menu</string>
+    <string name="cafeteria_outside_business_hours">It\'s outside business hours.</string>
     <string name="price">Price</string>
     <string name="rate">★</string>
     <string name="student_cafeteria">Student Cafeteria</string>
