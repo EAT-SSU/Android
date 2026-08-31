@@ -48,16 +48,15 @@ class InfoBottomSheetFragment : BottomSheetDialogFragment() {
         analyticsTracker.track(CafeteriaAnalyticsEvent.RestaurantInfoClicked(restaurantType))
 
         binding.tvName.text = getString(restaurantType.displayNameResId)
+        binding.tvLocation.text = getString(restaurantType.locationResId)
+        binding.tvTime.text = getString(restaurantType.timeResId)
+        binding.tvEtc.text = getString(restaurantType.etcResId)
 
         viewLifecycleOwner.lifecycleScope.launch {
             val restaurantInfo = infoViewModel.getRestaurantInfo(restaurantType)
             val binding = _binding ?: return@launch
 
             restaurantInfo?.let {
-                binding.tvLocation.text = it.location
-                binding.tvTime.text = it.time
-                binding.tvEtc.text = it.etc
-
                 Glide.with(binding.ivCafeteriaPhoto)
                     .load(it.image)
                     .into(binding.ivCafeteriaPhoto)

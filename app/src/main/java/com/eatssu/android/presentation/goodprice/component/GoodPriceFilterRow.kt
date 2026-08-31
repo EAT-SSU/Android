@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.eatssu.common.enums.GoodPriceCategory
 import com.eatssu.design_system.theme.EatssuTheme
@@ -73,7 +74,7 @@ fun GoodPriceFilterRow(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = category.displayName,
+                    text = stringResource(id = category.displayNameResId),
                     style = if (isSelected) {
                         EatssuTheme.typography.body2
                     } else {
