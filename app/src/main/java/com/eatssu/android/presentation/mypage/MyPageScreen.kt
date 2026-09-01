@@ -62,17 +62,20 @@ fun MyPageScreen(
             .verticalScroll(rememberScrollState())
             .padding(bottom = dimensionResource(id = R.dimen.bottom_nav_height)),
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.mypage),
-            style = EatssuTheme.typography.subtitle1,
-            color = Gray700,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(28.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 17.dp)
+                .height(56.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(R.string.mypage),
+                style = EatssuTheme.typography.subtitle1,
+                color = Gray700,
+                textAlign = TextAlign.Center,
+            )
+        }
 
         Row(
             modifier = Modifier
