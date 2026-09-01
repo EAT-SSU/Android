@@ -65,6 +65,7 @@ class MainViewModel @Inject constructor(
             val userInfo = getUserCollegeDepartmentUseCase()
             _uiState.value = UiState.Success(
                 MainState.DepartmentState(
+                    collegeName = userInfo.userCollege.collegeName,
                     departmentName = userInfo.userDepartment.departmentName
                 )
             )
@@ -146,6 +147,7 @@ class MainViewModel @Inject constructor(
         val userInfo = getUserCollegeDepartmentUseCase()
         _uiState.value = UiState.Success(
             MainState.DepartmentState(
+                collegeName = userInfo.userCollege.collegeName,
                 departmentName = userInfo.userDepartment.departmentName,
                 showUserDepartmentBottomSheet =
                     (userInfo.userCollege.collegeId == -1 || userInfo.userDepartment.departmentId == -1)
@@ -169,6 +171,7 @@ class MainViewModel @Inject constructor(
 
         _uiState.value = UiState.Success(
             MainState.DepartmentState(
+                collegeName = college.collegeName,
                 departmentName = department.departmentName,
                 showUserDepartmentBottomSheet =
                     (college.collegeId == -1 || department.departmentId == -1)
@@ -201,6 +204,7 @@ sealed class MainState {
     object NicknameNull : MainState()
     object LoggedOut : MainState()
     data class DepartmentState(
+        val collegeName: String? = "",
         val departmentName: String? = "",
         val showUserDepartmentBottomSheet: Boolean = false
     ) : MainState()

@@ -40,7 +40,7 @@ import com.eatssu.design_system.theme.White
 @Composable
 fun MyPageScreen(
     state: MyPageState,
-    departmentName: String,
+    affiliationName: String,
     onAlarmToggle: (Boolean) -> Unit,
     onMyInfoClick: () -> Unit,
     onMyReviewClick: () -> Unit,
@@ -102,7 +102,7 @@ fun MyPageScreen(
                     )
 
                     Text(
-                        text = departmentName,
+                        text = affiliationName,
                         style = EatssuTheme.typography.body3,
                         color = Gray700,
                     )
@@ -323,7 +323,7 @@ private fun MyPageScreenPreview() {
                 isAlarmOn = true,
                 appVersion = "1.0.0 (1)",
             ),
-            departmentName = "컴퓨터학부",
+            affiliationName = "AI대학 정보보호학과",
             onAlarmToggle = {},
             onMyInfoClick = {},
             onMyReviewClick = {},
