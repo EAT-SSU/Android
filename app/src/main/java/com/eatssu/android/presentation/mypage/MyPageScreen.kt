@@ -159,6 +159,7 @@ fun MyPageScreen(
 
         MyPageMenuItem(
             title = stringResource(R.string.language_setting),
+            trailingText = state.selectedLanguage.nativeDisplayName,
             onClick = onLanguageSettingClick,
         )
 
@@ -288,6 +289,7 @@ fun MyPageSectionText(text: String) {
 fun MyPageMenuItem(
     title: String,
     onClick: () -> Unit,
+    trailingText: String? = null,
 ) {
     Column {
         Row(
@@ -303,12 +305,22 @@ fun MyPageMenuItem(
                 style = EatssuTheme.typography.body1,
                 color = Gray700,
             )
-            Icon(
-                modifier = Modifier.size(18.dp),
-                painter = painterResource(R.drawable.ic_arrow_right),
-                contentDescription = null,
-                tint = Gray300,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                trailingText?.let { text ->
+                    Text(
+                        text = text,
+                        style = EatssuTheme.typography.body3,
+                        color = Gray400,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(R.drawable.ic_arrow_right),
+                    contentDescription = null,
+                    tint = Gray300,
+                )
+            }
         }
     }
 }
