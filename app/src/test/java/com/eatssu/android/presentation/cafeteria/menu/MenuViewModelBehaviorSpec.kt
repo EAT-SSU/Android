@@ -46,7 +46,7 @@ class MenuViewModelBehaviorSpec : AppBehaviorSpec({
 
         `when`("usecase가 식당별 메뉴 맵을 반환하면") {
             val viewModel = MenuViewModel(useCase)
-            val r1 = Restaurant.FOOD_COURT
+            val r1 = Restaurant.SNACK_CORNER
             val r2 = Restaurant.HAKSIK
             val m1 = listOf(Menu(id = 1, name = "A", price = 1000, rate = 4.0))
             val m2 = listOf(Menu(id = 2, name = "B", price = 2000, rate = 3.5))
@@ -77,7 +77,7 @@ class MenuViewModelBehaviorSpec : AppBehaviorSpec({
 
         `when`("일부 식당 메뉴가 비어있어도") {
             val viewModel = MenuViewModel(useCase)
-            val r1 = Restaurant.FOOD_COURT
+            val r1 = Restaurant.SNACK_CORNER
             val r2 = Restaurant.HAKSIK
             val m1 = emptyList<Menu>()
             val m2 = listOf(Menu(id = 2, name = "B", price = 2000, rate = 3.5))

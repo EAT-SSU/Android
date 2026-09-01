@@ -36,11 +36,11 @@ class MenuRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     )
                 )
             )
-            coEvery { menuService.getFixMenu(Restaurant.FOOD_COURT.toString()) } returns ApiResult.Success(response)
+            coEvery { menuService.getFixMenu(Restaurant.SNACK_CORNER.toString()) } returns ApiResult.Success(response)
 
             then("도메인 Menu 리스트로 매핑한다") {
                 runTest {
-                    val result = repository.getFixedMenuList(Restaurant.FOOD_COURT)
+                    val result = repository.getFixedMenuList(Restaurant.SNACK_CORNER)
                     result.size shouldBe 1
                     result.first().name shouldBe "돈까스"
                 }
@@ -49,12 +49,12 @@ class MenuRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
         `when`("고정 메뉴 API가 실패하면") {
             coEvery {
-                menuService.getFixMenu(Restaurant.FOOD_COURT.toString())
+                menuService.getFixMenu(Restaurant.SNACK_CORNER.toString())
             } returns ApiResult.Failure(500, "err")
 
             then("빈 리스트를 반환한다") {
                 runTest {
-                    repository.getFixedMenuList(Restaurant.FOOD_COURT) shouldBe emptyList()
+                    repository.getFixedMenuList(Restaurant.SNACK_CORNER) shouldBe emptyList()
                 }
             }
         }

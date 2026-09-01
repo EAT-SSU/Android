@@ -46,14 +46,6 @@ enum class Restaurant(
         R.string.cafeteria_faculty_etc,
         MenuType.VARIABLE
     ),
-    FOOD_COURT(
-        "food_court",
-        R.string.restaurant_food_court,
-        R.string.cafeteria_food_court_location,
-        R.string.cafeteria_food_court_time,
-        R.string.cafeteria_food_court_etc,
-        MenuType.FIXED
-    ),
     SNACK_CORNER(
         "snack_corner",
         R.string.restaurant_snack_corner,

@@ -379,9 +379,6 @@
     <string name="cafeteria_snack_corner_time">11:00~15:30(점심)</string>
     <string name="cafeteria_snack_corner_etc">분식류, 옛날도시락, 컵밥 등\n주말 휴무</string>
 
-    <string name="cafeteria_food_court_location">학생회관 2층</string>
-    <string name="cafeteria_food_court_time">휴무</string>
-    <string name="cafeteria_food_court_etc">준비 중</string>
 
     <string name="cafeteria_the_kitchen_location">학생회관 2층</string>
     <string name="cafeteria_the_kitchen_time"></string>
