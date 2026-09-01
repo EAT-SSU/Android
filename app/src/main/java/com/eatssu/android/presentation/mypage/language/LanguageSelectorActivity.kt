@@ -1,10 +1,10 @@
 package com.eatssu.android.presentation.mypage.language
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LanguageSelectorActivity : ComponentActivity() {
+class LanguageSelectorActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_LANGUAGE_CHANGED = "KEY_LANGUAGE_CHANGED"

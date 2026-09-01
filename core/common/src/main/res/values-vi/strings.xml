@@ -14,6 +14,37 @@
     <string name="restaurant_the_kitchen">더 키친</string>
 
     <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">Tòa Student Union, tầng 3</string>
+    <string name="cafeteria_student_time">08:00~09:00(Bữa sáng 1.000 won)\n11:20~14:00(Bữa trưa)\n14:00~17:00(Giờ mở không gian)</string>
+    <string name="cafeteria_student_etc">3 quầy phục vụ\nMón kiểu ttukbaegi, cơm tô, món Âu\nĐóng cửa cuối tuần</string>
+
+    <string name="cafeteria_dodam_location">Tòa Shinyang, tầng 2</string>
+    <string name="cafeteria_dodam_time">Ngày thường\n11:20~14:00(Bữa trưa)\n17:00~18:30(Bữa tối)\n\nCuối tuần\n11:20~13:30(Bữa trưa)</string>
+    <string name="cafeteria_dodam_etc">2 quầy phục vụ\nSuất ăn thường, suất ăn lành mạnh</string>
+
+    <string name="cafeteria_dormitory_location">Residence Hall, tầng B1</string>
+    <string name="cafeteria_dormitory_time">Ngày thường\n11:20~13:50(Bữa trưa)\n17:00~18:30(Bữa tối)\n\nCuối tuần\n11:20~13:30(Bữa trưa)\n17:00~18:20(Bữa tối)</string>
+    <string name="cafeteria_dormitory_etc">Không phục vụ bữa sáng</string>
+
+    <string name="cafeteria_faculty_location">Tòa Jeonsan, tầng B1</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(Bữa trưa)\n14:00~17:00(Giờ mở không gian)</string>
+    <string name="cafeteria_faculty_etc">Đóng cửa cuối tuần</string>
+
+    <string name="cafeteria_snack_corner_location">Tòa Student Union, tầng 3</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(Bữa trưa)</string>
+    <string name="cafeteria_snack_corner_etc">Bunsik(đồ ăn vặt Hàn Quốc), cơm hộp kiểu xưa, cơm ly, v.v.\nĐóng cửa cuối tuần</string>
+
+    <string name="cafeteria_food_court_location">Tòa Student Union, tầng 2</string>
+    <string name="cafeteria_food_court_time">Nghỉ</string>
+    <string name="cafeteria_food_court_etc">Đang chuẩn bị</string>
+
+    <string name="cafeteria_the_kitchen_location">Tòa Student Union, tầng 2</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
+
+    <!-- ========================== -->
     <!-- Report Types -->
     <!-- ========================== -->
     <string name="report_type_no_associate_content">Nội dung không liên quan đến thực đơn</string>
@@ -28,4 +59,23 @@
     <!-- ========================== -->
     <string name="college_placeholder">Trường/Khoa</string>
     <string name="department_placeholder">Ngành/Khoa</string>
+
+    <!-- ========================== -->
+    <!-- Good Price Categories -->
+    <!-- ========================== -->
+    <string name="category_good_price_all">Tất cả</string>
+    <string name="category_good_price_korean">Món Hàn</string>
+    <string name="category_good_price_japanese">Món Nhật</string>
+    <string name="category_good_price_western">Món Âu</string>
+    <string name="category_good_price_chinese">Món Trung</string>
+    <string name="category_good_price_bakery">Tiệm bánh</string>
+    <string name="category_good_price_etc">Khác</string>
+
+    <!-- ========================== -->
+    <!-- School Partnership Categories -->
+    <!-- ========================== -->
+    <string name="category_school_partnership_all">Tất cả</string>
+    <string name="category_school_partnership_restaurant">Nhà hàng</string>
+    <string name="category_school_partnership_cafe">Quán cà phê</string>
+    <string name="category_school_partnership_pub">Quán nhậu</string>
 </resources>

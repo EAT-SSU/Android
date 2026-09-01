@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -57,6 +57,7 @@ import com.eatssu.common.enums.StoreType
 import com.eatssu.design_system.component.EatSsuSnackbar
 import com.eatssu.design_system.component.EatSsuSnackbarType
 import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Error
 import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Gray500
@@ -155,7 +156,7 @@ fun MapRestaurantBottomSheet(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = storeType.value,
+                            text = stringResource(id = storeType.displayNameResId),
                             style = EatssuTheme.typography.caption3,
                             color = Gray400,
                         )
@@ -170,6 +171,7 @@ fun MapRestaurantBottomSheet(
                     Image(
                         painter = painterResource(id = if (isLike) R.drawable.ic_like_filled else R.drawable.ic_like_line),
                         contentDescription = "좋아요",
+                        colorFilter = if (isLike) ColorFilter.tint(Error) else null,
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
@@ -253,104 +255,38 @@ fun MapRestaurantBottomSheet(
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Gray200),
+            MapLinkButtons(
+                onKakaoMapClick = onKakaoMapClick,
+                onNaverMapClick = onNaverMapClick,
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .padding(horizontal = 24.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            androidx.compose.animation.AnimatedVisibility(
+                visible = snackbarState != null,
+                enter = fadeIn() + slideInVertically { it / 2 },
+                exit = fadeOut() + slideOutVertically { it / 2 },
             ) {
-                MapLinkButton(
-                    iconRes = R.drawable.ic_kakao_map,
-                    labelRes = R.string.map_open_kakao,
-                    onClick = onKakaoMapClick,
-                    modifier = Modifier.weight(1f),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .height(24.dp)
-                        .background(Gray400),
-                )
-
-                MapLinkButton(
-                    iconRes = R.drawable.ic_naver_map,
-                    labelRes = R.string.map_open_naver,
-                    onClick = onNaverMapClick,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-            }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 104.dp),
-            ) {
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = snackbarState != null,
-                    enter = fadeIn() + slideInVertically { it / 2 },
-                    exit = fadeOut() + slideOutVertically { it / 2 },
-                ) {
-                    snackbarState?.let { (message, actionLabel) ->
-                        EatSsuSnackbar(
-                            message = message,
-                            actionLabel = actionLabel,
-                            onActionClick = {
-                                snackbarJob?.cancel()
-                                snackbarState = null
-                                onLikeClick()
-                            },
-                            type = EatSsuSnackbarType.Success,
-                        )
-                    }
+                snackbarState?.let { (message, actionLabel) ->
+                    EatSsuSnackbar(
+                        message = message,
+                        actionLabel = actionLabel,
+                        onActionClick = {
+                            snackbarJob?.cancel()
+                            snackbarState = null
+                            onLikeClick()
+                        },
+                        type = EatSsuSnackbarType.Success,
+                    )
+                }
             }
         }
     }
 }
 }
 
-@Composable
-private fun MapLinkButton(
-    iconRes: Int,
-    labelRes: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxHeight()
-            .clickable(onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = stringResource(labelRes),
-            style = EatssuTheme.typography.body2,
-            color = Gray600,
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun MapRestaurantBottomSheetPreview() {
+    var isLiked by remember { mutableStateOf(false) }
     val dummyList = listOf(
         RestaurantInfo("경영대", null, "09.03~12.18","학생증 인증하면 음료수 1개 증정"),
         RestaurantInfo("IT대", null,"09.01~12.31", "학생증 인증하고 카카오페이 결제 시 10% 할인, 긴내용긴내용긴내용긴내용"),
@@ -364,7 +300,8 @@ fun MapRestaurantBottomSheetPreview() {
                 storeName = "현선이네",
                 mapRestaurantList = dummyList,
                 storeType = StoreType.RESTAURANT,
-                isLike = false
+                isLike = isLiked,
+                onLikeClick = { isLiked = !isLiked },
             )
         }
     }

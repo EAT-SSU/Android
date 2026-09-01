@@ -46,11 +46,18 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.GoodPriceStore
 import com.eatssu.android.presentation.goodprice.component.GoodPriceFilterRow
 import com.eatssu.android.presentation.goodprice.component.GoodPriceStoreBottomSheet
+import com.eatssu.android.presentation.map.MapDestination
+import com.eatssu.android.presentation.map.MapExternalNavigator
+import com.eatssu.android.presentation.map.MapProvider
 import com.eatssu.android.presentation.map.findActivityOrNull
+import com.eatssu.android.presentation.map.openMapWithoutResolution
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
+import com.eatssu.common.UiText
 import com.eatssu.common.enums.GoodPriceCategory
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.component.EatSsuSnackbar
 import com.eatssu.design_system.component.EatSsuSnackbarType
 import com.eatssu.design_system.theme.Black
@@ -86,6 +93,7 @@ private const val LOCATION_PERMISSION_REQUEST_CODE = 2001
 @Composable
 fun GoodPriceMapRoute(
     viewModel: GoodPriceMapViewModel = viewModel(),
+    mapExternalNavigator: MapExternalNavigator? = null,
     showTopBar: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier,
@@ -133,7 +141,28 @@ fun GoodPriceMapRoute(
         showTopBar = showTopBar,
         contentPadding = contentPadding,
         onCategorySelected = { viewModel.setCategory(it) },
-        onStoreClick = { viewModel.selectStore(it.id) },
+        onStoreClick = viewModel::selectStore,
+        onOpenMap = { provider, store ->
+            scope.launch {
+                val destination = MapDestination(
+                    storeName = store.storeName,
+                    latitude = store.latitude,
+                    longitude = store.longitude,
+                )
+                val opened = mapExternalNavigator?.open(
+                    context = context,
+                    provider = provider,
+                    destination = destination,
+                ) ?: context.openMapWithoutResolution(provider, destination)
+
+                if (!opened) {
+                    context.showToast(
+                        UiText.StringResource(R.string.toast_map_open_failed),
+                        ToastType.ERROR,
+                    )
+                }
+            }
+        },
         onDismissBottomSheet = { viewModel.clearSelectedStore() },
         animateCameraTo = { latLng, zoom ->
             scope.launch {
@@ -159,6 +188,7 @@ fun GoodPriceMapScreen(
     contentPadding: PaddingValues = PaddingValues(),
     onCategorySelected: (GoodPriceCategory) -> Unit,
     onStoreClick: (GoodPriceStore) -> Unit,
+    onOpenMap: (MapProvider, GoodPriceStore) -> Unit,
     onDismissBottomSheet: () -> Unit,
     animateCameraTo: (LatLng, Double) -> Unit,
     modifier: Modifier = Modifier,
@@ -284,8 +314,9 @@ fun GoodPriceMapScreen(
                     },
                     // 개별 마커 클릭 시 업소 상세 바텀시트 호출
                     onClickLeaf = { leaf, _ ->
-                        val store = leaf.tag as? GoodPriceStore ?: return@Clustering true
-                        onStoreClick(store)
+                        (leaf.tag as? GoodPriceStore)?.let { store ->
+                            onStoreClick(store)
+                        }
                         true
                     },
                 )
@@ -333,8 +364,13 @@ fun GoodPriceMapScreen(
 
             // 업소 상세 바텀시트
             uiState.selectedStoreDetail?.let { detail ->
+                val selectedStore = uiState.selectedStore ?: return@let
+                if (selectedStore.id != detail.id) return@let
+
                 GoodPriceStoreBottomSheet(
                     storeDetail = detail,
+                    onKakaoMapClick = { onOpenMap(MapProvider.KAKAO, selectedStore) },
+                    onNaverMapClick = { onOpenMap(MapProvider.NAVER, selectedStore) },
                     onDismiss = onDismissBottomSheet,
                 )
             }
