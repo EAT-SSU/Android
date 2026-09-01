@@ -457,7 +457,6 @@ internal fun MapScreen(
                 MapRestaurantBottomSheet(
                     storeName = info.storeName,
                     storeType = storeType,
-                    isLike = info.likedByUser,
                     mapRestaurantList = mapState.restaurantInfoList,
                     onNaverMapClick = {
                         openMap(MapProvider.NAVER, info)
@@ -467,9 +466,6 @@ internal fun MapScreen(
                     },
                     onDismiss = {
                         onHidePartnershipSheet()
-                    },
-                    onLikeClick = {
-                        viewModel.likePartnership(info.id)
                     },
                 )
             }

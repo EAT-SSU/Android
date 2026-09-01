@@ -68,7 +68,6 @@ fun FavoriteDetailRoute(
         is UiState.Success -> FavoriteDetailScreen(
             restaurant = state.data,
             onBack = onBack,
-            onLikeClick = viewModel::toggleLike,
             onNaverMapClick = {
                 scope.launch {
                     openMap(context, mapExternalNavigator, MapProvider.NAVER, state.data)
@@ -88,7 +87,6 @@ fun FavoriteDetailRoute(
 private fun FavoriteDetailScreen(
     restaurant: PartnershipRestaurant,
     onBack: () -> Unit,
-    onLikeClick: () -> Unit,
     onNaverMapClick: () -> Unit,
     onKakaoMapClick: () -> Unit,
 ) {
@@ -138,7 +136,6 @@ private fun FavoriteDetailScreen(
         MapRestaurantBottomSheet(
             storeName = restaurant.storeName,
             storeType = restaurant.storeType,
-            isLike = restaurant.likedByUser,
             mapRestaurantList = listOf(
                 RestaurantInfo(
                     collegeName = restaurant.collegeName,
@@ -150,7 +147,6 @@ private fun FavoriteDetailScreen(
             onNaverMapClick = onNaverMapClick,
             onKakaoMapClick = onKakaoMapClick,
             onDismiss = onBack,
-            onLikeClick = onLikeClick,
             scrimColor = Color.Transparent,
         )
     }
