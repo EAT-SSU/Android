@@ -1,7 +1,7 @@
 package com.eatssu.android.presentation.login
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -30,7 +30,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginActivity : ComponentActivity() {
+class LoginActivity : AppCompatActivity() {
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker

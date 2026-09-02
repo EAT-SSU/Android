@@ -14,11 +14,11 @@ class GetUserCollegeDepartmentUseCase @Inject constructor(
         val nickname = accountDataStore.name.first()
         val college = accountDataStore.college.first() ?: College(
             collegeId = -1,
-            collegeName = "단과대"
+            collegeName = ""
         )
         val department = accountDataStore.department.first() ?: Department(
             departmentId = -1,
-            departmentName = "학과"
+            departmentName = ""
         )
         return UserInfo(nickname, department, college)
     }

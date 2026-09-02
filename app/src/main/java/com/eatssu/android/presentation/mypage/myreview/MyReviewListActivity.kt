@@ -1,7 +1,7 @@
 package com.eatssu.android.presentation.mypage.myreview
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyReviewListComposeActivity : ComponentActivity() {
+class MyReviewListComposeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker

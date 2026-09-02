@@ -43,13 +43,13 @@ class UserDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
             every { accountDataStore.college } returns flowOf(null)
             every { accountDataStore.department } returns flowOf(null)
 
-            then("기본 placeholder 값으로 채운다") {
+            then("언어에 종속되지 않는 빈 placeholder 값으로 채운다") {
                 runTest {
                     val result = useCase()
                     result.userCollege.collegeId shouldBe -1
-                    result.userCollege.collegeName shouldBe "단과대"
+                    result.userCollege.collegeName shouldBe ""
                     result.userDepartment.departmentId shouldBe -1
-                    result.userDepartment.departmentName shouldBe "학과"
+                    result.userDepartment.departmentName shouldBe ""
                 }
             }
         }

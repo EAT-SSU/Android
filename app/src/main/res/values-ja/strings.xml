@@ -53,6 +53,8 @@
     <string name="button_report">通報</string>
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">確認</string>
+    <string name="button_close">閉じる</string>
+    <string name="button_retry">再試行</string>
     <string name="button_update">アップデート</string>
     <string name="button_check_duplicate">確認</string>
 
@@ -154,20 +156,22 @@
     <string name="review_photo_count">写真を追加（%1$d/%2$d）</string>
     <string name="review_settings">レビュー設定</string>
     <string name="review_error_occurred">エラーが発生しました。</string>
+    <string name="review_menu_info_load_failed">メニュー情報を読み込めませんでした。\nもう一度お試しください。</string>
+    <string name="review_additional_data_load_failed">追加のレビューを読み込めませんでした。</string>
     <string name="review_show_translation">翻訳を見る</string>
-    <string name="review_translate">번역하기</string>
+    <string name="review_translate">翻訳する</string>
     <string name="review_show_original">原文を見る</string>
     <string name="review_translating">翻訳中...</string>
-    <string name="review_translated_by_ai">AI가 한국어에서 번역함</string>
-    <string name="review_translation_unavailable">번역을 사용할 수 없음</string>
-    <string name="review_translation_accuracy_notice">AI 번역은 항상 정확하지 않을 수 있습니다.</string>
-    <string name="review_translation_unavailable_notice">현재 AI 번역을 사용할 수 없습니다.\n나중에 다시 시도해 주세요.</string>
-    <string name="review_translation_information">번역 안내</string>
-    <string name="review_profile_image">프로필 이미지</string>
-    <string name="review_more">리뷰 메뉴</string>
-    <string name="review_image">리뷰 이미지</string>
+    <string name="review_translated_by_ai">AIが韓国語から翻訳</string>
+    <string name="review_translation_unavailable">翻訳を利用できません</string>
+    <string name="review_translation_accuracy_notice">AI翻訳は常に正確とは限りません。</string>
+    <string name="review_translation_unavailable_notice">現在AI翻訳を利用できません。\n後でもう一度お試しください。</string>
+    <string name="review_translation_information">翻訳情報</string>
+    <string name="review_profile_image">プロフィール画像</string>
+    <string name="review_more">レビューメニュー</string>
+    <string name="review_image">レビュー画像</string>
     <string name="toast_review_translation_failed">レビューの翻訳に失敗しました。</string>
-    <string name="toast_review_translation_unchanged">번역 결과가 원문과 동일합니다.</string>
+    <string name="toast_review_translation_unchanged">翻訳結果が原文と同じです。</string>
     <string name="review_write">レビューを書く</string>
 
     <!-- ========================== -->
@@ -215,9 +219,9 @@
     <string name="logout">ログアウト</string>
     <string name="signout">アカウント削除</string>
     <string name="app_version">アプリバージョン</string>
-    <string name="mypage_push_activity_section_title">알림 및 활동</string>
-    <string name="mypage_service_section_title">서비스 정보</string>
-    <string name="mypage_etc_section_title">기타</string>
+    <string name="mypage_push_activity_section_title">通知と活動</string>
+    <string name="mypage_service_section_title">サービス情報</string>
+    <string name="mypage_etc_section_title">その他</string>
     <string name="mypage_push_notification_title">プッシュ通知設定</string>
     <string name="mypage_push_notification_description">毎日午前11時に通知をお送りします。</string>
 
@@ -282,7 +286,7 @@
     <string name="private_information">プライバシーポリシー</string>
     <string name="policy">プライバシーポリシー</string>
     <string name="terms">利用規約</string>
-    <string name="terms_and_rule">약관 및 정책</string>
+    <string name="terms_and_rule">規約およびポリシー</string>
     <string name="developer">開発者</string>
     <string name="oss_licenses">オープンソースライブラリ</string>
 
@@ -320,23 +324,23 @@
     <string name="etc">備考</string>
     <string name="time">営業時間</string>
     <string name="favorite_partnership">お気に入りの提携</string>
-    <string name="favorite_title">찜</string>
-    <string name="favorite_menu_tab">메뉴 찜</string>
-    <string name="favorite_partnership_tab">제휴 찜</string>
-    <string name="favorite_filter_all">전체</string>
-    <string name="favorite_empty_title">아직 찜한 제휴가 없어요.</string>
-    <string name="favorite_empty_description">관심 있는 제휴를 찜하고 빠르게 확인해 보세요!</string>
-    <string name="favorite_open">제휴 찜 열기</string>
-    <string name="favorite_open_detail">제휴 상세보기</string>
-    <string name="favorite_edit">편집</string>
-    <string name="favorite_select_all">전체 선택</string>
-    <string name="favorite_delete">삭제</string>
-    <string name="favorite_delete_count">삭제 %d</string>
-    <string name="favorite_added_snackbar">찜한 제휴에 추가했어요.</string>
-    <string name="favorite_deleted_snackbar">찜한 제휴에서 삭제했어요.</string>
-    <string name="favorite_undo">취소하기</string>
+    <string name="favorite_title">お気に入り</string>
+    <string name="favorite_menu_tab">お気に入りメニュー</string>
+    <string name="favorite_partnership_tab">お気に入り提携</string>
+    <string name="favorite_filter_all">すべて</string>
+    <string name="favorite_empty_title">お気に入りの提携はまだありません。</string>
+    <string name="favorite_empty_description">気になる提携をお気に入りに追加して、すばやく確認しましょう！</string>
+    <string name="favorite_open">お気に入り提携を開く</string>
+    <string name="favorite_open_detail">提携詳細を見る</string>
+    <string name="favorite_edit">編集</string>
+    <string name="favorite_select_all">すべて選択</string>
+    <string name="favorite_delete">削除</string>
+    <string name="favorite_delete_count">%d件削除</string>
+    <string name="favorite_added_snackbar">お気に入り提携に追加しました。</string>
+    <string name="favorite_deleted_snackbar">お気に入り提携から削除しました。</string>
+    <string name="favorite_undo">キャンセル</string>
     <string name="partnership_filter_mine">自分の提携</string>
-    <string name="partnership_filter_festival">축제</string>
+    <string name="partnership_filter_festival">祭り</string>
     <string name="partnership_filter_all">すべて</string>
     <string name="partnership_filter_restaurant">レストラン</string>
     <string name="partnership_filter_cafe">カフェ</string>
@@ -346,7 +350,8 @@
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->
     <!-- ========================== -->
-    <string name="eatssu_instagram_link">EAT-SSU 인스타그램</string>
+    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
+    <string name="event_do_not_show_again">今後表示しない</string>
 
     <!-- ========================== -->
     <!-- Cafeteria Detail Information -->

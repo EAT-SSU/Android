@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityReportBinding
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.util.showToast
@@ -33,7 +34,7 @@ class ReportActivity : BaseActivity<ActivityReportBinding>(
     //Todo 코드 수정 해야함
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbarTitle.text = "신고하기" // 툴바 제목 설정
+        toolbarTitle.text = getString(R.string.title_report)
 
         reviewId = intent.getLongExtra("reviewId", -1L)
 

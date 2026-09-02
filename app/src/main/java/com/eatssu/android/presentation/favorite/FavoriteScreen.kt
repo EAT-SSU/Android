@@ -177,7 +177,7 @@ internal fun FavoriteScreen(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_arrow_left),
-                                contentDescription = "뒤로가기",
+                                contentDescription = stringResource(R.string.nav_back),
                                 tint = Gray500,
                             )
                         }

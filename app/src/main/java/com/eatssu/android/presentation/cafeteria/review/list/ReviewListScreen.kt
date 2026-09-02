@@ -343,7 +343,7 @@ internal fun ReviewListScreen(
                                             )
                                             Spacer(modifier = Modifier.height(8.dp))
                                             EatSsuButton(
-                                                text = "재시도",
+                                                text = stringResource(R.string.button_retry),
                                                 onClick = { reviewPagingItems.retry() },
                                                 modifier = Modifier.width(100.dp)
                                             )
@@ -429,9 +429,9 @@ internal fun ReviewListScreen(
                                                     .padding(16.dp),
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
-                                                Text("추가 데이터를 불러오지 못했습니다.")
+                                                Text(stringResource(R.string.review_additional_data_load_failed))
                                                 EatSsuButton(
-                                                    text = "재시도",
+                                                    text = stringResource(R.string.button_retry),
                                                     onClick = { reviewPagingItems.retry() },
                                                     modifier = Modifier.width(100.dp)
                                                 )
