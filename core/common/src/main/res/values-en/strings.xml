@@ -9,7 +9,6 @@
     <string name="restaurant_dodam">Dodam Restaurant</string>
     <string name="restaurant_dormitory">Dormitory Restaurant</string>
     <string name="restaurant_faculty">FACULTY (Faculty Only)</string>
-    <string name="restaurant_food_court">푸드 코트</string>
     <string name="restaurant_snack_corner">Snack Corner</string>
     <string name="restaurant_the_kitchen">더 키친</string>
 
@@ -36,9 +35,6 @@
     <string name="cafeteria_snack_corner_time">11:00~15:30(Lunch)</string>
     <string name="cafeteria_snack_corner_etc">Bunsik(Korean Snacks), Old-school Lunch Box, Cup Rice, etc.\nClosed on weekends</string>
 
-    <string name="cafeteria_food_court_location">Student Union Building, 2F</string>
-    <string name="cafeteria_food_court_time">Closed</string>
-    <string name="cafeteria_food_court_etc">Coming Soon</string>
 
     <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
     <string name="cafeteria_the_kitchen_time"></string>

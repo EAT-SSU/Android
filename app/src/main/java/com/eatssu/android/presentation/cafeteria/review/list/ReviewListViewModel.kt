@@ -8,6 +8,7 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.domain.model.ReviewInfo
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.menu.GetMealMenuNamesUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
@@ -38,6 +39,7 @@ class ReviewListViewModel @Inject constructor(
     private val deleteReviewUseCase: DeleteReviewUseCase,
     private val getReviewTranslationUseCase: GetReviewTranslationUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
+    private val getMealMenuNamesUseCase: GetMealMenuNamesUseCase,
 ) : ViewModel() {
 
     val isLoggedIn: Boolean
@@ -58,6 +60,7 @@ class ReviewListViewModel @Inject constructor(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
+    private var fallbackMenuName: String = ""
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val reviewPagingData: Flow<PagingData<Review>> = _loadParams
@@ -66,21 +69,42 @@ class ReviewListViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    fun getReview(menuType: MenuType, itemId: Long) {
+    fun getReview(
+        menuType: MenuType,
+        itemId: Long,
+        menuName: String = "",
+    ) {
+        fallbackMenuName = menuName
+
         // 동일 파라미터로 다시 진입(작성/수정 후 popBackStack)해도
         // 항상 페이징 소스를 새로 만들 수 있도록 SharedFlow로 트리거한다.
         _loadParams.tryEmit(menuType to itemId)
 
         viewModelScope.launch {
-            loadReviewInfo(menuType, itemId)
+            loadReviewInfo(menuType, itemId, menuName)
         }
     }
 
-    private suspend fun loadReviewInfo(menuType: MenuType, itemId: Long) {
+    private suspend fun loadReviewInfo(
+        menuType: MenuType,
+        itemId: Long,
+        fallbackMenuName: String,
+    ) {
         _uiState.value = UiState.Loading
         try {
             val reviewInfo = getReviewInfoUseCase(menuType, itemId)
-            _uiState.value = UiState.Success(ReviewListState(reviewInfo))
+            val detailedMenuName = when (menuType) {
+                MenuType.FIXED -> fallbackMenuName
+                MenuType.VARIABLE -> getMealMenuNamesUseCase(itemId)
+                    .joinToString(separator = ", ")
+                    .ifBlank { fallbackMenuName }
+            }
+            _uiState.value = UiState.Success(
+                ReviewListState(
+                    reviewInfo = reviewInfo,
+                    menuName = detailedMenuName.takeIf { it.isNotBlank() },
+                )
+            )
         } catch (e: Exception) {
             _uiState.value = UiState.Error
             _uiEvent.emit(
@@ -111,7 +135,13 @@ class ReviewListViewModel @Inject constructor(
 
             // 정보 갱신
             val currentParams = _loadParams.replayCache.lastOrNull()
-            if (currentParams != null) loadReviewInfo(currentParams.first, currentParams.second)
+            if (currentParams != null) {
+                loadReviewInfo(
+                    menuType = currentParams.first,
+                    itemId = currentParams.second,
+                    fallbackMenuName = fallbackMenuName,
+                )
+            }
         }
     }
 
@@ -161,6 +191,7 @@ class ReviewListViewModel @Inject constructor(
 
 data class ReviewListState(
     val reviewInfo: ReviewInfo? = null,
+    val menuName: String? = null,
 )
 
 

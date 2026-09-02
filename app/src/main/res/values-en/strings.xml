@@ -53,6 +53,8 @@
     <string name="button_report">Report</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
+    <string name="button_close">Close</string>
+    <string name="button_retry">Retry</string>
     <string name="button_update">Update</string>
     <string name="button_check_duplicate">Check</string>
 
@@ -154,20 +156,22 @@
     <string name="review_photo_count">Add Photo (%1$d/%2$d)</string>
     <string name="review_settings">Review Settings</string>
     <string name="review_error_occurred">An error occurred.</string>
+    <string name="review_menu_info_load_failed">Could not load the menu information.\nPlease try again.</string>
+    <string name="review_additional_data_load_failed">Failed to load more reviews.</string>
     <string name="review_show_translation">Show translation</string>
-    <string name="review_translate">번역하기</string>
+    <string name="review_translate">Translate</string>
     <string name="review_show_original">Show original</string>
     <string name="review_translating">Translating...</string>
-    <string name="review_translated_by_ai">AI가 한국어에서 번역함</string>
-    <string name="review_translation_unavailable">번역을 사용할 수 없음</string>
-    <string name="review_translation_accuracy_notice">AI 번역은 항상 정확하지 않을 수 있습니다.</string>
-    <string name="review_translation_unavailable_notice">현재 AI 번역을 사용할 수 없습니다.\n나중에 다시 시도해 주세요.</string>
-    <string name="review_translation_information">번역 안내</string>
-    <string name="review_profile_image">프로필 이미지</string>
-    <string name="review_more">리뷰 메뉴</string>
-    <string name="review_image">리뷰 이미지</string>
+    <string name="review_translated_by_ai">Translated from Korean by AI</string>
+    <string name="review_translation_unavailable">Translation unavailable</string>
+    <string name="review_translation_accuracy_notice">AI translations may not always be accurate.</string>
+    <string name="review_translation_unavailable_notice">AI translation is currently unavailable.\nPlease try again later.</string>
+    <string name="review_translation_information">Translation Info</string>
+    <string name="review_profile_image">Profile Image</string>
+    <string name="review_more">Review Menu</string>
+    <string name="review_image">Review Image</string>
     <string name="toast_review_translation_failed">Failed to translate the review.</string>
-    <string name="toast_review_translation_unchanged">번역 결과가 원문과 동일합니다.</string>
+    <string name="toast_review_translation_unchanged">The translation is identical to the original.</string>
     <string name="review_write">Write a Review</string>
 
     <!-- ========================== -->
@@ -188,7 +192,7 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">Today\'s Menu</string>
-    <string name="cafeteria_outside_business_hours">It\'s outside business hours.</string>
+    <string name="cafeteria_outside_business_hours">Closed now</string>
     <string name="price">Price</string>
     <string name="rate">★</string>
     <string name="student_cafeteria">Student Cafeteria</string>
@@ -215,9 +219,9 @@
     <string name="logout">Log Out</string>
     <string name="signout">Delete Account</string>
     <string name="app_version">App Version</string>
-    <string name="mypage_push_activity_section_title">알림 및 활동</string>
-    <string name="mypage_service_section_title">서비스 정보</string>
-    <string name="mypage_etc_section_title">기타</string>
+    <string name="mypage_push_activity_section_title">Notifications &amp; Activity</string>
+    <string name="mypage_service_section_title">Service Info</string>
+    <string name="mypage_etc_section_title">Other</string>
     <string name="mypage_push_notification_title">Push Notification Settings</string>
     <string name="mypage_push_notification_description">We\'ll send you a notification every day at 11:00 AM.</string>
 
@@ -282,7 +286,7 @@
     <string name="private_information">Privacy Policy</string>
     <string name="policy">Privacy Policy</string>
     <string name="terms">Terms of Service</string>
-    <string name="terms_and_rule">약관 및 정책</string>
+    <string name="terms_and_rule">Terms &amp; Policies</string>
     <string name="developer">Credits</string>
     <string name="oss_licenses">Open-Source Libraries</string>
 
@@ -320,23 +324,23 @@
     <string name="etc">Notes</string>
     <string name="time">Hours</string>
     <string name="favorite_partnership">Favorite Partners</string>
-    <string name="favorite_title">찜</string>
-    <string name="favorite_menu_tab">메뉴 찜</string>
-    <string name="favorite_partnership_tab">제휴 찜</string>
-    <string name="favorite_filter_all">전체</string>
-    <string name="favorite_empty_title">아직 찜한 제휴가 없어요.</string>
-    <string name="favorite_empty_description">관심 있는 제휴를 찜하고 빠르게 확인해 보세요!</string>
-    <string name="favorite_open">제휴 찜 열기</string>
-    <string name="favorite_open_detail">제휴 상세보기</string>
-    <string name="favorite_edit">편집</string>
-    <string name="favorite_select_all">전체 선택</string>
-    <string name="favorite_delete">삭제</string>
-    <string name="favorite_delete_count">삭제 %d</string>
-    <string name="favorite_added_snackbar">찜한 제휴에 추가했어요.</string>
-    <string name="favorite_deleted_snackbar">찜한 제휴에서 삭제했어요.</string>
-    <string name="favorite_undo">취소하기</string>
+    <string name="favorite_title">Favorites</string>
+    <string name="favorite_menu_tab">Favorite Menus</string>
+    <string name="favorite_partnership_tab">Favorite Partners</string>
+    <string name="favorite_filter_all">All</string>
+    <string name="favorite_empty_title">No favorite partners yet.</string>
+    <string name="favorite_empty_description">Save partners you\'re interested in and find them quickly.</string>
+    <string name="favorite_open">Open Favorite Partners</string>
+    <string name="favorite_open_detail">View Partner Details</string>
+    <string name="favorite_edit">Edit</string>
+    <string name="favorite_select_all">Select All</string>
+    <string name="favorite_delete">Delete</string>
+    <string name="favorite_delete_count">Delete %d</string>
+    <string name="favorite_added_snackbar">Added to favorite partners.</string>
+    <string name="favorite_deleted_snackbar">Removed from favorite partners.</string>
+    <string name="favorite_undo">Cancel</string>
     <string name="partnership_filter_mine">My Partners</string>
-    <string name="partnership_filter_festival">축제</string>
+    <string name="partnership_filter_festival">Festival</string>
     <string name="partnership_filter_all">All</string>
     <string name="partnership_filter_restaurant">Restaurant</string>
     <string name="partnership_filter_cafe">Cafe</string>
@@ -346,7 +350,8 @@
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->
     <!-- ========================== -->
-    <string name="eatssu_instagram_link">EAT-SSU 인스타그램 바로가기</string>
+    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
+    <string name="event_do_not_show_again">Don\'t show again</string>
 
     <!-- ========================== -->
     <!-- Cafeteria Detail Information -->
@@ -366,9 +371,6 @@
     <string name="cafeteria_snack_corner_location">Student Union Building, 3F</string>
     <string name="cafeteria_snack_corner_time">11:00~15:30(Lunch)</string>
     <string name="cafeteria_snack_corner_etc">Bunsik(Korean Snacks), Old-school Lunch Box, Cup Rice, etc.\nClosed on weekends</string>
-    <string name="cafeteria_food_court_location">Student Union Building, 2F</string>
-    <string name="cafeteria_food_court_time">Closed</string>
-    <string name="cafeteria_food_court_etc">Coming Soon</string>
     <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>

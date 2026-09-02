@@ -3,7 +3,7 @@ package com.eatssu.android.presentation.widget.ui
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +30,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class WidgetSettingActivity : ComponentActivity() {
+class WidgetSettingActivity : AppCompatActivity() {
 
     @Inject
     lateinit var saveRestaurantByFileKeyUseCase: SaveRestaurantByFileKeyUseCase

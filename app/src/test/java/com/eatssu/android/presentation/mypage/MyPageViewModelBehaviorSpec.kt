@@ -10,6 +10,7 @@ import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.assertToast
 import com.eatssu.android.test.awaitToastEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.AppLanguage
 import com.eatssu.common.enums.ToastType
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
@@ -32,9 +33,11 @@ class MyPageViewModelBehaviorSpec : AppBehaviorSpec({
         val setDailyNotificationStatusUseCase = mockk<SetDailyNotificationStatusUseCase>()
         val alarmUseCase = mockk<AlarmUseCase>()
         val settingDataStore = mockk<SettingDataStore>()
+        val appLanguage = MutableStateFlow(AppLanguage.KOREAN)
 
         every { alarmUseCase.scheduleAlarm() } just Runs
         every { alarmUseCase.cancelAlarm() } just Runs
+        every { settingDataStore.appLanguage } returns appLanguage
         coEvery { setDailyNotificationStatusUseCase(any()) } returns Unit
 
         `when`("닉네임이 비어 있으면") {
@@ -143,6 +146,33 @@ class MyPageViewModelBehaviorSpec : AppBehaviorSpec({
 
                     coVerify { setDailyNotificationStatusUseCase(false) }
                     verify { alarmUseCase.cancelAlarm() }
+                }
+            }
+        }
+
+        `when`("앱 언어가 변경되면") {
+            val dailyStatus = MutableStateFlow(false)
+            every { settingDataStore.dailyNotificationStatus } returns dailyStatus
+            coEvery { getUserNickNameUseCase() } returns "eatssu"
+
+            val viewModel = MyPageViewModel(
+                getUserNickNameUseCase,
+                setDailyNotificationStatusUseCase,
+                alarmUseCase,
+                settingDataStore,
+            )
+
+            then("현재 언어를 state에 반영한다") {
+                runTest {
+                    viewModel.uiState.test {
+                        awaitItem()
+                        appLanguage.value = AppLanguage.JAPANESE
+                        advanceUntilIdle()
+
+                        val state = expectMostRecentItem() as UiState.Success<MyPageState>
+                        state.data.selectedLanguage shouldBe AppLanguage.JAPANESE
+                        cancelAndIgnoreRemainingEvents()
+                    }
                 }
             }
         }

@@ -97,17 +97,21 @@ class MyPageFragment : Fragment() {
                 val uiState by myPageViewModel.uiState.collectAsStateWithLifecycle()
                 val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-                val departmentName = when (val state = mainUiState) {
+                val notFoundText = stringResource(R.string.not_found)
+                val loadingText = stringResource(R.string.widget_loading)
+                val affiliationName = when (val state = mainUiState) {
                     is UiState.Success -> {
                         when (val data = state.data) {
-                            is MainState.DepartmentState -> data.departmentName
-                                ?: stringResource(R.string.not_found)
+                            is MainState.DepartmentState -> listOfNotNull(
+                                data.collegeName?.takeIf { it.isNotBlank() },
+                                data.departmentName?.takeIf { it.isNotBlank() },
+                            ).joinToString(" ").ifBlank { notFoundText }
 
-                            else -> stringResource(R.string.widget_loading)
+                            else -> loadingText
                         }
                     }
 
-                    else -> stringResource(R.string.widget_loading)
+                    else -> loadingText
                 }
 
                 ProvideAnalyticsTracker(analyticsTracker) {
@@ -116,7 +120,7 @@ class MyPageFragment : Fragment() {
                             is UiState.Success -> {
                                 MyPageScreen(
                                     state = state.data,
-                                    departmentName = departmentName,
+                                    affiliationName = affiliationName,
                                     onAlarmToggle = ::handleAlarmSwitchChange,
                                     onMyInfoClick = {
                                         mainViewModel.trackMyPageMenu(MENU_MY_INFO)

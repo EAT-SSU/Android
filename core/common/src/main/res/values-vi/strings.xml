@@ -9,7 +9,6 @@
     <string name="restaurant_dodam">Nhà ăn Dodam</string>
     <string name="restaurant_dormitory">Nhà ăn ký túc xá</string>
     <string name="restaurant_faculty">FACULTY (Chỉ dành cho giảng viên/nhân viên)</string>
-    <string name="restaurant_food_court">푸드 코트</string>
     <string name="restaurant_snack_corner">Quầy đồ ăn nhẹ</string>
     <string name="restaurant_the_kitchen">더 키친</string>
 
@@ -36,9 +35,6 @@
     <string name="cafeteria_snack_corner_time">11:00~15:30(Bữa trưa)</string>
     <string name="cafeteria_snack_corner_etc">Bunsik(đồ ăn vặt Hàn Quốc), cơm hộp kiểu xưa, cơm ly, v.v.\nĐóng cửa cuối tuần</string>
 
-    <string name="cafeteria_food_court_location">Tòa Student Union, tầng 2</string>
-    <string name="cafeteria_food_court_time">Nghỉ</string>
-    <string name="cafeteria_food_court_etc">Đang chuẩn bị</string>
 
     <string name="cafeteria_the_kitchen_location">Tòa Student Union, tầng 2</string>
     <string name="cafeteria_the_kitchen_time"></string>

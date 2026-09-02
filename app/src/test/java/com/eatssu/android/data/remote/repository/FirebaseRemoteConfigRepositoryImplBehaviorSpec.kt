@@ -85,6 +85,22 @@ class FirebaseRemoteConfigRepositoryImplBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("식당 정보 JSON에 지원하지 않는 enum이 섞여 있으면") {
+            every { remoteConfig.fetchAndActivate() } returns Tasks.forResult(true)
+            every { remoteConfig.getString("cafeteria_information") } returns """
+                [
+                  {"enum":"FOOD_COURT","name":"푸드 코트","location":"2F","image":"a.png","time":"휴무","etc":"-"},
+                  {"enum":"HAKSIK","name":"학식당","location":"3F","image":"b.png","time":"11:00-14:00","etc":"-"}
+                ]
+            """.trimIndent()
+
+            then("지원하는 식당 정보는 계속 반환한다") {
+                runTest {
+                    repository.getRestaurantInfo(Restaurant.HAKSIK)?.name shouldBe "학식당"
+                }
+            }
+        }
+
         `when`("식당 정보 JSON 파싱에 실패하면") {
             every { remoteConfig.fetchAndActivate() } returns Tasks.forResult(true)
             every { remoteConfig.getString("cafeteria_information") } returns "{invalid-json}"

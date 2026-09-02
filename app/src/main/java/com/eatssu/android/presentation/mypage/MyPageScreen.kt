@@ -40,7 +40,7 @@ import com.eatssu.design_system.theme.White
 @Composable
 fun MyPageScreen(
     state: MyPageState,
-    departmentName: String,
+    affiliationName: String,
     onAlarmToggle: (Boolean) -> Unit,
     onMyInfoClick: () -> Unit,
     onMyReviewClick: () -> Unit,
@@ -62,17 +62,20 @@ fun MyPageScreen(
             .verticalScroll(rememberScrollState())
             .padding(bottom = dimensionResource(id = R.dimen.bottom_nav_height)),
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.mypage),
-            style = EatssuTheme.typography.subtitle1,
-            color = Gray700,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(28.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 17.dp)
+                .height(56.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(R.string.mypage),
+                style = EatssuTheme.typography.subtitle1,
+                color = Gray700,
+                textAlign = TextAlign.Center,
+            )
+        }
 
         Row(
             modifier = Modifier
@@ -99,7 +102,7 @@ fun MyPageScreen(
                     )
 
                     Text(
-                        text = departmentName,
+                        text = affiliationName,
                         style = EatssuTheme.typography.body3,
                         color = Gray700,
                     )
@@ -156,6 +159,7 @@ fun MyPageScreen(
 
         MyPageMenuItem(
             title = stringResource(R.string.language_setting),
+            trailingText = state.selectedLanguage.nativeDisplayName,
             onClick = onLanguageSettingClick,
         )
 
@@ -285,6 +289,7 @@ fun MyPageSectionText(text: String) {
 fun MyPageMenuItem(
     title: String,
     onClick: () -> Unit,
+    trailingText: String? = null,
 ) {
     Column {
         Row(
@@ -300,12 +305,22 @@ fun MyPageMenuItem(
                 style = EatssuTheme.typography.body1,
                 color = Gray700,
             )
-            Icon(
-                modifier = Modifier.size(18.dp),
-                painter = painterResource(R.drawable.ic_arrow_right),
-                contentDescription = null,
-                tint = Gray300,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                trailingText?.let { text ->
+                    Text(
+                        text = text,
+                        style = EatssuTheme.typography.body3,
+                        color = Gray400,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(R.drawable.ic_arrow_right),
+                    contentDescription = null,
+                    tint = Gray300,
+                )
+            }
         }
     }
 }
@@ -320,7 +335,7 @@ private fun MyPageScreenPreview() {
                 isAlarmOn = true,
                 appVersion = "1.0.0 (1)",
             ),
-            departmentName = "컴퓨터학부",
+            affiliationName = "AI대학 정보보호학과",
             onAlarmToggle = {},
             onMyInfoClick = {},
             onMyReviewClick = {},

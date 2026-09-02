@@ -91,8 +91,8 @@ fun ReviewListScreen(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = menuType, key2 = id) {
-        viewModel.getReview(menuType, id)
+    LaunchedEffect(key1 = menuType, key2 = id, key3 = menuName) {
+        viewModel.getReview(menuType, id, menuName)
     }
 
     // Screen View 로깅
@@ -107,7 +107,7 @@ fun ReviewListScreen(
     LaunchedEffect(refreshNonce) {
         if (refreshNonce == 0L) return@LaunchedEffect
         // 리뷰 작성 화면에서 돌아온 경우, 리스트/정보를 강제로 갱신한다.
-        viewModel.getReview(menuType, id)
+        viewModel.getReview(menuType, id, menuName)
         reviewPagingItems.refresh()
     }
 
@@ -279,6 +279,7 @@ internal fun ReviewListScreen(
 
                     is UiState.Success -> {
                         val info = uiState.data.reviewInfo
+                        val displayMenuName = uiState.data.menuName ?: menuName
 
                         val loadState = reviewPagingItems.loadState
                         val isInitialLoading = loadState.refresh is LoadState.Loading
@@ -289,7 +290,7 @@ internal fun ReviewListScreen(
                             state = reviewListScrollState,
                         ) {
                             item {
-                                ReviewInfoContent(menuName, info)
+                                ReviewInfoContent(displayMenuName, info)
                             }
 
                             item {
@@ -343,7 +344,7 @@ internal fun ReviewListScreen(
                                             )
                                             Spacer(modifier = Modifier.height(8.dp))
                                             EatSsuButton(
-                                                text = "재시도",
+                                                text = stringResource(R.string.button_retry),
                                                 onClick = { reviewPagingItems.retry() },
                                                 modifier = Modifier.width(100.dp)
                                             )
@@ -429,9 +430,9 @@ internal fun ReviewListScreen(
                                                     .padding(16.dp),
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
-                                                Text("추가 데이터를 불러오지 못했습니다.")
+                                                Text(stringResource(R.string.review_additional_data_load_failed))
                                                 EatSsuButton(
-                                                    text = "재시도",
+                                                    text = stringResource(R.string.button_retry),
                                                     onClick = { reviewPagingItems.retry() },
                                                     modifier = Modifier.width(100.dp)
                                                 )

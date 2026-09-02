@@ -23,12 +23,12 @@ class GetMenuListUseCaseBehaviorSpec : AppBehaviorSpec({
 
         `when`("고정식당 메뉴를 조회하면") {
             val result = listOf(Menu(id = 1, name = "돈까스", price = 5000, rate = 4.0))
-            coEvery { menuRepository.getFixedMenuList(Restaurant.FOOD_COURT) } returns result
+            coEvery { menuRepository.getFixedMenuList(Restaurant.SNACK_CORNER) } returns result
 
             then("menuRepository.getFixedMenuList를 사용한다") {
                 runTest {
-                    useCase(Restaurant.FOOD_COURT, "2025-01-01", Time.LUNCH) shouldBe result
-                    coVerify(exactly = 1) { menuRepository.getFixedMenuList(Restaurant.FOOD_COURT) }
+                    useCase(Restaurant.SNACK_CORNER, "2025-01-01", Time.LUNCH) shouldBe result
+                    coVerify(exactly = 1) { menuRepository.getFixedMenuList(Restaurant.SNACK_CORNER) }
                     coVerify(exactly = 0) { mealRepository.getTodayMenuList(any(), any(), any()) }
                 }
             }

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +37,7 @@ import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.design_system.theme.Black
 import com.eatssu.design_system.theme.EatssuTheme
+import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Secondary
 import com.eatssu.design_system.theme.White
@@ -188,22 +190,46 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(top = 50.dp)
-                    .height(30.dp),
+                    .padding(top = 48.dp)
+                    .width(300.dp)
+                    .height(20.dp),
             ) {
-                Image(
-                    painter = painterResource(R.drawable.seoul_logo_kr),
-                    contentDescription = "KOR Seoul Logo",
-                    modifier = Modifier.weight(1f),
-                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(20.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.seoul_logo_kr),
+                        contentDescription = "KOR Seoul Logo",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .width(89.dp)
+                            .height(17.dp),
+                    )
+                }
                 VerticalDivider(
-                    modifier = Modifier.width(1.dp),
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(20.dp),
+                    color = Gray200,
                 )
-                Image(
-                    painter = painterResource(R.drawable.seoul_logo_en),
-                    contentDescription = "ENG Seoul Logo",
-                    modifier = Modifier.weight(1f),
-                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(20.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.seoul_logo_en),
+                        contentDescription = "ENG Seoul Logo",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .width(145.dp)
+                            .height(17.dp),
+                    )
+                }
             }
         }
     }

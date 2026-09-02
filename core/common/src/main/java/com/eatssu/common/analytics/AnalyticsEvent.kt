@@ -279,6 +279,5 @@ private fun MutableMap<String, Any>.putRestaurant(key: String, restaurant: Resta
 }
 
 private val analyticsExcludedRestaurants = setOf(
-    Restaurant.FOOD_COURT,
     Restaurant.THE_KITCHEN,
 )

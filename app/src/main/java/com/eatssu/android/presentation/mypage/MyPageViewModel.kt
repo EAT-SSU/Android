@@ -11,6 +11,7 @@ import com.eatssu.android.domain.usecase.user.GetUserNickNameUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
+import com.eatssu.common.enums.AppLanguage
 import com.eatssu.common.enums.ToastType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -55,6 +56,7 @@ class MyPageViewModel @Inject constructor(
 
     init {
         observeNotificationStatus()
+        observeAppLanguage()
         fetchMyInfo()
     }
 
@@ -62,6 +64,14 @@ class MyPageViewModel @Inject constructor(
         viewModelScope.launch {
             settingDataStore.dailyNotificationStatus.collectLatest { isOn ->
                 _state.update { it.copy(isAlarmOn = isOn) }
+            }
+        }
+    }
+
+    private fun observeAppLanguage() {
+        viewModelScope.launch {
+            settingDataStore.appLanguage.collectLatest { language ->
+                _state.update { it.copy(selectedLanguage = language) }
             }
         }
     }
@@ -104,7 +114,8 @@ data class MyPageState(
     val nickname: String? = null,
     val platform: String = "KAKAO",
     val isAlarmOn: Boolean = false,
-    val appVersion: String = "0.0.0"
+    val appVersion: String = "0.0.0",
+    val selectedLanguage: AppLanguage = AppLanguage.KOREAN,
 ) {
     val hasNickname: Boolean get() = !nickname.isNullOrBlank()
 }
