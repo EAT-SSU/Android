@@ -1,16 +1,20 @@
 package com.eatssu.android.data.remote.repository
 
+import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.data.remote.dto.response.CategoryMenuListCollection
 import com.eatssu.android.data.remote.dto.response.GetFixedMenuResponse
 import com.eatssu.android.data.remote.dto.response.MenuInformationList
 import com.eatssu.android.data.remote.service.MenuService
 import com.eatssu.android.test.AppBehaviorSpec
+import com.eatssu.common.enums.AppLanguage
 import com.eatssu.common.enums.Restaurant
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -18,7 +22,10 @@ class MenuRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
     given("MenuRepositoryImpl") {
         val menuService = mockk<MenuService>()
-        val repository = MenuRepositoryImpl(menuService)
+        val settingDataStore = mockk<SettingDataStore>()
+        val languageFlow = MutableStateFlow(AppLanguage.KOREAN)
+        every { settingDataStore.appLanguage } returns languageFlow
+        val repository = MenuRepositoryImpl(menuService, settingDataStore)
 
         `when`("고정 메뉴 API가 성공하면") {
             val response = GetFixedMenuResponse(
@@ -36,7 +43,9 @@ class MenuRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     )
                 )
             )
-            coEvery { menuService.getFixMenu(Restaurant.SNACK_CORNER.toString()) } returns ApiResult.Success(response)
+            coEvery {
+                menuService.getFixMenu(Restaurant.SNACK_CORNER.toString(), null)
+            } returns ApiResult.Success(response)
 
             then("도메인 Menu 리스트로 매핑한다") {
                 runTest {
@@ -45,11 +54,35 @@ class MenuRepositoryImplBehaviorSpec : AppBehaviorSpec({
                     result.first().name shouldBe "돈까스"
                 }
             }
+
+            then("영어 설정이면 language=EN을 전달한다") {
+                runTest {
+                    languageFlow.value = AppLanguage.ENGLISH
+                    coEvery {
+                        menuService.getFixMenu(Restaurant.SNACK_CORNER.toString(), "EN")
+                    } returns ApiResult.Success(response)
+
+                    repository.getFixedMenuList(Restaurant.SNACK_CORNER).first().name shouldBe "돈까스"
+                }
+            }
+
+            then("일본어와 베트남어 설정도 임시로 language=EN을 전달한다") {
+                runTest {
+                    listOf(AppLanguage.JAPANESE, AppLanguage.VIETNAMESE).forEach { language ->
+                        languageFlow.value = language
+                        coEvery {
+                            menuService.getFixMenu(Restaurant.SNACK_CORNER.toString(), "EN")
+                        } returns ApiResult.Success(response)
+
+                        repository.getFixedMenuList(Restaurant.SNACK_CORNER).first().name shouldBe "돈까스"
+                    }
+                }
+            }
         }
 
         `when`("고정 메뉴 API가 실패하면") {
             coEvery {
-                menuService.getFixMenu(Restaurant.SNACK_CORNER.toString())
+                menuService.getFixMenu(Restaurant.SNACK_CORNER.toString(), null)
             } returns ApiResult.Failure(500, "err")
 
             then("빈 리스트를 반환한다") {
