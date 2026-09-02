@@ -87,6 +87,7 @@ class MenuRepositoryImplBehaviorSpec : AppBehaviorSpec({
 
             then("빈 리스트를 반환한다") {
                 runTest {
+                    languageFlow.value = AppLanguage.KOREAN
                     repository.getFixedMenuList(Restaurant.SNACK_CORNER) shouldBe emptyList()
                 }
             }
