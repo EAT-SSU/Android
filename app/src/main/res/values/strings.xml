@@ -365,23 +365,23 @@
     <!-- Cafeteria Detail Information -->
     <!-- ========================== -->
     <string name="cafeteria_student_location">학생회관 3층</string>
-    <string name="cafeteria_student_time">08:00~09:00(천원의아침밥)\n11:20~14:00(점심)\n14:00~17:00(공간 개방)</string>
+    <string name="cafeteria_student_time">08:00~09:00(천원의아침밥)\n11:20~14:00(점심)\n16:00~23:00(도서관 대체열람실)</string>
     <string name="cafeteria_student_etc">3개 코너 운영\n뚝배기, 덮밥, 양식\n주말 휴무</string>
 
     <string name="cafeteria_dodam_location">신양관 2층</string>
-    <string name="cafeteria_dodam_time">평일\n11:20~14:00(점심)\n17:00~18:30(저녁)\n\n주말\n11:20~13:30(점심)</string>
+    <string name="cafeteria_dodam_time">평일\n11:20~14:00(점심)\n17:00~18:30(저녁)\n19:30~23:00(도서관 대체열람실)\n\n주말\n11:20~13:30(점심)</string>
     <string name="cafeteria_dodam_etc">2개 코너 운영\n일반식, 웰빙코너</string>
 
     <string name="cafeteria_dormitory_location">레지던스홀 지하 1층</string>
-    <string name="cafeteria_dormitory_time">평일\n11:20~13:50(점심)\n17:00~18:30(저녁)\n\n주말\n11:20~13:30(점심)\n17:00~18:20(저녁)</string>
+    <string name="cafeteria_dormitory_time">평일\n11:00~13:50(점심)\n17:00~18:30(저녁)\n\n주말\n11:20~13:30(점심)\n17:00~18:20(저녁)</string>
     <string name="cafeteria_dormitory_etc">조식 미운영</string>
 
     <string name="cafeteria_faculty_location">전산관 지하 1층</string>
-    <string name="cafeteria_faculty_time">11:30~14:00(점심)\n14:00~17:00(공간개방)</string>
+    <string name="cafeteria_faculty_time">11:20~14:00(점심)</string>
     <string name="cafeteria_faculty_etc">주말 휴무</string>
 
     <string name="cafeteria_snack_corner_location">학생회관 3층</string>
-    <string name="cafeteria_snack_corner_time">11:00~15:30(점심)</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(점심)\n16:00~23:00(도서관 대체열람실)</string>
     <string name="cafeteria_snack_corner_etc">분식류, 옛날도시락, 컵밥 등\n주말 휴무</string>
 
 

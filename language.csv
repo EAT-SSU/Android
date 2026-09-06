@@ -209,13 +209,13 @@ category_school_partnership_pub,주점,Pub,居酒屋,Quán nhậu
 cafeteria_student_location,학생회관 3층,"Student Union Building, 3F",学生会館 3階,"Tòa Student Union, tầng 3"
 cafeteria_student_time,"08:00~09:00(천원의아침밥)
 11:20~14:00(점심)
-14:00~17:00(공간 개방)","08:00~09:00(1,000-Won Breakfast)
+16:00~23:00(도서관 대체열람실)","08:00~09:00(1,000-Won Breakfast)
 11:20~14:00(Lunch)
-14:00~17:00(Open Space Hours)","08:00~09:00(千ウォン朝食)
+16:00~23:00(Temporary Library Study Room)","08:00~09:00(千ウォン朝食)
 11:20~14:00(昼食)
-14:00~17:00(スペース開放)","08:00~09:00(Bữa sáng 1.000 won)
+16:00~23:00(図書館臨時自習室)","08:00~09:00(Bữa sáng 1.000 won)
 11:20~14:00(Bữa trưa)
-14:00~17:00(Giờ mở không gian)"
+16:00~23:00(Phòng tự học tạm thời của thư viện)"
 cafeteria_student_etc,"3개 코너 운영
 뚝배기, 덮밥, 양식
 주말 휴무","3 Food Stations
@@ -229,21 +229,25 @@ cafeteria_dodam_location,신양관 2층,"Shinyang Hall, 2F",信陽館 2階,"Tòa
 cafeteria_dodam_time,"평일
 11:20~14:00(점심)
 17:00~18:30(저녁)
+19:30~23:00(도서관 대체열람실)
 
 주말
 11:20~13:30(점심)","Weekdays
 11:20~14:00(Lunch)
 17:00~18:30(Dinner)
+19:30~23:00(Temporary Library Study Room)
 
 Weekends
 11:20~13:30(Lunch)","平日
 11:20~14:00(昼食)
 17:00~18:30(夕食)
+19:30~23:00(図書館臨時自習室)
 
 週末
 11:20~13:30(昼食)","Ngày thường
 11:20~14:00(Bữa trưa)
 17:00~18:30(Bữa tối)
+19:30~23:00(Phòng tự học tạm thời của thư viện)
 
 Cuối tuần
 11:20~13:30(Bữa trưa)"
@@ -254,25 +258,25 @@ Standard Meals, Healthy Meals","2つのコーナーを運営
 Suất ăn thường, suất ăn lành mạnh"
 cafeteria_dormitory_location,레지던스홀 지하 1층,"Residence Hall, B1",レジデンスホール 地下1階,"Residence Hall, tầng B1"
 cafeteria_dormitory_time,"평일
-11:20~13:50(점심)
+11:00~13:50(점심)
 17:00~18:30(저녁)
 
 주말
 11:20~13:30(점심)
 17:00~18:20(저녁)","Weekdays
-11:20~13:50(Lunch)
+11:00~13:50(Lunch)
 17:00~18:30(Dinner)
 
 Weekends
 11:20~13:30(Lunch)
 17:00~18:20(Dinner)","平日
-11:20~13:50(昼食)
+11:00~13:50(昼食)
 17:00~18:30(夕食)
 
 週末
 11:20~13:30(昼食)
 17:00~18:20(夕食)","Ngày thường
-11:20~13:50(Bữa trưa)
+11:00~13:50(Bữa trưa)
 17:00~18:30(Bữa tối)
 
 Cuối tuần
@@ -280,14 +284,14 @@ Cuối tuần
 17:00~18:20(Bữa tối)"
 cafeteria_dormitory_etc,조식 미운영,Breakfast Not Available,朝食の提供なし,Không phục vụ bữa sáng
 cafeteria_faculty_location,전산관 지하 1층,"Jeonsan Hall, B1",電算館 地下1階,"Tòa Jeonsan, tầng B1"
-cafeteria_faculty_time,"11:30~14:00(점심)
-14:00~17:00(공간개방)","11:30~14:00(Lunch)
-14:00~17:00(Open Space Hours)","11:30~14:00(昼食)
-14:00~17:00(スペース開放)","11:30~14:00(Bữa trưa)
-14:00~17:00(Giờ mở không gian)"
+cafeteria_faculty_time,11:20~14:00(점심),11:30~14:00(Lunch),11:30~14:00(昼食),11:30~14:00(Bữa trưa)
 cafeteria_faculty_etc,주말 휴무,Closed on weekends,週末休業,Đóng cửa cuối tuần
 cafeteria_snack_corner_location,학생회관 3층,"Student Union Building, 3F",学生会館 3階,"Tòa Student Union, tầng 3"
-cafeteria_snack_corner_time,11:00~15:30(점심),11:00~15:30(Lunch),11:00~15:30(昼食),11:00~15:30(Bữa trưa)
+cafeteria_snack_corner_time,"11:00~15:30(점심)
+16:00~23:00(도서관 대체열람실)","11:00~15:30(Lunch)
+16:00~23:00(Temporary Library Study Room)","11:00~15:30(昼食)
+16:00~23:00(図書館臨時自習室)","11:00~15:30(Bữa trưa)
+16:00~23:00(Phòng tự học tạm thời của thư viện)"
 cafeteria_snack_corner_etc,"분식류, 옛날도시락, 컵밥 등
 주말 휴무","Bunsik(Korean Snacks), Old-school Lunch Box, Cup Rice, etc.
 Closed on weekends","粉食類、昔ながらのお弁当、カップご飯など

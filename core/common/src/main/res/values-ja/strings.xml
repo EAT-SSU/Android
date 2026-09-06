@@ -16,23 +16,23 @@
     <!-- Cafeteria Detail Information -->
     <!-- ========================== -->
     <string name="cafeteria_student_location">学生会館 3階</string>
-    <string name="cafeteria_student_time">08:00~09:00(千ウォン朝食)\n11:20~14:00(昼食)\n14:00~17:00(スペース開放)</string>
+    <string name="cafeteria_student_time">08:00~09:00(千ウォン朝食)\n11:20~14:00(昼食)\n16:00~23:00(図書館臨時自習室)</string>
     <string name="cafeteria_student_etc">3つのコーナーを運営\nトゥッペギ料理、丼もの、洋食\n週末休業</string>
 
     <string name="cafeteria_dodam_location">信陽館 2階</string>
-    <string name="cafeteria_dodam_time">平日\n11:20~14:00(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)</string>
+    <string name="cafeteria_dodam_time">平日\n11:20~14:00(昼食)\n17:00~18:30(夕食)\n19:30~23:00(図書館臨時自習室)\n\n週末\n11:20~13:30(昼食)</string>
     <string name="cafeteria_dodam_etc">2つのコーナーを運営\n一般食、ヘルシーメニュー</string>
 
     <string name="cafeteria_dormitory_location">レジデンスホール 地下1階</string>
-    <string name="cafeteria_dormitory_time">平日\n11:20~13:50(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)\n17:00~18:20(夕食)</string>
+    <string name="cafeteria_dormitory_time">平日\n11:00~13:50(昼食)\n17:00~18:30(夕食)\n\n週末\n11:20~13:30(昼食)\n17:00~18:20(夕食)</string>
     <string name="cafeteria_dormitory_etc">朝食の提供なし</string>
 
     <string name="cafeteria_faculty_location">電算館 地下1階</string>
-    <string name="cafeteria_faculty_time">11:30~14:00(昼食)\n14:00~17:00(スペース開放)</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(昼食)</string>
     <string name="cafeteria_faculty_etc">週末休業</string>
 
     <string name="cafeteria_snack_corner_location">学生会館 3階</string>
-    <string name="cafeteria_snack_corner_time">11:00~15:30(昼食)</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(昼食)\n16:00~23:00(図書館臨時自習室)</string>
     <string name="cafeteria_snack_corner_etc">粉食類、昔ながらのお弁当、カップご飯など\n週末休業</string>
 
 
