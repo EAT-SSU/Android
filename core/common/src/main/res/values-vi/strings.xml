@@ -16,23 +16,23 @@
     <!-- Cafeteria Detail Information -->
     <!-- ========================== -->
     <string name="cafeteria_student_location">Tòa Student Union, tầng 3</string>
-    <string name="cafeteria_student_time">08:00~09:00(Bữa sáng 1.000 won)\n11:20~14:00(Bữa trưa)\n14:00~17:00(Giờ mở không gian)</string>
+    <string name="cafeteria_student_time">08:00~09:00(Bữa sáng 1.000 won)\n11:20~14:00(Bữa trưa)\n16:00~23:00(Phòng tự học tạm thời của thư viện)</string>
     <string name="cafeteria_student_etc">3 quầy phục vụ\nMón kiểu ttukbaegi, cơm tô, món Âu\nĐóng cửa cuối tuần</string>
 
     <string name="cafeteria_dodam_location">Tòa Shinyang, tầng 2</string>
-    <string name="cafeteria_dodam_time">Ngày thường\n11:20~14:00(Bữa trưa)\n17:00~18:30(Bữa tối)\n\nCuối tuần\n11:20~13:30(Bữa trưa)</string>
+    <string name="cafeteria_dodam_time">Ngày thường\n11:20~14:00(Bữa trưa)\n17:00~18:30(Bữa tối)\n19:30~23:00(Phòng tự học tạm thời của thư viện)\n\nCuối tuần\n11:20~13:30(Bữa trưa)</string>
     <string name="cafeteria_dodam_etc">2 quầy phục vụ\nSuất ăn thường, suất ăn lành mạnh</string>
 
     <string name="cafeteria_dormitory_location">Residence Hall, tầng B1</string>
-    <string name="cafeteria_dormitory_time">Ngày thường\n11:20~13:50(Bữa trưa)\n17:00~18:30(Bữa tối)\n\nCuối tuần\n11:20~13:30(Bữa trưa)\n17:00~18:20(Bữa tối)</string>
+    <string name="cafeteria_dormitory_time">Ngày thường\n11:00~13:50(Bữa trưa)\n17:00~18:30(Bữa tối)\n\nCuối tuần\n11:20~13:30(Bữa trưa)\n17:00~18:20(Bữa tối)</string>
     <string name="cafeteria_dormitory_etc">Không phục vụ bữa sáng</string>
 
     <string name="cafeteria_faculty_location">Tòa Jeonsan, tầng B1</string>
-    <string name="cafeteria_faculty_time">11:30~14:00(Bữa trưa)\n14:00~17:00(Giờ mở không gian)</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(Bữa trưa)</string>
     <string name="cafeteria_faculty_etc">Đóng cửa cuối tuần</string>
 
     <string name="cafeteria_snack_corner_location">Tòa Student Union, tầng 3</string>
-    <string name="cafeteria_snack_corner_time">11:00~15:30(Bữa trưa)</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(Bữa trưa)\n16:00~23:00(Phòng tự học tạm thời của thư viện)</string>
     <string name="cafeteria_snack_corner_etc">Bunsik(đồ ăn vặt Hàn Quốc), cơm hộp kiểu xưa, cơm ly, v.v.\nĐóng cửa cuối tuần</string>
 
 
