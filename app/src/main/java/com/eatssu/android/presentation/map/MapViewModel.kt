@@ -22,8 +22,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.Clock
+import java.time.LocalDate
 import javax.inject.Inject
 
 
@@ -42,6 +46,9 @@ data class MapState(
     val selectedCategory: PartnershipCategory = PartnershipCategory.ALL,
     val filterChangeResult: FilterChangeResult? = null,
 ) {
+    val hasFestivalPartnerships: Boolean
+        get() = partnerships.any { it.hasFestivalPartnership }
+
     val visiblePartnerships: List<Partnership>
         get() = selectedCategory.storeType?.let { storeType ->
             partnerships.filter { it.restaurantType == storeType }
@@ -59,6 +66,7 @@ class MapViewModel @Inject constructor(
     private val getPartnershipDetailUseCase: GetPartnershipDetailUseCase,
     private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
     private val analyticsTracker: AnalyticsTracker,
+    private val clock: Clock = Clock.systemDefaultZone(),
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<MapState>> = MutableStateFlow(UiState.Init)
@@ -153,7 +161,27 @@ class MapViewModel @Inject constructor(
             
             _uiState.value = UiState.Loading
 
-            val partnerships = partnershipRepository.getUserCollegePartnerships()
+            val today = LocalDate.now(clock)
+            val partnerships = coroutineScope {
+                val userPartnerships = async {
+                    partnershipRepository.getUserCollegePartnerships()
+                }
+                val festivalPartnerships = async {
+                    if (isFestivalPartnershipPeriod(today)) {
+                        activeFestivalPartnerships(
+                            partnerships = partnershipRepository.getAllPartnerships(),
+                            date = today,
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+
+                mergePartnerships(
+                    userPartnerships = userPartnerships.await(),
+                    festivalPartnerships = festivalPartnerships.await(),
+                )
+            }
             _uiState.value = UiState.Success(
                 currentData.copy(
                     partnerships = partnerships,
