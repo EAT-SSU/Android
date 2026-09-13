@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -50,7 +49,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,6 +71,7 @@ import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipCategory
 import com.eatssu.android.presentation.map.component.PartnershipCategoryFilterRow
+import com.eatssu.android.presentation.map.component.PartnershipMarkerIcon
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
@@ -81,7 +80,6 @@ import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.ScreenId
-import com.eatssu.common.enums.StoreType
 import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
@@ -530,17 +528,7 @@ internal fun MapScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = spacedBy(3.dp),
                         ) {
-                            val iconRes = when (partnership.restaurantType) {
-                                StoreType.CAFE -> R.drawable.ic_map_marker_cafe
-                                StoreType.PUB -> R.drawable.ic_map_marker_pub
-                                else -> R.drawable.ic_map_marker_restaurant
-                            }
-
-                            Image(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                            )
+                            PartnershipMarkerIcon(partnership = partnership)
 
                             Text(
                                 text = partnership.storeName,
