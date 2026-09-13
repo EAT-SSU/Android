@@ -32,6 +32,9 @@
     <string name="title_good_price_map">Good Price Stores Map</string>
     <string name="title_force_update">Force Update</string>
     <string name="tab_school_partnership">Campus Partners</string>
+    <string name="festival_partnership_help_title">See 2026 Festival partner stores!</string>
+    <string name="festival_partnership_help_warning">Cannot combine with regular benefits.</string>
+    <string name="festival_partnership_help_content_description">Festival partnership information</string>
     <string name="tab_good_price">Good Price</string>
 
     <!-- ========================== -->

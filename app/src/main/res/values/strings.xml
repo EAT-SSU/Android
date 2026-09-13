@@ -29,6 +29,9 @@
     <string name="title_good_price_map">착한가격업소 지도</string>
     <string name="title_force_update">강제 업데이트</string>
     <string name="tab_school_partnership">학교 제휴</string>
+    <string name="festival_partnership_help_title">2026 동연제 제휴 매장을 확인해보세요!</string>
+    <string name="festival_partnership_help_warning">기존 제휴와 중복 적용되지 않아요.</string>
+    <string name="festival_partnership_help_content_description">축제 제휴 안내</string>
     <string name="tab_good_price">착한 가격</string>
 
     <!-- ========================== -->

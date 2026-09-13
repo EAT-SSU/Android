@@ -40,6 +40,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -68,6 +69,7 @@ import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.goodprice.GoodPriceMapRoute
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
+import com.eatssu.android.presentation.map.component.FestivalPartnershipHelp
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
 import com.eatssu.android.presentation.map.component.PartnershipCategory
 import com.eatssu.android.presentation.map.component.PartnershipCategoryFilterRow
@@ -421,6 +423,11 @@ internal fun MapScreen(
     selectedCategory: PartnershipCategory,
 ) {
     val analyticsTracker = LocalAnalyticsTracker.current
+    var showFestivalHelp by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(mapState.hasFestivalPartnerships) {
+        if (!mapState.hasFestivalPartnerships) showFestivalHelp = false
+    }
 
     // 학과 정보가 없을 때 보여줄 BottomSheet
     if (departmentSheetState.isVisible) {
@@ -568,6 +575,19 @@ internal fun MapScreen(
             },
             modifier = Modifier.padding(top = 12.dp),
         )
+
+        if (mapState.hasFestivalPartnerships) {
+            FestivalPartnershipHelp(
+                isMessageVisible = showFestivalHelp,
+                onClick = { showFestivalHelp = !showFestivalHelp },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = 24.dp,
+                        bottom = dimensionResource(R.dimen.bottom_nav_height) + 12.dp,
+                    ),
+            )
+        }
     }
 }
 
