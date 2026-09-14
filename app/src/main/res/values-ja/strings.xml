@@ -32,6 +32,9 @@
     <string name="title_good_price_map">お手頃価格のお店マップ</string>
     <string name="title_force_update">強制アップデート</string>
     <string name="tab_school_partnership">学校提携</string>
+    <string name="festival_partnership_help_title">2026年サークル連合祭の提携店舗をチェック！</string>
+    <string name="festival_partnership_help_warning">既存の提携特典とは併用できません。</string>
+    <string name="festival_partnership_help_content_description">学園祭提携情報</string>
     <string name="tab_good_price">お手頃価格</string>
 
     <!-- ========================== -->
