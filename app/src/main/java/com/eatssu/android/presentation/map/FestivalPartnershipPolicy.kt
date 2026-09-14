@@ -4,7 +4,7 @@ import com.eatssu.android.domain.model.Partnership
 import com.eatssu.common.enums.PeriodType
 import java.time.LocalDate
 
-private val FESTIVAL_START_DATE: LocalDate = LocalDate.of(2026, 9, 15)
+private val FESTIVAL_START_DATE: LocalDate = LocalDate.of(2026, 9, 14)
 private val FESTIVAL_END_DATE: LocalDate = LocalDate.of(2026, 9, 16)
 
 internal fun isFestivalPartnershipPeriod(date: LocalDate): Boolean =
@@ -18,7 +18,7 @@ internal fun activeFestivalPartnerships(
 
     return partnerships.mapNotNull { partnership ->
         val activeFestivalInfos = partnership.partnershipInfos.filter { info ->
-            info.periodType == PeriodType.FESTIVAL && info.isActiveOn(date)
+            info.periodType == PeriodType.FESTIVAL && info.isVisibleOn(date)
         }
 
         partnership
@@ -53,10 +53,13 @@ internal fun mergePartnerships(
 internal val Partnership.hasFestivalPartnership: Boolean
     get() = partnershipInfos.any { it.periodType == PeriodType.FESTIVAL }
 
-private fun Partnership.PartnershipInfo.isActiveOn(date: LocalDate): Boolean {
+private fun Partnership.PartnershipInfo.isVisibleOn(date: LocalDate): Boolean {
     val start = startDate.toLocalDateOrNull() ?: return false
     val end = endDate.toLocalDateOrNull() ?: return false
-    return !date.isBefore(start) && !date.isAfter(end)
+    if (start.isAfter(FESTIVAL_END_DATE) || end.isBefore(FESTIVAL_START_DATE)) return false
+
+    val visibleStart = minOf(start, FESTIVAL_START_DATE)
+    return !date.isBefore(visibleStart) && !date.isAfter(end)
 }
 
 private fun String.toLocalDateOrNull(): LocalDate? = runCatching(LocalDate::parse).getOrNull()
