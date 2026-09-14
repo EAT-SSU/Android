@@ -33,11 +33,11 @@ class FestivalPartnershipPolicySpec : AppBehaviorSpec({
             infos = listOf(normalInfo, festivalInfo),
         )
 
-        `when`("행사 시작 전이거나 종료 후이면") {
+        `when`("사전 노출 시작 전이거나 축제 종료 후이면") {
             then("축제 제휴를 노출하지 않는다") {
                 activeFestivalPartnerships(
                     partnerships = listOf(source),
-                    date = LocalDate.of(2026, 9, 14),
+                    date = LocalDate.of(2026, 9, 13),
                 ) shouldBe emptyList()
                 activeFestivalPartnerships(
                     partnerships = listOf(source),
@@ -46,9 +46,10 @@ class FestivalPartnershipPolicySpec : AppBehaviorSpec({
             }
         }
 
-        `when`("9월 15일 또는 16일이면") {
+        `when`("9월 14일부터 16일까지이면") {
             then("FESTIVAL 타입인 제휴만 노출한다") {
                 listOf(
+                    LocalDate.of(2026, 9, 14),
                     LocalDate.of(2026, 9, 15),
                     LocalDate.of(2026, 9, 16),
                 ).forEach { date ->
