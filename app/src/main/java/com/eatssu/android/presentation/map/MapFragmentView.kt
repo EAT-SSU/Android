@@ -508,12 +508,12 @@ internal fun MapScreen(
 
             Surface(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                    .align(Alignment.TopEnd)
                     .padding(
                         end = 18.dp,
-                        bottom = dimensionResource(R.dimen.bottom_nav_height) + 18.dp,
+                        top = 15.dp,
                     )
-                    .size(48.dp),
+                    .size(36.dp),
                 shape = CircleShape,
                 color = Color.White,
                 shadowElevation = 4.dp,
@@ -521,7 +521,7 @@ internal fun MapScreen(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Image(
-                        painter = painterResource(R.drawable.ic_like_selected),
+                        painter = painterResource(R.drawable.ic_like_line),
                         contentDescription = stringResource(R.string.favorite_open),
                         modifier = Modifier.size(24.dp),
                     )
