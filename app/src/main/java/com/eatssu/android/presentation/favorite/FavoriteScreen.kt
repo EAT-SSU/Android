@@ -503,7 +503,7 @@ private fun FavoriteTabs(
             ) {
                 Text(
                     text = label,
-                    style = EatssuTheme.typography.h2,
+                    style = EatssuTheme.typography.subtitle2,
                     color = if (selectedPage == page) Primary else Gray400,
                     modifier = Modifier.padding(vertical = 18.dp),
                 )
@@ -581,7 +581,7 @@ private fun FavoriteFilters(
             val selected = selectedStoreType == type
             Text(
                 text = label,
-                style = EatssuTheme.typography.body3,
+                style = EatssuTheme.typography.body2,
                 fontWeight = if (selected) FontWeight.W500 else FontWeight.W400,
                 color = if (selected) Primary else Gray400,
                 modifier = Modifier
@@ -720,7 +720,7 @@ private fun FavoritePartnershipRow(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.storeName,
-                    style = EatssuTheme.typography.h2,
+                    style = EatssuTheme.typography.subtitle1,
                     color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -728,7 +728,7 @@ private fun FavoritePartnershipRow(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = item.storeType.value,
-                    style = EatssuTheme.typography.body3,
+                    style = EatssuTheme.typography.caption2,
                     color = Gray600,
                 )
             }
