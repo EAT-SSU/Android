@@ -2,11 +2,18 @@ package com.eatssu.android.presentation.favorite
 
 import com.eatssu.android.data.local.FavoritePartnershipDataStore
 import com.eatssu.android.domain.repository.PartnershipRepository
+import com.eatssu.android.domain.repository.MenuFavoriteRepository
+import com.eatssu.android.data.model.ApiResult
+import com.eatssu.android.domain.model.FavoriteMenu
+import com.eatssu.android.domain.model.MenuFavoriteSearchResult
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.samplePartnership
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.StoreType
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.mockk.coVerify
 import io.mockk.coEvery
 import io.mockk.mockk
 
@@ -15,6 +22,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
     given("제휴 찜 화면") {
         val repository = mockk<PartnershipRepository>()
         val dataStore = mockk<FavoritePartnershipDataStore>()
+        val menuRepository = mockk<MenuFavoriteRepository>()
         val restaurant = samplePartnership(storeName = "식당", type = StoreType.RESTAURANT)
         val cafe = samplePartnership(
             storeName = "카페",
@@ -24,8 +32,9 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
 
         coEvery { repository.getUserFavoritePartnerships() } returns listOf(restaurant, cafe)
         coEvery { dataStore.reconcile(listOf(1, 2)) } returns listOf(2, 1)
+        coEvery { menuRepository.getFavoriteMenus() } returns ApiResult.Success(emptyList())
 
-        val viewModel = FavoriteViewModel(repository, dataStore)
+        val viewModel = FavoriteViewModel(repository, dataStore, menuRepository)
 
         `when`("찜 목록을 불러오면") {
             viewModel.loadFavorites()
@@ -60,6 +69,74 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
             then("해당 항목을 목록에서 제거한다") {
                 val state = (viewModel.uiState.value as UiState.Success).data
                 state.partnerships.map { it.partnershipId } shouldBe listOf(2)
+            }
+        }
+    }
+
+    given("메뉴 찜 화면") {
+        val partnershipRepository = mockk<PartnershipRepository>()
+        val dataStore = mockk<FavoritePartnershipDataStore>()
+        val menuRepository = mockk<MenuFavoriteRepository>()
+        val favoriteMenu = FavoriteMenu(
+            menuId = 10L,
+            menuName = "김치찌개",
+            restaurant = Restaurant.HAKSIK,
+            isDiscontinued = false,
+        )
+        val searchResult = MenuFavoriteSearchResult(
+            menuId = 20L,
+            menuName = "김치닭볶음탕",
+            restaurant = Restaurant.DODAM,
+            isFavorite = false,
+        )
+
+        coEvery { partnershipRepository.getUserFavoritePartnerships() } returns emptyList()
+        coEvery { dataStore.reconcile(emptyList()) } returns emptyList()
+        coEvery { menuRepository.getFavoriteMenus() } returns ApiResult.Success(listOf(favoriteMenu))
+        coEvery { menuRepository.searchMenus("김치") } returns ApiResult.Success(listOf(searchResult))
+        coEvery { menuRepository.addFavoriteMenu(20L) } returns ApiResult.Success(Unit)
+
+        val viewModel = FavoriteViewModel(partnershipRepository, dataStore, menuRepository)
+
+        `when`("찜 목록을 불러오면") {
+            viewModel.loadFavorites()
+
+            then("서버가 내려준 최신순 메뉴를 표시한다") {
+                val state = (viewModel.uiState.value as UiState.Success).data
+                state.favoriteMenus shouldBe listOf(favoriteMenu)
+            }
+        }
+
+        `when`("공백을 제외한 검색어가 두 글자 미만이면") {
+            viewModel.loadFavorites()
+            viewModel.onMenuSearchQueryChanged(" 김 ")
+
+            then("서버 검색을 호출하지 않는다") {
+                coVerify(exactly = 0) { menuRepository.searchMenus(any()) }
+            }
+        }
+
+        `when`("두 글자 이상 메뉴를 검색하면") {
+            viewModel.loadFavorites()
+            viewModel.onMenuSearchQueryChanged(" 김치 ")
+
+            then("앞뒤 공백을 제거한 결과를 식당 정보와 함께 유지한다") {
+                val state = (viewModel.uiState.value as UiState.Success).data
+                state.menuSearchResults shouldBe listOf(searchResult)
+                state.menuSearchResults.first().restaurant shouldBe Restaurant.DODAM
+            }
+        }
+
+        `when`("검색 결과를 찜하면") {
+            viewModel.loadFavorites()
+            viewModel.onMenuSearchQueryChanged("김치")
+            viewModel.toggleMenuFavorite(searchResult)
+
+            then("찜 목록의 맨 앞에 추가하고 검색 결과도 갱신한다") {
+                val state = (viewModel.uiState.value as UiState.Success).data
+                state.favoriteMenus shouldHaveSize 2
+                state.favoriteMenus.first().menuId shouldBe 20L
+                state.menuSearchResults.first().isFavorite shouldBe true
             }
         }
     }

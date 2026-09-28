@@ -41,6 +41,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,8 +67,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
+import com.eatssu.android.domain.model.FavoriteMenu
+import com.eatssu.android.domain.model.MenuFavoriteSearchResult
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.map.iconRes
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
@@ -90,6 +94,7 @@ import com.eatssu.design_system.theme.Secondary
 import com.eatssu.design_system.theme.White
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -103,6 +108,15 @@ fun FavoriteRoute(
     onPartnershipClick: (PartnershipRestaurant) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var menuSnackbarEvent by remember { mutableStateOf<FavoriteMenuSnackbarEvent?>(null) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.menuSnackbarEvents.collectLatest { event ->
+            menuSnackbarEvent = event
+            delay(3500)
+            menuSnackbarEvent = null
+        }
+    }
 
     FavoriteScreen(
         uiState = uiState,
@@ -112,6 +126,10 @@ fun FavoriteRoute(
         onRemoveFavorite = viewModel::removeFavorite,
         onRemoveFavorites = viewModel::removeFavorites,
         onRestoreFavorites = viewModel::restoreFavorites,
+        onMenuSearchQueryChanged = viewModel::onMenuSearchQueryChanged,
+        onSearchFavoriteClick = viewModel::toggleMenuFavorite,
+        onFavoriteMenuClick = viewModel::removeFavoriteMenu,
+        menuSnackbarEvent = menuSnackbarEvent,
     )
 }
 
@@ -125,9 +143,13 @@ internal fun FavoriteScreen(
     onRemoveFavorite: (Int) -> Unit = {},
     onRemoveFavorites: (Set<Int>) -> Unit = {},
     onRestoreFavorites: (List<FavoritePartnershipItem>) -> Unit = {},
+    onMenuSearchQueryChanged: (String) -> Unit = {},
+    onSearchFavoriteClick: (MenuFavoriteSearchResult) -> Unit = {},
+    onFavoriteMenuClick: (FavoriteMenu) -> Unit = {},
+    menuSnackbarEvent: FavoriteMenuSnackbarEvent? = null,
 ) {
     val pagerState = rememberPagerState(
-        initialPage = PARTNERSHIP_PAGE,
+        initialPage = MENU_PAGE,
         pageCount = { 2 },
     )
     val scope = rememberCoroutineScope()
@@ -165,22 +187,24 @@ internal fun FavoriteScreen(
                         textAlign = TextAlign.Center,
                     )
 
-                    if (isEditMode) {
-                        IconButton(
-                            onClick = {
+                    IconButton(
+                        onClick = {
+                            if (isEditMode) {
                                 isEditMode = false
                                 selectedPartnershipIds = emptySet()
-                            },
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .padding(start = 12.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_arrow_left),
-                                contentDescription = stringResource(R.string.nav_back),
-                                tint = Gray500,
-                            )
-                        }
+                            } else {
+                                onBackToMap()
+                            }
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 12.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_left),
+                            contentDescription = stringResource(R.string.nav_back),
+                            tint = Gray500,
+                        )
                     }
                 }
             }
@@ -266,7 +290,12 @@ internal fun FavoriteScreen(
                                 },
                             )
                         } else {
-                            Spacer(modifier = Modifier.fillMaxSize())
+                            FavoriteMenuContent(
+                                uiState = uiState,
+                                onSearchQueryChanged = onMenuSearchQueryChanged,
+                                onSearchFavoriteClick = onSearchFavoriteClick,
+                                onFavoriteMenuClick = onFavoriteMenuClick,
+                            )
                         }
                     }
                 }
@@ -291,6 +320,28 @@ internal fun FavoriteScreen(
                     },
                     type = EatSsuSnackbarType.Success,
                 )
+            }
+
+            AnimatedVisibility(
+                visible = menuSnackbarEvent != null,
+                enter = fadeIn() + slideInVertically { it / 2 },
+                exit = fadeOut() + slideOutVertically { it / 2 },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = 8.dp)
+                    .padding(bottom = 6.dp),
+            ) {
+                menuSnackbarEvent?.let { event ->
+                    EatSsuSnackbar(
+                        message = stringResource(event.messageRes),
+                        modifier = Modifier.fillMaxWidth(),
+                        type = if (event.isError) {
+                            EatSsuSnackbarType.Danger
+                        } else {
+                            EatSsuSnackbarType.Success
+                        },
+                    )
+                }
             }
         }
     }
@@ -533,9 +584,9 @@ private fun FavoriteTabs(
             ) {
                 Text(
                     text = label,
-                    style = EatssuTheme.typography.h2,
+                    style = EatssuTheme.typography.subtitle2.copy(lineHeight = 24.sp),
                     color = if (selectedPage == page) Primary else Gray400,
-                    modifier = Modifier.padding(vertical = 18.dp),
+                    modifier = Modifier.padding(vertical = 8.5.dp),
                 )
                 Box(
                     modifier = Modifier
