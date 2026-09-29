@@ -142,6 +142,23 @@ private fun MenuFavoriteSearchField(
                     }
                     innerTextField()
                 }
+                if (query.isNotEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clickable { onQueryChanged("") },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_close),
+                            contentDescription = stringResource(
+                                R.string.favorite_menu_clear_search_content_description,
+                            ),
+                            modifier = Modifier.size(18.dp),
+                            tint = Gray400,
+                        )
+                    }
+                }
             }
         },
     )
