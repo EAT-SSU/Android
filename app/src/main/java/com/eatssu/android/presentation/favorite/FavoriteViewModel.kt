@@ -49,6 +49,7 @@ data class FavoriteState(
     val partnerships: List<FavoritePartnershipItem> = emptyList(),
     val selectedStoreType: StoreType? = null,
     val favoriteMenus: List<FavoriteMenu> = emptyList(),
+    val unfavoritedMenuIds: Set<Long> = emptySet(),
     val menuSearchResults: List<MenuFavoriteSearchResult> = emptyList(),
     val menuSearchQuery: String = "",
     val favoriteMenuLoadState: MenuFavoriteLoadState = MenuFavoriteLoadState.Idle,
@@ -88,6 +89,7 @@ class FavoriteViewModel @Inject constructor(
         _menuSnackbarEvents.asSharedFlow()
 
     private var menuSearchJob: Job? = null
+    private val pendingMenuActions = mutableSetOf<Long>()
 
     fun loadFavorites() {
         viewModelScope.launch {
@@ -113,6 +115,7 @@ class FavoriteViewModel @Inject constructor(
                         previous.copy(
                             partnerships = partnerships,
                             favoriteMenus = menuResult.data,
+                            unfavoritedMenuIds = emptySet(),
                             favoriteMenuLoadState = MenuFavoriteLoadState.Success,
                         ),
                     )
@@ -123,6 +126,7 @@ class FavoriteViewModel @Inject constructor(
                         previous.copy(
                             partnerships = partnerships,
                             favoriteMenus = emptyList(),
+                            unfavoritedMenuIds = emptySet(),
                             favoriteMenuLoadState = MenuFavoriteLoadState.Error,
                         ),
                     )
@@ -176,75 +180,106 @@ class FavoriteViewModel @Inject constructor(
     }
 
     fun toggleMenuFavorite(item: MenuFavoriteSearchResult) {
+        if (!pendingMenuActions.add(item.menuId)) return
         viewModelScope.launch {
-            val result = if (item.isFavorite) {
-                menuFavoriteRepository.removeFavoriteMenu(item.menuId)
-            } else {
-                menuFavoriteRepository.addFavoriteMenu(item.menuId)
-            }
-
-            if (result is ApiResult.Success) {
-                updateState { state ->
-                    val updatedResults = state.menuSearchResults.map { resultItem ->
-                        if (resultItem.menuId == item.menuId) {
-                            resultItem.copy(isFavorite = !item.isFavorite)
-                        } else {
-                            resultItem
-                        }
-                    }
-                    val updatedFavorites = if (item.isFavorite) {
-                        state.favoriteMenus.filterNot { it.menuId == item.menuId }
-                    } else {
-                        listOf(
-                            FavoriteMenu(
-                                menuId = item.menuId,
-                                menuName = item.menuName,
-                                restaurant = item.restaurant,
-                                isDiscontinued = false,
-                            ),
-                        ) + state.favoriteMenus.filterNot { it.menuId == item.menuId }
-                    }
-                    state.copy(
-                        menuSearchResults = updatedResults,
-                        favoriteMenus = updatedFavorites,
-                    )
+            try {
+                val result = if (item.isFavorite) {
+                    menuFavoriteRepository.removeFavoriteMenu(item.menuId)
+                } else {
+                    menuFavoriteRepository.addFavoriteMenu(item.menuId)
                 }
-                showMenuSnackbar(
-                    messageRes = if (item.isFavorite) {
-                        R.string.favorite_menu_deleted_snackbar
-                    } else {
-                        R.string.favorite_menu_added_snackbar
-                    },
-                    isError = false,
-                )
-            } else {
-                showMenuSnackbar(R.string.favorite_menu_action_error, isError = true)
+
+                if (result is ApiResult.Success) {
+                    updateState { state ->
+                        val updatedResults = state.menuSearchResults.map { resultItem ->
+                            if (resultItem.menuId == item.menuId) {
+                                resultItem.copy(isFavorite = !item.isFavorite)
+                            } else {
+                                resultItem
+                            }
+                        }
+                        val updatedFavorites = if (
+                            item.isFavorite || state.favoriteMenus.any { it.menuId == item.menuId }
+                        ) {
+                            state.favoriteMenus
+                        } else {
+                            listOf(
+                                FavoriteMenu(
+                                    menuId = item.menuId,
+                                    menuName = item.menuName,
+                                    restaurant = item.restaurant,
+                                    isDiscontinued = false,
+                                ),
+                            ) + state.favoriteMenus
+                        }
+                        state.copy(
+                            menuSearchResults = updatedResults,
+                            favoriteMenus = updatedFavorites,
+                            unfavoritedMenuIds = if (item.isFavorite) {
+                                state.unfavoritedMenuIds + item.menuId
+                            } else {
+                                state.unfavoritedMenuIds - item.menuId
+                            },
+                        )
+                    }
+                    showMenuSnackbar(
+                        messageRes = if (item.isFavorite) {
+                            R.string.favorite_menu_deleted_snackbar
+                        } else {
+                            R.string.favorite_menu_added_snackbar
+                        },
+                        isError = false,
+                    )
+                } else {
+                    showMenuSnackbar(R.string.favorite_menu_action_error, isError = true)
+                }
+            } finally {
+                pendingMenuActions.remove(item.menuId)
             }
         }
     }
 
-    fun removeFavoriteMenu(item: FavoriteMenu) {
+    fun toggleFavoriteMenu(item: FavoriteMenu) {
+        if (!pendingMenuActions.add(item.menuId)) return
         viewModelScope.launch {
-            when (menuFavoriteRepository.removeFavoriteMenu(item.menuId)) {
-                is ApiResult.Success -> {
-                    updateState { state ->
-                        state.copy(
-                            favoriteMenus = state.favoriteMenus.filterNot {
-                                it.menuId == item.menuId
-                            },
-                            menuSearchResults = state.menuSearchResults.map { result ->
-                                if (result.menuId == item.menuId) {
-                                    result.copy(isFavorite = false)
-                                } else {
-                                    result
-                                }
-                            },
-                        )
-                    }
-                    showMenuSnackbar(R.string.favorite_menu_deleted_snackbar, isError = false)
+            try {
+                val state = (_uiState.value as? UiState.Success)?.data ?: return@launch
+                val isFavorite = item.menuId !in state.unfavoritedMenuIds
+                val result = if (isFavorite) {
+                    menuFavoriteRepository.removeFavoriteMenu(item.menuId)
+                } else {
+                    menuFavoriteRepository.addFavoriteMenu(item.menuId)
                 }
 
-                else -> showMenuSnackbar(R.string.favorite_menu_action_error, isError = true)
+                when (result) {
+                    is ApiResult.Success -> {
+                        updateState { current ->
+                            current.copy(
+                                unfavoritedMenuIds = if (isFavorite) {
+                                    current.unfavoritedMenuIds + item.menuId
+                                } else {
+                                    current.unfavoritedMenuIds - item.menuId
+                                },
+                                menuSearchResults = current.menuSearchResults.map { searchResult ->
+                                    if (searchResult.menuId == item.menuId) {
+                                        searchResult.copy(isFavorite = !isFavorite)
+                                    } else {
+                                        searchResult
+                                    }
+                                },
+                            )
+                        }
+                        showMenuSnackbar(
+                            if (isFavorite) R.string.favorite_menu_deleted_snackbar
+                            else R.string.favorite_menu_added_snackbar,
+                            isError = false,
+                        )
+                    }
+
+                    else -> showMenuSnackbar(R.string.favorite_menu_action_error, isError = true)
+                }
+            } finally {
+                pendingMenuActions.remove(item.menuId)
             }
         }
     }

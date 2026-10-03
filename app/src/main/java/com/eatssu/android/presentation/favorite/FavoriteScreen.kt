@@ -128,7 +128,7 @@ fun FavoriteRoute(
         onRestoreFavorites = viewModel::restoreFavorites,
         onMenuSearchQueryChanged = viewModel::onMenuSearchQueryChanged,
         onSearchFavoriteClick = viewModel::toggleMenuFavorite,
-        onFavoriteMenuClick = viewModel::removeFavoriteMenu,
+        onFavoriteMenuClick = viewModel::toggleFavoriteMenu,
         menuSnackbarEvent = menuSnackbarEvent,
     )
 }

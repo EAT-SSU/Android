@@ -140,4 +140,50 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
     }
+
+    given("찜 목록에서 메뉴 하트를 잘못 눌렀을 때") {
+        val partnershipRepository = mockk<PartnershipRepository>()
+        val dataStore = mockk<FavoritePartnershipDataStore>()
+        val menuRepository = mockk<MenuFavoriteRepository>()
+        val favoriteMenu = FavoriteMenu(
+            menuId = 10L,
+            menuName = "김치찌개",
+            restaurant = Restaurant.HAKSIK,
+            isDiscontinued = false,
+        )
+
+        coEvery { partnershipRepository.getUserFavoritePartnerships() } returns emptyList()
+        coEvery { dataStore.reconcile(emptyList()) } returns emptyList()
+        coEvery { menuRepository.getFavoriteMenus() } returnsMany listOf(
+            ApiResult.Success(listOf(favoriteMenu)),
+            ApiResult.Success(emptyList()),
+        )
+        coEvery { menuRepository.removeFavoriteMenu(10L) } returns ApiResult.Success(Unit)
+        coEvery { menuRepository.addFavoriteMenu(10L) } returns ApiResult.Success(Unit)
+
+        val viewModel = FavoriteViewModel(partnershipRepository, dataStore, menuRepository)
+
+        `when`("하트를 끄고 같은 화면에서 다시 켠 뒤, 다시 끄고 재진입하면") {
+            viewModel.loadFavorites()
+            viewModel.toggleFavoriteMenu(favoriteMenu)
+
+            then("화면을 떠나기 전에는 메뉴가 남아 다시 찜할 수 있고, 재진입 후에는 사라진다") {
+                var state = (viewModel.uiState.value as UiState.Success).data
+                state.favoriteMenus shouldBe listOf(favoriteMenu)
+                state.unfavoritedMenuIds shouldBe setOf(10L)
+
+                viewModel.toggleFavoriteMenu(favoriteMenu)
+                state = (viewModel.uiState.value as UiState.Success).data
+                state.favoriteMenus shouldBe listOf(favoriteMenu)
+                state.unfavoritedMenuIds shouldBe emptySet()
+                coVerify(exactly = 1) { menuRepository.addFavoriteMenu(10L) }
+
+                viewModel.toggleFavoriteMenu(favoriteMenu)
+                viewModel.loadFavorites()
+                state = (viewModel.uiState.value as UiState.Success).data
+                state.favoriteMenus shouldBe emptyList()
+                state.unfavoritedMenuIds shouldBe emptySet()
+            }
+        }
+    }
 })

@@ -210,6 +210,7 @@ private fun FavoriteMenuListContent(
                     ) { menu ->
                         FavoriteMenuRow(
                             menu = menu,
+                            isFavorite = menu.menuId !in state.unfavoritedMenuIds,
                             onFavoriteClick = { onFavoriteClick(menu) },
                         )
                     }
@@ -261,6 +262,7 @@ private fun MenuSearchContent(
 @Composable
 private fun FavoriteMenuRow(
     menu: FavoriteMenu,
+    isFavorite: Boolean,
     onFavoriteClick: () -> Unit,
 ) {
     MenuRow(
@@ -269,7 +271,7 @@ private fun FavoriteMenuRow(
             restaurant = stringResource(menu.restaurant.displayNameResId),
             isDiscontinued = menu.isDiscontinued,
         ),
-        isFavorite = true,
+        isFavorite = isFavorite,
         onFavoriteClick = onFavoriteClick,
     )
 }
