@@ -38,11 +38,12 @@ jobs:
 
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        packages: platform-tools
 
-    - name: Install Android SDK (API 35)
+    - name: Install Android SDK (API 36)
       run: |
-        sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-        yes | sdkmanager --licenses
+        sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;35.0.0"
 
     - name: Create Local Properties
       run: touch local.properties
