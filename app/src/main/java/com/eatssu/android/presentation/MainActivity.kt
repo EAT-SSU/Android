@@ -103,11 +103,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 //                    false
 //                }
 
-                //TODO 찜 기능 완성 시
-//                R.id.favorite_menu -> {
-//                    navController.navigate(R.id.favoriteFragment)
-//                    true
-//                }
+                R.id.favorite_menu -> {
+                    navController.navigate(R.id.favoriteFragment)
+                    true
+                }
 
                 R.id.mypage_menu -> {
                     navController.navigate(R.id.myPageFragment)
@@ -123,7 +122,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val menuItemId = when (destination.id) {
                 R.id.cafeteria_menu -> R.id.cafeteria_menu
-                R.id.mapFragment, R.id.favoriteDetailFragment, R.id.favoriteFragment -> R.id.map_menu
+                R.id.mapFragment -> R.id.map_menu
+                R.id.favoriteDetailFragment, R.id.favoriteFragment -> R.id.favorite_menu
                 R.id.myPageFragment -> R.id.mypage_menu
                 else -> null
             }
