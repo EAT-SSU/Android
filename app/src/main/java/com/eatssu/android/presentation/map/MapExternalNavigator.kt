@@ -11,9 +11,15 @@ class MapExternalNavigator @Inject constructor(
         context: Context,
         provider: MapProvider,
         restaurant: PartnershipRestaurant,
+    ): Boolean = open(context, provider, restaurant.toMapDestination())
+
+    internal suspend fun open(
+        context: Context,
+        provider: MapProvider,
+        destination: MapDestination,
     ): Boolean {
-        val serverWebUrl = MapDeepLink.serverWebUrl(provider, restaurant)
-        val serverKakaoPlaceId = restaurant.kakaoMapUrl
+        val serverWebUrl = MapDeepLink.serverWebUrl(provider, destination)
+        val serverKakaoPlaceId = destination.kakaoMapUrl
             ?.let(MapDeepLink::kakaoPlaceId)
         val isMapAppInstalled = context.isPackageInstalled(provider.packageName)
 
@@ -41,7 +47,7 @@ class MapExternalNavigator @Inject constructor(
             !supportsKakaoPlaceAction
         val resolvedPlace = if (requiresExactPlaceName) {
             kakaoLocalPlaceResolver.resolve(
-                restaurant = restaurant,
+                destination = destination,
                 preferredPlaceId = serverKakaoPlaceId,
             )
         } else {
@@ -49,7 +55,7 @@ class MapExternalNavigator @Inject constructor(
         }
         val webFallbackUrl = serverWebUrl ?: MapDeepLink.fallbackWebUrl(
             provider = provider,
-            restaurant = restaurant,
+            destination = destination,
             resolvedPlace = resolvedPlace,
         )
 
@@ -62,9 +68,9 @@ class MapExternalNavigator @Inject constructor(
                     appName = context.packageName,
                 )
             } ?: MapDeepLink.naverCoordinateUrl(
-                storeName = restaurant.storeName,
-                latitude = restaurant.latitude,
-                longitude = restaurant.longitude,
+                storeName = destination.storeName,
+                latitude = destination.latitude,
+                longitude = destination.longitude,
                 appName = context.packageName,
             )
 
@@ -76,13 +82,13 @@ class MapExternalNavigator @Inject constructor(
 
                     resolvedPlace != null -> MapDeepLink.kakaoSearchUrl(
                         storeName = resolvedPlace.name,
-                        latitude = restaurant.latitude,
-                        longitude = restaurant.longitude,
+                        latitude = destination.latitude,
+                        longitude = destination.longitude,
                     )
 
                     else -> MapDeepLink.kakaoCoordinateUrl(
-                        latitude = restaurant.latitude,
-                        longitude = restaurant.longitude,
+                        latitude = destination.latitude,
+                        longitude = destination.longitude,
                     )
                 }
             }

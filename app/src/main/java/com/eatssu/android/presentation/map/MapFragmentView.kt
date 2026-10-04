@@ -10,40 +10,49 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -58,10 +67,13 @@ import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.goodprice.GoodPriceMapRoute
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
-import com.eatssu.android.presentation.map.component.FilterType
+import com.eatssu.android.presentation.map.component.FestivalPartnershipHelp
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
-import com.eatssu.android.presentation.map.component.PartnershipFilterToggle
+import com.eatssu.android.presentation.map.component.PartnershipCategory
+import com.eatssu.android.presentation.map.component.PartnershipCategoryFilterRow
+import com.eatssu.android.presentation.map.component.PartnershipMarkerIcon
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
@@ -70,11 +82,13 @@ import com.eatssu.common.UiState
 import com.eatssu.common.UiText
 import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.ScreenId
-import com.eatssu.common.enums.StoreType
 import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
+import com.eatssu.design_system.theme.Gray500
+import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.Primary
+import com.eatssu.design_system.theme.White
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
@@ -97,12 +111,14 @@ private const val DEFAULT_LONGITUDE = 126.95661313346206
 private const val DEFAULT_ZOOM = 14.5
 private const val PERMISSION_REQUEST_CODE = 1001
 
+/**
+ * 숭실대 사용자 지도 화면 (학교 제휴 / 착한 가격 탭 전환 지원)
+ */
 @Composable
 fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel(),
     mapExternalNavigator: MapExternalNavigator? = null,
-    onFavoriteClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -122,6 +138,9 @@ fun MapRoute(
 
     val departmentId by viewModel.departmentId.collectAsStateWithLifecycle()
     val collegeId by viewModel.collegeId.collectAsStateWithLifecycle()
+
+    // 상단 탭 인덱스 (0: 학교 제휴, 1: 착한 가격)
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition(
@@ -149,15 +168,14 @@ fun MapRoute(
     }
 
     // MainState에서 학과 정보 가져오기
-    val (departmentName, showUserDepartmentBottomSheet) = when (val state = mainUiState) {
+    val showUserDepartmentBottomSheet = when (val state = mainUiState) {
         is UiState.Success -> {
             when (val data = state.data) {
-                is MainState.DepartmentState -> data.departmentName to data.showUserDepartmentBottomSheet
-                else -> "학과" to false
+                is MainState.DepartmentState -> data.showUserDepartmentBottomSheet
+                else -> false
             }
         }
-
-        else -> "학과" to false
+        else -> false
     }
 
     LaunchedEffect(Unit) {
@@ -185,18 +203,18 @@ fun MapRoute(
         }
     }
 
-    // 상태 변화 감지해서 show/hide -> Scrim 잔존 문제 해결
-    LaunchedEffect(showUserDepartmentBottomSheet) {
-        if (showUserDepartmentBottomSheet) {
+    // [학교 제휴 탭] 학과 미입력 시 바텀시트 노출
+    LaunchedEffect(showUserDepartmentBottomSheet, selectedTabIndex) {
+        if (selectedTabIndex == 0 && showUserDepartmentBottomSheet) {
             departmentSheetState.show()
-        } else {
+        } else if (selectedTabIndex == 1) {
             departmentSheetState.hide()
         }
     }
 
-    // 필터 변경 결과에 따라 학과 입력 BottomSheet 표시
-    LaunchedEffect(mapState.filterChangeResult) {
-        if (mapState.filterChangeResult is MapState.FilterChangeResult.RequiresDepartment) {
+    // [학교 제휴 탭] 필터 변경 결과(RequiresDepartment)에 따라 학과 입력 BottomSheet 표시
+    LaunchedEffect(mapState.filterChangeResult, selectedTabIndex) {
+        if (selectedTabIndex == 0 && mapState.filterChangeResult is MapState.FilterChangeResult.RequiresDepartment) {
             departmentSheetState.show()
         }
     }
@@ -214,12 +232,13 @@ fun MapRoute(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // onResume 시마다 학과 정보 반영
+    // onResume 시마다 학과 정보 및 제휴 데이터 갱신
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                Timber.d("MapFragmentComposeView: onResume -> 학과 정보 갱신")
+                Timber.d("MapFragmentComposeView: onResume -> 학과 정보 및 제휴 데이터 갱신")
                 mainViewModel.refreshUserDepartment()
+                viewModel.refresh()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -229,68 +248,159 @@ fun MapRoute(
         }
     }
 
-    MapScreen(
-        mapState = mapState,
-        viewModel = viewModel,
-        cameraPositionState = cameraPositionState,
-        locationSource = locationSource,
-        departmentSheetState = departmentSheetState,
-        partnershipSheetState = partnershipSheetState,
-        showToast = { uiText, info ->
-            scope.launch {
-                context.showToast(uiText, info)
-            }
-        },
-        openMap = { provider, restaurant ->
-            scope.launch {
-                val opened = mapExternalNavigator?.open(
-                    context = context,
-                    provider = provider,
-                    restaurant = restaurant,
-                ) ?: context.openMapWithoutResolution(provider, restaurant)
+    Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(White)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 17.dp)
+                        .height(56.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(R.string.nav_map),
+                        style = EatssuTheme.typography.subtitle1,
+                        color = Gray700,
+                        textAlign = TextAlign.Center,
+                    )
+                }
 
-                if (!opened) {
-                    context.showToast(
-                        UiText.StringResource(R.string.toast_map_open_failed),
-                        ToastType.ERROR,
+                // 상단 탭: 학교 제휴 | 착한 가격
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = White,
+                    contentColor = Primary,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                            color = Primary,
+                            height = 2.dp,
+                        )
+                    },
+                    divider = {
+                        HorizontalDivider(color = Gray300, thickness = 0.5.dp)
+                    },
+                ) {
+                    Tab(
+                        selected = selectedTabIndex == 0,
+                        onClick = { selectedTabIndex = 0 },
+                        text = {
+                            Text(
+                                text = stringResource(R.string.tab_school_partnership),
+                                style = EatssuTheme.typography.subtitle2.copy(
+                                    fontWeight = if (selectedTabIndex == 0) FontWeight.Bold else FontWeight.Normal,
+                                ),
+                                color = if (selectedTabIndex == 0) Primary else Gray500,
+                            )
+                        },
+                    )
+
+                    Tab(
+                        selected = selectedTabIndex == 1,
+                        onClick = { selectedTabIndex = 1 },
+                        text = {
+                            Text(
+                                text = stringResource(R.string.tab_good_price),
+                                style = EatssuTheme.typography.subtitle2.copy(
+                                    fontWeight = if (selectedTabIndex == 1) FontWeight.Bold else FontWeight.Normal,
+                                ),
+                                color = if (selectedTabIndex == 1) Primary else Gray500,
+                            )
+                        },
                     )
                 }
             }
         },
-        navigateToUserInfo = {
-            val intent = Intent(context, UserInfoActivity::class.java)
-            context.startActivity(intent)
-        },
-        onHideDepartmentSheet = {
-            scope.launch { departmentSheetState.hide() }
-        },
-        onHidePartnershipSheet = {
-            scope.launch {
-                partnershipSheetState.hide()
-                viewModel.clearSelectedPartnership()
-            }
-        },
-        animateCameraPositionTo = { position, currentZoom ->
-            scope.launch {
-                cameraPositionState.animate(
-                    CameraUpdate.toCameraPosition(
-                        CameraPosition(
-                            position,
-                            currentZoom + 2.0
-                        )
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            when (selectedTabIndex) {
+                // 0: 학교 제휴 탭 (숭실대 중심 제휴 지도)
+                0 -> {
+                    MapScreen(
+                        mapState = mapState,
+                        viewModel = viewModel,
+                        cameraPositionState = cameraPositionState,
+                        locationSource = locationSource,
+                        departmentSheetState = departmentSheetState,
+                        partnershipSheetState = partnershipSheetState,
+                        showToast = { uiText, info ->
+                            scope.launch { context.showToast(uiText, info) }
+                        },
+                        openMap = { provider, restaurant ->
+                            scope.launch {
+                                val opened = mapExternalNavigator?.open(
+                                    context = context,
+                                    provider = provider,
+                                    restaurant = restaurant,
+                                ) ?: context.openMapWithoutResolution(provider, restaurant)
+
+                                if (!opened) {
+                                    context.showToast(
+                                        UiText.StringResource(R.string.toast_map_open_failed),
+                                        ToastType.ERROR,
+                                    )
+                                }
+                            }
+                        },
+                        navigateToUserInfo = {
+                            val intent = Intent(context, UserInfoActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                        onHideDepartmentSheet = {
+                            scope.launch {
+                                departmentSheetState.hide()
+                                viewModel.clearFilterChangeResult()
+                            }
+                        },
+                        onHidePartnershipSheet = {
+                            scope.launch {
+                                partnershipSheetState.hide()
+                                viewModel.clearSelectedPartnership()
+                            }
+                        },
+                        animateCameraPositionTo = { position, currentZoom ->
+                            scope.launch {
+                                cameraPositionState.animate(
+                                    CameraUpdate.toCameraPosition(
+                                        CameraPosition(
+                                            position,
+                                            currentZoom + 2.0
+                                        )
+                                    )
+                                )
+                            }
+                        },
+                        onSelectedCategoryChange = { category ->
+                            viewModel.setCategory(category)
+                        },
+                        departmentId = departmentId,
+                        collegeId = collegeId,
+                        selectedCategory = mapState.selectedCategory,
                     )
-                )
+                }
+
+                // 1: 착한 가격 탭 (서울시 전역 착한가격업소 지도, 학과 바텀시트 불필요)
+                1 -> {
+                    GoodPriceMapRoute(
+                        mapExternalNavigator = mapExternalNavigator,
+                        showTopBar = false,
+                        contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
-        },
-        onSelectedFilterChange = { filter ->
-            viewModel.setFilter(filter)
-        },
-        departmentId = departmentId,
-        collegeId = collegeId,
-        departmentName = departmentName,
-        selectedFilter = mapState.selectedFilter,
-        onFavoriteClick = onFavoriteClick,
-    )
+        }
+    }
 }
 
 @Composable
@@ -307,135 +417,111 @@ internal fun MapScreen(
     onHideDepartmentSheet: () -> Unit = {},
     onHidePartnershipSheet: () -> Unit = {},
     animateCameraPositionTo: (LatLng, Double) -> Unit,
-    onSelectedFilterChange: (FilterType) -> Unit,
+    onSelectedCategoryChange: (PartnershipCategory) -> Unit,
     departmentId: Long,
     collegeId: Long,
-    departmentName: String?,
-    selectedFilter: FilterType,
-    onFavoriteClick: () -> Unit,
+    selectedCategory: PartnershipCategory,
 ) {
     val analyticsTracker = LocalAnalyticsTracker.current
+    var showFestivalHelp by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.title_partnership_map),
-                        style = EatssuTheme.typography.subtitle1
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 17.dp),
-                windowInsets = TopAppBarDefaults.windowInsets
-            )
-        },
-    ) { innerPadding ->
+    LaunchedEffect(mapState.hasFestivalPartnerships) {
+        if (!mapState.hasFestivalPartnerships) showFestivalHelp = false
+    }
 
-        // 학과 정보가 없을 때 보여줄 BottomSheet
-        if (departmentSheetState.isVisible) {
-            Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
+    // 학과 정보가 없을 때 보여줄 BottomSheet
+    if (departmentSheetState.isVisible) {
+        Timber.d("학과 정보가 없습니다. BottomSheet를 표시합니다.")
 
-            DepartmentBottomSheet(
-                onDismiss = {
-                    onHideDepartmentSheet()
-                },
-                onInputClick = {
-                    onHideDepartmentSheet()
-                    navigateToUserInfo()
-                },
-                sheetState = departmentSheetState
-            )
-        }
+        DepartmentBottomSheet(
+            onDismiss = {
+                onHideDepartmentSheet()
+            },
+            onInputClick = {
+                onHideDepartmentSheet()
+                navigateToUserInfo()
+            },
+            sheetState = departmentSheetState,
+        )
+    }
 
-        // 특정 식당에 대한 제휴 정보 BottomSheet
-        if (partnershipSheetState.isVisible) {
-            mapState.restaurantPartnershipInfo?.let { info ->
-                mapState.storeType?.let { storeType ->
-                    LaunchedEffect(info.id, collegeId, departmentId) {
-                        analyticsTracker.track(
-                            MapAnalyticsEvent.PartnerRestaurantClicked(
-                                college = collegeId,
-                                major = departmentId,
-                                partnerRestaurantId = info.id.toLong(),
-                            ),
-                        )
-                    }
-
-                    MapRestaurantBottomSheet(
-                        storeName = info.storeName,
-                        storeType = storeType,
-                        isLike = info.likedByUser,
-                        mapRestaurantList = mapState.restaurantInfoList,
-                        onNaverMapClick = {
-                            openMap(MapProvider.NAVER, info)
-                        },
-                        onKakaoMapClick = {
-                            openMap(MapProvider.KAKAO, info)
-                        },
-                        onDismiss = {
-                            onHidePartnershipSheet()
-                        },
-                        onLikeClick = {
-                            viewModel.likePartnership(info.id)
-                        }
+    // 특정 식당에 대한 제휴 정보 BottomSheet
+    if (partnershipSheetState.isVisible) {
+        mapState.restaurantPartnershipInfo?.let { info ->
+            mapState.storeType?.let { storeType ->
+                LaunchedEffect(info.id, collegeId, departmentId) {
+                    analyticsTracker.track(
+                        MapAnalyticsEvent.PartnerRestaurantClicked(
+                            college = collegeId,
+                            major = departmentId,
+                            partnerRestaurantId = info.id.toLong(),
+                        ),
                     )
                 }
+
+                MapRestaurantBottomSheet(
+                    storeName = info.storeName,
+                    storeType = storeType,
+                    mapRestaurantList = mapState.restaurantInfoList,
+                    onNaverMapClick = {
+                        openMap(MapProvider.NAVER, info)
+                    },
+                    onKakaoMapClick = {
+                        openMap(MapProvider.KAKAO, info)
+                    },
+                    onDismiss = {
+                        onHidePartnershipSheet()
+                    },
+                )
             }
         }
+    }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.TopCenter,
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        NaverMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            uiSettings = MapUiSettings(
+                isZoomControlEnabled = false,
+                isLocationButtonEnabled = true,
+            ),
+            locationSource = locationSource,
+            contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
+            properties = MapProperties(
+                // 현재 다른 위치에 있는 경우에도 숭실대입구를 보여주어야 함
+                locationTrackingMode = LocationTrackingMode.NoFollow,
+            ),
         ) {
-            NaverMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(
-                    isZoomControlEnabled = false,
-                    isLocationButtonEnabled = true
-                ),
-                locationSource = locationSource,
-                contentPadding = PaddingValues(bottom = dimensionResource(R.dimen.bottom_nav_height)),
-                properties = MapProperties(
-                    // 현재 다른 위치에 있는 경우에도 숭실대입구를 보여주어야 함
-                    locationTrackingMode = LocationTrackingMode.NoFollow,
-                ),
-            ) {
-                val clusterItems = mapState.partnerships.associateBy {
-                    ItemKey(
-                        it.storeName,
-                        LatLng(it.latitude, it.longitude)
-                    )
-                }
+            val clusterItems = mapState.visiblePartnerships.associateBy {
+                ItemKey(
+                    it.storeName,
+                    LatLng(it.latitude, it.longitude),
+                )
+            }
 
-                Clustering(
-                    items = clusterItems,
-                    thresholdStrategy = {
-                        // 줌 레벨에 상관 없이 임의의 값 사용
-                        25.0
-                    },
-
-                    clusterContent = {
-                        Box(
-                            modifier = Modifier
-                                .size(32.dp)
-                                .background(Primary, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "${it.size}",
-                                color = Color.White,
-                                style = EatssuTheme.typography.body2
-                            )
-                        }
-                    },
-                    leafContent = { info ->
-                        val partnership = info.tag as? Partnership ?: return@Clustering
-
+            Clustering(
+                items = clusterItems,
+                thresholdStrategy = { 25.0 },
+                clusterContent = {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .background(Primary, CircleShape),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "${it.size}",
+                            color = Color.White,
+                            style = EatssuTheme.typography.body2,
+                        )
+                    }
+                },
+                leafContent = { info ->
+                    val partnership = info.tag as? Partnership
+                    if (partnership != null) {
                         Row(
                             modifier = Modifier
                                 .background(Color.White, RoundedCornerShape(13.dp))
@@ -444,89 +530,63 @@ internal fun MapScreen(
                                     start = 3.dp,
                                     end = 7.dp,
                                     top = 2.5.dp,
-                                    bottom = 2.5.dp
+                                    bottom = 2.5.dp,
                                 ),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = spacedBy(
-                                3.dp
-                            )
+                            horizontalArrangement = spacedBy(3.dp),
                         ) {
-                            val iconRes = when (partnership.restaurantType) {
-                                StoreType.CAFE -> R.drawable.ic_map_marker_cafe
-                                StoreType.PUB -> R.drawable.ic_map_marker_pub
-                                else -> R.drawable.ic_map_marker_restaurant
-                            }
-
-                            Image(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
+                            PartnershipMarkerIcon(partnership = partnership)
 
                             Text(
                                 text = partnership.storeName,
                                 style = EatssuTheme.typography.caption3,
-                                color = Color.Black
+                                color = Color.Black,
                             )
                         }
-                    },
-                    onClickCluster = { info, _ ->
-                        animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
-                        true
-                    },
-                    onClickLeaf = { info, _ ->
-                        val partnership = info.tag as? Partnership ?: return@Clustering true
-
-                        if (partnership.partnershipInfos.isEmpty()) {
-                            // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
-                            showToast(
-                                UiText.StringResource(R.string.toast_partnership_info_not_found),
-                                ToastType.INFO
-                            )
-                        } else {
-                            // 제휴 정보가 있을 때만 바텀시트 띄움
-                            viewModel.selectPartnershipByStoreName(partnership.storeName)
-                        }
-                        true
                     }
-
-                )
-            }
-
-            // 학과 정보를 입력하지 않은 상태에서 제휴 필터를 변경하려고 할 때 BottomSheet 표시
-            // 학과 정보가 없으면 제휴 필터를 변경할 수 없음
-            PartnershipFilterToggle(
-                selected = selectedFilter,
-                onSelectedChange = { next ->
-                    if (partnershipSheetState.isVisible) return@PartnershipFilterToggle
-                    onSelectedFilterChange(next)
                 },
-                modifier = Modifier.padding(top = 12.dp),
-                departmentName = departmentName.toString(),
-                filters = mapState.availableFilters,
-            )
+                onClickCluster = { info, _ ->
+                    animateCameraPositionTo(info.position, cameraPositionState.position.zoom)
+                    true
+                },
+                onClickLeaf = { info, _ ->
+                    val partnership = info.tag as? Partnership ?: return@Clustering true
 
-            Surface(
+                    if (partnership.partnershipInfos.isEmpty()) {
+                        // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
+                        showToast(
+                            UiText.StringResource(R.string.toast_partnership_info_not_found),
+                            ToastType.INFO,
+                        )
+                    } else {
+                        // 제휴 정보가 있을 때만 바텀시트 띄움
+                        viewModel.selectPartnershipByStoreName(partnership.storeName)
+                    }
+                    true
+                },
+            )
+        }
+
+        PartnershipCategoryFilterRow(
+            selectedCategory = selectedCategory,
+            onCategorySelected = { next ->
+                if (partnershipSheetState.isVisible) return@PartnershipCategoryFilterRow
+                onSelectedCategoryChange(next)
+            },
+            modifier = Modifier.padding(top = 12.dp),
+        )
+
+        if (mapState.hasFestivalPartnerships) {
+            FestivalPartnershipHelp(
+                isMessageVisible = showFestivalHelp,
+                onClick = { showFestivalHelp = !showFestivalHelp },
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
+                    .align(Alignment.BottomEnd)
                     .padding(
-                        end = 18.dp,
-                        top = 15.dp,
-                    )
-                    .size(36.dp),
-                shape = CircleShape,
-                color = Color.White,
-                shadowElevation = 4.dp,
-                onClick = onFavoriteClick,
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_like_line),
-                        contentDescription = stringResource(R.string.favorite_open),
-                        modifier = Modifier.size(24.dp),
-                    )
-                }
-            }
+                        end = 24.dp,
+                        bottom = dimensionResource(R.dimen.bottom_nav_height) + 12.dp,
+                    ),
+            )
         }
     }
 }

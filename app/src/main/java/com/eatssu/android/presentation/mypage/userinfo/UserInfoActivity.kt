@@ -20,6 +20,7 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.ToastType
+import com.eatssu.common.R as CommonR
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -133,14 +134,16 @@ class UserInfoActivity :
 
     private fun updateCollegeDepartmentUI(data: UserInfoData) {
         with(binding) {
-            tvCollege.text = data.selectedCollege?.collegeName ?: "단과대"
+            tvCollege.text = data.selectedCollege?.collegeName
+                ?: getString(CommonR.string.college_placeholder)
             tvCollege.setTextColor(
                 getColor(
                     if (data.selectedCollege != null) R.color.gray700 else R.color.gray400
                 )
             )
 
-            tvDepartment.text = data.selectedDepartment?.departmentName ?: "학과"
+            tvDepartment.text = data.selectedDepartment?.departmentName
+                ?: getString(CommonR.string.department_placeholder)
             tvDepartment.setTextColor(
                 getColor(
                     if (data.selectedDepartment != null) R.color.gray700 else R.color.gray400

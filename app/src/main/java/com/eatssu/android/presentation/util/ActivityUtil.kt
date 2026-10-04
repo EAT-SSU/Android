@@ -9,7 +9,7 @@ import com.eatssu.android.presentation.base.NetworkErrorEventBus
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
-inline fun <reified T : Activity> AppCompatActivity.startActivity(block: Intent.() -> Unit = {}) {
+inline fun <reified T : Activity> Activity.startActivity(block: Intent.() -> Unit = {}) {
     startActivity(Intent(this, T::class.java).apply(block))
 }
 

@@ -13,6 +13,7 @@ interface MenuService {
     @GET("menus")
     suspend fun getFixMenu(
         @Query("restaurant") restaurant: String,
+        @Query("language") language: String? = null,
     ): ApiResult<GetFixedMenuResponse>
 
 }

@@ -3,6 +3,7 @@ package com.eatssu.android.presentation.cafeteria.menu
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,13 +43,22 @@ class MenuAdapter(
             }
 
             binding.tvCafeteria.text = binding.root.context.getString(sectionModel.cafeteria.displayNameResId)
-            binding.tvCafeteriaLocation.text = sectionModel.cafeteriaLocation
+            binding.tvCafeteriaLocation.text =
+                binding.root.context.getString(sectionModel.cafeteria.locationResId)
+
+            val menuList = sectionModel.menuList.orEmpty()
+            val hasMenu = menuList.isNotEmpty()
+
+            binding.rvMenu.isVisible = hasMenu
+            binding.tvClosedMessage.isVisible = !hasMenu
 
             binding.rvMenu.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(binding.root.context)
-                adapter = sectionModel.menuList?.let {
-                    MenuSubAdapter(it, sectionModel.cafeteria, analyticsTracker)
+                adapter = if (hasMenu) {
+                    MenuSubAdapter(menuList, sectionModel.cafeteria, analyticsTracker)
+                } else {
+                    null
                 }
             }
         }

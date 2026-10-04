@@ -29,9 +29,9 @@ android {
     defaultConfig {
         applicationId = "com.eatssu.android"
         minSdk = 28
-        targetSdk = 35
-        versionCode = 66
-        versionName = "3.2.13"
+        targetSdk = 37
+        versionCode = 71
+        versionName = "3.2.16"
 
       testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

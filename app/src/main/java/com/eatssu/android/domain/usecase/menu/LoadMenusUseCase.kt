@@ -26,7 +26,6 @@ class LoadMenusUseCase @Inject constructor(
             addAll(Restaurant.getVariableRestaurantList())
 
             if (shouldIncludeFixedRestaurants(date = date, time = time, isPublicHoliday = isPublicHoliday)) {
-                add(Restaurant.FOOD_COURT)
                 add(Restaurant.SNACK_CORNER)
             }
         }

@@ -102,7 +102,7 @@ class PostHogAnalyticsTrackerTest {
 
     @Test
     fun `restaurant analytics payload omits excluded restaurants`() {
-        val addPayload = WidgetAnalyticsEvent.Added(Restaurant.FOOD_COURT).toPayload()
+        val addPayload = WidgetAnalyticsEvent.Added(Restaurant.THE_KITCHEN).toPayload()
         val removePayload = WidgetAnalyticsEvent.Removed(Restaurant.THE_KITCHEN).toPayload()
 
         assertTrue(addPayload.properties.isEmpty())
@@ -129,7 +129,7 @@ class PostHogAnalyticsTrackerTest {
     @Test
     fun `widget change payload omits excluded before and after restaurant values`() {
         val payload = WidgetAnalyticsEvent.Changed(
-            restaurantBefore = Restaurant.FOOD_COURT,
+            restaurantBefore = Restaurant.THE_KITCHEN,
             restaurantAfter = Restaurant.THE_KITCHEN,
         ).toPayload()
 

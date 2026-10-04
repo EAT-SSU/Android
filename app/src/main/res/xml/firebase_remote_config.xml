@@ -52,15 +52,6 @@
             "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/66f13f3e-62ac-4747-a461-aabd26b3999e20240823074330%E1%84%89%E1%85%B3%E1%84%82%E1%85%A2%E1%86%A8%E1%84%8F%E1%85%A9%E1%84%82%E1%85%A5.jpeg"
             },
             {
-            "enum": "FOOD_COURT",
-            "name": "푸드 코트",
-            "location": "학생회관 2층",
-            "time": "휴무",
-            "etc": "준비 중",
-            "image":
-            "https://eatssu-prod-bucket.s3.ap-northeast-2.amazonaws.com/reviewImg/09b487f5-e431-4ab2-a339-76e472ea8d8320240926041925%E1%84%91%E1%85%AE%E1%84%8F%E1%85%A9IMG_0396%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%A6.jpeg"
-            },
-            {
             "enum": "DORMITORY",
             "name": "기숙사 식당",
             "location": "레지던스홀 지하 1층",

@@ -2,8 +2,9 @@ package com.eatssu.android.presentation.mypage.terms
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
 import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TermSelectorActivity : ComponentActivity() {
+class TermSelectorActivity : AppCompatActivity() {
 
     companion object {
         private const val MENU_TERMS_OF_USE = "terms_of_use"
@@ -30,6 +31,7 @@ class TermSelectorActivity : ComponentActivity() {
     lateinit var getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             EatssuTheme {

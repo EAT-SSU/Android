@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.ReviewTranslation
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
+import com.eatssu.android.domain.usecase.menu.GetMealMenuNamesUseCase
 import com.eatssu.android.domain.usecase.review.DeleteReviewUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewInfoUseCase
 import com.eatssu.android.domain.usecase.review.GetReviewListPagedUseCase
@@ -35,9 +36,11 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
         val deleteReviewUseCase = mockk<DeleteReviewUseCase>()
         val getReviewTranslationUseCase = mockk<GetReviewTranslationUseCase>()
         val getAccessTokenUseCase = mockk<GetAccessTokenUseCase>()
+        val getMealMenuNamesUseCase = mockk<GetMealMenuNamesUseCase>()
 
         every { getReviewListPagedUseCase(any(), any()) } returns flowOf(PagingData.empty())
         every { getAccessTokenUseCase() } returns "access-token"
+        coEvery { getMealMenuNamesUseCase(any()) } returns emptyList()
 
         `when`("리뷰 정보를 정상 조회하면") {
             val viewModel = ReviewListViewModel(
@@ -46,6 +49,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             val info = sampleReviewInfo()
             coEvery { getReviewInfoUseCase(MenuType.FIXED, 100L) } returns info
@@ -60,6 +64,66 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
             }
         }
 
+        `when`("변동식단 리뷰 정보를 영어로 조회하면") {
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
+            )
+            val info = sampleReviewInfo()
+            coEvery { getReviewInfoUseCase(MenuType.VARIABLE, 5637L) } returns info
+            coEvery { getMealMenuNamesUseCase(5637L) } returns listOf(
+                "Beef Shabu Rice Noodles",
+                "팔춘권튀김",
+                "미니밥",
+            )
+
+            then("상세 API의 영문 대표메뉴와 한국어 나머지 메뉴를 함께 표시한다") {
+                runTest {
+                    viewModel.getReview(MenuType.VARIABLE, 5637L, "Beef Shabu Rice Noodles")
+                    advanceUntilIdle()
+
+                    viewModel.uiState.value shouldBe UiState.Success(
+                        ReviewListState(
+                            reviewInfo = info,
+                            menuName = "Beef Shabu Rice Noodles, 팔춘권튀김, 미니밥",
+                        )
+                    )
+                }
+            }
+        }
+
+        `when`("변동식단 상세 메뉴 조회 결과가 비어 있으면") {
+            val viewModel = ReviewListViewModel(
+                getReviewInfoUseCase,
+                getReviewListPagedUseCase,
+                deleteReviewUseCase,
+                getReviewTranslationUseCase,
+                getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
+            )
+            val info = sampleReviewInfo()
+            coEvery { getReviewInfoUseCase(MenuType.VARIABLE, 5638L) } returns info
+            coEvery { getMealMenuNamesUseCase(5638L) } returns emptyList()
+
+            then("목록 화면에서 전달된 기존 메뉴명을 유지한다") {
+                runTest {
+                    viewModel.getReview(MenuType.VARIABLE, 5638L, "제육, 계란찜")
+                    advanceUntilIdle()
+
+                    viewModel.uiState.value shouldBe UiState.Success(
+                        ReviewListState(
+                            reviewInfo = info,
+                            menuName = "제육, 계란찜",
+                        )
+                    )
+                }
+            }
+        }
+
         `when`("리뷰 정보 조회에서 예외가 발생하면") {
             val viewModel = ReviewListViewModel(
                 getReviewInfoUseCase,
@@ -67,6 +131,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             coEvery { getReviewInfoUseCase(MenuType.VARIABLE, 101L) } throws IllegalStateException("boom")
 
@@ -91,6 +156,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             coEvery { deleteReviewUseCase(55L) } returns false
 
@@ -114,6 +180,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             coEvery { getReviewInfoUseCase(MenuType.FIXED, 300L) } returns sampleReviewInfo(count = 3)
             coEvery { deleteReviewUseCase(56L) } returns true
@@ -142,6 +209,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             coEvery { deleteReviewUseCase(77L) } returns true
 
@@ -167,6 +235,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             coEvery { getReviewTranslationUseCase(255L, "EN") } returns ReviewTranslation(
                 reviewId = 255L,
@@ -199,6 +268,7 @@ class ReviewListViewModelBehaviorSpec : AppBehaviorSpec({
                 deleteReviewUseCase,
                 getReviewTranslationUseCase,
                 getAccessTokenUseCase,
+                getMealMenuNamesUseCase,
             )
             coEvery { getReviewTranslationUseCase(256L, "EN") } returns ReviewTranslation(
                 reviewId = 256L,

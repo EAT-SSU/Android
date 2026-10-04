@@ -9,6 +9,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonArray
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,7 +64,11 @@ class FirebaseRemoteConfigRepositoryImpl @Inject constructor(
 
     private fun parseCafeteriaJson(jsonString: String): List<RestaurantInfo> {
         return try {
-            json.decodeFromString<List<RestaurantInfo>>(jsonString).also {
+            json.parseToJsonElement(jsonString).jsonArray.mapNotNull { element ->
+                runCatching { json.decodeFromJsonElement<RestaurantInfo>(element) }
+                    .onFailure { Timber.w(it, "지원하지 않는 식당 정보 제외: $element") }
+                    .getOrNull()
+            }.also {
                 Timber.d("Loaded cafeteria info: $it")
             }
         } catch (e: Exception) {

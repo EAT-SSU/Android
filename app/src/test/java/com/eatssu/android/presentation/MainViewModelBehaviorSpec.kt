@@ -84,7 +84,10 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.refreshUserDepartment()
                     eventually(2.seconds) {
                         viewModel.uiState.value shouldBe UiState.Success(
-                            MainState.DepartmentState(departmentName = "컴퓨터학부")
+                            MainState.DepartmentState(
+                                collegeName = "IT",
+                                departmentName = "컴퓨터학부",
+                            )
                         )
                     }
                 }
@@ -118,6 +121,7 @@ class MainViewModelBehaviorSpec : AppBehaviorSpec({
 
                     viewModel.uiState.value shouldBe UiState.Success(
                         MainState.DepartmentState(
+                            collegeName = "IT",
                             departmentName = "컴퓨터학부",
                             showUserDepartmentBottomSheet = false
                         )

@@ -94,22 +94,9 @@ class MenuFragment : Fragment() {
                 val menuMap = state.data.menuMap
                 Timber.d("Menu map received: $menuMap")
 
-                val sectionList = buildList {
-                    menuMap
-                        .filter { (_, menuList) -> menuList.isNotEmpty() }
-                        .forEach { (restaurant, menuList) ->
-                            val location =
-                                infoViewModel.getRestaurantInfo(restaurant)?.location ?: ""
-                            add(
-                                Section(
-                                    restaurant.menuType,
-                                    restaurant,
-                                    menuList,
-                                    location
-                                )
-                            )
-                        }
-                }.sortedBy { it.cafeteria.ordinal }
+                val sectionList = buildMenuSections(menuMap) { restaurant ->
+                    infoViewModel.getRestaurantInfo(restaurant)?.location.orEmpty()
+                }
 
                 setupRecyclerView(sectionList)
             }

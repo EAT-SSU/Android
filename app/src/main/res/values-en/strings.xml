@@ -29,13 +29,19 @@
     <string name="title_report">Report</string>
     <string name="title_widget_setting">Widget Settings</string>
     <string name="title_partnership_map">Partner Map</string>
+    <string name="title_good_price_map">Good Price Stores Map</string>
     <string name="title_force_update">Force Update</string>
+    <string name="tab_school_partnership">Campus Partners</string>
+    <string name="festival_partnership_help_title">See 2026 Festival partner stores!</string>
+    <string name="festival_partnership_help_warning">Cannot combine with regular benefits.</string>
+    <string name="festival_partnership_help_content_description">Festival partnership information</string>
+    <string name="tab_good_price">Good Price</string>
 
     <!-- ========================== -->
     <!-- Navigation -->
     <!-- ========================== -->
     <string name="nav_cafeteria_menu">Cafeteria</string>
-    <string name="nav_map">Partner Map</string>
+    <string name="nav_map">Map</string>
     <string name="nav_anyone_but_me">Lucky Game</string>
     <string name="nav_mypage">My Page</string>
     <string name="nav_back">Back</string>
@@ -50,6 +56,8 @@
     <string name="button_report">Report</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
+    <string name="button_close">Close</string>
+    <string name="button_retry">Retry</string>
     <string name="button_update">Update</string>
     <string name="button_check_duplicate">Check</string>
 
@@ -134,6 +142,9 @@
     <string name="toast_oss_load_fail">Could not load open-source libraries.</string>
     <string name="toast_sign_out_success">Your account has been deleted.</string>
     <string name="toast_sign_out_fail">Failed to delete your account.</string>
+    <string name="toast_load_good_price_stores_failed">Failed to load store information.</string>
+    <string name="btn_browse_good_price_stores">Explore Good Price Stores</string>
+    <string name="btn_browse_good_price_stores_subtitle">Find an affordable meal near you</string>
 
     <!-- ========================== -->
     <!-- Review Screen -->
@@ -148,6 +159,8 @@
     <string name="review_photo_count">Add Photo (%1$d/%2$d)</string>
     <string name="review_settings">Review Settings</string>
     <string name="review_error_occurred">An error occurred.</string>
+    <string name="review_menu_info_load_failed">Could not load the menu information.\nPlease try again.</string>
+    <string name="review_additional_data_load_failed">Failed to load more reviews.</string>
     <string name="review_show_translation">Show translation</string>
     <string name="review_translate">Translate</string>
     <string name="review_show_original">Show original</string>
@@ -155,13 +168,13 @@
     <string name="review_translated_by_ai">Translated from Korean by AI</string>
     <string name="review_translation_unavailable">Translation unavailable</string>
     <string name="review_translation_accuracy_notice">AI translations may not always be accurate.</string>
-    <string name="review_translation_unavailable_notice">AI translation is temporarily unavailable.\nPlease try again later.</string>
-    <string name="review_translation_information">Translation information</string>
-    <string name="review_profile_image">Profile image</string>
-    <string name="review_more">Review menu</string>
-    <string name="review_image">Review image</string>
+    <string name="review_translation_unavailable_notice">AI translation is currently unavailable.\nPlease try again later.</string>
+    <string name="review_translation_information">Translation Info</string>
+    <string name="review_profile_image">Profile Image</string>
+    <string name="review_more">Review Menu</string>
+    <string name="review_image">Review Image</string>
     <string name="toast_review_translation_failed">Failed to translate the review.</string>
-    <string name="toast_review_translation_unchanged">The translation is the same as the original.</string>
+    <string name="toast_review_translation_unchanged">The translation is identical to the original.</string>
     <string name="review_write">Write a Review</string>
 
     <!-- ========================== -->
@@ -182,6 +195,7 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">Today\'s Menu</string>
+    <string name="cafeteria_outside_business_hours">Closed now</string>
     <string name="price">Price</string>
     <string name="rate">★</string>
     <string name="student_cafeteria">Student Cafeteria</string>
@@ -208,9 +222,9 @@
     <string name="logout">Log Out</string>
     <string name="signout">Delete Account</string>
     <string name="app_version">App Version</string>
-    <string name="mypage_push_activity_section_title">Notifications and Activity</string>
+    <string name="mypage_push_activity_section_title">Notifications &amp; Activity</string>
     <string name="mypage_service_section_title">Service Info</string>
-    <string name="mypage_etc_section_title">etc.</string>
+    <string name="mypage_etc_section_title">Other</string>
     <string name="mypage_push_notification_title">Push Notification Settings</string>
     <string name="mypage_push_notification_description">We\'ll send you a notification every day at 11:00 AM.</string>
 
@@ -265,7 +279,7 @@
     <!-- App Slogan -->
     <!-- ========================== -->
     <string name="app_slogan_part1">Eat at</string>
-    <string name="app_slogan_part2">Soongsil</string>
+    <string name="app_slogan_part2">From Soongsil to all of Seoul</string>
 
     <!-- ========================== -->
     <!-- Links & External -->
@@ -275,8 +289,8 @@
     <string name="private_information">Privacy Policy</string>
     <string name="policy">Privacy Policy</string>
     <string name="terms">Terms of Service</string>
-    <string name="terms_and_rule">Terms and Policies</string>
-    <string name="developer">Creators</string>
+    <string name="terms_and_rule">Terms &amp; Policies</string>
+    <string name="developer">Credits</string>
     <string name="oss_licenses">Open-Source Libraries</string>
 
     <!-- ========================== -->
@@ -304,7 +318,7 @@
     <string name="map_unknown_college_department">College/Department information unavailable</string>
     <string name="map_open_kakao">KakaoMap</string>
     <string name="map_open_naver">Naver Map</string>
-    <string name="toast_map_open_failed">Unable to open the map. Please try again later.</string>
+    <string name="toast_map_open_failed">Failed to open the map. Please try again in a moment.</string>
 
     <!-- ========================== -->
     <!-- Partnership -->
@@ -313,13 +327,54 @@
     <string name="etc">Notes</string>
     <string name="time">Hours</string>
     <string name="favorite_partnership">Favorite Partners</string>
+    <string name="favorite_title">Favorites</string>
+    <string name="favorite_menu_tab">Favorite Menus</string>
+    <string name="favorite_partnership_tab">Favorite Partners</string>
+    <string name="favorite_filter_all">All</string>
+    <string name="favorite_empty_title">No favorite partners yet.</string>
+    <string name="favorite_empty_description">Save partners you\'re interested in and find them quickly.</string>
+    <string name="favorite_open">Open Favorite Partners</string>
+    <string name="favorite_open_detail">View Partner Details</string>
+    <string name="favorite_edit">Edit</string>
+    <string name="favorite_select_all">Select All</string>
+    <string name="favorite_delete">Delete</string>
+    <string name="favorite_delete_count">Delete %d</string>
+    <string name="favorite_added_snackbar">Added to favorite partners.</string>
+    <string name="favorite_deleted_snackbar">Removed from favorite partners.</string>
+    <string name="favorite_undo">Cancel</string>
     <string name="partnership_filter_mine">My Partners</string>
     <string name="partnership_filter_festival">Festival</string>
     <string name="partnership_filter_all">All</string>
+    <string name="partnership_filter_restaurant">Restaurant</string>
+    <string name="partnership_filter_cafe">Cafe</string>
+    <string name="partnership_filter_pub">Pub</string>
     <string name="partnership_filter_department_placeholder">Department</string>
-    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->
     <!-- ========================== -->
+    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
+    <string name="event_do_not_show_again">Don\'t show again</string>
+
+    <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">Student Union Building, 3F</string>
+    <string name="cafeteria_student_time">08:00~09:00(1,000-Won Breakfast)\n11:20~14:00(Lunch)\n16:00~23:00(Temporary Library Study Room)</string>
+    <string name="cafeteria_student_etc">3 Food Stations\nHot Pot(Ttukbaegi-style Meals), Rice Bowls, Western food\nClosed on weekends</string>
+    <string name="cafeteria_dodam_location">Shinyang Hall, 2F</string>
+    <string name="cafeteria_dodam_time">Weekdays\n11:20~14:00(Lunch)\n17:00~18:30(Dinner)\n19:30~23:00(Temporary Library Study Room)\n\nWeekends\n11:20~13:30(Lunch)</string>
+    <string name="cafeteria_dodam_etc">2 Food Stations\nStandard Meals, Healthy Meals</string>
+    <string name="cafeteria_dormitory_location">Residence Hall, B1</string>
+    <string name="cafeteria_dormitory_time">Weekdays\n11:00~13:50(Lunch)\n17:00~18:30(Dinner)\n\nWeekends\n11:20~13:30(Lunch)\n17:00~18:20(Dinner)</string>
+    <string name="cafeteria_dormitory_etc">Breakfast Not Available</string>
+    <string name="cafeteria_faculty_location">Jeonsan Hall, B1</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(Lunch)</string>
+    <string name="cafeteria_faculty_etc">Closed on weekends</string>
+    <string name="cafeteria_snack_corner_location">Student Union Building, 3F</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(Lunch)\n16:00~23:00(Temporary Library Study Room)</string>
+    <string name="cafeteria_snack_corner_etc">Bunsik(Korean Snacks), Old-school Lunch Box, Cup Rice, etc.\nClosed on weekends</string>
+    <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
 </resources>

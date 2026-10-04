@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
@@ -68,7 +69,6 @@ fun FavoriteDetailRoute(
         is UiState.Success -> FavoriteDetailScreen(
             restaurant = state.data,
             onBack = onBack,
-            onLikeClick = viewModel::toggleLike,
             onNaverMapClick = {
                 scope.launch {
                     openMap(context, mapExternalNavigator, MapProvider.NAVER, state.data)
@@ -88,7 +88,6 @@ fun FavoriteDetailRoute(
 private fun FavoriteDetailScreen(
     restaurant: PartnershipRestaurant,
     onBack: () -> Unit,
-    onLikeClick: () -> Unit,
     onNaverMapClick: () -> Unit,
     onKakaoMapClick: () -> Unit,
 ) {
@@ -130,7 +129,7 @@ private fun FavoriteDetailScreen(
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_arrow_left),
-                contentDescription = "뒤로가기",
+                contentDescription = stringResource(R.string.nav_back),
                 modifier = Modifier.size(24.dp),
             )
         }
@@ -138,7 +137,6 @@ private fun FavoriteDetailScreen(
         MapRestaurantBottomSheet(
             storeName = restaurant.storeName,
             storeType = restaurant.storeType,
-            isLike = restaurant.likedByUser,
             mapRestaurantList = listOf(
                 RestaurantInfo(
                     collegeName = restaurant.collegeName,
@@ -150,7 +148,6 @@ private fun FavoriteDetailScreen(
             onNaverMapClick = onNaverMapClick,
             onKakaoMapClick = onKakaoMapClick,
             onDismiss = onBack,
-            onLikeClick = onLikeClick,
             scrimColor = Color.Transparent,
         )
     }

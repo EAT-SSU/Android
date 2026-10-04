@@ -29,7 +29,13 @@
     <string name="title_report">Báo cáo</string>
     <string name="title_widget_setting">Cài đặt widget</string>
     <string name="title_partnership_map">Bản đồ đối tác</string>
+    <string name="title_good_price_map">Bản đồ cửa hàng giá tốt</string>
     <string name="title_force_update">Bắt buộc cập nhật</string>
+    <string name="tab_school_partnership">Đối tác trường</string>
+    <string name="festival_partnership_help_title">Xem ưu đãi Lễ hội CLB 2026!</string>
+    <string name="festival_partnership_help_warning">Không dùng chung ưu đãi hiện có.</string>
+    <string name="festival_partnership_help_content_description">Thông tin đối tác lễ hội</string>
+    <string name="tab_good_price">Giá tốt</string>
 
     <!-- ========================== -->
     <!-- Navigation -->
@@ -50,6 +56,8 @@
     <string name="button_report">Báo cáo</string>
     <string name="button_cancel">Hủy</string>
     <string name="button_confirm">Xác nhận</string>
+    <string name="button_close">Đóng</string>
+    <string name="button_retry">Thử lại</string>
     <string name="button_update">Cập nhật</string>
     <string name="button_check_duplicate">Kiểm tra</string>
 
@@ -134,6 +142,9 @@
     <string name="toast_oss_load_fail">Không thể tải thư viện mã nguồn mở.</string>
     <string name="toast_sign_out_success">Tài khoản của bạn đã được xóa.</string>
     <string name="toast_sign_out_fail">Không thể xóa tài khoản.</string>
+    <string name="toast_load_good_price_stores_failed">Không thể tải thông tin cửa hàng.</string>
+    <string name="btn_browse_good_price_stores">Khám phá cửa hàng giá tốt</string>
+    <string name="btn_browse_good_price_stores_subtitle">Tìm một bữa ăn hợp túi tiền gần bạn</string>
 
     <!-- ========================== -->
     <!-- Review Screen -->
@@ -148,20 +159,22 @@
     <string name="review_photo_count">Thêm ảnh (%1$d/%2$d)</string>
     <string name="review_settings">Cài đặt đánh giá</string>
     <string name="review_error_occurred">Đã xảy ra lỗi.</string>
+    <string name="review_menu_info_load_failed">Không thể tải thông tin thực đơn.\nVui lòng thử lại.</string>
+    <string name="review_additional_data_load_failed">Không thể tải thêm đánh giá.</string>
     <string name="review_show_translation">Xem bản dịch</string>
     <string name="review_translate">Dịch</string>
     <string name="review_show_original">Xem bản gốc</string>
     <string name="review_translating">Đang dịch...</string>
-    <string name="review_translated_by_ai">Được AI dịch từ tiếng Hàn</string>
-    <string name="review_translation_unavailable">Không thể dịch</string>
+    <string name="review_translated_by_ai">AI dịch từ tiếng Hàn</string>
+    <string name="review_translation_unavailable">Bản dịch không khả dụng</string>
     <string name="review_translation_accuracy_notice">Bản dịch AI không phải lúc nào cũng chính xác.</string>
-    <string name="review_translation_unavailable_notice">Tính năng dịch AI tạm thời không khả dụng.\nVui lòng thử lại sau.</string>
-    <string name="review_translation_information">Thông tin bản dịch</string>
+    <string name="review_translation_unavailable_notice">Hiện không thể sử dụng bản dịch AI.\nVui lòng thử lại sau.</string>
+    <string name="review_translation_information">Thông tin dịch thuật</string>
     <string name="review_profile_image">Ảnh hồ sơ</string>
     <string name="review_more">Menu đánh giá</string>
     <string name="review_image">Ảnh đánh giá</string>
     <string name="toast_review_translation_failed">Không thể dịch đánh giá.</string>
-    <string name="toast_review_translation_unchanged">Bản dịch giống với nội dung gốc.</string>
+    <string name="toast_review_translation_unchanged">Bản dịch giống với bản gốc.</string>
     <string name="review_write">Viết đánh giá</string>
 
     <!-- ========================== -->
@@ -182,6 +195,7 @@
     <!-- Menu/Restaurant Related -->
     <!-- ========================== -->
     <string name="today_menu">Thực đơn hôm nay</string>
+    <string name="cafeteria_outside_business_hours">Hiện không trong giờ hoạt động.</string>
     <string name="price">Giá</string>
     <string name="rate">★</string>
     <string name="student_cafeteria">Nhà ăn sinh viên</string>
@@ -208,9 +222,9 @@
     <string name="logout">Đăng xuất</string>
     <string name="signout">Xóa tài khoản</string>
     <string name="app_version">Phiên bản ứng dụng</string>
-    <string name="mypage_push_activity_section_title">Notifications and Activity</string>
-    <string name="mypage_service_section_title">Service Info</string>
-    <string name="mypage_etc_section_title">và vân vân</string>
+    <string name="mypage_push_activity_section_title">Thông báo &amp; Hoạt động</string>
+    <string name="mypage_service_section_title">Thông tin dịch vụ</string>
+    <string name="mypage_etc_section_title">Khác</string>
     <string name="mypage_push_notification_title">Cài đặt thông báo đẩy</string>
     <string name="mypage_push_notification_description">Bạn sẽ nhận được thông báo mỗi ngày lúc 11:00.</string>
 
@@ -265,7 +279,7 @@
     <!-- App Slogan -->
     <!-- ========================== -->
     <string name="app_slogan_part1">Ăn tại</string>
-    <string name="app_slogan_part2">Soongsil</string>
+    <string name="app_slogan_part2">Khắp mọi nơi ở Seoul</string>
 
     <!-- ========================== -->
     <!-- Links & External -->
@@ -275,7 +289,7 @@
     <string name="private_information">Chính sách quyền riêng tư</string>
     <string name="policy">Chính sách quyền riêng tư</string>
     <string name="terms">Điều khoản dịch vụ</string>
-    <string name="terms_and_rule">Điều khoản và Chính sách</string>
+    <string name="terms_and_rule">Điều khoản &amp; Chính sách</string>
     <string name="developer">Thông tin đội ngũ</string>
     <string name="oss_licenses">Thư viện mã nguồn mở</string>
 
@@ -303,8 +317,8 @@
     <string name="input_string_description">Nhập ngành học của bạn\nvà xem các ưu đãi dành riêng cho bạn!</string>
     <string name="map_unknown_college_department">Không có thông tin khoa/ngành</string>
     <string name="map_open_kakao">KakaoMap</string>
-    <string name="map_open_naver">Bản đồ Naver</string>
-    <string name="toast_map_open_failed">Không thể mở bản đồ. Vui lòng thử lại sau.</string>
+    <string name="map_open_naver">Naver Map</string>
+    <string name="toast_map_open_failed">Không thể mở bản đồ. Vui lòng thử lại sau giây lát.</string>
 
     <!-- ========================== -->
     <!-- Partnership -->
@@ -313,13 +327,58 @@
     <string name="etc">Ghi chú</string>
     <string name="time">Giờ mở cửa</string>
     <string name="favorite_partnership">Ưu đãi yêu thích</string>
+    <string name="favorite_title">Yêu thích</string>
+    <string name="favorite_menu_tab">Món yêu thích</string>
+    <string name="favorite_partnership_tab">Đối tác yêu thích</string>
+    <string name="favorite_filter_all">Tất cả</string>
+    <string name="favorite_empty_title">Chưa có đối tác yêu thích.</string>
+    <string name="favorite_empty_description">Lưu các đối tác bạn quan tâm để xem nhanh.</string>
+    <string name="favorite_open">Mở đối tác yêu thích</string>
+    <string name="favorite_open_detail">Xem chi tiết đối tác</string>
+    <string name="favorite_edit">Chỉnh sửa</string>
+    <string name="favorite_select_all">Chọn tất cả</string>
+    <string name="favorite_delete">Xóa</string>
+    <string name="favorite_delete_count">Xóa %d</string>
+    <string name="favorite_added_snackbar">Đã thêm vào đối tác yêu thích.</string>
+    <string name="favorite_deleted_snackbar">Đã xóa khỏi đối tác yêu thích.</string>
+    <string name="favorite_undo">Hủy</string>
     <string name="partnership_filter_mine">Ưu đãi của tôi</string>
-    <string name="partnership_filter_festival">các hoạt động lễ hội</string>
+    <string name="partnership_filter_festival">Lễ hội</string>
     <string name="partnership_filter_all">Tất cả</string>
+    <string name="partnership_filter_restaurant">Nhà hàng</string>
+    <string name="partnership_filter_cafe">Quán cà phê</string>
+    <string name="partnership_filter_pub">Quán rượu</string>
     <string name="partnership_filter_department_placeholder">Ngành/Khoa</string>
-    <string name="eatssu_instagram_link">EAT-SSU Instagram</string>
 
     <!-- ========================== -->
     <!-- URLs (Non-translatable) -->
     <!-- ========================== -->
+    <string name="eatssu_instagram_link">Instagram EAT-SSU</string>
+    <string name="event_do_not_show_again">Không hiển thị lại</string>
+
+    <!-- ========================== -->
+    <!-- Cafeteria Detail Information -->
+    <!-- ========================== -->
+    <string name="cafeteria_student_location">Tòa Student Union, tầng 3</string>
+    <string name="cafeteria_student_time">08:00~09:00(Bữa sáng 1.000 won)\n11:20~14:00(Bữa trưa)\n16:00~23:00(Phòng tự học tạm thời của thư viện)</string>
+    <string name="cafeteria_student_etc">3 quầy phục vụ\nMón kiểu ttukbaegi, cơm tô, món Âu\nĐóng cửa cuối tuần</string>
+
+    <string name="cafeteria_dodam_location">Tòa Shinyang, tầng 2</string>
+    <string name="cafeteria_dodam_time">Ngày thường\n11:20~14:00(Bữa trưa)\n17:00~18:30(Bữa tối)\n19:30~23:00(Phòng tự học tạm thời của thư viện)\n\nCuối tuần\n11:20~13:30(Bữa trưa)</string>
+    <string name="cafeteria_dodam_etc">2 quầy phục vụ\nSuất ăn thường, suất ăn lành mạnh</string>
+
+    <string name="cafeteria_dormitory_location">Residence Hall, tầng B1</string>
+    <string name="cafeteria_dormitory_time">Ngày thường\n11:00~13:50(Bữa trưa)\n17:00~18:30(Bữa tối)\n\nCuối tuần\n11:20~13:30(Bữa trưa)\n17:00~18:20(Bữa tối)</string>
+    <string name="cafeteria_dormitory_etc">Không phục vụ bữa sáng</string>
+
+    <string name="cafeteria_faculty_location">Tòa Jeonsan, tầng B1</string>
+    <string name="cafeteria_faculty_time">11:30~14:00(Bữa trưa)</string>
+    <string name="cafeteria_faculty_etc">Đóng cửa cuối tuần</string>
+
+    <string name="cafeteria_snack_corner_location">Tòa Student Union, tầng 3</string>
+    <string name="cafeteria_snack_corner_time">11:00~15:30(Bữa trưa)\n16:00~23:00(Phòng tự học tạm thời của thư viện)</string>
+    <string name="cafeteria_snack_corner_etc">Bunsik(đồ ăn vặt Hàn Quốc), cơm hộp kiểu xưa, cơm ly, v.v.\nĐóng cửa cuối tuần</string>
+    <string name="cafeteria_the_kitchen_location">Tòa Student Union, tầng 2</string>
+    <string name="cafeteria_the_kitchen_time"></string>
+    <string name="cafeteria_the_kitchen_etc"></string>
 </resources>

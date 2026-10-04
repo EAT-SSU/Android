@@ -50,4 +50,29 @@ class MapWebFallbackBehaviorSpec : AppBehaviorSpec({
             }
         }
     }
+
+    given("a good-price store without server map URLs") {
+        val destination = MapDestination(
+            storeName = "착한식당 숭실대점",
+            latitude = 37.496,
+            longitude = 126.955,
+        )
+
+        `when`("neither map app is installed") {
+            then("generated browser URLs retain the store name and coordinates") {
+                MapDeepLink.fallbackWebUrl(
+                    provider = MapProvider.NAVER,
+                    destination = destination,
+                    resolvedPlace = null,
+                ) shouldContain "%EC%B0%A9%ED%95%9C%EC%8B%9D%EB%8B%B9%20%EC%88%AD%EC%8B%A4%EB%8C%80%EC%A0%90"
+
+                MapDeepLink.fallbackWebUrl(
+                    provider = MapProvider.KAKAO,
+                    destination = destination,
+                    resolvedPlace = null,
+                ) shouldBe "https://map.kakao.com/link/map/" +
+                    "%EC%B0%A9%ED%95%9C%EC%8B%9D%EB%8B%B9%20%EC%88%AD%EC%8B%A4%EB%8C%80%EC%A0%90,37.496,126.955"
+            }
+        }
+    }
 })

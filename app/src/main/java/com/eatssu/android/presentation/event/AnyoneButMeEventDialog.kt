@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -98,11 +99,11 @@ fun AnyoneButMeEventDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     FooterActionText(
-                        text = "다시 보지 않기",
+                        text = stringResource(R.string.event_do_not_show_again),
                         onClick = onDismissForever
                     )
                     FooterActionText(
-                        text = "닫기",
+                        text = stringResource(R.string.button_close),
                         onClick = onDismiss
                     )
                 }
@@ -124,7 +125,7 @@ private fun InstagramButton(onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "EAT-SSU 인스타그램 바로가기",
+            text = stringResource(R.string.eatssu_instagram_link),
             color = White,
             style = EatssuTheme.typography.body2
         )

@@ -136,6 +136,18 @@
                 android:layout_marginTop="11dp"
                 android:layout_marginBottom="18dp"
                 tools:listitem="@layout/item_menu" />
+
+            <TextView
+                android:id="@+id/tv_closed_message"
+                style="@style/Body3"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/cafeteria_outside_business_hours"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
     </LinearLayout>

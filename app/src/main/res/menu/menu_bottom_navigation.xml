@@ -18,11 +18,13 @@
     <!--        android:icon="@drawable/ic_anyone_but_me"-->
     <!--        android:title="@string/nav_anyone_but_me"/>-->
 
-    <item
-        android:id="@+id/favorite_menu"
-        android:enabled="true"
-        android:icon="@drawable/selector_ic_like"
-        android:title="@string/favorite" />
+
+    <!-- TODO 찜 기능 완료 시-->
+    <!--      <item-->
+    <!--        android:id="@+id/favorite_menu"-->
+    <!--        android:enabled="true"-->
+    <!--        android:icon="@drawable/selector_ic_like"-->
+    <!--        android:title="@string/favorite" />-->
 
     <item
         android:id="@+id/mypage_menu"

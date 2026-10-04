@@ -1,18 +1,11 @@
 package com.eatssu.android.presentation.map.component
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,17 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -54,36 +41,25 @@ import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
-import com.eatssu.design_system.component.EatSsuSnackbar
-import com.eatssu.design_system.component.EatSsuSnackbarType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray200
 import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapRestaurantBottomSheet(
     storeName: String,
     storeType: StoreType,
-    isLike: Boolean,
     mapRestaurantList: List<RestaurantInfo>,
     onNaverMapClick: () -> Unit = {},
     onKakaoMapClick: () -> Unit = {},
     onDismiss: () -> Unit = {},
-    onLikeClick: () -> Unit = {},
     scrimColor: Color = BottomSheetDefaults.ScrimColor,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var snackbarState by remember { mutableStateOf<Pair<String, String?>?>(null) }
-    var snackbarJob by remember { mutableStateOf<Job?>(null) }
 
     LaunchedEffect(Unit) {
         sheetState.show()
@@ -121,13 +97,12 @@ fun MapRestaurantBottomSheet(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // 상단 타이틀 라인 (store name + 하트)
+            // 상단 타이틀 라인
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
                     Text(
@@ -155,41 +130,14 @@ fun MapRestaurantBottomSheet(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = storeType.value,
+                            text = stringResource(id = storeType.displayNameResId),
                             style = EatssuTheme.typography.caption3,
                             color = Gray400,
                         )
                     }
                 }
 
-                // 찜 기능
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = if (isLike) R.drawable.ic_like_filled else R.drawable.ic_like_line),
-                        contentDescription = "좋아요",
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                val wasLiked = isLike
-                                onLikeClick()
-                                snackbarJob?.cancel()
-                                snackbarJob = scope.launch {
-                                    snackbarState = if (!wasLiked) {
-                                        context.getString(R.string.favorite_added_snackbar) to null
-                                    } else {
-                                        context.getString(R.string.favorite_deleted_snackbar) to context.getString(
-                                            R.string.favorite_undo
-                                        )
-                                    }
-                                    delay(3000)
-                                    snackbarState = null
-                                }
-                            }
-                    )
-                }
+                // TODO 찜 탭 재도입 시 상세 찜 UI 복구
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -253,99 +201,14 @@ fun MapRestaurantBottomSheet(
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Gray200),
+            MapLinkButtons(
+                onKakaoMapClick = onKakaoMapClick,
+                onNaverMapClick = onNaverMapClick,
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .padding(horizontal = 24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                MapLinkButton(
-                    iconRes = R.drawable.ic_kakao_map,
-                    labelRes = R.string.map_open_kakao,
-                    onClick = onKakaoMapClick,
-                    modifier = Modifier.weight(1f),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .height(24.dp)
-                        .background(Gray400),
-                )
-
-                MapLinkButton(
-                    iconRes = R.drawable.ic_naver_map,
-                    labelRes = R.string.map_open_naver,
-                    onClick = onNaverMapClick,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-            }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 104.dp),
-            ) {
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = snackbarState != null,
-                    enter = fadeIn() + slideInVertically { it / 2 },
-                    exit = fadeOut() + slideOutVertically { it / 2 },
-                ) {
-                    snackbarState?.let { (message, actionLabel) ->
-                        EatSsuSnackbar(
-                            message = message,
-                            actionLabel = actionLabel,
-                            onActionClick = {
-                                snackbarJob?.cancel()
-                                snackbarState = null
-                                onLikeClick()
-                            },
-                            type = EatSsuSnackbarType.Success,
-                        )
-                    }
-            }
         }
     }
 }
-}
-
-@Composable
-private fun MapLinkButton(
-    iconRes: Int,
-    labelRes: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxHeight()
-            .clickable(onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = stringResource(labelRes),
-            style = EatssuTheme.typography.body2,
-            color = Gray600,
-        )
-    }
 }
 
 @Preview(showBackground = true)
@@ -364,7 +227,6 @@ fun MapRestaurantBottomSheetPreview() {
                 storeName = "현선이네",
                 mapRestaurantList = dummyList,
                 storeType = StoreType.RESTAURANT,
-                isLike = false
             )
         }
     }
