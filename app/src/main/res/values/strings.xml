@@ -405,4 +405,8 @@
     <string name="cafeteria_the_kitchen_location">학생회관 2층</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="favorite_menu_preparing_title">메뉴 찜은 준비 중이에요.</string>
+    <string name="favorite_menu_preparing_description">곧 만나볼 수 있어요!</string>
+    <string name="favorite_add_partnership">제휴 찜하기</string>
+    <string name="favorite_remove_partnership">제휴 찜 취소하기</string>
 </resources>

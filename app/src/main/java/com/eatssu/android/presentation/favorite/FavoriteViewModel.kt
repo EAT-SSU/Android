@@ -91,7 +91,7 @@ class FavoriteViewModel @Inject constructor(
     private var menuSearchJob: Job? = null
     private val pendingMenuActions = mutableSetOf<Long>()
 
-    fun loadFavorites() {
+    fun loadFavorites(includeMenuFavorites: Boolean = false) {
         viewModelScope.launch {
             val previous = (_uiState.value as? UiState.Success)?.data ?: FavoriteState()
             _uiState.value = UiState.Loading
@@ -106,9 +106,25 @@ class FavoriteViewModel @Inject constructor(
                 val itemById = items.associateBy { it.partnershipId }
                 order.mapNotNull(itemById::get)
             }
-            val menuJob = async { menuFavoriteRepository.getFavoriteMenus() }
+            // Menu favorites remain unavailable in this release.
+            val menuJob = if (includeMenuFavorites) {
+                async { menuFavoriteRepository.getFavoriteMenus() }
+            } else {
+                null
+            }
 
             val partnerships = partnershipJob.await()
+            if (menuJob == null) {
+                _uiState.value = UiState.Success(
+                    previous.copy(
+                        partnerships = partnerships,
+                        favoriteMenus = emptyList(),
+                        unfavoritedMenuIds = emptySet(),
+                        favoriteMenuLoadState = MenuFavoriteLoadState.Idle,
+                    ),
+                )
+                return@launch
+            }
             when (val menuResult = menuJob.await()) {
                 is ApiResult.Success -> {
                     _uiState.value = UiState.Success(

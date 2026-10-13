@@ -1,44 +1,46 @@
 package com.eatssu.android.presentation.map.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eatssu.android.R
 import com.eatssu.android.presentation.map.iconRes
 import com.eatssu.android.presentation.map.model.RestaurantInfo
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.android.R
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
 import com.eatssu.design_system.theme.EatssuTheme
@@ -54,6 +56,8 @@ fun MapRestaurantBottomSheet(
     storeName: String,
     storeType: StoreType,
     mapRestaurantList: List<RestaurantInfo>,
+    isLiked: Boolean = false,
+    onFavoriteClick: () -> Unit = {},
     onNaverMapClick: () -> Unit = {},
     onKakaoMapClick: () -> Unit = {},
     onDismiss: () -> Unit = {},
@@ -104,7 +108,7 @@ fun MapRestaurantBottomSheet(
                     .padding(horizontal = 24.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = storeName,
                         style = EatssuTheme.typography.subtitle2
@@ -137,7 +141,21 @@ fun MapRestaurantBottomSheet(
                     }
                 }
 
-                // TODO 찜 탭 재도입 시 상세 찜 UI 복구
+                IconButton(
+                    onClick = onFavoriteClick,
+                    modifier = Modifier.align(Alignment.Top).size(24.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (isLiked) R.drawable.ic_like_filled else R.drawable.ic_like_line,
+                        ),
+                        contentDescription = stringResource(
+                            if (isLiked) R.string.favorite_remove_partnership else R.string.favorite_add_partnership,
+                        ),
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
