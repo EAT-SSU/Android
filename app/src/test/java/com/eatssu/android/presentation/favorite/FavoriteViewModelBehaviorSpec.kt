@@ -43,6 +43,8 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
                 val state = (viewModel.uiState.value as UiState.Success).data
                 state.partnerships.map { it.partnershipId } shouldBe listOf(2, 1)
                 state.partnerships.map { it.storeName } shouldBe listOf("카페", "식당")
+                coVerify(exactly = 0) { menuRepository.getFavoriteMenus() }
+                state.favoriteMenuLoadState shouldBe MenuFavoriteLoadState.Idle
             }
         }
 
@@ -99,7 +101,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         val viewModel = FavoriteViewModel(partnershipRepository, dataStore, menuRepository)
 
         `when`("찜 목록을 불러오면") {
-            viewModel.loadFavorites()
+            viewModel.loadFavorites(includeMenuFavorites = true)
 
             then("서버가 내려준 최신순 메뉴를 표시한다") {
                 val state = (viewModel.uiState.value as UiState.Success).data
@@ -108,7 +110,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("공백을 제외한 검색어가 두 글자 미만이면") {
-            viewModel.loadFavorites()
+            viewModel.loadFavorites(includeMenuFavorites = true)
             viewModel.onMenuSearchQueryChanged(" 김 ")
 
             then("서버 검색을 호출하지 않는다") {
@@ -117,7 +119,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("두 글자 이상 메뉴를 검색하면") {
-            viewModel.loadFavorites()
+            viewModel.loadFavorites(includeMenuFavorites = true)
             viewModel.onMenuSearchQueryChanged(" 김치 ")
 
             then("앞뒤 공백을 제거한 결과를 식당 정보와 함께 유지한다") {
@@ -128,7 +130,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         }
 
         `when`("검색 결과를 찜하면") {
-            viewModel.loadFavorites()
+            viewModel.loadFavorites(includeMenuFavorites = true)
             viewModel.onMenuSearchQueryChanged("김치")
             viewModel.toggleMenuFavorite(searchResult)
 
@@ -164,7 +166,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         val viewModel = FavoriteViewModel(partnershipRepository, dataStore, menuRepository)
 
         `when`("하트를 끄고 같은 화면에서 다시 켠 뒤, 다시 끄고 재진입하면") {
-            viewModel.loadFavorites()
+            viewModel.loadFavorites(includeMenuFavorites = true)
             viewModel.toggleFavoriteMenu(favoriteMenu)
 
             then("화면을 떠나기 전에는 메뉴가 남아 다시 찜할 수 있고, 재진입 후에는 사라진다") {
@@ -179,7 +181,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
                 coVerify(exactly = 1) { menuRepository.addFavoriteMenu(10L) }
 
                 viewModel.toggleFavoriteMenu(favoriteMenu)
-                viewModel.loadFavorites()
+                viewModel.loadFavorites(includeMenuFavorites = true)
                 state = (viewModel.uiState.value as UiState.Success).data
                 state.favoriteMenus shouldBe emptyList()
                 state.unfavoritedMenuIds shouldBe emptySet()

@@ -1,37 +1,35 @@
 package com.eatssu.android.presentation.favorite
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,43 +39,43 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.eatssu.android.R
-import com.eatssu.android.domain.model.FavoriteMenu
-import com.eatssu.android.domain.model.MenuFavoriteSearchResult
 import com.eatssu.android.domain.model.PartnershipRestaurant
+import com.eatssu.android.presentation.map.component.MapStyleTabs
+import com.eatssu.android.presentation.map.component.PartnershipCategory
+import com.eatssu.android.presentation.map.component.PartnershipCategoryChip
 import com.eatssu.android.presentation.map.iconRes
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
-import com.eatssu.common.UiState
+import com.eatssu.android.R
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
+import com.eatssu.common.UiState
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuSnackbar
 import com.eatssu.design_system.component.EatSsuSnackbarType
@@ -89,14 +87,14 @@ import com.eatssu.design_system.theme.Gray400
 import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Gray700
+import com.eatssu.design_system.theme.pretendardMedium
+import com.eatssu.design_system.theme.pretendardSemiBold
 import com.eatssu.design_system.theme.Primary
-import com.eatssu.design_system.theme.Secondary
 import com.eatssu.design_system.theme.White
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 private const val MENU_PAGE = 0
 private const val PARTNERSHIP_PAGE = 1
@@ -104,32 +102,18 @@ private const val PARTNERSHIP_PAGE = 1
 @Composable
 fun FavoriteRoute(
     viewModel: FavoriteViewModel,
-    onBackToMap: () -> Unit,
+    showPartnership: Boolean = false,
     onPartnershipClick: (PartnershipRestaurant) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var menuSnackbarEvent by remember { mutableStateOf<FavoriteMenuSnackbarEvent?>(null) }
-
-    LaunchedEffect(viewModel) {
-        viewModel.menuSnackbarEvents.collectLatest { event ->
-            menuSnackbarEvent = event
-            delay(3500)
-            menuSnackbarEvent = null
-        }
-    }
-
     FavoriteScreen(
         uiState = uiState,
-        onBackToMap = onBackToMap,
+        showPartnership = showPartnership,
         onStoreTypeSelected = viewModel::selectStoreType,
         onPartnershipClick = onPartnershipClick,
         onRemoveFavorite = viewModel::removeFavorite,
         onRemoveFavorites = viewModel::removeFavorites,
         onRestoreFavorites = viewModel::restoreFavorites,
-        onMenuSearchQueryChanged = viewModel::onMenuSearchQueryChanged,
-        onSearchFavoriteClick = viewModel::toggleMenuFavorite,
-        onFavoriteMenuClick = viewModel::toggleFavoriteMenu,
-        menuSnackbarEvent = menuSnackbarEvent,
     )
 }
 
@@ -137,21 +121,14 @@ fun FavoriteRoute(
 @Composable
 internal fun FavoriteScreen(
     uiState: UiState<FavoriteState>,
-    onBackToMap: () -> Unit,
+    showPartnership: Boolean = false,
     onStoreTypeSelected: (StoreType?) -> Unit,
     onPartnershipClick: (PartnershipRestaurant) -> Unit,
     onRemoveFavorite: (Int) -> Unit = {},
     onRemoveFavorites: (Set<Int>) -> Unit = {},
     onRestoreFavorites: (List<FavoritePartnershipItem>) -> Unit = {},
-    onMenuSearchQueryChanged: (String) -> Unit = {},
-    onSearchFavoriteClick: (MenuFavoriteSearchResult) -> Unit = {},
-    onFavoriteMenuClick: (FavoriteMenu) -> Unit = {},
-    menuSnackbarEvent: FavoriteMenuSnackbarEvent? = null,
 ) {
-    val pagerState = rememberPagerState(
-        initialPage = MENU_PAGE,
-        pageCount = { 2 },
-    )
+    var selectedPage by rememberSaveable { mutableStateOf(if (showPartnership) PARTNERSHIP_PAGE else MENU_PAGE) }
     val scope = rememberCoroutineScope()
     var isEditMode by remember { mutableStateOf(false) }
     var selectedPartnershipIds by remember { mutableStateOf(setOf<Int>()) }
@@ -162,6 +139,11 @@ internal fun FavoriteScreen(
     }
     var showDeleteSnackbar by remember { mutableStateOf(false) }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
+
+    BackHandler(enabled = isEditMode) {
+        isEditMode = false
+        selectedPartnershipIds = emptySet()
+    }
 
     TrackScreenViewEvent(ScreenId.MAP_FAVORITE)
 
@@ -187,14 +169,10 @@ internal fun FavoriteScreen(
                         textAlign = TextAlign.Center,
                     )
 
-                    IconButton(
+                    if (isEditMode) IconButton(
                         onClick = {
-                            if (isEditMode) {
-                                isEditMode = false
-                                selectedPartnershipIds = emptySet()
-                            } else {
-                                onBackToMap()
-                            }
+                            isEditMode = false
+                            selectedPartnershipIds = emptySet()
                         },
                         modifier = Modifier
                             .align(Alignment.CenterStart)
@@ -250,22 +228,17 @@ internal fun FavoriteScreen(
                         },
                     )
                 } else {
-                    FavoriteTabs(
-                        selectedPage = pagerState.currentPage,
-                        onPageSelected = { page ->
-                            scope.launch {
-                                pagerState.animateScrollToPage(
-                                    page
-                                )
-                            }
-                        },
+                    MapStyleTabs(
+                        labels = listOf(
+                            stringResource(R.string.favorite_menu_tab),
+                            stringResource(R.string.favorite_partnership_tab),
+                        ),
+                        selectedPage = selectedPage,
+                        onPageSelected = { selectedPage = it },
                     )
 
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.fillMaxSize(),
-                    ) { page ->
-                        if (page == PARTNERSHIP_PAGE) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (selectedPage == PARTNERSHIP_PAGE) {
                             FavoritePartnershipContent(
                                 uiState = uiState,
                                 onStoreTypeSelected = onStoreTypeSelected,
@@ -290,11 +263,9 @@ internal fun FavoriteScreen(
                                 },
                             )
                         } else {
-                            FavoriteMenuContent(
-                                uiState = uiState,
-                                onSearchQueryChanged = onMenuSearchQueryChanged,
-                                onSearchFavoriteClick = onSearchFavoriteClick,
-                                onFavoriteMenuClick = onFavoriteMenuClick,
+                            FavoriteEmptyContent(
+                                title = stringResource(R.string.favorite_menu_preparing_title),
+                                description = stringResource(R.string.favorite_menu_preparing_description),
                             )
                         }
                     }
@@ -320,28 +291,6 @@ internal fun FavoriteScreen(
                     },
                     type = EatSsuSnackbarType.Success,
                 )
-            }
-
-            AnimatedVisibility(
-                visible = menuSnackbarEvent != null,
-                enter = fadeIn() + slideInVertically { it / 2 },
-                exit = fadeOut() + slideOutVertically { it / 2 },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 6.dp),
-            ) {
-                menuSnackbarEvent?.let { event ->
-                    EatSsuSnackbar(
-                        message = stringResource(event.messageRes),
-                        modifier = Modifier.fillMaxWidth(),
-                        type = if (event.isError) {
-                            EatSsuSnackbarType.Danger
-                        } else {
-                            EatSsuSnackbarType.Success
-                        },
-                    )
-                }
             }
         }
     }
@@ -490,10 +439,11 @@ private fun FavoriteEditRow(
             )
         }
 
-        Image(
+        Icon(
             painter = painterResource(R.drawable.ic_arrow_right),
+            tint = Gray300,
             contentDescription = null,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(18.dp),
         )
     }
 }
@@ -567,39 +517,6 @@ private fun CircularCheckbox(
 }
 
 @Composable
-private fun FavoriteTabs(
-    selectedPage: Int,
-    onPageSelected: (Int) -> Unit,
-) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        listOf(
-            MENU_PAGE to stringResource(R.string.favorite_menu_tab),
-            PARTNERSHIP_PAGE to stringResource(R.string.favorite_partnership_tab),
-        ).forEach { (page, label) ->
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable { onPageSelected(page) },
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = label,
-                    style = EatssuTheme.typography.subtitle2.copy(lineHeight = 24.sp),
-                    color = if (selectedPage == page) Primary else Gray400,
-                    modifier = Modifier.padding(vertical = 8.5.dp),
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .background(if (selectedPage == page) Primary else Gray400),
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun FavoritePartnershipContent(
     uiState: UiState<FavoriteState>,
     onStoreTypeSelected: (StoreType?) -> Unit,
@@ -643,42 +560,29 @@ private fun FavoriteFilters(
     onStoreTypeSelected: (StoreType?) -> Unit,
     onEditClick: () -> Unit,
 ) {
-    val filters = listOf(
-        null to stringResource(R.string.favorite_filter_all),
-        StoreType.RESTAURANT to StoreType.RESTAURANT.value,
-        StoreType.CAFE to StoreType.CAFE.value,
-        StoreType.PUB to StoreType.PUB.value,
-    )
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 14.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 24.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        filters.forEach { (type, label) ->
-            val selected = selectedStoreType == type
-            Text(
-                text = label,
-                style = EatssuTheme.typography.body2,
-                fontWeight = if (selected) FontWeight.W500 else FontWeight.W400,
-                color = if (selected) Primary else Gray400,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(24.dp))
-                    .then(
-                        if (selected) Modifier.background(Secondary)
-                        else Modifier.border(1.dp, Gray300, RoundedCornerShape(24.dp)),
-                    )
-                    .clickable { onStoreTypeSelected(type) }
-                    .padding(horizontal = 18.dp, vertical = 10.dp),
-            )
+        Row(
+            modifier = Modifier.weight(1f).horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            PartnershipCategory.entries.forEach { category ->
+                PartnershipCategoryChip(
+                    category = category,
+                    isSelected = selectedStoreType == category.storeType,
+                    onClick = { onStoreTypeSelected(category.storeType) },
+                )
+            }
         }
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.width(12.dp))
         Text(
             text = stringResource(R.string.favorite_edit),
-            style = EatssuTheme.typography.button2.copy(color = Gray500),
+            style = EatssuTheme.typography.button2.copy(fontFamily = pretendardSemiBold),
+            color = Gray500,
             modifier = Modifier.clickable(onClick = onEditClick),
         )
     }
@@ -823,16 +727,20 @@ private fun FavoritePartnershipRow(
             )
         }
 
-        Image(
+        Icon(
             painter = painterResource(R.drawable.ic_arrow_right),
+            tint = Gray300,
             contentDescription = stringResource(R.string.favorite_open_detail),
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(18.dp),
         )
     }
 }
 
 @Composable
-private fun FavoriteEmptyContent() {
+private fun FavoriteEmptyContent(
+    title: String = stringResource(R.string.favorite_empty_title),
+    description: String = stringResource(R.string.favorite_empty_description),
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -841,14 +749,16 @@ private fun FavoriteEmptyContent() {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = stringResource(R.string.favorite_empty_title),
-            style = EatssuTheme.typography.h1,
+            text = title,
+            style = EatssuTheme.typography.subtitle2.copy(lineHeight = 24.sp),
+            textAlign = TextAlign.Center,
             color = Gray600,
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.favorite_empty_description),
-            style = EatssuTheme.typography.body2,
+            text = description,
+            style = EatssuTheme.typography.caption2.copy(fontFamily = pretendardMedium),
+            textAlign = TextAlign.Center,
             color = Gray600,
         )
     }
@@ -872,7 +782,7 @@ private fun FavoriteScreenPreview() {
                     ),
                 ),
             ),
-            onBackToMap = {},
+            showPartnership = true,
             onStoreTypeSelected = {},
             onPartnershipClick = {},
         )

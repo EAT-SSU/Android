@@ -1,8 +1,8 @@
 package com.eatssu.android.presentation
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -13,32 +13,33 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.NavController
 import androidx.work.WorkManager
-import com.eatssu.android.R
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
 import com.eatssu.android.presentation.event.AnyoneButMeEventTooltipController
 import com.eatssu.android.presentation.favorite.FavoriteDetailFragment
+import com.eatssu.android.presentation.favorite.FavoriteFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
+import com.eatssu.android.R
+import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
-import com.eatssu.common.enums.ScreenId
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -131,9 +132,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         }
     }
 
-    fun openFavoriteTab() {
+    fun openFavoriteTab(showPartnership: Boolean = false) {
         if (navController.currentDestination?.id != R.id.favoriteFragment) {
-            navController.navigate(R.id.favoriteFragment)
+            navController.navigate(
+                R.id.favoriteFragment,
+                bundleOf(FavoriteFragment.ARG_SHOW_PARTNERSHIP to showPartnership),
+            )
         }
     }
 

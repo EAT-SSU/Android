@@ -391,4 +391,8 @@
     <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="favorite_menu_preparing_title">Menu favorites are coming soon.</string>
+    <string name="favorite_menu_preparing_description">Stay tuned!</string>
+    <string name="favorite_add_partnership">Add partner to favorites</string>
+    <string name="favorite_remove_partnership">Remove partner from favorites</string>
 </resources>

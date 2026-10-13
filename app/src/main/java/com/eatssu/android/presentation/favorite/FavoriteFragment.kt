@@ -17,6 +17,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
+    companion object {
+        const val ARG_SHOW_PARTNERSHIP = "show_partnership"
+    }
+
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
@@ -32,7 +36,7 @@ class FavoriteFragment : Fragment() {
                 EatssuTheme {
                     FavoriteRoute(
                         viewModel = viewModel,
-                        onBackToMap = { mainActivity().openMapTab() },
+                        showPartnership = arguments?.getBoolean(ARG_SHOW_PARTNERSHIP) == true,
                         onPartnershipClick = mainActivity()::openFavoriteDetail,
                     )
                 }

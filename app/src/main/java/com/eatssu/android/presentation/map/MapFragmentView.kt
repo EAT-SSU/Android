@@ -2,12 +2,12 @@
 
 package com.eatssu.android.presentation.map
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -15,30 +15,27 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,43 +43,45 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eatssu.android.R
 import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.Partnership
 import com.eatssu.android.domain.model.PartnershipRestaurant
+import com.eatssu.android.presentation.goodprice.GoodPriceMapRoute
 import com.eatssu.android.presentation.MainState
 import com.eatssu.android.presentation.MainViewModel
-import com.eatssu.android.presentation.goodprice.GoodPriceMapRoute
 import com.eatssu.android.presentation.map.component.DepartmentBottomSheet
 import com.eatssu.android.presentation.map.component.FestivalPartnershipHelp
 import com.eatssu.android.presentation.map.component.MapRestaurantBottomSheet
+import com.eatssu.android.presentation.map.component.MapStyleTabs
 import com.eatssu.android.presentation.map.component.PartnershipCategory
 import com.eatssu.android.presentation.map.component.PartnershipCategoryFilterRow
 import com.eatssu.android.presentation.map.component.PartnershipMarkerIcon
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
-import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
+import com.eatssu.android.presentation.util.TrackScreenViewEvent
+import com.eatssu.android.R
+import com.eatssu.common.analytics.MapAnalyticsEvent
+import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.StoreType
+import com.eatssu.common.enums.ToastType
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.UiText
-import com.eatssu.common.analytics.MapAnalyticsEvent
-import com.eatssu.common.enums.ScreenId
-import com.eatssu.common.enums.ToastType
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray300
 import com.eatssu.design_system.theme.Gray500
@@ -119,6 +118,7 @@ fun MapRoute(
     viewModel: MapViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel(),
     mapExternalNavigator: MapExternalNavigator? = null,
+    onFavoriteClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -271,50 +271,14 @@ fun MapRoute(
                     )
                 }
 
-                // 상단 탭: 학교 제휴 | 착한 가격
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = White,
-                    contentColor = Primary,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                            color = Primary,
-                            height = 2.dp,
-                        )
-                    },
-                    divider = {
-                        HorizontalDivider(color = Gray300, thickness = 0.5.dp)
-                    },
-                ) {
-                    Tab(
-                        selected = selectedTabIndex == 0,
-                        onClick = { selectedTabIndex = 0 },
-                        text = {
-                            Text(
-                                text = stringResource(R.string.tab_school_partnership),
-                                style = EatssuTheme.typography.subtitle2.copy(
-                                    fontWeight = if (selectedTabIndex == 0) FontWeight.Bold else FontWeight.Normal,
-                                ),
-                                color = if (selectedTabIndex == 0) Primary else Gray500,
-                            )
-                        },
-                    )
-
-                    Tab(
-                        selected = selectedTabIndex == 1,
-                        onClick = { selectedTabIndex = 1 },
-                        text = {
-                            Text(
-                                text = stringResource(R.string.tab_good_price),
-                                style = EatssuTheme.typography.subtitle2.copy(
-                                    fontWeight = if (selectedTabIndex == 1) FontWeight.Bold else FontWeight.Normal,
-                                ),
-                                color = if (selectedTabIndex == 1) Primary else Gray500,
-                            )
-                        },
-                    )
-                }
+                MapStyleTabs(
+                    labels = listOf(
+                        stringResource(R.string.tab_school_partnership),
+                        stringResource(R.string.tab_good_price),
+                    ),
+                    selectedPage = selectedTabIndex,
+                    onPageSelected = { selectedTabIndex = it },
+                )
             }
         },
     ) { innerPadding ->
@@ -386,6 +350,7 @@ fun MapRoute(
                         departmentId = departmentId,
                         collegeId = collegeId,
                         selectedCategory = mapState.selectedCategory,
+                        onFavoriteClick = onFavoriteClick,
                     )
                 }
 
@@ -421,9 +386,19 @@ internal fun MapScreen(
     departmentId: Long,
     collegeId: Long,
     selectedCategory: PartnershipCategory,
+    onFavoriteClick: () -> Unit,
 ) {
     val analyticsTracker = LocalAnalyticsTracker.current
     var showFestivalHelp by rememberSaveable { mutableStateOf(false) }
+    val markerItems = mapState.visiblePartnerships.toMarkerItems()
+    val clusterItems = remember(markerItems) {
+        markerItems.associateBy { marker ->
+            ItemKey(
+                marker.storeName,
+                LatLng(marker.latitude, marker.longitude),
+            )
+        }
+    }
 
     LaunchedEffect(mapState.hasFestivalPartnerships) {
         if (!mapState.hasFestivalPartnerships) showFestivalHelp = false
@@ -461,6 +436,8 @@ internal fun MapScreen(
 
                 MapRestaurantBottomSheet(
                     storeName = info.storeName,
+                    isLiked = info.likedByUser,
+                    onFavoriteClick = { viewModel.likePartnership(info.id) },
                     storeType = storeType,
                     mapRestaurantList = mapState.restaurantInfoList,
                     onNaverMapClick = {
@@ -495,13 +472,6 @@ internal fun MapScreen(
                 locationTrackingMode = LocationTrackingMode.NoFollow,
             ),
         ) {
-            val clusterItems = mapState.visiblePartnerships.associateBy {
-                ItemKey(
-                    it.storeName,
-                    LatLng(it.latitude, it.longitude),
-                )
-            }
-
             Clustering(
                 items = clusterItems,
                 thresholdStrategy = { 25.0 },
@@ -520,8 +490,8 @@ internal fun MapScreen(
                     }
                 },
                 leafContent = { info ->
-                    val partnership = info.tag as? Partnership
-                    if (partnership != null) {
+                    val marker = info.tag as? PartnershipMarkerItem
+                    if (marker != null) {
                         Row(
                             modifier = Modifier
                                 .background(Color.White, RoundedCornerShape(13.dp))
@@ -535,10 +505,13 @@ internal fun MapScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = spacedBy(3.dp),
                         ) {
-                            PartnershipMarkerIcon(partnership = partnership)
+                            PartnershipMarkerIcon(
+                                storeType = marker.storeType,
+                                isFestivalPartnership = marker.isFestivalPartnership,
+                            )
 
                             Text(
-                                text = partnership.storeName,
+                                text = marker.storeName,
                                 style = EatssuTheme.typography.caption3,
                                 color = Color.Black,
                             )
@@ -550,9 +523,9 @@ internal fun MapScreen(
                     true
                 },
                 onClickLeaf = { info, _ ->
-                    val partnership = info.tag as? Partnership ?: return@Clustering true
+                    val marker = info.tag as? PartnershipMarkerItem ?: return@Clustering true
 
-                    if (partnership.partnershipInfos.isEmpty()) {
+                    if (!marker.hasPartnershipInfo) {
                         // 제휴 정보가 없을 때는 토스트만 띄우고 바텀시트는 안 띄움
                         showToast(
                             UiText.StringResource(R.string.toast_partnership_info_not_found),
@@ -560,7 +533,7 @@ internal fun MapScreen(
                         )
                     } else {
                         // 제휴 정보가 있을 때만 바텀시트 띄움
-                        viewModel.selectPartnershipByStoreName(partnership.storeName)
+                        viewModel.selectPartnershipByStoreName(marker.storeName)
                     }
                     true
                 },
@@ -575,6 +548,23 @@ internal fun MapScreen(
             },
             modifier = Modifier.padding(top = 12.dp),
         )
+
+        IconButton(
+            onClick = onFavoriteClick,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 12.dp, end = 20.dp)
+                .size(40.dp)
+                .background(White, CircleShape)
+                .border(1.dp, Gray300, CircleShape),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_like_line),
+                contentDescription = stringResource(R.string.favorite_partnership_tab),
+                tint = Gray700,
+                modifier = Modifier.size(24.dp),
+            )
+        }
 
         if (mapState.hasFestivalPartnerships) {
             FestivalPartnershipHelp(
@@ -609,3 +599,24 @@ fun MapFragmentComposeViewPreview() {
 data class ItemKey(val id: String, private val latLng: LatLng) : ClusteringKey {
     override fun getPosition() = latLng
 }
+
+internal data class PartnershipMarkerItem(
+    val storeName: String,
+    val longitude: Double,
+    val latitude: Double,
+    val storeType: StoreType,
+    val hasPartnershipInfo: Boolean,
+    val isFestivalPartnership: Boolean,
+)
+
+internal fun List<Partnership>.toMarkerItems(): List<PartnershipMarkerItem> =
+    map { partnership ->
+        PartnershipMarkerItem(
+            storeName = partnership.storeName,
+            longitude = partnership.longitude,
+            latitude = partnership.latitude,
+            storeType = partnership.restaurantType,
+            hasPartnershipInfo = partnership.partnershipInfos.isNotEmpty(),
+            isFestivalPartnership = partnership.hasFestivalPartnership,
+        )
+    }

@@ -395,4 +395,8 @@
     <string name="cafeteria_the_kitchen_location">学生会館 2階</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="favorite_menu_preparing_title">メニューのお気に入りは準備中です。</string>
+    <string name="favorite_menu_preparing_description">もうしばらくお待ちください！</string>
+    <string name="favorite_add_partnership">提携店をお気に入りに追加</string>
+    <string name="favorite_remove_partnership">提携店をお気に入りから削除</string>
 </resources>
