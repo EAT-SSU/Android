@@ -421,4 +421,6 @@
     <string name="notification_favorite_one_body">今日の%1$s、%2$sに%3$sが登場 👀</string>
     <string name="notification_favorite_two_body">今日の%1$s、%2$sの%3$s・%4$sの%5$sが登場 👀</string>
     <string name="notification_favorite_many_body">今日の%1$s、%2$sの%3$sほか%4$d品が登場 👀</string>
+    <string name="favorite_add_partnership">提携店をお気に入りに追加</string>
+    <string name="favorite_remove_partnership">提携店をお気に入りから削除</string>
 </resources>

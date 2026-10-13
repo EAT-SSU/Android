@@ -421,4 +421,6 @@
     <string name="notification_favorite_one_body">%1$s hôm nay: %3$s tại %2$s 👀</string>
     <string name="notification_favorite_two_body">%1$s hôm nay: %3$s tại %2$s · %5$s tại %4$s 👀</string>
     <string name="notification_favorite_many_body">%1$s hôm nay: %3$s tại %2$s và %4$d món khác 👀</string>
+    <string name="favorite_add_partnership">Thêm đối tác vào yêu thích</string>
+    <string name="favorite_remove_partnership">Bỏ đối tác khỏi yêu thích</string>
 </resources>

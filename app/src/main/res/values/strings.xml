@@ -440,4 +440,6 @@
     <string name="notification_favorite_one_body">오늘 %1$s, %2$s에 %3$s 등장 👀</string>
     <string name="notification_favorite_two_body">오늘 %1$s, %2$s %3$s · %4$s %5$s 등장 👀</string>
     <string name="notification_favorite_many_body">오늘 %1$s, %2$s %3$s 외 %4$d개 등장 👀</string>
+    <string name="favorite_add_partnership">제휴 찜하기</string>
+    <string name="favorite_remove_partnership">제휴 찜 취소하기</string>
 </resources>
