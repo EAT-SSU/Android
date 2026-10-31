@@ -55,6 +55,8 @@ data class FavoriteState(
     val unfavoritedMenuIds: Set<Long> = emptySet(),
     val menuSearchResults: List<MenuFavoriteSearchResult> = emptyList(),
     val menuSearchQuery: String = "",
+    val isMenuSearchMode: Boolean = false,
+    val submittedMenuSearchQuery: String? = null,
     val favoriteMenuLoadState: MenuFavoriteLoadState = MenuFavoriteLoadState.Idle,
     val menuSearchLoadState: MenuFavoriteLoadState = MenuFavoriteLoadState.Idle,
 ) {
@@ -66,8 +68,9 @@ data class FavoriteState(
     val normalizedMenuSearchQuery: String
         get() = menuSearchQuery.trim()
 
-    val isMenuSearchActive: Boolean
-        get() = normalizedMenuSearchQuery.length >= MENU_SEARCH_MIN_LENGTH
+    val hasSubmittedMenuSearch: Boolean
+        get() = submittedMenuSearchQuery == normalizedMenuSearchQuery &&
+                normalizedMenuSearchQuery.length >= MENU_SEARCH_MIN_LENGTH
 }
 
 data class FavoriteMenuSnackbarEvent(
@@ -173,6 +176,13 @@ class FavoriteViewModel @Inject constructor(
                     )
                 }
             }
+            if (result !is ApiResult.Success && requestVersion == todayMenuLoadVersion &&
+                _todayMenuState.value.date == request.date &&
+                _todayMenuState.value.restaurant == request.restaurant &&
+                _todayMenuState.value.time == request.time
+            ) {
+                showMenuSnackbar(R.string.favorite_menu_load_error, isError = true)
+            }
         }
     }
 
@@ -239,6 +249,7 @@ class FavoriteViewModel @Inject constructor(
     }
 
     private var menuSearchJob: Job? = null
+    private var menuSearchVersion = 0
     private val pendingMenuActions = mutableSetOf<Long>()
 
     fun loadFavorites() {
@@ -286,41 +297,75 @@ class FavoriteViewModel @Inject constructor(
         }
     }
 
-    fun onMenuSearchQueryChanged(query: String) {
+    fun onMenuSearchFocusChanged(isFocused: Boolean) {
+        if (isFocused) updateState { it.copy(isMenuSearchMode = true) }
+    }
+
+    fun exitMenuSearch() {
         menuSearchJob?.cancel()
-        val keyword = query.trim()
+        menuSearchVersion++
+        updateState {
+            it.copy(
+                menuSearchQuery = "",
+                isMenuSearchMode = false,
+                submittedMenuSearchQuery = null,
+                menuSearchResults = emptyList(),
+                menuSearchLoadState = MenuFavoriteLoadState.Idle,
+            )
+        }
+        _todayMenuState.update { it.copy(expanded = false) }
+    }
+
+    fun onMenuSearchQueryChanged(query: String) {
+        val current = (_uiState.value as? UiState.Success)?.data ?: return
+        if (current.menuSearchQuery == query) return
+        menuSearchJob?.cancel()
+        menuSearchVersion++
         updateState {
             it.copy(
                 menuSearchQuery = query,
-                menuSearchResults = if (keyword.length < MENU_SEARCH_MIN_LENGTH) {
-                    emptyList()
-                } else {
-                    it.menuSearchResults
-                },
-                menuSearchLoadState = if (keyword.length < MENU_SEARCH_MIN_LENGTH) {
-                    MenuFavoriteLoadState.Idle
-                } else {
-                    MenuFavoriteLoadState.Loading
-                },
+                isMenuSearchMode = true,
+                submittedMenuSearchQuery = null,
+                menuSearchResults = emptyList(),
+                menuSearchLoadState = MenuFavoriteLoadState.Idle,
             )
         }
+    }
 
+    fun submitMenuSearch() {
+        val current = (_uiState.value as? UiState.Success)?.data ?: return
+        val keyword = current.normalizedMenuSearchQuery
         if (keyword.length < MENU_SEARCH_MIN_LENGTH) return
-
+        if (current.menuSearchLoadState == MenuFavoriteLoadState.Loading &&
+            current.submittedMenuSearchQuery == keyword
+        ) return
+        menuSearchJob?.cancel()
+        val requestVersion = ++menuSearchVersion
+        updateState {
+            it.copy(
+                isMenuSearchMode = true,
+                submittedMenuSearchQuery = keyword,
+                menuSearchResults = emptyList(),
+                menuSearchLoadState = MenuFavoriteLoadState.Loading,
+            )
+        }
         menuSearchJob = viewModelScope.launch {
-            when (val result = menuFavoriteRepository.searchMenus(keyword)) {
-                is ApiResult.Success -> updateSearchResultIfCurrent(keyword) {
+            val result = menuFavoriteRepository.searchMenus(keyword)
+            if (requestVersion != menuSearchVersion) return@launch
+            val state = (_uiState.value as? UiState.Success)?.data ?: return@launch
+            if (!state.isMenuSearchMode || state.normalizedMenuSearchQuery != keyword) return@launch
+            when (result) {
+                is ApiResult.Success -> updateState {
                     it.copy(
-                        menuSearchResults = result.data,
+                        menuSearchResults = sortMenuFavoriteSearchResults(result.data, keyword),
                         menuSearchLoadState = MenuFavoriteLoadState.Success,
                     )
                 }
-
                 else -> {
-                    updateSearchResultIfCurrent(keyword) {
+                    updateState {
                         it.copy(
                             menuSearchResults = emptyList(),
-                            menuSearchLoadState = MenuFavoriteLoadState.Error,
+                            menuSearchLoadState = MenuFavoriteLoadState.Error
                         )
                     }
                     showMenuSnackbar(R.string.favorite_menu_load_error, isError = true)
@@ -497,15 +542,6 @@ class FavoriteViewModel @Inject constructor(
                     state.copy(partnerships = newlyAdded + state.partnerships)
                 }
             }
-        }
-    }
-
-    private fun updateSearchResultIfCurrent(
-        keyword: String,
-        transform: (FavoriteState) -> FavoriteState,
-    ) {
-        updateState { state ->
-            if (state.normalizedMenuSearchQuery == keyword) transform(state) else state
         }
     }
 

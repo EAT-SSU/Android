@@ -123,20 +123,29 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
     private fun openNotificationDestination(intent: Intent) {
         val date = intent.getStringExtra(NotificationActivity.EXTRA_MEAL_DATE)
-            ?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return
+            ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
         val time = intent.getStringExtra(NotificationActivity.EXTRA_MEAL_TIME)
-            ?.let { value -> Time.entries.firstOrNull { it.name == value } } ?: return
+            ?.let { value -> Time.entries.firstOrNull { it.name == value } }
+        if (!intent.getBooleanExtra(
+                NotificationActivity.EXTRA_OPEN_CAFETERIA,
+                false
+            ) && (date == null || time == null)
+        ) return
+        val notificationId = intent.getStringExtra("notification_id")
         lifecycleScope.launch {
-            intent.getStringExtra("notification_id")?.let { notificationStore.markRead(it) }
+            notificationId?.let { notificationStore.markRead(it) }
         }
-        navController.navigate(
-            R.id.cafeteria_menu, bundleOf(
-                NotificationActivity.EXTRA_MEAL_DATE to date.toString(),
-                NotificationActivity.EXTRA_MEAL_TIME to time.name,
-            )
-        )
+        val args = if (date != null && time != null) bundleOf(
+            NotificationActivity.EXTRA_MEAL_DATE to date.toString(),
+            NotificationActivity.EXTRA_MEAL_TIME to time.name,
+            NotificationActivity.EXTRA_RESTAURANT to intent.getStringExtra(NotificationActivity.EXTRA_RESTAURANT),
+        ) else null
+        navController.navigate(R.id.cafeteria_menu, args)
+        intent.removeExtra(NotificationActivity.EXTRA_OPEN_CAFETERIA)
         intent.removeExtra(NotificationActivity.EXTRA_MEAL_DATE)
         intent.removeExtra(NotificationActivity.EXTRA_MEAL_TIME)
+        intent.removeExtra(NotificationActivity.EXTRA_RESTAURANT)
+        intent.removeExtra("notification_id")
     }
 
     private fun setNavigation() {

@@ -32,7 +32,14 @@ class TodayMenuAccordionUiTest {
 
     @Test
     fun accordionSelectionAndUnavailableTimes() {
-        val menus = listOf("맑은미역국", "쌀밥&흑미밥", "연탄불맛돈불고기", "양배추찜&쌈다시마/초장", "배추김치", "요구르트")
+        val menus = listOf(
+            "잔치국수(大)",
+            "쌀밥&흑미밥",
+            "연탄불맛돈불고기",
+            "양배추찜&쌈다시마/초장",
+            "배추김치",
+            "Roasted chicken with vegetables and steamed rice served with a rich tomato and mushroom sauce"
+        )
             .mapIndexed { index, name ->
                 MenuFavoriteSearchResult(
                     index.toLong() + 1,
@@ -100,6 +107,16 @@ class TodayMenuAccordionUiTest {
             awaitText(R.string.today_favorite_change)
             assertFalse(actionNode(awaitText(R.string.today_favorite_save)).isEnabled)
             screenshot("today-favorite-expanded")
+            val hanjaBounds =
+                Rect().also { actionNode(awaitText("잔치국수(大)")).getBoundsInScreen(it) }
+            val normalBounds =
+                Rect().also { actionNode(awaitText("연탄불맛돈불고기")).getBoundsInScreen(it) }
+            val longBounds =
+                Rect().also { actionNode(awaitText(menus.last().menuName)).getBoundsInScreen(it) }
+            assertTrue(hanjaBounds.height() == normalBounds.height())
+            // Accessibility expands both chips to the minimum touch target; the captured render verifies line wrapping.
+            assertTrue(longBounds.height() >= normalBounds.height())
+            assertTrue(longBounds.width() <= context.resources.displayMetrics.widthPixels)
             tap(awaitText("연탄불맛돈불고기"))
             assertTrue(
                 actionNode(

@@ -1,11 +1,11 @@
 package com.eatssu.android.presentation.favorite
 
 import com.eatssu.android.data.local.FavoritePartnershipDataStore
-import com.eatssu.android.domain.repository.PartnershipRepository
-import com.eatssu.android.domain.repository.MenuFavoriteRepository
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.FavoriteMenu
 import com.eatssu.android.domain.model.MenuFavoriteSearchResult
+import com.eatssu.android.domain.repository.MenuFavoriteRepository
+import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.android.test.AppBehaviorSpec
 import com.eatssu.android.test.samplePartnership
 import com.eatssu.common.UiState
@@ -13,8 +13,8 @@ import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.StoreType
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
-import io.mockk.coVerify
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 
 class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
@@ -110,6 +110,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         `when`("공백을 제외한 검색어가 두 글자 미만이면") {
             viewModel.loadFavorites()
             viewModel.onMenuSearchQueryChanged(" 김 ")
+            viewModel.submitMenuSearch()
 
             then("서버 검색을 호출하지 않는다") {
                 coVerify(exactly = 0) { menuRepository.searchMenus(any()) }
@@ -119,6 +120,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         `when`("두 글자 이상 메뉴를 검색하면") {
             viewModel.loadFavorites()
             viewModel.onMenuSearchQueryChanged(" 김치 ")
+            viewModel.submitMenuSearch()
 
             then("앞뒤 공백을 제거한 결과를 식당 정보와 함께 유지한다") {
                 val state = (viewModel.uiState.value as UiState.Success).data
@@ -130,6 +132,7 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         `when`("검색 결과를 찜하면") {
             viewModel.loadFavorites()
             viewModel.onMenuSearchQueryChanged("김치")
+            viewModel.submitMenuSearch()
             viewModel.toggleMenuFavorite(searchResult)
 
             then("찜 목록의 맨 앞에 추가하고 검색 결과도 갱신한다") {

@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
+import com.eatssu.android.presentation.cafeteria.CafeteriaScrollViewModel
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
 import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.format.DateTimeFormatter
@@ -37,6 +39,9 @@ class MenuFragment : Fragment() {
     private val mainViewModel by activityViewModels<MainViewModel>()
     private val infoViewModel by activityViewModels<InfoViewModel>()
     private val menuViewModel by viewModels<MenuViewModel>()
+    private val scrollViewModel by viewModels<CafeteriaScrollViewModel>({ requireParentFragment() })
+    private var displayedState: MenuState? = null
+    private var displayedSections: List<Section> = emptyList()
 
     private val time: Time by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -86,20 +91,45 @@ class MenuFragment : Fragment() {
         }
     }
 
-    private fun observeUiState() = lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            menuViewModel.uiState.collect { state ->
-                if (state !is UiState.Success) return@collect
-
-                val menuMap = state.data.menuMap
-                Timber.d("Menu map received: $menuMap")
-
-                val sectionList = buildMenuSections(menuMap) { restaurant ->
-                    infoViewModel.getRestaurantInfo(restaurant)?.location.orEmpty()
+    private fun observeUiState() = viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            launch {
+                menuViewModel.uiState.collectLatest { state ->
+                    if (state !is UiState.Success) return@collectLatest
+                    if (displayedState == state.data && _binding?.rv?.adapter != null) {
+                        scrollToNotificationRestaurant()
+                        return@collectLatest
+                    }
+                    val sections = buildMenuSections(state.data.menuMap) { restaurant ->
+                        infoViewModel.getRestaurantInfo(restaurant)?.location.orEmpty()
+                    }
+                    if (menuViewModel.uiState.value != state) return@collectLatest
+                    displayedState = state.data
+                    displayedSections = sections
+                    setupRecyclerView(sections)
+                    scrollToNotificationRestaurant()
                 }
-
-                setupRecyclerView(sectionList)
             }
+            launch { scrollViewModel.target.collect { scrollToNotificationRestaurant() } }
+        }
+    }
+
+    private fun scrollToNotificationRestaurant() {
+        val target = scrollViewModel.target.value ?: return
+        val current = (menuViewModel.uiState.value as? UiState.Success)?.data ?: return
+        if (target.time != time || current.date != target.date || current.time != target.time || displayedState != current) return
+        val position = displayedSections.indexOfFirst { it.cafeteria == target.restaurant }
+        if (position < 0) return
+        val recycler = _binding?.rv ?: return
+        recycler.post {
+            if (_binding?.rv !== recycler || scrollViewModel.target.value?.id != target.id ||
+                (menuViewModel.uiState.value as? UiState.Success)?.data != current
+            ) return@post
+            (recycler.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(
+                position,
+                0
+            )
+            scrollViewModel.consume(target.id)
         }
     }
 
@@ -114,5 +144,7 @@ class MenuFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        displayedState = null
+        displayedSections = emptyList()
     }
 }

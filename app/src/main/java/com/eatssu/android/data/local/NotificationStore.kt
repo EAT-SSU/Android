@@ -36,8 +36,19 @@ class NotificationStore @Inject constructor(@ApplicationContext private val cont
         },
     ) { items, now -> items.filterNot { it.isExpired(now) }.sortedByDescending { it.receivedAt } }
 
-    suspend fun add(notification: MenuNotification) = update { items ->
-        if (items.any { it.id == notification.id }) items else items + notification
+    suspend fun add(notification: MenuNotification) {
+        addIfAbsent(notification)
+    }
+
+    suspend fun addIfAbsent(notification: MenuNotification): Boolean {
+        var added = false
+        update { items ->
+            if (notification.isExpired(Instant.now()) || items.any { it.id == notification.id }) items
+            else {
+                added = true; items + notification
+            }
+        }
+        return added
     }
 
     suspend fun markRead(id: String) = update { items ->
@@ -54,7 +65,11 @@ class NotificationStore @Inject constructor(@ApplicationContext private val cont
         context.notificationDataStore.edit { preferences ->
             val now = Instant.now()
             preferences[key] = json.encodeToString(
-                transform(decode(preferences[key])).filterNot { it.isExpired(now) },
+                transform(decode(preferences[key]).filterNot { it.isExpired(now) }).filterNot {
+                    it.isExpired(
+                        now
+                    )
+                },
             )
         }
     }

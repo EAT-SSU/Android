@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -28,11 +29,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.eatssu.android.R
 import com.eatssu.common.enums.Restaurant
@@ -214,36 +220,63 @@ internal fun TodayMenuAccordion(
                     }
                 }
             }
-            val selectedCount = (state.selectedMenuIds - favoriteIds).size
+            val pendingCount = (state.selectedMenuIds - favoriteIds).size
+            val selectedCount =
+                state.menus.count { it.menuId in favoriteIds || it.menuId in state.selectedMenuIds }
             TodayMenuSaveButton(
-                text = if (selectedCount == 0) stringResource(R.string.today_favorite_save)
+                text = if (pendingCount == 0) stringResource(R.string.today_favorite_save)
                 else stringResource(R.string.today_favorite_save_count, selectedCount),
-                enabled = canSave && !state.isSaving && selectedCount > 0 && state.loadState == MenuFavoriteLoadState.Success,
+                enabled = canSave && !state.isSaving && pendingCount > 0 && state.loadState == MenuFavoriteLoadState.Success,
                 onClick = onSave,
             )
         }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun TodayMenuChip(label: String, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
     val shape = RoundedCornerShape(1000.dp)
-    Text(
-        label,
-        Modifier
-            .alpha(if (enabled) 1f else 0.5f)
-            .clip(shape)
-            .background(if (selected) Secondary else White)
-            .border(1.dp, if (selected) Primary else Gray300, shape)
-            .toggleable(
-                value = selected,
-                interactionSource = remember { MutableInteractionSource() }, indication = null,
-                enabled = enabled, role = Role.Checkbox, onValueChange = { onClick() },
-            )
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        style = EatssuTheme.typography.caption3.copy(fontFamily = pretendardMedium),
-        color = if (selected) Gray700 else Gray600,
+    val textStyle = EatssuTheme.typography.caption3.copy(
+        fontFamily = pretendardMedium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
     )
+    val textMeasurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+    BoxWithConstraints {
+        val availableWidth = with(density) { (maxWidth - 16.dp).roundToPx().coerceAtLeast(1) }
+        val layout = textMeasurer.measure(
+            label,
+            textStyle,
+            constraints = Constraints(maxWidth = availableWidth)
+        )
+        // Keep every single-line chip at 28dp, including fallback glyphs, while allowing long labels to wrap.
+        val chipHeight =
+            if (layout.lineCount == 1) 28.dp else with(density) { layout.size.height.toDp() } + 16.dp
+        Box(
+            modifier = Modifier
+                .height(chipHeight)
+                .alpha(if (enabled || selected) 1f else 0.5f)
+                .clip(shape)
+                .background(if (selected) Secondary else White)
+                .border(1.dp, if (selected) Primary else Gray300, shape)
+                .toggleable(
+                    value = selected,
+                    interactionSource = remember { MutableInteractionSource() }, indication = null,
+                    enabled = enabled, role = Role.Checkbox, onValueChange = { onClick() },
+                )
+                .padding(horizontal = 8.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = label,
+                style = textStyle,
+                color = if (selected) Gray700 else Gray600,
+                textAlign = TextAlign.Center,
+                softWrap = true,
+            )
+        }
+    }
 }
 
 @Composable

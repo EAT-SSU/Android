@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -105,6 +106,8 @@ fun EatSsuSnackbar(
     actionLabel: String? = null,
     onActionClick: (() -> Unit)? = null,
     type: EatSsuSnackbarType = EatSsuSnackbarType.Info,
+    messageStyle: TextStyle = EatssuTheme.typography.body1,
+    maxLines: Int = 2,
 ) {
     val colors = type.colors()
 
@@ -145,9 +148,9 @@ fun EatSsuSnackbar(
                 Text(
                     text = message,
                     modifier = Modifier.weight(1f),
-                    style = EatssuTheme.typography.body1,
+                    style = messageStyle,
                     color = Gray600,
-                    maxLines = 2,
+                    maxLines = maxLines,
                     overflow = TextOverflow.Ellipsis
                 )
             }

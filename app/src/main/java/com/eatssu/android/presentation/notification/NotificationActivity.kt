@@ -30,8 +30,10 @@ class NotificationActivity : AppCompatActivity() {
                         lifecycleScope.launch {
                             viewModel.markRead(notification.id)
                             setResult(Activity.RESULT_OK, Intent().apply {
+                                putExtra(EXTRA_OPEN_CAFETERIA, true)
+                                putExtra(EXTRA_RESTAURANT, notification.targetRestaurant?.name)
                                 putExtra(EXTRA_MEAL_DATE, notification.mealDate)
-                                putExtra(EXTRA_MEAL_TIME, notification.mealTime.name)
+                                putExtra(EXTRA_MEAL_TIME, notification.mealTime?.name)
                             })
                             finish()
                         }
@@ -42,6 +44,8 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val EXTRA_OPEN_CAFETERIA = "notification_open_cafeteria"
+        const val EXTRA_RESTAURANT = "notification_restaurant"
         const val EXTRA_MEAL_DATE = "notification_meal_date"
         const val EXTRA_MEAL_TIME = "notification_meal_time"
     }

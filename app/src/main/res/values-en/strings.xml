@@ -355,8 +355,8 @@
     <string name="favorite_menu_added_snackbar">Added to favorite menus.</string>
     <string name="favorite_menu_deleted_snackbar">Removed from favorite menus.</string>
     <string name="favorite_menu_action_error">Couldn\'t complete the action. Please try again.</string>
-    <string name="favorite_menu_load_error">Couldn\'t load menus.\nPlease try again.</string>
-    <string name="favorite_menu_clear_search_content_description">Clear search text</string>
+    <string name="favorite_menu_load_error">Couldn\'t load menus.</string>
+    <string name="favorite_menu_clear_search_content_description">Close menu search</string>
     <string name="favorite_menu_add_content_description">Add menu to favorites</string>
     <string name="favorite_menu_remove_content_description">Remove menu from favorites</string>
     <string name="favorite_menu_discontinued">Discontinued</string>
@@ -395,4 +395,26 @@
     <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="today_favorite_title">Favorite from today’s meals</string>
+    <string name="today_favorite_expanded">Expanded</string>
+    <string name="today_favorite_collapsed">Collapsed</string>
+    <string name="today_favorite_change">Change</string>
+    <string name="today_favorite_hint">Select menus to add to favorites.</string>
+    <string name="today_favorite_save">Favorite menus</string>
+    <string name="today_favorite_save_count">Favorite %1$d selected menus</string>
+    <string name="today_favorite_no_menu">No meals for this time.</string>
+    <string name="today_favorite_sheet_title">Change meal</string>
+    <string name="today_favorite_restaurant_title">Cafeteria</string>
+    <string name="today_favorite_time_title">Meal time</string>
+    <string name="today_favorite_apply">Apply</string>
+    <string name="today_favorite_haksik">Student cafeteria</string>
+    <string name="today_favorite_dodam">Dodam cafeteria</string>
+    <string name="today_favorite_dormitory">Dormitory cafeteria</string>
+    <string name="today_favorite_faculty">Faculty cafeteria</string>
+    <string name="notification_favorite_one_title">🍽️ A favorite menu is available!</string>
+    <string name="notification_favorite_two_title">🍽️ Two favorite menus are available!</string>
+    <string name="notification_favorite_many_title">🍽️ Several favorite menus are available!</string>
+    <string name="notification_favorite_one_body">Today’s %1$s: %3$s at %2$s 👀</string>
+    <string name="notification_favorite_two_body">Today’s %1$s: %3$s at %2$s · %5$s at %4$s 👀</string>
+    <string name="notification_favorite_many_body">Today’s %1$s: %3$s at %2$s and %4$d more 👀</string>
 </resources>

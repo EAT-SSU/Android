@@ -355,8 +355,8 @@
     <string name="favorite_menu_added_snackbar">Đã thêm vào món ăn yêu thích.</string>
     <string name="favorite_menu_deleted_snackbar">Đã xóa khỏi món ăn yêu thích.</string>
     <string name="favorite_menu_action_error">Không thể xử lý. Vui lòng thử lại sau.</string>
-    <string name="favorite_menu_load_error">Không thể tải món ăn.\nVui lòng thử lại sau.</string>
-    <string name="favorite_menu_clear_search_content_description">Xóa toàn bộ từ khóa tìm kiếm</string>
+    <string name="favorite_menu_load_error">Không thể tải món ăn.</string>
+    <string name="favorite_menu_clear_search_content_description">Đóng tìm kiếm món ăn</string>
     <string name="favorite_menu_add_content_description">Thêm món ăn vào yêu thích</string>
     <string name="favorite_menu_remove_content_description">Xóa món ăn khỏi yêu thích</string>
     <string name="favorite_menu_discontinued">Ngừng bán</string>
@@ -399,4 +399,26 @@
     <string name="cafeteria_the_kitchen_location">Tòa Student Union, tầng 2</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="today_favorite_title">Thêm món từ thực đơn hôm nay</string>
+    <string name="today_favorite_expanded">Đã mở rộng</string>
+    <string name="today_favorite_collapsed">Đã thu gọn</string>
+    <string name="today_favorite_change">Đổi</string>
+    <string name="today_favorite_hint">Chọn món để thêm vào yêu thích.</string>
+    <string name="today_favorite_save">Thêm món yêu thích</string>
+    <string name="today_favorite_save_count">Thêm %1$d món đã chọn</string>
+    <string name="today_favorite_no_menu">Không có thực đơn cho khung giờ này.</string>
+    <string name="today_favorite_sheet_title">Đổi thực đơn</string>
+    <string name="today_favorite_restaurant_title">Nhà ăn</string>
+    <string name="today_favorite_time_title">Bữa ăn</string>
+    <string name="today_favorite_apply">Áp dụng</string>
+    <string name="today_favorite_haksik">Nhà ăn sinh viên</string>
+    <string name="today_favorite_dodam">Nhà ăn Dodam</string>
+    <string name="today_favorite_dormitory">Nhà ăn ký túc xá</string>
+    <string name="today_favorite_faculty">Nhà ăn giảng viên</string>
+    <string name="notification_favorite_one_title">🍽️ Có món ăn yêu thích hôm nay!</string>
+    <string name="notification_favorite_two_title">🍽️ Có hai món ăn yêu thích hôm nay!</string>
+    <string name="notification_favorite_many_title">🍽️ Có nhiều món ăn yêu thích hôm nay!</string>
+    <string name="notification_favorite_one_body">%1$s hôm nay: %3$s tại %2$s 👀</string>
+    <string name="notification_favorite_two_body">%1$s hôm nay: %3$s tại %2$s · %5$s tại %4$s 👀</string>
+    <string name="notification_favorite_many_body">%1$s hôm nay: %3$s tại %2$s và %4$d món khác 👀</string>
 </resources>

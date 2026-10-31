@@ -70,6 +70,26 @@ class TodayMenuFavoritesBehaviorSpec : AppBehaviorSpec({
             vm.toggleTodayMenu(1)
             vm.todayMenuState.value.selectedMenuIds shouldBe setOf(2L)
         }
+        then("같은 화면에서 두 메뉴를 저장하고 두 메뉴를 더 고르면 새 메뉴만 서버에 추가한다") {
+            val fixture = TodayFavoriteFixture()
+            coEvery { fixture.menus.getTodayMenus(any(), any(), any()) } returns ApiResult.Success(
+                (1L..4L).map { MenuFavoriteSearchResult(it, "메뉴 $it", Restaurant.HAKSIK, false) },
+            )
+            coEvery { fixture.menus.addFavoriteMenu(any()) } returns ApiResult.Success(Unit)
+            val vm = fixture.viewModel()
+            vm.configureTodayMenus(null, null, true)
+            vm.toggleTodayMenu(1)
+            vm.toggleTodayMenu(2)
+            vm.saveTodayMenus()
+            vm.todayMenuState.value.selectedMenuIds shouldBe emptySet()
+            vm.toggleTodayMenu(3)
+            vm.toggleTodayMenu(4)
+            vm.saveTodayMenus()
+            (vm.uiState.value as UiState.Success).data.favoriteMenus.map { it.menuId }
+                .toSet() shouldBe setOf(1L, 2L, 3L, 4L)
+            (1L..4L).forEach { id -> coVerify(exactly = 1) { fixture.menus.addFavoriteMenu(id) } }
+            vm.todayMenuState.value.selectedMenuIds shouldBe emptySet()
+        }
         then("메뉴 선택 없이 저장하면 등록 요청을 보내지 않는다") {
             val fixture = TodayFavoriteFixture()
             val vm = fixture.viewModel()

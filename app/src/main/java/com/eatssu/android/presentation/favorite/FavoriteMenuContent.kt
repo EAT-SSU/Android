@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.favorite
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,6 +21,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,13 +34,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +69,6 @@ import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.pretendardBold
-import java.util.Locale
 
 @Composable
 internal fun FavoriteMenuContent(
@@ -71,7 +82,18 @@ internal fun FavoriteMenuContent(
     onTodayToggleMenu: (Long) -> Unit,
     onTodaySave: () -> Unit,
     onTodayRetry: () -> Unit,
+    onSearchFocusChanged: (Boolean) -> Unit = {},
+    onSearchSubmit: () -> Unit = {},
+    onSearchExit: () -> Unit = {},
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val exitSearch = {
+        focusManager.clearFocus(force = true)
+        keyboard?.hide()
+        onSearchExit()
+    }
+    BackHandler(enabled = (uiState as? UiState.Success)?.data?.isMenuSearchMode == true) { exitSearch() }
     var showMealSelection by rememberSaveable { mutableStateOf(false) }
     if (showMealSelection) {
         TodayMealSelectionSheet(
@@ -102,12 +124,16 @@ internal fun FavoriteMenuContent(
             ) {
                 item(key = "search") {
                     MenuFavoriteSearchField(
-                        state.menuSearchQuery,
-                        onSearchQueryChanged,
-                        Modifier.fillMaxWidth()
+                        query = state.menuSearchQuery,
+                        isSearchMode = state.isMenuSearchMode,
+                        onQueryChanged = onSearchQueryChanged,
+                        onFocusChanged = onSearchFocusChanged,
+                        onSubmit = onSearchSubmit,
+                        onExit = exitSearch,
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
-                item(key = "today") {
+                if (!state.isMenuSearchMode) item(key = "today") {
                     Spacer(Modifier.height(20.dp))
                     TodayMenuAccordion(
                         state = todayMenuState,
@@ -120,34 +146,38 @@ internal fun FavoriteMenuContent(
                         onRetry = onTodayRetry,
                     )
                 }
-                if (state.isMenuSearchActive) {
-                    item { Spacer(Modifier.height(20.dp)) }
-                    when (state.menuSearchLoadState) {
-                        MenuFavoriteLoadState.Loading -> item {
-                            DelayedLoadingIndicator(Modifier
-                                .fillMaxWidth()
-                                .height(120.dp))
-                        }
-
-                        MenuFavoriteLoadState.Success -> {
-                            if (state.menuSearchResults.isEmpty()) item {
-                                MenuFavoriteEmptyState(
-                                    stringResource(R.string.favorite_menu_search_empty_title),
-                                    stringResource(R.string.favorite_menu_search_empty_description),
+                if (state.isMenuSearchMode) {
+                    if (state.hasSubmittedMenuSearch) {
+                        item { Spacer(Modifier.height(20.dp)) }
+                        when (state.menuSearchLoadState) {
+                            MenuFavoriteLoadState.Loading -> item {
+                                DelayedLoadingIndicator(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(120.dp)
                                 )
                             }
-                            items(
-                                state.menuSearchResults,
-                                key = { "search-${it.menuId}" }) { menu ->
-                                MenuSearchResultRow(
-                                    menu,
-                                    state.normalizedMenuSearchQuery
-                                ) { onSearchFavoriteClick(menu) }
-                                Spacer(Modifier.height(10.dp))
-                            }
-                        }
 
-                        else -> Unit
+                            MenuFavoriteLoadState.Success -> {
+                                if (state.menuSearchResults.isEmpty()) item {
+                                    MenuFavoriteEmptyState(
+                                        stringResource(R.string.favorite_menu_search_empty_title),
+                                        stringResource(R.string.favorite_menu_search_empty_description),
+                                    )
+                                }
+                                items(
+                                    state.menuSearchResults,
+                                    key = { "search-${it.menuId}" }) { menu ->
+                                    MenuSearchResultRow(
+                                        menu,
+                                        state.normalizedMenuSearchQuery
+                                    ) { onSearchFavoriteClick(menu) }
+                                    Spacer(Modifier.height(10.dp))
+                                }
+                            }
+
+                            else -> Unit
+                        }
                     }
                 } else {
                     item {
@@ -190,7 +220,11 @@ internal fun FavoriteMenuContent(
 @Composable
 private fun MenuFavoriteSearchField(
     query: String,
+    isSearchMode: Boolean,
     onQueryChanged: (String) -> Unit,
+    onFocusChanged: (Boolean) -> Unit,
+    onSubmit: () -> Unit,
+    onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -200,6 +234,13 @@ private fun MenuFavoriteSearchField(
         value = query,
         onValueChange = onQueryChanged,
         modifier = modifier
+            .onFocusChanged { onFocusChanged(it.isFocused) }
+            .onPreviewKeyEvent {
+                if (it.key == Key.Enter || it.key == Key.NumPadEnter) {
+                    if (it.type == KeyEventType.KeyUp) onSubmit()
+                    true
+                } else false
+            }
             .height(50.dp)
             .clip(shape)
             .background(Gray100)
@@ -210,6 +251,8 @@ private fun MenuFavoriteSearchField(
             ),
         textStyle = EatssuTheme.typography.body2.copy(color = Gray700),
         singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { onSubmit() }),
         cursorBrush = SolidColor(Gray700),
         interactionSource = interactionSource,
         decorationBox = { innerTextField ->
@@ -238,11 +281,11 @@ private fun MenuFavoriteSearchField(
                     }
                     innerTextField()
                 }
-                if (query.isNotEmpty()) {
+                if (isSearchMode || query.isNotEmpty()) {
                     Box(
                         modifier = Modifier
                             .size(32.dp)
-                            .clickable { onQueryChanged("") },
+                            .clickable(onClick = onExit),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -372,8 +415,7 @@ private fun menuLabel(
     append(menuName)
 
     if (!query.isNullOrBlank()) {
-        val start = menuName.lowercase(Locale.getDefault())
-            .indexOf(query.lowercase(Locale.getDefault()))
+        val start = menuName.indexOf(query, ignoreCase = true)
         if (start >= 0) {
             addStyle(
                 style = SpanStyle(

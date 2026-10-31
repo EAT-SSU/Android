@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -25,6 +26,7 @@ import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
 import com.eatssu.common.analytics.CafeteriaAnalyticsEvent
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.Time
 import com.google.android.material.tabs.TabLayout
@@ -40,6 +42,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
 ), CalendarAdapter.OnItemListener {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
+    private val scrollViewModel by viewModels<CafeteriaScrollViewModel>()
 
     @Inject
     lateinit var notificationStore: NotificationStore
@@ -54,6 +57,21 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
                 if (date != null && time != null) {
                     onItemClick(-1, date)
                     binding.vpMain.setCurrentItem(Time.entries.indexOf(time), false)
+                    val restaurant =
+                        result.data?.getStringExtra(NotificationActivity.EXTRA_RESTAURANT)
+                            ?.let { value -> Restaurant.entries.firstOrNull { it.name == value } }
+                    scrollViewModel.request(date, time, restaurant)
+                } else if (result.data?.getBooleanExtra(
+                        NotificationActivity.EXTRA_OPEN_CAFETERIA,
+                        false
+                    ) == true
+                ) {
+                    val today = LocalDate.now()
+                    onItemClick(-1, today)
+                    val adapter = binding.vpMain.adapter as? CafeteriaViewPagerAdapter
+                    val position = adapter?.getDefaultFragmentPosition() ?: 1
+                    binding.vpMain.setCurrentItem(position, false)
+                    scrollViewModel.request(today, Time.entries[position], Restaurant.HAKSIK)
                 }
             }
         }
@@ -73,7 +91,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
         val viewPager: ViewPager2 = binding.vpMain
         val tabLayout: TabLayout = binding.tabLayout
 
-        val viewpagerFragmentAdapter = CafeteriaViewPagerAdapter(requireActivity())
+        val viewpagerFragmentAdapter = CafeteriaViewPagerAdapter(this)
         viewPager.adapter = viewpagerFragmentAdapter
         viewPager.setCurrentItem(viewpagerFragmentAdapter.getDefaultFragmentPosition(), false)
 
@@ -91,6 +109,13 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
             ?.let { value -> Time.entries.firstOrNull { it.name == value } }
             ?.let { viewPager.setCurrentItem(Time.entries.indexOf(it), false) }
         mainViewModel.setData(CalendarUtil.selectedDate)
+        val targetRestaurant = selectedState?.getString(NotificationActivity.EXTRA_RESTAURANT)
+            ?.let { value -> Restaurant.entries.firstOrNull { it.name == value } }
+        scrollViewModel.request(
+            CalendarUtil.selectedDate,
+            Time.entries[viewPager.currentItem],
+            targetRestaurant
+        )
         setWeekView()
         setCalendarWeekClickListener()
         binding.btnNotifications.setOnClickListener {
@@ -114,6 +139,10 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
             CalendarUtil.selectedDate.toString()
         )
         outState.putString(NotificationActivity.EXTRA_MEAL_TIME, selectedMealTime.name)
+        outState.putString(
+            NotificationActivity.EXTRA_RESTAURANT,
+            scrollViewModel.target.value?.restaurant?.name
+        )
     }
 
     private fun setupViewPagerPageChangeListener(viewPager: ViewPager2) {

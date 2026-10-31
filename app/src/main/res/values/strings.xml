@@ -355,8 +355,8 @@
     <string name="favorite_menu_added_snackbar">찜한 메뉴에 추가했어요.</string>
     <string name="favorite_menu_deleted_snackbar">찜한 메뉴에서 삭제했어요.</string>
     <string name="favorite_menu_action_error">처리하지 못했어요. 잠시 후 다시 시도해주세요.</string>
-    <string name="favorite_menu_load_error">메뉴를 불러오지 못했어요.\n잠시 후 다시 시도해주세요.</string>
-    <string name="favorite_menu_clear_search_content_description">검색어 전체 삭제</string>
+    <string name="favorite_menu_load_error">메뉴를 불러오지 못했어요.</string>
+    <string name="favorite_menu_clear_search_content_description">메뉴 검색 닫기</string>
     <string name="favorite_menu_add_content_description">메뉴 찜하기</string>
     <string name="favorite_menu_remove_content_description">메뉴 찜 취소하기</string>
     <string name="favorite_menu_discontinued">단종</string>
@@ -424,7 +424,7 @@
     <string name="today_favorite_change">변경</string>
     <string name="today_favorite_hint">메뉴를 선택해 찜할 수 있어요.</string>
     <string name="today_favorite_save">메뉴 찜하기</string>
-    <string name="today_favorite_save_count">선택한 %1$d개 메뉴 찜하기</string>
+    <string name="today_favorite_save_count">선택한 메뉴 %1$d개 찜하기</string>
     <string name="today_favorite_no_menu">해당 시간대의 식단이 없어요.</string>
     <string name="today_favorite_sheet_title">식단 변경</string>
     <string name="today_favorite_restaurant_title">식당 종류</string>
@@ -434,4 +434,10 @@
     <string name="today_favorite_dodam">도담식당</string>
     <string name="today_favorite_dormitory">기숙사식당</string>
     <string name="today_favorite_faculty">교직원식당</string>
+    <string name="notification_favorite_one_title">🍽️ 찜한 메뉴가 나온대요!</string>
+    <string name="notification_favorite_two_title">🍽️ 찜한 메뉴가 2개나 나온대요!</string>
+    <string name="notification_favorite_many_title">🍽️ 찜한 메뉴가 여러 개 나온대요!</string>
+    <string name="notification_favorite_one_body">오늘 %1$s, %2$s에 %3$s 등장 👀</string>
+    <string name="notification_favorite_two_body">오늘 %1$s, %2$s %3$s · %4$s %5$s 등장 👀</string>
+    <string name="notification_favorite_many_body">오늘 %1$s, %2$s %3$s 외 %4$d개 등장 👀</string>
 </resources>

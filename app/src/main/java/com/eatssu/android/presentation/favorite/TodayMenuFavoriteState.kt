@@ -1,6 +1,7 @@
 package com.eatssu.android.presentation.favorite
 
 import com.eatssu.android.domain.model.MenuFavoriteSearchResult
+import com.eatssu.android.domain.model.isFavoriteMealAvailable
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import java.time.LocalDate
@@ -10,12 +11,7 @@ internal val todayMenuRestaurants = listOf(
 )
 
 internal fun isTodayMealAvailable(restaurant: Restaurant?, time: Time?): Boolean =
-    when (restaurant) {
-        Restaurant.HAKSIK -> time == Time.MORNING || time == Time.LUNCH
-        Restaurant.DODAM, Restaurant.DORMITORY -> time == Time.LUNCH || time == Time.DINNER
-        Restaurant.FACULTY -> time == Time.LUNCH
-        else -> false
-    }
+    isFavoriteMealAvailable(restaurant, time)
 
 data class TodayMenuFavoriteState(
     val expanded: Boolean = false,
