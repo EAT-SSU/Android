@@ -226,7 +226,7 @@
     <string name="mypage_service_section_title">Thông tin dịch vụ</string>
     <string name="mypage_etc_section_title">Khác</string>
     <string name="mypage_push_notification_title">Cài đặt thông báo đẩy</string>
-    <string name="mypage_push_notification_description">Bạn sẽ nhận được thông báo mỗi ngày lúc 11:00.</string>
+    <string name="mypage_push_notification_description">Thông báo cho bạn khi món ăn yêu thích có trong thực đơn hôm nay.</string>
 
     <!-- Language Settings -->
     <string name="language_setting">Cài đặt ngôn ngữ</string>
