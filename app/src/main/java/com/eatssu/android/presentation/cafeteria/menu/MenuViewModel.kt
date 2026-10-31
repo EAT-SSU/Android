@@ -8,6 +8,7 @@ import com.eatssu.common.UiState
 import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,14 +24,22 @@ class MenuViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<UiState<MenuState>> = MutableStateFlow(UiState.Init)
     val uiState: StateFlow<UiState<MenuState>> = _uiState.asStateFlow()
 
+    private var loadJob: Job? = null
+    private var loadVersion = 0
+
     fun loadMenus(date: LocalDate, time: Time) {
+        loadJob?.cancel()
+        val version = ++loadVersion
         _uiState.value = UiState.Loading
 
-        viewModelScope.launch {
+        loadJob = viewModelScope.launch {
             val result = loadMenusUseCase(date, time)
+            if (version != loadVersion) return@launch
             _uiState.value = UiState.Success(
                 MenuState(
                     menuMap = result.menuMap,
+                    date = date,
+                    time = time,
                 )
             )
         }
@@ -39,4 +48,6 @@ class MenuViewModel @Inject constructor(
 
 data class MenuState(
     val menuMap: Map<Restaurant, List<Menu>> = emptyMap(),
+    val date: LocalDate? = null,
+    val time: Time? = null,
 )

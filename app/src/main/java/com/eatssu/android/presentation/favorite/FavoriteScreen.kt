@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -68,6 +69,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.FavoriteMenu
@@ -76,8 +79,10 @@ import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.map.iconRes
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
+import com.eatssu.common.enums.Time
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuSnackbar
 import com.eatssu.design_system.component.EatSsuSnackbarType
@@ -96,6 +101,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.ZonedDateTime
 import kotlin.math.roundToInt
 
 private const val MENU_PAGE = 0
@@ -108,6 +115,18 @@ fun FavoriteRoute(
     onPartnershipClick: (PartnershipRestaurant) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val todayState by viewModel.todayMenuState.collectAsStateWithLifecycle()
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshTodayMenusIfDateChanged() }
+    LaunchedEffect(viewModel) {
+        while (true) {
+            val now = ZonedDateTime.now()
+            delay(
+                Duration.between(now, now.toLocalDate().plusDays(1).atStartOfDay(now.zone))
+                    .toMillis().coerceAtLeast(1)
+            )
+            viewModel.refreshTodayMenusIfDateChanged()
+        }
+    }
     var menuSnackbarEvent by remember { mutableStateOf<FavoriteMenuSnackbarEvent?>(null) }
 
     LaunchedEffect(viewModel) {
@@ -127,9 +146,18 @@ fun FavoriteRoute(
         onRemoveFavorites = viewModel::removeFavorites,
         onRestoreFavorites = viewModel::restoreFavorites,
         onMenuSearchQueryChanged = viewModel::onMenuSearchQueryChanged,
+        onMenuSearchFocusChanged = viewModel::onMenuSearchFocusChanged,
+        onMenuSearchSubmit = viewModel::submitMenuSearch,
+        onMenuSearchExit = viewModel::exitMenuSearch,
         onSearchFavoriteClick = viewModel::toggleMenuFavorite,
         onFavoriteMenuClick = viewModel::toggleFavoriteMenu,
         menuSnackbarEvent = menuSnackbarEvent,
+        todayMenuState = todayState,
+        onTodayToggleExpanded = viewModel::toggleTodayMenus,
+        onTodayChangeMeal = viewModel::changeTodayMeal,
+        onTodayToggleMenu = viewModel::toggleTodayMenu,
+        onTodaySave = viewModel::saveTodayMenus,
+        onTodayRetry = viewModel::loadTodayMenus,
     )
 }
 
@@ -144,9 +172,18 @@ internal fun FavoriteScreen(
     onRemoveFavorites: (Set<Int>) -> Unit = {},
     onRestoreFavorites: (List<FavoritePartnershipItem>) -> Unit = {},
     onMenuSearchQueryChanged: (String) -> Unit = {},
+    onMenuSearchFocusChanged: (Boolean) -> Unit = {},
+    onMenuSearchSubmit: () -> Unit = {},
+    onMenuSearchExit: () -> Unit = {},
     onSearchFavoriteClick: (MenuFavoriteSearchResult) -> Unit = {},
     onFavoriteMenuClick: (FavoriteMenu) -> Unit = {},
     menuSnackbarEvent: FavoriteMenuSnackbarEvent? = null,
+    todayMenuState: TodayMenuFavoriteState = TodayMenuFavoriteState(),
+    onTodayToggleExpanded: () -> Unit = {},
+    onTodayChangeMeal: (Restaurant, Time) -> Unit = { _, _ -> },
+    onTodayToggleMenu: (Long) -> Unit = {},
+    onTodaySave: () -> Unit = {},
+    onTodayRetry: () -> Unit = {},
 ) {
     val pagerState = rememberPagerState(
         initialPage = MENU_PAGE,
@@ -293,8 +330,17 @@ internal fun FavoriteScreen(
                             FavoriteMenuContent(
                                 uiState = uiState,
                                 onSearchQueryChanged = onMenuSearchQueryChanged,
+                                onSearchFocusChanged = onMenuSearchFocusChanged,
+                                onSearchSubmit = onMenuSearchSubmit,
+                                onSearchExit = onMenuSearchExit,
                                 onSearchFavoriteClick = onSearchFavoriteClick,
                                 onFavoriteMenuClick = onFavoriteMenuClick,
+                                todayMenuState = todayMenuState,
+                                onTodayToggleExpanded = onTodayToggleExpanded,
+                                onTodayChangeMeal = onTodayChangeMeal,
+                                onTodayToggleMenu = onTodayToggleMenu,
+                                onTodaySave = onTodaySave,
+                                onTodayRetry = onTodayRetry,
                             )
                         }
                     }
@@ -327,6 +373,7 @@ internal fun FavoriteScreen(
                 enter = fadeIn() + slideInVertically { it / 2 },
                 exit = fadeOut() + slideOutVertically { it / 2 },
                 modifier = Modifier
+                    .imePadding()
                     .align(Alignment.BottomCenter)
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 6.dp),
@@ -335,6 +382,8 @@ internal fun FavoriteScreen(
                     EatSsuSnackbar(
                         message = stringResource(event.messageRes),
                         modifier = Modifier.fillMaxWidth(),
+                        messageStyle = EatssuTheme.typography.body2,
+                        maxLines = 1,
                         type = if (event.isError) {
                             EatSsuSnackbarType.Danger
                         } else {

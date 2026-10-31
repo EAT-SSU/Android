@@ -7,6 +7,7 @@ import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.GoodPriceStore
 import com.eatssu.android.domain.usecase.goodprice.GetGoodPriceStoreDetailUseCase
 import com.eatssu.android.domain.usecase.goodprice.GetGoodPriceStoresUseCase
+import com.eatssu.android.domain.usecase.user.GetUserCollegeDepartmentUseCase
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiText
 import com.eatssu.common.enums.GoodPriceCategory
@@ -29,7 +30,14 @@ import javax.inject.Inject
 class GoodPriceMapViewModel @Inject constructor(
     private val getGoodPriceStoresUseCase: GetGoodPriceStoresUseCase,
     private val getGoodPriceStoreDetailUseCase: GetGoodPriceStoreDetailUseCase,
+    private val getUserCollegeDepartmentUseCase: GetUserCollegeDepartmentUseCase,
 ) : ViewModel() {
+
+    private val _departmentId = MutableStateFlow<Long>(-1)
+    val departmentId: StateFlow<Long> = _departmentId.asStateFlow()
+
+    private val _collegeId = MutableStateFlow<Long>(-1)
+    val collegeId: StateFlow<Long> = _collegeId.asStateFlow()
 
     private val _uiState = MutableStateFlow(GoodPriceMapState())
     val uiState: StateFlow<GoodPriceMapState> = _uiState.asStateFlow()
@@ -38,8 +46,17 @@ class GoodPriceMapViewModel @Inject constructor(
     val uiEvent: SharedFlow<UiEvent> = _uiEvent.asSharedFlow()
 
     init {
-        // 초기 진입 시 전체 업소 목록 조회
+        // 초기 진입 시 전체 업소 목록 조회 및 학과 정보 로드
         loadStores(GoodPriceCategory.ALL)
+        fetchUserCollegeDepartment()
+    }
+
+    private fun fetchUserCollegeDepartment() {
+        viewModelScope.launch {
+            val userCollegeDepartment = getUserCollegeDepartmentUseCase()
+            _departmentId.value = userCollegeDepartment.userDepartment.departmentId.toLong()
+            _collegeId.value = userCollegeDepartment.userCollege.collegeId.toLong()
+        }
     }
 
     // 카테고리 필터 변경 (중복 선택 불가, 단일 선택)

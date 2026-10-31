@@ -20,6 +20,8 @@ button_save,저장하기,Save,保存,Lưu
 button_report,신고하기,Report,通報,Báo cáo
 button_cancel,취소,Cancel,キャンセル,Hủy
 button_confirm,확인,Confirm,確認,Xác nhận
+button_later,나중에,Later,後で,Để sau
+button_allow_notification,알림 허용하기,Allow Notifications,通知を許可,Cho phép thông báo
 button_update,업데이트,Update,アップデート,Cập nhật
 button_check_duplicate,중복확인,Check,確認,Kiểm tra
 dialog_logout_title,로그아웃,Log Out,ログアウト,Đăng xuất
@@ -29,6 +31,8 @@ dialog_location_permission_description,내 위치를 바로 확인하며 제휴 
 dialog_notification_permission_title,알림 권한 필요,Notification Permission Required,通知権限が必要です,Cần quyền thông báo
 dialog_notification_permission_description,알림을 받으려면 알림 권한을 활성화해야 합니다.\n설정에서 알림 권한을 허용해주세요.,"To receive notifications, you need to enable notification permission.\nPlease allow notification access in Settings.",通知を受け取るには、通知権限を有効にする必要があります。\n設定で通知を許可してください。,"Để nhận thông báo, bạn cần bật quyền thông báo.\nVui lòng cho phép thông báo trong Cài đặt."
 dialog_settings,설정으로 이동,Go to Settings,設定へ移動,Đi tới Cài đặt
+dialog_notification_pre_permission_title,잇슈의 유용한 소식을 받아보세요,Get useful updates from EAT-SSU,イートシューの役立つ情報を受け取る,Nhận thông tin hữu ích từ EAT-SSU
+dialog_notification_pre_permission_description,오늘의 학식과 찜한 메뉴 소식을\n알림으로 빠르게 알려드릴게요.,"We will quickly notify you about today's menu and your favorite meals.",今日の学食やお気に入りメニューの情報を\n通知ですぐにお知らせします。,"Chúng tôi sẽ nhanh chóng thông báo cho bạn về thực đơn hôm nay và món ăn yêu thích."
 dialog_placeholder_title,제목을 입력해주세요,Please enter a title,タイトルを入力してください,Vui lòng nhập tiêu đề
 dialog_placeholder_body,본문을 입력해주세요,Please enter the content,本文を入力してください,Vui lòng nhập nội dung
 dialog_network_error_title,네트워크 연결 안 됨,No Network Connection,ネットワークに接続されていません,Không có kết nối mạng
@@ -118,7 +122,7 @@ logout,로그아웃,Log Out,ログアウト,Đăng xuất
 signout,회원탈퇴,Delete Account,アカウント削除,Xóa tài khoản
 app_version,앱 버전,App Version,アプリバージョン,Phiên bản ứng dụng
 mypage_push_notification_title,푸시 알림 설정,Push Notification Settings,プッシュ通知設定,Cài đặt thông báo đẩy
-mypage_push_notification_description,매일 오전 11시에 알림을 보내드려요,We'll send you a notification every day at 11:00 AM.,毎日午前11時に通知をお送りします。,Bạn sẽ nhận được thông báo mỗi ngày lúc 11:00.
+mypage_push_notification_description,찜한 메뉴가 오늘 식단에 나오면 알려드려요,We'll notify you when your favorite menu is on today's menu.,お気に入りのメニューが今日の献立に出たらお知らせします。,Thông báo cho bạn khi món ăn yêu thích có trong thực đơn hôm nay.
 language_setting,언어 설정,Language Settings,言語設定,Cài đặt ngôn ngữ
 language_select_description,사용할 언어를 선택하세요.,Choose the language you want to use.,使用する言語を選択してください。,Chọn ngôn ngữ bạn muốn sử dụng.
 language_system_default,시스템 언어 (기본값),System Language (Default),システム言語（デフォルト）,Ngôn ngữ hệ thống (mặc định)

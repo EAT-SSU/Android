@@ -56,6 +56,8 @@
     <string name="button_report">通報</string>
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">確認</string>
+    <string name="button_later">後で</string>
+    <string name="button_allow_notification">通知を許可</string>
     <string name="button_close">閉じる</string>
     <string name="button_retry">再試行</string>
     <string name="button_update">アップデート</string>
@@ -71,6 +73,8 @@
     <string name="dialog_notification_permission_title">通知権限が必要です</string>
     <string name="dialog_notification_permission_description">通知を受け取るには、通知権限を有効にする必要があります。\n設定で通知を許可してください。</string>
     <string name="dialog_settings">設定へ移動</string>
+    <string name="dialog_notification_pre_permission_title">イートシューの役立つ情報を受け取る</string>
+    <string name="dialog_notification_pre_permission_description">今日の学食やお気に入りメニューの情報を\n通知ですぐにお知らせします。</string>
     <string name="dialog_placeholder_title">タイトルを入力してください</string>
     <string name="dialog_placeholder_body">本文を入力してください</string>
     <string name="dialog_network_error_title">ネットワークに接続されていません</string>
@@ -226,7 +230,7 @@
     <string name="mypage_service_section_title">サービス情報</string>
     <string name="mypage_etc_section_title">その他</string>
     <string name="mypage_push_notification_title">プッシュ通知設定</string>
-    <string name="mypage_push_notification_description">毎日午前11時に通知をお送りします。</string>
+    <string name="mypage_push_notification_description">お気に入りのメニューが今日の献立に出たらお知らせします。</string>
 
     <!-- Language Settings -->
     <string name="language_setting">言語設定</string>
@@ -351,8 +355,8 @@
     <string name="favorite_menu_added_snackbar">お気に入りメニューに追加しました。</string>
     <string name="favorite_menu_deleted_snackbar">お気に入りメニューから削除しました。</string>
     <string name="favorite_menu_action_error">処理できませんでした。しばらくしてからもう一度お試しください。</string>
-    <string name="favorite_menu_load_error">メニューを読み込めませんでした。\nしばらくしてからもう一度お試しください。</string>
-    <string name="favorite_menu_clear_search_content_description">検索語をすべて削除</string>
+    <string name="favorite_menu_load_error">メニューを読み込めませんでした。</string>
+    <string name="favorite_menu_clear_search_content_description">メニュー検索を閉じる</string>
     <string name="favorite_menu_add_content_description">メニューをお気に入りに追加</string>
     <string name="favorite_menu_remove_content_description">メニューをお気に入りから削除</string>
     <string name="favorite_menu_discontinued">販売終了</string>
@@ -395,4 +399,26 @@
     <string name="cafeteria_the_kitchen_location">学生会館 2階</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="today_favorite_title">今日の献立からお気に入り登録</string>
+    <string name="today_favorite_expanded">展開済み</string>
+    <string name="today_favorite_collapsed">折りたたみ</string>
+    <string name="today_favorite_change">変更</string>
+    <string name="today_favorite_hint">メニューを選んでお気に入りに登録できます。</string>
+    <string name="today_favorite_save">メニューをお気に入り登録</string>
+    <string name="today_favorite_save_count">選択した%1$d件をお気に入り登録</string>
+    <string name="today_favorite_no_menu">この時間帯の献立はありません。</string>
+    <string name="today_favorite_sheet_title">献立を変更</string>
+    <string name="today_favorite_restaurant_title">食堂</string>
+    <string name="today_favorite_time_title">時間帯</string>
+    <string name="today_favorite_apply">適用</string>
+    <string name="today_favorite_haksik">学生食堂</string>
+    <string name="today_favorite_dodam">ドダム食堂</string>
+    <string name="today_favorite_dormitory">寮食堂</string>
+    <string name="today_favorite_faculty">教職員食堂</string>
+    <string name="notification_favorite_one_title">🍽️ お気に入りメニューが登場！</string>
+    <string name="notification_favorite_two_title">🍽️ お気に入りメニューが2品登場！</string>
+    <string name="notification_favorite_many_title">🍽️ お気に入りメニューが複数登場！</string>
+    <string name="notification_favorite_one_body">今日の%1$s、%2$sに%3$sが登場 👀</string>
+    <string name="notification_favorite_two_body">今日の%1$s、%2$sの%3$s・%4$sの%5$sが登場 👀</string>
+    <string name="notification_favorite_many_body">今日の%1$s、%2$sの%3$sほか%4$d品が登場 👀</string>
 </resources>

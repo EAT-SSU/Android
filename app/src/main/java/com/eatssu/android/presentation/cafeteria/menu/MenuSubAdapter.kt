@@ -10,16 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eatssu.android.databinding.ItemMenuBinding
 import com.eatssu.android.domain.model.Menu
 import com.eatssu.android.presentation.cafeteria.review.ReviewComposeActivity
-import com.eatssu.common.analytics.CafeteriaAnalyticsEvent
+import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.common.analytics.AnalyticsTracker
+import com.eatssu.common.analytics.CafeteriaAnalyticsEvent
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 
 
 class MenuSubAdapter(
     private val dataList: List<Menu>,
     private val restaurant: Restaurant,
     private val analyticsTracker: AnalyticsTracker,
+    private val time: Time,
 ) :
     RecyclerView.Adapter<MenuSubAdapter.ViewHolder>() {
 
@@ -44,6 +47,11 @@ class MenuSubAdapter(
                 val item = dataList[position]
                 val intent = Intent(binding.root.context, ReviewComposeActivity::class.java)
                 intent.putExtra("restaurant", restaurant.name)
+                intent.putExtra(
+                    ReviewComposeActivity.EXTRA_MENU_DATE,
+                    CalendarUtil.selectedDate.toString()
+                )
+                intent.putExtra(ReviewComposeActivity.EXTRA_MEAL_TIME, time.name)
 
                 when (restaurant.menuType) {
                     MenuType.FIXED -> {

@@ -56,6 +56,8 @@
     <string name="button_report">Report</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
+    <string name="button_later">Later</string>
+    <string name="button_allow_notification">Allow Notifications</string>
     <string name="button_close">Close</string>
     <string name="button_retry">Retry</string>
     <string name="button_update">Update</string>
@@ -71,6 +73,8 @@
     <string name="dialog_notification_permission_title">Notification Permission Required</string>
     <string name="dialog_notification_permission_description">To receive notifications, you need to enable notification permission.\nPlease allow notification access in Settings.</string>
     <string name="dialog_settings">Go to Settings</string>
+    <string name="dialog_notification_pre_permission_title">Get useful updates from EAT-SSU</string>
+    <string name="dialog_notification_pre_permission_description">We will quickly notify you about today\'s menu and your favorite meals.</string>
     <string name="dialog_placeholder_title">Please enter a title</string>
     <string name="dialog_placeholder_body">Please enter the content</string>
     <string name="dialog_network_error_title">No Network Connection</string>
@@ -226,7 +230,7 @@
     <string name="mypage_service_section_title">Service Info</string>
     <string name="mypage_etc_section_title">Other</string>
     <string name="mypage_push_notification_title">Push Notification Settings</string>
-    <string name="mypage_push_notification_description">We\'ll send you a notification every day at 11:00 AM.</string>
+    <string name="mypage_push_notification_description">We\'ll notify you when your favorite menu is on today\'s menu.</string>
 
     <!-- Language Settings -->
     <string name="language_setting">Language Settings</string>
@@ -351,8 +355,8 @@
     <string name="favorite_menu_added_snackbar">Added to favorite menus.</string>
     <string name="favorite_menu_deleted_snackbar">Removed from favorite menus.</string>
     <string name="favorite_menu_action_error">Couldn\'t complete the action. Please try again.</string>
-    <string name="favorite_menu_load_error">Couldn\'t load menus.\nPlease try again.</string>
-    <string name="favorite_menu_clear_search_content_description">Clear search text</string>
+    <string name="favorite_menu_load_error">Couldn\'t load menus.</string>
+    <string name="favorite_menu_clear_search_content_description">Close menu search</string>
     <string name="favorite_menu_add_content_description">Add menu to favorites</string>
     <string name="favorite_menu_remove_content_description">Remove menu from favorites</string>
     <string name="favorite_menu_discontinued">Discontinued</string>
@@ -391,4 +395,26 @@
     <string name="cafeteria_the_kitchen_location">Student Union Building, 2F</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="today_favorite_title">Favorite from today’s meals</string>
+    <string name="today_favorite_expanded">Expanded</string>
+    <string name="today_favorite_collapsed">Collapsed</string>
+    <string name="today_favorite_change">Change</string>
+    <string name="today_favorite_hint">Select menus to add to favorites.</string>
+    <string name="today_favorite_save">Favorite menus</string>
+    <string name="today_favorite_save_count">Favorite %1$d selected menus</string>
+    <string name="today_favorite_no_menu">No meals for this time.</string>
+    <string name="today_favorite_sheet_title">Change meal</string>
+    <string name="today_favorite_restaurant_title">Cafeteria</string>
+    <string name="today_favorite_time_title">Meal time</string>
+    <string name="today_favorite_apply">Apply</string>
+    <string name="today_favorite_haksik">Student cafeteria</string>
+    <string name="today_favorite_dodam">Dodam cafeteria</string>
+    <string name="today_favorite_dormitory">Dormitory cafeteria</string>
+    <string name="today_favorite_faculty">Faculty cafeteria</string>
+    <string name="notification_favorite_one_title">🍽️ A favorite menu is available!</string>
+    <string name="notification_favorite_two_title">🍽️ Two favorite menus are available!</string>
+    <string name="notification_favorite_many_title">🍽️ Several favorite menus are available!</string>
+    <string name="notification_favorite_one_body">Today’s %1$s: %3$s at %2$s 👀</string>
+    <string name="notification_favorite_two_body">Today’s %1$s: %3$s at %2$s · %5$s at %4$s 👀</string>
+    <string name="notification_favorite_many_body">Today’s %1$s: %3$s at %2$s and %4$d more 👀</string>
 </resources>

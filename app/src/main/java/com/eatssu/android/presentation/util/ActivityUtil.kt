@@ -1,7 +1,9 @@
 package com.eatssu.android.presentation.util
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.R
@@ -9,8 +11,16 @@ import com.eatssu.android.presentation.base.NetworkErrorEventBus
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
+
 inline fun <reified T : Activity> Activity.startActivity(block: Intent.() -> Unit = {}) {
     startActivity(Intent(this, T::class.java).apply(block))
+}
+
+fun Context.openAppNotificationSettings() {
+    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+        putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+    }
+    startActivity(intent)
 }
 
 /**

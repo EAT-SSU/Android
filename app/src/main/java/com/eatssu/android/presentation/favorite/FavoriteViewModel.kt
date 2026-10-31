@@ -13,7 +13,9 @@ import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.domain.repository.MenuFavoriteRepository
 import com.eatssu.android.domain.repository.PartnershipRepository
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.StoreType
+import com.eatssu.common.enums.Time
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -26,6 +28,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 private const val MENU_SEARCH_MIN_LENGTH = 2
@@ -52,6 +55,8 @@ data class FavoriteState(
     val unfavoritedMenuIds: Set<Long> = emptySet(),
     val menuSearchResults: List<MenuFavoriteSearchResult> = emptyList(),
     val menuSearchQuery: String = "",
+    val isMenuSearchMode: Boolean = false,
+    val submittedMenuSearchQuery: String? = null,
     val favoriteMenuLoadState: MenuFavoriteLoadState = MenuFavoriteLoadState.Idle,
     val menuSearchLoadState: MenuFavoriteLoadState = MenuFavoriteLoadState.Idle,
 ) {
@@ -63,8 +68,9 @@ data class FavoriteState(
     val normalizedMenuSearchQuery: String
         get() = menuSearchQuery.trim()
 
-    val isMenuSearchActive: Boolean
-        get() = normalizedMenuSearchQuery.length >= MENU_SEARCH_MIN_LENGTH
+    val hasSubmittedMenuSearch: Boolean
+        get() = submittedMenuSearchQuery == normalizedMenuSearchQuery &&
+                normalizedMenuSearchQuery.length >= MENU_SEARCH_MIN_LENGTH
 }
 
 data class FavoriteMenuSnackbarEvent(
@@ -88,7 +94,162 @@ class FavoriteViewModel @Inject constructor(
     val menuSnackbarEvents: SharedFlow<FavoriteMenuSnackbarEvent> =
         _menuSnackbarEvents.asSharedFlow()
 
+    private val _todayMenuState = MutableStateFlow(TodayMenuFavoriteState())
+    val todayMenuState: StateFlow<TodayMenuFavoriteState> = _todayMenuState.asStateFlow()
+    private var todayMenuLoadJob: Job? = null
+    private var todayMenuLoadVersion = 0
+    private var hasConfiguredTodayMenus = false
+
+    fun configureTodayMenus(restaurant: Restaurant?, time: Time?, expanded: Boolean) {
+        if (hasConfiguredTodayMenus) return
+        hasConfiguredTodayMenus = true
+        val initialRestaurant =
+            restaurant?.takeIf { it in todayMenuRestaurants } ?: Restaurant.HAKSIK
+        val initialTime = time?.takeIf { isTodayMealAvailable(initialRestaurant, it) } ?: Time.LUNCH
+        _todayMenuState.value = TodayMenuFavoriteState(
+            restaurant = initialRestaurant, time = initialTime, expanded = expanded,
+        )
+        if (expanded) loadTodayMenus()
+    }
+
+    fun toggleTodayMenus() {
+        _todayMenuState.update { it.copy(expanded = !it.expanded) }
+        if (_todayMenuState.value.expanded) {
+            refreshTodayMenusIfDateChanged()
+            if (_todayMenuState.value.loadState == MenuFavoriteLoadState.Idle) loadTodayMenus()
+        }
+    }
+
+    fun refreshTodayMenusIfDateChanged() {
+        if (_todayMenuState.value.date == LocalDate.now()) return
+        todayMenuLoadJob?.cancel()
+        _todayMenuState.update {
+            it.copy(
+                date = LocalDate.now(),
+                menus = emptyList(),
+                selectedMenuIds = emptySet(),
+                loadState = MenuFavoriteLoadState.Idle
+            )
+        }
+        if (_todayMenuState.value.expanded) loadTodayMenus()
+    }
+
+    fun changeTodayMeal(restaurant: Restaurant, time: Time) {
+        if (!isTodayMealAvailable(restaurant, time) || _todayMenuState.value.isSaving) return
+        if (_todayMenuState.value.restaurant == restaurant && _todayMenuState.value.time == time) return
+        _todayMenuState.update {
+            it.copy(
+                restaurant = restaurant,
+                time = time,
+                menus = emptyList(),
+                selectedMenuIds = emptySet()
+            )
+        }
+        loadTodayMenus()
+    }
+
+    fun loadTodayMenus() {
+        todayMenuLoadJob?.cancel()
+        val requestVersion = ++todayMenuLoadVersion
+        _todayMenuState.update {
+            it.copy(
+                date = LocalDate.now(),
+                loadState = MenuFavoriteLoadState.Loading,
+                selectedMenuIds = emptySet()
+            )
+        }
+        val request = _todayMenuState.value
+        todayMenuLoadJob = viewModelScope.launch {
+            val result =
+                menuFavoriteRepository.getTodayMenus(request.date, request.restaurant, request.time)
+            _todayMenuState.update { current ->
+                if (requestVersion != todayMenuLoadVersion || current.restaurant != request.restaurant || current.time != request.time || current.date != request.date) current
+                else when (result) {
+                    is ApiResult.Success -> current.copy(
+                        menus = result.data,
+                        loadState = MenuFavoriteLoadState.Success
+                    )
+
+                    else -> current.copy(
+                        menus = emptyList(),
+                        loadState = MenuFavoriteLoadState.Error
+                    )
+                }
+            }
+            if (result !is ApiResult.Success && requestVersion == todayMenuLoadVersion &&
+                _todayMenuState.value.date == request.date &&
+                _todayMenuState.value.restaurant == request.restaurant &&
+                _todayMenuState.value.time == request.time
+            ) {
+                showMenuSnackbar(R.string.favorite_menu_load_error, isError = true)
+            }
+        }
+    }
+
+    fun toggleTodayMenu(menuId: Long) {
+        val state = _todayMenuState.value
+        if (state.isSaving || state.menus.none { it.menuId == menuId } || menuId in favoriteMenuIds()) return
+        _todayMenuState.update {
+            it.copy(selectedMenuIds = if (menuId in it.selectedMenuIds) it.selectedMenuIds - menuId else it.selectedMenuIds + menuId)
+        }
+    }
+
+    fun saveTodayMenus() {
+        val state = _todayMenuState.value
+        if (state.isSaving || _uiState.value !is UiState.Success) return
+        if (state.date != LocalDate.now()) {
+            refreshTodayMenusIfDateChanged(); return
+        }
+        val menus =
+            state.menus.filter { it.menuId in state.selectedMenuIds && it.menuId !in favoriteMenuIds() }
+        if (menus.isEmpty() || menus.any { it.menuId in pendingMenuActions }) return
+        pendingMenuActions.addAll(menus.map { it.menuId })
+        _todayMenuState.update { it.copy(isSaving = true) }
+        viewModelScope.launch {
+            try {
+                val results = menus.map { menu ->
+                    async { menu to menuFavoriteRepository.addFavoriteMenu(menu.menuId) }
+                }.awaitAll()
+                val added = results.filter { it.second is ApiResult.Success }.map { it.first }
+                val ids = added.map { it.menuId }.toSet()
+                updateState { current ->
+                    current.copy(
+                        favoriteMenus = added.map {
+                            FavoriteMenu(
+                                it.menuId,
+                                it.menuName,
+                                it.restaurant,
+                                false
+                            )
+                        } +
+                                current.favoriteMenus.filterNot { it.menuId in ids },
+                        unfavoritedMenuIds = current.unfavoritedMenuIds - ids,
+                        menuSearchResults = current.menuSearchResults.map {
+                            if (it.menuId in ids) it.copy(
+                                isFavorite = true
+                            ) else it
+                        },
+                    )
+                }
+                _todayMenuState.update { it.copy(selectedMenuIds = it.selectedMenuIds - ids) }
+                showMenuSnackbar(
+                    if (added.size == menus.size) R.string.favorite_menu_added_snackbar else R.string.favorite_menu_action_error,
+                    isError = added.size != menus.size,
+                )
+            } finally {
+                pendingMenuActions.removeAll(menus.map { it.menuId }.toSet())
+                _todayMenuState.update { it.copy(isSaving = false) }
+            }
+        }
+    }
+
+    private fun favoriteMenuIds(): Set<Long> {
+        val state = (_uiState.value as? UiState.Success)?.data ?: return emptySet()
+        return state.favoriteMenus.map { it.menuId }.toSet() - state.unfavoritedMenuIds
+    }
+
     private var menuSearchJob: Job? = null
+    private var menuSearchVersion = 0
     private val pendingMenuActions = mutableSetOf<Long>()
 
     fun loadFavorites() {
@@ -136,41 +297,75 @@ class FavoriteViewModel @Inject constructor(
         }
     }
 
-    fun onMenuSearchQueryChanged(query: String) {
+    fun onMenuSearchFocusChanged(isFocused: Boolean) {
+        if (isFocused) updateState { it.copy(isMenuSearchMode = true) }
+    }
+
+    fun exitMenuSearch() {
         menuSearchJob?.cancel()
-        val keyword = query.trim()
+        menuSearchVersion++
+        updateState {
+            it.copy(
+                menuSearchQuery = "",
+                isMenuSearchMode = false,
+                submittedMenuSearchQuery = null,
+                menuSearchResults = emptyList(),
+                menuSearchLoadState = MenuFavoriteLoadState.Idle,
+            )
+        }
+        _todayMenuState.update { it.copy(expanded = false) }
+    }
+
+    fun onMenuSearchQueryChanged(query: String) {
+        val current = (_uiState.value as? UiState.Success)?.data ?: return
+        if (current.menuSearchQuery == query) return
+        menuSearchJob?.cancel()
+        menuSearchVersion++
         updateState {
             it.copy(
                 menuSearchQuery = query,
-                menuSearchResults = if (keyword.length < MENU_SEARCH_MIN_LENGTH) {
-                    emptyList()
-                } else {
-                    it.menuSearchResults
-                },
-                menuSearchLoadState = if (keyword.length < MENU_SEARCH_MIN_LENGTH) {
-                    MenuFavoriteLoadState.Idle
-                } else {
-                    MenuFavoriteLoadState.Loading
-                },
+                isMenuSearchMode = true,
+                submittedMenuSearchQuery = null,
+                menuSearchResults = emptyList(),
+                menuSearchLoadState = MenuFavoriteLoadState.Idle,
             )
         }
+    }
 
+    fun submitMenuSearch() {
+        val current = (_uiState.value as? UiState.Success)?.data ?: return
+        val keyword = current.normalizedMenuSearchQuery
         if (keyword.length < MENU_SEARCH_MIN_LENGTH) return
-
+        if (current.menuSearchLoadState == MenuFavoriteLoadState.Loading &&
+            current.submittedMenuSearchQuery == keyword
+        ) return
+        menuSearchJob?.cancel()
+        val requestVersion = ++menuSearchVersion
+        updateState {
+            it.copy(
+                isMenuSearchMode = true,
+                submittedMenuSearchQuery = keyword,
+                menuSearchResults = emptyList(),
+                menuSearchLoadState = MenuFavoriteLoadState.Loading,
+            )
+        }
         menuSearchJob = viewModelScope.launch {
-            when (val result = menuFavoriteRepository.searchMenus(keyword)) {
-                is ApiResult.Success -> updateSearchResultIfCurrent(keyword) {
+            val result = menuFavoriteRepository.searchMenus(keyword)
+            if (requestVersion != menuSearchVersion) return@launch
+            val state = (_uiState.value as? UiState.Success)?.data ?: return@launch
+            if (!state.isMenuSearchMode || state.normalizedMenuSearchQuery != keyword) return@launch
+            when (result) {
+                is ApiResult.Success -> updateState {
                     it.copy(
-                        menuSearchResults = result.data,
+                        menuSearchResults = sortMenuFavoriteSearchResults(result.data, keyword),
                         menuSearchLoadState = MenuFavoriteLoadState.Success,
                     )
                 }
-
                 else -> {
-                    updateSearchResultIfCurrent(keyword) {
+                    updateState {
                         it.copy(
                             menuSearchResults = emptyList(),
-                            menuSearchLoadState = MenuFavoriteLoadState.Error,
+                            menuSearchLoadState = MenuFavoriteLoadState.Error
                         )
                     }
                     showMenuSnackbar(R.string.favorite_menu_load_error, isError = true)
@@ -347,15 +542,6 @@ class FavoriteViewModel @Inject constructor(
                     state.copy(partnerships = newlyAdded + state.partnerships)
                 }
             }
-        }
-    }
-
-    private fun updateSearchResultIfCurrent(
-        keyword: String,
-        transform: (FavoriteState) -> FavoriteState,
-    ) {
-        updateState { state ->
-            if (state.normalizedMenuSearchQuery == keyword) transform(state) else state
         }
     }
 

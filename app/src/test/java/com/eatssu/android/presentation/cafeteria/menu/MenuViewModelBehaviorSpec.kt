@@ -14,9 +14,9 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import java.time.LocalDate
 import java.time.Clock
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,7 +38,13 @@ class MenuViewModelBehaviorSpec : AppBehaviorSpec({
                     viewModel.loadMenus(date, Time.LUNCH)
                     advanceUntilIdle()
 
-                    viewModel.uiState.value shouldBe UiState.Success(MenuState(emptyMap()))
+                    viewModel.uiState.value shouldBe UiState.Success(
+                        MenuState(
+                            emptyMap(),
+                            date = date,
+                            time = Time.LUNCH
+                        )
+                    )
                     coVerify(exactly = 1) { useCase(date, Time.LUNCH) }
                 }
             }
@@ -68,6 +74,8 @@ class MenuViewModelBehaviorSpec : AppBehaviorSpec({
                                 r1 to m1,
                                 r2 to m2,
                             ),
+                            date = date,
+                            time = Time.LUNCH,
                         ),
                     )
                     coVerify(exactly = 1) { useCase(date, Time.LUNCH) }
@@ -99,6 +107,8 @@ class MenuViewModelBehaviorSpec : AppBehaviorSpec({
                                 r1 to m1,
                                 r2 to m2,
                             ),
+                            date = date,
+                            time = Time.DINNER,
                         )
                     )
                     coVerify(exactly = 1) { useCase(date, Time.DINNER) }

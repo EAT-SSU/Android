@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
+import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.Review
 import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
@@ -42,6 +43,7 @@ import com.eatssu.android.presentation.cafeteria.review.translation.shouldShowRe
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.ReviewAnalyticsEvent
 import com.eatssu.design_system.component.EatSsuTopBar
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Gray100
@@ -62,6 +64,7 @@ fun MyReviewListScreen(
         viewModel.loadUserNickname()
     }
 
+    val analyticsTracker = LocalAnalyticsTracker.current
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val userNickname by viewModel.nickname.collectAsStateWithLifecycle()
     val translationStates by viewModel.translationStates.collectAsStateWithLifecycle()
@@ -83,7 +86,10 @@ fun MyReviewListScreen(
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
         onModifyClick = onModifyClick,
         onTranslationClick = { review ->
-            targetLanguage?.let { viewModel.toggleReviewTranslation(review, it) }
+            targetLanguage?.let { lang ->
+                analyticsTracker.track(ReviewAnalyticsEvent.TranslateClicked(langTo = lang.lowercase()))
+                viewModel.toggleReviewTranslation(review, lang)
+            }
         },
         targetLanguage = targetLanguage,
         isLoggedIn = viewModel.isLoggedIn,

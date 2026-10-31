@@ -2,6 +2,7 @@ package com.eatssu.android.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
@@ -17,25 +19,32 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.WorkManager
 import com.eatssu.android.R
+import com.eatssu.android.data.local.NotificationStore
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
 import com.eatssu.android.presentation.event.AnyoneButMeEventTooltipController
 import com.eatssu.android.presentation.favorite.FavoriteDetailFragment
+import com.eatssu.android.presentation.favorite.FavoriteFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.notification.NotificationActivity
+import com.eatssu.android.presentation.util.openAppNotificationSettings
+import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.Time
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -47,8 +56,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ScreenId.HOME_MAIN
 ) {
     companion object {
+        const val EXTRA_OPEN_MENU_FAVORITES = "open_menu_favorites"
         private const val ENABLE_ANYONE_BUT_ME = false
+        private const val REQUEST_CODE_NOTIFICATION_PERMISSION = 1000
     }
+
+    @Inject
+    lateinit var notificationStore: NotificationStore
 
     @Inject
     lateinit var workManager: WorkManager
@@ -69,14 +83,69 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
         setupNoToolbar()
         setNavigation()
+        if (savedInstanceState == null) {
+            openNotificationDestination(intent)
+            openMenuFavoritesDestination(intent)
+        }
         if (ENABLE_ANYONE_BUT_ME) {
             bindEventPopup(showOnLaunch = savedInstanceState == null)
             bindEventTooltip()
         }
 
-        checkAlarmPermission()
+        if (savedInstanceState == null) {
+            checkNotificationPermissionDialog()
+        }
         collectState()
         collectUiEvents()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        openNotificationDestination(intent)
+        openMenuFavoritesDestination(intent)
+    }
+
+    private fun openMenuFavoritesDestination(intent: Intent) {
+        if (!intent.getBooleanExtra(EXTRA_OPEN_MENU_FAVORITES, false)) return
+        intent.removeExtra(EXTRA_OPEN_MENU_FAVORITES)
+        val args = bundleOf(
+            FavoriteFragment.ARG_TODAY_RESTAURANT to intent.getStringExtra(FavoriteFragment.ARG_TODAY_RESTAURANT),
+            FavoriteFragment.ARG_TODAY_TIME to intent.getStringExtra(FavoriteFragment.ARG_TODAY_TIME),
+            FavoriteFragment.ARG_TODAY_EXPANDED to intent.getBooleanExtra(
+                FavoriteFragment.ARG_TODAY_EXPANDED,
+                false
+            ),
+        )
+        // A new destination resets the pager to menu favorites, including when partnerships were open.
+        navController.navigate(R.id.favoriteFragment, args)
+    }
+
+    private fun openNotificationDestination(intent: Intent) {
+        val date = intent.getStringExtra(NotificationActivity.EXTRA_MEAL_DATE)
+            ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+        val time = intent.getStringExtra(NotificationActivity.EXTRA_MEAL_TIME)
+            ?.let { value -> Time.entries.firstOrNull { it.name == value } }
+        if (!intent.getBooleanExtra(
+                NotificationActivity.EXTRA_OPEN_CAFETERIA,
+                false
+            ) && (date == null || time == null)
+        ) return
+        val notificationId = intent.getStringExtra("notification_id")
+        lifecycleScope.launch {
+            notificationId?.let { notificationStore.markRead(it) }
+        }
+        val args = if (date != null && time != null) bundleOf(
+            NotificationActivity.EXTRA_MEAL_DATE to date.toString(),
+            NotificationActivity.EXTRA_MEAL_TIME to time.name,
+            NotificationActivity.EXTRA_RESTAURANT to intent.getStringExtra(NotificationActivity.EXTRA_RESTAURANT),
+        ) else null
+        navController.navigate(R.id.cafeteria_menu, args)
+        intent.removeExtra(NotificationActivity.EXTRA_OPEN_CAFETERIA)
+        intent.removeExtra(NotificationActivity.EXTRA_MEAL_DATE)
+        intent.removeExtra(NotificationActivity.EXTRA_MEAL_TIME)
+        intent.removeExtra(NotificationActivity.EXTRA_RESTAURANT)
+        intent.removeExtra("notification_id")
     }
 
     private fun setNavigation() {
@@ -189,7 +258,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == 1000) {
+        if (requestCode == REQUEST_CODE_NOTIFICATION_PERMISSION) {
             val nowDatetime = LocalDateTime.now()
             val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
@@ -199,28 +268,82 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 myPageViewModel.setNotificationOn()
             } else {
                 // 권한이 거부됨
-                showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
-                myPageViewModel.setNotificationOff()
+                // 시스템 권한 다이얼로그가 뜨지 않고 바로 거부된 경우(영구 거부 등) 시스템 설정 화면으로 이동 안내
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    !ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+                ) {
+                    openAppNotificationSettings()
+                } else {
+                    showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                    myPageViewModel.setNotificationOff()
+                }
             }
         }
     }
 
-    // 알림 퍼미션 있는지 자가 진단
-    private fun checkAlarmPermission() {
+    private fun isNotificationPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            NotificationManagerCompat.from(this).areNotificationsEnabled()
+        }
+    }
+
+    private fun checkNotificationPermissionDialog() {
+        if (isNotificationPermissionGranted()) return
+
+        lifecycleScope.launch {
+            if (mainViewModel.isNotificationPermissionDialogDismissed()) return@launch
+
+            showNotificationPrePermissionDialog()
+        }
+    }
+
+    private fun showNotificationPrePermissionDialog() {
+        showDialog(
+            title = getString(R.string.dialog_notification_pre_permission_title),
+            description = getString(R.string.dialog_notification_pre_permission_description),
+        ) {
+            cancelText = getString(R.string.button_later)
+            confirmText = getString(R.string.button_allow_notification)
+            cancellable = true
+            onCancel { dialog ->
+                mainViewModel.setNotificationPermissionDialogDismissed(true)
+                dialog.dismiss()
+            }
+            onDismiss {
+                mainViewModel.setNotificationPermissionDialogDismissed(true)
+            }
+            onConfirm { dialog ->
+                mainViewModel.setNotificationPermissionDialogDismissed(true)
+                dialog.dismiss()
+                handleAllowNotification()
+            }
+        }
+    }
+
+    private fun handleAllowNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // 권한이 없다면 요청
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    1000
-                )
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_CODE_NOTIFICATION_PERMISSION
+            )
+        } else {
+            if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+                val nowDatetime = LocalDateTime.now()
+                val formattedDate =
+                    nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                myPageViewModel.setNotificationOn()
             } else {
-                // 권한이 이미 있어
+                openAppNotificationSettings()
             }
         }
     }

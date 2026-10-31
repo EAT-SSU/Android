@@ -9,12 +9,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.eatssu.android.BuildConfig
+import com.eatssu.android.R
+import com.eatssu.android.data.local.NotificationStore
 import com.eatssu.android.data.local.SettingDataStore
 import com.eatssu.android.databinding.ActivityIntroBinding
 import com.eatssu.android.domain.model.AppTheme
+import com.eatssu.android.domain.model.notification.MenuNotification
 import com.eatssu.android.presentation.MainActivity
 import com.eatssu.android.presentation.common.ForceUpdateDialogActivity
 import com.eatssu.android.presentation.login.LoginActivity
+import com.eatssu.android.presentation.notification.NotificationActivity
 import com.eatssu.android.presentation.util.observeNetworkError
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -41,6 +45,9 @@ class IntroActivity : AppCompatActivity() {
 
     @Inject
     lateinit var settingDataStore: SettingDataStore
+
+    @Inject
+    lateinit var notificationStore: NotificationStore
 
     private val introViewModel: IntroViewModel by viewModels()
     private lateinit var binding: ActivityIntroBinding
@@ -92,7 +99,12 @@ class IntroActivity : AppCompatActivity() {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
                     is UiState.Success -> {
-                        startActivity<MainActivity>()
+                        captureConsoleNotificationTap()
+                        startActivity<MainActivity> {
+                            flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            this@IntroActivity.intent.extras?.let { putExtras(it) }
+                        }
                         finish()
                     }
 
@@ -106,6 +118,27 @@ class IntroActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private suspend fun captureConsoleNotificationTap() {
+        val messageId = intent.getStringExtra("google.message_id")
+            ?: intent.getStringExtra("message_id") ?: return
+        intent.putExtra(NotificationActivity.EXTRA_OPEN_CAFETERIA, true)
+        val data = listOf("title", "body", "meal_date", "meal_time", "restaurant", "restaurants")
+            .mapNotNull { key -> intent.getStringExtra(key)?.let { key to it } }.toMap()
+        // Console background notifications expose content on tap only when copied into custom data.
+        val message = MenuNotification.fromRemoteData(
+            data,
+            messageId,
+            System.currentTimeMillis(),
+            getString(R.string.notification_title)
+        )
+            ?: return
+        notificationStore.add(message.copy(isRead = true))
+        intent.putExtra("notification_id", message.id)
+        intent.putExtra(NotificationActivity.EXTRA_MEAL_DATE, message.mealDate)
+        intent.putExtra(NotificationActivity.EXTRA_MEAL_TIME, message.mealTime?.name)
+        intent.putExtra(NotificationActivity.EXTRA_RESTAURANT, message.targetRestaurant?.name)
     }
 
     private fun applySplashTheme(theme: AppTheme) {
@@ -163,7 +196,7 @@ class IntroActivity : AppCompatActivity() {
                 "local_notification" -> LaunchPath.LOCAL_NOTIFICATION
                 "remote_notification" -> LaunchPath.REMOTE_NOTIFICATION
                 // launch_path가 없으면 일반적인 앱 아이콘 클릭으로 간주
-                else -> LaunchPath.ICON
+                else -> if (intent.hasExtra("google.message_id") || intent.hasExtra("message_id")) LaunchPath.REMOTE_NOTIFICATION else LaunchPath.ICON
             }
             analyticsTracker.track(AppAnalyticsEvent.Launch(launchPath, localeCode))
         }

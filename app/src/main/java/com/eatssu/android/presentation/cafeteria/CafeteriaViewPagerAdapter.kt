@@ -1,14 +1,13 @@
 package com.eatssu.android.presentation.cafeteria
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.eatssu.android.presentation.cafeteria.menu.MenuFragment
 import com.eatssu.common.enums.Time
 import java.time.LocalTime
 
-class CafeteriaViewPagerAdapter(fragmentActivity: FragmentActivity) :
-    FragmentStateAdapter(fragmentActivity) {
+class CafeteriaViewPagerAdapter(fragment: Fragment) :
+    FragmentStateAdapter(fragment) {
 
     // 1. ViewPager2에 연결할 Fragment 들을 생성
     private val fragmentList = listOf(

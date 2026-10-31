@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.favorite
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,12 +8,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,20 +21,35 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +57,8 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.FavoriteMenu
 import com.eatssu.android.domain.model.MenuFavoriteSearchResult
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Error
@@ -51,7 +69,6 @@ import com.eatssu.design_system.theme.Gray500
 import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Gray700
 import com.eatssu.design_system.theme.pretendardBold
-import java.util.Locale
 
 @Composable
 internal fun FavoriteMenuContent(
@@ -59,32 +76,141 @@ internal fun FavoriteMenuContent(
     onSearchQueryChanged: (String) -> Unit,
     onSearchFavoriteClick: (MenuFavoriteSearchResult) -> Unit,
     onFavoriteMenuClick: (FavoriteMenu) -> Unit,
+    todayMenuState: TodayMenuFavoriteState,
+    onTodayToggleExpanded: () -> Unit,
+    onTodayChangeMeal: (Restaurant, Time) -> Unit,
+    onTodayToggleMenu: (Long) -> Unit,
+    onTodaySave: () -> Unit,
+    onTodayRetry: () -> Unit,
+    onSearchFocusChanged: (Boolean) -> Unit = {},
+    onSearchSubmit: () -> Unit = {},
+    onSearchExit: () -> Unit = {},
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val exitSearch = {
+        focusManager.clearFocus(force = true)
+        keyboard?.hide()
+        onSearchExit()
+    }
+    BackHandler(enabled = (uiState as? UiState.Success)?.data?.isMenuSearchMode == true) { exitSearch() }
+    var showMealSelection by rememberSaveable { mutableStateOf(false) }
+    if (showMealSelection) {
+        TodayMealSelectionSheet(
+            restaurant = todayMenuState.restaurant,
+            time = todayMenuState.time,
+            onDismiss = { showMealSelection = false },
+            onApply = { restaurant, time ->
+                onTodayChangeMeal(restaurant, time)
+                showMealSelection = false
+            },
+        )
+    }
     when (uiState) {
         UiState.Init, UiState.Loading -> DelayedLoadingIndicator(modifier = Modifier.fillMaxSize())
         UiState.Error -> Unit
         is UiState.Success -> {
             val state = uiState.data
-            Column(modifier = Modifier.fillMaxSize()) {
-                MenuFavoriteSearchField(
-                    query = state.menuSearchQuery,
-                    onQueryChanged = onSearchQueryChanged,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .padding(top = 24.dp),
-                )
+            val favoriteIds =
+                state.favoriteMenus.map { it.menuId }.toSet() - state.unfavoritedMenuIds
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 24.dp,
+                    end = 24.dp,
+                    top = 24.dp,
+                    bottom = 24.dp
+                ),
+            ) {
+                item(key = "search") {
+                    MenuFavoriteSearchField(
+                        query = state.menuSearchQuery,
+                        isSearchMode = state.isMenuSearchMode,
+                        onQueryChanged = onSearchQueryChanged,
+                        onFocusChanged = onSearchFocusChanged,
+                        onSubmit = onSearchSubmit,
+                        onExit = exitSearch,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                if (!state.isMenuSearchMode) item(key = "today") {
+                    Spacer(Modifier.height(20.dp))
+                    TodayMenuAccordion(
+                        state = todayMenuState,
+                        favoriteIds = favoriteIds,
+                        canSave = true,
+                        onToggleExpanded = onTodayToggleExpanded,
+                        onChangeMeal = { showMealSelection = true },
+                        onToggleMenu = onTodayToggleMenu,
+                        onSave = onTodaySave,
+                        onRetry = onTodayRetry,
+                    )
+                }
+                if (state.isMenuSearchMode) {
+                    if (state.hasSubmittedMenuSearch) {
+                        item { Spacer(Modifier.height(20.dp)) }
+                        when (state.menuSearchLoadState) {
+                            MenuFavoriteLoadState.Loading -> item {
+                                DelayedLoadingIndicator(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(120.dp)
+                                )
+                            }
 
-                if (state.isMenuSearchActive) {
-                    MenuSearchContent(
-                        state = state,
-                        onFavoriteClick = onSearchFavoriteClick,
-                    )
+                            MenuFavoriteLoadState.Success -> {
+                                if (state.menuSearchResults.isEmpty()) item {
+                                    MenuFavoriteEmptyState(
+                                        stringResource(R.string.favorite_menu_search_empty_title),
+                                        stringResource(R.string.favorite_menu_search_empty_description),
+                                    )
+                                }
+                                items(
+                                    state.menuSearchResults,
+                                    key = { "search-${it.menuId}" }) { menu ->
+                                    MenuSearchResultRow(
+                                        menu,
+                                        state.normalizedMenuSearchQuery
+                                    ) { onSearchFavoriteClick(menu) }
+                                    Spacer(Modifier.height(10.dp))
+                                }
+                            }
+
+                            else -> Unit
+                        }
+                    }
                 } else {
-                    FavoriteMenuListContent(
-                        state = state,
-                        onFavoriteClick = onFavoriteMenuClick,
-                    )
+                    item {
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.favorite_menu_section_title),
+                            style = EatssuTheme.typography.subtitle1,
+                            color = Gray700
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Gray200))
+                        Spacer(Modifier.height(12.dp))
+                    }
+                    if (state.favoriteMenuLoadState == MenuFavoriteLoadState.Loading) item {
+                        DelayedLoadingIndicator(Modifier
+                            .fillMaxWidth()
+                            .height(120.dp))
+                    } else if (state.favoriteMenus.isEmpty()) item {
+                        MenuFavoriteEmptyState(
+                            stringResource(R.string.favorite_menu_empty_title),
+                            stringResource(R.string.favorite_menu_empty_description),
+                        )
+                    }
+                    items(state.favoriteMenus, key = { "favorite-${it.menuId}" }) { menu ->
+                        FavoriteMenuRow(
+                            menu,
+                            menu.menuId in favoriteIds
+                        ) { onFavoriteMenuClick(menu) }
+                        Spacer(Modifier.height(12.dp))
+                    }
                 }
             }
         }
@@ -94,7 +220,11 @@ internal fun FavoriteMenuContent(
 @Composable
 private fun MenuFavoriteSearchField(
     query: String,
+    isSearchMode: Boolean,
     onQueryChanged: (String) -> Unit,
+    onFocusChanged: (Boolean) -> Unit,
+    onSubmit: () -> Unit,
+    onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -104,6 +234,13 @@ private fun MenuFavoriteSearchField(
         value = query,
         onValueChange = onQueryChanged,
         modifier = modifier
+            .onFocusChanged { onFocusChanged(it.isFocused) }
+            .onPreviewKeyEvent {
+                if (it.key == Key.Enter || it.key == Key.NumPadEnter) {
+                    if (it.type == KeyEventType.KeyUp) onSubmit()
+                    true
+                } else false
+            }
             .height(50.dp)
             .clip(shape)
             .background(Gray100)
@@ -114,6 +251,8 @@ private fun MenuFavoriteSearchField(
             ),
         textStyle = EatssuTheme.typography.body2.copy(color = Gray700),
         singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { onSubmit() }),
         cursorBrush = SolidColor(Gray700),
         interactionSource = interactionSource,
         decorationBox = { innerTextField ->
@@ -142,11 +281,11 @@ private fun MenuFavoriteSearchField(
                     }
                     innerTextField()
                 }
-                if (query.isNotEmpty()) {
+                if (isSearchMode || query.isNotEmpty()) {
                     Box(
                         modifier = Modifier
                             .size(32.dp)
-                            .clickable { onQueryChanged("") },
+                            .clickable(onClick = onExit),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -162,101 +301,6 @@ private fun MenuFavoriteSearchField(
             }
         },
     )
-}
-
-@Composable
-private fun FavoriteMenuListContent(
-    state: FavoriteState,
-    onFavoriteClick: (FavoriteMenu) -> Unit,
-) {
-    when (state.favoriteMenuLoadState) {
-        MenuFavoriteLoadState.Loading -> DelayedLoadingIndicator(modifier = Modifier.fillMaxSize())
-        MenuFavoriteLoadState.Error,
-        MenuFavoriteLoadState.Idle,
-        MenuFavoriteLoadState.Success,
-        -> if (state.favoriteMenus.isEmpty()) {
-            MenuFavoriteEmptyState(
-                title = stringResource(R.string.favorite_menu_empty_title),
-                description = stringResource(R.string.favorite_menu_empty_description),
-            )
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp)
-                    .padding(horizontal = 2.dp)
-                    .padding(top = 22.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.favorite_menu_section_title),
-                    style = EatssuTheme.typography.subtitle1,
-                    color = Gray700,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Gray200),
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    items(
-                        items = state.favoriteMenus,
-                        key = FavoriteMenu::menuId,
-                    ) { menu ->
-                        FavoriteMenuRow(
-                            menu = menu,
-                            isFavorite = menu.menuId !in state.unfavoritedMenuIds,
-                            onFavoriteClick = { onFavoriteClick(menu) },
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun MenuSearchContent(
-    state: FavoriteState,
-    onFavoriteClick: (MenuFavoriteSearchResult) -> Unit,
-) {
-    when (state.menuSearchLoadState) {
-        MenuFavoriteLoadState.Loading -> DelayedLoadingIndicator(modifier = Modifier.fillMaxSize())
-        MenuFavoriteLoadState.Success -> if (state.menuSearchResults.isEmpty()) {
-            MenuFavoriteEmptyState(
-                title = stringResource(R.string.favorite_menu_search_empty_title),
-                description = stringResource(R.string.favorite_menu_search_empty_description),
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                items(
-                    items = state.menuSearchResults,
-                    key = MenuFavoriteSearchResult::menuId,
-                ) { menu ->
-                    MenuSearchResultRow(
-                        menu = menu,
-                        query = state.normalizedMenuSearchQuery,
-                        onFavoriteClick = { onFavoriteClick(menu) },
-                    )
-                }
-            }
-        }
-
-        MenuFavoriteLoadState.Error,
-        MenuFavoriteLoadState.Idle,
-        -> Unit
-    }
 }
 
 @Composable
@@ -339,11 +383,11 @@ private fun MenuFavoriteEmptyState(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth()
+            .height(260.dp),
         contentAlignment = Alignment.Center,
     ) {
         Column(
-            modifier = Modifier.offset(y = (-65).dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -371,8 +415,7 @@ private fun menuLabel(
     append(menuName)
 
     if (!query.isNullOrBlank()) {
-        val start = menuName.lowercase(Locale.getDefault())
-            .indexOf(query.lowercase(Locale.getDefault()))
+        val start = menuName.indexOf(query, ignoreCase = true)
         if (start >= 0) {
             addStyle(
                 style = SpanStyle(

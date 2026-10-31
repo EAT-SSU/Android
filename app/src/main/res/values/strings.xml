@@ -53,6 +53,8 @@
     <string name="button_report">신고하기</string>
     <string name="button_cancel">취소</string>
     <string name="button_confirm">확인</string>
+    <string name="button_later">나중에</string>
+    <string name="button_allow_notification">알림 허용하기</string>
     <string name="button_close">닫기</string>
     <string name="button_retry">재시도</string>
     <string name="button_update">업데이트</string>
@@ -68,6 +70,8 @@
     <string name="dialog_notification_permission_title">알림 권한 필요</string>
     <string name="dialog_notification_permission_description">알림을 받으려면 알림 권한을 활성화해야 합니다.\n설정에서 알림 권한을 허용해주세요.</string>
     <string name="dialog_settings">설정으로 이동</string>
+    <string name="dialog_notification_pre_permission_title">잇슈의 유용한 소식을 받아보세요</string>
+    <string name="dialog_notification_pre_permission_description">오늘의 학식과 찜한 메뉴 소식을\n알림으로 빠르게 알려드릴게요.</string>
     <string name="dialog_placeholder_title">제목을 입력해주세요</string>
     <string name="dialog_placeholder_body">본문을 입력해주세요</string>
     <string name="dialog_network_error_title">네트워크 연결 안 됨</string>
@@ -223,7 +227,7 @@
     <string name="mypage_service_section_title">서비스 정보</string>
     <string name="mypage_etc_section_title">기타</string>
     <string name="mypage_push_notification_title">푸시 알림 설정</string>
-    <string name="mypage_push_notification_description">매일 오전 11시에 알림을 보내드려요</string>
+    <string name="mypage_push_notification_description">찜한 메뉴가 오늘 식단에 나오면 알려드려요</string>
 
     <!-- Language Settings -->
     <string name="language_setting">언어 설정</string>
@@ -351,8 +355,8 @@
     <string name="favorite_menu_added_snackbar">찜한 메뉴에 추가했어요.</string>
     <string name="favorite_menu_deleted_snackbar">찜한 메뉴에서 삭제했어요.</string>
     <string name="favorite_menu_action_error">처리하지 못했어요. 잠시 후 다시 시도해주세요.</string>
-    <string name="favorite_menu_load_error">메뉴를 불러오지 못했어요.\n잠시 후 다시 시도해주세요.</string>
-    <string name="favorite_menu_clear_search_content_description">검색어 전체 삭제</string>
+    <string name="favorite_menu_load_error">메뉴를 불러오지 못했어요.</string>
+    <string name="favorite_menu_clear_search_content_description">메뉴 검색 닫기</string>
     <string name="favorite_menu_add_content_description">메뉴 찜하기</string>
     <string name="favorite_menu_remove_content_description">메뉴 찜 취소하기</string>
     <string name="favorite_menu_discontinued">단종</string>
@@ -405,4 +409,35 @@
     <string name="cafeteria_the_kitchen_location">학생회관 2층</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="notification_title">알림</string>
+    <string name="notification_empty_title">새로운 알림이 없어요.</string>
+    <string name="notification_empty_description">찜한 메뉴가 나오면 알림으로 알려드릴게요!</string>
+    <string name="notification_mark_all_read">모두 읽음</string>
+    <string name="notification_retention">7일 전 알림까지 확인할 수 있어요</string>
+    <string name="notification_hours_ago">%1$d시간 전</string>
+    <string name="notification_date">%1$d월 %2$d일</string>
+    <string name="review_today_menu_favorite">오늘의 메뉴를 찜해보세요!</string>
+    <string name="review_menu_notification_description">찜한 메뉴 소식을 받으려면 푸시 알림을 허용해주세요.</string>
+    <string name="today_favorite_title">오늘 식단에서 찜하기</string>
+    <string name="today_favorite_expanded">펼쳐짐</string>
+    <string name="today_favorite_collapsed">접힘</string>
+    <string name="today_favorite_change">변경</string>
+    <string name="today_favorite_hint">메뉴를 선택해 찜할 수 있어요.</string>
+    <string name="today_favorite_save">메뉴 찜하기</string>
+    <string name="today_favorite_save_count">선택한 메뉴 %1$d개 찜하기</string>
+    <string name="today_favorite_no_menu">해당 시간대의 식단이 없어요.</string>
+    <string name="today_favorite_sheet_title">식단 변경</string>
+    <string name="today_favorite_restaurant_title">식당 종류</string>
+    <string name="today_favorite_time_title">시간대</string>
+    <string name="today_favorite_apply">적용하기</string>
+    <string name="today_favorite_haksik">학생식당</string>
+    <string name="today_favorite_dodam">도담식당</string>
+    <string name="today_favorite_dormitory">기숙사식당</string>
+    <string name="today_favorite_faculty">교직원식당</string>
+    <string name="notification_favorite_one_title">🍽️ 찜한 메뉴가 나온대요!</string>
+    <string name="notification_favorite_two_title">🍽️ 찜한 메뉴가 2개나 나온대요!</string>
+    <string name="notification_favorite_many_title">🍽️ 찜한 메뉴가 여러 개 나온대요!</string>
+    <string name="notification_favorite_one_body">오늘 %1$s, %2$s에 %3$s 등장 👀</string>
+    <string name="notification_favorite_two_body">오늘 %1$s, %2$s %3$s · %4$s %5$s 등장 👀</string>
+    <string name="notification_favorite_many_body">오늘 %1$s, %2$s %3$s 외 %4$d개 등장 👀</string>
 </resources>
