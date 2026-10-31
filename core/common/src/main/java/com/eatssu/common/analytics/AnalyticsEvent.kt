@@ -90,6 +90,15 @@ sealed interface ReviewAnalyticsEvent : AnalyticsEvent {
             putRestaurant("restaurants", restaurant)
         }
     }
+
+    data class TranslateClicked(
+        val langTo: String,
+    ) : ReviewAnalyticsEvent {
+        override val eventName = "translate_review"
+        override val properties = buildMap {
+            put("lang_to", langTo)
+        }
+    }
 }
 
 sealed interface MapAnalyticsEvent : AnalyticsEvent {
@@ -151,6 +160,50 @@ sealed interface MapAnalyticsEvent : AnalyticsEvent {
             put("major", major)
             put("partner_restaurant_id", partnerRestaurantId)
         }
+    }
+
+    data class JehuClicked(
+        val college: Long,
+        val major: Long,
+        val defaultType: String,
+    ) : MapAnalyticsEvent {
+        override val eventName = "click_map_jehu"
+        override val properties = buildMap {
+            put("college", college)
+            put("major", major)
+            put("default_type", defaultType)
+        }
+    }
+
+    data class HankkiClicked(
+        val college: Long,
+        val major: Long,
+    ) : MapAnalyticsEvent {
+        override val eventName = "click_map_hankki"
+        override val properties = buildMap {
+            put("college", college)
+            put("major", major)
+        }
+    }
+
+    data class RestaurantDeeplinkClicked(
+        val college: Long,
+        val major: Long,
+        val deeplink: String,
+    ) : MapAnalyticsEvent {
+        override val eventName = "click_map_restaurant_deeplink"
+        override val properties = buildMap {
+            put("college", college)
+            put("major", major)
+            put("deeplink", deeplink)
+        }
+    }
+}
+
+sealed interface GoodPriceAnalyticsEvent : AnalyticsEvent {
+    data object HankkiClicked : GoodPriceAnalyticsEvent {
+        override val eventName = "click_hankki"
+        override val properties: Map<String, Any> = emptyMap()
     }
 }
 

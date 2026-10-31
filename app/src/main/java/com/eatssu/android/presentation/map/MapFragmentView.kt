@@ -136,6 +136,7 @@ fun MapRoute(
         ?: throw IllegalStateException("FusedLocationSource는 Activity에서만 사용할 수 있습니다.")
     val scope = rememberCoroutineScope()
 
+    val analyticsTracker = LocalAnalyticsTracker.current
     val departmentId by viewModel.departmentId.collectAsStateWithLifecycle()
     val collegeId by viewModel.collegeId.collectAsStateWithLifecycle()
 
@@ -289,7 +290,16 @@ fun MapRoute(
                 ) {
                     Tab(
                         selected = selectedTabIndex == 0,
-                        onClick = { selectedTabIndex = 0 },
+                        onClick = {
+                            analyticsTracker.track(
+                                MapAnalyticsEvent.JehuClicked(
+                                    college = collegeId,
+                                    major = departmentId,
+                                    defaultType = if (mapState.hasFestivalPartnerships) "festival" else "general",
+                                ),
+                            )
+                            selectedTabIndex = 0
+                        },
                         text = {
                             Text(
                                 text = stringResource(R.string.tab_school_partnership),
@@ -303,7 +313,15 @@ fun MapRoute(
 
                     Tab(
                         selected = selectedTabIndex == 1,
-                        onClick = { selectedTabIndex = 1 },
+                        onClick = {
+                            analyticsTracker.track(
+                                MapAnalyticsEvent.HankkiClicked(
+                                    college = collegeId,
+                                    major = departmentId,
+                                ),
+                            )
+                            selectedTabIndex = 1
+                        },
                         text = {
                             Text(
                                 text = stringResource(R.string.tab_good_price),
@@ -337,6 +355,17 @@ fun MapRoute(
                             scope.launch { context.showToast(uiText, info) }
                         },
                         openMap = { provider, restaurant ->
+                            val deeplink = when (provider) {
+                                MapProvider.NAVER -> "navermap"
+                                MapProvider.KAKAO -> "kakaomap"
+                            }
+                            analyticsTracker.track(
+                                MapAnalyticsEvent.RestaurantDeeplinkClicked(
+                                    college = collegeId,
+                                    major = departmentId,
+                                    deeplink = deeplink,
+                                ),
+                            )
                             scope.launch {
                                 val opened = mapExternalNavigator?.open(
                                     context = context,

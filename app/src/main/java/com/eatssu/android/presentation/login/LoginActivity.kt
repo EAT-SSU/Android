@@ -1,11 +1,11 @@
 package com.eatssu.android.presentation.login
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,6 +20,7 @@ import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.analytics.CredentialsEvent
+import com.eatssu.common.analytics.GoodPriceAnalyticsEvent
 import com.eatssu.design_system.theme.EatssuTheme
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -69,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
                         isLoading = uiState is UiState.Loading,
                         onKakaoLoginClick = { handleKakaoLogin() },
                         onBrowseGoodPriceStoreClick = {
+                            analyticsTracker.track(GoodPriceAnalyticsEvent.HankkiClicked)
                             startActivity<com.eatssu.android.presentation.goodprice.GoodPriceMapActivity>()
                         },
                     )

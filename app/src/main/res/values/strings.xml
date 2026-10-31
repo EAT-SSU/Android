@@ -416,4 +416,22 @@
     <string name="notification_retention">7일 전 알림까지 확인할 수 있어요</string>
     <string name="notification_hours_ago">%1$d시간 전</string>
     <string name="notification_date">%1$d월 %2$d일</string>
+    <string name="review_today_menu_favorite">오늘의 메뉴를 찜해보세요!</string>
+    <string name="review_menu_notification_description">찜한 메뉴 소식을 받으려면 푸시 알림을 허용해주세요.</string>
+    <string name="today_favorite_title">오늘 식단에서 찜하기</string>
+    <string name="today_favorite_expanded">펼쳐짐</string>
+    <string name="today_favorite_collapsed">접힘</string>
+    <string name="today_favorite_change">변경</string>
+    <string name="today_favorite_hint">메뉴를 선택해 찜할 수 있어요.</string>
+    <string name="today_favorite_save">메뉴 찜하기</string>
+    <string name="today_favorite_save_count">선택한 %1$d개 메뉴 찜하기</string>
+    <string name="today_favorite_no_menu">해당 시간대의 식단이 없어요.</string>
+    <string name="today_favorite_sheet_title">식단 변경</string>
+    <string name="today_favorite_restaurant_title">식당 종류</string>
+    <string name="today_favorite_time_title">시간대</string>
+    <string name="today_favorite_apply">적용하기</string>
+    <string name="today_favorite_haksik">학생식당</string>
+    <string name="today_favorite_dodam">도담식당</string>
+    <string name="today_favorite_dormitory">기숙사식당</string>
+    <string name="today_favorite_faculty">교직원식당</string>
 </resources>

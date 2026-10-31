@@ -52,10 +52,14 @@ import com.eatssu.android.presentation.cafeteria.review.list.component.MyReviewB
 import com.eatssu.android.presentation.cafeteria.review.list.component.OthersReviewBottomSheet
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewItem
 import com.eatssu.android.presentation.cafeteria.review.list.component.ReviewProgressBar
+import com.eatssu.android.presentation.cafeteria.review.list.component.TodayMenuFavoriteButton
+import com.eatssu.android.presentation.cafeteria.review.list.component.rememberReviewToday
+import com.eatssu.android.presentation.cafeteria.review.list.component.shouldShowTodayMenuFavorite
 import com.eatssu.android.presentation.cafeteria.review.report.ReportActivity
 import com.eatssu.android.presentation.cafeteria.review.translation.ReviewTranslationUiState
 import com.eatssu.android.presentation.cafeteria.review.translation.currentReviewTranslationTargetLanguage
 import com.eatssu.android.presentation.cafeteria.review.translation.shouldShowReviewTranslationAction
+import com.eatssu.android.presentation.favorite.todayMenuRestaurants
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
@@ -75,6 +79,7 @@ import com.eatssu.design_system.theme.Gray600
 import com.eatssu.design_system.theme.Primary
 import com.eatssu.design_system.theme.Star
 import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDate
 
 @Composable
 fun ReviewListScreen(
@@ -85,6 +90,8 @@ fun ReviewListScreen(
     menuName: String,
     id: Long,
     refreshNonce: Long = 0L,
+    menuDate: LocalDate? = null,
+    onMenuFavoriteClick: () -> Unit = {},
     onBack: () -> Unit = {},
     onWriteButtonClick: () -> Unit,
     onModifyClick: (Review) -> Unit,
@@ -98,6 +105,7 @@ fun ReviewListScreen(
     // Screen View 로깅
     TrackScreenViewEvent(ScreenId.REVIEW_V2_VIEW)
 
+    val analyticsTracker = LocalAnalyticsTracker.current
     val reviewListState by viewModel.uiState.collectAsStateWithLifecycle()
     val translationStates by viewModel.translationStates.collectAsStateWithLifecycle()
     val reviewPagingItems = viewModel.reviewPagingData.collectAsLazyPagingItems()
@@ -140,10 +148,18 @@ fun ReviewListScreen(
         onModifyClick = onModifyClick,
         onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
         onTranslationClick = { review ->
-            targetLanguage?.let { viewModel.toggleReviewTranslation(review, it) }
+            targetLanguage?.let { lang ->
+                analyticsTracker.track(ReviewAnalyticsEvent.TranslateClicked(langTo = lang.lowercase()))
+                viewModel.toggleReviewTranslation(review, lang)
+            }
         },
         targetLanguage = targetLanguage,
         isLoggedIn = viewModel.isLoggedIn,
+        showMenuFavoriteButton = shouldShowTodayMenuFavorite(
+            menuDate,
+            rememberReviewToday()
+        ) && restaurant in todayMenuRestaurants,
+        onMenuFavoriteClick = onMenuFavoriteClick,
     )
 }
 
@@ -162,6 +178,8 @@ internal fun ReviewListScreen(
     onTranslationClick: (Review) -> Unit,
     targetLanguage: String?,
     isLoggedIn: Boolean,
+    showMenuFavoriteButton: Boolean = false,
+    onMenuFavoriteClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val analyticsTracker = LocalAnalyticsTracker.current
@@ -242,7 +260,9 @@ internal fun ReviewListScreen(
                                 twoStarCount = 0,
                                 oneStarCount = 0,
                                 rating = 0.0,
-                            )
+                            ),
+                            showMenuFavoriteButton = showMenuFavoriteButton,
+                            onMenuFavoriteClick = onMenuFavoriteClick,
                         )
                         Column(modifier = Modifier.fillMaxSize()) {
                             Spacer(
@@ -290,7 +310,12 @@ internal fun ReviewListScreen(
                             state = reviewListScrollState,
                         ) {
                             item {
-                                ReviewInfoContent(displayMenuName, info)
+                                ReviewInfoContent(
+                                    displayMenuName,
+                                    info,
+                                    showMenuFavoriteButton = showMenuFavoriteButton,
+                                    onMenuFavoriteClick = onMenuFavoriteClick,
+                                )
                             }
 
                             item {
@@ -458,7 +483,9 @@ internal fun ReviewListScreen(
                                 twoStarCount = 0,
                                 oneStarCount = 0,
                                 rating = 0.0,
-                            )
+                            ),
+                            showMenuFavoriteButton = showMenuFavoriteButton,
+                            onMenuFavoriteClick = onMenuFavoriteClick,
                         )
                         Column(modifier = Modifier.fillMaxSize()) {
                             Spacer(
@@ -505,7 +532,9 @@ internal fun ReviewListScreen(
 @Composable
 fun ReviewInfoContent(
     menuName: String,
-    info: ReviewInfo?
+    info: ReviewInfo?,
+    showMenuFavoriteButton: Boolean = false,
+    onMenuFavoriteClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -546,6 +575,11 @@ fun ReviewInfoContent(
                     style = EatssuTheme.typography.body1
                 )
             }
+        }
+
+        if (showMenuFavoriteButton) {
+            Spacer(Modifier.height(12.dp))
+            TodayMenuFavoriteButton(onClick = onMenuFavoriteClick)
         }
 
         Box(

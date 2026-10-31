@@ -26,6 +26,7 @@ import com.eatssu.android.presentation.base.BaseActivity
 import com.eatssu.android.presentation.event.AnyoneButMeEventPopupController
 import com.eatssu.android.presentation.event.AnyoneButMeEventTooltipController
 import com.eatssu.android.presentation.favorite.FavoriteDetailFragment
+import com.eatssu.android.presentation.favorite.FavoriteFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ScreenId.HOME_MAIN
 ) {
     companion object {
+        const val EXTRA_OPEN_MENU_FAVORITES = "open_menu_favorites"
         private const val ENABLE_ANYONE_BUT_ME = false
         private const val REQUEST_CODE_NOTIFICATION_PERMISSION = 1000
     }
@@ -81,7 +83,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
         setupNoToolbar()
         setNavigation()
-        if (savedInstanceState == null) openNotificationDestination(intent)
+        if (savedInstanceState == null) {
+            openNotificationDestination(intent)
+            openMenuFavoritesDestination(intent)
+        }
         if (ENABLE_ANYONE_BUT_ME) {
             bindEventPopup(showOnLaunch = savedInstanceState == null)
             bindEventTooltip()
@@ -98,6 +103,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         super.onNewIntent(intent)
         setIntent(intent)
         openNotificationDestination(intent)
+        openMenuFavoritesDestination(intent)
+    }
+
+    private fun openMenuFavoritesDestination(intent: Intent) {
+        if (!intent.getBooleanExtra(EXTRA_OPEN_MENU_FAVORITES, false)) return
+        intent.removeExtra(EXTRA_OPEN_MENU_FAVORITES)
+        val args = bundleOf(
+            FavoriteFragment.ARG_TODAY_RESTAURANT to intent.getStringExtra(FavoriteFragment.ARG_TODAY_RESTAURANT),
+            FavoriteFragment.ARG_TODAY_TIME to intent.getStringExtra(FavoriteFragment.ARG_TODAY_TIME),
+            FavoriteFragment.ARG_TODAY_EXPANDED to intent.getBooleanExtra(
+                FavoriteFragment.ARG_TODAY_EXPANDED,
+                false
+            ),
+        )
+        // A new destination resets the pager to menu favorites, including when partnerships were open.
+        navController.navigate(R.id.favoriteFragment, args)
     }
 
     private fun openNotificationDestination(intent: Intent) {

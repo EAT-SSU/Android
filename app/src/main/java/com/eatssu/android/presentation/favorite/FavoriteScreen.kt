@@ -68,6 +68,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eatssu.android.R
 import com.eatssu.android.domain.model.FavoriteMenu
@@ -76,8 +78,10 @@ import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.map.iconRes
 import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.Restaurant
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.StoreType
+import com.eatssu.common.enums.Time
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.component.EatSsuSnackbar
 import com.eatssu.design_system.component.EatSsuSnackbarType
@@ -96,6 +100,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.ZonedDateTime
 import kotlin.math.roundToInt
 
 private const val MENU_PAGE = 0
@@ -108,6 +114,18 @@ fun FavoriteRoute(
     onPartnershipClick: (PartnershipRestaurant) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val todayState by viewModel.todayMenuState.collectAsStateWithLifecycle()
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshTodayMenusIfDateChanged() }
+    LaunchedEffect(viewModel) {
+        while (true) {
+            val now = ZonedDateTime.now()
+            delay(
+                Duration.between(now, now.toLocalDate().plusDays(1).atStartOfDay(now.zone))
+                    .toMillis().coerceAtLeast(1)
+            )
+            viewModel.refreshTodayMenusIfDateChanged()
+        }
+    }
     var menuSnackbarEvent by remember { mutableStateOf<FavoriteMenuSnackbarEvent?>(null) }
 
     LaunchedEffect(viewModel) {
@@ -130,6 +148,12 @@ fun FavoriteRoute(
         onSearchFavoriteClick = viewModel::toggleMenuFavorite,
         onFavoriteMenuClick = viewModel::toggleFavoriteMenu,
         menuSnackbarEvent = menuSnackbarEvent,
+        todayMenuState = todayState,
+        onTodayToggleExpanded = viewModel::toggleTodayMenus,
+        onTodayChangeMeal = viewModel::changeTodayMeal,
+        onTodayToggleMenu = viewModel::toggleTodayMenu,
+        onTodaySave = viewModel::saveTodayMenus,
+        onTodayRetry = viewModel::loadTodayMenus,
     )
 }
 
@@ -147,6 +171,12 @@ internal fun FavoriteScreen(
     onSearchFavoriteClick: (MenuFavoriteSearchResult) -> Unit = {},
     onFavoriteMenuClick: (FavoriteMenu) -> Unit = {},
     menuSnackbarEvent: FavoriteMenuSnackbarEvent? = null,
+    todayMenuState: TodayMenuFavoriteState = TodayMenuFavoriteState(),
+    onTodayToggleExpanded: () -> Unit = {},
+    onTodayChangeMeal: (Restaurant, Time) -> Unit = { _, _ -> },
+    onTodayToggleMenu: (Long) -> Unit = {},
+    onTodaySave: () -> Unit = {},
+    onTodayRetry: () -> Unit = {},
 ) {
     val pagerState = rememberPagerState(
         initialPage = MENU_PAGE,
@@ -295,6 +325,12 @@ internal fun FavoriteScreen(
                                 onSearchQueryChanged = onMenuSearchQueryChanged,
                                 onSearchFavoriteClick = onSearchFavoriteClick,
                                 onFavoriteMenuClick = onFavoriteMenuClick,
+                                todayMenuState = todayMenuState,
+                                onTodayToggleExpanded = onTodayToggleExpanded,
+                                onTodayChangeMeal = onTodayChangeMeal,
+                                onTodayToggleMenu = onTodayToggleMenu,
+                                onTodaySave = onTodaySave,
+                                onTodayRetry = onTodayRetry,
                             )
                         }
                     }

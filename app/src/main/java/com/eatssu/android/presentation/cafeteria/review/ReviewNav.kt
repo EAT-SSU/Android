@@ -14,6 +14,7 @@ import com.eatssu.android.presentation.cafeteria.review.modify.ModifyReviewScree
 import com.eatssu.android.presentation.cafeteria.review.write.WriteReviewScreen
 import com.eatssu.common.enums.MenuType
 import com.eatssu.common.enums.Restaurant
+import java.time.LocalDate
 
 object ReviewNav {
     const val List = "list"
@@ -30,6 +31,8 @@ fun ReviewNav(
     menuType: MenuType,
     restaurant: Restaurant,
     id: Long,
+    menuDate: LocalDate? = null,
+    onMenuFavoriteClick: () -> Unit = {},
     onExit: () -> Unit = {}
 ) {
 
@@ -49,6 +52,8 @@ fun ReviewNav(
                 restaurant = restaurant,
                 id = id,
                 refreshNonce = refreshNonce,
+                menuDate = menuDate,
+                onMenuFavoriteClick = onMenuFavoriteClick,
                 onBack = { onExit() },
                 onModifyClick = { review ->
                     // 선택된 리뷰 데이터를 Modify 화면으로 전달

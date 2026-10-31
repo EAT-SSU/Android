@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eatssu.android.R
+import com.eatssu.android.analytics.LocalAnalyticsTracker
 import com.eatssu.android.domain.model.GoodPriceStore
 import com.eatssu.android.presentation.goodprice.component.GoodPriceFilterRow
 import com.eatssu.android.presentation.goodprice.component.GoodPriceStoreBottomSheet
@@ -55,6 +56,7 @@ import com.eatssu.android.presentation.util.TrackScreenViewEvent
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiText
+import com.eatssu.common.analytics.MapAnalyticsEvent
 import com.eatssu.common.enums.GoodPriceCategory
 import com.eatssu.common.enums.ScreenId
 import com.eatssu.common.enums.ToastType
@@ -99,6 +101,9 @@ fun GoodPriceMapRoute(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val departmentId by viewModel.departmentId.collectAsStateWithLifecycle()
+    val collegeId by viewModel.collegeId.collectAsStateWithLifecycle()
+    val analyticsTracker = LocalAnalyticsTracker.current
     val context = LocalContext.current
     val activity = remember(context) { context.findActivityOrNull() }
     val scope = rememberCoroutineScope()
@@ -143,6 +148,17 @@ fun GoodPriceMapRoute(
         onCategorySelected = { viewModel.setCategory(it) },
         onStoreClick = viewModel::selectStore,
         onOpenMap = { provider, store ->
+            val deeplink = when (provider) {
+                MapProvider.NAVER -> "navermap"
+                MapProvider.KAKAO -> "kakaomap"
+            }
+            analyticsTracker.track(
+                MapAnalyticsEvent.RestaurantDeeplinkClicked(
+                    college = collegeId,
+                    major = departmentId,
+                    deeplink = deeplink,
+                ),
+            )
             scope.launch {
                 val destination = MapDestination(
                     storeName = store.storeName,

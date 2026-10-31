@@ -17,8 +17,8 @@ import com.eatssu.android.databinding.FragmentMenuBinding
 import com.eatssu.android.domain.model.Section
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.cafeteria.info.InfoViewModel
-import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.UiState
+import com.eatssu.common.analytics.AnalyticsTracker
 import com.eatssu.common.enums.Time
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -107,7 +107,7 @@ class MenuFragment : Fragment() {
         binding.rv.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = MenuAdapter(getParentFragmentManager(), sectionList, analyticsTracker)
+            adapter = MenuAdapter(getParentFragmentManager(), sectionList, analyticsTracker, time)
         }
     }
 

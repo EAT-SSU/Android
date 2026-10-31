@@ -7,12 +7,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,7 +23,11 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,8 @@ import com.eatssu.android.R
 import com.eatssu.android.domain.model.FavoriteMenu
 import com.eatssu.android.domain.model.MenuFavoriteSearchResult
 import com.eatssu.common.UiState
+import com.eatssu.common.enums.Restaurant
+import com.eatssu.common.enums.Time
 import com.eatssu.design_system.component.DelayedLoadingIndicator
 import com.eatssu.design_system.theme.EatssuTheme
 import com.eatssu.design_system.theme.Error
@@ -59,32 +65,122 @@ internal fun FavoriteMenuContent(
     onSearchQueryChanged: (String) -> Unit,
     onSearchFavoriteClick: (MenuFavoriteSearchResult) -> Unit,
     onFavoriteMenuClick: (FavoriteMenu) -> Unit,
+    todayMenuState: TodayMenuFavoriteState,
+    onTodayToggleExpanded: () -> Unit,
+    onTodayChangeMeal: (Restaurant, Time) -> Unit,
+    onTodayToggleMenu: (Long) -> Unit,
+    onTodaySave: () -> Unit,
+    onTodayRetry: () -> Unit,
 ) {
+    var showMealSelection by rememberSaveable { mutableStateOf(false) }
+    if (showMealSelection) {
+        TodayMealSelectionSheet(
+            restaurant = todayMenuState.restaurant,
+            time = todayMenuState.time,
+            onDismiss = { showMealSelection = false },
+            onApply = { restaurant, time ->
+                onTodayChangeMeal(restaurant, time)
+                showMealSelection = false
+            },
+        )
+    }
     when (uiState) {
         UiState.Init, UiState.Loading -> DelayedLoadingIndicator(modifier = Modifier.fillMaxSize())
         UiState.Error -> Unit
         is UiState.Success -> {
             val state = uiState.data
-            Column(modifier = Modifier.fillMaxSize()) {
-                MenuFavoriteSearchField(
-                    query = state.menuSearchQuery,
-                    onQueryChanged = onSearchQueryChanged,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .padding(top = 24.dp),
-                )
-
+            val favoriteIds =
+                state.favoriteMenus.map { it.menuId }.toSet() - state.unfavoritedMenuIds
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 24.dp,
+                    end = 24.dp,
+                    top = 24.dp,
+                    bottom = 24.dp
+                ),
+            ) {
+                item(key = "search") {
+                    MenuFavoriteSearchField(
+                        state.menuSearchQuery,
+                        onSearchQueryChanged,
+                        Modifier.fillMaxWidth()
+                    )
+                }
+                item(key = "today") {
+                    Spacer(Modifier.height(20.dp))
+                    TodayMenuAccordion(
+                        state = todayMenuState,
+                        favoriteIds = favoriteIds,
+                        canSave = true,
+                        onToggleExpanded = onTodayToggleExpanded,
+                        onChangeMeal = { showMealSelection = true },
+                        onToggleMenu = onTodayToggleMenu,
+                        onSave = onTodaySave,
+                        onRetry = onTodayRetry,
+                    )
+                }
                 if (state.isMenuSearchActive) {
-                    MenuSearchContent(
-                        state = state,
-                        onFavoriteClick = onSearchFavoriteClick,
-                    )
+                    item { Spacer(Modifier.height(20.dp)) }
+                    when (state.menuSearchLoadState) {
+                        MenuFavoriteLoadState.Loading -> item {
+                            DelayedLoadingIndicator(Modifier
+                                .fillMaxWidth()
+                                .height(120.dp))
+                        }
+
+                        MenuFavoriteLoadState.Success -> {
+                            if (state.menuSearchResults.isEmpty()) item {
+                                MenuFavoriteEmptyState(
+                                    stringResource(R.string.favorite_menu_search_empty_title),
+                                    stringResource(R.string.favorite_menu_search_empty_description),
+                                )
+                            }
+                            items(
+                                state.menuSearchResults,
+                                key = { "search-${it.menuId}" }) { menu ->
+                                MenuSearchResultRow(
+                                    menu,
+                                    state.normalizedMenuSearchQuery
+                                ) { onSearchFavoriteClick(menu) }
+                                Spacer(Modifier.height(10.dp))
+                            }
+                        }
+
+                        else -> Unit
+                    }
                 } else {
-                    FavoriteMenuListContent(
-                        state = state,
-                        onFavoriteClick = onFavoriteMenuClick,
-                    )
+                    item {
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.favorite_menu_section_title),
+                            style = EatssuTheme.typography.subtitle1,
+                            color = Gray700
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Gray200))
+                        Spacer(Modifier.height(12.dp))
+                    }
+                    if (state.favoriteMenuLoadState == MenuFavoriteLoadState.Loading) item {
+                        DelayedLoadingIndicator(Modifier
+                            .fillMaxWidth()
+                            .height(120.dp))
+                    } else if (state.favoriteMenus.isEmpty()) item {
+                        MenuFavoriteEmptyState(
+                            stringResource(R.string.favorite_menu_empty_title),
+                            stringResource(R.string.favorite_menu_empty_description),
+                        )
+                    }
+                    items(state.favoriteMenus, key = { "favorite-${it.menuId}" }) { menu ->
+                        FavoriteMenuRow(
+                            menu,
+                            menu.menuId in favoriteIds
+                        ) { onFavoriteMenuClick(menu) }
+                        Spacer(Modifier.height(12.dp))
+                    }
                 }
             }
         }
@@ -162,101 +258,6 @@ private fun MenuFavoriteSearchField(
             }
         },
     )
-}
-
-@Composable
-private fun FavoriteMenuListContent(
-    state: FavoriteState,
-    onFavoriteClick: (FavoriteMenu) -> Unit,
-) {
-    when (state.favoriteMenuLoadState) {
-        MenuFavoriteLoadState.Loading -> DelayedLoadingIndicator(modifier = Modifier.fillMaxSize())
-        MenuFavoriteLoadState.Error,
-        MenuFavoriteLoadState.Idle,
-        MenuFavoriteLoadState.Success,
-        -> if (state.favoriteMenus.isEmpty()) {
-            MenuFavoriteEmptyState(
-                title = stringResource(R.string.favorite_menu_empty_title),
-                description = stringResource(R.string.favorite_menu_empty_description),
-            )
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp)
-                    .padding(horizontal = 2.dp)
-                    .padding(top = 22.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.favorite_menu_section_title),
-                    style = EatssuTheme.typography.subtitle1,
-                    color = Gray700,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Gray200),
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    items(
-                        items = state.favoriteMenus,
-                        key = FavoriteMenu::menuId,
-                    ) { menu ->
-                        FavoriteMenuRow(
-                            menu = menu,
-                            isFavorite = menu.menuId !in state.unfavoritedMenuIds,
-                            onFavoriteClick = { onFavoriteClick(menu) },
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun MenuSearchContent(
-    state: FavoriteState,
-    onFavoriteClick: (MenuFavoriteSearchResult) -> Unit,
-) {
-    when (state.menuSearchLoadState) {
-        MenuFavoriteLoadState.Loading -> DelayedLoadingIndicator(modifier = Modifier.fillMaxSize())
-        MenuFavoriteLoadState.Success -> if (state.menuSearchResults.isEmpty()) {
-            MenuFavoriteEmptyState(
-                title = stringResource(R.string.favorite_menu_search_empty_title),
-                description = stringResource(R.string.favorite_menu_search_empty_description),
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                items(
-                    items = state.menuSearchResults,
-                    key = MenuFavoriteSearchResult::menuId,
-                ) { menu ->
-                    MenuSearchResultRow(
-                        menu = menu,
-                        query = state.normalizedMenuSearchQuery,
-                        onFavoriteClick = { onFavoriteClick(menu) },
-                    )
-                }
-            }
-        }
-
-        MenuFavoriteLoadState.Error,
-        MenuFavoriteLoadState.Idle,
-        -> Unit
-    }
 }
 
 @Composable
@@ -339,11 +340,11 @@ private fun MenuFavoriteEmptyState(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth()
+            .height(260.dp),
         contentAlignment = Alignment.Center,
     ) {
         Column(
-            modifier = Modifier.offset(y = (-65).dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
