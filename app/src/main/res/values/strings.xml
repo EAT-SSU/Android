@@ -409,4 +409,11 @@
     <string name="cafeteria_the_kitchen_location">학생회관 2층</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="notification_title">알림</string>
+    <string name="notification_empty_title">새로운 알림이 없어요.</string>
+    <string name="notification_empty_description">찜한 메뉴가 나오면 알림으로 알려드릴게요!</string>
+    <string name="notification_mark_all_read">모두 읽음</string>
+    <string name="notification_retention">7일 전 알림까지 확인할 수 있어요</string>
+    <string name="notification_hours_ago">%1$d시간 전</string>
+    <string name="notification_date">%1$d월 %2$d일</string>
 </resources>

@@ -1,18 +1,26 @@
 package com.eatssu.android.presentation.cafeteria
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
+import com.eatssu.android.data.local.NotificationStore
 import com.eatssu.android.databinding.FragmentCafeteriaBinding
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.base.BaseFragment
 import com.eatssu.android.presentation.cafeteria.calendar.CalendarAdapter
+import com.eatssu.android.presentation.notification.NotificationActivity
 import com.eatssu.android.presentation.util.CalendarUtil
 import com.eatssu.android.presentation.util.CalendarUtil.daysInWeekArray
 import com.eatssu.android.presentation.util.CalendarUtil.monthYearFromDate
@@ -22,7 +30,9 @@ import com.eatssu.common.enums.Time
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
@@ -31,9 +41,27 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
 
     private val mainViewModel by activityViewModels<MainViewModel>()
 
+    @Inject
+    lateinit var notificationStore: NotificationStore
+
+    private val notificationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val date = result.data?.getStringExtra(NotificationActivity.EXTRA_MEAL_DATE)
+                    ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+                val time = result.data?.getStringExtra(NotificationActivity.EXTRA_MEAL_TIME)
+                    ?.let { value -> Time.entries.firstOrNull { it.name == value } }
+                if (date != null && time != null) {
+                    onItemClick(-1, date)
+                    binding.vpMain.setCurrentItem(Time.entries.indexOf(time), false)
+                }
+            }
+        }
+
     private var monthYearText: TextView? = null
     private var calendarRecyclerView: RecyclerView? = null
     private var mainPosition: Int = -1
+    private var selectedMealTime: Time = Time.LUNCH
 
     override fun setBinding(layoutInflater: LayoutInflater): FragmentCafeteriaBinding {
         return FragmentCafeteriaBinding.inflate(layoutInflater)
@@ -56,10 +84,36 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
         setupViewPagerPageChangeListener(viewPager)
 
         initWidgets()
-        CalendarUtil.selectedDate = LocalDate.now()
+        val selectedState = savedInstanceState ?: arguments
+        CalendarUtil.selectedDate = selectedState?.getString(NotificationActivity.EXTRA_MEAL_DATE)
+            ?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: LocalDate.now()
+        selectedState?.getString(NotificationActivity.EXTRA_MEAL_TIME)
+            ?.let { value -> Time.entries.firstOrNull { it.name == value } }
+            ?.let { viewPager.setCurrentItem(Time.entries.indexOf(it), false) }
         mainViewModel.setData(CalendarUtil.selectedDate)
         setWeekView()
         setCalendarWeekClickListener()
+        binding.btnNotifications.setOnClickListener {
+            notificationLauncher.launch(Intent(requireContext(), NotificationActivity::class.java))
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                notificationStore.notifications.collect { notifications ->
+                    binding.btnNotifications.setImageResource(
+                        if (notifications.any { !it.isRead }) R.drawable.ic_alarm_unread else R.drawable.ic_alarm_read,
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(
+            NotificationActivity.EXTRA_MEAL_DATE,
+            CalendarUtil.selectedDate.toString()
+        )
+        outState.putString(NotificationActivity.EXTRA_MEAL_TIME, selectedMealTime.name)
     }
 
     private fun setupViewPagerPageChangeListener(viewPager: ViewPager2) {
@@ -74,6 +128,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
                     2 -> Time.DINNER
                     else -> Time.LUNCH // 기본값
                 }
+                selectedMealTime = time
                 analyticsTracker.track(CafeteriaAnalyticsEvent.MealTimeSelected(time))
             }
         })

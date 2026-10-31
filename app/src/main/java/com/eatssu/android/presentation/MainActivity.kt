@@ -2,6 +2,7 @@ package com.eatssu.android.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.WorkManager
 import com.eatssu.android.R
+import com.eatssu.android.data.local.NotificationStore
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.base.BaseActivity
@@ -27,6 +29,7 @@ import com.eatssu.android.presentation.favorite.FavoriteDetailFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.notification.NotificationActivity
 import com.eatssu.android.presentation.util.openAppNotificationSettings
 import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showInfoToast
@@ -35,10 +38,12 @@ import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
 import com.eatssu.common.enums.ScreenId
+import com.eatssu.common.enums.Time
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -53,6 +58,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         private const val ENABLE_ANYONE_BUT_ME = false
         private const val REQUEST_CODE_NOTIFICATION_PERMISSION = 1000
     }
+
+    @Inject
+    lateinit var notificationStore: NotificationStore
 
     @Inject
     lateinit var workManager: WorkManager
@@ -73,6 +81,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
         setupNoToolbar()
         setNavigation()
+        if (savedInstanceState == null) openNotificationDestination(intent)
         if (ENABLE_ANYONE_BUT_ME) {
             bindEventPopup(showOnLaunch = savedInstanceState == null)
             bindEventTooltip()
@@ -83,6 +92,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         }
         collectState()
         collectUiEvents()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        openNotificationDestination(intent)
+    }
+
+    private fun openNotificationDestination(intent: Intent) {
+        val date = intent.getStringExtra(NotificationActivity.EXTRA_MEAL_DATE)
+            ?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return
+        val time = intent.getStringExtra(NotificationActivity.EXTRA_MEAL_TIME)
+            ?.let { value -> Time.entries.firstOrNull { it.name == value } } ?: return
+        lifecycleScope.launch {
+            intent.getStringExtra("notification_id")?.let { notificationStore.markRead(it) }
+        }
+        navController.navigate(
+            R.id.cafeteria_menu, bundleOf(
+                NotificationActivity.EXTRA_MEAL_DATE to date.toString(),
+                NotificationActivity.EXTRA_MEAL_TIME to time.name,
+            )
+        )
+        intent.removeExtra(NotificationActivity.EXTRA_MEAL_DATE)
+        intent.removeExtra(NotificationActivity.EXTRA_MEAL_TIME)
     }
 
     private fun setNavigation() {

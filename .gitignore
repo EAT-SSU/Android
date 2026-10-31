@@ -127,3 +127,4 @@ lint/tmp/
 
 
 /.kotlin
+/app/serviceAccountKey.json

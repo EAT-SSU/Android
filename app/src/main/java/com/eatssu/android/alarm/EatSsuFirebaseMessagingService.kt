@@ -6,29 +6,50 @@ import android.app.PendingIntent
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.eatssu.android.R
+import com.eatssu.android.data.local.NotificationStore
+import com.eatssu.android.domain.model.notification.MenuNotification
 import com.eatssu.android.presentation.intro.IntroActivity
+import com.eatssu.android.presentation.notification.NotificationActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
+    @Inject
+    lateinit var notificationStore: NotificationStore
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Timber.d("From: ${remoteMessage.from}")
-
-        val notificationBody = remoteMessage.notification?.body ?: return
-        Timber.d("Message Notification Body: $notificationBody")
-
-        sendNotification(notificationBody)
+        val body = remoteMessage.data["body"] ?: remoteMessage.notification?.body ?: return
+        val title = remoteMessage.data["title"] ?: remoteMessage.notification?.title
+        val sentAt = remoteMessage.sentTime.takeIf { it > 0 } ?: System.currentTimeMillis()
+        val data = remoteMessage.data.toMutableMap().apply {
+            put("body", body)
+            title?.let { put("title", it) }
+        }
+        val notification = MenuNotification.fromData(
+            data,
+            remoteMessage.messageId ?: "${sentAt}_${data.hashCode()}",
+            sentAt,
+        )
+        // Complete the small local write inside the FCM callback lifetime.
+        if (notification != null) runBlocking(Dispatchers.IO) { notificationStore.add(notification) }
+        sendNotification(body, title, notification)
     }
-
 
     override fun onNewToken(token: String) {
-        Timber.d("Refreshed token: $token")
-        // 아직 특정 기기의 Push Token이 필요하지 않음
+        // Token registration is not currently used. Never log the token.
     }
 
-    private fun sendNotification(messageBody: String?) {
+    private fun sendNotification(
+        messageBody: String,
+        title: String?,
+        menuNotification: MenuNotification?
+    ) {
         val notificationManager =
             getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -46,12 +67,17 @@ class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
 
         val intent = Intent(this, IntroActivity::class.java).apply {
             putExtra("launch_path", "remote_notification")
+            menuNotification?.let {
+                putExtra(NotificationActivity.EXTRA_MEAL_DATE, it.mealDate)
+                putExtra(NotificationActivity.EXTRA_MEAL_TIME, it.mealTime.name)
+                putExtra("notification_id", it.id)
+            }
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            menuNotification?.id?.hashCode() ?: 0,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -59,7 +85,9 @@ class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
         val notification =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_mini_logo)
+                .setContentTitle(title)
                 .setContentText(messageBody)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(messageBody))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -67,7 +95,10 @@ class EatSsuFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pendingIntent)
                 .build()
 
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        notificationManager.notify(
+            menuNotification?.id?.hashCode() ?: NOTIFICATION_ID,
+            notification
+        )
     }
 
     companion object {

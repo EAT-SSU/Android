@@ -92,7 +92,9 @@ class IntroActivity : AppCompatActivity() {
             introViewModel.uiState.collectLatest { state ->
                 when (state) {
                     is UiState.Success -> {
-                        startActivity<MainActivity>()
+                        startActivity<MainActivity> {
+                            this@IntroActivity.intent.extras?.let { putExtras(it) }
+                        }
                         finish()
                     }
 
