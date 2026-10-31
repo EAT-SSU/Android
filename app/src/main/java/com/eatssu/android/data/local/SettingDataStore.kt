@@ -22,6 +22,19 @@ class SettingDataStore @Inject constructor(
     companion object {
         private val DAILY_NOTIFICATION_KEY = booleanPreferencesKey("daily_notification")
         private val LANGUAGE_KEY = stringPreferencesKey("app_language")
+        private val NOTIFICATION_PERMISSION_DIALOG_DISMISSED_KEY =
+            booleanPreferencesKey("notification_permission_dialog_dismissed")
+    }
+
+    val isNotificationPermissionDialogDismissed: Flow<Boolean> = context.settingDataStore.data
+        .map { preferences ->
+            preferences[NOTIFICATION_PERMISSION_DIALOG_DISMISSED_KEY] ?: false
+        }
+
+    suspend fun setNotificationPermissionDialogDismissed(dismissed: Boolean) {
+        context.settingDataStore.edit { preferences ->
+            preferences[NOTIFICATION_PERMISSION_DIALOG_DISMISSED_KEY] = dismissed
+        }
     }
 
     val dailyNotificationStatus: Flow<Boolean> = context.settingDataStore.data

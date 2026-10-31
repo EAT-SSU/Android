@@ -53,6 +53,8 @@
     <string name="button_report">신고하기</string>
     <string name="button_cancel">취소</string>
     <string name="button_confirm">확인</string>
+    <string name="button_later">나중에</string>
+    <string name="button_allow_notification">알림 허용하기</string>
     <string name="button_close">닫기</string>
     <string name="button_retry">재시도</string>
     <string name="button_update">업데이트</string>
@@ -68,6 +70,8 @@
     <string name="dialog_notification_permission_title">알림 권한 필요</string>
     <string name="dialog_notification_permission_description">알림을 받으려면 알림 권한을 활성화해야 합니다.\n설정에서 알림 권한을 허용해주세요.</string>
     <string name="dialog_settings">설정으로 이동</string>
+    <string name="dialog_notification_pre_permission_title">잇슈의 유용한 소식을 받아보세요</string>
+    <string name="dialog_notification_pre_permission_description">오늘의 학식과 찜한 메뉴 소식을\n알림으로 빠르게 알려드릴게요.</string>
     <string name="dialog_placeholder_title">제목을 입력해주세요</string>
     <string name="dialog_placeholder_body">본문을 입력해주세요</string>
     <string name="dialog_network_error_title">네트워크 연결 안 됨</string>

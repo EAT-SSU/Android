@@ -56,6 +56,8 @@
     <string name="button_report">Report</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
+    <string name="button_later">Later</string>
+    <string name="button_allow_notification">Allow Notifications</string>
     <string name="button_close">Close</string>
     <string name="button_retry">Retry</string>
     <string name="button_update">Update</string>
@@ -71,6 +73,8 @@
     <string name="dialog_notification_permission_title">Notification Permission Required</string>
     <string name="dialog_notification_permission_description">To receive notifications, you need to enable notification permission.\nPlease allow notification access in Settings.</string>
     <string name="dialog_settings">Go to Settings</string>
+    <string name="dialog_notification_pre_permission_title">Get useful updates from EAT-SSU</string>
+    <string name="dialog_notification_pre_permission_description">We will quickly notify you about today\'s menu and your favorite meals.</string>
     <string name="dialog_placeholder_title">Please enter a title</string>
     <string name="dialog_placeholder_body">Please enter the content</string>
     <string name="dialog_network_error_title">No Network Connection</string>

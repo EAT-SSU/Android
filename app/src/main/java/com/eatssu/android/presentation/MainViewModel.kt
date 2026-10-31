@@ -197,6 +197,16 @@ class MainViewModel @Inject constructor(
         val language = settingDataStore.appLanguage.first()
         userRepository.patchUserLanguage(language.code.uppercase())
     }
+
+    suspend fun isNotificationPermissionDialogDismissed(): Boolean {
+        return settingDataStore.isNotificationPermissionDialogDismissed.first()
+    }
+
+    fun setNotificationPermissionDialogDismissed(dismissed: Boolean) {
+        viewModelScope.launch {
+            settingDataStore.setNotificationPermissionDialogDismissed(dismissed)
+        }
+    }
 }
 
 

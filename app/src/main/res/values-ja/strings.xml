@@ -56,6 +56,8 @@
     <string name="button_report">通報</string>
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">確認</string>
+    <string name="button_later">後で</string>
+    <string name="button_allow_notification">通知を許可</string>
     <string name="button_close">閉じる</string>
     <string name="button_retry">再試行</string>
     <string name="button_update">アップデート</string>
@@ -71,6 +73,8 @@
     <string name="dialog_notification_permission_title">通知権限が必要です</string>
     <string name="dialog_notification_permission_description">通知を受け取るには、通知権限を有効にする必要があります。\n設定で通知を許可してください。</string>
     <string name="dialog_settings">設定へ移動</string>
+    <string name="dialog_notification_pre_permission_title">イートシューの役立つ情報を受け取る</string>
+    <string name="dialog_notification_pre_permission_description">今日の学食やお気に入りメニューの情報を\n通知ですぐにお知らせします。</string>
     <string name="dialog_placeholder_title">タイトルを入力してください</string>
     <string name="dialog_placeholder_body">本文を入力してください</string>
     <string name="dialog_network_error_title">ネットワークに接続されていません</string>

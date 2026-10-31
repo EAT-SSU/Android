@@ -56,6 +56,8 @@
     <string name="button_report">Báo cáo</string>
     <string name="button_cancel">Hủy</string>
     <string name="button_confirm">Xác nhận</string>
+    <string name="button_later">Để sau</string>
+    <string name="button_allow_notification">Cho phép thông báo</string>
     <string name="button_close">Đóng</string>
     <string name="button_retry">Thử lại</string>
     <string name="button_update">Cập nhật</string>
@@ -71,6 +73,8 @@
     <string name="dialog_notification_permission_title">Cần quyền thông báo</string>
     <string name="dialog_notification_permission_description">Để nhận thông báo, bạn cần bật quyền thông báo.\nVui lòng cho phép thông báo trong Cài đặt.</string>
     <string name="dialog_settings">Đi tới Cài đặt</string>
+    <string name="dialog_notification_pre_permission_title">Nhận thông tin hữu ích từ EAT-SSU</string>
+    <string name="dialog_notification_pre_permission_description">Chúng tôi sẽ nhanh chóng thông báo cho bạn về thực đơn hôm nay và món ăn yêu thích.</string>
     <string name="dialog_placeholder_title">Vui lòng nhập tiêu đề</string>
     <string name="dialog_placeholder_body">Vui lòng nhập nội dung</string>
     <string name="dialog_network_error_title">Không có kết nối mạng</string>

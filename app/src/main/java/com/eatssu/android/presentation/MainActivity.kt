@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +27,8 @@ import com.eatssu.android.presentation.favorite.FavoriteDetailFragment
 import com.eatssu.android.presentation.login.LoginActivity
 import com.eatssu.android.presentation.mypage.MyPageViewModel
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
+import com.eatssu.android.presentation.util.openAppNotificationSettings
+import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -48,6 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 ) {
     companion object {
         private const val ENABLE_ANYONE_BUT_ME = false
+        private const val REQUEST_CODE_NOTIFICATION_PERMISSION = 1000
     }
 
     @Inject
@@ -74,7 +78,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
             bindEventTooltip()
         }
 
-        checkAlarmPermission()
+        if (savedInstanceState == null) {
+            checkNotificationPermissionDialog()
+        }
         collectState()
         collectUiEvents()
     }
@@ -189,7 +195,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == 1000) {
+        if (requestCode == REQUEST_CODE_NOTIFICATION_PERMISSION) {
             val nowDatetime = LocalDateTime.now()
             val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
@@ -199,28 +205,82 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 myPageViewModel.setNotificationOn()
             } else {
                 // 권한이 거부됨
-                showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
-                myPageViewModel.setNotificationOff()
+                // 시스템 권한 다이얼로그가 뜨지 않고 바로 거부된 경우(영구 거부 등) 시스템 설정 화면으로 이동 안내
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    !ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+                ) {
+                    openAppNotificationSettings()
+                } else {
+                    showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                    myPageViewModel.setNotificationOff()
+                }
             }
         }
     }
 
-    // 알림 퍼미션 있는지 자가 진단
-    private fun checkAlarmPermission() {
+    private fun isNotificationPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            NotificationManagerCompat.from(this).areNotificationsEnabled()
+        }
+    }
+
+    private fun checkNotificationPermissionDialog() {
+        if (isNotificationPermissionGranted()) return
+
+        lifecycleScope.launch {
+            if (mainViewModel.isNotificationPermissionDialogDismissed()) return@launch
+
+            showNotificationPrePermissionDialog()
+        }
+    }
+
+    private fun showNotificationPrePermissionDialog() {
+        showDialog(
+            title = getString(R.string.dialog_notification_pre_permission_title),
+            description = getString(R.string.dialog_notification_pre_permission_description),
+        ) {
+            cancelText = getString(R.string.button_later)
+            confirmText = getString(R.string.button_allow_notification)
+            cancellable = true
+            onCancel { dialog ->
+                mainViewModel.setNotificationPermissionDialogDismissed(true)
+                dialog.dismiss()
+            }
+            onDismiss {
+                mainViewModel.setNotificationPermissionDialogDismissed(true)
+            }
+            onConfirm { dialog ->
+                mainViewModel.setNotificationPermissionDialogDismissed(true)
+                dialog.dismiss()
+                handleAllowNotification()
+            }
+        }
+    }
+
+    private fun handleAllowNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // 권한이 없다면 요청
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    1000
-                )
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_CODE_NOTIFICATION_PERMISSION
+            )
+        } else {
+            if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+                val nowDatetime = LocalDateTime.now()
+                val formattedDate =
+                    nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                myPageViewModel.setNotificationOn()
             } else {
-                // 권한이 이미 있어
+                openAppNotificationSettings()
             }
         }
     }
