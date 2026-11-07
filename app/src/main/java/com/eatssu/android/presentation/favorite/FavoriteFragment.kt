@@ -21,6 +21,9 @@ class FavoriteFragment : Fragment() {
 
     companion object {
         const val ARG_SHOW_PARTNERSHIP = "show_partnership"
+        const val ARG_TODAY_RESTAURANT = "today_favorite_restaurant"
+        const val ARG_TODAY_TIME = "today_favorite_time"
+        const val ARG_TODAY_EXPANDED = "today_favorite_expanded"
     }
 
     @Inject
@@ -41,12 +44,6 @@ class FavoriteFragment : Fragment() {
             time,
             arguments?.getBoolean(ARG_TODAY_EXPANDED) == true
         )
-    }
-
-    companion object {
-        const val ARG_TODAY_RESTAURANT = "today_favorite_restaurant"
-        const val ARG_TODAY_TIME = "today_favorite_time"
-        const val ARG_TODAY_EXPANDED = "today_favorite_expanded"
     }
 
     override fun onCreateView(
