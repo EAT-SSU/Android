@@ -417,4 +417,6 @@
     <string name="notification_favorite_one_body">Today’s %1$s: %3$s at %2$s 👀</string>
     <string name="notification_favorite_two_body">Today’s %1$s: %3$s at %2$s · %5$s at %4$s 👀</string>
     <string name="notification_favorite_many_body">Today’s %1$s: %3$s at %2$s and %4$d more 👀</string>
+    <string name="favorite_add_partnership">Add partner to favorites</string>
+    <string name="favorite_remove_partnership">Remove partner from favorites</string>
 </resources>

@@ -19,6 +19,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
+    companion object {
+        const val ARG_SHOW_PARTNERSHIP = "show_partnership"
+        const val ARG_TODAY_RESTAURANT = "today_favorite_restaurant"
+        const val ARG_TODAY_TIME = "today_favorite_time"
+        const val ARG_TODAY_EXPANDED = "today_favorite_expanded"
+    }
+
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
@@ -39,12 +46,6 @@ class FavoriteFragment : Fragment() {
         )
     }
 
-    companion object {
-        const val ARG_TODAY_RESTAURANT = "today_favorite_restaurant"
-        const val ARG_TODAY_TIME = "today_favorite_time"
-        const val ARG_TODAY_EXPANDED = "today_favorite_expanded"
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,7 +56,7 @@ class FavoriteFragment : Fragment() {
                 EatssuTheme {
                     FavoriteRoute(
                         viewModel = viewModel,
-                        onBackToMap = { mainActivity().openMapTab() },
+                        showPartnership = arguments?.getBoolean(ARG_SHOW_PARTNERSHIP) == true,
                         onPartnershipClick = mainActivity()::openFavoriteDetail,
                     )
                 }

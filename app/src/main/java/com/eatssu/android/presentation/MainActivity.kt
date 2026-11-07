@@ -1,9 +1,9 @@
 package com.eatssu.android.presentation
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -15,8 +15,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.NavController
 import androidx.work.WorkManager
 import com.eatssu.android.R
 import com.eatssu.android.data.local.NotificationStore
@@ -200,9 +200,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         }
     }
 
-    fun openFavoriteTab() {
+    fun openFavoriteTab(showPartnership: Boolean = false) {
         if (navController.currentDestination?.id != R.id.favoriteFragment) {
-            navController.navigate(R.id.favoriteFragment)
+            navController.navigate(
+                R.id.favoriteFragment,
+                bundleOf(FavoriteFragment.ARG_SHOW_PARTNERSHIP to showPartnership),
+            )
         }
     }
 
