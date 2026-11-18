@@ -399,6 +399,8 @@
     <string name="cafeteria_the_kitchen_location">学生会館 2階</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="review_menu_notification_title">お気に入りメニュー通知を許可してください</string>
+    <string name="review_menu_notification_description">お気に入りメニューが学食に出たら\n一番にお知らせします。</string>
     <string name="today_favorite_title">今日の献立からお気に入り登録</string>
     <string name="today_favorite_expanded">展開済み</string>
     <string name="today_favorite_collapsed">折りたたみ</string>

@@ -399,6 +399,8 @@
     <string name="cafeteria_the_kitchen_location">Tòa Student Union, tầng 2</string>
     <string name="cafeteria_the_kitchen_time"></string>
     <string name="cafeteria_the_kitchen_etc"></string>
+    <string name="review_menu_notification_title">Vui lòng cho phép thông báo món ăn yêu thích</string>
+    <string name="review_menu_notification_description">Chúng tôi sẽ báo cho bạn sớm nhất\nkhi món yêu thích có trong thực đơn.</string>
     <string name="today_favorite_title">Thêm món từ thực đơn hôm nay</string>
     <string name="today_favorite_expanded">Đã mở rộng</string>
     <string name="today_favorite_collapsed">Đã thu gọn</string>

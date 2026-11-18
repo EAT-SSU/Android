@@ -220,10 +220,32 @@ class MenuFavoriteSearchUiTest {
             findNode(
                 instrumentation.uiAutomation.rootInActiveWindow,
                 predicate
-            )?.let { Thread.sleep(300); return it }
+            )?.let {
+                Thread.sleep(300)
+                return findNode(
+                    instrumentation.uiAutomation.rootInActiveWindow,
+                    predicate
+                ) ?: it
+            }
             Thread.sleep(100)
         }
-        error("Expected accessibility node not found")
+        error(
+            "Expected accessibility node not found. visibleTexts=${
+                collectTexts(instrumentation.uiAutomation.rootInActiveWindow)
+            }"
+        )
+    }
+
+    private fun collectTexts(
+        node: AccessibilityNodeInfo?,
+        out: MutableList<String> = mutableListOf(),
+    ): List<String> {
+        if (node == null) return out
+        node.text?.toString()?.let { out += it }
+        for (index in 0 until node.childCount) {
+            collectTexts(node.getChild(index), out)
+        }
+        return out
     }
 
     private fun findNode(

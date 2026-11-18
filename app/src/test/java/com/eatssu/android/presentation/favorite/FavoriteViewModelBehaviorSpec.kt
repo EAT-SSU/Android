@@ -1,5 +1,6 @@
 package com.eatssu.android.presentation.favorite
 
+import com.eatssu.android.R
 import com.eatssu.android.data.local.FavoritePartnershipDataStore
 import com.eatssu.android.data.model.ApiResult
 import com.eatssu.android.domain.model.FavoriteMenu
@@ -16,6 +17,10 @@ import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
 
@@ -144,7 +149,47 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         }
     }
 
-    given("찜 목록에서 메뉴 하트를 잘못 눌렀을 때") {
+    given("찜 목록에서 메뉴 하트를 눌러 삭제할 때") {
+        val partnershipRepository = mockk<PartnershipRepository>()
+        val dataStore = mockk<FavoritePartnershipDataStore>()
+        val menuRepository = mockk<MenuFavoriteRepository>()
+        val favoriteMenu = FavoriteMenu(
+            menuId = 10L,
+            menuName = "김치찌개",
+            restaurant = Restaurant.HAKSIK,
+            isDiscontinued = false,
+        )
+
+        coEvery { partnershipRepository.getUserFavoritePartnerships() } returns emptyList()
+        coEvery { dataStore.reconcile(emptyList()) } returns emptyList()
+        coEvery { menuRepository.getFavoriteMenus() } returns ApiResult.Success(listOf(favoriteMenu))
+        coEvery { menuRepository.removeFavoriteMenu(10L) } returns ApiResult.Success(Unit)
+
+        val viewModel = FavoriteViewModel(partnershipRepository, dataStore, menuRepository)
+
+        `when`("하트를 누르면") {
+            val events = mutableListOf<FavoriteMenuSnackbarEvent>()
+            val scope = CoroutineScope(Dispatchers.Unconfined)
+            val job = scope.launch { viewModel.menuSnackbarEvents.collect { events += it } }
+            try {
+                viewModel.loadFavorites()
+                viewModel.toggleFavoriteMenu(favoriteMenu)
+
+                then("삭제 토스트와 함께 리스트에서 즉시 삭제된다") {
+                    val state = (viewModel.uiState.value as UiState.Success).data
+                    state.favoriteMenus shouldBe emptyList()
+                    state.unfavoritedMenuIds shouldBe emptySet()
+                    events.map { it.messageRes } shouldBe listOf(R.string.favorite_menu_deleted_snackbar)
+                    coVerify(exactly = 1) { menuRepository.removeFavoriteMenu(10L) }
+                }
+            } finally {
+                job.cancel()
+                scope.cancel()
+            }
+        }
+    }
+
+    given("이미 불러온 찜 목록이 있는 상태에서 재조회할 때") {
         val partnershipRepository = mockk<PartnershipRepository>()
         val dataStore = mockk<FavoritePartnershipDataStore>()
         val menuRepository = mockk<MenuFavoriteRepository>()
@@ -159,33 +204,23 @@ class FavoriteViewModelBehaviorSpec : AppBehaviorSpec({
         coEvery { dataStore.reconcile(emptyList()) } returns emptyList()
         coEvery { menuRepository.getFavoriteMenus() } returnsMany listOf(
             ApiResult.Success(listOf(favoriteMenu)),
+            ApiResult.Failure(500, "network"),
             ApiResult.Success(emptyList()),
         )
-        coEvery { menuRepository.removeFavoriteMenu(10L) } returns ApiResult.Success(Unit)
-        coEvery { menuRepository.addFavoriteMenu(10L) } returns ApiResult.Success(Unit)
 
         val viewModel = FavoriteViewModel(partnershipRepository, dataStore, menuRepository)
 
-        `when`("하트를 끄고 같은 화면에서 다시 켠 뒤, 다시 끄고 재진입하면") {
+        `when`("재조회가 실패한 뒤 다시 조회하면") {
             viewModel.loadFavorites()
-            viewModel.toggleFavoriteMenu(favoriteMenu)
+            viewModel.loadFavorites()
 
-            then("화면을 떠나기 전에는 메뉴가 남아 다시 찜할 수 있고, 재진입 후에는 사라진다") {
+            then("일시적 재조회 실패 시에는 기존 목록을 유지하고 성공 시 서버 상태로 갱신한다") {
                 var state = (viewModel.uiState.value as UiState.Success).data
                 state.favoriteMenus shouldBe listOf(favoriteMenu)
-                state.unfavoritedMenuIds shouldBe setOf(10L)
 
-                viewModel.toggleFavoriteMenu(favoriteMenu)
-                state = (viewModel.uiState.value as UiState.Success).data
-                state.favoriteMenus shouldBe listOf(favoriteMenu)
-                state.unfavoritedMenuIds shouldBe emptySet()
-                coVerify(exactly = 1) { menuRepository.addFavoriteMenu(10L) }
-
-                viewModel.toggleFavoriteMenu(favoriteMenu)
                 viewModel.loadFavorites()
                 state = (viewModel.uiState.value as UiState.Success).data
                 state.favoriteMenus shouldBe emptyList()
-                state.unfavoritedMenuIds shouldBe emptySet()
             }
         }
     }

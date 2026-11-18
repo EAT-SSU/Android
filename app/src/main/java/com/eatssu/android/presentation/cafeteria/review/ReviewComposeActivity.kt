@@ -144,36 +144,45 @@ class ReviewComposeActivity : AppCompatActivity() {
                     }
                 } else if (!notificationsEnabled) {
                     notificationDialog = showDialog(
-                        title = getString(R.string.dialog_notification_permission_title),
+                        title = getString(R.string.review_menu_notification_title),
                         description = getString(R.string.review_menu_notification_description),
                     ) {
                         confirmText = getString(R.string.button_allow_notification)
                         onConfirm { dialog ->
+                            dialog.dismiss()
                             lifecycleScope.launch {
                                 setNotificationStatus(true)
                                 alarmUseCase.scheduleAlarm()
+                                openMainMenuFavorites(showNotificationEnabledToast = true)
                             }
-                            dialog.dismiss()
                         }
                     }
                 } else {
-                    startActivity(
-                        Intent(
-                            this@ReviewComposeActivity,
-                            MainActivity::class.java
-                        ).apply {
-                            flags =
-                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            putExtra(MainActivity.EXTRA_OPEN_MENU_FAVORITES, true)
-                            putExtra(FavoriteFragment.ARG_TODAY_RESTAURANT, restaurant)
-                            putExtra(FavoriteFragment.ARG_TODAY_TIME, mealTime?.name)
-                            putExtra(FavoriteFragment.ARG_TODAY_EXPANDED, true)
-                        })
+                    openMainMenuFavorites()
                 }
             } finally {
                 isCheckingNotification = false
             }
         }
+    }
+
+    private fun openMainMenuFavorites(showNotificationEnabledToast: Boolean = false) {
+        startActivity(
+            Intent(
+                this@ReviewComposeActivity,
+                MainActivity::class.java,
+            ).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                putExtra(MainActivity.EXTRA_OPEN_MENU_FAVORITES, true)
+                putExtra(
+                    MainActivity.EXTRA_SHOW_NOTIFICATION_ENABLED_TOAST,
+                    showNotificationEnabledToast,
+                )
+                putExtra(FavoriteFragment.ARG_TODAY_RESTAURANT, restaurant)
+                putExtra(FavoriteFragment.ARG_TODAY_TIME, mealTime?.name)
+                putExtra(FavoriteFragment.ARG_TODAY_EXPANDED, true)
+            },
+        )
     }
 
     override fun onDestroy() {

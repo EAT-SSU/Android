@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.eatssu.android.R
 import com.eatssu.android.databinding.ToastLayoutBinding
 import com.eatssu.android.presentation.map.findActivityOrNull
 import com.eatssu.common.UiEvent
@@ -16,6 +17,8 @@ import com.eatssu.common.UiText
 import com.eatssu.common.enums.ToastType
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @SuppressLint("RestrictedApi")
 fun Context.showToast(
@@ -121,3 +124,18 @@ fun Fragment.showErrorToast(message: String) =
 
 fun Fragment.showErrorToast(@StringRes messageId: Int) =
     requireContext().showErrorToast(messageId)
+
+private val notificationConsentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+fun Context.showNotificationConsentToast(enabled: Boolean) {
+    val formattedDate = LocalDateTime.now().format(notificationConsentFormatter)
+    val messageRes = if (enabled) {
+        R.string.toast_notification_enable
+    } else {
+        R.string.toast_notification_disable
+    }
+    showInfoToast(getString(messageRes, formattedDate))
+}
+
+fun Fragment.showNotificationConsentToast(enabled: Boolean) =
+    requireContext().showNotificationConsentToast(enabled)
