@@ -112,6 +112,8 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
         val favoritePartnershipDataStore = mockk<FavoritePartnershipDataStore>()
         val analyticsTracker = mockk<AnalyticsTracker>(relaxed = true)
         val notificationStore = mockk<NotificationStore>()
+        val pushManager = mockk<com.eatssu.android.alarm.PushTokenManager>(relaxed = true)
+        val notificationRepository = mockk<com.eatssu.android.data.remote.repository.NotificationRepository>(relaxed = true)
         coJustRun { notificationStore.clear() }
         val useCase = LogoutUseCase(
             accountDataStore,
@@ -120,6 +122,8 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
             favoritePartnershipDataStore,
             analyticsTracker,
             notificationStore,
+            javax.inject.Provider { pushManager },
+            javax.inject.Provider { notificationRepository },
         )
 
         coJustRun { accountDataStore.clear() }
@@ -132,6 +136,7 @@ class AuthDelegatingUseCasesBehaviorSpec : AppBehaviorSpec({
                 runTest {
                     useCase()
                     coVerifyOrder {
+                        pushManager.revokeBeforeLogout()
                         accountDataStore.clear()
                         tokenStore.clear()
                         settingDataStore.clear()

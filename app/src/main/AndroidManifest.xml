@@ -124,6 +124,9 @@
 
         <!-- 기본 알림 아이콘과 색상 설정 -->
         <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="FCMNotificationChannel" />
+        <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/ic_mini_logo" />
         <meta-data

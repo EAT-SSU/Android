@@ -9,16 +9,47 @@ import com.eatssu.android.data.remote.service.PartnershipService
 import com.eatssu.android.data.remote.service.ReportService
 import com.eatssu.android.data.remote.service.ReviewService
 import com.eatssu.android.data.remote.service.UserService
+import com.eatssu.android.data.remote.service.NotificationService
+import com.eatssu.android.data.remote.service.PushTokenService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
+
+    @Provides
+    @Singleton
+    fun provideNotificationService(retrofit: Retrofit): NotificationService =
+        retrofit.create(NotificationService::class.java)
+
+    @Provides
+    @Singleton
+    @NoToken
+    fun provideRevocationService(@NoToken retrofit: Retrofit): PushTokenService {
+        // FCM token bodies must never reach the debug HTTP logging interceptor.
+        val client = (retrofit.callFactory() as OkHttpClient).newBuilder().apply {
+            interceptors().clear()
+        }.build()
+        return retrofit.newBuilder().client(client).build()
+            .create(PushTokenService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePushTokenService(retrofit: Retrofit): PushTokenService {
+        val client = (retrofit.callFactory() as OkHttpClient).newBuilder().apply {
+            interceptors().removeAll { it is HttpLoggingInterceptor }
+        }.build()
+        return retrofit.newBuilder().client(client).build()
+            .create(PushTokenService::class.java)
+    }
 
     @Provides
     @Singleton
