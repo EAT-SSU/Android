@@ -2,6 +2,7 @@ package com.eatssu.android.presentation.favorite
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.KeyEvent
@@ -50,7 +51,7 @@ class MenuFavoriteSearchUiTest {
         launch {
             FavoriteScreen(
                 uiState = UiState.Success(state.value),
-                onBackToMap = {}, onStoreTypeSelected = {}, onPartnershipClick = {},
+                onStoreTypeSelected = {}, onPartnershipClick = {},
                 todayMenuState = today.value,
                 menuSnackbarEvent = feedback.value,
                 onMenuSearchFocusChanged = { focused ->
@@ -119,7 +120,7 @@ class MenuFavoriteSearchUiTest {
             assertNull(findNode(instrumentation.uiAutomation.rootInActiveWindow) {
                 it.text?.toString()?.startsWith("Meatballs") == true
             })
-            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER)
+            submitSearch()
             awaitNode { it.text?.toString()?.startsWith("Meatballs") == true }
             assertEquals(1, requests.get())
             tap(awaitDescription(R.string.favorite_menu_add_content_description))
@@ -130,7 +131,7 @@ class MenuFavoriteSearchUiTest {
             awaitText(context.getString(R.string.favorite_menu_deleted_snackbar))
             setQuery("zz")
             assertEquals(1, requests.get())
-            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER)
+            submitSearch()
             awaitText(context.getString(R.string.favorite_menu_load_error))
             screenshot("menu-search-load-error")
             tap(awaitDescription(R.string.favorite_menu_clear_search_content_description))
@@ -170,7 +171,7 @@ class MenuFavoriteSearchUiTest {
                         favoriteMenuLoadState = MenuFavoriteLoadState.Success
                     )
                 ),
-                onBackToMap = {}, onStoreTypeSelected = {}, onPartnershipClick = {},
+                onStoreTypeSelected = {}, onPartnershipClick = {},
                 todayMenuState = today.value, menuSnackbarEvent = feedback.value,
                 onTodayToggleMenu = { id ->
                     today.value =
@@ -208,7 +209,21 @@ class MenuFavoriteSearchUiTest {
         assertTrue(field.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, Bundle().apply {
             putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, query)
         }))
+        instrumentation.waitForIdleSync()
         Thread.sleep(350)
+    }
+
+    private fun submitSearch() {
+        val field = awaitNode { it.className?.toString() == "android.widget.EditText" }
+        val imeEnterTriggered = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            field.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_IME_ENTER.id)
+        } else {
+            false
+        }
+        if (!imeEnterTriggered) {
+            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER)
+        }
+        instrumentation.waitForIdleSync()
     }
 
     private fun awaitText(text: String) = awaitNode { it.text?.toString() == text }
@@ -217,15 +232,18 @@ class MenuFavoriteSearchUiTest {
 
     private fun awaitNode(predicate: (AccessibilityNodeInfo) -> Boolean): AccessibilityNodeInfo {
         repeat(60) {
-            findNode(
-                instrumentation.uiAutomation.rootInActiveWindow,
-                predicate
-            )?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                instrumentation.uiAutomation.clearCache()
+            }
+            val root = instrumentation.uiAutomation.rootInActiveWindow
+            findNode(root, predicate)?.let {
+                instrumentation.waitForIdleSync()
                 Thread.sleep(300)
-                return findNode(
-                    instrumentation.uiAutomation.rootInActiveWindow,
-                    predicate
-                ) ?: it
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    instrumentation.uiAutomation.clearCache()
+                }
+                val refreshedRoot = instrumentation.uiAutomation.rootInActiveWindow
+                return findNode(refreshedRoot, predicate) ?: it
             }
             Thread.sleep(100)
         }
@@ -279,6 +297,7 @@ class MenuFavoriteSearchUiTest {
             )
             instrumentation.sendPointerSync(event); event.recycle()
         }
+        instrumentation.waitForIdleSync()
         Thread.sleep(300)
     }
 

@@ -53,41 +53,52 @@ fun PartnershipCategoryFilterRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(PartnershipCategory.entries, key = { it.name }) { category ->
-            val isSelected = category == selectedCategory
-
-            Box(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 3.dp,
-                        shape = CircleShape,
-                        ambientColor = Color(0x1A949494),
-                        spotColor = Color(0x1A949494),
-                    )
-                    .clip(CircleShape)
-                    .background(if (isSelected) Primary else White)
-                    .border(
-                        width = if (isSelected) 0.dp else 1.dp,
-                        color = if (isSelected) Color.Transparent else Gray300,
-                        shape = CircleShape,
-                    )
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = { onCategorySelected(category) },
-                    )
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = stringResource(category.labelResId),
-                    style = if (isSelected) {
-                        EatssuTheme.typography.body2
-                    } else {
-                        EatssuTheme.typography.body3
-                    },
-                    color = if (isSelected) White else Gray400,
-                )
-            }
+            PartnershipCategoryChip(
+                category = category,
+                isSelected = category == selectedCategory,
+                onClick = { onCategorySelected(category) },
+            )
         }
+    }
+}
+
+@Composable
+fun PartnershipCategoryChip(
+    category: PartnershipCategory,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .shadow(
+                elevation = 3.dp,
+                shape = CircleShape,
+                ambientColor = Color(0x1A949494),
+                spotColor = Color(0x1A949494),
+            )
+            .clip(CircleShape)
+            .background(if (isSelected) Primary else White)
+            .border(
+                width = if (isSelected) 0.dp else 1.dp,
+                color = if (isSelected) Color.Transparent else Gray300,
+                shape = CircleShape,
+            )
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick,
+            )
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = stringResource(category.labelResId),
+            style = if (isSelected) {
+                EatssuTheme.typography.body2
+            } else {
+                EatssuTheme.typography.body3
+            },
+            color = if (isSelected) White else Gray400,
+        )
     }
 }
