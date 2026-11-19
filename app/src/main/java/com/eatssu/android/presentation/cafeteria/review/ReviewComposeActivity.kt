@@ -1,10 +1,13 @@
 package com.eatssu.android.presentation.cafeteria.review
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -65,6 +69,19 @@ class ReviewComposeActivity : AppCompatActivity() {
 
     private var notificationDialog: Dialog? = null
     private var isCheckingNotification = false
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                enableNotificationsAndOpenFavorites()
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                )
+            ) {
+                openAppNotificationSettings()
+            }
+        }
     private var menuDate: LocalDate? = null
     private var mealTime: Time? = null
     private var menuType: String? = null
@@ -126,54 +143,67 @@ class ReviewComposeActivity : AppCompatActivity() {
         isCheckingNotification = true
         lifecycleScope.launch {
             try {
+                val hasOsPermission =
+                    NotificationManagerCompat.from(this@ReviewComposeActivity)
+                        .areNotificationsEnabled()
                 val notificationsEnabled = settingDataStore.dailyNotificationStatus.first()
                 // Recheck after the suspending read in case the calendar day changed.
                 if (menuDate != LocalDate.now()) return@launch
-                if (!NotificationManagerCompat.from(this@ReviewComposeActivity)
-                        .areNotificationsEnabled()
-                ) {
+                if (!hasOsPermission || !notificationsEnabled) {
                     notificationDialog = showDialog(
-                        title = getString(R.string.dialog_notification_permission_title),
-                        description = getString(R.string.dialog_notification_permission_description),
-                    ) {
-                        confirmText = getString(R.string.dialog_settings)
-                        onConfirm { dialog ->
-                            dialog.dismiss()
-                            openAppNotificationSettings()
-                        }
-                    }
-                } else if (!notificationsEnabled) {
-                    notificationDialog = showDialog(
-                        title = getString(R.string.dialog_notification_permission_title),
+                        title = getString(R.string.review_menu_notification_title),
                         description = getString(R.string.review_menu_notification_description),
                     ) {
                         confirmText = getString(R.string.button_allow_notification)
                         onConfirm { dialog ->
-                            lifecycleScope.launch {
-                                setNotificationStatus(true)
-                                alarmUseCase.scheduleAlarm()
-                            }
                             dialog.dismiss()
+                            allowMenuNotifications()
                         }
                     }
                 } else {
-                    startActivity(
-                        Intent(
-                            this@ReviewComposeActivity,
-                            MainActivity::class.java
-                        ).apply {
-                            flags =
-                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            putExtra(MainActivity.EXTRA_OPEN_MENU_FAVORITES, true)
-                            putExtra(FavoriteFragment.ARG_TODAY_RESTAURANT, restaurant)
-                            putExtra(FavoriteFragment.ARG_TODAY_TIME, mealTime?.name)
-                            putExtra(FavoriteFragment.ARG_TODAY_EXPANDED, true)
-                        })
+                    openMainMenuFavorites()
                 }
             } finally {
                 isCheckingNotification = false
             }
         }
+    }
+
+    private fun allowMenuNotifications() {
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            enableNotificationsAndOpenFavorites()
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            openAppNotificationSettings()
+        }
+    }
+
+    private fun enableNotificationsAndOpenFavorites() {
+        lifecycleScope.launch {
+            setNotificationStatus(true)
+            alarmUseCase.scheduleAlarm()
+            openMainMenuFavorites(showNotificationEnabledToast = true)
+        }
+    }
+
+    private fun openMainMenuFavorites(showNotificationEnabledToast: Boolean = false) {
+        startActivity(
+            Intent(
+                this@ReviewComposeActivity,
+                MainActivity::class.java,
+            ).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                putExtra(MainActivity.EXTRA_OPEN_MENU_FAVORITES, true)
+                putExtra(
+                    MainActivity.EXTRA_SHOW_NOTIFICATION_ENABLED_TOAST,
+                    showNotificationEnabledToast,
+                )
+                putExtra(FavoriteFragment.ARG_TODAY_RESTAURANT, restaurant)
+                putExtra(FavoriteFragment.ARG_TODAY_TIME, mealTime?.name)
+                putExtra(FavoriteFragment.ARG_TODAY_EXPANDED, true)
+            },
+        )
     }
 
     override fun onDestroy() {

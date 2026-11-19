@@ -1,9 +1,9 @@
 package com.eatssu.android.presentation
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -15,8 +15,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.NavController
 import androidx.work.WorkManager
 import com.eatssu.android.R
 import com.eatssu.android.data.local.NotificationStore
@@ -33,7 +33,7 @@ import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.notification.NotificationActivity
 import com.eatssu.android.presentation.util.openAppNotificationSettings
 import com.eatssu.android.presentation.util.showDialog
-import com.eatssu.android.presentation.util.showInfoToast
+import com.eatssu.android.presentation.util.showNotificationConsentToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
 import com.eatssu.common.UiEvent
@@ -45,8 +45,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -57,6 +55,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 ) {
     companion object {
         const val EXTRA_OPEN_MENU_FAVORITES = "open_menu_favorites"
+        const val EXTRA_SHOW_NOTIFICATION_ENABLED_TOAST = "show_notification_enabled_toast"
         private const val ENABLE_ANYONE_BUT_ME = false
         private const val REQUEST_CODE_NOTIFICATION_PERMISSION = 1000
     }
@@ -108,7 +107,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
     private fun openMenuFavoritesDestination(intent: Intent) {
         if (!intent.getBooleanExtra(EXTRA_OPEN_MENU_FAVORITES, false)) return
+        val showNotificationToast =
+            intent.getBooleanExtra(EXTRA_SHOW_NOTIFICATION_ENABLED_TOAST, false)
         intent.removeExtra(EXTRA_OPEN_MENU_FAVORITES)
+        intent.removeExtra(EXTRA_SHOW_NOTIFICATION_ENABLED_TOAST)
         val args = bundleOf(
             FavoriteFragment.ARG_TODAY_RESTAURANT to intent.getStringExtra(FavoriteFragment.ARG_TODAY_RESTAURANT),
             FavoriteFragment.ARG_TODAY_TIME to intent.getStringExtra(FavoriteFragment.ARG_TODAY_TIME),
@@ -119,6 +121,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         )
         // A new destination resets the pager to menu favorites, including when partnerships were open.
         navController.navigate(R.id.favoriteFragment, args)
+        if (showNotificationToast) {
+            showNotificationConsentToast(enabled = true)
+        }
     }
 
     private fun openNotificationDestination(intent: Intent) {
@@ -200,9 +205,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         }
     }
 
-    fun openFavoriteTab() {
+    fun openFavoriteTab(showPartnership: Boolean = false) {
         if (navController.currentDestination?.id != R.id.favoriteFragment) {
-            navController.navigate(R.id.favoriteFragment)
+            navController.navigate(
+                R.id.favoriteFragment,
+                bundleOf(FavoriteFragment.ARG_SHOW_PARTNERSHIP to showPartnership),
+            )
         }
     }
 
@@ -259,12 +267,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == REQUEST_CODE_NOTIFICATION_PERMISSION) {
-            val nowDatetime = LocalDateTime.now()
-            val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 승인됨
-                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                showNotificationConsentToast(enabled = true)
                 myPageViewModel.setNotificationOn()
             } else {
                 // 권한이 거부됨
@@ -277,7 +282,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 ) {
                     openAppNotificationSettings()
                 } else {
-                    showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                    showNotificationConsentToast(enabled = false)
                     myPageViewModel.setNotificationOff()
                 }
             }
@@ -337,10 +342,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
             )
         } else {
             if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-                val nowDatetime = LocalDateTime.now()
-                val formattedDate =
-                    nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                showNotificationConsentToast(enabled = true)
                 myPageViewModel.setNotificationOn()
             } else {
                 openAppNotificationSettings()

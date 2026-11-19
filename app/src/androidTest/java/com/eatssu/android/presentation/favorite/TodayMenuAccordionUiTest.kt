@@ -73,7 +73,7 @@ class TodayMenuAccordionUiTest {
                                     favoriteMenuLoadState = MenuFavoriteLoadState.Success,
                                 )
                             ),
-                            onBackToMap = {}, onStoreTypeSelected = {}, onPartnershipClick = {},
+                            onStoreTypeSelected = {}, onPartnershipClick = {},
                             todayMenuState = todayState.value,
                             onTodayToggleExpanded = {
                                 todayState.value =

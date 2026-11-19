@@ -39,7 +39,7 @@ import com.eatssu.android.presentation.mypage.terms.WebViewActivity
 import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.util.showDialog
 import com.eatssu.android.presentation.util.showErrorToast
-import com.eatssu.android.presentation.util.showInfoToast
+import com.eatssu.android.presentation.util.showNotificationConsentToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.common.UiEvent
 import com.eatssu.common.UiState
@@ -54,8 +54,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -224,11 +222,13 @@ class MyPageFragment : Fragment() {
         if (isChecked) {
             if (checkNotificationPermission(requireContext())) {
                 myPageViewModel.setNotificationOn()
+                showNotificationConsentToast(enabled = true)
             } else {
                 showNotificationPermissionDialog()
             }
         } else {
             myPageViewModel.setNotificationOff()
+            showNotificationConsentToast(enabled = false)
         }
     }
 
@@ -283,14 +283,11 @@ class MyPageFragment : Fragment() {
         
         // 이전 권한 상태가 저장되어 있고, 현재 상태와 다른 경우에만 토스트 표시
         if (lastNotificationPermissionState != null && lastNotificationPermissionState != currentPermissionState) {
-            val nowDatetime = LocalDateTime.now()
-            val formattedDate = nowDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-            
             if (currentPermissionState) {
-                showInfoToast(getString(R.string.toast_notification_enable, formattedDate))
+                showNotificationConsentToast(enabled = true)
                 myPageViewModel.setNotificationOn()
             } else {
-                showInfoToast(getString(R.string.toast_notification_disable, formattedDate))
+                showNotificationConsentToast(enabled = false)
                 myPageViewModel.setNotificationOff()
             }
         }

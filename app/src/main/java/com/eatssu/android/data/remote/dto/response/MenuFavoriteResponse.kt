@@ -15,7 +15,7 @@ data class FavoriteMenuResponse(
     @SerialName("restaurant")
     val restaurant: Restaurant,
     @SerialName("isDiscontinued")
-    val isDiscontinued: Boolean,
+    val isDiscontinued: Boolean = false,
 )
 
 @Serializable

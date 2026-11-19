@@ -220,12 +220,11 @@ internal fun TodayMenuAccordion(
                     }
                 }
             }
-            val pendingCount = (state.selectedMenuIds - favoriteIds).size
-            val selectedCount =
-                state.menus.count { it.menuId in favoriteIds || it.menuId in state.selectedMenuIds }
+            val pendingCount =
+                state.menus.count { it.menuId !in favoriteIds && it.menuId in state.selectedMenuIds }
             TodayMenuSaveButton(
                 text = if (pendingCount == 0) stringResource(R.string.today_favorite_save)
-                else stringResource(R.string.today_favorite_save_count, selectedCount),
+                else stringResource(R.string.today_favorite_save_count, pendingCount),
                 enabled = canSave && !state.isSaving && pendingCount > 0 && state.loadState == MenuFavoriteLoadState.Success,
                 onClick = onSave,
             )

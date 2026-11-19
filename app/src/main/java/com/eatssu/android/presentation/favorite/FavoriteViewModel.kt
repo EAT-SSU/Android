@@ -286,7 +286,11 @@ class FavoriteViewModel @Inject constructor(
                     _uiState.value = UiState.Success(
                         previous.copy(
                             partnerships = partnerships,
-                            favoriteMenus = emptyList(),
+                            favoriteMenus = if (previous.favoriteMenuLoadState == MenuFavoriteLoadState.Success) {
+                                previous.favoriteMenus
+                            } else {
+                                emptyList()
+                            },
                             unfavoritedMenuIds = emptySet(),
                             favoriteMenuLoadState = MenuFavoriteLoadState.Error,
                         ),
@@ -393,9 +397,9 @@ class FavoriteViewModel @Inject constructor(
                                 resultItem
                             }
                         }
-                        val updatedFavorites = if (
-                            item.isFavorite || state.favoriteMenus.any { it.menuId == item.menuId }
-                        ) {
+                        val updatedFavorites = if (item.isFavorite) {
+                            state.favoriteMenus.filterNot { it.menuId == item.menuId }
+                        } else if (state.favoriteMenus.any { it.menuId == item.menuId }) {
                             state.favoriteMenus
                         } else {
                             listOf(
@@ -410,11 +414,7 @@ class FavoriteViewModel @Inject constructor(
                         state.copy(
                             menuSearchResults = updatedResults,
                             favoriteMenus = updatedFavorites,
-                            unfavoritedMenuIds = if (item.isFavorite) {
-                                state.unfavoritedMenuIds + item.menuId
-                            } else {
-                                state.unfavoritedMenuIds - item.menuId
-                            },
+                            unfavoritedMenuIds = state.unfavoritedMenuIds - item.menuId,
                         )
                     }
                     showMenuSnackbar(
@@ -450,11 +450,12 @@ class FavoriteViewModel @Inject constructor(
                     is ApiResult.Success -> {
                         updateState { current ->
                             current.copy(
-                                unfavoritedMenuIds = if (isFavorite) {
-                                    current.unfavoritedMenuIds + item.menuId
+                                favoriteMenus = if (isFavorite) {
+                                    current.favoriteMenus.filterNot { it.menuId == item.menuId }
                                 } else {
-                                    current.unfavoritedMenuIds - item.menuId
+                                    current.favoriteMenus
                                 },
+                                unfavoritedMenuIds = current.unfavoritedMenuIds - item.menuId,
                                 menuSearchResults = current.menuSearchResults.map { searchResult ->
                                     if (searchResult.menuId == item.menuId) {
                                         searchResult.copy(isFavorite = !isFavorite)

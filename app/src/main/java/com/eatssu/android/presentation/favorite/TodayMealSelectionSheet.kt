@@ -89,16 +89,20 @@ internal fun TodayMealSelectionSheet(
                 color = Black
             )
             Spacer(Modifier.height(10.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                todayMenuRestaurants.forEach { option ->
-                    MealSelectionChip(
-                        todayRestaurantLabel(option),
-                        selectedRestaurant == option,
-                        true,
-                        Modifier.weight(1f)
-                    ) {
-                        selectedRestaurant = option
-                        if (!isTodayMealAvailable(option, selectedTime)) selectedTime = null
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                todayMenuRestaurants.chunked(2).forEach { rowOptions ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        rowOptions.forEach { option ->
+                            MealSelectionChip(
+                                todayRestaurantLabel(option),
+                                selectedRestaurant == option,
+                                true,
+                                Modifier.weight(1f)
+                            ) {
+                                selectedRestaurant = option
+                                if (!isTodayMealAvailable(option, selectedTime)) selectedTime = null
+                            }
+                        }
                     }
                 }
             }
