@@ -52,6 +52,8 @@ internal fun NotificationScreen(
     onBack: () -> Unit,
     onMarkAllRead: () -> Unit,
     onNotificationClick: (MenuNotification) -> Unit,
+    hasError: Boolean = false,
+    onRetry: () -> Unit = {},
 ) {
     val now by produceState(initialValue = Instant.now()) {
         while (true) {
@@ -63,7 +65,7 @@ internal fun NotificationScreen(
         .fillMaxSize()
         .background(White)
         .systemBarsPadding()) {
-        if (notifications?.isEmpty() == true) {
+        if (notifications?.isEmpty() == true && !hasError) {
             Column(
                 Modifier
                     .align(Alignment.Center)
@@ -90,6 +92,14 @@ internal fun NotificationScreen(
                 onBack = onBack,
                 modifier = Modifier.padding(horizontal = 12.dp),
             )
+            if (hasError) {
+                Text(
+                    text = stringResource(R.string.notification_sync_error),
+                    modifier = Modifier.fillMaxWidth().clickable(onClick = onRetry).padding(24.dp),
+                    style = EatssuTheme.typography.body2,
+                    color = Gray700,
+                )
+            }
             when {
                 notifications == null -> Box(
                     Modifier

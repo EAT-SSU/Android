@@ -10,11 +10,9 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.eatssu.android.data.local.AccountDataStore
 import com.eatssu.android.data.local.SettingDataStore
-import com.eatssu.android.domain.usecase.alarm.GetDailyFavoriteMealsUseCase
 import com.eatssu.android.domain.usecase.auth.GetAccessTokenUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import java.io.IOException
@@ -29,7 +27,6 @@ class DailyMenuNotificationWorker @AssistedInject constructor(
     @Assisted parameters: WorkerParameters,
     private val settings: SettingDataStore,
     private val accountDataStore: AccountDataStore,
-    private val getMatches: GetDailyFavoriteMealsUseCase,
     private val getAccessToken: GetAccessTokenUseCase,
     private val factory: MenuNotificationFactory,
     private val publisher: NotificationPublisher,
@@ -48,16 +45,9 @@ class DailyMenuNotificationWorker @AssistedInject constructor(
             if (!settings.dailyNotificationStatus.first()) return Result.success()
             val account = getAccessToken()
             val email = accountDataStore.email.first()
-            val matches = try {
-                if (account.isBlank()) emptyList() else getMatches(date)
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Exception) {
-                Timber.w(error, "찜 식단 조회 실패, 기본 알림으로 대체")
-                emptyList()
-            }
             if (date != LocalDate.now(clock.withZone(ZoneId.systemDefault())) || !settings.dailyNotificationStatus.first() || (account.isBlank() != getAccessToken().isBlank()) || email != accountDataStore.email.first()) return Result.success()
-            factory.create(date, matches, settings.appLanguage.first())
+            // Favorite-menu pushes are owned by the server; retain only the general daily reminder.
+            factory.create(date, emptyList(), settings.appLanguage.first())
                 .forEach { publisher.publish(it) }
             Result.success()
         } catch (error: IOException) {

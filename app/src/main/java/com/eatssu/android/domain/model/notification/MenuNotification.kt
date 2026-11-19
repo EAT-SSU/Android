@@ -21,6 +21,7 @@ data class MenuNotification(
     val isRead: Boolean = false,
     val targetRestaurant: Restaurant? = null,
     val source: NotificationSource = NotificationSource.REMOTE,
+    val serverNotificationId: Long? = null,
 ) {
     fun isExpired(now: Instant): Boolean =
         !Instant.ofEpochMilli(receivedAt).plus(Duration.ofDays(7)).isAfter(now)
@@ -36,6 +37,7 @@ data class MenuNotification(
             val title = data["title"].orEmpty()
             if (title.isBlank() && body.isBlank()) return null
             val message = data + ("title" to title.ifBlank { fallbackTitle })
+            if (data["type"] == "MENU_FAVORITE") return fromData(message, id, sentAt)
             return fromData(message, id, sentAt) ?: MenuNotification(
                 id = id, title = message.getValue("title"), body = body, receivedAt = sentAt,
             )
@@ -43,6 +45,19 @@ data class MenuNotification(
 
         // Explicit destination data is required: never infer an old notification's date from today.
         fun fromData(data: Map<String, String>, id: String, sentAt: Long): MenuNotification? {
+            if (data["type"] == "MENU_FAVORITE") {
+                val serverId = data["notificationId"]?.toLongOrNull()?.takeIf { it > 0 } ?: return null
+                val date = runCatching {
+                    LocalDate.parse(data["date"], java.time.format.DateTimeFormatter.BASIC_ISO_DATE)
+                }.getOrNull() ?: return null
+                val time = Time.entries.firstOrNull { it.name == data["timePart"] } ?: return null
+                return MenuNotification(
+                    id = "server_$serverId",
+                    title = data["title"].orEmpty(), body = data["body"].orEmpty(),
+                    receivedAt = sentAt, mealDate = date.toString(), mealTime = time,
+                    serverNotificationId = serverId,
+                )
+            }
             val date = runCatching { LocalDate.parse(data["meal_date"]) }.getOrNull() ?: return null
             val time = Time.entries.firstOrNull {
                 it.value.equals(data["meal_time"], ignoreCase = true) ||

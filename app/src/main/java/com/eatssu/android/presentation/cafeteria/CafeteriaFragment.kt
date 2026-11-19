@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.eatssu.android.R
-import com.eatssu.android.data.local.NotificationStore
+import com.eatssu.android.data.remote.repository.NotificationRepository
 import com.eatssu.android.databinding.FragmentCafeteriaBinding
 import com.eatssu.android.presentation.MainViewModel
 import com.eatssu.android.presentation.base.BaseFragment
@@ -45,7 +45,7 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
     private val scrollViewModel by viewModels<CafeteriaScrollViewModel>()
 
     @Inject
-    lateinit var notificationStore: NotificationStore
+    lateinit var notificationRepository: NotificationRepository
 
     private val notificationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -123,9 +123,10 @@ class CafeteriaFragment : BaseFragment<FragmentCafeteriaBinding>(
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                notificationStore.notifications.collect { notifications ->
+                launch { notificationRepository.refreshUnread() }
+                notificationRepository.hasUnread.collect { unread ->
                     binding.btnNotifications.setImageResource(
-                        if (notifications.any { !it.isRead }) R.drawable.ic_alarm_unread else R.drawable.ic_alarm_read,
+                        if (unread) R.drawable.ic_alarm_unread else R.drawable.ic_alarm_read,
                     )
                 }
             }

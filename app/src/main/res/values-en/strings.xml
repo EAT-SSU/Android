@@ -421,4 +421,6 @@
     <string name="notification_favorite_many_body">Today’s %1$s: %3$s at %2$s and %4$d more 👀</string>
     <string name="favorite_add_partnership">Add partner to favorites</string>
     <string name="favorite_remove_partnership">Remove partner from favorites</string>
+    <string name="notification_sync_error">Could not sync notifications. Tap to retry.</string>
+    <string name="notification_read_error">Could not save the read status. Please try again later.</string>
 </resources>

@@ -19,7 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.NavController
 import androidx.work.WorkManager
 import com.eatssu.android.R
-import com.eatssu.android.data.local.NotificationStore
+import com.eatssu.android.data.remote.repository.NotificationRepository
 import com.eatssu.android.databinding.ActivityMainBinding
 import com.eatssu.android.domain.model.PartnershipRestaurant
 import com.eatssu.android.presentation.base.BaseActivity
@@ -33,6 +33,7 @@ import com.eatssu.android.presentation.mypage.userinfo.UserInfoActivity
 import com.eatssu.android.presentation.notification.NotificationActivity
 import com.eatssu.android.presentation.util.openAppNotificationSettings
 import com.eatssu.android.presentation.util.showDialog
+import com.eatssu.android.presentation.util.showInfoToast
 import com.eatssu.android.presentation.util.showNotificationConsentToast
 import com.eatssu.android.presentation.util.showToast
 import com.eatssu.android.presentation.util.startActivity
@@ -61,7 +62,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     }
 
     @Inject
-    lateinit var notificationStore: NotificationStore
+    lateinit var notificationRepository: NotificationRepository
 
     @Inject
     lateinit var workManager: WorkManager
@@ -138,7 +139,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         ) return
         val notificationId = intent.getStringExtra("notification_id")
         lifecycleScope.launch {
-            notificationId?.let { notificationStore.markRead(it) }
+            notificationId?.let {
+                if (!notificationRepository.markRead(it)) showInfoToast(R.string.notification_read_error)
+            }
         }
         val args = if (date != null && time != null) bundleOf(
             NotificationActivity.EXTRA_MEAL_DATE to date.toString(),

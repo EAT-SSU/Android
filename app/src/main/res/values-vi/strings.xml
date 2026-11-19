@@ -425,4 +425,6 @@
     <string name="notification_favorite_many_body">%1$s hôm nay: %3$s tại %2$s và %4$d món khác 👀</string>
     <string name="favorite_add_partnership">Thêm đối tác vào yêu thích</string>
     <string name="favorite_remove_partnership">Bỏ đối tác khỏi yêu thích</string>
+    <string name="notification_sync_error">Không thể đồng bộ thông báo. Nhấn để thử lại.</string>
+    <string name="notification_read_error">Không thể lưu trạng thái đã đọc. Vui lòng thử lại sau.</string>
 </resources>

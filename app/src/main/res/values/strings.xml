@@ -443,4 +443,6 @@
     <string name="notification_favorite_many_body">오늘 %1$s, %2$s %3$s 외 %4$d개 등장 👀</string>
     <string name="favorite_add_partnership">제휴 찜하기</string>
     <string name="favorite_remove_partnership">제휴 찜 취소하기</string>
+    <string name="notification_sync_error">알림 정보를 동기화하지 못했어요. 눌러서 다시 시도해주세요.</string>
+    <string name="notification_read_error">읽음 상태를 저장하지 못했어요. 잠시 후 다시 시도해주세요.</string>
 </resources>
