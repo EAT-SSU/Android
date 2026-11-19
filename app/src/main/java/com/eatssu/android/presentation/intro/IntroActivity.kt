@@ -124,6 +124,15 @@ class IntroActivity : AppCompatActivity() {
         val messageId = intent.getStringExtra("google.message_id")
             ?: intent.getStringExtra("message_id") ?: return
         intent.putExtra(NotificationActivity.EXTRA_OPEN_CAFETERIA, true)
+        if (intent.getStringExtra("type") == "MENU_FAVORITE") {
+            val data = listOf("type", "notificationId", "date", "timePart")
+                .mapNotNull { key -> intent.getStringExtra(key)?.let { key to it } }.toMap()
+            val message = MenuNotification.fromData(data, messageId, System.currentTimeMillis()) ?: return
+            intent.putExtra("notification_id", message.id)
+            intent.putExtra(NotificationActivity.EXTRA_MEAL_DATE, message.mealDate)
+            intent.putExtra(NotificationActivity.EXTRA_MEAL_TIME, message.mealTime?.name)
+            return
+        }
         val data = listOf("title", "body", "meal_date", "meal_time", "restaurant", "restaurants")
             .mapNotNull { key -> intent.getStringExtra(key)?.let { key to it } }.toMap()
         // Console background notifications expose content on tap only when copied into custom data.

@@ -425,4 +425,6 @@
     <string name="notification_favorite_many_body">今日の%1$s、%2$sの%3$sほか%4$d品が登場 👀</string>
     <string name="favorite_add_partnership">提携店をお気に入りに追加</string>
     <string name="favorite_remove_partnership">提携店をお気に入りから削除</string>
+    <string name="notification_sync_error">通知を同期できませんでした。タップして再試行してください。</string>
+    <string name="notification_read_error">既読状態を保存できませんでした。しばらくしてから再試行してください。</string>
 </resources>
