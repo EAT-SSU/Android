@@ -142,7 +142,7 @@ class MenuFavoriteSearchUiTest {
     }
 
     @Test
-    fun alreadySavedMenusCountTowardTheNextSelectionAndSaveDisablesAgain() {
+    fun alreadySavedMenusDoNotAccumulateInNextSelectionAndSaveDisablesAgain() {
         val names = listOf("맑은미역국", "배추김치", "연탄불맛돈불고기", "양배추찜")
         val menus = names.mapIndexed { index, name ->
             MenuFavoriteSearchResult(
@@ -188,9 +188,9 @@ class MenuFavoriteSearchUiTest {
             assertFalse(actionNode(awaitText(context.getString(R.string.today_favorite_save))).isEnabled)
             tap(awaitText("맑은미역국"))
             tap(awaitText("배추김치"))
-            val save = awaitText(context.getString(R.string.today_favorite_save_count, 4))
+            val save = awaitText(context.getString(R.string.today_favorite_save_count, 2))
             assertTrue(actionNode(save).isEnabled)
-            screenshot("today-favorite-four-selected")
+            screenshot("today-favorite-two-new-selected")
             tap(save)
             awaitText(context.getString(R.string.favorite_menu_added_snackbar))
             assertFalse(actionNode(awaitText(context.getString(R.string.today_favorite_save))).isEnabled)
